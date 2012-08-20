@@ -26,7 +26,7 @@
 
 /**
  * hkl_unit_dup: (skip)
- * @self: 
+ * @self:
  *
  * copy an #Hklunit
  *
@@ -46,7 +46,7 @@ HklUnit* hkl_unit_dup(const HklUnit *self)
 
 /**
  * hkl_unit_free: (skip)
- * @self: 
+ * @self:
  *
  * release the memory of an #HklUnit
  **/

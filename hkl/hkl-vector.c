@@ -46,7 +46,7 @@ HklVector* hkl_vector_dup (const HklVector* self) {
 
 /**
  * hkl_vector_free: (skip)
- * @self: 
+ * @self:
  *
  * delete an HklVector struct
  **/
@@ -104,8 +104,8 @@ int hkl_vector_cmp(const HklVector *self, const HklVector *vector)
 
 /**
  * hkl_vector_is_opposite: (skip)
- * @self: 
- * @vector: 
+ * @self:
+ * @vector:
  *
  * Check if two vectors are oposite.
  *

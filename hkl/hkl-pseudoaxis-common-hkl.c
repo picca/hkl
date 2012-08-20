@@ -228,7 +228,7 @@ static int get_last_axis_idx(HklGeometry *geometry, int holder_idx, char const *
  *
  * Only usefull if you need to create a new hkl mode.
  *
- * Returns: 
+ * Returns:
  **/
 int _RUBh_minus_Q_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
@@ -241,13 +241,13 @@ int _RUBh_minus_Q_func(const gsl_vector *x, void *params, gsl_vector *f)
 
 /**
  * RUBh_minus_Q: (skip)
- * @x: 
- * @params: 
- * @f: 
+ * @x:
+ * @params:
+ * @f:
  *
- * 
  *
- * Returns: 
+ *
+ * Returns:
  **/
 int RUBh_minus_Q(double const x[], void *params, double f[])
 {
@@ -429,13 +429,13 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
 
 /**
  * double_diffraction: (skip)
- * @x: 
- * @params: 
- * @f: 
+ * @x:
+ * @params:
+ * @f:
  *
- * 
  *
- * Returns: 
+ *
+ * Returns:
  **/
 int _double_diffraction(double const x[], void *params, double f[])
 {
@@ -484,13 +484,13 @@ int _double_diffraction(double const x[], void *params, double f[])
 
 /**
  * double_diffraction_func: (skip)
- * @x: 
- * @params: 
- * @f: 
+ * @x:
+ * @params:
+ * @f:
  *
- * 
  *
- * Returns: 
+ *
+ * Returns:
  **/
 int _double_diffraction_func(gsl_vector const *x, void *params, gsl_vector *f)
 {
@@ -508,13 +508,13 @@ int _double_diffraction_func(gsl_vector const *x, void *params, gsl_vector *f)
 
 /**
  * psi_constant_vertical_func: (skip)
- * @x: 
- * @params: 
- * @f: 
+ * @x:
+ * @params:
+ * @f:
  *
- * 
  *
- * Returns: 
+ *
+ * Returns:
  **/
 int _psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f)
 {

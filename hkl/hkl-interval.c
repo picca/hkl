@@ -27,11 +27,11 @@
 
 /**
  * hkl_interval_dup: (skip)
- * @self: 
+ * @self:
  *
  * copy an #HklInterval
  *
- * Returns: 
+ * Returns:
  **/
 HklInterval *hkl_interval_dup(const HklInterval *self)
 {
@@ -47,7 +47,7 @@ HklInterval *hkl_interval_dup(const HklInterval *self)
 
 /**
  * hkl_interval_free: (skip)
- * @self: 
+ * @self:
  *
  * delete an #HklInterval
  **/
@@ -59,12 +59,12 @@ void hkl_interval_free(HklInterval *self)
 
 /**
  * hkl_interval_cmp: (skip)
- * @self: 
- * @interval: 
+ * @self:
+ * @interval:
  *
  * compare two intervals
  *
- * Returns: 
+ * Returns:
  **/
 int hkl_interval_cmp(const HklInterval *self, const HklInterval *interval)
 {
@@ -73,8 +73,8 @@ int hkl_interval_cmp(const HklInterval *self, const HklInterval *interval)
 
 /**
  * hkl_interval_plus_interval: (skip)
- * @self: 
- * @interval: 
+ * @self:
+ * @interval:
  *
  * add two ontervals
  **/
@@ -86,8 +86,8 @@ void hkl_interval_plus_interval(HklInterval *self, const HklInterval *interval)
 
 /**
  * hkl_interval_plus_double: (skip)
- * @self: 
- * @d: 
+ * @self:
+ * @d:
  *
  * add to an interval a double
  **/
@@ -100,8 +100,8 @@ void hkl_interval_plus_double(HklInterval *self, double const d)
 
 /**
  * hkl_interval_minus_interval: (skip)
- * @self: 
- * @interval: 
+ * @self:
+ * @interval:
  *
  * substract two #HklInterval
  **/
@@ -114,8 +114,8 @@ void hkl_interval_minus_interval(HklInterval *self, const HklInterval *interval)
 
 /**
  * hkl_interval_minus_double: (skip)
- * @self: 
- * @d: 
+ * @self:
+ * @d:
  *
  * subst a double to an #HklInterval
  **/
@@ -127,8 +127,8 @@ void hkl_interval_minus_double(HklInterval *self, double const d)
 
 /**
  * hkl_interval_times_interval: (skip)
- * @self: 
- * @interval: 
+ * @self:
+ * @interval:
  *
  * multiply two #HklInterval
  **/
@@ -163,8 +163,8 @@ void hkl_interval_times_interval(HklInterval *self, const HklInterval *interval)
 
 /**
  * hkl_interval_times_double: (skip)
- * @self: 
- * @d: 
+ * @self:
+ * @d:
  *
  * multiply an #HklInterval by a double
  **/
@@ -185,8 +185,8 @@ void hkl_interval_times_double(HklInterval *self, double const d)
 
 /**
  * hkl_interval_divides_double: (skip)
- * @self: 
- * @d: 
+ * @self:
+ * @d:
  *
  * divide an #HklInterval by a double
  **/
@@ -205,11 +205,11 @@ void hkl_interval_divides_double(HklInterval *self, double const d)
 
 /**
  * hkl_interval_contain_zero: (skip)
- * @self: 
+ * @self:
  *
  * check if an #HklInterval contain zero
  *
- * Returns: 
+ * Returns:
  **/
 int hkl_interval_contain_zero(HklInterval const *self)
 {
@@ -221,7 +221,7 @@ int hkl_interval_contain_zero(HklInterval const *self)
 
 /**
  * hkl_interval_cos: (skip)
- * @self: 
+ * @self:
  *
  * compute the cosinus of an #HklInterval
  **/
@@ -369,9 +369,9 @@ void hkl_interval_cos(HklInterval *self)
 
 /**
  * hkl_interval_acos: (skip)
- * @self: 
+ * @self:
  *
- * compute the arc cosinus of an #HklInterval 
+ * compute the arc cosinus of an #HklInterval
  **/
 void hkl_interval_acos(HklInterval *self)
 {
@@ -385,7 +385,7 @@ void hkl_interval_acos(HklInterval *self)
 
 /**
  * hkl_interval_sin: (skip)
- * @self: 
+ * @self:
  *
  * compute the sin of an #HklInterval
  **/
@@ -541,7 +541,7 @@ void hkl_interval_sin(HklInterval *self)
 
 /**
  * hkl_interval_asin: (skip)
- * @self: 
+ * @self:
  *
  * compute the arc sinus of an #HklInterval
  **/
@@ -553,7 +553,7 @@ void hkl_interval_asin(HklInterval *self)
 
 /**
  * hkl_interval_tan: (skip)
- * @self: 
+ * @self:
  *
  * compute the tangente of an #HklInterval
  **/
@@ -576,7 +576,7 @@ void hkl_interval_tan(HklInterval *self)
 
 /**
  * hkl_interval_atan: (skip)
- * @self: 
+ * @self:
  *
  * compute the arc tangente of an #HklInterval
  **/
@@ -588,11 +588,11 @@ void hkl_interval_atan(HklInterval *self)
 
 /**
  * hkl_interval_length: (skip)
- * @self: 
+ * @self:
  *
  * compute the length of an #HklInterval
  *
- * Returns: 
+ * Returns:
  **/
 double hkl_interval_length(const HklInterval *self)
 {
@@ -601,7 +601,7 @@ double hkl_interval_length(const HklInterval *self)
 
 /**
  * hkl_interval_angle_restrict_symm: (skip)
- * @self: 
+ * @self:
  *
  * restrict an #HklInterval into -pi, pi
  **/

@@ -475,7 +475,7 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_is_initialized_toggled(Glib::ustring
 	bool old_flag = row[_pseudoAxeModelColumns.is_initialized];
 	if (!old_flag
 	    && hkl_pseudo_axis_engine_initialize(pseudoAxis->engine, NULL))
-			this->updatePseudoAxes();
+		this->updatePseudoAxes();
 }
 
 //PseuodAxes Parameters

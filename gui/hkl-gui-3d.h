@@ -36,12 +36,12 @@ public:
 	Gtk::TreeModelColumn<Hkl3DObject *> object;
 
 	Hkl3DObjectsModelColumns()
-	{
-		this->add(name);
-		this->add(hide);
-		this->add(model);
-		this->add(object);
-	}
+		{
+			this->add(name);
+			this->add(hide);
+			this->add(model);
+			this->add(object);
+		}
 };
 
 class Hkl3DFrame

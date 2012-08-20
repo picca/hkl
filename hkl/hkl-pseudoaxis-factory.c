@@ -105,7 +105,7 @@ static void hkl_geometry_list_multiply_k6c_real(HklGeometryList *self,
 
 /**
  * hkl_pseudo_axis_engine_list_factory:
- * @config: 
+ * @config:
  *
  * create an #HklPseudoAxisEngineList given an #HklGeometryConfig
  *

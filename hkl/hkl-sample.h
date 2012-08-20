@@ -32,7 +32,7 @@ typedef struct _HklSample HklSample;
 typedef struct _HklSampleReflection HklSampleReflection;
 typedef struct _HklSampleList HklSampleList;
 
-typedef enum _HklSampleType 
+typedef enum _HklSampleType
 {
 	HKL_SAMPLE_TYPE_MONOCRYSTAL
 } HklSampleType;
@@ -164,4 +164,3 @@ extern void hkl_sample_list_fprintf(FILE *f, const HklSampleList *self);
 HKL_END_DECLS
 
 #endif
-

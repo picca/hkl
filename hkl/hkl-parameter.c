@@ -26,18 +26,18 @@
 
 /**
  * hkl_parameter_new: (skip)
- * @name: 
- * @min: 
- * @value: 
- * @max: 
- * @fit: 
- * @changed: 
- * @unit: 
- * @punit: 
+ * @name:
+ * @min:
+ * @value:
+ * @max:
+ * @fit:
+ * @changed:
+ * @unit:
+ * @punit:
  *
  * create a new #HklParameter
  *
- * Returns: 
+ * Returns:
  **/
 HklParameter *hkl_parameter_new(const char *name,
 				double min, double value, double max,
@@ -61,11 +61,11 @@ HklParameter *hkl_parameter_new(const char *name,
 
 /**
  * hkl_parameter_new_copy: (skip)
- * @self: 
+ * @self:
  *
  * copy an #HklParameter
  *
- * Returns: 
+ * Returns:
  **/
 HklParameter *hkl_parameter_new_copy(const HklParameter *self)
 {
@@ -80,19 +80,19 @@ HklParameter *hkl_parameter_new_copy(const HklParameter *self)
 
 /**
  * hkl_parameter_init: (skip)
- * @self: 
- * @name: 
- * @min: 
- * @value: 
- * @max: 
- * @fit: 
- * @changed: 
- * @unit: 
- * @punit: 
+ * @self:
+ * @name:
+ * @min:
+ * @value:
+ * @max:
+ * @fit:
+ * @changed:
+ * @unit:
+ * @punit:
  *
  * initialize an #HklParameter
  *
- * Returns: 
+ * Returns:
  **/
 int hkl_parameter_init(HklParameter *self, const char *name,
 		       double min, double value, double max,
@@ -119,7 +119,7 @@ int hkl_parameter_init(HklParameter *self, const char *name,
 
 /**
  * hkl_parameter_free: (skip)
- * @self: 
+ * @self:
  *
  * delete an #HklParameter
  **/
@@ -131,8 +131,8 @@ void hkl_parameter_free(HklParameter *self)
 
 /**
  * hkl_parameter_set_value: (skip)
- * @self: 
- * @value: 
+ * @self:
+ * @value:
  *
  * set the value of an #HklParameter
  **/
@@ -144,11 +144,11 @@ void hkl_parameter_set_value(HklParameter *self, double value)
 
 /**
  * hkl_parameter_get_value_unit: (skip)
- * @self: 
+ * @self:
  *
  * get the value of the parameter express in the punit #Hklunit
  * @todo test
- * Returns: 
+ * Returns:
  **/
 double hkl_parameter_get_value_unit(const HklParameter *self)
 {
@@ -159,12 +159,12 @@ double hkl_parameter_get_value_unit(const HklParameter *self)
 
 /**
  * hkl_parameter_set_value_unit: (skip)
- * @self: 
- * @value: 
+ * @self:
+ * @value:
  *
  * set the value of the parameter express in the punit #HklUnit
  * @todo test
- * Returns: 
+ * Returns:
  **/
 int hkl_parameter_set_value_unit(HklParameter *self, double value)
 {
@@ -178,11 +178,11 @@ int hkl_parameter_set_value_unit(HklParameter *self, double value)
 
 /**
  * hkl_parameter_get_max: (skip)
- * @self: 
+ * @self:
  *
  * get the max value of the #HklParameter
  *
- * Returns: 
+ * Returns:
  **/
 double hkl_parameter_get_max(const HklParameter *self)
 {
@@ -191,9 +191,9 @@ double hkl_parameter_get_max(const HklParameter *self)
 
 /**
  * hkl_parameter_get_range_unit: (skip)
- * @self: 
- * @min: 
- * @max: 
+ * @self:
+ * @min:
+ * @max:
  *
  * get the #HklParameter range, min, max
  * @todo test
@@ -208,9 +208,9 @@ void hkl_parameter_get_range_unit(const HklParameter *self, double *min, double 
 
 /**
  * hkl_parameter_set_range: (skip)
- * @self: 
- * @min: 
- * @max: 
+ * @self:
+ * @min:
+ * @max:
  *
  * set the #HklParameter range.
  * @todo test
@@ -223,9 +223,9 @@ void hkl_parameter_set_range(HklParameter *self, double min, double max)
 
 /**
  * hkl_parameter_set_range_unit: (skip)
- * @self: 
- * @min: 
- * @max: 
+ * @self:
+ * @min:
+ * @max:
  *
  * set the #HklParameter range express in the punit #HklUnit
  * @todo test
@@ -239,7 +239,7 @@ void hkl_parameter_set_range_unit(HklParameter *self, double min, double max)
 
 /**
  * hkl_parameter_randomize: (skip)
- * @self: 
+ * @self:
  *
  * randomize the #HklParameter value into the min,max range
  **/
@@ -255,11 +255,11 @@ void hkl_parameter_randomize(HklParameter *self)
 
 /**
  * hkl_parameter_is_valid: (skip)
- * @self: 
+ * @self:
  *
  * check if the value of the #HklParameter is in the min,max range
  *
- * Returns: 
+ * Returns:
  **/
 int hkl_parameter_is_valid(const HklParameter *self)
 {
@@ -272,8 +272,8 @@ int hkl_parameter_is_valid(const HklParameter *self)
 
 /**
  * hkl_parameter_fprintf: (skip)
- * @f: 
- * @self: 
+ * @f:
+ * @self:
  *
  * print into the #FILE f an #HklParameter
  **/

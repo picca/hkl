@@ -29,11 +29,11 @@
 
 /**
  * hkl_matrix_dup: (skip)
- * @self: 
+ * @self:
  *
- * 
  *
- * Returns: 
+ *
+ * Returns:
  **/
 HklMatrix *hkl_matrix_dup(const HklMatrix* self)
 {
@@ -47,9 +47,9 @@ HklMatrix *hkl_matrix_dup(const HklMatrix* self)
 
 /**
  * hkl_matrix_free: (skip)
- * @self: 
+ * @self:
  *
- * 
+ *
  **/
 void hkl_matrix_free(HklMatrix *self)
 {

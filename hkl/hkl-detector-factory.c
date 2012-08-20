@@ -25,11 +25,11 @@
 
 /**
  * hkl_detector_factory_new:
- * @type: 
+ * @type:
  *
  * Detector factory
  *
- * Returns: 
+ * Returns:
  **/
 HklDetector *hkl_detector_factory_new(HklDetectorType type)
 {

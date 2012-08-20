@@ -439,7 +439,7 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 	_pseudoAxeModel = Gtk::ListStore::create(_pseudoAxeModelColumns);
 
 	//Fill the models from the diffractometer pseudoAxes
-	list_for_each(&_engines->engines, engine, list)
+	list_for_each(&_engines->engines, engine, list){
 		list_for_each(&engine->pseudo_axes, pseudo_axis, list){
 			Gtk::ListStore::Row row = *(_pseudoAxeModel->append());
 			row[_pseudoAxeModelColumns.pseudoAxis] = pseudo_axis;
@@ -459,6 +459,7 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 				_mapPseudoAxeParameterModel.insert(std::pair<HklPseudoAxis *, Glib::RefPtr<Gtk::ListStore> >(pseudo_axis, model));
 			}
 		}
+	}
 
 	//Set the model for the TreeView
 	_TreeView_pseudoAxes->set_model(_pseudoAxeModel);

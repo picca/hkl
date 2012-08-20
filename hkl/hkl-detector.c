@@ -27,7 +27,7 @@
  *
  * Create a new default #HklDetector
  *
- * Returns: 
+ * Returns:
  **/
 HklDetector *hkl_detector_new(void)
 {
@@ -47,7 +47,7 @@ HklDetector *hkl_detector_new(void)
  *
  * the copy constructor
  *
- * Returns: 
+ * Returns:
  **/
 HklDetector *hkl_detector_new_copy(HklDetector const *src)
 {
@@ -65,7 +65,7 @@ HklDetector *hkl_detector_new_copy(HklDetector const *src)
 
 /**
  * hkl_detector_free: (skip)
- * @self: 
+ * @self:
  *
  * destructor
  **/
@@ -77,8 +77,8 @@ void hkl_detector_free(HklDetector *self)
 
 /**
  * hkl_detector_attach_to_holder: (skip)
- * @self: 
- * @holder: 
+ * @self:
+ * @holder:
  *
  * attach the #HklDetector to an #HklHolder
  **/
@@ -92,7 +92,7 @@ void hkl_detector_attach_to_holder(HklDetector *self, HklHolder const *holder)
 
 /**
  * hkl_detector_compute_kf: (skip)
- * @self: 
+ * @self:
  * @g: (in): the diffractometer #HklGeometry use to compute kf.
  * @kf: (out caller-allocates): the #HklVector fill with the kf coordinates.
  *
@@ -118,8 +118,8 @@ int hkl_detector_compute_kf(HklDetector const *self, HklGeometry *g,
 
 /**
  * hkl_detector_fprintf: (skip)
- * @f: 
- * @self: 
+ * @f:
+ * @self:
  *
  * print to a FILE the detector members
  **/

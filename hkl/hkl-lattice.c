@@ -43,16 +43,16 @@ static int check_lattice_param(double a, double b, double c,
 
 /**
  * hkl_lattice_new: (skip)
- * @a: 
- * @b: 
- * @c: 
- * @alpha: 
- * @beta: 
- * @gamma: 
+ * @a:
+ * @b:
+ * @c:
+ * @alpha:
+ * @beta:
+ * @gamma:
  *
  * constructor
  *
- * Returns: 
+ * Returns:
  **/
 HklLattice *hkl_lattice_new(double a, double b, double c,
 			    double alpha, double beta, double gamma)
@@ -92,11 +92,11 @@ HklLattice *hkl_lattice_new(double a, double b, double c,
 
 /**
  * hkl_lattice_new_copy: (skip)
- * @self: 
+ * @self:
  *
  * copy constructor
  *
- * Returns: 
+ * Returns:
  **/
 HklLattice *hkl_lattice_new_copy(const HklLattice *self)
 {
@@ -119,7 +119,7 @@ HklLattice *hkl_lattice_new_copy(const HklLattice *self)
  *
  * default constructor
  *
- * Returns: 
+ * Returns:
  **/
 HklLattice* hkl_lattice_new_default(void)
 {
@@ -129,7 +129,7 @@ HklLattice* hkl_lattice_new_default(void)
 
 /**
  * hkl_lattice_free: (skip)
- * @self: 
+ * @self:
  *
  * destructor
  **/
@@ -146,17 +146,17 @@ void hkl_lattice_free(HklLattice *self)
 
 /**
  * hkl_lattice_set: (skip)
- * @self: 
- * @a: 
- * @b: 
- * @c: 
- * @alpha: 
- * @beta: 
- * @gamma: 
+ * @self:
+ * @a:
+ * @b:
+ * @c:
+ * @alpha:
+ * @beta:
+ * @gamma:
  *
  * set the lattice parameters
  *
- * Returns: 
+ * Returns:
  **/
 int hkl_lattice_set(HklLattice *self,
 		    double a, double b, double c,
@@ -177,12 +177,12 @@ int hkl_lattice_set(HklLattice *self,
 
 /**
  * hkl_lattice_get_B: (skip)
- * @self: 
+ * @self:
  * @B: (out): where to store the B matrix
  *
  * Get the B matrix from the lattice parameters
  *
- * Returns: 
+ * Returns:
  **/
 int hkl_lattice_get_B(const HklLattice *self, HklMatrix *B)
 {
@@ -285,12 +285,12 @@ int hkl_lattice_get_1_B(const HklLattice *self, HklMatrix *B)
 
 /**
  * hkl_lattice_reciprocal: (skip)
- * @self: 
+ * @self:
  * @reciprocal: (inout):
  *
  * compute the reciprocal lattice
  *
- * Returns: 
+ * Returns:
  **/
 int hkl_lattice_reciprocal(const HklLattice *self, HklLattice *reciprocal)
 {
@@ -339,7 +339,7 @@ int hkl_lattice_reciprocal(const HklLattice *self, HklLattice *reciprocal)
 
 /**
  * hkl_lattice_randomize: (skip)
- * @self: 
+ * @self:
  *
  * randomize the lattice
  **/
@@ -467,8 +467,8 @@ void hkl_lattice_randomize(HklLattice *self)
 
 /**
  * hkl_lattice_fprintf: (skip)
- * @f: 
- * @self: 
+ * @f:
+ * @self:
  *
  * print into a file the lattice.
  **/

@@ -200,7 +200,7 @@ static void hkl_geometry_init_eulerian4C_horizontal(HklGeometry *self,
 
 /**
  * hkl_geometry_factory_get_config_from_type:
- * @type: 
+ * @type:
  *
  * get am #HklGeometryConfig for a given #HklGeometryType
  *
@@ -222,8 +222,8 @@ const HklGeometryConfig *hkl_geometry_factory_get_config_from_type(HklGeometryTy
 
 /**
  * hkl_geometry_factory_new: (skip)
- * @config: 
- * @...: 
+ * @config:
+ * @...:
  *
  * create an #HklGeometry given an #HklGeometryConfig
  *
@@ -254,9 +254,9 @@ HklGeometry *hkl_geometry_factory_new(const HklGeometryConfig *config, ...)
 
 /**
  * hkl_geometry_factory_newv:
- * @config: 
+ * @config:
  * @parameters: (array length=len):
- * @len: 
+ * @len:
  *
  * factory constructor
  *

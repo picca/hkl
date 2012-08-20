@@ -31,11 +31,11 @@
 /* public */
 /**
  * hkl_quaternion_dup: (skip)
- * @self: 
+ * @self:
  *
- * 
  *
- * Returns: 
+ *
+ * Returns:
  **/
 HklQuaternion *hkl_quaternion_dup(const HklQuaternion* self)
 {
@@ -49,9 +49,9 @@ HklQuaternion *hkl_quaternion_dup(const HklQuaternion* self)
 
 /**
  * hkl_quaternion_free: (skip)
- * @self: 
+ * @self:
  *
- * 
+ *
  **/
 void hkl_quaternion_free(HklQuaternion *self)
 {

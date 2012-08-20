@@ -31,7 +31,7 @@
  * copy constructor
  * TODO test
  *
- * Returns: 
+ * Returns:
  **/
 HklSource *hkl_source_dup(const HklSource *self)
 {
@@ -91,7 +91,7 @@ int hkl_source_init(HklSource *self,
  *
  * compare two sources
  *
- * Returns: 
+ * Returns:
  **/
 int hkl_source_cmp(HklSource const *self, HklSource const *s)
 {
@@ -102,8 +102,8 @@ int hkl_source_cmp(HklSource const *self, HklSource const *s)
 
 /**
  * hkl_source_compute_ki: (skip)
- * @self: 
- * @ki: (out caller-allocates): 
+ * @self:
+ * @ki: (out caller-allocates):
  *
  * compute the ki hkl_vector
  **/
@@ -115,7 +115,7 @@ void hkl_source_compute_ki(HklSource const *self, HklVector *ki)
 
 /**
  * hkl_source_get_wavelength: (skip)
- * @self: 
+ * @self:
  *
  * get the wave_length
  *
@@ -128,8 +128,8 @@ double hkl_source_get_wavelength(HklSource const *self)
 
 /**
  * hkl_source_fprintf: (skip)
- * @f: 
- * @self: 
+ * @f:
+ * @self:
  *
  * printf the source
  **/

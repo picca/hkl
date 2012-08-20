@@ -86,7 +86,7 @@ static int get_q_real(HklPseudoAxisEngineMode *self,
 	/* update q */
 	q = 2 *HKL_TAU / wavelength * sin(theta);
 	hkl_pseudo_axis_engine_set_values(engine, &q, 1);
-	
+
 	return HKL_TRUE;
 }
 

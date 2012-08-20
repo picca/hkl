@@ -326,7 +326,7 @@ static int _constant_incidence_func(const gsl_vector *x, void *params, gsl_vecto
 
 	hkl_vector_project_on_plan(&n, &ki);
 	azimuth = hkl_vector_angle(&n, &Y);
-	
+
 	f->data[3] = incidence0 - incidence;
 	f->data[4] = azimuth0 - azimuth;
 

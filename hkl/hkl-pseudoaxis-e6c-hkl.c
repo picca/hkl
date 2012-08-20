@@ -35,7 +35,7 @@
 
 static int _bissector_horizontal_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	const double mu = x->data[0]; 
+	const double mu = x->data[0];
 	const double omega = x->data[1];
 	const double gamma = x->data[4];
 

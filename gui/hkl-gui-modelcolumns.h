@@ -35,13 +35,13 @@ public:
 	Gtk::TreeModelColumn<bool> flag;
 
 	ReflectionModelColumns()
-	{
-		this->add(index);
-		this->add(h);
-		this->add(k);
-		this->add(l);
-		this->add(flag);
-	}
+		{
+			this->add(index);
+			this->add(h);
+			this->add(k);
+			this->add(l);
+			this->add(flag);
+		}
 };
 
 class CrystalModelColumns : public Gtk::TreeModel::ColumnRecord
@@ -56,15 +56,15 @@ public:
 	Gtk::TreeModelColumn<double> gamma;
 
 	CrystalModelColumns()
-	{
-		this->add(name);
-		this->add(a);
-		this->add(b);
-		this->add(c);
-		this->add(alpha);
-		this->add(beta);
-		this->add(gamma);
-	}
+		{
+			this->add(name);
+			this->add(a);
+			this->add(b);
+			this->add(c);
+			this->add(alpha);
+			this->add(beta);
+			this->add(gamma);
+		}
 };
 
 class AxeModelColumns : public Gtk::TreeModel::ColumnRecord
@@ -78,14 +78,14 @@ public:
 	Gtk::TreeModelColumn<double> max;
 
 	AxeModelColumns()
-	{
-		add(axis);
-		add(name);
-		add(read);
-		add(write);
-		add(min);
-		add(max);
-	}
+		{
+			add(axis);
+			add(name);
+			add(read);
+			add(write);
+			add(min);
+			add(max);
+		}
 };
 
 class PseudoAxeModelColumns : public Gtk::TreeModel::ColumnRecord
@@ -100,15 +100,15 @@ public:
 	Gtk::TreeModelColumn<bool> is_initialized;
 
 	PseudoAxeModelColumns()
-	{
-		this->add(pseudoAxis);
-		this->add(name);
-		this->add(read);
-		this->add(write);
-		this->add(min);
-		this->add(max);
-		this->add(is_initialized);
-	}
+		{
+			this->add(pseudoAxis);
+			this->add(name);
+			this->add(read);
+			this->add(write);
+			this->add(min);
+			this->add(max);
+			this->add(is_initialized);
+		}
 };
 
 class ParameterModelColumns : public Gtk::TreeModel::ColumnRecord
@@ -119,11 +119,11 @@ public:
 	Gtk::TreeModelColumn<double> value;
 
 	ParameterModelColumns()
-	{
-		this->add(parameter);
-		this->add(name);
-		this->add(value);
-	}
+		{
+			this->add(parameter);
+			this->add(name);
+			this->add(value);
+		}
 };
 
 class SolutionModelColumns : public Gtk::TreeModel::ColumnRecord
@@ -134,17 +134,17 @@ public:
 	std::vector<Gtk::TreeModelColumn<gdouble> > axes;
 
 	SolutionModelColumns(HklGeometry *geometry)
-	{
-		size_t i;
+		{
+			size_t i;
 
-		this->add(this->index);
-		this->add(this->item);
+			this->add(this->index);
+			this->add(this->item);
 
-		for(i=0; i<geometry->len; ++i){
-			this->axes.push_back(Gtk::TreeModelColumn<gdouble>());
-			this->add(this->axes[i]);
+			for(i=0; i<geometry->len; ++i){
+				this->axes.push_back(Gtk::TreeModelColumn<gdouble>());
+				this->add(this->axes[i]);
+			}
 		}
-	}
 };
 
 class DiffractometerModelColumns : public Gtk::TreeModel::ColumnRecord
@@ -154,10 +154,10 @@ public:
 	Gtk::TreeModelColumn<gint> type;
 
 	DiffractometerModelColumns(void)
-	{
-		this->add(name);
-		this->add(type);
-	}
+		{
+			this->add(name);
+			this->add(type);
+		}
 };
 
 #endif // GTKMM_MODEL_COLUMNS_H

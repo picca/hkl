@@ -186,7 +186,7 @@ HklAxis *hkl_holder_add_rotation_axis(HklHolder *self,
  *
  * constructor
  *
- * Returns: 
+ * Returns:
  **/
 HklGeometry *hkl_geometry_new(void)
 {
@@ -206,11 +206,11 @@ HklGeometry *hkl_geometry_new(void)
 
 /**
  * hkl_geometry_new_copy: (skip)
- * @self: 
+ * @self:
  *
  * copy constructor
  *
- * Returns: 
+ * Returns:
  **/
 HklGeometry *hkl_geometry_new_copy(const HklGeometry *self)
 {
@@ -243,7 +243,7 @@ HklGeometry *hkl_geometry_new_copy(const HklGeometry *self)
 
 /**
  * hkl_geometry_free: (skip)
- * @self: 
+ * @self:
  *
  * destructor
  **/
@@ -265,8 +265,8 @@ void hkl_geometry_free(HklGeometry *self)
 
 /**
  * hkl_geometry_init_geometry: (skip)
- * @self: 
- * @src: 
+ * @self:
+ * @src:
  *
  * initilize an HklGeometry
  **/
@@ -288,11 +288,11 @@ void hkl_geometry_init_geometry(HklGeometry *self, const HklGeometry *src)
 
 /**
  * hkl_geometry_add_holder: (skip)
- * @self: 
+ * @self:
  *
  * add an Holder to the #HklGeometry
  *
- * Returns: 
+ * Returns:
  **/
 HklHolder *hkl_geometry_add_holder(HklGeometry *self)
 {
@@ -304,7 +304,7 @@ HklHolder *hkl_geometry_add_holder(HklGeometry *self)
 
 /**
  * hkl_geometry_update: (skip)
- * @self: 
+ * @self:
  *
  * update the geometry internal once an Axis values changed
  **/
@@ -356,10 +356,10 @@ int hkl_geometry_get_axis_idx_by_name(HklGeometry *self, const char *name)
 
 /**
  * hkl_geometry_get_axis_by_name:
- * @self: 
- * @name: 
+ * @self:
+ * @name:
  *
- * get an #HklAxis using its name 
+ * get an #HklAxis using its name
  *
  * Returns: (transfer none):
  **/
@@ -377,7 +377,7 @@ HklAxis *hkl_geometry_get_axis_by_name(HklGeometry *self, const char *name)
 
 /**
  * hkl_geometry_randomize: (skip)
- * @self: 
+ * @self:
  *
  * randomize the #HklGeometry
  **/
@@ -392,13 +392,13 @@ void hkl_geometry_randomize(HklGeometry *self)
 
 /**
  * hkl_geometry_set_values_v: (skip)
- * @self: 
- * @len: 
+ * @self:
+ * @len:
  * "...:
  *
  * set the axes values
  *
- * Returns: 
+ * Returns:
  **/
 int hkl_geometry_set_values_v(HklGeometry *self, size_t len, ...)
 {
@@ -438,12 +438,12 @@ int hkl_geometry_set_values_unit_v(HklGeometry *self, ...)
 
 /**
  * hkl_geometry_distance: (skip)
- * @self: 
- * @geom: 
+ * @self:
+ * @geom:
  *
  * compute the distance between two #HklGeometries
  *
- * Returns: 
+ * Returns:
  **/
 double hkl_geometry_distance(HklGeometry *self, HklGeometry *geom)
 {
@@ -465,12 +465,12 @@ double hkl_geometry_distance(HklGeometry *self, HklGeometry *geom)
 
 /**
  * hkl_geometry_distance_orthodromic: (skip)
- * @self: 
- * @geom: 
+ * @self:
+ * @geom:
  *
  * compute the orthodromique distance between two #HklGeometry
  *
- * Returns: 
+ * Returns:
  **/
 double hkl_geometry_distance_orthodromic(HklGeometry *self, HklGeometry *geom)
 {
@@ -498,11 +498,11 @@ double hkl_geometry_distance_orthodromic(HklGeometry *self, HklGeometry *geom)
 
 /**
  * hkl_geometry_is_valid: (skip)
- * @self: 
+ * @self:
  *
  * check if all axes of the #HklGeometry are valid.
  *
- * Returns: 
+ * Returns:
  **/
 int hkl_geometry_is_valid(const HklGeometry *self)
 {
@@ -517,13 +517,13 @@ int hkl_geometry_is_valid(const HklGeometry *self)
 
 /**
  * hkl_geometry_closest_from_geometry_with_range: (skip)
- * @self: 
- * @ref: 
+ * @self:
+ * @ref:
  *
  * get the closest axes values in the HklInterval compatible with the
  * current axes values
  *
- * Returns: 
+ * Returns:
  **/
 int hkl_geometry_closest_from_geometry_with_range(HklGeometry *self, HklGeometry *ref)
 {
@@ -548,7 +548,7 @@ int hkl_geometry_closest_from_geometry_with_range(HklGeometry *self, HklGeometry
 
 /**
  * hkl_geometry_get_axes_values_unit:
- * @self: 
+ * @self:
  * @len: (out caller-allocates)
  *
  * return all the axes values (must be free by the user)
@@ -575,9 +575,9 @@ double *hkl_geometry_get_axes_values_unit(const HklGeometry *self, unsigned int 
 
 /**
  * hkl_geometry_set_axes_values_unit:
- * @self: 
+ * @self:
  * @values: (array length=len):
- * @len: 
+ * @len:
  *
  * set the axes values
  **/
@@ -595,8 +595,8 @@ void hkl_geometry_set_axes_values_unit(HklGeometry *self, double *values, unsign
 
 /**
  * hkl_geometry_fprintf: (skip)
- * @file: 
- * @self: 
+ * @file:
+ * @self:
  *
  * print into a file the #HklGeometry
  **/
@@ -623,7 +623,7 @@ void hkl_geometry_fprintf(FILE *file, const HklGeometry *self)
  *
  * constructor
  *
- * Returns: 
+ * Returns:
  **/
 HklGeometryList *hkl_geometry_list_new(void)
 {
@@ -640,11 +640,11 @@ HklGeometryList *hkl_geometry_list_new(void)
 
 /**
  * hkl_geometry_list_new_copy: (skip)
- * @self: 
+ * @self:
  *
  * copy constructor
  *
- * Returns: 
+ * Returns:
  **/
 HklGeometryList *hkl_geometry_list_new_copy(const HklGeometryList *self)
 {
@@ -671,7 +671,7 @@ HklGeometryList *hkl_geometry_list_new_copy(const HklGeometryList *self)
 
 /**
  * hkl_geometry_list_free: (skip)
- * @self: 
+ * @self:
  *
  * destructor
  **/
@@ -714,7 +714,7 @@ void hkl_geometry_list_add(HklGeometryList *self, HklGeometry *geometry)
 
 /**
  * hkl_geometry_list_reset: (skip)
- * @self: 
+ * @self:
  *
  * reset the HklGeometry, in fact it is a sort of clean method remove
  * all the items of the list.
@@ -733,8 +733,8 @@ void hkl_geometry_list_reset(HklGeometryList *self)
 
 /**
  * hkl_geometry_list_sort: (skip)
- * @self: 
- * @ref: 
+ * @self:
+ * @ref:
  *
  * sort the #HklGeometryList compare to the distance of the given
  * #HklGeometry
@@ -784,8 +784,8 @@ void hkl_geometry_list_sort(HklGeometryList *self, HklGeometry *ref)
 
 /**
  * hkl_geometry_list_fprintf: (skip)
- * @f: 
- * @self: 
+ * @f:
+ * @self:
  *
  * print to a file the #HklGeometryList
  **/
@@ -838,7 +838,7 @@ void hkl_geometry_list_fprintf(FILE *f, const HklGeometryList *self)
 
 /**
  * hkl_geometry_list_multiply: (skip)
- * @self: 
+ * @self:
  *
  * apply the multiply lenthod to the #HklGeometry
  **/
@@ -942,7 +942,7 @@ void hkl_geometry_list_multiply_from_range(HklGeometryList *self)
 
 /**
  * hkl_geometry_list_remove_invalid: (skip)
- * @self: 
+ * @self:
  *
  * remove all invalid #HklGeometry from the #HklGeometryList
  **/
@@ -968,11 +968,11 @@ void hkl_geometry_list_remove_invalid(HklGeometryList *self)
 
 /**
  * hkl_geometry_list_item_new: (skip)
- * @geometry: 
+ * @geometry:
  *
  * constructor
  *
- * Returns: 
+ * Returns:
  **/
 HklGeometryListItem *hkl_geometry_list_item_new(HklGeometry *geometry)
 {
@@ -990,11 +990,11 @@ HklGeometryListItem *hkl_geometry_list_item_new(HklGeometry *geometry)
 
 /**
  * hkl_geometry_list_item_new_copy: (skip)
- * @self: 
+ * @self:
  *
  * copy constructor
  *
- * Returns: 
+ * Returns:
  **/
 HklGeometryListItem *hkl_geometry_list_item_new_copy(const HklGeometryListItem *self)
 {
@@ -1012,7 +1012,7 @@ HklGeometryListItem *hkl_geometry_list_item_new_copy(const HklGeometryListItem *
 
 /**
  * hkl_geometry_list_item_free: (skip)
- * @self: 
+ * @self:
  *
  * destructor
  **/

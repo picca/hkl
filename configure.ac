@@ -188,7 +188,7 @@ AM_COND_IF([GUI],
 	[PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.18])
 	AM_COND_IF([HKL3D],
 		   [PKG_CHECK_MODULES([GLU], [glu >= 7.7.1])
-	 	    PKG_CHECK_MODULES([GTKGLEXTMM], [gtkglextmm-1.2])
+		    PKG_CHECK_MODULES([GTKGLEXTMM], [gtkglextmm-1.2])
 	])
 ])
 
