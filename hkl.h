@@ -1,7 +1,3 @@
-#include <hkl/hkl-error.h>
 #include <hkl/hkl-detector-factory.h>
+#include <hkl/hkl-geometry-factory.h>
 #include <hkl/hkl-pseudoaxis-factory.h>
-#include <hkl/hkl-pseudoaxis-e4c.h>
-#include <hkl/hkl-pseudoaxis-e6c.h>
-#include <hkl/hkl-pseudoaxis-k4cv.h>
-#include <hkl/hkl-pseudoaxis-k6c.h>
