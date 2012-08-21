@@ -43,6 +43,9 @@ struct _HklPseudoAxisEngineModeAutoInfo {
 	const uint n_functions;
 };
 
+#define HKL_MODE_OPERATIONS_AUTO_DEFAULTS \
+	.set = hkl_pseudo_axis_engine_mode_set_real
+
 #define CHECK_NAN(x, len) do{				\
 		for(uint i=0; i<len; ++i)		\
 			if(gsl_isnan(x[i]))		\

@@ -20,7 +20,6 @@ hkl_c_sources = \
 	hkl-parameter.c \
 	hkl-pseudoaxis.c \
 	hkl-pseudoaxis-auto.c \
-	hkl-pseudoaxis-common.c \
 	hkl-pseudoaxis-common-eulerians.c \
 	hkl-pseudoaxis-common-hkl.c \
 	hkl-pseudoaxis-common-psi.c \
@@ -66,7 +65,6 @@ hkl_public_h_sources = \
 hkl_private_h_sources = \
 	hkl-pseudoaxis-private.h \
 	hkl-pseudoaxis-auto-private.h \
-	hkl-pseudoaxis-common-private.h \
 	hkl-pseudoaxis-common-eulerians-private.h \
 	hkl-pseudoaxis-common-hkl-private.h \
 	hkl-pseudoaxis-common-q-private.h \

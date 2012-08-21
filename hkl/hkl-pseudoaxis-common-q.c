@@ -104,7 +104,7 @@ static HklPseudoAxisEngineMode *mode_q(void)
 		INFO_AUTO("q", axes, functions),
 	};
 	static const HklPseudoAxisEngineModeOperations operations = {
-		HKL_MODE_OPERATIONS_DEFAULTS,
+		HKL_MODE_OPERATIONS_AUTO_DEFAULTS,
 		.get = get_q_real,
 	};
 
@@ -214,7 +214,7 @@ static HklPseudoAxisEngineMode *mode_q2(void)
 		INFO_AUTO("q2", axes, functions),
 	};
 	static const HklPseudoAxisEngineModeOperations operations = {
-		HKL_MODE_OPERATIONS_DEFAULTS,
+		HKL_MODE_OPERATIONS_AUTO_DEFAULTS,
 		.get = get_q2_real,
 	};
 

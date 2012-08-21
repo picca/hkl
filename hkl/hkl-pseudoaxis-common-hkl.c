@@ -26,7 +26,6 @@
 #include <ccan/array_size/array_size.h>
 
 #include "hkl-pseudoaxis-auto-private.h"
-#include "hkl-pseudoaxis-common-private.h"
 #include "hkl-pseudoaxis-common-hkl-private.h"
 
 /* #define DEBUG */
@@ -586,7 +585,7 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 	HklVector ki, kf, Q, n;
 
 	if (!self || !engine || !engine->mode || !geometry || !detector || !sample
-	    || !hkl_pseudo_axis_engine_init_func(self, engine, geometry, detector, sample)){
+	    || !hkl_pseudo_axis_engine_mode_init_real(self, engine, geometry, detector, sample, error)){
 		hkl_error_set(error, "internal error");
 		return HKL_FALSE;
 	}

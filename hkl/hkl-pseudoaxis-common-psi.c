@@ -27,7 +27,6 @@
 
 #include "hkl-pseudoaxis-auto-private.h"
 #include "hkl-pseudoaxis-common-psi-private.h"
-#include "hkl-pseudoaxis-common-private.h"
 
 
 /***********************/
@@ -124,7 +123,7 @@ static int hkl_pseudo_axis_engine_mode_init_psi_real(HklPseudoAxisEngineMode *ba
 
 	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
-	if (!hkl_pseudo_axis_engine_init_func(base, engine, geometry, detector, sample)){
+	if (!hkl_pseudo_axis_engine_mode_init_real(base, engine, geometry, detector, sample, error)){
 		hkl_error_set(error, "internal error");
 		return HKL_FALSE;
 	}

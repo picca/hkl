@@ -51,10 +51,6 @@ struct _HklPseudoAxisEngineModeOperations
 		    HklError **error);
 };
 
-#define HKL_MODE_OPERATIONS_DEFAULTS .init = NULL,		\
-		.get = NULL,					\
-		.set = hkl_pseudo_axis_engine_mode_set_real
-
 #define INFO(n, ax) .name = n, .axes=ax, .n_axes=ARRAY_SIZE(ax)
 #define INFO_WITH_PARAMS(name, axes, parameters) INFO(name, axes), .parameters=parameters, .n_parameters=ARRAY_SIZE(parameters)
 
@@ -183,6 +179,34 @@ static inline void hkl_pseudo_axis_engine_mode_free(HklPseudoAxisEngineMode *sel
 		self->sample_init = NULL;
 	}
 	free(self);
+}
+
+static int hkl_pseudo_axis_engine_mode_init_real(HklPseudoAxisEngineMode *mode,
+						 HklPseudoAxisEngine *self,
+						 HklGeometry *geometry,
+						 HklDetector *detector,
+						 HklSample *sample,
+						 HklError **error)
+{
+	if (!self || !mode || !geometry || !detector || !sample)
+		return HKL_FALSE;
+
+	/* update the geometry internals */
+	hkl_geometry_update(geometry);
+
+	if(mode->geometry_init)
+		hkl_geometry_free(mode->geometry_init);
+	mode->geometry_init = hkl_geometry_new_copy(geometry);
+
+	if(mode->detector_init)
+		hkl_detector_free(mode->detector_init);
+	mode->detector_init = hkl_detector_new_copy(detector);
+
+	if(mode->sample_init)
+		hkl_sample_free(mode->sample_init);
+	mode->sample_init = hkl_sample_new_copy(sample);
+
+	return HKL_TRUE;
 }
 
 /***********************/

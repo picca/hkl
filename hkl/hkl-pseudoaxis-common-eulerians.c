@@ -139,7 +139,6 @@ static HklPseudoAxisEngineMode *mode_eulerians()
 		INFO_WITH_PARAMS("eulerians", axes, parameters),
 	};
 	static const HklPseudoAxisEngineModeOperations operations = {
-		HKL_MODE_OPERATIONS_DEFAULTS,
 		.get = hkl_pseudo_axis_engine_mode_get_eulerians_real,
 		.set = hkl_pseudo_axis_engine_mode_set_eulerians_real,
 	};
