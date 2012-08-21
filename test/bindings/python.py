@@ -62,18 +62,6 @@ class TestAPI(unittest.TestCase):
         for r, w in zip(values_w, values_r):
             self.assertAlmostEqual(r, w)
 
-    def test_sample_api(self):
-        """
-        enforce the HklSample API
-        """
-
-        # create a sample
-        sample = Hkl.Sample.new("toto", Hkl.SampleType.MONOCRYSTAL)
-        self.assertTrue(sample.name == "toto")
-
-        #set the lattice parameters
-        sample.set_lattice(1.54, 1.54, 1.54, 90., 90., 90.)
-
     def test_pseudoaxis_api(self):
         """
         enforce the HklPseudoAxisEngine API
@@ -110,6 +98,19 @@ class TestAPI(unittest.TestCase):
         # SET_AXES(geom, 30., 0., 0., 60.);
         # hkl_pseudo_axis_engine_get(engine, NULL);
         # CHECK_PSEUDOAXES(engine, 0., 0., 1.);
+
+    def test_sample_api(self):
+        """
+        enforce the HklSample API
+        """
+
+        # create a sample
+        sample = Hkl.Sample.new("toto", Hkl.SampleType.MONOCRYSTAL)
+        self.assertTrue(sample.name == "toto")
+
+        #set the lattice parameters
+        sample.set_lattice(1.54, 1.54, 1.54, 90., 90., 90.)
+
 
 if __name__ == '__main__':
     unittest.main()
