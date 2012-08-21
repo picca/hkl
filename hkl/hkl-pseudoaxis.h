@@ -47,9 +47,9 @@ struct _HklPseudoAxis
 struct _HklPseudoAxisEngineModeInfo {
 	const char *name;
 	const char **axes;
-	const uint n_axes;
+	uint n_axes;
 	const HklParameter *parameters;
-	const uint n_parameters;
+	uint n_parameters;
 };
 
 struct _HklPseudoAxisEngineMode
@@ -67,7 +67,7 @@ struct _HklPseudoAxisEngineMode
 struct _HklPseudoAxisEngineInfo {
 	const char *name;
 	const HklPseudoAxis **pseudo_axes;
-	const uint n_pseudo_axes;
+	uint n_pseudo_axes;
 };
 
 struct _HklPseudoAxisEngine
