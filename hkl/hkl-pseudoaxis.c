@@ -557,33 +557,3 @@ void hkl_pseudo_axis_engine_list_fprintf(FILE *f,
 		hkl_pseudo_axis_engine_fprintf(f, engine);
 	}
 }
-
-/*********************/
-/* binding dedicated */
-/*********************/
-
-/**
- * hkl_pseudo_axis_engine_list_engines:
- * @self: the #HklPseudoAxisEngineList
- * @len: (out caller-allocates): the number of returned HklPseudoAxisEngine
- *
- * return all the engines of the list (the returned array must be free)
- *
- * Returns: (array length=len) (transfer container):
- **/
-HklPseudoAxisEngine** hkl_pseudo_axis_engine_list_engines(HklPseudoAxisEngineList *self, uint *len)
-{
-	HklPseudoAxisEngine **engines;
-	HklPseudoAxisEngine *engine;
-	uint i = 0;
-
-	/* first we need to compute the number of engines, this could
-	be optimize if we maintain a len member in the list */
-	*len = 0;
-	list_for_each(&self->engines, engine, list) (*len)++;
-
-	engines = malloc(sizeof(*engines) * (*len));
-	list_for_each(&self->engines, engine, list) engines[i++] = engine;
-
-	return engines;
-}

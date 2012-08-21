@@ -100,7 +100,9 @@ if HAVE_INTROSPECTION
 libhkl_la_SOURCES += \
 	hkl-types.c \
 	hkl-type-builtins.c \
-	hkl-type-builtins.h
+	hkl-type-builtins.h \
+	hkl-binding.c \
+	hkl-binding-private.h
 
 hklinclude_HEADERS += hkl-types.h
 
@@ -122,6 +124,7 @@ introspection_files = \
 	hkl-sample.h \
 	hkl-pseudoaxis.h \
 	hkl-pseudoaxis-factory.h \
+	hkl-binding-private.h \
 	hkl-types.h \
 	hkl-error.c \
 	hkl-vector.c \
@@ -140,6 +143,7 @@ introspection_files = \
 	hkl-sample.c \
 	hkl-pseudoaxis.c \
 	hkl-pseudoaxis-factory.c \
+	hkl-binding.c \
 	hkl-types.c \
 	hkl-type-builtins.c \
 	hkl-type-builtins.h

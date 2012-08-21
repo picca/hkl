@@ -547,53 +547,6 @@ int hkl_geometry_closest_from_geometry_with_range(HklGeometry *self, HklGeometry
 }
 
 /**
- * hkl_geometry_get_axes_values_unit:
- * @self:
- * @len: (out caller-allocates)
- *
- * return all the axes values (must be free by the user)
- *
- * Returns: (array length=len) (transfer full):
- **/
-double *hkl_geometry_get_axes_values_unit(const HklGeometry *self, unsigned int *len)
-{
-	double *values;
-	uint i;
-
-	if(!self || !len || self->len == 0)
-		return NULL;
-
-	*len = self->len;
-	values = malloc(self->len * sizeof(*values));
-	if(!values)
-		return NULL;
-	for(i=0; i<self->len; ++i)
-		values[i] = hkl_axis_get_value_unit(&self->axes[i]);
-
-	return values;
-}
-
-/**
- * hkl_geometry_set_axes_values_unit:
- * @self:
- * @values: (array length=len):
- * @len:
- *
- * set the axes values
- **/
-void hkl_geometry_set_axes_values_unit(HklGeometry *self, double *values, unsigned int len)
-{
-	uint i;
-
-	if (!self || !values || len != self->len)
-		return;
-
-	for(i=0; i<self->len; ++i)
-		hkl_axis_set_value_unit(&self->axes[i], values[i]);
-	hkl_geometry_update(self);
-}
-
-/**
  * hkl_geometry_fprintf: (skip)
  * @file:
  * @self:

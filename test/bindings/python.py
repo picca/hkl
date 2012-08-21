@@ -98,6 +98,7 @@ class TestAPI(unittest.TestCase):
 
         for engine in engines.engines():
             self.assertTrue(type(engine) is Hkl.PseudoAxisEngine)
+            self.assertTrue(type(engine.info.name) is str)
 
         # check the set result
         for item in engines.geometries.items():

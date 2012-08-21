@@ -139,10 +139,6 @@ extern int hkl_geometry_is_valid(const HklGeometry *self);
 
 extern void hkl_geometry_fprintf(FILE *file, const HklGeometry *self);
 
-/* binding dedicated (please do not use) */
-extern double *hkl_geometry_get_axes_values_unit(const HklGeometry *self, unsigned int *len);
-extern void hkl_geometry_set_axes_values_unit(HklGeometry *self, double *values, unsigned int len);
-
 /*******************/
 /* HklGeometryList */
 /*******************/
@@ -166,9 +162,6 @@ extern void hkl_geometry_list_multiply(HklGeometryList *self);
 extern void hkl_geometry_list_multiply_from_range(HklGeometryList *self);
 
 extern void hkl_geometry_list_remove_invalid(HklGeometryList *self);
-
-/* binding dedicated (please do not use) */
-HklGeometryListItem** hkl_geometry_list_items(const HklGeometryList *self, unsigned int *len);
 
 /***********************/
 /* HklGeometryListItem */

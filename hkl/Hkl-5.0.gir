@@ -911,14 +911,13 @@ Returns:</doc>
         </return-value>
       </method>
       <method name="items" c:identifier="hkl_geometry_list_items">
-        <return-value transfer-ownership="full">
-          <type name="GeometryListItem" c:type="HklGeometryListItem**"/>
+        <doc xml:whitespace="preserve">free the list with g_slist_free when done.</doc>
+        <return-value transfer-ownership="container">
+          <doc xml:whitespace="preserve">list of items,</doc>
+          <type name="GLib.SList" c:type="GSList*">
+            <type name="GeometryListItem"/>
+          </type>
         </return-value>
-        <parameters>
-          <parameter name="len" transfer-ownership="none">
-            <type name="guint" c:type="unsigned int*"/>
-          </parameter>
-        </parameters>
       </method>
       <method name="multiply"
               c:identifier="hkl_geometry_list_multiply"
@@ -2216,21 +2215,13 @@ Returns:</doc>
       </field>
       <method name="engines"
               c:identifier="hkl_pseudo_axis_engine_list_engines">
-        <doc xml:whitespace="preserve">return all the engines of the list (the returned array must be free)</doc>
+        <doc xml:whitespace="preserve">free the list with g_slist_free when done.</doc>
         <return-value transfer-ownership="container">
-          <array length="0" zero-terminated="0" c:type="HklPseudoAxisEngine**">
-            <type name="PseudoAxisEngine" c:type="HklPseudoAxisEngine*"/>
-          </array>
+          <doc xml:whitespace="preserve">list of engines,</doc>
+          <type name="GLib.SList" c:type="GSList*">
+            <type name="PseudoAxisEngine"/>
+          </type>
         </return-value>
-        <parameters>
-          <parameter name="len"
-                     direction="out"
-                     caller-allocates="1"
-                     transfer-ownership="full">
-            <doc xml:whitespace="preserve">the number of returned HklPseudoAxisEngine</doc>
-            <type name="guint" c:type="uint*"/>
-          </parameter>
-        </parameters>
       </method>
       <method name="free"
               c:identifier="hkl_pseudo_axis_engine_list_free"
