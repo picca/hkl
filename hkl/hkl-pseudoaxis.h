@@ -44,28 +44,6 @@ struct _HklPseudoAxis
 	struct list_node list; /* PseudoAxisEngine */
 };
 
-struct _HklPseudoAxisEngineModeOperations
-{
-	int (* init)(HklPseudoAxisEngineMode *self,
-		     HklPseudoAxisEngine *engine,
-		     HklGeometry *geometry,
-		     HklDetector *detector,
-		     HklSample *sample,
-		     HklError **error);
-	int (* get)(HklPseudoAxisEngineMode *self,
-		    HklPseudoAxisEngine *engine,
-		    HklGeometry *geometry,
-		    HklDetector *detector,
-		    HklSample *sample,
-		    HklError **error);
-	int (* set)(HklPseudoAxisEngineMode *self,
-		    HklPseudoAxisEngine *engine,
-		    HklGeometry *geometry,
-		    HklDetector *detector,
-		    HklSample *sample,
-		    HklError **error);
-};
-
 struct _HklPseudoAxisEngineModeInfo {
 	const char *name;
 	const char **axes;

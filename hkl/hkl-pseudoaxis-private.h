@@ -29,6 +29,28 @@
 
 HKL_BEGIN_DECLS
 
+struct _HklPseudoAxisEngineModeOperations
+{
+	int (* init)(HklPseudoAxisEngineMode *self,
+		     HklPseudoAxisEngine *engine,
+		     HklGeometry *geometry,
+		     HklDetector *detector,
+		     HklSample *sample,
+		     HklError **error);
+	int (* get)(HklPseudoAxisEngineMode *self,
+		    HklPseudoAxisEngine *engine,
+		    HklGeometry *geometry,
+		    HklDetector *detector,
+		    HklSample *sample,
+		    HklError **error);
+	int (* set)(HklPseudoAxisEngineMode *self,
+		    HklPseudoAxisEngine *engine,
+		    HklGeometry *geometry,
+		    HklDetector *detector,
+		    HklSample *sample,
+		    HklError **error);
+};
+
 #define HKL_MODE_OPERATIONS_DEFAULTS .init = NULL,		\
 		.get = NULL,					\
 		.set = hkl_pseudo_axis_engine_mode_set_real
