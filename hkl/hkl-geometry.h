@@ -167,6 +167,9 @@ extern void hkl_geometry_list_multiply_from_range(HklGeometryList *self);
 
 extern void hkl_geometry_list_remove_invalid(HklGeometryList *self);
 
+/* binding dedicated (please do not use) */
+HklGeometryListItem** hkl_geometry_list_items(const HklGeometryList *self, unsigned int *len);
+
 /***********************/
 /* HklGeometryListItem */
 /***********************/

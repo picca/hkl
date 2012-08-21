@@ -98,12 +98,12 @@ class TestAPI(unittest.TestCase):
 
         for engine in engines.engines():
             self.assertTrue(type(engine) is Hkl.PseudoAxisEngine)
-        #     for geometry in engine.geometries:
-        #         print geometry.get_axes_values_unit()
+
+        # check the set result
+        for item in engines.geometries.items():
+            self.assertTrue(type(item) is Hkl.GeometryListItem)
 
         self.assertTrue(True)
-
-        # engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "hkl");
 
         # /* geometry -> pseudo */
         # SET_AXES(geom, 30., 0., 0., 60.);
