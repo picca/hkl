@@ -139,7 +139,7 @@ extern int hkl_geometry_is_valid(const HklGeometry *self);
 
 extern void hkl_geometry_fprintf(FILE *file, const HklGeometry *self);
 
-/* binding */
+/* binding dedicated (please do not use) */
 extern double *hkl_geometry_get_axes_values_unit(const HklGeometry *self, unsigned int *len);
 extern void hkl_geometry_set_axes_values_unit(HklGeometry *self, double *values, unsigned int len);
 
