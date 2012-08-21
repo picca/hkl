@@ -42,6 +42,12 @@ extern void hkl_geometry_set_axes_values_unit(HklGeometry *self, double *values,
 
 extern GSList* hkl_geometry_list_items(HklGeometryList *self);
 
+/***********************/
+/* HklPseudoAxisEngine */
+/***********************/
+
+extern GSList* hkl_pseudo_axis_engine_pseudo_axes(HklPseudoAxisEngine *self);
+
 /***************************/
 /* HklPSeudoAxisEngineList */
 /***************************/

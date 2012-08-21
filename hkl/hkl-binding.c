@@ -89,6 +89,25 @@ GSList* hkl_geometry_list_items(HklGeometryList *self)
 }
 
 /**
+ * hkl_pseudo_axis_engine_pseudo_axes:
+ * @self: the this ptr
+ *
+ * Return value: (element-type HklPseudoAxis) (transfer container): list of pseudo axes,
+ *               free the list with g_slist_free when done.
+ **/
+GSList* hkl_pseudo_axis_engine_pseudo_axes(HklPseudoAxisEngine *self)
+{
+	GSList *list = NULL;
+	HklPseudoAxis *pseudo_axis;
+
+	list_for_each(&self->pseudo_axes, pseudo_axis, list){
+		list = g_slist_append(list, pseudo_axis);
+	}
+
+	return list;
+}
+
+/**
  * hkl_pseudo_axis_engine_list_engines:
  * @self: the #HklPseudoAxisEngineList
  *
