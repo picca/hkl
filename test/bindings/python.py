@@ -93,6 +93,7 @@ class TestAPI(unittest.TestCase):
         # check the set result
         for item in engines.geometries.items():
             self.assertTrue(type(item) is Hkl.GeometryListItem)
+            self.assertTrue(type(item.geometry) is Hkl.Geometry)
 
         self.assertTrue(True)
 
