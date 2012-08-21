@@ -153,6 +153,13 @@ extern int hkl_pseudo_axis_engine_list_get(HklPseudoAxisEngineList *self);
 
 extern void hkl_pseudo_axis_engine_list_fprintf(FILE *f,
 						const HklPseudoAxisEngineList *self);
+
+/*********************/
+/* binding dedicated */
+/*********************/
+
+HklPseudoAxisEngine** hkl_pseudo_axis_engine_list_engines(HklPseudoAxisEngineList *self, uint *len);
+
 HKL_END_DECLS
 
 #endif /* __HKL_PSEUDOAXIS_H__ */
