@@ -84,6 +84,10 @@ class TestAPI(unittest.TestCase):
         engines.init(geometry, detector, sample)
         engines.get()
 
+        # get the hkl engine and do a computation
+        hkl = engines.get_by_name("hkl")
+        hkl.get_values_unit()
+
         # check that all the values computed are reachable
         for engine in engines.engines():
             self.assertTrue(type(engine) is Hkl.PseudoAxisEngine)
