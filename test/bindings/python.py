@@ -84,11 +84,13 @@ class TestAPI(unittest.TestCase):
         engines.init(geometry, detector, sample)
         engines.get()
 
+        # check that all the values computed are reachable
         for engine in engines.engines():
             self.assertTrue(type(engine) is Hkl.PseudoAxisEngine)
             self.assertTrue(type(engine.info.name) is str)
             for pseudo_axis in engine.pseudo_axes():
                 self.assertTrue(type(pseudo_axis) is Hkl.PseudoAxis)
+                self.assertTrue(type(pseudo_axis.parent.value) is float)
 
         # check the set result
         for item in engines.geometries.items():
@@ -117,4 +119,3 @@ class TestAPI(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
