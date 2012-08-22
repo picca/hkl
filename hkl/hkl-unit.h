@@ -43,7 +43,7 @@ struct _HklUnit
 };
 
 static HklUnit const hkl_unit_angle_deg = {HKL_UNIT_ANGLE_DEG, "Degree", "°"};
-static HklUnit const hkl_unit_angle_rad = {HKL_UNIT_ANGLE_RAD, "Radian", ""};
+static HklUnit const hkl_unit_angle_rad = {HKL_UNIT_ANGLE_RAD, "Radian", "rad"};
 static HklUnit const hkl_unit_length_nm = {HKL_UNIT_LENGTH_NM, "Nano Meter", "nm"};
 
 extern HklUnit *hkl_unit_dup(const HklUnit *self);
