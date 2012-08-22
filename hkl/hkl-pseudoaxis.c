@@ -291,9 +291,9 @@ void hkl_pseudo_axis_engine_set_values(HklPseudoAxisEngine *self,
 }
 
 /**
- * hkl_pseudo_axis_engine_get_values:
- * @self:
- * @:
+ * hkl_pseudo_axis_engine_get_values: (skip)
+ * @self: the this ptr
+ * @values:
  * @len:
  *
  * get the values of all the pseudo axes
@@ -427,8 +427,8 @@ int hkl_pseudo_axis_engine_list_add(HklPseudoAxisEngineList *self,
 }
 
 /**
- * hkl_pseudo_axis_engine_list_get_by_name: (skip)
- * @self: the engine list
+ * hkl_pseudo_axis_engine_list_get_by_name:
+ * @self: the this ptr
  * @name: the name of the requested #HklPseudoAxisEngin
  *
  * get the #HklPseudoAxisEngine by its name from the list.

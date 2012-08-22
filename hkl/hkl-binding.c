@@ -108,6 +108,29 @@ GSList* hkl_pseudo_axis_engine_pseudo_axes(HklPseudoAxisEngine *self)
 }
 
 /**
+ * hkl_pseudo_axis_engine_get_values_unit:
+ * @self: the this ptr
+ * @len: (out caller-allocates): the length of the returned array
+ *
+ * Return value: (array length=len) (transfer full): list of pseudo axes values with unit
+ *               free the array with free when done 
+ **/
+double *hkl_pseudo_axis_engine_get_values_unit(HklPseudoAxisEngine *self,
+					       unsigned int *len)
+{
+	HklPseudoAxis *pseudo_axis;
+	double *values;
+	*len=0;
+
+	values = malloc(sizeof(*values) * self->info->n_pseudo_axes);
+	list_for_each(&self->pseudo_axes, pseudo_axis, list){
+		values[(*len)++] = hkl_parameter_get_value_unit(&pseudo_axis->parent);
+	}
+
+	return values;
+}
+
+/**
  * hkl_pseudo_axis_engine_list_engines:
  * @self: the #HklPseudoAxisEngineList
  *

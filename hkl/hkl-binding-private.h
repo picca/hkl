@@ -48,6 +48,9 @@ extern GSList* hkl_geometry_list_items(HklGeometryList *self);
 
 extern GSList* hkl_pseudo_axis_engine_pseudo_axes(HklPseudoAxisEngine *self);
 
+extern double *hkl_pseudo_axis_engine_get_values_unit(HklPseudoAxisEngine *self,
+						      unsigned int *len);
+
 /***************************/
 /* HklPSeudoAxisEngineList */
 /***************************/

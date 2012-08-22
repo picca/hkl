@@ -86,7 +86,8 @@ class TestAPI(unittest.TestCase):
 
         # get the hkl engine and do a computation
         hkl = engines.get_by_name("hkl")
-        hkl.get_values_unit()
+        values_r = hkl.get_values_unit()
+        print values_r
 
         # check that all the values computed are reachable
         for engine in engines.engines():
