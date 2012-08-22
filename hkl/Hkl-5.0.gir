@@ -1839,8 +1839,7 @@ Returns:</doc>
         </parameters>
       </method>
       <method name="get_value_unit"
-              c:identifier="hkl_parameter_get_value_unit"
-              introspectable="0">
+              c:identifier="hkl_parameter_get_value_unit">
         <doc xml:whitespace="preserve">get the value of the parameter express in the punit #Hklunit
 @todo test
 Returns:</doc>

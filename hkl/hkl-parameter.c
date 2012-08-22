@@ -143,8 +143,8 @@ void hkl_parameter_set_value(HklParameter *self, double value)
 }
 
 /**
- * hkl_parameter_get_value_unit: (skip)
- * @self:
+ * hkl_parameter_get_value_unit:
+ * @self: the this ptr
  *
  * get the value of the parameter express in the punit #Hklunit
  * @todo test

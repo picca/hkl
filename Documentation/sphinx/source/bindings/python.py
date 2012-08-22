@@ -49,6 +49,30 @@ geometry.set_axes_values_unit(values)
 # compute all the pseudo axes managed by all engines
 engines.get()
 
+# lets print the raw pseudo axes values for each engine.
+for engine in engines.engines():
+    print("\"{}\"".format(engine.info.name))
+    for pseudo_axis in engine.pseudo_axes():
+        unit = ""
+        if pseudo_axis.parent.unit:
+            unit = pseudo_axis.parent.unit.repr
+        print("  {0:10} : {1:10f} {2}".format(pseudo_axis.parent.name,
+                                              pseudo_axis.parent.value,
+                                              unit))
+
+# now it would be nice to see all thoses values with the user units
+# (rad -> deg etc...)
+for engine in engines.engines():
+    print("\n\"{}\"".format(engine.info.name))
+    for pseudo_axis in engine.pseudo_axes():
+        unit = ""
+        if pseudo_axis.parent.punit:
+            unit = pseudo_axis.parent.punit.repr
+        print("  {0:10} : {1:10f} {2}".format(pseudo_axis.parent.name,
+                                              pseudo_axis.parent.get_value_unit(),
+                                              unit))
+
+
 # engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "hkl");
 
 # /* geometry -> pseudo */
