@@ -2,8 +2,8 @@
 #
 
 # You can set these variables from the command line.
-SPHINXOPTS    =
-SPHINXBUILD   = sphinx-build
+SPHINXOPTS    = -E
+SPHINXBUILD   = env GI_TYPELIB_PATH=$(abs_top_builddir)/hkl $(LIBTOOL) --mode=execute -dlopen $(abs_top_builddir)/hkl/libhkl.la sphinx-build
 PAPER         =
 BUILDDIR      = build
 

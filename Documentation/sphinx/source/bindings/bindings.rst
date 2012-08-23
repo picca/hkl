@@ -12,3 +12,8 @@ Python
 hkl computation:
 
 .. literalinclude:: python.py
+
+let's compute an hkl trajectory
+
+.. plot:: pyplots/trajectory.py
+

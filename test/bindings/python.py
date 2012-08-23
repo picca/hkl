@@ -127,8 +127,9 @@ class TestAPI(unittest.TestCase):
 
         self.assertTrue(True)
 
-    def doc_exemple(self):
-        execfile("../../Documentation/sphinx/source/bindings/python.py")
+    def test_doc_exemple(self):
+        #execfile("../../Documentation/sphinx/source/bindings/python.py")
+        execfile("../../Documentation/sphinx/source/pyplots/trajectory.py")
 
         self.assertTrue(False)
 
