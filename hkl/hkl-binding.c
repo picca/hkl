@@ -20,18 +20,42 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 
+#include <glib.h>
+#include <string.h>
 #include "hkl-binding-private.h"
+
+/************/
+/* Geometry */
+/************/
+
+/**
+ * hkl_geometry_axes:
+ * @self: the this ptr
+ *
+ * Returns: (element-type HklAxis) (transfer container): list of HklAxis,
+ *          free the list with g_slist_free when done.
+ **/
+GSList *hkl_geometry_axes(HklGeometry *self)
+{
+	GSList *list = NULL;
+	guint i;
+
+	for(i=0; i<self->len; ++i)
+		list = g_slist_append(list, &self->axes[i]);
+
+	return list;
+}
+
 
 /**
  * hkl_geometry_get_axes_values_unit:
- * @self:
- * @len: (out caller-allocates)
+ * @self: the this ptr
+ * @len: (out caller-allocates): the length of the returned array
  *
- * return all the axes values (must be free by the user)
- *
- * Returns: (array length=len) (transfer full):
+ * Return value: (array length=len) (transfer container): list of axes values,
+ *          free the list with free when done.
  **/
-double *hkl_geometry_get_axes_values_unit(const HklGeometry *self, unsigned int *len)
+double *hkl_geometry_get_axes_values_unit(const HklGeometry *self, guint *len)
 {
 	double *values;
 	uint i;
@@ -41,21 +65,18 @@ double *hkl_geometry_get_axes_values_unit(const HklGeometry *self, unsigned int 
 
 	*len = self->len;
 	values = malloc(self->len * sizeof(*values));
-	if(!values)
-		return NULL;
+
 	for(i=0; i<self->len; ++i)
-		values[i] = hkl_axis_get_value_unit(&self->axes[i]);
+		values[i] = hkl_parameter_get_value_unit(&self->axes[i].parent_instance);
 
 	return values;
 }
 
 /**
  * hkl_geometry_set_axes_values_unit:
- * @self:
- * @values: (array length=len):
- * @len:
- *
- * set the axes values
+ * @self: the this ptr
+ * @values: (array length=len): the values to set.
+ * @len: the length of the values array.
  **/
 void hkl_geometry_set_axes_values_unit(HklGeometry *self, double *values, unsigned int len)
 {
@@ -68,6 +89,10 @@ void hkl_geometry_set_axes_values_unit(HklGeometry *self, double *values, unsign
 		hkl_axis_set_value_unit(&self->axes[i], values[i]);
 	hkl_geometry_update(self);
 }
+
+/*******************/
+/* HklGeometryList */
+/*******************/
 
 /**
  * hkl_geometry_list_items:
@@ -87,6 +112,21 @@ GSList* hkl_geometry_list_items(HklGeometryList *self)
 
 	return list;
 }
+
+/***********************/
+/* HklPseudoAxisEngine */
+/***********************/
+
+#define HKL_PSEUDO_AXIS_ENGINE_ERROR hkl_pseudo_axis_engine_error_quark ()
+
+GQuark hkl_pseudo_axis_engine_error_quark (void)
+{
+	return g_quark_from_static_string ("hkl-pseudo-axis-engine-error-quark");
+}
+
+typedef enum {
+	HKL_PSEUDO_AXIS_ENGINE_ERROR_SET /* can not set the pseudo axis engine */
+} HklPseudoAxisEngineError;
 
 /**
  * hkl_pseudo_axis_engine_pseudo_axes:
@@ -120,14 +160,61 @@ double *hkl_pseudo_axis_engine_get_values_unit(HklPseudoAxisEngine *self,
 {
 	HklPseudoAxis *pseudo_axis;
 	double *values;
-	*len=0;
 
 	values = malloc(sizeof(*values) * self->info->n_pseudo_axes);
+
+	*len=0;
 	list_for_each(&self->pseudo_axes, pseudo_axis, list){
 		values[(*len)++] = hkl_parameter_get_value_unit(&pseudo_axis->parent);
 	}
 
 	return values;
+}
+
+/**
+ * hkl_pseudo_axis_engine_set_values_unit:
+ * @self: the this ptr
+ * @values: (array length=len): the values to set
+ * @len: the len of the values array
+ * @error: return location of a GError or NULL
+ *
+ * compute the #HklGeometry angles for this #HklPseudoAxisEngine
+ *
+ * Return value: TRUE on success or FALSE if an error occurred
+ **/
+extern gboolean hkl_pseudo_axis_engine_set_values_unit(HklPseudoAxisEngine *self,
+						       double values[], unsigned int len,
+						       GError **error)
+{
+	HklPseudoAxis *pseudo_axis;
+	uint i = 0;
+	HklError *err = NULL;
+
+	g_return_val_if_fail(error == NULL ||*error == NULL, FALSE);
+
+	if(len != self->info->n_pseudo_axes)
+		return FALSE;
+
+	list_for_each(&self->pseudo_axes, pseudo_axis, list){
+		pseudo_axis->parent.value = values[i];
+		++i;
+	}
+
+	if(!hkl_pseudo_axis_engine_set(self, &err)){
+		g_assert(&err == NULL || err != NULL);
+
+		g_set_error(error,
+			    HKL_PSEUDO_AXIS_ENGINE_ERROR,
+			    HKL_PSEUDO_AXIS_ENGINE_ERROR_SET,
+			    strdup(err->message));
+
+		hkl_error_clear(&err);
+
+		return FALSE;
+	}
+	g_assert(error != NULL ||*error != NULL);
+
+	return TRUE;
 }
 
 /**

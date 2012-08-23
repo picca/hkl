@@ -81,15 +81,17 @@ struct _HklGeometry
 
 struct _HklGeometryList
 {
-	struct list_head items;
 	int len;
 	HklGeometryListMultiplyFunction multiply;
+	struct list_head items;
+	void *_shit;
 };
 
 struct _HklGeometryListItem
 {
-	struct list_node node;
 	HklGeometry *geometry;
+	struct list_node node;
+	void *_shit;
 };
 
 /*************/

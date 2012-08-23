@@ -636,6 +636,15 @@ Returns:</doc>
           <type name="Holder" c:type="HklHolder*"/>
         </return-value>
       </method>
+      <method name="axes" c:identifier="hkl_geometry_axes">
+        <doc xml:whitespace="preserve">free the list with g_slist_free when done.</doc>
+        <return-value transfer-ownership="container">
+          <doc xml:whitespace="preserve">list of HklAxis,</doc>
+          <type name="GLib.SList" c:type="GSList*">
+            <type name="Axis"/>
+          </type>
+        </return-value>
+      </method>
       <method name="closest_from_geometry_with_range"
               c:identifier="hkl_geometry_closest_from_geometry_with_range"
               introspectable="0">
@@ -690,8 +699,9 @@ Returns:</doc>
       </method>
       <method name="get_axes_values_unit"
               c:identifier="hkl_geometry_get_axes_values_unit">
-        <doc xml:whitespace="preserve">return all the axes values (must be free by the user)</doc>
-        <return-value transfer-ownership="full">
+        <doc xml:whitespace="preserve">free the list with free when done.</doc>
+        <return-value transfer-ownership="container">
+          <doc xml:whitespace="preserve">list of axes values,</doc>
           <array length="0" zero-terminated="0" c:type="double*">
             <type name="gdouble" c:type="double"/>
           </array>
@@ -699,9 +709,9 @@ Returns:</doc>
         <parameters>
           <parameter name="len"
                      direction="out"
-                     caller-allocates="0"
+                     caller-allocates="1"
                      transfer-ownership="full">
-            <doc xml:whitespace="preserve">(out caller-allocates)</doc>
+            <doc xml:whitespace="preserve">the length of the returned array</doc>
             <type name="guint" c:type="unsigned int*"/>
           </parameter>
         </parameters>
@@ -775,17 +785,18 @@ Returns:</doc>
       </method>
       <method name="set_axes_values_unit"
               c:identifier="hkl_geometry_set_axes_values_unit">
-        <doc xml:whitespace="preserve">set the axes values</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
           <parameter name="values" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the values to set.</doc>
             <array length="1" zero-terminated="0" c:type="double*">
               <type name="gdouble" c:type="double"/>
             </array>
           </parameter>
           <parameter name="len" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the length of the values array.</doc>
             <type name="guint" c:type="unsigned int"/>
           </parameter>
         </parameters>
@@ -872,15 +883,18 @@ Returns:</doc>
             glib:type-name="HklGeometryList"
             glib:get-type="hkl_geometry_list_get_type"
             c:symbol-prefix="geometry_list">
-      <field name="items" writable="1">
-        <type name="gpointer" c:type="gpointer"/>
-      </field>
       <field name="len" writable="1">
         <type name="gint" c:type="int"/>
       </field>
       <field name="multiply" writable="1">
         <type name="GeometryListMultiplyFunction"
               c:type="HklGeometryListMultiplyFunction"/>
+      </field>
+      <field name="items" writable="1">
+        <type name="gpointer" c:type="gpointer"/>
+      </field>
+      <field name="_shit" writable="1">
+        <type name="gpointer" c:type="void*"/>
       </field>
       <constructor name="new"
                    c:identifier="hkl_geometry_list_new"
@@ -996,11 +1010,14 @@ all the items of the list.</doc>
             glib:type-name="HklGeometryListItem"
             glib:get-type="hkl_geometry_list_item_get_type"
             c:symbol-prefix="geometry_list_item">
+      <field name="geometry" writable="1">
+        <type name="Geometry" c:type="HklGeometry*"/>
+      </field>
       <field name="node" writable="1">
         <type name="gpointer" c:type="gpointer"/>
       </field>
-      <field name="geometry" writable="1">
-        <type name="Geometry" c:type="HklGeometry*"/>
+      <field name="_shit" writable="1">
+        <type name="gpointer" c:type="void*"/>
       </field>
       <constructor name="new"
                    c:identifier="hkl_geometry_list_item_new"
@@ -2002,6 +2019,9 @@ Returns:</doc>
       <field name="list" writable="1">
         <type name="gpointer" c:type="gpointer"/>
       </field>
+      <field name="_shit" writable="1">
+        <type name="gpointer" c:type="void*"/>
+      </field>
       <function name="fprintf"
                 c:identifier="hkl_pseudo_axis_fprintf"
                 introspectable="0">
@@ -2036,6 +2056,12 @@ Returns:</doc>
       <field name="sample" writable="1">
         <type name="Sample" c:type="HklSample*"/>
       </field>
+      <field name="mode" writable="1">
+        <type name="PseudoAxisEngineMode" c:type="HklPseudoAxisEngineMode*"/>
+      </field>
+      <field name="engines" writable="1">
+        <type name="PseudoAxisEngineList" c:type="HklPseudoAxisEngineList*"/>
+      </field>
       <field name="modes" writable="1">
         <type name="gpointer" c:type="gpointer"/>
       </field>
@@ -2045,14 +2071,20 @@ Returns:</doc>
       <field name="axes" writable="1">
         <type name="gpointer" c:type="gpointer"/>
       </field>
-      <field name="mode" writable="1">
-        <type name="PseudoAxisEngineMode" c:type="HklPseudoAxisEngineMode*"/>
-      </field>
-      <field name="engines" writable="1">
-        <type name="PseudoAxisEngineList" c:type="HklPseudoAxisEngineList*"/>
-      </field>
       <field name="list" writable="1">
         <type name="gpointer" c:type="gpointer"/>
+      </field>
+      <field name="_shit1" writable="1">
+        <type name="gpointer" c:type="void*"/>
+      </field>
+      <field name="_shit2" writable="1">
+        <type name="gpointer" c:type="void*"/>
+      </field>
+      <field name="_shit3" writable="1">
+        <type name="gpointer" c:type="void*"/>
+      </field>
+      <field name="_shit4" writable="1">
+        <type name="gpointer" c:type="void*"/>
       </field>
       <method name="get"
               c:identifier="hkl_pseudo_axis_engine_get"
@@ -2192,6 +2224,27 @@ Returns:</doc>
           </parameter>
         </parameters>
       </method>
+      <method name="set_values_unit"
+              c:identifier="hkl_pseudo_axis_engine_set_values_unit"
+              throws="1">
+        <doc xml:whitespace="preserve">compute the #HklGeometry angles for this #HklPseudoAxisEngine</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">TRUE on success or FALSE if an error occurred</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <parameter name="values" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the values to set</doc>
+            <array length="1" zero-terminated="0" c:type="double">
+              <type name="gdouble" c:type="double"/>
+            </array>
+          </parameter>
+          <parameter name="len" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the len of the values array</doc>
+            <type name="guint" c:type="unsigned int"/>
+          </parameter>
+        </parameters>
+      </method>
       <function name="fprintf"
                 c:identifier="hkl_pseudo_axis_engine_fprintf"
                 introspectable="0">
@@ -2227,9 +2280,6 @@ Returns:</doc>
             glib:type-name="HklPseudoAxisEngineList"
             glib:get-type="hkl_pseudo_axis_engine_list_get_type"
             c:symbol-prefix="pseudo_axis_engine_list">
-      <field name="engines" writable="1">
-        <type name="gpointer" c:type="gpointer"/>
-      </field>
       <field name="geometries" writable="1">
         <type name="GeometryList" c:type="HklGeometryList*"/>
       </field>
@@ -2241,6 +2291,12 @@ Returns:</doc>
       </field>
       <field name="sample" writable="1">
         <type name="Sample" c:type="HklSample*"/>
+      </field>
+      <field name="engines" writable="1">
+        <type name="gpointer" c:type="gpointer"/>
+      </field>
+      <field name="_shit" writable="1">
+        <type name="gpointer" c:type="void*"/>
       </field>
       <method name="engines"
               c:identifier="hkl_pseudo_axis_engine_list_engines">
@@ -2377,6 +2433,9 @@ Geometry, a detector and a sample.</doc>
       </field>
       <field name="list" writable="1">
         <type name="gpointer" c:type="gpointer"/>
+      </field>
+      <field name="_shit" writable="1">
+        <type name="gpointer" c:type="void*"/>
       </field>
       <function name="fprintf"
                 c:identifier="hkl_pseudo_axis_engine_mode_fprintf"

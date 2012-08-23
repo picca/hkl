@@ -23,6 +23,7 @@
 #define __HKL_BINDING_PRIVATE_H__
 
 #include <glib/gslist.h>
+#include <glib/gerror.h>
 
 #include "hkl-pseudoaxis.h"
 
@@ -32,7 +33,9 @@ HKL_BEGIN_DECLS
 /* HklGeometry */
 /***************/
 
-extern double *hkl_geometry_get_axes_values_unit(const HklGeometry *self, unsigned int *len);
+extern GSList* hkl_geometry_axes(HklGeometry *self);
+
+extern double* hkl_geometry_get_axes_values_unit(const HklGeometry *self, unsigned int *len);
 
 extern void hkl_geometry_set_axes_values_unit(HklGeometry *self, double *values, unsigned int len);
 
@@ -48,8 +51,12 @@ extern GSList* hkl_geometry_list_items(HklGeometryList *self);
 
 extern GSList* hkl_pseudo_axis_engine_pseudo_axes(HklPseudoAxisEngine *self);
 
-extern double *hkl_pseudo_axis_engine_get_values_unit(HklPseudoAxisEngine *self,
+extern double* hkl_pseudo_axis_engine_get_values_unit(HklPseudoAxisEngine *self,
 						      unsigned int *len);
+
+extern gboolean hkl_pseudo_axis_engine_set_values_unit(HklPseudoAxisEngine *self,
+						       double values[], unsigned int len,
+						       GError **error);
 
 /***************************/
 /* HklPSeudoAxisEngineList */

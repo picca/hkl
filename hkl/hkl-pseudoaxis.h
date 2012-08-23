@@ -42,6 +42,7 @@ struct _HklPseudoAxis
 	HklParameter parent;
 	HklPseudoAxisEngine *engine;
 	struct list_node list; /* PseudoAxisEngine */
+	void *_shit;
 };
 
 struct _HklPseudoAxisEngineModeInfo {
@@ -62,6 +63,7 @@ struct _HklPseudoAxisEngineMode
 	HklDetector *detector_init;
 	HklSample *sample_init;
 	struct list_node list;
+	void *_shit;
 };
 
 struct _HklPseudoAxisEngineInfo {
@@ -76,12 +78,16 @@ struct _HklPseudoAxisEngine
 	HklGeometry *geometry;
 	HklDetector *detector;
 	HklSample *sample;
+	HklPseudoAxisEngineMode *mode; /* not owned */
+	HklPseudoAxisEngineList *engines; /* not owned */
 	struct list_head modes; /* owned */
 	struct list_head pseudo_axes; /* owned */
 	struct list_head axes; /* item not owned */
-	HklPseudoAxisEngineMode *mode; /* not owned */
-	HklPseudoAxisEngineList *engines; /* not owned */
 	struct list_node list; /* PseudoAxisEngineList */
+	void *_shit1;
+	void *_shit2;
+	void *_shit3;
+	void *_shit4;
 };
 
 /**
@@ -89,11 +95,12 @@ struct _HklPseudoAxisEngine
  **/
 struct _HklPseudoAxisEngineList
 {
-	struct list_head engines;
 	HklGeometryList *geometries;
 	HklGeometry *geometry;
 	HklDetector *detector;
 	HklSample *sample;
+	struct list_head engines;
+	void *_shit;
 };
 
 /*****************/

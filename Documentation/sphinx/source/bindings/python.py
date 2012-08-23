@@ -23,59 +23,56 @@ Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
 """
 
 import math
+from gi.repository import GLib
 from gi.repository import Hkl
 
 detector = Hkl.Detector().factory_new(Hkl.DetectorType(0))
 detector.idx = 1
 
-config = Hkl.geometry_factory_get_config_from_type(Hkl.GeometryType.KAPPA6C)
-
-geometry = Hkl.Geometry.factory_newv(config, [50. * math.pi / 180.])
+config = Hkl.geometry_factory_get_config_from_type(
+    Hkl.GeometryType.KAPPA6C)
+geometry = Hkl.Geometry.factory_newv(config, [math.radians(50.)])
+values_w = [0., 30., 0., 0., 0., 60.]
+geometry.set_axes_values_unit(values_w)
+axes_names = [axis.parent_instance.name for axis in geometry.axes()]
+print config.name, "diffractometer has", geometry.len,\
+    "axes : ", axes_names
+print values_w
 
 sample = Hkl.Sample.new("toto", Hkl.SampleType.MONOCRYSTAL)
-sample.set_lattice(1.54, 1.54, 1.54, 90., 90., 90.)
-
-engines = Hkl.PseudoAxisEngineList.factory(config)
-engines.init(geometry, detector, sample)
-
-# print the current geometry axes values
-values = geometry.get_axes_values_unit()
-print values
-
-# set the axes values
-values = [0, 30, 0, 0, 0, 60]
-geometry.set_axes_values_unit(values)
+sample.set_lattice(1.54, 1.54, 1.54,
+                   math.radians(90.0),
+                   math.radians(90.0),
+                   math.radians(90.))
 
 # compute all the pseudo axes managed by all engines
+engines = Hkl.PseudoAxisEngineList.factory(config)
+engines.init(geometry, detector, sample)
 engines.get()
 
-# lets print the raw pseudo axes values for each engine.
-for engine in engines.engines():
-    print("\"{}\"".format(engine.info.name))
-    for pseudo_axis in engine.pseudo_axes():
-        unit = ""
-        if pseudo_axis.parent.unit:
-            unit = pseudo_axis.parent.unit.repr
-        print("  {0:10} : {1:10f} {2}".format(pseudo_axis.parent.name,
-                                              pseudo_axis.parent.value,
-                                              unit))
+# get the hkl engine and do a computation
+hkl = engines.get_by_name("hkl")
+values = hkl.get_values_unit()
+print "read : ", values
 
-# now it would be nice to see all thoses values with the user units
-# (rad -> deg etc...)
-for engine in engines.engines():
-    print("\n\"{}\"".format(engine.info.name))
-    for pseudo_axis in engine.pseudo_axes():
-        unit = ""
-        if pseudo_axis.parent.punit:
-            unit = pseudo_axis.parent.punit.repr
-        print("  {0:10} : {1:10f} {2}".format(pseudo_axis.parent.name,
-                                              pseudo_axis.parent.get_value_unit(),
-                                              unit))
+# set the hkl engine and get the results
+for _ in range(100):
+    try:
+        print
+        hkl.set_values_unit(values)
+        print hkl.get_values_unit()
 
+        print("idx".center(15)),
+        for name in axes_names:
+            print("{}".format(name.center(15))),
+        print
 
-# engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "hkl");
-
-# /* geometry -> pseudo */
-# SET_AXES(geom, 30., 0., 0., 60.);
-# hkl_pseudo_axis_engine_get(engine, NULL);
-# CHECK_PSEUDOAXES(engine, 0., 0., 1.);
+        for i, item in enumerate(engines.geometries.items()):
+            read = item.geometry.get_axes_values_unit()
+            print("{}".format(repr(i).center(15))),
+            for value in read:
+                print("{}".format(repr(value)[:15].center(15))),
+            print
+    except GLib.GError, err:
+        print values, err
+    values[1] += .01

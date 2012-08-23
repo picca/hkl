@@ -24,6 +24,7 @@ Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
 
 import math
 import unittest
+from gi.repository import GLib
 from gi.repository import Hkl
 
 
@@ -53,10 +54,16 @@ class TestAPI(unittest.TestCase):
             Hkl.GeometryType.KAPPA6C)
         geometry = Hkl.Geometry.factory_newv(config, [50. * math.pi / 180.])
 
+        # axes names are accessible
+        self.assertTrue(
+            isinstance([axis.parent_instance.name for axis in geometry.axes()],
+                       list))
+
         # set the geometry axes values
         values_w = [0, 30, 0, 0, 0, 60]
         geometry.set_axes_values_unit(values_w)
         values_r = geometry.get_axes_values_unit()
+
         # check that the read and write values of the geometry are
         # almost equals
         for r, w in zip(values_w, values_r):
@@ -72,12 +79,15 @@ class TestAPI(unittest.TestCase):
 
         config = Hkl.geometry_factory_get_config_from_type(
             Hkl.GeometryType.KAPPA6C)
-        geometry = Hkl.Geometry.factory_newv(config, [50. * math.pi / 180.])
-        values_w = [0, 30, 0, 0, 0, 60]
+        geometry = Hkl.Geometry.factory_newv(config, [math.radians(50.)])
+        values_w = [0., 30., 0., 0., 0., 60.]
         geometry.set_axes_values_unit(values_w)
 
         sample = Hkl.Sample.new("toto", Hkl.SampleType.MONOCRYSTAL)
-        sample.set_lattice(1.54, 1.54, 1.54, 90., 90., 90.)
+        sample.set_lattice(1.54, 1.54, 1.54,
+                           math.radians(90.0),
+                           math.radians(90.0),
+                           math.radians(90.0))
 
         # compute all the pseudo axes managed by all engines
         engines = Hkl.PseudoAxisEngineList.factory(config)
@@ -86,8 +96,21 @@ class TestAPI(unittest.TestCase):
 
         # get the hkl engine and do a computation
         hkl = engines.get_by_name("hkl")
-        values_r = hkl.get_values_unit()
-        print values_r
+        values = hkl.get_values_unit()
+
+        # set the hkl engine and get the results
+        for _ in range(100):
+            try:
+                hkl.set_values_unit(values)
+
+                for item in engines.geometries.items():
+                    item.geometry.get_axes_values_unit()
+            except GLib.GError, err:
+                print values, err
+            values[1] += .01
+
+        # for item in engines.geometries.items():
+        #     print item.geometry.get_axes_values_unit()
 
         # check that all the values computed are reachable
         for engine in engines.engines():
@@ -104,10 +127,10 @@ class TestAPI(unittest.TestCase):
 
         self.assertTrue(True)
 
-        # /* geometry -> pseudo */
-        # SET_AXES(geom, 30., 0., 0., 60.);
-        # hkl_pseudo_axis_engine_get(engine, NULL);
-        # CHECK_PSEUDOAXES(engine, 0., 0., 1.);
+    def doc_exemple(self):
+        execfile("../../Documentation/sphinx/source/bindings/python.py")
+
+        self.assertTrue(False)
 
     def test_sample_api(self):
         """
@@ -119,7 +142,10 @@ class TestAPI(unittest.TestCase):
         self.assertTrue(sample.name == "toto")
 
         #set the lattice parameters
-        sample.set_lattice(1.54, 1.54, 1.54, 90., 90., 90.)
+        sample.set_lattice(1.54, 1.54, 1.54,
+                           math.radians(90.),
+                           math.radians(90.),
+                           math.radians(90.))
 
 
 if __name__ == '__main__':
