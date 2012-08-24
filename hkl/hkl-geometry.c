@@ -437,13 +437,13 @@ int hkl_geometry_set_values_unit_v(HklGeometry *self, ...)
 }
 
 /**
- * hkl_geometry_distance: (skip)
- * @self:
- * @geom:
+ * hkl_geometry_distance:
+ * @self: the this ptr
+ * @geom: the #HklGeometry to compare with
  *
  * compute the distance between two #HklGeometries
  *
- * Returns:
+ * Returns: the distance between the two geometries
  **/
 double hkl_geometry_distance(HklGeometry *self, HklGeometry *geom)
 {

@@ -84,13 +84,13 @@ for idx, h, k, l in zip(range(n), h, k, l):
             except IndexError:
                 trajectories.append([])
             values = item.geometry.get_axes_values_unit()
-            print values
+            print values, geometry.distance(item.geometry)
             trajectories[i].append(values)
         print
     except GLib.GError, err:
         pass
 
-maximum = min(2, len(trajectories))
+maximum = min(4, len(trajectories))
 for i, trajectory in enumerate(trajectories):
     if i < maximum:
         plt.subplot(1, maximum, i + 1)

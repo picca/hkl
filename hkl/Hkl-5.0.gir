@@ -661,17 +661,15 @@ Returns:</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="distance"
-              c:identifier="hkl_geometry_distance"
-              introspectable="0">
-        <doc xml:whitespace="preserve">compute the distance between two #HklGeometries
-
-Returns:</doc>
+      <method name="distance" c:identifier="hkl_geometry_distance">
+        <doc xml:whitespace="preserve">compute the distance between two #HklGeometries</doc>
         <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">the distance between the two geometries</doc>
           <type name="gdouble" c:type="double"/>
         </return-value>
         <parameters>
           <parameter name="geom" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklGeometry to compare with</doc>
             <type name="Geometry" c:type="HklGeometry*"/>
           </parameter>
         </parameters>
