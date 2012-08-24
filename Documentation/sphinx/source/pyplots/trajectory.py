@@ -1,26 +1,5 @@
 #!/bin/env python
 # -*- coding: utf-8 -*-
-"""
-This file is part of the hkl library.
-
-The hkl library is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-The hkl library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
-
-Copyright (C) 2003-2012 Synchrotron SOLEIL
-                        L'Orme des Merisiers Saint-Aubin
-                        BP 48 91192 GIF-sur-YVETTE CEDEX
-Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
-"""
 
 import math
 import numpy
@@ -90,10 +69,15 @@ for idx, h, k, l in zip(range(n), h, k, l):
     except GLib.GError, err:
         pass
 
-maximum = min(4, len(trajectories))
-for i, trajectory in enumerate(trajectories):
-    if i < maximum:
-        plt.subplot(1, maximum, i + 1)
-        plt.plot(trajectory)
-        plt.ylim(-180, 180)
-plt.show()
+plt.plot(trajectories[0])
+plt.ylim(-180, 180)
+
+
+def full():
+    plt.figure()
+    maximum = min(4, len(trajectories))
+    for i, trajectory in enumerate(trajectories):
+        if i < maximum:
+            plt.subplot(1, maximum, i + 1)
+            plt.plot(trajectory)
+            plt.ylim(-180, 180)

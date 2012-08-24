@@ -439,24 +439,24 @@ int hkl_geometry_set_values_unit_v(HklGeometry *self, ...)
 /**
  * hkl_geometry_distance:
  * @self: the this ptr
- * @geom: the #HklGeometry to compare with
+ * @ref: the #HklGeometry to compare with
  *
  * compute the distance between two #HklGeometries
  *
  * Returns: the distance between the two geometries
  **/
-double hkl_geometry_distance(HklGeometry *self, HklGeometry *geom)
+double hkl_geometry_distance(HklGeometry *self, HklGeometry *ref)
 {
 	size_t i;
 	double value1, value2;
 	double distance = 0.;
 
-	if (!self || !geom)
+	if (!self || !ref)
 		return 0.;
 
 	for(i=0; i<self->len; ++i){
 		value1 = hkl_axis_get_value(&self->axes[i]);
-		value2 = hkl_axis_get_value(&geom->axes[i]);
+		value2 = hkl_axis_get_value(&ref->axes[i]);
 		distance += fabs(value2 - value1);
 	}
 

@@ -669,7 +669,6 @@ Returns:</doc>
         </return-value>
         <parameters>
           <parameter name="geom" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the #HklGeometry to compare with</doc>
             <type name="Geometry" c:type="HklGeometry*"/>
           </parameter>
         </parameters>
