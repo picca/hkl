@@ -34,7 +34,7 @@ HKL_BEGIN_DECLS
 typedef struct _HklAxis HklAxis;
 
 struct _HklAxis {
-	HklParameter parent_instance;
+	HklParameter parameter;
 	HklVector axis_v;
 	HklQuaternion q;
 	struct list_node engine_list;

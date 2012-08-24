@@ -67,7 +67,7 @@ double *hkl_geometry_get_axes_values_unit(const HklGeometry *self, guint *len)
 	values = malloc(self->len * sizeof(*values));
 
 	for(i=0; i<self->len; ++i)
-		values[i] = hkl_parameter_get_value_unit(&self->axes[i].parent_instance);
+		values[i] = hkl_parameter_get_value_unit(&self->axes[i].parameter);
 
 	return values;
 }

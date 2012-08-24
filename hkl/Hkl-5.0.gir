@@ -18,7 +18,7 @@ and/or use gtk-doc annotations.  -->
             glib:type-name="HklAxis"
             glib:get-type="hkl_axis_get_type"
             c:symbol-prefix="axis">
-      <field name="parent_instance" writable="1">
+      <field name="parameter" writable="1">
         <type name="Parameter" c:type="HklParameter"/>
       </field>
       <field name="axis_v" writable="1">

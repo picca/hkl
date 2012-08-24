@@ -114,7 +114,7 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 	x_data = (double *)x->data;
 	i = 0;
 	list_for_each(&self->axes, axis, engine_list)
-		x_data[i++] = axis->parent_instance.value;
+		x_data[i++] = axis->parameter.value;
 
 	/* keep a copy of the first axes positions to deal with degenerated axes */
 	memcpy(x_data0, x_data, len * sizeof(double));
@@ -326,7 +326,7 @@ static int solve_function(HklPseudoAxisEngine *self,
 		/* use first solution as starting point for permutations */
 		i = 0;
 		list_for_each(&self->axes, axis, engine_list){
-			x0[i] = axis->parent_instance.value;
+			x0[i] = axis->parameter.value;
 			op_len[i] = degenerated[i] ? 1 : 4;
 			++i;
 		}

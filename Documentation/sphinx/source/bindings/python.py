@@ -34,7 +34,7 @@ config = Hkl.geometry_factory_get_config_from_type(
 geometry = Hkl.Geometry.factory_newv(config, [math.radians(50.)])
 values_w = [0., 30., 0., 0., 0., 60.]
 geometry.set_axes_values_unit(values_w)
-axes_names = [axis.parent_instance.name for axis in geometry.axes()]
+axes_names = [axis.parameter.name for axis in geometry.axes()]
 print config.name, "diffractometer has", geometry.len,\
     "axes : ", axes_names
 print values_w

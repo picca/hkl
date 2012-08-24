@@ -21,7 +21,7 @@ detector.idx = 1
 config = Hkl.geometry_factory_get_config_from_type(
     Hkl.GeometryType.KAPPA6C)
 geometry = Hkl.Geometry.factory_newv(config, [math.radians(50.)])
-axes_names = [axis.parent_instance.name for axis in geometry.axes()]
+axes_names = [axis.parameter.name for axis in geometry.axes()]
 geometry.set_axes_values_unit([0., 120, 0., -90., 0., 60.])
 
 engines = Hkl.PseudoAxisEngineList.factory(config)

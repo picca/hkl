@@ -16,11 +16,11 @@ config = Hkl.geometry_factory_get_config_from_type(
     Hkl.GeometryType.KAPPA6C)
 geometry = Hkl.Geometry.factory_newv(config, [math.radians(50.)])
 delta = geometry.axes()[5]
-#delta.parent_instance.range.min = 0
+#delta.parameter.range.min = 0
 #values_w = [0., -60, 0., 90., 0., 60.]
 values_w = [0., 120, 0., -90., 0., 60.]
 geometry.set_axes_values_unit(values_w)
-axes_names = [axis.parent_instance.name for axis in geometry.axes()]
+axes_names = [axis.parameter.name for axis in geometry.axes()]
 
 sample = Hkl.Sample.new("toto", Hkl.SampleType.MONOCRYSTAL)
 sample.set_lattice(1.54, 1.54, 1.54,

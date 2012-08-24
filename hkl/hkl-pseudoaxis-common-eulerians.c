@@ -87,9 +87,9 @@ static int hkl_pseudo_axis_engine_mode_get_eulerians_real(HklPseudoAxisEngineMod
 							  HklError **error)
 {
 	const double angles[] = {
-		hkl_geometry_get_axis_by_name(geometry, "komega")->parent_instance.value,
-		hkl_geometry_get_axis_by_name(geometry, "kappa")->parent_instance.value,
-		hkl_geometry_get_axis_by_name(geometry, "kphi")->parent_instance.value,
+		hkl_geometry_get_axis_by_name(geometry, "komega")->parameter.value,
+		hkl_geometry_get_axis_by_name(geometry, "kappa")->parameter.value,
+		hkl_geometry_get_axis_by_name(geometry, "kphi")->parameter.value,
 	};
 	double values[3];
 	int solution;
