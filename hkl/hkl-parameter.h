@@ -54,11 +54,6 @@ extern HklParameter *hkl_parameter_new(const char *name,
 
 extern HklParameter *hkl_parameter_new_copy(const HklParameter *self);
 
-extern int hkl_parameter_init(HklParameter *self, const char *name,
-			      double min, double value, double max,
-			      int fit, int changed,
-			      const HklUnit *unit, const HklUnit *punit);
-
 extern void hkl_parameter_free(HklParameter *self);
 
 extern double hkl_parameter_get_value(const HklParameter *self);

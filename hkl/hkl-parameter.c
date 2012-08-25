@@ -24,6 +24,30 @@
 
 #include <hkl/hkl-parameter-private.h>
 
+static int hkl_parameter_init(HklParameter *self, const char *name,
+			      double min, double value, double max,
+			      int fit, int changed,
+			      const HklUnit *unit, const HklUnit *punit)
+{
+	if (min <= value
+	    && value <= max
+	    && strcmp(name, "")
+	    && hkl_unit_compatible(unit, punit)) {
+		self->name = name;
+		self->range.min = min;
+		self->range.max = max;
+		self->value = value;
+		self->unit = unit;
+		self->punit = punit;
+		self->fit = fit;
+		self->changed = changed;
+		self->ops = &hkl_parameter_operations;
+	} else
+		return HKL_FALSE;
+
+	return HKL_TRUE;
+}
+
 /**
  * hkl_parameter_new: (skip)
  * @name:
@@ -44,19 +68,19 @@ HklParameter *hkl_parameter_new(const char *name,
 				int fit, int changed,
 				const HklUnit *unit, const HklUnit *punit)
 {
-	HklParameter *parameter;
+	HklParameter *self;
 
-	parameter = HKL_MALLOC(HklParameter);
+	self = HKL_MALLOC(HklParameter);
 
-	if (!hkl_parameter_init(parameter,
+	if (!hkl_parameter_init(self,
 				name, min, value, max,
 				fit, changed,
 				unit, punit)) {
-		free(parameter);
-		parameter = NULL;
+		free(self);
+		self = NULL;
 	}
 
-	return parameter;
+	return self;
 }
 
 /**
@@ -76,46 +100,6 @@ HklParameter *hkl_parameter_new_copy(const HklParameter *self)
 	*parameter = *self;
 
 	return parameter;
-}
-
-/**
- * hkl_parameter_init: (skip)
- * @self:
- * @name:
- * @min:
- * @value:
- * @max:
- * @fit:
- * @changed:
- * @unit:
- * @punit:
- *
- * initialize an #HklParameter
- *
- * Returns:
- **/
-int hkl_parameter_init(HklParameter *self, const char *name,
-		       double min, double value, double max,
-		       int fit, int changed,
-		       const HklUnit *unit, const HklUnit *punit)
-{
-	if (min <= value
-	    && value <= max
-	    && strcmp(name, "")
-	    && hkl_unit_compatible(unit, punit)) {
-		self->name = name;
-		self->range.min = min;
-		self->range.max = max;
-		self->value = value;
-		self->unit = unit;
-		self->punit = punit;
-		self->fit = fit;
-		self->changed = changed;
-		self->ops = &hkl_parameter_operations;
-	} else
-		return HKL_FALSE;
-
-	return HKL_TRUE;
 }
 
 /**

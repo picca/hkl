@@ -1872,40 +1872,6 @@ Returns:</doc>
           <type name="gdouble" c:type="double"/>
         </return-value>
       </method>
-      <method name="init" c:identifier="hkl_parameter_init" introspectable="0">
-        <doc xml:whitespace="preserve">initialize an #HklParameter
-
-Returns:</doc>
-        <return-value transfer-ownership="none">
-          <type name="gint" c:type="int"/>
-        </return-value>
-        <parameters>
-          <parameter name="name" transfer-ownership="none">
-            <type name="utf8" c:type="char*"/>
-          </parameter>
-          <parameter name="min" transfer-ownership="none">
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-          <parameter name="value" transfer-ownership="none">
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-          <parameter name="max" transfer-ownership="none">
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-          <parameter name="fit" transfer-ownership="none">
-            <type name="gint" c:type="int"/>
-          </parameter>
-          <parameter name="changed" transfer-ownership="none">
-            <type name="gint" c:type="int"/>
-          </parameter>
-          <parameter name="unit" transfer-ownership="none">
-            <type name="Unit" c:type="HklUnit*"/>
-          </parameter>
-          <parameter name="punit" transfer-ownership="none">
-            <type name="Unit" c:type="HklUnit*"/>
-          </parameter>
-        </parameters>
-      </method>
       <method name="is_valid"
               c:identifier="hkl_parameter_is_valid"
               introspectable="0">
