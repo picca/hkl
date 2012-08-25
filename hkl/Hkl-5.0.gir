@@ -1783,6 +1783,9 @@ Todo: test</doc>
       <field name="changed" writable="1">
         <type name="gint" c:type="int"/>
       </field>
+      <field name="ops" writable="1">
+        <type name="ParameterOperations" c:type="HklParameterOperations*"/>
+      </field>
       <constructor name="new"
                    c:identifier="hkl_parameter_new"
                    introspectable="0">
@@ -1851,6 +1854,14 @@ Returns:</doc>
             <type name="gdouble" c:type="double*"/>
           </parameter>
         </parameters>
+      </method>
+      <method name="get_value"
+              c:identifier="hkl_parameter_get_value"
+              introspectable="0">
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">the value of the #HklParameter</doc>
+          <type name="gdouble" c:type="double"/>
+        </return-value>
       </method>
       <method name="get_value_unit"
               c:identifier="hkl_parameter_get_value_unit">
@@ -2001,6 +2012,10 @@ Returns:</doc>
           </parameter>
         </parameters>
       </function>
+    </record>
+    <record name="ParameterOperations"
+            c:type="HklParameterOperations"
+            disguised="1">
     </record>
     <record name="PseudoAxis"
             c:type="HklPseudoAxis"

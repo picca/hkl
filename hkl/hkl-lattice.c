@@ -23,6 +23,7 @@
 #include <math.h>
 
 #include "hkl/hkl-lattice.h"
+#include "hkl/hkl-parameter-private.h"
 #include "hkl/hkl-unit.h"
 
 /* private */

@@ -22,7 +22,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <hkl/hkl-parameter.h>
+#include <hkl/hkl-parameter-private.h>
 
 /**
  * hkl_parameter_new: (skip)
@@ -111,10 +111,22 @@ int hkl_parameter_init(HklParameter *self, const char *name,
 		self->punit = punit;
 		self->fit = fit;
 		self->changed = changed;
+		self->ops = &hkl_parameter_operations;
 	} else
 		return HKL_FALSE;
 
 	return HKL_TRUE;
+}
+
+/**
+ * hkl_parameter_get_value: (skip)
+ * @self: the this ptr
+ *
+ * Returns: the value of the #HklParameter
+ **/
+double hkl_parameter_get_value(const HklParameter *self)
+{
+	return self->ops->get_value(self);
 }
 
 /**

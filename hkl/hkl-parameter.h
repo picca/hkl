@@ -29,6 +29,7 @@
 HKL_BEGIN_DECLS
 
 typedef struct _HklParameter HklParameter;
+typedef struct _HklParameterOperations HklParameterOperations;
 
 struct _HklParameter {
 	const char *name;
@@ -38,6 +39,7 @@ struct _HklParameter {
 	const HklUnit *punit;
 	int fit;
 	int changed;
+	const HklParameterOperations *ops;
 };
 
 #define HKL_PARAMETER_DEFAULTS .name="dummy", .range={.min=0, .max=0}, .value=0, .unit=NULL, .punit=NULL, .fit=HKL_TRUE, .changed=HKL_TRUE
@@ -58,6 +60,8 @@ extern int hkl_parameter_init(HklParameter *self, const char *name,
 			      const HklUnit *unit, const HklUnit *punit);
 
 extern void hkl_parameter_free(HklParameter *self);
+
+extern double hkl_parameter_get_value(const HklParameter *self);
 
 extern void hkl_parameter_set_value(HklParameter *self, double value);
 

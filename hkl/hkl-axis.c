@@ -26,11 +26,17 @@
 #include <gsl/gsl_sf_trig.h>
 
 #include <hkl/hkl-axis.h>
+#include <hkl/hkl-parameter-private.h>
 #include <hkl/hkl-quaternion.h>
 
 /***********/
 /* HklAxis */
 /***********/
+
+static HklParameterOperations axis_operations = {
+	HKL_PARAMETER_OPERATIONS_DEFAULT,
+};
+
 static void hkl_axis_update(HklAxis *self)
 {
 	hkl_quaternion_init_from_angle_and_axe(&self->q,
@@ -116,17 +122,20 @@ void hkl_axis_free(HklAxis *self)
 		free(self);
 }
 
-void hkl_axis_init(HklAxis *self, char const * name, HklVector const *axis_v)
+void hkl_axis_init(HklAxis *self, const char* name, const HklVector *axis_v)
 {
-	static HklQuaternion q0 = {{1, 0, 0, 0}};
+	static HklAxis axis0 = {
+		.parameter = {
+			HKL_PARAMETER_DEFAULTS_ANGLE,
+			.ops = &axis_operations,
+		},
+		.q = {{1, 0, 0, 0}},
+	};
 
-	/* base initializer */
-	hkl_parameter_init((HklParameter *)self, name, -M_PI, 0, M_PI,
-			   HKL_TRUE, HKL_TRUE,
-			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
+	*self = axis0;
 
+	self->parameter.name = name;
 	self->axis_v = *axis_v;
-	self->q = q0;
 }
 
 char const *hkl_axis_get_name(HklAxis const *self)
