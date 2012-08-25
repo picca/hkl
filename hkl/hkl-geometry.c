@@ -455,8 +455,8 @@ double hkl_geometry_distance(HklGeometry *self, HklGeometry *ref)
 		return 0.;
 
 	for(i=0; i<self->len; ++i){
-		value1 = hkl_axis_get_value(&self->axes[i]);
-		value2 = hkl_axis_get_value(&ref->axes[i]);
+		value1 = hkl_parameter_get_value(&self->axes[i].parameter);
+		value2 = hkl_parameter_get_value(&ref->axes[i].parameter);
 		distance += fabs(value2 - value1);
 	}
 
@@ -482,8 +482,8 @@ double hkl_geometry_distance_orthodromic(HklGeometry *self, HklGeometry *ref)
 	for(i=0; i<self->len; ++i){
 		double d;
 
-		value1 = hkl_axis_get_value(&self->axes[i]);
-		value2 = hkl_axis_get_value(&ref->axes[i]);
+		value1 = hkl_parameter_get_value(&self->axes[i].parameter);
+		value2 = hkl_parameter_get_value(&ref->axes[i].parameter);
 		d = fabs(gsl_sf_angle_restrict_symm(value2) - gsl_sf_angle_restrict_symm(value1));
 		/* as M_PI and -M_PI are included in the GSL restriction */
 		if (d > M_PI)
@@ -742,7 +742,6 @@ void hkl_geometry_list_sort(HklGeometryList *self, HklGeometry *ref)
  **/
 void hkl_geometry_list_fprintf(FILE *f, const HklGeometryList *self)
 {
-	HklParameter *parameter;
 	HklGeometry *g;
 	double value;
 	size_t axes_len;
@@ -763,6 +762,8 @@ void hkl_geometry_list_fprintf(FILE *f, const HklGeometryList *self)
 
 		/* geometries */
 		list_for_each(&self->items, item, node){
+			HklParameter *parameter;
+
 			fprintf(f, "\n%d :", i);
 			for(j=0; j<axes_len; ++j) {
 				parameter = (HklParameter *)(&item->geometry->axes[j]);
@@ -775,8 +776,10 @@ void hkl_geometry_list_fprintf(FILE *f, const HklGeometryList *self)
 			}
 			fprintf(f, "\n   ");
 			for(j=0; j<axes_len; ++j) {
-				parameter = (HklParameter *)(&item->geometry->axes[j]);
-				value = gsl_sf_angle_restrict_symm(parameter->value) * hkl_unit_factor(parameter->unit, parameter->punit);
+				parameter = &item->geometry->axes[j].parameter;
+				value = hkl_parameter_get_value(parameter);
+				value = gsl_sf_angle_restrict_symm(value);
+				value *= hkl_unit_factor(parameter->unit, parameter->punit);
 				if (parameter->punit)
 					fprintf(f, " % 18.15f %s", value, parameter->punit->repr);
 				else
@@ -833,7 +836,7 @@ static void perm_r(HklGeometryList *self, HklGeometry *ref, HklGeometry *geometr
 
 			axis = &geometry->axes[axis_idx];
 			max = hkl_axis_get_max(axis);
-			value = hkl_axis_get_value(axis);
+			value = hkl_parameter_get_value(&axis->parameter);
 			value0 = value;
 			do{
 				/* fprintf(stdout, "\n%d %s, %f", axis_idx, hkl_axis_get_name(axis), value * HKL_RADTODEG); */

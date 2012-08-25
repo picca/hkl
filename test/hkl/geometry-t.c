@@ -113,9 +113,9 @@ static void set_values(void)
 	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
 
 	hkl_geometry_set_values_v(g, 3, 1., 1., 1.);
-	is_double(1., hkl_axis_get_value(&g->axes[0]), HKL_EPSILON, __func__);
-	is_double(1., hkl_axis_get_value(&g->axes[1]), HKL_EPSILON, __func__);
-	is_double(1., hkl_axis_get_value(&g->axes[2]), HKL_EPSILON, __func__);
+	is_double(1., hkl_parameter_get_value(&g->axes[0].parameter), HKL_EPSILON, __func__);
+	is_double(1., hkl_parameter_get_value(&g->axes[1].parameter), HKL_EPSILON, __func__);
+	is_double(1., hkl_parameter_get_value(&g->axes[2].parameter), HKL_EPSILON, __func__);
 
 	hkl_geometry_free(g);
 }
@@ -132,9 +132,9 @@ static void set_values_unit(void)
 	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
 
 	hkl_geometry_set_values_unit_v(g, 10., 10., 10.);
-	is_double(10. * HKL_DEGTORAD, hkl_axis_get_value(&g->axes[0]), HKL_EPSILON, __func__);
-	is_double(10. * HKL_DEGTORAD, hkl_axis_get_value(&g->axes[1]), HKL_EPSILON, __func__);
-	is_double(10. * HKL_DEGTORAD, hkl_axis_get_value(&g->axes[2]), HKL_EPSILON, __func__);
+	is_double(10. * HKL_DEGTORAD, hkl_parameter_get_value(&g->axes[0].parameter), HKL_EPSILON, __func__);
+	is_double(10. * HKL_DEGTORAD, hkl_parameter_get_value(&g->axes[1].parameter), HKL_EPSILON, __func__);
+	is_double(10. * HKL_DEGTORAD, hkl_parameter_get_value(&g->axes[2].parameter), HKL_EPSILON, __func__);
 
 	hkl_geometry_free(g);
 }
@@ -217,7 +217,7 @@ static void list(void)
 
 	list_for_each(&list->items, item, node){
 		is_double(values[i++],
-			  hkl_axis_get_value(&item->geometry->axes[0]),
+			  hkl_parameter_get_value(&item->geometry->axes[0].parameter),
 			  HKL_EPSILON, __func__);
 	}
 

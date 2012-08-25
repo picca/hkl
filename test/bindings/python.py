@@ -118,7 +118,7 @@ class TestAPI(unittest.TestCase):
             self.assertTrue(type(engine.info.name) is str)
             for pseudo_axis in engine.pseudo_axes():
                 self.assertTrue(type(pseudo_axis) is Hkl.PseudoAxis)
-                self.assertTrue(type(pseudo_axis.parameter.value) is float)
+                self.assertTrue(type(pseudo_axis.parameter.get_value()) is float)
 
         # check the set result
         for item in engines.geometries.items():

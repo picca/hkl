@@ -36,12 +36,12 @@ static int hkl_parameter_init(HklParameter *self, const char *name,
 		self->name = name;
 		self->range.min = min;
 		self->range.max = max;
-		self->value = value;
+		self->_value = value;
 		self->unit = unit;
 		self->punit = punit;
 		self->fit = fit;
 		self->changed = changed;
-		self->ops = &hkl_parameter_operations;
+		self->ops = &hkl_parameter_operations_defaults;
 	} else
 		return HKL_FALSE;
 
@@ -103,17 +103,6 @@ HklParameter *hkl_parameter_new_copy(const HklParameter *self)
 }
 
 /**
- * hkl_parameter_get_value: (skip)
- * @self: the this ptr
- *
- * Returns: the value of the #HklParameter
- **/
-double hkl_parameter_get_value(const HklParameter *self)
-{
-	return self->ops->get_value(self);
-}
-
-/**
  * hkl_parameter_free: (skip)
  * @self:
  *
@@ -134,7 +123,7 @@ void hkl_parameter_free(HklParameter *self)
  **/
 void hkl_parameter_set_value(HklParameter *self, double value)
 {
-	self->value = value;
+	self->_value = value;
 	self->changed = HKL_TRUE;
 }
 
@@ -150,7 +139,7 @@ double hkl_parameter_get_value_unit(const HklParameter *self)
 {
 	double factor = hkl_unit_factor(self->unit, self->punit);
 
-	return self->value * factor;
+	return self->_value * factor;
 }
 
 /**
@@ -166,7 +155,7 @@ int hkl_parameter_set_value_unit(HklParameter *self, double value)
 {
 	double factor = hkl_unit_factor(self->unit, self->punit);
 
-	self->value = value / factor;
+	self->_value = value / factor;
 	self->changed = HKL_TRUE;
 
 	return HKL_TRUE;
@@ -243,7 +232,7 @@ void hkl_parameter_randomize(HklParameter *self)
 {
 	if (self->fit) {
 		double alea = (double)rand() / (RAND_MAX + 1.);
-		self->value = self->range.min
+		self->_value = self->range.min
 			+ (self->range.max - self->range.min) * alea;
 		self->changed = HKL_TRUE;
 	}
@@ -259,8 +248,8 @@ void hkl_parameter_randomize(HklParameter *self)
  **/
 int hkl_parameter_is_valid(const HklParameter *self)
 {
-	if(self->value < (self->range.min - HKL_EPSILON)
-	   || self->value > (self->range.max + HKL_EPSILON))
+	if(self->_value < (self->range.min - HKL_EPSILON)
+	   || self->_value > (self->range.max + HKL_EPSILON))
 		return HKL_FALSE;
 	else
 		return HKL_TRUE;
@@ -279,7 +268,7 @@ void hkl_parameter_fprintf(FILE *f, HklParameter *self)
 	if (self->punit)
 		fprintf(f, "\"%s\" : %.7f %s [%.7f : %.7f] (%d)",
 			self->name,
-			self->value * factor,
+			self->_value * factor,
 			self->punit->repr,
 			self->range.min * factor,
 			self->range.max * factor,
@@ -287,7 +276,7 @@ void hkl_parameter_fprintf(FILE *f, HklParameter *self)
 	else
 		fprintf(f, "\"%s\" : %.7f [%.7f : %.7f] (%d)",
 			self->name,
-			self->value * factor,
+			self->_value * factor,
 			self->range.min * factor,
 			self->range.max * factor,
 			self->fit);

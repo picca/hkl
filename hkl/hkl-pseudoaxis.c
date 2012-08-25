@@ -286,7 +286,7 @@ void hkl_pseudo_axis_engine_set_values(HklPseudoAxisEngine *self,
 	hkl_assert(len == self->info->n_pseudo_axes);
 
 	list_for_each(&self->pseudo_axes, pseudo_axis, list){
-		pseudo_axis->parameter.value = values[i++];
+		hkl_parameter_set_value(&pseudo_axis->parameter, values[i++]);
 	}
 }
 
@@ -307,7 +307,7 @@ void hkl_pseudo_axis_engine_get_values(HklPseudoAxisEngine *self,
 	assert(*len == self->info->n_pseudo_axes);
 
 	list_for_each(&self->pseudo_axes, pseudo_axis, list){
-		values[i++] = pseudo_axis->parameter.value;
+		values[i++] = hkl_parameter_get_value(&pseudo_axis->parameter);
 	}
 }
 

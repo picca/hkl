@@ -25,6 +25,7 @@
 
 #include <ccan/array_size/array_size.h>
 
+#include "hkl-parameter-private.h"
 #include "hkl-pseudoaxis-auto-private.h"
 #include "hkl-pseudoaxis-common-psi-private.h"
 
@@ -81,9 +82,9 @@ int _psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 
 		/* compute hkl1 in the laboratory referentiel */
 		/* for now the 0 holder is the sample holder. */
-		hkl1.data[0] = engine->mode->parameters[0].value;
-		hkl1.data[1] = engine->mode->parameters[1].value;
-		hkl1.data[2] = engine->mode->parameters[2].value;
+		hkl1.data[0] = hkl_parameter_get_value(&engine->mode->parameters[0]);
+		hkl1.data[1] = hkl_parameter_get_value(&engine->mode->parameters[1]);
+		hkl1.data[2] = hkl_parameter_get_value(&engine->mode->parameters[2]);
 		hkl_matrix_times_vector(&engine->sample->UB, &hkl1);
 		hkl_vector_rotated_quaternion(&hkl1, &engine->geometry->holders[0].q);
 
@@ -191,9 +192,9 @@ static int hkl_pseudo_axis_engine_mode_get_psi_real(HklPseudoAxisEngineMode *bas
 		/* compute hkl1 in the laboratory referentiel */
 		/* the geometry was already updated in the detector compute kf */
 		/* for now the 0 holder is the sample holder. */
-		hkl1.data[0] = base->parameters[0].value;
-		hkl1.data[1] = base->parameters[1].value;
-		hkl1.data[2] = base->parameters[2].value;
+		hkl1.data[0] = hkl_parameter_get_value(&base->parameters[0]);
+		hkl1.data[1] = hkl_parameter_get_value(&base->parameters[1]);
+		hkl1.data[2] = hkl_parameter_get_value(&base->parameters[2]);
 		hkl_matrix_times_vector(&sample->UB, &hkl1);
 		hkl_vector_rotated_quaternion(&hkl1, &geometry->holders[0].q);
 

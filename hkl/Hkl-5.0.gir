@@ -86,11 +86,6 @@ and/or use gtk-doc annotations.  -->
           </parameter>
         </parameters>
       </method>
-      <method name="get_value" c:identifier="hkl_axis_get_value">
-        <return-value transfer-ownership="none">
-          <type name="gdouble" c:type="double"/>
-        </return-value>
-      </method>
       <method name="get_value_closest"
               c:identifier="hkl_axis_get_value_closest">
         <return-value transfer-ownership="none">
@@ -1768,7 +1763,7 @@ Todo: test</doc>
       <field name="range" writable="1">
         <type name="Interval" c:type="HklInterval"/>
       </field>
-      <field name="value" writable="1">
+      <field name="_value" writable="1">
         <type name="gdouble" c:type="double"/>
       </field>
       <field name="unit" writable="1">
@@ -1854,14 +1849,6 @@ Returns:</doc>
             <type name="gdouble" c:type="double*"/>
           </parameter>
         </parameters>
-      </method>
-      <method name="get_value"
-              c:identifier="hkl_parameter_get_value"
-              introspectable="0">
-        <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">the value of the #HklParameter</doc>
-          <type name="gdouble" c:type="double"/>
-        </return-value>
       </method>
       <method name="get_value_unit"
               c:identifier="hkl_parameter_get_value_unit">
@@ -1979,9 +1966,19 @@ Returns:</doc>
         </parameters>
       </function>
     </record>
-    <record name="ParameterOperations"
-            c:type="HklParameterOperations"
-            disguised="1">
+    <record name="ParameterOperations" c:type="HklParameterOperations">
+      <field name="get_value">
+        <callback name="get_value">
+          <return-value transfer-ownership="none">
+            <type name="gdouble" c:type="double"/>
+          </return-value>
+          <parameters>
+            <parameter name="self" transfer-ownership="none">
+              <type name="Parameter" c:type="HklParameter*"/>
+            </parameter>
+          </parameters>
+        </callback>
+      </field>
     </record>
     <record name="PseudoAxis"
             c:type="HklPseudoAxis"

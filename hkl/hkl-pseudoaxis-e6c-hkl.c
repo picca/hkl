@@ -26,6 +26,7 @@
 
 #include <ccan/array_size/array_size.h>
 
+#include "hkl-parameter-private.h"
 #include "hkl-pseudoaxis-auto-private.h"
 #include "hkl-pseudoaxis-common-hkl-private.h"
 
@@ -164,9 +165,9 @@ static HklPseudoAxisEngineMode *double_diffraction_vertical(void)
 	static const char* axes[] = {"omega", "chi", "phi", "delta"};
 	static const HklFunction *functions[] = {&double_diffraction_func};
 	static const HklParameter parameters[] = {
-		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, .value = 1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, .value = 1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, .value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, ._value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, ._value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, ._value = 1,},
 	};
 	static const HklPseudoAxisEngineModeAutoInfo info = {
 		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
@@ -193,9 +194,9 @@ static HklPseudoAxisEngineMode *double_diffraction_horizontal(void)
 	static const char* axes[] = {"mu", "chi", "phi", "gamma"};
 	static const HklFunction *functions[] = {&double_diffraction_func};
 	static const HklParameter parameters[] = {
-		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, .value = 1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, .value = 1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, .value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, ._value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, ._value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, ._value = 1,},
 	};
 	static const HklPseudoAxisEngineModeAutoInfo info = {
 		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
@@ -210,9 +211,9 @@ static HklPseudoAxisEngineMode *psi_constant_vertical(void)
 	static const char* axes[] = {"omega", "chi", "phi", "delta"};
 	static const HklFunction *functions[] = {&psi_constant_vertical_func};
 	static const HklParameter parameters[] = {
-		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, .value = 1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, .value = 0,},
-		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, .value = 0,},
+		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, ._value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, ._value = 0,},
+		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, ._value = 0,},
 		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "psi"},
 	};
 	static const HklPseudoAxisEngineModeAutoInfo info = {
@@ -228,9 +229,9 @@ static HklPseudoAxisEngineMode *psi_constant_horizontal(void)
 	static const char* axes[] = {"omega", "chi", "phi", "gamma"};
 	static const HklFunction *functions[] = {&psi_constant_vertical_func};
 	static const HklParameter parameters[] = {
-		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, .value = 1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, .value = 0,},
-		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, .value = 0,},
+		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, ._value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, ._value = 0,},
+		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, ._value = 0,},
 		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "psi"},
 	};
 	static const HklPseudoAxisEngineModeAutoInfo info = {

@@ -103,7 +103,7 @@ static void degenerated(void)
 
 		hkl_pseudo_axis_engine_select_mode(engine, mode);
 		if (engine->mode->parameters_len)
-			engine->mode->parameters[0].value = 0.;
+			hkl_parameter_set_value(&engine->mode->parameters[0], 0.);
 
 		/* studdy this degenerated case */
 		hkl_pseudo_axis_engine_set_values(engine, values, 3);
@@ -138,9 +138,6 @@ static void psi_getter(void)
 	HklGeometry *geom;
 	HklDetector *detector;
 	HklSample *sample;
-	double *h_ref;
-	double *k_ref;
-	double *l_ref;
 
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL);
 	geom = hkl_geometry_factory_new(config);
@@ -154,49 +151,44 @@ static void psi_getter(void)
 
 	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "psi");
 
-	h_ref = &engine->mode->parameters[0].value;
-	k_ref = &engine->mode->parameters[1].value;
-	l_ref = &engine->mode->parameters[2].value;
-
 	/* the getter part */
 	hkl_geometry_set_values_unit_v(geom, 30., 0., 0., 60.);
 	hkl_pseudo_axis_engine_initialize(engine, NULL);
 
-	*h_ref = 1;
-	*k_ref = 0;
-	*l_ref = 0;
+	hkl_parameter_set_value(&engine->mode->parameters[0], 1);
+	hkl_parameter_set_value(&engine->mode->parameters[1], 0);
+	hkl_parameter_set_value(&engine->mode->parameters[2], 0);
 	res &= hkl_pseudo_axis_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, 0.);
 
-	*h_ref = /* 0 */ 1;
-	*k_ref = /* 1 */ 0;
-	*l_ref = /* 0 */ 0;
-
+	hkl_parameter_set_value(&engine->mode->parameters[0], 1);
+	hkl_parameter_set_value(&engine->mode->parameters[1], 0);
+	hkl_parameter_set_value(&engine->mode->parameters[2], 0);
 	res &= hkl_pseudo_axis_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, 0. * HKL_DEGTORAD);
 
 	/* here Q and <h, k, l>_ref are colinear must FAIL */
-	*h_ref = 0;
-	*k_ref = 1;
-	*l_ref = 0;
+	hkl_parameter_set_value(&engine->mode->parameters[0], 0);
+	hkl_parameter_set_value(&engine->mode->parameters[1], 1);
+	hkl_parameter_set_value(&engine->mode->parameters[2], 0);
 	res &= !hkl_pseudo_axis_engine_get(engine, NULL);
 
-	*h_ref = -1;
-	*k_ref = 0;
-	*l_ref = 0;
+	hkl_parameter_set_value(&engine->mode->parameters[0], -1);
+	hkl_parameter_set_value(&engine->mode->parameters[1], 0);
+	hkl_parameter_set_value(&engine->mode->parameters[2], 0);
 	res &= hkl_pseudo_axis_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, 180. * HKL_DEGTORAD);
 
-	*h_ref = 0;
-	*k_ref = 0;
-	*l_ref = -1;
+	hkl_parameter_set_value(&engine->mode->parameters[0], 0);
+	hkl_parameter_set_value(&engine->mode->parameters[1], 0);
+	hkl_parameter_set_value(&engine->mode->parameters[2], -1);
 	res &= hkl_pseudo_axis_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, 90. * HKL_DEGTORAD);
 
 	/* Q and <h, k, l>_ref are colinear so must FAIL */
-	*h_ref = 0;
-	*k_ref = -1;
-	*l_ref = 0;
+	hkl_parameter_set_value(&engine->mode->parameters[0], 0);
+	hkl_parameter_set_value(&engine->mode->parameters[1], -1);
+	hkl_parameter_set_value(&engine->mode->parameters[2], 0);
 	res &= !hkl_pseudo_axis_engine_get(engine, NULL);
 
 	ok(res == HKL_TRUE, "psi getter");
@@ -217,7 +209,6 @@ static void psi_setter(void)
 	HklGeometry *geom;
 	HklDetector *detector;
 	HklSample *sample;
-	double *h_ref, *k_ref, *l_ref;
 
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL);
 	geom = hkl_geometry_factory_new(config);
@@ -231,15 +222,11 @@ static void psi_setter(void)
 
 	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "psi");
 
-	h_ref = &engine->mode->parameters[0].value;
-	k_ref = &engine->mode->parameters[1].value;
-	l_ref = &engine->mode->parameters[2].value;
-
 	/* the init part */
 	hkl_geometry_set_values_unit_v(geom, 30., 0., 0., 60.);
-	*h_ref = 1;
-	*k_ref = 0;
-	*l_ref = 0;
+	hkl_parameter_set_value(&engine->mode->parameters[0], 1);
+	hkl_parameter_set_value(&engine->mode->parameters[1], 0);
+	hkl_parameter_set_value(&engine->mode->parameters[2], 0);
 	hkl_pseudo_axis_engine_initialize(engine, NULL);
 
 	list_for_each(&engine->modes, mode, list){
@@ -340,7 +327,6 @@ static void hkl_psi_constant_horizontal(void)
 	HklDetector *detector;
 	HklSample *sample;
 	size_t i, f_idx;
-	double *h_ref, *k_ref, *l_ref, *psi_ref;
 	static double hkl[] = {1, 0, 1};
 
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL);
@@ -357,16 +343,12 @@ static void hkl_psi_constant_horizontal(void)
 
 	hkl_pseudo_axis_engine_select_mode_by_name(engine,
 						   "psi_constant");
-	h_ref = &engine->mode->parameters[0].value;
-	k_ref = &engine->mode->parameters[1].value;
-	l_ref = &engine->mode->parameters[2].value;
-	psi_ref = &engine->mode->parameters[3].value;
 
 	/* the init part */
 	hkl_geometry_set_values_unit_v(geom, 30., 0., 0., 60.);
-	*h_ref = 1;
-	*k_ref = 1;
-	*l_ref = 0;
+	hkl_parameter_set_value(&engine->mode->parameters[0], 1);
+	hkl_parameter_set_value(&engine->mode->parameters[1], 1);
+	hkl_parameter_set_value(&engine->mode->parameters[2], 0);
 	hkl_pseudo_axis_engine_initialize(engine, NULL);
 
 	hkl_pseudo_axis_engine_set_values(engine, hkl, 3);

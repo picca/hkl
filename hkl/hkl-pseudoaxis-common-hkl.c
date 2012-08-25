@@ -25,6 +25,7 @@
 #include <gsl/gsl_multiroots.h>
 #include <ccan/array_size/array_size.h>
 
+#include "hkl-parameter-private.h"
 #include "hkl-pseudoaxis-auto-private.h"
 #include "hkl-pseudoaxis-common-hkl-private.h"
 
@@ -142,7 +143,7 @@ static int fit_detector_position(HklPseudoAxisEngineMode *mode, HklGeometry *geo
 
 		/* initialize x with the right values */
 		for(i=0; i<params.len; ++i)
-			x->data[i] = hkl_axis_get_value(params.axes[i]);
+			x->data[i] = hkl_parameter_get_value(&params.axes[i]->parameter);
 
 		f.f = fit_detector_function;
 		f.n = params.len;
@@ -181,8 +182,13 @@ static int fit_detector_position(HklPseudoAxisEngineMode *mode, HklGeometry *geo
 		if(status != GSL_CONTINUE){
 			res = HKL_TRUE;
 			/* put the axes in the -pi, pi range. */
-			for(i=0; i<params.len; ++i)
-				gsl_sf_angle_restrict_pos_e(&((HklParameter *)params.axes[i])->value);
+			for(i=0; i<params.len; ++i){
+				double value;
+
+				value = hkl_parameter_get_value(&params.axes[i]->parameter);
+				hkl_parameter_set_value(&params.axes[i]->parameter,
+							gsl_sf_angle_restrict_pos(value));
+			}
 		}
 		/* release memory */
 		gsl_vector_free(x);
@@ -398,7 +404,8 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
 			kf2 = q;
 			hkl_vector_rotated_around_line(&kf2, M_PI, &cp, &op);
 			angle = hkl_vector_oriented_angle_points(&q, &op, &kf2, &axis_v);
-			hkl_axis_set_value(axis, ((HklParameter *)axis)->value + angle);
+			hkl_axis_set_value(axis,
+					   hkl_parameter_get_value(&axis->parameter) + angle);
 			hkl_geometry_update(geom);
 #ifdef DEBUG
 			fprintf(stdout, "\n- try to add a solution by rotating Q <%f, %f, %f> around the \"%s\" axis <%f, %f, %f> of %f radian",
@@ -452,9 +459,9 @@ int _double_diffraction(double const x[], void *params, double f[])
 	hkl_pseudo_axis_engine_get_values(engine, hkl.data, &len);
 
 	hkl_vector_init(&kf2,
-			engine->mode->parameters[0].value,
-			engine->mode->parameters[1].value,
-			engine->mode->parameters[2].value);
+			hkl_parameter_get_value(&engine->mode->parameters[0]),
+			hkl_parameter_get_value(&engine->mode->parameters[1]),
+			hkl_parameter_get_value(&engine->mode->parameters[2]));
 
 	/* R * UB * hkl = Q */
 	/* for now the 0 holder is the sample holder. */
@@ -533,7 +540,7 @@ int _psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f
 	Q = kf;
 	hkl_vector_minus_vector(&Q, &ki);
 
-	f->data[3] =  engine->mode->parameters[3].value;
+	f->data[3] =  hkl_parameter_get_value(&engine->mode->parameters[3]);
 
 	/* if |Q| > epsilon ok */
 	if(hkl_vector_normalize(&Q)){
@@ -548,9 +555,9 @@ int _psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f
 		/* compute the hkl ref position in the laboratory */
 		/* referentiel. The geometry was already updated. */
 		/* FIXME for now the 0 holder is the sample holder. */
-		hkl.data[0] = engine->mode->parameters[0].value;
-		hkl.data[1] = engine->mode->parameters[1].value;
-		hkl.data[2] = engine->mode->parameters[2].value;
+		hkl.data[0] = hkl_parameter_get_value(&engine->mode->parameters[0]);
+		hkl.data[1] = hkl_parameter_get_value(&engine->mode->parameters[1]);
+		hkl.data[2] = hkl_parameter_get_value(&engine->mode->parameters[2]);
 		hkl_matrix_times_vector(&engine->sample->UB, &hkl);
 		hkl_vector_rotated_quaternion(&hkl, &engine->geometry->holders[0].q);
 
@@ -612,9 +619,9 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 		/* compute hkl in the laboratory referentiel */
 		/* the geometry was already updated in the detector compute kf */
 		/* for now the 0 holder is the sample holder */
-		hkl.data[0] = self->parameters[0].value;
-		hkl.data[1] = self->parameters[1].value;
-		hkl.data[2] = self->parameters[2].value;
+		hkl.data[0] = hkl_parameter_get_value(&self->parameters[0]);
+		hkl.data[1] = hkl_parameter_get_value(&self->parameters[1]);
+		hkl.data[2] = hkl_parameter_get_value(&self->parameters[2]);
 		hkl_matrix_times_vector(&sample->UB, &hkl);
 		hkl_vector_rotated_quaternion(&hkl, &geometry->holders[0].q);
 

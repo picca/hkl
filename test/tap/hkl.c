@@ -36,7 +36,7 @@ int check_pseudoaxes_v(HklPseudoAxisEngine *engine, ...)
 	return check_pseudoaxes(engine, values, engine->info->n_pseudo_axes);
 }
 
-int check_pseudoaxes(HklPseudoAxisEngine *engine, double values[], uint len)
+int check_pseudoaxes(HklPseudoAxisEngine *engine, double expected[], uint len)
 {
 	int res = HKL_TRUE;
 	uint i;
@@ -46,10 +46,11 @@ int check_pseudoaxes(HklPseudoAxisEngine *engine, double values[], uint len)
 
 	i = 0;
 	list_for_each(&engine->pseudo_axes, pseudo_axis, list){
-		res &= fabs(values[i] - pseudo_axis->parameter.value) <= HKL_EPSILON;
+		const double current = hkl_parameter_get_value(&pseudo_axis->parameter);
+		res &= fabs(current - expected[i]) <= HKL_EPSILON;
 		if (!res){
 			fprintf(stderr, "current: %f, expected: %f, epsilon: %f\n",
-				pseudo_axis->parameter.value, values[i], HKL_EPSILON);
+				current, expected[i], HKL_EPSILON);
 		}
 		i++;
 	}

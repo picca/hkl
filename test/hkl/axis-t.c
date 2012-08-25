@@ -32,7 +32,7 @@ static void new(void)
 	is_string("omega", ((HklParameter *)axis)->name, __func__);
 	is_double(-M_PI, ((HklParameter *)axis)->range.min, HKL_EPSILON, __func__);
 	is_double(M_PI, ((HklParameter *)axis)->range.max, HKL_EPSILON, __func__);
-	is_double(0., ((HklParameter *)axis)->value, HKL_EPSILON, __func__);
+	is_double(0., hkl_parameter_get_value(&axis->parameter), HKL_EPSILON, __func__);
 	ok(HKL_TRUE == ((HklParameter *)axis)->fit, __func__);
 	ok(HKL_TRUE == ((HklParameter *)axis)->changed, __func__);
 
@@ -53,7 +53,7 @@ static void get_quaternions(void)
 	is_double(0., q.data[2], HKL_EPSILON, __func__);
 	is_double(0., q.data[3], HKL_EPSILON, __func__);
 
-	((HklParameter *)axis)->value = -M_PI_2;
+	hkl_parameter_set_value(&axis->parameter, -M_PI_2);
 	hkl_axis_get_quaternion(axis, &q);
 	is_double(1./sqrt(2.), q.data[0], HKL_EPSILON, __func__);
 	is_double(-1./sqrt(2.), q.data[1], HKL_EPSILON, __func__);

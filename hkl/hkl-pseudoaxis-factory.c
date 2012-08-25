@@ -61,9 +61,9 @@ static void hkl_geometry_list_multiply_k4c_real(HklGeometryList *self,
 	double kphi, kphip;
 
 	geometry = item->geometry;
-	komega = hkl_axis_get_value(&geometry->axes[0]);
-	kappa = hkl_axis_get_value(&geometry->axes[1]);
-	kphi = hkl_axis_get_value(&geometry->axes[2]);
+	komega = hkl_parameter_get_value(&geometry->axes[0].parameter);
+	kappa = hkl_parameter_get_value(&geometry->axes[1].parameter);
+	kphi = hkl_parameter_get_value(&geometry->axes[2].parameter);
 
 	kappa_2_kappap(komega, kappa, kphi, 50 * HKL_DEGTORAD, &komegap, &kappap, &kphip);
 
@@ -87,9 +87,9 @@ static void hkl_geometry_list_multiply_k6c_real(HklGeometryList *self,
 	double kphi, kphip;
 
 	geometry = item->geometry;
-	komega = hkl_axis_get_value(&geometry->axes[1]);
-	kappa = hkl_axis_get_value(&geometry->axes[2]);
-	kphi = hkl_axis_get_value(&geometry->axes[3]);
+	komega = hkl_parameter_get_value(&geometry->axes[1].parameter);
+	kappa = hkl_parameter_get_value(&geometry->axes[2].parameter);
+	kphi = hkl_parameter_get_value(&geometry->axes[3].parameter);
 
 	kappa_2_kappap(komega, kappa, kphi, 50 * HKL_DEGTORAD, &komegap, &kappap, &kphip);
 

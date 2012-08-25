@@ -196,7 +196,7 @@ extern gboolean hkl_pseudo_axis_engine_set_values_unit(HklPseudoAxisEngine *self
 		return FALSE;
 
 	list_for_each(&self->pseudo_axes, pseudo_axis, list){
-		pseudo_axis->parameter.value = values[i];
+		hkl_parameter_set_value(&pseudo_axis->parameter, values[i]);
 		++i;
 	}
 

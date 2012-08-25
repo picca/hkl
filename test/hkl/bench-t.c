@@ -35,7 +35,7 @@ static void hkl_test_bench_run_real(HklPseudoAxisEngine *engine, HklGeometry *ge
 
 		hkl_pseudo_axis_engine_select_mode(engine, mode);
 		if (mode->parameters_len)
-			mode->parameters[0].value = 1.;
+			hkl_parameter_set_value(&mode->parameters[0], 1.);
 
 		mean = max = 0;
 		min = 1000; /* arbitrary value always greater than the real min */
@@ -70,10 +70,8 @@ static void hkl_test_bench_run_v(HklPseudoAxisEngineList *engines, HklGeometry *
 
 	va_start(ap, n);
 	list_for_each(&engine->pseudo_axes, pseudo_axis, list){
-		double value;
-
-		value = va_arg(ap, double);
-		pseudo_axis->parameter.value = value;
+		hkl_parameter_set_value(&pseudo_axis->parameter,
+					va_arg(ap, double));
 	}
 	va_end(ap);
 

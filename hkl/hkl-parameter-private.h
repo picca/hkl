@@ -26,18 +26,14 @@
 
 HKL_BEGIN_DECLS
 
-struct _HklParameterOperations {
-	double (*get_value)(const HklParameter *self);
-};
-
 #define HKL_PARAMETER_OPERATIONS_DEFAULT .get_value=hkl_parameter_get_value_real
 
 static inline double hkl_parameter_get_value_real(const HklParameter *self)
 {
-	return self->value;
+	return self->_value;
 }
 
-static HklParameterOperations hkl_parameter_operations = {
+static HklParameterOperations hkl_parameter_operations_defaults = {
 	HKL_PARAMETER_OPERATIONS_DEFAULT,
 };
 

@@ -26,6 +26,7 @@
 #include <ccan/array_size/array_size.h>
 #include <gsl/gsl_sf_trig.h>
 
+#include "hkl-parameter-private.h"
 #include "hkl-pseudoaxis-auto-private.h"
 #include "hkl-pseudoaxis-common-q-private.h"
 

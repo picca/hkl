@@ -40,12 +40,12 @@ static int hkl_geometry_list_check_geometry_unit(HklGeometryList *self,
 		axes = item->geometry->axes;
 
 		res = HKL_TRUE;
-		res &= fabs(mu * HKL_DEGTORAD - ((HklParameter *)(&axes[0]))->value) < HKL_EPSILON;
-		res &= fabs(omega * HKL_DEGTORAD - ((HklParameter *)(&axes[1]))->value) < HKL_EPSILON;
-		res &= fabs(chi * HKL_DEGTORAD - ((HklParameter *)(&axes[2]))->value) < HKL_EPSILON;
-		res &= fabs(phi * HKL_DEGTORAD - ((HklParameter *)(&axes[3]))->value) < HKL_EPSILON;
-		res &= fabs(gamma * HKL_DEGTORAD - ((HklParameter *)(&axes[4]))->value) < HKL_EPSILON;
-		res &= fabs(delta * HKL_DEGTORAD - ((HklParameter *)(&axes[5]))->value) < HKL_EPSILON;
+		res &= fabs(mu * HKL_DEGTORAD - hkl_parameter_get_value(&axes[0].parameter)) < HKL_EPSILON;
+		res &= fabs(omega * HKL_DEGTORAD - hkl_parameter_get_value(&axes[1].parameter)) < HKL_EPSILON;
+		res &= fabs(chi * HKL_DEGTORAD - hkl_parameter_get_value(&axes[2].parameter)) < HKL_EPSILON;
+		res &= fabs(phi * HKL_DEGTORAD - hkl_parameter_get_value(&axes[3].parameter)) < HKL_EPSILON;
+		res &= fabs(gamma * HKL_DEGTORAD - hkl_parameter_get_value(&axes[4].parameter)) < HKL_EPSILON;
+		res &= fabs(delta * HKL_DEGTORAD - hkl_parameter_get_value(&axes[5].parameter)) < HKL_EPSILON;
 		if (res)
 			break;
 	}
@@ -130,7 +130,7 @@ static void degenerated(void)
 	list_for_each(&engine->modes, mode, list) {
 		hkl_pseudo_axis_engine_select_mode(engine, mode);
 		if (engine->mode->parameters_len)
-			engine->mode->parameters[0].value = 0.;
+			hkl_parameter_set_value(&engine->mode->parameters[0], 0.);
 
 		/* studdy this degenerated case */
 		hkl_pseudo_axis_engine_set_values(engine, hkl, 3);
@@ -273,7 +273,7 @@ static void petra3(void)
 			hkl_geometry_init_geometry(geom, item->geometry);
 			hkl_pseudo_axis_engine_initialize(psi, NULL);
 			hkl_pseudo_axis_engine_list_get(engines);
-			res &= fabs(PSI*HKL_DEGTORAD - list_top(&psi->pseudo_axes, HklPseudoAxis, list)->parameter.value) < HKL_EPSILON;
+			res &= fabs(PSI*HKL_DEGTORAD - hkl_parameter_get_value(&list_top(&psi->pseudo_axes, HklPseudoAxis, list)->parameter)) < HKL_EPSILON;
 		}
 	}
 
@@ -363,7 +363,7 @@ static void petra3_2(void)
 			hkl_geometry_init_geometry(geometry, item->geometry);
 			hkl_pseudo_axis_engine_initialize(psi, NULL);
 			hkl_pseudo_axis_engine_list_get(engines);
-			res &= fabs(PSI * HKL_DEGTORAD - list_top(&psi->pseudo_axes, HklPseudoAxis, list)->parameter.value) < HKL_EPSILON;
+			res &= fabs(PSI * HKL_DEGTORAD - hkl_parameter_get_value(&list_top(&psi->pseudo_axes, HklPseudoAxis, list)->parameter)) < HKL_EPSILON;
 		}
 	}
 
@@ -387,7 +387,7 @@ static void petra3_2(void)
 			hkl_geometry_init_geometry(geometry, item->geometry);
 			hkl_pseudo_axis_engine_initialize(psi, NULL);
 			hkl_pseudo_axis_engine_list_get(engines);
-			res &= fabs(PSI * HKL_DEGTORAD - list_top(&psi->pseudo_axes, HklPseudoAxis, list)->parameter.value) < HKL_EPSILON;
+			res &= fabs(PSI * HKL_DEGTORAD - hkl_parameter_get_value(&list_top(&psi->pseudo_axes, HklPseudoAxis, list)->parameter)) < HKL_EPSILON;
 		}
 	}
 
@@ -421,7 +421,7 @@ static void petra3_2(void)
 			hkl_geometry_init_geometry(geometry, item->geometry);
 			hkl_pseudo_axis_engine_initialize(psi, NULL);
 			hkl_pseudo_axis_engine_list_get(engines);
-			res &= fabs(PSI * HKL_DEGTORAD - list_top(&psi->pseudo_axes, HklPseudoAxis, list)->parameter.value) < HKL_EPSILON;
+			res &= fabs(PSI * HKL_DEGTORAD - hkl_parameter_get_value(&list_top(&psi->pseudo_axes, HklPseudoAxis, list)->parameter)) < HKL_EPSILON;
 		}
 	}
 
@@ -445,7 +445,7 @@ static void petra3_2(void)
 			hkl_geometry_init_geometry(geometry, item->geometry);
 			hkl_pseudo_axis_engine_initialize(psi, NULL);
 			hkl_pseudo_axis_engine_list_get(engines);
-			res &= fabs(PSI * HKL_DEGTORAD - list_top(&psi->pseudo_axes, HklPseudoAxis, list)->parameter.value) < HKL_EPSILON;
+			res &= fabs(PSI * HKL_DEGTORAD - hkl_parameter_get_value(&list_top(&psi->pseudo_axes, HklPseudoAxis, list)->parameter)) < HKL_EPSILON;
 		}
 	}
 

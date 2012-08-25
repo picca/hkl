@@ -21,6 +21,7 @@
  */
 #include <ccan/array_size/array_size.h>
 
+#include "hkl-parameter-private.h"
 #include "hkl-pseudoaxis-auto-private.h"
 #include "hkl-pseudoaxis-common-psi-private.h"
 
@@ -33,9 +34,9 @@ static HklPseudoAxisEngineMode* psi_vertical()
 	static const char *axes[] = {"omega", "chi", "phi", "delta"};
 	static const HklFunction *functions[] = {&psi_func};
 	static const HklParameter parameters[] = {
-		{HKL_PARAMETER_DEFAULTS, .name = "h1", .range = {.min=-1, .max=1}, .value=1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "k1", .range = {.min=-1, .max=1}, .value=1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "l1", .range = {.min=-1, .max=1}, .value=1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "h1", .range = {.min=-1, .max=1}, ._value=1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "k1", .range = {.min=-1, .max=1}, ._value=1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "l1", .range = {.min=-1, .max=1}, ._value=1,},
 	};
 	static const HklPseudoAxisEngineModeAutoInfo info = {
 		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),

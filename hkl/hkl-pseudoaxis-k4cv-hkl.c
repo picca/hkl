@@ -26,6 +26,7 @@
 
 #include <ccan/array_size/array_size.h>
 
+#include "hkl-parameter-private.h"
 #include "hkl-pseudoaxis-auto-private.h"
 #include "hkl-pseudoaxis-common-hkl-private.h"
 
@@ -83,7 +84,7 @@ static int _constant_omega_f1(const gsl_vector *x, void *params, gsl_vector *f)
 	double const kappa = x->data[1];
 	double omega;
 	HklPseudoAxisEngine *engine = params;
-	double omega0 = engine->mode->parameters[0].value;
+	double omega0 = hkl_parameter_get_value(&engine->mode->parameters[0]);
 
 	CHECK_NAN(x->data, x->size);
 
@@ -106,7 +107,7 @@ static int _constant_omega_f2(const gsl_vector *x, void *params, gsl_vector *f)
 	const double kappa = x->data[1];
 	double omega;
 	HklPseudoAxisEngine *engine = params;
-	double omega0 = engine->mode->parameters[0].value;
+	double omega0 = hkl_parameter_get_value(&engine->mode->parameters[0]);
 
 	CHECK_NAN(x->data, x->size);
 
@@ -128,7 +129,7 @@ static int _constant_chi_f1(const gsl_vector *x, void *params, gsl_vector *f)
 	const double kappa = x->data[1];
 	double chi;
 	HklPseudoAxisEngine *engine = params;
-	double chi0 = engine->mode->parameters[0].value;
+	double chi0 = hkl_parameter_get_value(&engine->mode->parameters[0]);
 
 	CHECK_NAN(x->data, x->size);
 
@@ -150,7 +151,7 @@ static int _constant_chi_f2(const gsl_vector *x, void *params, gsl_vector *f)
 	const double kappa = x->data[1];
 	double chi;
 	HklPseudoAxisEngine *engine = params;
-	double chi0 = engine->mode->parameters[0].value;
+	double chi0 = hkl_parameter_get_value(&engine->mode->parameters[0]);
 
 	CHECK_NAN(x->data, x->size);
 
@@ -173,7 +174,7 @@ static int _constant_phi_f1(const gsl_vector *x, void *params, gsl_vector *f)
 	const double kphi = x->data[2];
 	double phi;
 	HklPseudoAxisEngine *engine = params;
-	double phi0 = engine->mode->parameters[0].value;
+	double phi0 =  hkl_parameter_get_value(&engine->mode->parameters[0]);
 
 	CHECK_NAN(x->data, x->size);
 
@@ -196,7 +197,7 @@ static int _constant_phi_f2(const gsl_vector *x, void *params, gsl_vector *f)
 	const double kphi = x->data[2];
 	double phi;
 	HklPseudoAxisEngine *engine = params;
-	double phi0 = engine->mode->parameters[0].value;
+	double phi0 =  hkl_parameter_get_value(&engine->mode->parameters[0]);
 
 	CHECK_NAN(x->data, x->size);
 
@@ -279,9 +280,9 @@ static HklPseudoAxisEngineMode *double_diffraction(void)
 	static const char* axes[] = {"komega", "kappa", "kphi", "tth"};
 	static const HklFunction *functions[] = {&double_diffraction_func};
 	static const HklParameter parameters[] = {
-		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, .value = 1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, .value = 1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, .value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, ._value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, ._value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, ._value = 1,},
 	};
 	static const HklPseudoAxisEngineModeAutoInfo info = {
 		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
@@ -296,9 +297,9 @@ static HklPseudoAxisEngineMode *psi_constant(void)
 	static const char* axes[] = {"komega", "kappa", "kphi", "tth"};
 	static const HklFunction *functions[] = {&psi_constant_vertical_func};
 	static const HklParameter parameters[] = {
-		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, .value = 1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, .value = 0,},
-		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, .value = 0,},
+		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, ._value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, ._value = 0,},
+		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, ._value = 0,},
 		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "psi"},
 	};
 	static const HklPseudoAxisEngineModeAutoInfo info = {

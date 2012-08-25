@@ -23,6 +23,7 @@
 #include <gsl/gsl_sf_trig.h>
 #include <ccan/array_size/array_size.h>
 
+#include "hkl-parameter-private.h"
 #include "hkl-pseudoaxis-auto-private.h"
 #include "hkl-pseudoaxis-common-eulerians-private.h"
 
@@ -87,16 +88,19 @@ static int hkl_pseudo_axis_engine_mode_get_eulerians_real(HklPseudoAxisEngineMod
 							  HklError **error)
 {
 	const double angles[] = {
-		hkl_geometry_get_axis_by_name(geometry, "komega")->parameter.value,
-		hkl_geometry_get_axis_by_name(geometry, "kappa")->parameter.value,
-		hkl_geometry_get_axis_by_name(geometry, "kphi")->parameter.value,
+		hkl_parameter_get_value(
+			&hkl_geometry_get_axis_by_name(geometry, "komega")->parameter),
+		hkl_parameter_get_value(
+			&hkl_geometry_get_axis_by_name(geometry, "kappa")->parameter),
+		hkl_parameter_get_value(
+			&hkl_geometry_get_axis_by_name(geometry, "kphi")->parameter),
 	};
 	double values[3];
 	int solution;
 
 	hkl_geometry_update(geometry);
 
-	solution = (int)self->parameters[0].value;
+	solution = hkl_parameter_get_value(&self->parameters[0]);
 	kappa_to_eulerian(angles, values, 50 * HKL_DEGTORAD, solution);
 	hkl_pseudo_axis_engine_set_values(engine, values, 3);
 
@@ -115,7 +119,7 @@ static int hkl_pseudo_axis_engine_mode_set_eulerians_real(HklPseudoAxisEngineMod
 	double values[n_values];
 	double angles[3];
 
-	solution = self->parameters[0].value;
+	solution = hkl_parameter_get_value(&self->parameters[0]);
 	hkl_pseudo_axis_engine_get_values(engine, values, &n_values);
 
 	if(!eulerian_to_kappa(values, angles, 50 * HKL_DEGTORAD, solution)){
@@ -133,7 +137,7 @@ static HklPseudoAxisEngineMode *mode_eulerians()
 	HklPseudoAxisEngineMode *mode;
 	static const char *axes[] = {"komega", "kappa", "kphi"};
 	static const HklParameter parameters[] = {
-		{ HKL_PARAMETER_DEFAULTS, .name = "solution", .range = {.max = 1}, .value = 1,},
+		{ HKL_PARAMETER_DEFAULTS, .name = "solution", .range = {.max = 1}, ._value = 1,},
 	};
 	static const HklPseudoAxisEngineModeInfo info = {
 		INFO_WITH_PARAMS("eulerians", axes, parameters),
