@@ -668,7 +668,8 @@ Returns:</doc>
           <type name="gdouble" c:type="double"/>
         </return-value>
         <parameters>
-          <parameter name="geom" transfer-ownership="none">
+          <parameter name="ref" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklGeometry to compare with</doc>
             <type name="Geometry" c:type="HklGeometry*"/>
           </parameter>
         </parameters>
@@ -676,14 +677,13 @@ Returns:</doc>
       <method name="distance_orthodromic"
               c:identifier="hkl_geometry_distance_orthodromic"
               introspectable="0">
-        <doc xml:whitespace="preserve">compute the orthodromique distance between two #HklGeometry
-
-Returns:</doc>
         <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">the orthodromique distance</doc>
           <type name="gdouble" c:type="double"/>
         </return-value>
         <parameters>
-          <parameter name="geom" transfer-ownership="none">
+          <parameter name="ref" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the reference #HklGeometry to compare with.</doc>
             <type name="Geometry" c:type="HklGeometry*"/>
           </parameter>
         </parameters>
@@ -2007,7 +2007,7 @@ Returns:</doc>
             glib:type-name="HklPseudoAxis"
             glib:get-type="hkl_pseudo_axis_get_type"
             c:symbol-prefix="pseudo_axis">
-      <field name="parent" writable="1">
+      <field name="parameter" writable="1">
         <type name="Parameter" c:type="HklParameter"/>
       </field>
       <field name="engine" writable="1">

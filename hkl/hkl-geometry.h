@@ -131,9 +131,9 @@ extern int hkl_geometry_set_values_v(HklGeometry *self,
 
 extern int hkl_geometry_set_values_unit_v(HklGeometry *self, ...);
 
-extern double hkl_geometry_distance(HklGeometry *self, HklGeometry *geom);
+extern double hkl_geometry_distance(HklGeometry *self, HklGeometry *ref);
 
-extern double hkl_geometry_distance_orthodromic(HklGeometry *self, HklGeometry *geom);
+extern double hkl_geometry_distance_orthodromic(HklGeometry *self, HklGeometry *ref);
 
 extern int hkl_geometry_closest_from_geometry_with_range(HklGeometry *self, HklGeometry *ref);
 

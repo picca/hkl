@@ -465,27 +465,25 @@ double hkl_geometry_distance(HklGeometry *self, HklGeometry *ref)
 
 /**
  * hkl_geometry_distance_orthodromic: (skip)
- * @self:
- * @geom:
+ * @self: the this ptr
+ * @ref: the reference #HklGeometry to compare with.
  *
- * compute the orthodromique distance between two #HklGeometry
- *
- * Returns:
+ * Returns: the orthodromique distance
  **/
-double hkl_geometry_distance_orthodromic(HklGeometry *self, HklGeometry *geom)
+double hkl_geometry_distance_orthodromic(HklGeometry *self, HklGeometry *ref)
 {
 	size_t i;
 	double value1, value2;
 	double distance = 0.;
 
-	if (!self || !geom)
+	if (!self || !ref)
 		return 0.;
 
 	for(i=0; i<self->len; ++i){
 		double d;
 
 		value1 = hkl_axis_get_value(&self->axes[i]);
-		value2 = hkl_axis_get_value(&geom->axes[i]);
+		value2 = hkl_axis_get_value(&ref->axes[i]);
 		d = fabs(gsl_sf_angle_restrict_symm(value2) - gsl_sf_angle_restrict_symm(value1));
 		/* as M_PI and -M_PI are included in the GSL restriction */
 		if (d > M_PI)
