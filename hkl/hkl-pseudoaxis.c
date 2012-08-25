@@ -43,7 +43,7 @@ void hkl_pseudo_axis_fprintf(FILE *f, HklPseudoAxis *self)
 	if(!self)
 		return;
 
-	hkl_parameter_fprintf(f, &self->parent);
+	hkl_parameter_fprintf(f, &self->parameter);
 	fprintf(f, " %p", self->engine);
 }
 
@@ -286,7 +286,7 @@ void hkl_pseudo_axis_engine_set_values(HklPseudoAxisEngine *self,
 	hkl_assert(len == self->info->n_pseudo_axes);
 
 	list_for_each(&self->pseudo_axes, pseudo_axis, list){
-		pseudo_axis->parent.value = values[i++];
+		pseudo_axis->parameter.value = values[i++];
 	}
 }
 
@@ -307,7 +307,7 @@ void hkl_pseudo_axis_engine_get_values(HklPseudoAxisEngine *self,
 	assert(*len == self->info->n_pseudo_axes);
 
 	list_for_each(&self->pseudo_axes, pseudo_axis, list){
-		values[i++] = pseudo_axis->parent.value;
+		values[i++] = pseudo_axis->parameter.value;
 	}
 }
 
@@ -465,7 +465,7 @@ HklPseudoAxis *hkl_pseudo_axis_engine_list_get_pseudo_axis_by_name(HklPseudoAxis
 
 	list_for_each(&self->engines, engine, list){
 		list_for_each(&engine->pseudo_axes, pseudo_axis, list){
-			if (!strcmp(pseudo_axis->parent.name, name))
+			if (!strcmp(pseudo_axis->parameter.name, name))
 				return pseudo_axis;
 		}
 	}

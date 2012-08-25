@@ -273,7 +273,7 @@ static void petra3(void)
 			hkl_geometry_init_geometry(geom, item->geometry);
 			hkl_pseudo_axis_engine_initialize(psi, NULL);
 			hkl_pseudo_axis_engine_list_get(engines);
-			res &= fabs(PSI*HKL_DEGTORAD - list_top(&psi->pseudo_axes, HklPseudoAxis, list)->parent.value) < HKL_EPSILON;
+			res &= fabs(PSI*HKL_DEGTORAD - list_top(&psi->pseudo_axes, HklPseudoAxis, list)->parameter.value) < HKL_EPSILON;
 		}
 	}
 
@@ -363,7 +363,7 @@ static void petra3_2(void)
 			hkl_geometry_init_geometry(geometry, item->geometry);
 			hkl_pseudo_axis_engine_initialize(psi, NULL);
 			hkl_pseudo_axis_engine_list_get(engines);
-			res &= fabs(PSI * HKL_DEGTORAD - list_top(&psi->pseudo_axes, HklPseudoAxis, list)->parent.value) < HKL_EPSILON;
+			res &= fabs(PSI * HKL_DEGTORAD - list_top(&psi->pseudo_axes, HklPseudoAxis, list)->parameter.value) < HKL_EPSILON;
 		}
 	}
 
@@ -387,7 +387,7 @@ static void petra3_2(void)
 			hkl_geometry_init_geometry(geometry, item->geometry);
 			hkl_pseudo_axis_engine_initialize(psi, NULL);
 			hkl_pseudo_axis_engine_list_get(engines);
-			res &= fabs(PSI * HKL_DEGTORAD - list_top(&psi->pseudo_axes, HklPseudoAxis, list)->parent.value) < HKL_EPSILON;
+			res &= fabs(PSI * HKL_DEGTORAD - list_top(&psi->pseudo_axes, HklPseudoAxis, list)->parameter.value) < HKL_EPSILON;
 		}
 	}
 
@@ -421,7 +421,7 @@ static void petra3_2(void)
 			hkl_geometry_init_geometry(geometry, item->geometry);
 			hkl_pseudo_axis_engine_initialize(psi, NULL);
 			hkl_pseudo_axis_engine_list_get(engines);
-			res &= fabs(PSI * HKL_DEGTORAD - list_top(&psi->pseudo_axes, HklPseudoAxis, list)->parent.value) < HKL_EPSILON;
+			res &= fabs(PSI * HKL_DEGTORAD - list_top(&psi->pseudo_axes, HklPseudoAxis, list)->parameter.value) < HKL_EPSILON;
 		}
 	}
 
@@ -445,7 +445,7 @@ static void petra3_2(void)
 			hkl_geometry_init_geometry(geometry, item->geometry);
 			hkl_pseudo_axis_engine_initialize(psi, NULL);
 			hkl_pseudo_axis_engine_list_get(engines);
-			res &= fabs(PSI * HKL_DEGTORAD - list_top(&psi->pseudo_axes, HklPseudoAxis, list)->parent.value) < HKL_EPSILON;
+			res &= fabs(PSI * HKL_DEGTORAD - list_top(&psi->pseudo_axes, HklPseudoAxis, list)->parameter.value) < HKL_EPSILON;
 		}
 	}
 

@@ -39,7 +39,7 @@ typedef struct _HklPseudoAxisEngineList HklPseudoAxisEngineList;
 
 struct _HklPseudoAxis
 {
-	HklParameter parent;
+	HklParameter parameter;
 	HklPseudoAxisEngine *engine;
 	struct list_node list; /* PseudoAxisEngine */
 	void *_shit;

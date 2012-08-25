@@ -93,7 +93,7 @@ static int get_q_real(HklPseudoAxisEngineMode *self,
 /* not declared in the constructor as it is used also in the q2 pseudo
  * axis engine */
 static const HklPseudoAxis q = {
-	.parent = {HKL_PARAMETER_DEFAULTS, .name="q", .range={.min=-1, .max=1}},
+	.parameter = {HKL_PARAMETER_DEFAULTS, .name="q", .range={.min=-1, .max=1}},
 };
 
 static HklPseudoAxisEngineMode *mode_q(void)
@@ -222,7 +222,7 @@ static HklPseudoAxisEngineMode *mode_q2(void)
 }
 
 static const HklPseudoAxis alpha = {
-	.parent = {HKL_PARAMETER_DEFAULTS_ANGLE, .name="alpha"},
+	.parameter = {HKL_PARAMETER_DEFAULTS_ANGLE, .name="alpha"},
 };
 
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_q2_new(void)

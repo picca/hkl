@@ -52,9 +52,9 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 			/* randomize the pseudoAxes values */
 			j = 0;
 			list_for_each(&engine->pseudo_axes, pseudo_axis, list){
-				hkl_parameter_randomize(&pseudo_axis->parent);
+				hkl_parameter_randomize(&pseudo_axis->parameter);
 
-				values[j++] = pseudo_axis->parent.value;
+				values[j++] = pseudo_axis->parameter.value;
 			}
 			len = j;
 
@@ -75,14 +75,14 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 					/* to be sure that the result is the */
 					/* computed result. */
 					list_for_each(&engine->pseudo_axes, pseudo_axis, list)
-						pseudo_axis->parent.value = 0.;
+						pseudo_axis->parameter.value = 0.;
 
 					hkl_geometry_init_geometry(geometry, item->geometry);
 					hkl_pseudo_axis_engine_get(engine, NULL);
 
 					k=0;
 					list_for_each(&engine->pseudo_axes, pseudo_axis, list)
-						ko |= fabs(values[k++] - pseudo_axis->parent.value) >= HKL_EPSILON;
+						ko |= fabs(values[k++] - pseudo_axis->parameter.value) >= HKL_EPSILON;
 					if(ko)
 						break;
 				}
@@ -103,7 +103,7 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 				fprintf(stderr, " %f", values[k]);
 			fprintf(stderr, " obtained : ");
 			list_for_each(&engine->pseudo_axes, pseudo_axis, list)
-				fprintf(stderr, " %f", pseudo_axis->parent.value);
+				fprintf(stderr, " %f", pseudo_axis->parameter.value);
 			hkl_pseudo_axis_engine_fprintf(stdout, engine);
 		}else{
 			fprintf(stderr, " ok");

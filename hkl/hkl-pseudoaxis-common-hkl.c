@@ -640,13 +640,13 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_hkl_new(void)
 {
 	HklPseudoAxisEngine *self;
 	static const HklPseudoAxis h = {
-		.parent = { HKL_PARAMETER_DEFAULTS, .name = "h", .range={.min=-1, .max=1}}
+		.parameter = { HKL_PARAMETER_DEFAULTS, .name = "h", .range={.min=-1, .max=1}}
 	};
 	static const HklPseudoAxis k = {
-		.parent = { HKL_PARAMETER_DEFAULTS, .name = "k", .range={.min=-1, .max=1}}
+		.parameter = { HKL_PARAMETER_DEFAULTS, .name = "k", .range={.min=-1, .max=1}}
 	};
 	static const HklPseudoAxis l = {
-		.parent = { HKL_PARAMETER_DEFAULTS, .name = "l", .range={.min=-1, .max=1}}
+		.parameter = { HKL_PARAMETER_DEFAULTS, .name = "l", .range={.min=-1, .max=1}}
 	};
 	static const HklPseudoAxis *pseudo_axes[] = {&h, &k, &l};
 	static HklPseudoAxisEngineInfo info = {

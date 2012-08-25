@@ -41,7 +41,7 @@ l = numpy.linspace(1, 1, n + 1)
 
 # get the hkl engine
 hkl = engines.get_by_name("hkl")
-pseudo_axes_names = [axis.parent.name for axis in hkl.pseudo_axes()]
+pseudo_axes_names = [axis.parameter.name for axis in hkl.pseudo_axes()]
 
 # compute the trajectory
 motors_positions = []

@@ -46,7 +46,7 @@ l = numpy.linspace(hkl0[2], hkl1[2], n + 1)
 # get the hkl engine
 hkl = engines.get_by_name("hkl")
 eulerians = engines.get_by_name("eulerians")
-pseudo_names = [pseudo_axis.parent.name for pseudo_axis in eulerians.pseudo_axes()]
+pseudo_names = [pseudo_axis.parameter.name for pseudo_axis in eulerians.pseudo_axes()]
 
 # set the hkl engine and get the results
 trajectories = []

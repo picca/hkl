@@ -73,7 +73,7 @@ static void hkl_test_bench_run_v(HklPseudoAxisEngineList *engines, HklGeometry *
 		double value;
 
 		value = va_arg(ap, double);
-		pseudo_axis->parent.value = value;
+		pseudo_axis->parameter.value = value;
 	}
 	va_end(ap);
 

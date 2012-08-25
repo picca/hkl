@@ -244,7 +244,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_psi_new(void)
 {
 	HklPseudoAxisEngine *self;
 	static const HklPseudoAxis psi = {
-		.parent = { HKL_PARAMETER_DEFAULTS_ANGLE, .name = "psi"}
+		.parameter = { HKL_PARAMETER_DEFAULTS_ANGLE, .name = "psi"}
 	};
 	static const HklPseudoAxis *pseudo_axes[] = {&psi};
 	static const HklPseudoAxisEngineInfo info = {

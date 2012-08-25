@@ -151,13 +151,13 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_eulerians_new(void)
 	HklPseudoAxisEngine *self;
 	HklPseudoAxisEngineMode *mode;
 	static const HklPseudoAxis omega = {
-		.parent = { HKL_PARAMETER_DEFAULTS_ANGLE, .name = "omega"}
+		.parameter = { HKL_PARAMETER_DEFAULTS_ANGLE, .name = "omega"}
 	};
 	static const HklPseudoAxis chi = {
-		.parent = { HKL_PARAMETER_DEFAULTS_ANGLE, .name = "chi"}
+		.parameter = { HKL_PARAMETER_DEFAULTS_ANGLE, .name = "chi"}
 	};
 	static const HklPseudoAxis phi = {
-		.parent = {HKL_PARAMETER_DEFAULTS_ANGLE, .name = "phi"}
+		.parameter = {HKL_PARAMETER_DEFAULTS_ANGLE, .name = "phi"}
 	};
 	static const HklPseudoAxis *pseudo_axes[] = {&omega, &chi, &phi};
 	static HklPseudoAxisEngineInfo info = {

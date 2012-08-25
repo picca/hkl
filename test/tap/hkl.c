@@ -46,10 +46,10 @@ int check_pseudoaxes(HklPseudoAxisEngine *engine, double values[], uint len)
 
 	i = 0;
 	list_for_each(&engine->pseudo_axes, pseudo_axis, list){
-		res &= fabs(values[i] - pseudo_axis->parent.value) <= HKL_EPSILON;
+		res &= fabs(values[i] - pseudo_axis->parameter.value) <= HKL_EPSILON;
 		if (!res){
 			fprintf(stderr, "current: %f, expected: %f, epsilon: %f\n",
-				pseudo_axis->parent.value, values[i], HKL_EPSILON);
+				pseudo_axis->parameter.value, values[i], HKL_EPSILON);
 		}
 		i++;
 	}

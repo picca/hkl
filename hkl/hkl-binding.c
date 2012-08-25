@@ -165,7 +165,7 @@ double *hkl_pseudo_axis_engine_get_values_unit(HklPseudoAxisEngine *self,
 
 	*len=0;
 	list_for_each(&self->pseudo_axes, pseudo_axis, list){
-		values[(*len)++] = hkl_parameter_get_value_unit(&pseudo_axis->parent);
+		values[(*len)++] = hkl_parameter_get_value_unit(&pseudo_axis->parameter);
 	}
 
 	return values;
@@ -196,7 +196,7 @@ extern gboolean hkl_pseudo_axis_engine_set_values_unit(HklPseudoAxisEngine *self
 		return FALSE;
 
 	list_for_each(&self->pseudo_axes, pseudo_axis, list){
-		pseudo_axis->parent.value = values[i];
+		pseudo_axis->parameter.value = values[i];
 		++i;
 	}
 

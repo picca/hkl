@@ -72,7 +72,7 @@ static inline void hkl_pseudo_axis_init(HklPseudoAxis *self,
 				 const HklParameter *parameter,
 				 HklPseudoAxisEngine *engine)
 {
-	self->parent = *parameter;
+	self->parameter = *parameter;
 	self->engine = engine;
 }
 
@@ -97,7 +97,7 @@ static inline HklPseudoAxis *hkl_pseudo_axis_dup(const HklPseudoAxis *self)
 
 	dup = HKL_MALLOC(HklPseudoAxis);
 
-	dup->parent = self->parent;
+	dup->parameter = self->parameter;
 	dup->engine = self->engine;
 
 	return dup;
@@ -228,7 +228,7 @@ static inline HklPseudoAxisEngine *hkl_pseudo_axis_engine_new(const HklPseudoAxi
 	for(i=0; i<self->info->n_pseudo_axes; ++i){
 		HklPseudoAxis *pseudo_axis;
 
-		pseudo_axis =  hkl_pseudo_axis_new(&info->pseudo_axes[i]->parent, self);
+		pseudo_axis =  hkl_pseudo_axis_new(&info->pseudo_axes[i]->parameter, self);
 		list_add_tail(&self->pseudo_axes, &pseudo_axis->list);
 	}
 
