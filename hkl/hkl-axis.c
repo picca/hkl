@@ -52,6 +52,20 @@ static inline void hkl_axis_set_value_unit_real(HklParameter *self, double value
 	hkl_axis_update(container_of(self, HklAxis, parameter));
 }
 
+static inline void hkl_axis_randomize_real(HklParameter *self)
+{
+	hkl_parameter_randomize_real(self);
+	hkl_axis_update(container_of(self, HklAxis, parameter));
+}
+
+static HklParameterOperations axis_operations = {
+	HKL_PARAMETER_OPERATIONS_DEFAULT,
+	.set_value = hkl_axis_set_value_real,
+	.set_value_unit = hkl_axis_set_value_unit_real,
+	.randomize = hkl_axis_randomize_real,
+};
+
+
 /*
  * given a current position of angle a min and max interval find the closest
  * equivalent angle + n delta_angle in a given direction.
@@ -72,13 +86,6 @@ static void find_angle(double current, double *angle, double *distance,
 		new_angle += delta_angle;
 	}
 }
-
-static HklParameterOperations axis_operations = {
-	HKL_PARAMETER_OPERATIONS_DEFAULT,
-	.set_value = hkl_axis_set_value_real,
-	.set_value_unit = hkl_axis_set_value_unit_real,
-};
-
 
 /*
  * check if the angle or its equivalent is in between [min, max]
@@ -205,12 +212,6 @@ void hkl_axis_set_value_smallest_in_range(HklAxis *self)
 	else
 		hkl_parameter_set_value(&self->parameter,
 					value - 2*M_PI*floor((value - min)/(2*M_PI)));
-}
-
-void hkl_axis_randomize(HklAxis *self)
-{
-	hkl_parameter_randomize(&self->parameter);
-	hkl_axis_update(self);
 }
 
 void hkl_axis_get_quaternion(HklAxis const *self, HklQuaternion *q)

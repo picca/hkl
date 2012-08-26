@@ -109,11 +109,6 @@ and/or use gtk-doc annotations.  -->
           <type name="Axis" c:type="HklAxis*"/>
         </return-value>
       </method>
-      <method name="randomize" c:identifier="hkl_axis_randomize">
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-      </method>
       <method name="set_value_smallest_in_range"
               c:identifier="hkl_axis_set_value_smallest_in_range">
         <return-value transfer-ownership="none">

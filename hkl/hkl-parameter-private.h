@@ -1,3 +1,4 @@
+
 /* This file is part of the hkl library.
  *
  * The hkl library is free software: you can redistribute it and/or modify
@@ -31,13 +32,15 @@ struct _HklParameterOperations {
 	double (*get_value_unit)(const HklParameter *self);
 	void (*set_value)(HklParameter *self, double value);
 	void (*set_value_unit)(HklParameter *self, double value);
+	void (*randomize)(HklParameter *self);
 };
 
 #define HKL_PARAMETER_OPERATIONS_DEFAULT				\
 	.get_value=hkl_parameter_get_value_real,			\
 		.get_value_unit = hkl_parameter_get_value_unit_real,	\
-		.set_value = hkl_parameter_set_value_real, \
-		.set_value_unit = hkl_parameter_set_value_unit_real
+		.set_value = hkl_parameter_set_value_real,		\
+		.set_value_unit = hkl_parameter_set_value_unit_real,	\
+		.randomize = hkl_parameter_randomize_real
 
 static inline double hkl_parameter_get_value_real(const HklParameter *self)
 {
@@ -62,6 +65,16 @@ static inline void hkl_parameter_set_value_unit_real(HklParameter *self, double 
 	double factor = hkl_unit_factor(self->unit, self->punit);
 
 	hkl_parameter_set_value_real(self, value / factor);
+}
+
+static inline void hkl_parameter_randomize_real(HklParameter *self)
+{
+	if (self->fit) {
+		double alea = (double)rand() / (RAND_MAX + 1.);
+		self->_value = self->range.min
+			+ (self->range.max - self->range.min) * alea;
+		self->changed = HKL_TRUE;
+	}
 }
 
 static HklParameterOperations hkl_parameter_operations_defaults = {

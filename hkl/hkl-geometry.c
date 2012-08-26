@@ -386,7 +386,7 @@ void hkl_geometry_randomize(HklGeometry *self)
 	size_t i;
 
 	for(i=0; i<self->len; ++i)
-		hkl_axis_randomize(&self->axes[i]);
+		hkl_parameter_randomize(&self->axes[i].parameter);
 	hkl_geometry_update(self);
 }
 

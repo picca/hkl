@@ -230,12 +230,7 @@ void hkl_parameter_set_range_unit(HklParameter *self, double min, double max)
  **/
 void hkl_parameter_randomize(HklParameter *self)
 {
-	if (self->fit) {
-		double alea = (double)rand() / (RAND_MAX + 1.);
-		self->_value = self->range.min
-			+ (self->range.max - self->range.min) * alea;
-		self->changed = HKL_TRUE;
-	}
+	self->ops->randomize(self);
 }
 
 /**
