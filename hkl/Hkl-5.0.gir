@@ -114,16 +114,6 @@ and/or use gtk-doc annotations.  -->
           <type name="none" c:type="void"/>
         </return-value>
       </method>
-      <method name="set_value" c:identifier="hkl_axis_set_value">
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="value" transfer-ownership="none">
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-        </parameters>
-      </method>
       <method name="set_value_smallest_in_range"
               c:identifier="hkl_axis_set_value_smallest_in_range">
         <return-value transfer-ownership="none">

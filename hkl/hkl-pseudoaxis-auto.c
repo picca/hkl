@@ -162,7 +162,8 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 		x_data = (double *)s->x->data;
 		i = 0;
 		list_for_each(&self->axes, axis, engine_list){
-			hkl_axis_set_value(axis, degenerated[i] ? x_data0[i] : x_data[i]);
+			hkl_parameter_set_value(&axis->parameter,
+						degenerated[i] ? x_data0[i] : x_data[i]);
 			++i;
 		}
 

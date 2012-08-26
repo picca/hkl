@@ -410,7 +410,8 @@ int hkl_geometry_set_values_v(HklGeometry *self, size_t len, ...)
 
 	va_start(ap, len);
 	for(i=0; i<len; ++i)
-		hkl_axis_set_value(&self->axes[i], va_arg(ap, double));
+		hkl_parameter_set_value(&self->axes[i].parameter,
+					va_arg(ap, double));
 
 	va_end(ap);
 	hkl_geometry_update(self);
@@ -538,7 +539,8 @@ int hkl_geometry_closest_from_geometry_with_range(HklGeometry *self, HklGeometry
 	}
 	if(!ko){
 		for(i=0;i<self->len;++i)
-			hkl_axis_set_value(&self->axes[i], values[i]);
+			hkl_parameter_set_value(&self->axes[i].parameter,
+						values[i]);
 		hkl_geometry_update(self);
 	}
 	return ko;
@@ -843,9 +845,9 @@ static void perm_r(HklGeometryList *self, HklGeometry *ref, HklGeometry *geometr
 				perm_r(self, ref, geometry, perm, axis_idx + 1);
 				value +=  2*M_PI;
 				if(value <= (max + HKL_EPSILON))
-					hkl_axis_set_value(axis, value);
+					hkl_parameter_set_value(&axis->parameter, value);
 			}while(value <= (max + HKL_EPSILON));
-			hkl_axis_set_value(axis, value0);
+			hkl_parameter_set_value(&axis->parameter, value0);
 		} else
 			perm_r(self, ref, geometry, perm, axis_idx + 1);
 	}

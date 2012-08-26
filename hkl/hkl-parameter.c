@@ -145,8 +145,7 @@ inline double hkl_parameter_get_value_unit(const HklParameter *self)
  **/
 void hkl_parameter_set_value(HklParameter *self, double value)
 {
-	self->_value = value;
-	self->changed = HKL_TRUE;
+	self->ops->set_value(self, value);
 }
 
 /**

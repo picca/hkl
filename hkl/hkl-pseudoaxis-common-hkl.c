@@ -56,7 +56,8 @@ static int fit_detector_function(const gsl_vector *x, void *params, gsl_vector *
 
 	/* update the workspace from x; */
 	for(i=0; i<fitp->len; ++i)
-		hkl_axis_set_value(fitp->axes[i], x->data[i]);
+		hkl_parameter_set_value(&fitp->axes[i]->parameter,
+					x->data[i]);
 
 	hkl_geometry_update(fitp->geometry);
 
@@ -404,8 +405,8 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
 			kf2 = q;
 			hkl_vector_rotated_around_line(&kf2, M_PI, &cp, &op);
 			angle = hkl_vector_oriented_angle_points(&q, &op, &kf2, &axis_v);
-			hkl_axis_set_value(axis,
-					   hkl_parameter_get_value(&axis->parameter) + angle);
+			hkl_parameter_set_value(&axis->parameter,
+						hkl_parameter_get_value(&axis->parameter) + angle);
 			hkl_geometry_update(geom);
 #ifdef DEBUG
 			fprintf(stdout, "\n- try to add a solution by rotating Q <%f, %f, %f> around the \"%s\" axis <%f, %f, %f> of %f radian",

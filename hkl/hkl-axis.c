@@ -33,16 +33,19 @@
 /* HklAxis */
 /***********/
 
-static HklParameterOperations axis_operations = {
-	HKL_PARAMETER_OPERATIONS_DEFAULT,
-};
-
-static void hkl_axis_update(HklAxis *self)
+static inline void hkl_axis_update(HklAxis *self)
 {
 	hkl_quaternion_init_from_angle_and_axe(&self->q,
 					       hkl_parameter_get_value(&self->parameter),
 					       &self->axis_v);
 }
+
+static inline void hkl_axis_set_value_real(HklParameter *self, double value)
+{
+	hkl_parameter_set_value_real(self, value);
+	hkl_axis_update(container_of(self, HklAxis, parameter));
+}
+
 
 /*
  * given a current position of angle a min and max interval find the closest
@@ -64,6 +67,11 @@ static void find_angle(double current, double *angle, double *distance,
 		new_angle += delta_angle;
 	}
 }
+
+static HklParameterOperations axis_operations = {
+	HKL_PARAMETER_OPERATIONS_DEFAULT,
+	.set_value = hkl_axis_set_value_real,
+};
 
 
 /*
@@ -178,12 +186,6 @@ double hkl_axis_get_value_closest_unit(HklAxis const *self, HklAxis const *axis)
 	return factor * hkl_axis_get_value_closest(self, axis);
 }
 
-void hkl_axis_set_value(HklAxis *self, double value)
-{
-	hkl_parameter_set_value(&self->parameter, value);
-	hkl_axis_update(self);
-}
-
 void hkl_axis_set_value_smallest_in_range(HklAxis *self)
 {
 	double value, min;
@@ -192,9 +194,11 @@ void hkl_axis_set_value_smallest_in_range(HklAxis *self)
 	min = self->parameter.range.min;
 
 	if(value < min)
-		hkl_axis_set_value(self, value + 2*M_PI*ceil((min - value)/(2*M_PI)));
+		hkl_parameter_set_value(&self->parameter,
+					value + 2*M_PI*ceil((min - value)/(2*M_PI)));
 	else
-		hkl_axis_set_value(self, value - 2*M_PI*floor((value - min)/(2*M_PI)));
+		hkl_parameter_set_value(&self->parameter,
+					value - 2*M_PI*floor((value - min)/(2*M_PI)));
 }
 
 void hkl_axis_set_value_unit(HklAxis *self, double value)

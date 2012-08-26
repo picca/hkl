@@ -60,7 +60,7 @@ static inline void set_geometry_axes(HklPseudoAxisEngine *engine, const double v
 	uint i = 0;
 
 	list_for_each(&engine->axes, axis, engine_list)
-		hkl_axis_set_value(axis, values[i++]);
+		hkl_parameter_set_value(&axis->parameter, values[i++]);
 	hkl_geometry_update(engine->geometry);
 }
 
@@ -306,7 +306,8 @@ static inline void hkl_pseudo_axis_engine_add_geometry(HklPseudoAxisEngine *self
 
 	/* copy the axes configuration into the engine->geometry */
 	list_for_each(&self->axes, axis, engine_list){
-		hkl_axis_set_value(axis, gsl_sf_angle_restrict_symm(x[i++]));
+		hkl_parameter_set_value(&axis->parameter,
+					gsl_sf_angle_restrict_symm(x[i++]));
 	}
 
 	hkl_geometry_list_add(self->engines->geometries, self->geometry);

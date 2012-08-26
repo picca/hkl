@@ -29,11 +29,13 @@ HKL_BEGIN_DECLS
 struct _HklParameterOperations {
 	double (*get_value)(const HklParameter *self);
 	double (*get_value_unit)(const HklParameter *self);
+	void (*set_value)(HklParameter *self, double value);
 };
 
 #define HKL_PARAMETER_OPERATIONS_DEFAULT				\
 	.get_value=hkl_parameter_get_value_real,			\
-		.get_value_unit = hkl_parameter_get_value_unit_real
+		.get_value_unit = hkl_parameter_get_value_unit_real,	\
+		.set_value = hkl_parameter_set_value_real
 
 static inline double hkl_parameter_get_value_real(const HklParameter *self)
 {
@@ -45,6 +47,12 @@ static inline double hkl_parameter_get_value_unit_real(const HklParameter *self)
 	double factor = hkl_unit_factor(self->unit, self->punit);
 
 	return self->_value * factor;
+}
+
+static inline void hkl_parameter_set_value_real(HklParameter *self, double value)
+{
+	self->_value = value;
+	self->changed = HKL_TRUE;
 }
 
 static HklParameterOperations hkl_parameter_operations_defaults = {
