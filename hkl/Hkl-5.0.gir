@@ -48,16 +48,6 @@ and/or use gtk-doc annotations.  -->
           <type name="none" c:type="void"/>
         </return-value>
       </method>
-      <method name="get_quaternion" c:identifier="hkl_axis_get_quaternion">
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="q" transfer-ownership="none">
-            <type name="Quaternion" c:type="HklQuaternion*"/>
-          </parameter>
-        </parameters>
-      </method>
       <method name="get_value_closest"
               c:identifier="hkl_axis_get_value_closest">
         <return-value transfer-ownership="none">

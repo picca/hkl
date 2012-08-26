@@ -211,13 +211,6 @@ void hkl_axis_set_value_smallest_in_range(HklAxis *self)
 					value - 2*M_PI*floor((value - min)/(2*M_PI)));
 }
 
-void hkl_axis_get_quaternion(HklAxis const *self, HklQuaternion *q)
-{
-	hkl_quaternion_init_from_angle_and_axe(q,
-					       self->parameter._value,
-					       &self->axis_v);
-}
-
 void hkl_axis_fprintf(FILE *f, HklAxis *self)
 {
 	hkl_parameter_fprintf(f, &self->parameter);

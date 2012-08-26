@@ -43,22 +43,19 @@ static void get_quaternions(void)
 {
 	HklAxis *axis;
 	static HklVector v = {{1, 0, 0}};
-	HklQuaternion q;
 
 	axis = hkl_axis_new("omega", &v);
 
-	hkl_axis_get_quaternion(axis, &q);
-	is_double(1., q.data[0], HKL_EPSILON, __func__);
-	is_double(0., q.data[1], HKL_EPSILON, __func__);
-	is_double(0., q.data[2], HKL_EPSILON, __func__);
-	is_double(0., q.data[3], HKL_EPSILON, __func__);
+	is_double(1., axis->q.data[0], HKL_EPSILON, __func__);
+	is_double(0., axis->q.data[1], HKL_EPSILON, __func__);
+	is_double(0., axis->q.data[2], HKL_EPSILON, __func__);
+	is_double(0., axis->q.data[3], HKL_EPSILON, __func__);
 
 	hkl_parameter_set_value(&axis->parameter, -M_PI_2);
-	hkl_axis_get_quaternion(axis, &q);
-	is_double(1./sqrt(2.), q.data[0], HKL_EPSILON, __func__);
-	is_double(-1./sqrt(2.), q.data[1], HKL_EPSILON, __func__);
-	is_double(0., q.data[2], HKL_EPSILON, __func__);
-	is_double(0., q.data[3], HKL_EPSILON, __func__);
+	is_double(1./sqrt(2.), axis->q.data[0], HKL_EPSILON, __func__);
+	is_double(-1./sqrt(2.), axis->q.data[1], HKL_EPSILON, __func__);
+	is_double(0., axis->q.data[2], HKL_EPSILON, __func__);
+	is_double(0., axis->q.data[3], HKL_EPSILON, __func__);
 
 	hkl_axis_free(axis);
 }

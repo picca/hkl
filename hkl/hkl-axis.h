@@ -58,16 +58,6 @@ extern double hkl_axis_get_value_closest_unit(HklAxis const *self, HklAxis const
 
 extern void hkl_axis_set_value_smallest_in_range(HklAxis *self);
 
-/**
- * @brief get the quaternion of an axis.
- *
- * @param axis
- * @param q
- *
- * inline to speed computation.
- */
-extern void hkl_axis_get_quaternion(HklAxis const *self, HklQuaternion *q);
-
 extern int hkl_axis_is_value_compatible_with_range(HklAxis const *self);
 
 extern void hkl_axis_fprintf(FILE *f, HklAxis *self);
