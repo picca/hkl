@@ -139,11 +139,6 @@ void hkl_axis_init(HklAxis *self, const char* name, const HklVector *axis_v)
 	self->axis_v = *axis_v;
 }
 
-char const *hkl_axis_get_name(HklAxis const *self)
-{
-	return self->parameter.name;
-}
-
 int hkl_axis_get_changed(HklAxis const *self)
 {
 	return self->parameter.changed;

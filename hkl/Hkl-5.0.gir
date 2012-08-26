@@ -58,11 +58,6 @@ and/or use gtk-doc annotations.  -->
           <type name="gdouble" c:type="double"/>
         </return-value>
       </method>
-      <method name="get_name" c:identifier="hkl_axis_get_name">
-        <return-value transfer-ownership="full">
-          <type name="utf8" c:type="char*"/>
-        </return-value>
-      </method>
       <method name="get_quaternion" c:identifier="hkl_axis_get_quaternion">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>

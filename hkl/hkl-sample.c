@@ -694,7 +694,7 @@ void hkl_sample_fprintf(FILE *f, const HklSample *self)
 		fprintf(f, "i %-10.6s %-10.6s %-10.6s", "h", "k", "l");
 		axes = reflection->geometry->axes;
 		for(i=0; i<reflection->geometry->len; ++i)
-			fprintf(f, " %-10.6s", hkl_axis_get_name(&axes[i]));
+			fprintf(f, " %-10.6s", axes[i].parameter.name);
 
 		for(i=0; i<len; ++i){
 			size_t j;

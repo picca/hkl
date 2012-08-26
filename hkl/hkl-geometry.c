@@ -48,7 +48,7 @@ static size_t hkl_geometry_add_rotation(HklGeometry *self,
 		HklAxis *axis;
 
 		axis = &self->axes[i];
-		if(!strcmp(hkl_axis_get_name(axis), name)){
+		if(!strcmp(axis->parameter.name, name)){
 			if (hkl_vector_cmp(&axis->axis_v, axis_v)){
 				fprintf(stderr, "can not add two axis with the same name \"%s\" but different axes <%f, %f, %f> != <%f, %f, %f> into an HklAxes.",
 					name,
@@ -347,7 +347,7 @@ int hkl_geometry_get_axis_idx_by_name(HklGeometry *self, const char *name)
 
 	for(i=0; i<self->len; ++i){
 		axis = &self->axes[i];
-		if (!strcmp(hkl_axis_get_name(axis), name))
+		if (!strcmp(axis->parameter.name, name))
 			return i;
 	}
 
@@ -369,7 +369,7 @@ HklAxis *hkl_geometry_get_axis_by_name(HklGeometry *self, const char *name)
 	HklAxis *axis;
 	for(i=0; i<self->len; ++i) {
 		axis = &self->axes[i];
-		if (!strcmp(hkl_axis_get_name(axis), name))
+		if (!strcmp(axis->parameter.name, name))
 			return axis;
 	}
 	return NULL;
@@ -758,7 +758,7 @@ void hkl_geometry_list_fprintf(FILE *f, const HklGeometryList *self)
 		axes_len = item->geometry->len;
 		fprintf(f, "    ");
 		for(i=0; i<axes_len; ++i)
-			fprintf(f, "%19s", hkl_axis_get_name(&item->geometry->axes[i]));
+			fprintf(f, "%19s", item->geometry->axes[i].parameter.name);
 
 		/* geometries */
 		list_for_each(&self->items, item, node){
