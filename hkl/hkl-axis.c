@@ -58,14 +58,6 @@ static inline void hkl_axis_randomize_real(HklParameter *self)
 	hkl_axis_update(container_of(self, HklAxis, parameter));
 }
 
-static HklParameterOperations axis_operations = {
-	HKL_PARAMETER_OPERATIONS_DEFAULT,
-	.set_value = hkl_axis_set_value_real,
-	.set_value_unit = hkl_axis_set_value_unit_real,
-	.randomize = hkl_axis_randomize_real,
-};
-
-
 /*
  * given a current position of angle a min and max interval find the closest
  * equivalent angle + n delta_angle in a given direction.
@@ -86,6 +78,48 @@ static void find_angle(double current, double *angle, double *distance,
 		new_angle += delta_angle;
 	}
 }
+
+static inline double hkl_axis_get_value_closest_real(const HklParameter *self,
+						     const HklParameter *ref)
+{
+	double angle = self->_value;
+
+	if(hkl_axis_is_value_compatible_with_range(container_of(self, HklAxis, parameter))){
+		if(hkl_interval_length(&self->range) >= 2*M_PI){
+			int k;
+			double current = ref->_value;
+			double distance = fabs(current - angle);
+			double delta = 2. * M_PI;
+			double min = self->range.min;
+			double max = self->range.max;
+
+			/* three cases */
+			if (angle > max) {
+				k = (int)(floor((max - angle) / delta));
+				angle += k * delta;
+				find_angle(current, &angle, &distance, min, max, -delta);
+			} else if (angle < min) {
+				k = (int) (ceil((min - angle) / delta));
+				angle += k * delta;
+				find_angle(current, &angle, &distance, min, max, delta);
+			} else {
+				find_angle(current, &angle, &distance, min, max, -delta);
+				find_angle(current, &angle, &distance, min, max, delta);
+			}
+		}
+
+	}else
+		angle = GSL_NAN;
+	return angle;
+}
+
+static HklParameterOperations axis_operations = {
+	HKL_PARAMETER_OPERATIONS_DEFAULT,
+	.get_value_closest = hkl_axis_get_value_closest_real,
+	.set_value = hkl_axis_set_value_real,
+	.set_value_unit = hkl_axis_set_value_unit_real,
+	.randomize = hkl_axis_randomize_real,
+};
 
 /*
  * check if the angle or its equivalent is in between [min, max]
@@ -157,43 +191,12 @@ void hkl_axis_init(HklAxis *self, const char* name, const HklVector *axis_v)
 	self->axis_v = *axis_v;
 }
 
-double hkl_axis_get_value_closest(HklAxis const *self, HklAxis const *axis)
-{
-	double angle = self->parameter._value;
-
-	if(hkl_axis_is_value_compatible_with_range(self)){
-		if(hkl_interval_length(&self->parameter.range) >= 2*M_PI){
-			int k;
-			double current = axis->parameter._value;
-			double distance = fabs(current - angle);
-			double delta = 2. * M_PI;
-			double min = self->parameter.range.min;
-			double max = self->parameter.range.max;
-
-			/* three cases */
-			if (angle > max) {
-				k = (int)(floor((max - angle) / delta));
-				angle += k * delta;
-				find_angle(current, &angle, &distance, min, max, -delta);
-			} else if (angle < min) {
-				k = (int) (ceil((min - angle) / delta));
-				angle += k * delta;
-				find_angle(current, &angle, &distance, min, max, delta);
-			} else {
-				find_angle(current, &angle, &distance, min, max, -delta);
-				find_angle(current, &angle, &distance, min, max, delta);
-			}
-		}
-
-	}else
-		angle = GSL_NAN;
-	return angle;
-}
 
 double hkl_axis_get_value_closest_unit(HklAxis const *self, HklAxis const *axis)
 {
 	double factor = hkl_unit_factor(self->parameter.unit, self->parameter.punit);
-	return factor * hkl_axis_get_value_closest(self, axis);
+	return factor * hkl_axis_get_value_closest_real(&self->parameter,
+							&axis->parameter);
 }
 
 void hkl_axis_set_value_smallest_in_range(HklAxis *self)

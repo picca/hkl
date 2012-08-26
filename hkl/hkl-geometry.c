@@ -532,7 +532,8 @@ int hkl_geometry_closest_from_geometry_with_range(HklGeometry *self, HklGeometry
 	int ko = HKL_FALSE;
 
 	for(i=0;i<self->len;++i){
-		values[i] = hkl_axis_get_value_closest(&self->axes[i], &ref->axes[i]);
+		values[i] = hkl_parameter_get_value_closest(&self->axes[i].parameter,
+							    &ref->axes[i].parameter);
 		if(gsl_isnan(values[i])){
 			ko = HKL_TRUE;
 			break;

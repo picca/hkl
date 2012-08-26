@@ -137,6 +137,22 @@ inline double hkl_parameter_get_value_unit(const HklParameter *self)
 }
 
 /**
+ * hkl_parameter_get_value_closest:
+ * @self: the this ptr
+ * @ref: the reference #HklParameter
+ *
+ * 
+ *
+ * Returns: the closest value of the ref #HklParameter from the
+ *          current self #HklParameter
+ **/
+inline double hkl_parameter_get_value_closest(const HklParameter *self,
+					      const HklParameter *ref)
+{
+	return self->ops->get_value_closest(self, ref);
+}
+
+/**
  * hkl_parameter_set_value: (skip)
  * @self:
  * @value:

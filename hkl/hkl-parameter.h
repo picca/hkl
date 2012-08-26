@@ -60,6 +60,9 @@ extern double hkl_parameter_get_value(const HklParameter *self);
 
 extern double hkl_parameter_get_value_unit(const HklParameter *self);
 
+extern double hkl_parameter_get_value_closest(const HklParameter *self,
+					      const HklParameter *ref);
+
 extern void hkl_parameter_set_value(HklParameter *self, double value);
 
 extern void hkl_parameter_set_value_unit(HklParameter *self, double value);

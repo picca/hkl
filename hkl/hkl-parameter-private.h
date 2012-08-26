@@ -30,6 +30,8 @@ HKL_BEGIN_DECLS
 struct _HklParameterOperations {
 	double (*get_value)(const HklParameter *self);
 	double (*get_value_unit)(const HklParameter *self);
+	double (*get_value_closest)(const HklParameter *self,
+				    const HklParameter *other);
 	void (*set_value)(HklParameter *self, double value);
 	void (*set_value_unit)(HklParameter *self, double value);
 	void (*randomize)(HklParameter *self);
@@ -38,6 +40,7 @@ struct _HklParameterOperations {
 #define HKL_PARAMETER_OPERATIONS_DEFAULT				\
 	.get_value=hkl_parameter_get_value_real,			\
 		.get_value_unit = hkl_parameter_get_value_unit_real,	\
+		.get_value_closest = hkl_parameter_get_value_closest_real, \
 		.set_value = hkl_parameter_set_value_real,		\
 		.set_value_unit = hkl_parameter_set_value_unit_real,	\
 		.randomize = hkl_parameter_randomize_real
@@ -52,6 +55,12 @@ static inline double hkl_parameter_get_value_unit_real(const HklParameter *self)
 	double factor = hkl_unit_factor(self->unit, self->punit);
 
 	return self->_value * factor;
+}
+
+static inline double hkl_parameter_get_value_closest_real(const HklParameter *self,
+							  const HklParameter *ref)
+{
+	return hkl_parameter_get_value_real(self);
 }
 
 static inline void hkl_parameter_set_value_real(HklParameter *self, double value)

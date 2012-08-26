@@ -48,17 +48,6 @@ and/or use gtk-doc annotations.  -->
           <type name="none" c:type="void"/>
         </return-value>
       </method>
-      <method name="get_value_closest"
-              c:identifier="hkl_axis_get_value_closest">
-        <return-value transfer-ownership="none">
-          <type name="gdouble" c:type="double"/>
-        </return-value>
-        <parameters>
-          <parameter name="axis" transfer-ownership="none">
-            <type name="Axis" c:type="HklAxis*"/>
-          </parameter>
-        </parameters>
-      </method>
       <method name="get_value_closest_unit"
               c:identifier="hkl_axis_get_value_closest_unit">
         <return-value transfer-ownership="none">
@@ -1746,6 +1735,20 @@ Returns:</doc>
           <doc xml:whitespace="preserve">the value of the #HklParameter</doc>
           <type name="gdouble" c:type="double"/>
         </return-value>
+      </method>
+      <method name="get_value_closest"
+              c:identifier="hkl_parameter_get_value_closest">
+        <doc xml:whitespace="preserve">current self #HklParameter</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">the closest value of the ref #HklParameter from the</doc>
+          <type name="gdouble" c:type="double"/>
+        </return-value>
+        <parameters>
+          <parameter name="ref" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the reference #HklParameter</doc>
+            <type name="Parameter" c:type="HklParameter*"/>
+          </parameter>
+        </parameters>
       </method>
       <method name="get_value_unit"
               c:identifier="hkl_parameter_get_value_unit">

@@ -138,17 +138,23 @@ static void get_value_closest(void)
 
 	hkl_parameter_set_value_unit(&axis1->parameter, 0);
 	hkl_parameter_set_value_unit(&axis2->parameter, 0);
-	is_double(0., hkl_axis_get_value_closest(axis1, axis2), HKL_EPSILON, __func__);
+	is_double(0., hkl_parameter_get_value_closest(&axis1->parameter,
+						      &axis2->parameter),
+		  HKL_EPSILON, __func__);
 
 	/* change the range of axis1 */
 	hkl_parameter_set_range_unit(&axis1->parameter, -270, 180);
 	hkl_parameter_set_value_unit(&axis1->parameter, 100);
 
 	hkl_parameter_set_value_unit(&axis2->parameter, -75);
-	is_double(100*HKL_DEGTORAD, hkl_axis_get_value_closest(axis1, axis2), HKL_EPSILON, __func__);
+	is_double(100 * HKL_DEGTORAD, hkl_parameter_get_value_closest(&axis1->parameter,
+								      &axis2->parameter),
+		  HKL_EPSILON, __func__);
 
 	hkl_parameter_set_value_unit(&axis2->parameter, -85);
-	is_double(-260*HKL_DEGTORAD, hkl_axis_get_value_closest(axis1, axis2), HKL_EPSILON, __func__);
+	is_double(-260 * HKL_DEGTORAD, hkl_parameter_get_value_closest(&axis1->parameter,
+								       &axis2->parameter),
+		  HKL_EPSILON, __func__);
 
 	hkl_axis_free(axis1);
 	hkl_axis_free(axis2);
