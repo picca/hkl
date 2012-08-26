@@ -86,7 +86,8 @@ void hkl_geometry_set_axes_values_unit(HklGeometry *self, double *values, unsign
 		return;
 
 	for(i=0; i<self->len; ++i)
-		hkl_axis_set_value_unit(&self->axes[i], values[i]);
+		hkl_parameter_set_value_unit(&self->axes[i].parameter,
+					     values[i]);
 	hkl_geometry_update(self);
 }
 

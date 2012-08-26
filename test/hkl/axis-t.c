@@ -70,26 +70,26 @@ static void is_value_compatible_with_range(void)
 
 	axis1 = hkl_axis_new("omega", &v);
 
-	hkl_axis_set_value_unit(axis1, 45);
+	hkl_parameter_set_value_unit(&axis1->parameter, 45);
 	ok(HKL_TRUE == hkl_axis_is_value_compatible_with_range(axis1), __func__);
 
 	/* change the range of axis1 */
 	hkl_parameter_set_range_unit(&axis1->parameter, -270, 0);
 	ok(HKL_FALSE == hkl_axis_is_value_compatible_with_range(axis1), __func__);
 
-	hkl_axis_set_value_unit(axis1, -45);
+	hkl_parameter_set_value_unit(&axis1->parameter, -45);
 	ok(HKL_TRUE == hkl_axis_is_value_compatible_with_range(axis1), __func__);
 
 	hkl_parameter_set_range_unit(&axis1->parameter, 350, 450);
-	hkl_axis_set_value_unit(axis1, 45);
+	hkl_parameter_set_value_unit(&axis1->parameter, 45);
 	ok(HKL_TRUE == hkl_axis_is_value_compatible_with_range(axis1), __func__);
-	hkl_axis_set_value_unit(axis1, -45);
+	hkl_parameter_set_value_unit(&axis1->parameter, -45);
 	ok(HKL_FALSE == hkl_axis_is_value_compatible_with_range(axis1), __func__);
 
 	hkl_parameter_set_range_unit(&axis1->parameter, -10, 90);
-	hkl_axis_set_value_unit(axis1, 405);
+	hkl_parameter_set_value_unit(&axis1->parameter, 405);
 	ok(HKL_TRUE == hkl_axis_is_value_compatible_with_range(axis1), __func__);
-	hkl_axis_set_value_unit(axis1, -405);
+	hkl_parameter_set_value_unit(&axis1->parameter, -405);
 	ok(HKL_FALSE == hkl_axis_is_value_compatible_with_range(axis1), __func__);
 
 	hkl_axis_free(axis1);
@@ -104,27 +104,27 @@ static void set_value_smallest_in_range(void)
 
 	hkl_parameter_set_range_unit(&axis->parameter, -190, 190);
 
-	hkl_axis_set_value_unit(axis, 185);
+	hkl_parameter_set_value_unit(&axis->parameter, 185);
 	hkl_axis_set_value_smallest_in_range(axis);
 	is_double(-175., hkl_parameter_get_value_unit(&axis->parameter), HKL_EPSILON, __func__);
 
-	hkl_axis_set_value_unit(axis, 545);
+	hkl_parameter_set_value_unit(&axis->parameter, 545);
 	hkl_axis_set_value_smallest_in_range(axis);
 	is_double(-175., hkl_parameter_get_value_unit(&axis->parameter), HKL_EPSILON, __func__);
 
-	hkl_axis_set_value_unit(axis, -185);
+	hkl_parameter_set_value_unit(&axis->parameter, -185);
 	hkl_axis_set_value_smallest_in_range(axis);
 	is_double(-185., hkl_parameter_get_value_unit(&axis->parameter), HKL_EPSILON, __func__);
 
-	hkl_axis_set_value_unit(axis, 175);
+	hkl_parameter_set_value_unit(&axis->parameter, 175);
 	hkl_axis_set_value_smallest_in_range(axis);
 	is_double(-185., hkl_parameter_get_value_unit(&axis->parameter), HKL_EPSILON, __func__);
 
-	hkl_axis_set_value_unit(axis, 190);
+	hkl_parameter_set_value_unit(&axis->parameter, 190);
 	hkl_axis_set_value_smallest_in_range(axis);
 	is_double(-170., hkl_parameter_get_value_unit(&axis->parameter), HKL_EPSILON, __func__);
 
-	hkl_axis_set_value_unit(axis, -190);
+	hkl_parameter_set_value_unit(&axis->parameter, -190);
 	hkl_axis_set_value_smallest_in_range(axis);
 	is_double(-190., hkl_parameter_get_value_unit(&axis->parameter), HKL_EPSILON, __func__);
 
@@ -139,18 +139,18 @@ static void get_value_closest(void)
 	axis1 = hkl_axis_new("omega", &v);
 	axis2 = hkl_axis_new("omega", &v);
 
-	hkl_axis_set_value_unit(axis1, 0);
-	hkl_axis_set_value_unit(axis2, 0);
+	hkl_parameter_set_value_unit(&axis1->parameter, 0);
+	hkl_parameter_set_value_unit(&axis2->parameter, 0);
 	is_double(0., hkl_axis_get_value_closest(axis1, axis2), HKL_EPSILON, __func__);
 
 	/* change the range of axis1 */
 	hkl_parameter_set_range_unit(&axis1->parameter, -270, 180);
-	hkl_axis_set_value_unit(axis1, 100);
+	hkl_parameter_set_value_unit(&axis1->parameter, 100);
 
-	hkl_axis_set_value_unit(axis2, -75);
+	hkl_parameter_set_value_unit(&axis2->parameter, -75);
 	is_double(100*HKL_DEGTORAD, hkl_axis_get_value_closest(axis1, axis2), HKL_EPSILON, __func__);
 
-	hkl_axis_set_value_unit(axis2, -85);
+	hkl_parameter_set_value_unit(&axis2->parameter, -85);
 	is_double(-260*HKL_DEGTORAD, hkl_axis_get_value_closest(axis1, axis2), HKL_EPSILON, __func__);
 
 	hkl_axis_free(axis1);

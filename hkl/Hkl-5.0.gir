@@ -120,16 +120,6 @@ and/or use gtk-doc annotations.  -->
           <type name="none" c:type="void"/>
         </return-value>
       </method>
-      <method name="set_value_unit" c:identifier="hkl_axis_set_value_unit">
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="value" transfer-ownership="none">
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-        </parameters>
-      </method>
       <function name="fprintf" c:identifier="hkl_axis_fprintf">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
@@ -1863,13 +1853,13 @@ Returns:</doc>
               c:identifier="hkl_parameter_set_value_unit"
               introspectable="0">
         <doc xml:whitespace="preserve">set the value of the parameter express in the punit #HklUnit
-@todo test
-Returns:</doc>
+@todo test</doc>
         <return-value transfer-ownership="none">
-          <type name="gint" c:type="int"/>
+          <type name="none" c:type="void"/>
         </return-value>
         <parameters>
           <parameter name="value" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the value to set</doc>
             <type name="gdouble" c:type="double"/>
           </parameter>
         </parameters>

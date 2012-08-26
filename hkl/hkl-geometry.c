@@ -429,7 +429,8 @@ int hkl_geometry_set_values_unit_v(HklGeometry *self, ...)
 
 	va_start(ap, self);
 	for(i=0; i<self->len; ++i)
-		hkl_axis_set_value_unit(&self->axes[i], va_arg(ap, double));
+		hkl_parameter_set_value_unit(&self->axes[i].parameter,
+					     va_arg(ap, double));
 
 	va_end(ap);
 	hkl_geometry_update(self);

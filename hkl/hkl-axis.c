@@ -46,6 +46,11 @@ static inline void hkl_axis_set_value_real(HklParameter *self, double value)
 	hkl_axis_update(container_of(self, HklAxis, parameter));
 }
 
+static inline void hkl_axis_set_value_unit_real(HklParameter *self, double value)
+{
+	hkl_parameter_set_value_unit_real(self, value);
+	hkl_axis_update(container_of(self, HklAxis, parameter));
+}
 
 /*
  * given a current position of angle a min and max interval find the closest
@@ -71,6 +76,7 @@ static void find_angle(double current, double *angle, double *distance,
 static HklParameterOperations axis_operations = {
 	HKL_PARAMETER_OPERATIONS_DEFAULT,
 	.set_value = hkl_axis_set_value_real,
+	.set_value_unit = hkl_axis_set_value_unit_real,
 };
 
 
@@ -199,12 +205,6 @@ void hkl_axis_set_value_smallest_in_range(HklAxis *self)
 	else
 		hkl_parameter_set_value(&self->parameter,
 					value - 2*M_PI*floor((value - min)/(2*M_PI)));
-}
-
-void hkl_axis_set_value_unit(HklAxis *self, double value)
-{
-	hkl_parameter_set_value_unit(&self->parameter, value);
-	hkl_axis_update(self);
 }
 
 void hkl_axis_randomize(HklAxis *self)

@@ -326,7 +326,7 @@ void HKLWindow::on_cell_TreeView_axes_read_edited(Glib::ustring const & spath,
 	double value;
 	sscanf(newText.c_str(), "%lf", &value);
 	HklAxis *axis = hkl_geometry_get_axis_by_name(_geometry, name.c_str());
-	hkl_axis_set_value_unit(axis, value);
+	hkl_parameter_set_value_unit(&axis->parameter, value);
 	hkl_geometry_update(_geometry);
 
 	row[_axeModelColumns.read] = value;
@@ -355,7 +355,7 @@ void HKLWindow::on_cell_TreeView_axes_write_edited(Glib::ustring const & spath,
 	double value;
 	sscanf(newText.c_str(), "%lf", &value);
 	HklAxis *axis = hkl_geometry_get_axis_by_name(_geometry, name.c_str());
-	hkl_axis_set_value_unit(axis, value);
+	hkl_parameter_set_value_unit(&axis->parameter, value);
 	hkl_geometry_update(_geometry);
 
 	row[_axeModelColumns.write] = value;

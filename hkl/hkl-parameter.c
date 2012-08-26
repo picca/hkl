@@ -143,28 +143,22 @@ inline double hkl_parameter_get_value_unit(const HklParameter *self)
  *
  * set the value of an #HklParameter
  **/
-void hkl_parameter_set_value(HklParameter *self, double value)
+inline void hkl_parameter_set_value(HklParameter *self, double value)
 {
 	self->ops->set_value(self, value);
 }
 
 /**
  * hkl_parameter_set_value_unit: (skip)
- * @self:
- * @value:
+ * @self: the this ptr
+ * @value: the value to set
  *
  * set the value of the parameter express in the punit #HklUnit
  * @todo test
- * Returns:
  **/
-int hkl_parameter_set_value_unit(HklParameter *self, double value)
+inline void hkl_parameter_set_value_unit(HklParameter *self, double value)
 {
-	double factor = hkl_unit_factor(self->unit, self->punit);
-
-	self->_value = value / factor;
-	self->changed = HKL_TRUE;
-
-	return HKL_TRUE;
+	self->ops->set_value_unit(self, value);
 }
 
 /**
