@@ -26,11 +26,25 @@
 
 HKL_BEGIN_DECLS
 
-#define HKL_PARAMETER_OPERATIONS_DEFAULT .get_value=hkl_parameter_get_value_real
+struct _HklParameterOperations {
+	double (*get_value)(const HklParameter *self);
+	double (*get_value_unit)(const HklParameter *self);
+};
+
+#define HKL_PARAMETER_OPERATIONS_DEFAULT				\
+	.get_value=hkl_parameter_get_value_real,			\
+		.get_value_unit = hkl_parameter_get_value_unit_real
 
 static inline double hkl_parameter_get_value_real(const HklParameter *self)
 {
 	return self->_value;
+}
+
+static inline double hkl_parameter_get_value_unit_real(const HklParameter *self)
+{
+	double factor = hkl_unit_factor(self->unit, self->punit);
+
+	return self->_value * factor;
 }
 
 static HklParameterOperations hkl_parameter_operations_defaults = {

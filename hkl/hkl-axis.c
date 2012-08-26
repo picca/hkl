@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2012 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -152,11 +152,6 @@ int hkl_axis_get_changed(HklAxis const *self)
 void hkl_axis_set_changed(HklAxis *self, int changed)
 {
 	self->parameter.changed = changed;
-}
-
-double hkl_axis_get_value_unit(HklAxis const *self)
-{
-	return hkl_parameter_get_value_unit(&self->parameter);
 }
 
 double hkl_axis_get_value_closest(HklAxis const *self, HklAxis const *axis)

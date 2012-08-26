@@ -636,8 +636,8 @@ void HKLWindow::updateAxes(void)
 
 		Gtk::TreeRow row = *iter;
 		axis = row[_axeModelColumns.axis];
-		row[_axeModelColumns.read] = hkl_axis_get_value_unit(axis);
-		row[_axeModelColumns.write] = hkl_axis_get_value_unit(axis);
+		row[_axeModelColumns.read] = hkl_parameter_get_value_unit(&axis->parameter);
+		row[_axeModelColumns.write] = hkl_parameter_get_value_unit(&axis->parameter);
 		hkl_parameter_get_range_unit((HklParameter *)axis, &min, &max);
 		row[_axeModelColumns.min] = min;
 		row[_axeModelColumns.max] = max;

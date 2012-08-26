@@ -42,10 +42,6 @@ struct _HklParameter {
 	const HklParameterOperations *ops;
 };
 
-struct _HklParameterOperations {
-	double (*get_value)(const HklParameter *self);
-};
-
 #define HKL_PARAMETER_DEFAULTS .name="dummy", .range={.min=0, .max=0}, ._value=0, .unit=NULL, .punit=NULL, .fit=HKL_TRUE, .changed=HKL_TRUE, .ops = &hkl_parameter_operations_defaults
 
 #define HKL_PARAMETER_DEFAULTS_ANGLE HKL_PARAMETER_DEFAULTS, .range={.min=-M_PI, .max=M_PI}, .unit = &hkl_unit_angle_rad, .punit = &hkl_unit_angle_deg
@@ -60,20 +56,11 @@ extern HklParameter *hkl_parameter_new_copy(const HklParameter *self);
 
 extern void hkl_parameter_free(HklParameter *self);
 
-/**
- * hkl_parameter_get_value: (skip)
- * @self: the this ptr
- *
- * Returns: the value of the #HklParameter
- **/
-static inline double hkl_parameter_get_value(const HklParameter *self)
-{
-	return self->ops->get_value(self);
-}
-
-extern void hkl_parameter_set_value(HklParameter *self, double value);
+extern double hkl_parameter_get_value(const HklParameter *self);
 
 extern double hkl_parameter_get_value_unit(const HklParameter *self);
+
+extern void hkl_parameter_set_value(HklParameter *self, double value);
 
 extern int hkl_parameter_set_value_unit(HklParameter *self, double value);
 

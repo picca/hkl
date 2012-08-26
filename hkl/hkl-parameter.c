@@ -115,6 +115,28 @@ void hkl_parameter_free(HklParameter *self)
 }
 
 /**
+ * hkl_parameter_get_value:
+ * @self: the this ptr
+ *
+ * Returns: the value of the #HklParameter
+ **/
+inline double hkl_parameter_get_value(const HklParameter *self)
+{
+	return self->ops->get_value(self);
+}
+
+/**
+ * hkl_parameter_get_value_unit:
+ * @self: the this ptr
+ *
+ * Returns: the value of the #HklParameter expressed in the user unit
+ **/
+inline double hkl_parameter_get_value_unit(const HklParameter *self)
+{
+	return self->ops->get_value_unit(self);
+}
+
+/**
  * hkl_parameter_set_value: (skip)
  * @self:
  * @value:
@@ -125,21 +147,6 @@ void hkl_parameter_set_value(HklParameter *self, double value)
 {
 	self->_value = value;
 	self->changed = HKL_TRUE;
-}
-
-/**
- * hkl_parameter_get_value_unit:
- * @self: the this ptr
- *
- * get the value of the parameter express in the punit #Hklunit
- * @todo test
- * Returns:
- **/
-double hkl_parameter_get_value_unit(const HklParameter *self)
-{
-	double factor = hkl_unit_factor(self->unit, self->punit);
-
-	return self->_value * factor;
 }
 
 /**

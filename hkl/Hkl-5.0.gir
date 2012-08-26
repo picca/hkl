@@ -108,11 +108,6 @@ and/or use gtk-doc annotations.  -->
           </parameter>
         </parameters>
       </method>
-      <method name="get_value_unit" c:identifier="hkl_axis_get_value_unit">
-        <return-value transfer-ownership="none">
-          <type name="gdouble" c:type="double"/>
-        </return-value>
-      </method>
       <method name="init" c:identifier="hkl_axis_init">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
@@ -1850,12 +1845,16 @@ Returns:</doc>
           </parameter>
         </parameters>
       </method>
+      <method name="get_value" c:identifier="hkl_parameter_get_value">
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">the value of the #HklParameter</doc>
+          <type name="gdouble" c:type="double"/>
+        </return-value>
+      </method>
       <method name="get_value_unit"
               c:identifier="hkl_parameter_get_value_unit">
-        <doc xml:whitespace="preserve">get the value of the parameter express in the punit #Hklunit
-@todo test
-Returns:</doc>
         <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">the value of the #HklParameter expressed in the user unit</doc>
           <type name="gdouble" c:type="double"/>
         </return-value>
       </method>
@@ -1966,19 +1965,9 @@ Returns:</doc>
         </parameters>
       </function>
     </record>
-    <record name="ParameterOperations" c:type="HklParameterOperations">
-      <field name="get_value">
-        <callback name="get_value">
-          <return-value transfer-ownership="none">
-            <type name="gdouble" c:type="double"/>
-          </return-value>
-          <parameters>
-            <parameter name="self" transfer-ownership="none">
-              <type name="Parameter" c:type="HklParameter*"/>
-            </parameter>
-          </parameters>
-        </callback>
-      </field>
+    <record name="ParameterOperations"
+            c:type="HklParameterOperations"
+            disguised="1">
     </record>
     <record name="PseudoAxis"
             c:type="HklPseudoAxis"
