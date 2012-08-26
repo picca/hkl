@@ -509,7 +509,7 @@ int hkl_geometry_is_valid(const HklGeometry *self)
 	size_t i;
 
 	for(i=0; i<self->len; ++i)
-		if(hkl_axis_is_valid(&self->axes[i]) == HKL_FALSE)
+		if(!hkl_parameter_is_valid(&self->axes[i].parameter))
 			return HKL_FALSE;
 
 	return HKL_TRUE;

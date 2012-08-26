@@ -221,11 +221,6 @@ void hkl_axis_get_quaternion(HklAxis const *self, HklQuaternion *q)
 					       &self->axis_v);
 }
 
-int hkl_axis_is_valid(const HklAxis *self)
-{
-	return hkl_parameter_is_valid(&self->parameter);
-}
-
 void hkl_axis_fprintf(FILE *f, HklAxis *self)
 {
 	hkl_parameter_fprintf(f, &self->parameter);
