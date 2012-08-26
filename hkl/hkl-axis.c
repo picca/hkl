@@ -36,7 +36,7 @@
 static inline void hkl_axis_update(HklAxis *self)
 {
 	hkl_quaternion_init_from_angle_and_axe(&self->q,
-					       hkl_parameter_get_value(&self->parameter),
+					       self->parameter._value,
 					       &self->axis_v);
 }
 
@@ -92,12 +92,9 @@ static void find_angle(double current, double *angle, double *distance,
  */
 int hkl_axis_is_value_compatible_with_range(HklAxis const *self)
 {
-	double value;
+	double value = self->parameter._value;
 	int res = HKL_FALSE;
-	HklInterval range;
-
-	value = hkl_parameter_get_value(&self->parameter);
-	range = ((HklParameter *)self)->range;
+	HklInterval range = self->parameter.range;
 
 	if(hkl_interval_length(&range) > 2*M_PI)
 		res = HKL_TRUE;
@@ -162,12 +159,12 @@ void hkl_axis_init(HklAxis *self, const char* name, const HklVector *axis_v)
 
 double hkl_axis_get_value_closest(HklAxis const *self, HklAxis const *axis)
 {
-	double angle = hkl_parameter_get_value(&self->parameter);
+	double angle = self->parameter._value;
 
 	if(hkl_axis_is_value_compatible_with_range(self)){
 		if(hkl_interval_length(&self->parameter.range) >= 2*M_PI){
 			int k;
-			double current = hkl_parameter_get_value(&axis->parameter);
+			double current = axis->parameter._value;
 			double distance = fabs(current - angle);
 			double delta = 2. * M_PI;
 			double min = self->parameter.range.min;
@@ -203,21 +200,21 @@ void hkl_axis_set_value_smallest_in_range(HklAxis *self)
 {
 	double value, min;
 
-	value = hkl_parameter_get_value(&self->parameter);
+	value = self->parameter._value;
 	min = self->parameter.range.min;
 
 	if(value < min)
-		hkl_parameter_set_value(&self->parameter,
+		hkl_axis_set_value_real(&self->parameter,
 					value + 2*M_PI*ceil((min - value)/(2*M_PI)));
 	else
-		hkl_parameter_set_value(&self->parameter,
+		hkl_axis_set_value_real(&self->parameter,
 					value - 2*M_PI*floor((value - min)/(2*M_PI)));
 }
 
 void hkl_axis_get_quaternion(HklAxis const *self, HklQuaternion *q)
 {
 	hkl_quaternion_init_from_angle_and_axe(q,
-					       hkl_parameter_get_value(&self->parameter),
+					       self->parameter._value,
 					       &self->axis_v);
 }
 
