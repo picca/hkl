@@ -122,7 +122,7 @@ void hkl_parameter_free(HklParameter *self)
  **/
 inline double hkl_parameter_get_value(const HklParameter *self)
 {
-	return self->ops->get_value(self);
+	return self->_value;
 }
 
 /**
@@ -133,8 +133,11 @@ inline double hkl_parameter_get_value(const HklParameter *self)
  **/
 inline double hkl_parameter_get_value_unit(const HklParameter *self)
 {
-	return self->ops->get_value_unit(self);
+	double factor = hkl_unit_factor(self->unit, self->punit);
+
+	return self->_value * factor;
 }
+
 
 /**
  * hkl_parameter_get_value_closest:
