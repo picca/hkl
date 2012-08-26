@@ -178,16 +178,6 @@ double hkl_axis_get_value_closest_unit(HklAxis const *self, HklAxis const *axis)
 	return factor * hkl_axis_get_value_closest(self, axis);
 }
 
-double hkl_axis_get_max(HklAxis const *self)
-{
-	return hkl_parameter_get_max(&self->parameter);
-}
-
-void hkl_axis_get_range_unit(HklAxis const *self, double *min, double *max)
-{
-	hkl_parameter_get_range_unit(&self->parameter, min, max);
-}
-
 void hkl_axis_set_value(HklAxis *self, double value)
 {
 	hkl_parameter_set_value(&self->parameter, value);
@@ -211,16 +201,6 @@ void hkl_axis_set_value_unit(HklAxis *self, double value)
 {
 	hkl_parameter_set_value_unit(&self->parameter, value);
 	hkl_axis_update(self);
-}
-
-void hkl_axis_set_range(HklAxis *self, double min, double max)
-{
-	hkl_parameter_set_range(&self->parameter, min, max);
-}
-
-void hkl_axis_set_range_unit(HklAxis *self, double min, double max)
-{
-	hkl_parameter_set_range_unit(&self->parameter, min, max);
 }
 
 void hkl_axis_randomize(HklAxis *self)

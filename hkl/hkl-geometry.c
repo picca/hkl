@@ -835,7 +835,7 @@ static void perm_r(HklGeometryList *self, HklGeometry *ref, HklGeometry *geometr
 			double value0;
 
 			axis = &geometry->axes[axis_idx];
-			max = hkl_axis_get_max(axis);
+			max = hkl_parameter_get_max(&axis->parameter);
 			value = hkl_parameter_get_value(&axis->parameter);
 			value0 = value;
 			do{

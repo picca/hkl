@@ -242,9 +242,9 @@ static void  list_multiply_from_range(void)
 	axisB = hkl_geometry_get_axis_by_name(g, "B");
 	axisC = hkl_geometry_get_axis_by_name(g, "C");
 
-	hkl_axis_set_range_unit(axisA, -190, 190);
-	hkl_axis_set_range_unit(axisB, -190, 190);
-	hkl_axis_set_range_unit(axisC, -190, 190);
+	hkl_parameter_set_range_unit(&axisA->parameter, -190, 190);
+	hkl_parameter_set_range_unit(&axisB->parameter, -190, 190);
+	hkl_parameter_set_range_unit(&axisC->parameter, -190, 190);
 
 	list = hkl_geometry_list_new();
 
@@ -274,9 +274,9 @@ static void  list_remove_invalid(void)
 	axisB = hkl_geometry_get_axis_by_name(g, "B");
 	axisC = hkl_geometry_get_axis_by_name(g, "C");
 
-	hkl_axis_set_range_unit(axisA, -190., 180.);
-	hkl_axis_set_range_unit(axisB, -190., 180.);
-	hkl_axis_set_range_unit(axisC, -190., 180.);
+	hkl_parameter_set_range_unit(&axisA->parameter, -190., 180.);
+	hkl_parameter_set_range_unit(&axisB->parameter, -190., 180.);
+	hkl_parameter_set_range_unit(&axisC->parameter, -190., 180.);
 
 	list = hkl_geometry_list_new();
 

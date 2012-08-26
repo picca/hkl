@@ -56,19 +56,11 @@ extern double hkl_axis_get_value_closest(HklAxis const *self, HklAxis const *axi
 
 extern double hkl_axis_get_value_closest_unit(HklAxis const *self, HklAxis const *axis);
 
-extern double hkl_axis_get_max(HklAxis const *self);
-
-extern void hkl_axis_get_range_unit(HklAxis const *self, double *min, double *max);
-
 extern void hkl_axis_set_value(HklAxis *self, double value);
 
 extern void hkl_axis_set_value_smallest_in_range(HklAxis *self);
 
 extern void hkl_axis_set_value_unit(HklAxis *self, double value);
-
-extern void hkl_axis_set_range(HklAxis *self, double min, double max);
-
-extern void hkl_axis_set_range_unit(HklAxis *self, double min, double max);
 
 extern void hkl_axis_randomize(HklAxis *self);
 
