@@ -314,7 +314,7 @@ void hkl_geometry_update(HklGeometry *self)
 	int ko = 0;
 
 	for(i=0; i<self->len; ++i)
-		if (hkl_axis_get_changed(&self->axes[i])) {
+		if (self->axes[i].parameter.changed) {
 			ko = 1;
 			break;
 		}
@@ -324,7 +324,7 @@ void hkl_geometry_update(HklGeometry *self)
 			hkl_holder_update(&self->holders[i]);
 
 		for(i=0; i<self->len; i++)
-			hkl_axis_set_changed(&self->axes[i], HKL_FALSE);
+			self->axes[i].parameter.changed = HKL_FALSE;
 	}
 }
 

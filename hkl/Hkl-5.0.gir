@@ -48,11 +48,6 @@ and/or use gtk-doc annotations.  -->
           <type name="none" c:type="void"/>
         </return-value>
       </method>
-      <method name="get_changed" c:identifier="hkl_axis_get_changed">
-        <return-value transfer-ownership="none">
-          <type name="gint" c:type="int"/>
-        </return-value>
-      </method>
       <method name="get_max" c:identifier="hkl_axis_get_max">
         <return-value transfer-ownership="none">
           <type name="gdouble" c:type="double"/>
@@ -136,16 +131,6 @@ and/or use gtk-doc annotations.  -->
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
-      </method>
-      <method name="set_changed" c:identifier="hkl_axis_set_changed">
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="changed" transfer-ownership="none">
-            <type name="gint" c:type="int"/>
-          </parameter>
-        </parameters>
       </method>
       <method name="set_range" c:identifier="hkl_axis_set_range">
         <return-value transfer-ownership="none">

@@ -139,16 +139,6 @@ void hkl_axis_init(HklAxis *self, const char* name, const HklVector *axis_v)
 	self->axis_v = *axis_v;
 }
 
-int hkl_axis_get_changed(HklAxis const *self)
-{
-	return self->parameter.changed;
-}
-
-void hkl_axis_set_changed(HklAxis *self, int changed)
-{
-	self->parameter.changed = changed;
-}
-
 double hkl_axis_get_value_closest(HklAxis const *self, HklAxis const *axis)
 {
 	double angle = hkl_parameter_get_value(&self->parameter);

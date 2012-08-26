@@ -88,7 +88,7 @@ static void update(void)
 	axis1 = hkl_geometry_get_axis_by_name(g, "B");
 	hkl_axis_set_value(axis1, M_PI_2);
 	/* now axis1 is dirty */
-	ok(HKL_TRUE == hkl_axis_get_changed(axis1), __func__);
+	ok(HKL_TRUE == axis1->parameter.changed, __func__);
 
 	hkl_geometry_update(g);
 	is_double(1./sqrt(2), g->holders[0].q.data[0], HKL_EPSILON, __func__);
@@ -96,7 +96,7 @@ static void update(void)
 	is_double(.0, g->holders[0].q.data[2], HKL_EPSILON, __func__);
 	is_double(.0, g->holders[0].q.data[3], HKL_EPSILON, __func__);
 	/* now axis1 is clean */
-	ok(HKL_FALSE == hkl_axis_get_changed(axis1), __func__);
+	ok(HKL_FALSE == axis1->parameter.changed, __func__);
 
 	hkl_geometry_free(g);
 }
