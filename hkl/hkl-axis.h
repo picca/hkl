@@ -52,8 +52,6 @@ extern void hkl_axis_free(HklAxis *self);
 
 extern void hkl_axis_init(HklAxis *axis, char const * name, HklVector const *axis_v);
 
-extern double hkl_axis_get_value_closest_unit(HklAxis const *self, HklAxis const *axis);
-
 extern void hkl_axis_set_value_smallest_in_range(HklAxis *self);
 
 extern int hkl_axis_is_value_compatible_with_range(HklAxis const *self);
