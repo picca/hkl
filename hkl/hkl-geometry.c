@@ -846,10 +846,20 @@ static void perm_r(HklGeometryList *self, HklGeometry *ref, HklGeometry *geometr
 				/* fprintf(stdout, "\n%d %s, %f", axis_idx, hkl_axis_get_name(axis), value * HKL_RADTODEG); */
 				perm_r(self, ref, geometry, perm, axis_idx + 1);
 				value +=  2*M_PI;
-				if(value <= (max + HKL_EPSILON))
-					hkl_parameter_set_value(&axis->parameter, value);
+				if(value <= (max + HKL_EPSILON)){
+					/* optimisation here: */
+					/* instead of using set_value
+					 * we directly write the
+					 * HklParameter value, BEWARE
+					 * that it require that
+					 * HklParameter is a rotation
+					 * (for now it is always
+					 * true */
+					axis->parameter._value = value;
+				}
 			}while(value <= (max + HKL_EPSILON));
-			hkl_parameter_set_value(&axis->parameter, value0);
+			/* restore the initial value */
+			axis->parameter._value = value0;
 		} else
 			perm_r(self, ref, geometry, perm, axis_idx + 1);
 	}
