@@ -262,11 +262,7 @@ void hkl_parameter_randomize(HklParameter *self)
  **/
 int hkl_parameter_is_valid(const HklParameter *self)
 {
-	if(self->_value < (self->range.min - HKL_EPSILON)
-	   || self->_value > (self->range.max + HKL_EPSILON))
-		return HKL_FALSE;
-	else
-		return HKL_TRUE;
+	return self->ops->is_valid(self);
 }
 
 /**

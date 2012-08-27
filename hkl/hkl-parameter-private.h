@@ -33,13 +33,15 @@ struct _HklParameterOperations {
 	void (*set_value)(HklParameter *self, double value);
 	void (*set_value_unit)(HklParameter *self, double value);
 	void (*randomize)(HklParameter *self);
+	int (*is_valid)(const HklParameter *self);
 };
 
 #define HKL_PARAMETER_OPERATIONS_DEFAULT				\
 	.get_value_closest = hkl_parameter_get_value_closest_real,	\
 		.set_value = hkl_parameter_set_value_real,		\
 		.set_value_unit = hkl_parameter_set_value_unit_real,	\
-		.randomize = hkl_parameter_randomize_real
+		.randomize = hkl_parameter_randomize_real,		\
+		.is_valid = hkl_parameter_is_valid_real
 
 static inline double hkl_parameter_get_value_closest_real(const HklParameter *self,
 							  const HklParameter *ref)
@@ -68,6 +70,15 @@ static inline void hkl_parameter_randomize_real(HklParameter *self)
 			+ (self->range.max - self->range.min) * alea;
 		self->changed = HKL_TRUE;
 	}
+}
+
+static inline int hkl_parameter_is_valid_real(const HklParameter *self)
+{
+	if(self->_value < (self->range.min - HKL_EPSILON)
+	   || self->_value > (self->range.max + HKL_EPSILON))
+		return HKL_FALSE;
+	else
+		return HKL_TRUE;
 }
 
 static HklParameterOperations hkl_parameter_operations_defaults = {

@@ -60,7 +60,7 @@ static void get_quaternions(void)
 	hkl_axis_free(axis);
 }
 
-static void is_value_compatible_with_range(void)
+static void is_valid(void)
 {
 	HklAxis *axis1;
 	static HklVector v = {{1, 0, 0}};
@@ -68,26 +68,26 @@ static void is_value_compatible_with_range(void)
 	axis1 = hkl_axis_new("omega", &v);
 
 	hkl_parameter_set_value_unit(&axis1->parameter, 45);
-	ok(HKL_TRUE == hkl_axis_is_value_compatible_with_range(axis1), __func__);
+	ok(HKL_TRUE == hkl_parameter_is_valid(&axis1->parameter), __func__);
 
 	/* change the range of axis1 */
 	hkl_parameter_set_range_unit(&axis1->parameter, -270, 0);
-	ok(HKL_FALSE == hkl_axis_is_value_compatible_with_range(axis1), __func__);
+	ok(HKL_FALSE == hkl_parameter_is_valid(&axis1->parameter), __func__);
 
 	hkl_parameter_set_value_unit(&axis1->parameter, -45);
-	ok(HKL_TRUE == hkl_axis_is_value_compatible_with_range(axis1), __func__);
+	ok(HKL_TRUE == hkl_parameter_is_valid(&axis1->parameter), __func__);
 
 	hkl_parameter_set_range_unit(&axis1->parameter, 350, 450);
 	hkl_parameter_set_value_unit(&axis1->parameter, 45);
-	ok(HKL_TRUE == hkl_axis_is_value_compatible_with_range(axis1), __func__);
+	ok(HKL_TRUE == hkl_parameter_is_valid(&axis1->parameter), __func__);
 	hkl_parameter_set_value_unit(&axis1->parameter, -45);
-	ok(HKL_FALSE == hkl_axis_is_value_compatible_with_range(axis1), __func__);
+	ok(HKL_FALSE == hkl_parameter_is_valid(&axis1->parameter), __func__);
 
 	hkl_parameter_set_range_unit(&axis1->parameter, -10, 90);
 	hkl_parameter_set_value_unit(&axis1->parameter, 405);
-	ok(HKL_TRUE == hkl_axis_is_value_compatible_with_range(axis1), __func__);
+	ok(HKL_TRUE == hkl_parameter_is_valid(&axis1->parameter), __func__);
 	hkl_parameter_set_value_unit(&axis1->parameter, -405);
-	ok(HKL_FALSE == hkl_axis_is_value_compatible_with_range(axis1), __func__);
+	ok(HKL_FALSE == hkl_parameter_is_valid(&axis1->parameter), __func__);
 
 	hkl_axis_free(axis1);
 }
@@ -166,7 +166,7 @@ int main(int argc, char** argv)
 
 	new();
 	get_quaternions();
-	is_value_compatible_with_range();
+	is_valid();
 	set_value_smallest_in_range();
 	get_value_closest();
 

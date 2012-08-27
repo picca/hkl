@@ -61,12 +61,6 @@ and/or use gtk-doc annotations.  -->
           </parameter>
         </parameters>
       </method>
-      <method name="is_value_compatible_with_range"
-              c:identifier="hkl_axis_is_value_compatible_with_range">
-        <return-value transfer-ownership="none">
-          <type name="gint" c:type="int"/>
-        </return-value>
-      </method>
       <method name="new_copy" c:identifier="hkl_axis_new_copy">
         <return-value transfer-ownership="full">
           <type name="Axis" c:type="HklAxis*"/>

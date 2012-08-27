@@ -84,7 +84,7 @@ static inline double hkl_axis_get_value_closest_real(const HklParameter *self,
 {
 	double angle = self->_value;
 
-	if(hkl_axis_is_value_compatible_with_range(container_of(self, HklAxis, parameter))){
+	if(hkl_parameter_is_valid(self)){
 		if(hkl_interval_length(&self->range) >= 2*M_PI){
 			int k;
 			double current = ref->_value;
@@ -113,22 +113,14 @@ static inline double hkl_axis_get_value_closest_real(const HklParameter *self,
 	return angle;
 }
 
-static HklParameterOperations axis_operations = {
-	HKL_PARAMETER_OPERATIONS_DEFAULT,
-	.get_value_closest = hkl_axis_get_value_closest_real,
-	.set_value = hkl_axis_set_value_real,
-	.set_value_unit = hkl_axis_set_value_unit_real,
-	.randomize = hkl_axis_randomize_real,
-};
-
 /*
  * check if the angle or its equivalent is in between [min, max]
  */
-int hkl_axis_is_value_compatible_with_range(HklAxis const *self)
+static int hkl_axis_is_valid_real(const HklParameter *self)
 {
-	double value = self->parameter._value;
+	double value = self->_value;
 	int res = HKL_FALSE;
-	HklInterval range = self->parameter.range;
+	HklInterval range = self->range;
 
 	if(hkl_interval_length(&range) > 2*M_PI)
 		res = HKL_TRUE;
@@ -146,6 +138,15 @@ int hkl_axis_is_value_compatible_with_range(HklAxis const *self)
 	}
 	return res;
 }
+
+static HklParameterOperations axis_operations = {
+	HKL_PARAMETER_OPERATIONS_DEFAULT,
+	.get_value_closest = hkl_axis_get_value_closest_real,
+	.set_value = hkl_axis_set_value_real,
+	.set_value_unit = hkl_axis_set_value_unit_real,
+	.randomize = hkl_axis_randomize_real,
+	.is_valid = hkl_axis_is_valid_real,
+};
 
 HklAxis *hkl_axis_new(char const *name, HklVector const *axis_v)
 {

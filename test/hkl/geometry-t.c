@@ -175,7 +175,11 @@ static void is_valid(void)
 	hkl_geometry_set_values_v(geom, 3, 0., 0., 0.);
 	ok(HKL_TRUE == hkl_geometry_is_valid(geom), __func__);
 
-	hkl_geometry_set_values_v(geom, 3, -180., 0., 0.);
+	hkl_geometry_set_values_v(geom, 3, -181. * HKL_DEGTORAD, 0., 0.);
+	ok(HKL_TRUE == hkl_geometry_is_valid(geom), __func__);
+
+	hkl_parameter_set_range(&geom->axes[0].parameter,
+				-100 * HKL_DEGTORAD, 100 * HKL_DEGTORAD);
 	ok(HKL_FALSE == hkl_geometry_is_valid(geom), __func__);
 
 	hkl_geometry_free(geom);
@@ -274,9 +278,9 @@ static void  list_remove_invalid(void)
 	axisB = hkl_geometry_get_axis_by_name(g, "B");
 	axisC = hkl_geometry_get_axis_by_name(g, "C");
 
-	hkl_parameter_set_range_unit(&axisA->parameter, -190., 180.);
-	hkl_parameter_set_range_unit(&axisB->parameter, -190., 180.);
-	hkl_parameter_set_range_unit(&axisC->parameter, -190., 180.);
+	hkl_parameter_set_range_unit(&axisA->parameter, -100, 180.);
+	hkl_parameter_set_range_unit(&axisB->parameter, -100., 180.);
+	hkl_parameter_set_range_unit(&axisC->parameter, -100., 180.);
 
 	list = hkl_geometry_list_new();
 
@@ -308,7 +312,7 @@ static void  list_remove_invalid(void)
 
 int main(int argc, char** argv)
 {
-	plan(31);
+	plan(32);
 
 	add_holder();
 	get_axis();

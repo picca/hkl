@@ -891,7 +891,7 @@ void hkl_geometry_list_multiply_from_range(HklGeometryList *self)
 		/* find axes to permute and the first solution of thoses axes */
 		for(j=0; j<geometry->len; ++j){
 			HklAxis *axis = &geometry->axes[j];
-			perm[j] = hkl_axis_is_value_compatible_with_range(axis);
+			perm[j] = hkl_parameter_is_valid(&axis->parameter);
 			/* fprintf(stdout, "%d %d\n", j, perm[j]); */
 			if (perm[j])
 				hkl_axis_set_value_smallest_in_range(axis);
