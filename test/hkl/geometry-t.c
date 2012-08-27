@@ -86,7 +86,7 @@ static void update(void)
 	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
 
 	axis1 = hkl_geometry_get_axis_by_name(g, "B");
-	hkl_parameter_set_value(&axis1->parameter, M_PI_2);
+	hkl_parameter_set_value(&axis1->parameter, M_PI_2, NULL);
 	/* now axis1 is dirty */
 	ok(HKL_TRUE == axis1->parameter.changed, __func__);
 

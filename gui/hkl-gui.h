@@ -85,7 +85,6 @@ protected:
 						      Glib::ustring const &);
 	virtual void on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const &,
 							      Glib::ustring const &);
-	virtual void on_cell_TreeView_pseudoAxes_is_initialized_toggled(Glib::ustring const &);
 	virtual void on_cell_TreeView_pseudoAxes_parameters_value_edited(Glib::ustring const &,
 									 Glib::ustring const &);
 	virtual void on_cell_TreeView_crystals_name_edited(Glib::ustring const &,
@@ -261,7 +260,7 @@ private:
 	Glib::RefPtr<Gtk::ListStore> _pseudoAxeModel;
 
 	ParameterModelColumns _parameterModelColumns;
-	std::map<HklPseudoAxis *, Glib::RefPtr<Gtk::ListStore> > _mapPseudoAxeParameterModel;
+	std::map<HklParameter *, Glib::RefPtr<Gtk::ListStore> > _mapPseudoAxeParameterModel;
 
 	SolutionModelColumns *_solutionModelColumns;
 	Glib::RefPtr<Gtk::ListStore> _solutionModel;

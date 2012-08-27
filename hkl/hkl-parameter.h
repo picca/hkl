@@ -23,6 +23,9 @@
 #define __HKL_PARAMETER_H__
 
 #include <stdio.h>
+
+#include <ccan/list/list.h>
+#include <hkl/hkl-error.h>
 #include <hkl/hkl-interval.h>
 #include <hkl/hkl-unit.h>
 
@@ -30,6 +33,12 @@ HKL_BEGIN_DECLS
 
 typedef struct _HklParameter HklParameter;
 typedef struct _HklParameterOperations HklParameterOperations;
+typedef struct _HklParameterList HklParameterList;
+typedef struct _HklParameterListOperations HklParameterListOperations;
+
+/****************/
+/* HklParameter */
+/****************/
 
 struct _HklParameter {
 	const char *name;
@@ -40,6 +49,8 @@ struct _HklParameter {
 	int fit;
 	int changed;
 	const HklParameterOperations *ops;
+	struct list_node list;
+	void *_shit;
 };
 
 #define HKL_PARAMETER_DEFAULTS .name="dummy", .range={.min=0, .max=0}, ._value=0, .unit=NULL, .punit=NULL, .fit=HKL_TRUE, .changed=HKL_TRUE, .ops = &hkl_parameter_operations_defaults
@@ -63,9 +74,11 @@ extern double hkl_parameter_get_value_unit(const HklParameter *self);
 extern double hkl_parameter_get_value_closest(const HklParameter *self,
 					      const HklParameter *ref);
 
-extern void hkl_parameter_set_value(HklParameter *self, double value);
+extern bool hkl_parameter_set_value(HklParameter *self, double value,
+				    HklError **error);
 
-extern void hkl_parameter_set_value_unit(HklParameter *self, double value);
+extern bool hkl_parameter_set_value_unit(HklParameter *self, double value,
+					 HklError **error);
 
 extern double hkl_parameter_get_max(const HklParameter *self);
 
@@ -80,6 +93,35 @@ extern void hkl_parameter_randomize(HklParameter *self);
 extern int hkl_parameter_is_valid(const HklParameter *self);
 
 extern void hkl_parameter_fprintf(FILE *f, HklParameter *self);
+
+/********************/
+/* HklParameterList */
+/********************/
+
+struct _HklParameterList {
+	unsigned int len;
+	const HklParameterListOperations *ops;
+	struct list_head parameters;
+	void *_shit;
+};
+
+extern void hkl_parameter_list_get_values(const HklParameterList *self,
+					  double values[], unsigned int *len);
+
+extern unsigned int hkl_parameter_list_set_values(HklParameterList *self,
+						  double values[], unsigned int len,
+						  HklError **error);
+
+extern double *hkl_parameter_list_get_values_unit(const HklParameterList *self,
+						  unsigned int *len);
+
+extern unsigned int hkl_parameter_list_set_values_unit(HklParameterList *self,
+						       double values[],
+						       unsigned int len,
+						       HklError **error);
+
+extern HklParameter *hkl_parameter_list_get_by_name(HklParameterList *self,
+						    const char *name);
 
 HKL_END_DECLS
 

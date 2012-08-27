@@ -50,17 +50,17 @@ static void degenerated(void)
 	list_for_each(&engine->modes, mode, list){
 		hkl_pseudo_axis_engine_select_mode(engine, mode);
 		if (mode->parameters_len)
-			hkl_parameter_set_value(&engine->mode->parameters[0], 1.);
+			hkl_parameter_set_value(&engine->mode->parameters[0], 1., NULL);
 
 		/* studdy this degenerated case */
-		hkl_pseudo_axis_engine_set_values(engine, hkl, 3);
+		hkl_parameter_list_set_values(&engine->pseudo_axes, hkl, 3, NULL);
 		if (hkl_pseudo_axis_engine_set(engine, NULL)){
 			HklGeometryListItem *item;
 
 			list_for_each(&engines->geometries->items, item, node) {
 				static double null[] = {0, 0, 0};
 
-				hkl_pseudo_axis_engine_set_values(engine, null, 3);
+				hkl_parameter_list_set_values(&engine->pseudo_axes, null, 3, NULL);
 				hkl_geometry_init_geometry(geom, item->geometry);
 				hkl_pseudo_axis_engine_get(engine, NULL);
 				res &= check_pseudoaxes(engine, hkl, 3);
@@ -105,7 +105,7 @@ static void eulerians(void)
 
 		hkl_pseudo_axis_engine_select_mode(engine, mode);
 		if (mode->parameters_len)
-			hkl_parameter_set_value(&engine->mode->parameters[0], 1.);
+			hkl_parameter_set_value(&engine->mode->parameters[0], 1., NULL);
 
 		/* studdy this degenerated case */
 		hkl_pseudo_axis_engine_set_values_v(engine, 0., 90. * HKL_DEGTORAD, 0.);
@@ -170,14 +170,14 @@ static void q2(void)
 			for(alpha = -M_PI; alpha<M_PI; alpha += M_PI/180.){
 				double values[] = {q, alpha};
 
-				hkl_pseudo_axis_engine_set_values(engine, values, 2);
+				hkl_parameter_list_set_values(&engine->pseudo_axes, values, 2, NULL);
 				if(hkl_pseudo_axis_engine_set(engine, NULL)){
 					HklGeometryListItem *item;
 
 					list_for_each(&engines->geometries->items, item, node){
 						static double null[] = {0, 0};
 
-						hkl_pseudo_axis_engine_set_values(engine, null, 2);
+						hkl_parameter_list_set_values(&engine->pseudo_axes, null, 2, NULL);
 						hkl_geometry_init_geometry(geom, item->geometry);
 						hkl_pseudo_axis_engine_get(engine, NULL);
 						res &= check_pseudoaxes(engine, values, 2);

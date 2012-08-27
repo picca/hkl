@@ -24,6 +24,76 @@
 #include <string.h>
 #include "hkl-binding-private.h"
 
+/********************/
+/* HklParameterList */
+/********************/
+
+#define HKL_PARAMETER_LIST_ERROR hkl_parameter_list_error_quark ()
+
+GQuark hkl_parameter_list_error_quark (void)
+{
+	return g_quark_from_static_string ("hkl-parameter-list-error-quark");
+}
+
+typedef enum {
+	HKL_PARAMETER_LIST_ERROR_SET_VALUES /* can not set the parameter list values */
+} HklParameterListError;
+
+/**
+ * hkl_parameter_list_set_values_unit_binding:
+ * @self: the this ptr
+ * @values: (array length=len): the values to set
+ * @len: the length of the values
+ * @error: error set if something goes wrong
+ *
+ * set the parameter list with the given values
+ *
+ * Rename to: hkl_parameter_list_set_values_unit
+ *
+ * Return value: true if succeed or false otherwise
+ **/
+gboolean hkl_parameter_list_set_values_unit_binding(HklParameterList *self,
+						    double values[], uint len,
+						    GError **error)
+{
+	HklError *err = NULL;
+
+	g_return_val_if_fail(error == NULL ||*error == NULL, FALSE);
+
+	if(!hkl_parameter_list_set_values_unit(self,
+					       values, len, &err)){
+		g_assert(&err == NULL || err != NULL);
+
+		g_set_error(error,
+			    HKL_PARAMETER_LIST_ERROR,
+			    HKL_PARAMETER_LIST_ERROR_SET_VALUES,
+			    strdup(err->message));
+
+		hkl_error_clear(&err);
+
+		return FALSE;
+	}
+}
+
+/**
+ * hkl_parameter_list_parameters:
+ * @self: the this ptr
+ *
+ * Return value: (element-type HklParameter) (transfer container): list of parameters
+ *               free the list with g_slist_free when done.
+ **/
+GSList* hkl_parameter_list_parameters(HklParameterList *self)
+{
+	GSList *list = NULL;
+	HklParameter *parameter;
+
+	list_for_each(&self->parameters, parameter, list){
+		list = g_slist_append(list, parameter);
+	}
+
+	return list;
+}
+
 /************/
 /* Geometry */
 /************/
@@ -87,7 +157,8 @@ void hkl_geometry_set_axes_values_unit(HklGeometry *self, double *values, unsign
 
 	for(i=0; i<self->len; ++i)
 		hkl_parameter_set_value_unit(&self->axes[i].parameter,
-					     values[i]);
+					     values[i],
+					     NULL);
 	hkl_geometry_update(self);
 }
 
@@ -130,49 +201,6 @@ typedef enum {
 } HklPseudoAxisEngineError;
 
 /**
- * hkl_pseudo_axis_engine_pseudo_axes:
- * @self: the this ptr
- *
- * Return value: (element-type HklPseudoAxis) (transfer container): list of pseudo axes,
- *               free the list with g_slist_free when done.
- **/
-GSList* hkl_pseudo_axis_engine_pseudo_axes(HklPseudoAxisEngine *self)
-{
-	GSList *list = NULL;
-	HklPseudoAxis *pseudo_axis;
-
-	list_for_each(&self->pseudo_axes, pseudo_axis, list){
-		list = g_slist_append(list, pseudo_axis);
-	}
-
-	return list;
-}
-
-/**
- * hkl_pseudo_axis_engine_get_values_unit:
- * @self: the this ptr
- * @len: (out caller-allocates): the length of the returned array
- *
- * Return value: (array length=len) (transfer full): list of pseudo axes values with unit
- *               free the array with free when done 
- **/
-double *hkl_pseudo_axis_engine_get_values_unit(HklPseudoAxisEngine *self,
-					       unsigned int *len)
-{
-	HklPseudoAxis *pseudo_axis;
-	double *values;
-
-	values = malloc(sizeof(*values) * self->info->n_pseudo_axes);
-
-	*len=0;
-	list_for_each(&self->pseudo_axes, pseudo_axis, list){
-		values[(*len)++] = hkl_parameter_get_value_unit(&pseudo_axis->parameter);
-	}
-
-	return values;
-}
-
-/**
  * hkl_pseudo_axis_engine_set_values_unit:
  * @self: the this ptr
  * @values: (array length=len): the values to set
@@ -187,7 +215,7 @@ extern gboolean hkl_pseudo_axis_engine_set_values_unit(HklPseudoAxisEngine *self
 						       double values[], unsigned int len,
 						       GError **error)
 {
-	HklPseudoAxis *pseudo_axis;
+	HklParameter *parameter;
 	uint i = 0;
 	HklError *err = NULL;
 
@@ -196,9 +224,18 @@ extern gboolean hkl_pseudo_axis_engine_set_values_unit(HklPseudoAxisEngine *self
 	if(len != self->info->n_pseudo_axes)
 		return FALSE;
 
-	list_for_each(&self->pseudo_axes, pseudo_axis, list){
-		hkl_parameter_set_value(&pseudo_axis->parameter, values[i]);
-		++i;
+	if(!hkl_parameter_list_set_values_unit(&self->pseudo_axes,
+					       values, len, &err)){
+		g_assert(&err == NULL || err != NULL);
+
+		g_set_error(error,
+			    HKL_PSEUDO_AXIS_ENGINE_ERROR,
+			    HKL_PSEUDO_AXIS_ENGINE_ERROR_SET,
+			    strdup(err->message));
+
+		hkl_error_clear(&err);
+
+		return FALSE;
 	}
 
 	if(!hkl_pseudo_axis_engine_set(self, &err)){

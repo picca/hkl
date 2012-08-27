@@ -24,6 +24,10 @@
 
 #include <hkl/hkl-parameter-private.h>
 
+/****************/
+/* HklParameter */
+/****************/
+
 static int hkl_parameter_init(HklParameter *self, const char *name,
 			      double min, double value, double max,
 			      int fit, int changed,
@@ -93,13 +97,7 @@ HklParameter *hkl_parameter_new(const char *name,
  **/
 HklParameter *hkl_parameter_new_copy(const HklParameter *self)
 {
-	HklParameter *parameter = NULL;
-
-	parameter = HKL_MALLOC(HklParameter);
-
-	*parameter = *self;
-
-	return parameter;
+	return self->ops->copy(self);
 }
 
 /**
@@ -107,11 +105,12 @@ HklParameter *hkl_parameter_new_copy(const HklParameter *self)
  * @self:
  *
  * delete an #HklParameter
+extern HklAxis *hkl_axis_new_copy(const HklAxis *self);
+
  **/
 void hkl_parameter_free(HklParameter *self)
 {
-	if(self)
-		free(self);
+	self->ops->free(self);
 }
 
 /**
@@ -157,27 +156,35 @@ inline double hkl_parameter_get_value_closest(const HklParameter *self,
 
 /**
  * hkl_parameter_set_value: (skip)
- * @self:
- * @value:
+ * @self: this ptr
+ * @value: the value to set
+ * @error: the error set if something goes wrong
  *
  * set the value of an #HklParameter
+ *
+ * Return value: true if succeed or false otherwise
  **/
-inline void hkl_parameter_set_value(HklParameter *self, double value)
+inline bool hkl_parameter_set_value(HklParameter *self, double value,
+				    HklError **error)
 {
-	self->ops->set_value(self, value);
+	return self->ops->set_value(self, value, error);
 }
 
 /**
  * hkl_parameter_set_value_unit: (skip)
  * @self: the this ptr
  * @value: the value to set
+ * @error: the error set if something goes wrong
  *
  * set the value of the parameter express in the punit #HklUnit
  * @todo test
+ *
+ * Return value: true if succeed or false otherwise
  **/
-inline void hkl_parameter_set_value_unit(HklParameter *self, double value)
+inline bool hkl_parameter_set_value_unit(HklParameter *self, double value,
+					 HklError **error)
 {
-	self->ops->set_value_unit(self, value);
+	return self->ops->set_value_unit(self, value, error);
 }
 
 /**
@@ -290,4 +297,85 @@ void hkl_parameter_fprintf(FILE *f, HklParameter *self)
 			self->range.min * factor,
 			self->range.max * factor,
 			self->fit);
+}
+
+/********************/
+/* HklParameterList */
+/********************/
+
+/**
+ * hkl_parameter_list_add_parameter: (skip)
+ * @self: the this ptr
+ * @parameter: the #HklParameter to add to the list
+ *
+ * add an #HklParameter to a list of parameter.
+ **/
+void hkl_parameter_list_add_parameter(HklParameterList *self, HklParameter *parameter)
+{
+	list_add_tail(&self->parameters, &parameter->list);
+	self->len++;
+}
+
+/**
+ * hkl_parameter_list_get_values: (skip)
+ * @self: the this ptr
+ * @values: (array length=len): list of the paremetersc values.
+ * @len: (out caller-allocates): the len of the returned list.
+ *
+ * get a list of all the #HklParameter values
+ **/
+inline void hkl_parameter_list_get_values(const HklParameterList *self,
+					  double values[], uint *len)
+{
+	return self->ops->get_values(self, values, len);
+}
+
+/**
+ * hkl_parameter_list_set_values:
+ * @self: the this ptr
+ * @values: (array length=len): the values to set
+ * @len: the length of the values
+ * @error: error set if something goes wrong
+ *
+ * set the parameter list with the given values
+ *
+ * Return value: true if succeed or false otherwise
+ **/
+inline unsigned int hkl_parameter_list_set_values(HklParameterList *self,
+						  double values[], uint len,
+						  HklError **error)
+{
+	return self->ops->set_values(self, values, len, error);
+}
+
+/**
+ * hkl_parameter_list_get_values_unit:
+ * @self: the this ptr
+ * @len: (out caller-allocates): the length of the returned array
+ *
+ * Return value: (array length=len) (transfer full): list of pseudo axes values with unit
+ *               free the array with free when done 
+ **/
+inline double *hkl_parameter_list_get_values_unit(const HklParameterList *self,
+						  unsigned int *len)
+{
+	return self->ops->get_values_unit(self, len);
+}
+
+/**
+ * hkl_parameter_list_set_values_unit:
+ * @self: the this ptr
+ * @values: (array length=len): the values to set
+ * @len: the length of the values
+ * @error: error set if something goes wrong
+ *
+ * set the parameter list with the given values
+ *
+ * Return value: true if succeed or false otherwise
+ **/
+inline unsigned int hkl_parameter_list_set_values_unit(HklParameterList *self,
+						       double values[], uint len,
+						       HklError **error)
+{
+	return self->ops->set_values_unit(self, values, len, error);
 }

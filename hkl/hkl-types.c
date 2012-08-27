@@ -111,8 +111,8 @@ GType hkl_axis_get_type (void) {
         if (g_once_init_enter (&hkl_axis_type_id__volatile)) {
                 GType hkl_axis_type_id;
                 hkl_axis_type_id = g_boxed_type_register_static ("HklAxis",
-								 (GBoxedCopyFunc) hkl_axis_new_copy,
-								 (GBoxedFreeFunc) hkl_axis_free);
+								 (GBoxedCopyFunc) hkl_parameter_new_copy,
+								 (GBoxedFreeFunc) hkl_parameter_free);
                 g_once_init_leave (&hkl_axis_type_id__volatile, hkl_axis_type_id);
         }
         return hkl_axis_type_id__volatile;
@@ -231,8 +231,8 @@ GType hkl_pseudo_axis_get_type (void) {
         if (g_once_init_enter (&hkl_pseudo_axis_type_id__volatile)) {
                 GType hkl_pseudo_axis_type_id;
                 hkl_pseudo_axis_type_id = g_boxed_type_register_static ("HklPseudoAxis",
-									(GBoxedCopyFunc) hkl_pseudo_axis_dup,
-									(GBoxedFreeFunc) hkl_pseudo_axis_free);
+									(GBoxedCopyFunc) hkl_parameter_new_copy,
+									(GBoxedFreeFunc) hkl_parameter_free);
                 g_once_init_leave (&hkl_pseudo_axis_type_id__volatile, hkl_pseudo_axis_type_id);
         }
         return hkl_pseudo_axis_type_id__volatile;

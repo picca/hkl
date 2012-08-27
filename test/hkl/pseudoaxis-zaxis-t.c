@@ -61,14 +61,14 @@ static void solution(void)
 	hkl_geometry_set_values_unit_v(geometry, 1., 0., 0., 0.);
 
 	/* compute the 1 1 0 */
-	hkl_pseudo_axis_engine_set_values(engine, hkl, 3);
+	hkl_parameter_list_set_values(&engine->pseudo_axes, hkl, 3, NULL);
 	if (hkl_pseudo_axis_engine_set(engine, NULL)){
 		HklGeometryListItem *item;
 
 		list_for_each(&engines->geometries->items, item, node){
 			static double null[] = {0, 0, 0};
 
-			hkl_pseudo_axis_engine_set_values(engine, null, 3);
+			hkl_parameter_list_set_values(&engine->pseudo_axes, null, 3, NULL);
 			hkl_geometry_init_geometry(geometry, item->geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
 			res &= check_pseudoaxes(engine, hkl, 3);

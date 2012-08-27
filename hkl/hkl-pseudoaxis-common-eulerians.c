@@ -97,12 +97,14 @@ static int hkl_pseudo_axis_engine_mode_get_eulerians_real(HklPseudoAxisEngineMod
 	};
 	double values[3];
 	int solution;
+	HklParameter *parameter;
+	uint i = 0;
 
 	hkl_geometry_update(geometry);
 
 	solution = hkl_parameter_get_value(&self->parameters[0]);
 	kappa_to_eulerian(angles, values, 50 * HKL_DEGTORAD, solution);
-	hkl_pseudo_axis_engine_set_values(engine, values, 3);
+	_hkl_parameter_list_set_values(&engine->pseudo_axes, values, 3);
 
 	return HKL_TRUE;
 }
@@ -120,7 +122,7 @@ static int hkl_pseudo_axis_engine_mode_set_eulerians_real(HklPseudoAxisEngineMod
 	double angles[3];
 
 	solution = hkl_parameter_get_value(&self->parameters[0]);
-	hkl_pseudo_axis_engine_get_values(engine, values, &n_values);
+	hkl_parameter_list_get_values(&engine->pseudo_axes, values, &n_values);
 
 	if(!eulerian_to_kappa(values, angles, 50 * HKL_DEGTORAD, solution)){
 		hkl_error_set(error, "unreachable solution : 0° < chi < 50°");

@@ -103,7 +103,7 @@ int _psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 			f->data[0] = dhkl0.data[0];
 			f->data[1] = dhkl0.data[1];
 			f->data[2] = dhkl0.data[2];
-			hkl_pseudo_axis_engine_get_values(engine, &psi, &len);
+			hkl_parameter_list_get_values(&engine->pseudo_axes, &psi, &len);
 			f->data[3] = psi - hkl_vector_oriented_angle(&n, &hkl1, &Q);
 		}
 	}
@@ -209,7 +209,7 @@ static int hkl_pseudo_axis_engine_mode_get_psi_real(HklPseudoAxisEngineMode *bas
 
 			/* compute the angle beetween hkl1 and n */
 			psi = hkl_vector_oriented_angle(&n, &hkl1, &Q);
-			hkl_pseudo_axis_engine_set_values(engine, &psi, 1);
+			_hkl_parameter_list_set_values(&engine->pseudo_axes, &psi, 1);
 		}
 	}
 

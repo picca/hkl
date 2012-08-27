@@ -33,6 +33,24 @@
 /* HklAxis */
 /***********/
 
+static inline HklParameter *hkl_axis_copy_real(const HklParameter *base)
+{
+	HklAxis *self = container_of(base, HklAxis, parameter);
+	HklAxis *dup;
+
+	dup = HKL_MALLOC(HklAxis);
+
+	*dup = *self;
+
+	return &dup->parameter;
+}
+
+
+static inline void hkl_axis_free_real(HklParameter *self)
+{
+	free(container_of(self, HklAxis, parameter));
+}
+
 static inline void hkl_axis_update(HklAxis *self)
 {
 	hkl_quaternion_init_from_angle_and_axe(&self->q,
@@ -40,16 +58,32 @@ static inline void hkl_axis_update(HklAxis *self)
 					       &self->axis_v);
 }
 
-static inline void hkl_axis_set_value_real(HklParameter *self, double value)
+static inline unsigned int hkl_axis_set_value_real(
+	HklParameter *self, double value,
+	HklError **error)
 {
-	hkl_parameter_set_value_real(self, value);
-	hkl_axis_update(container_of(self, HklAxis, parameter));
+	HklAxis *axis = container_of(self, HklAxis, parameter);
+
+	if(!hkl_parameter_set_value_real(self, value, error))
+		return HKL_FALSE;
+
+	hkl_axis_update(axis);
+
+	return HKL_TRUE;
 }
 
-static inline void hkl_axis_set_value_unit_real(HklParameter *self, double value)
+static inline unsigned int hkl_axis_set_value_unit_real(
+	HklParameter *self, double value,
+	HklError **error)
 {
-	hkl_parameter_set_value_unit_real(self, value);
-	hkl_axis_update(container_of(self, HklAxis, parameter));
+	HklAxis *axis = container_of(self, HklAxis, parameter);
+
+	if(!hkl_parameter_set_value_unit_real(self, value, error))
+		return HKL_FALSE;
+
+	hkl_axis_update(axis);
+
+	return HKL_TRUE;
 }
 
 static inline void hkl_axis_randomize_real(HklParameter *self)
@@ -116,7 +150,7 @@ static inline double hkl_axis_get_value_closest_real(const HklParameter *self,
 /*
  * check if the angle or its equivalent is in between [min, max]
  */
-static int hkl_axis_is_valid_real(const HklParameter *self)
+static inline int hkl_axis_is_valid_real(const HklParameter *self)
 {
 	double value = self->_value;
 	int res = HKL_FALSE;
@@ -139,13 +173,25 @@ static int hkl_axis_is_valid_real(const HklParameter *self)
 	return res;
 }
 
-static HklParameterOperations axis_operations = {
-	HKL_PARAMETER_OPERATIONS_DEFAULT,
+static inline void hkl_axis_fprintf_real(FILE *f, const HklParameter *self)
+{
+	HklAxis *axis = container_of(self, HklAxis, parameter);
+
+	hkl_parameter_fprintf_real(f, self);
+	hkl_vector_fprintf(f, &axis->axis_v);
+	hkl_quaternion_fprintf(f, &axis->q);
+}
+
+static HklParameterOperations hkl_parameter_operations_axis = {
+	HKL_PARAMETER_OPERATIONS_DEFAULTS,
+	.copy = hkl_axis_copy_real,
+	.free = hkl_axis_free_real,
 	.get_value_closest = hkl_axis_get_value_closest_real,
 	.set_value = hkl_axis_set_value_real,
 	.set_value_unit = hkl_axis_set_value_unit_real,
 	.randomize = hkl_axis_randomize_real,
 	.is_valid = hkl_axis_is_valid_real,
+	.fprintf = hkl_axis_fprintf_real
 };
 
 HklAxis *hkl_axis_new(char const *name, HklVector const *axis_v)
@@ -159,29 +205,12 @@ HklAxis *hkl_axis_new(char const *name, HklVector const *axis_v)
 	return self;
 }
 
-HklAxis *hkl_axis_new_copy(const HklAxis *self)
-{
-	HklAxis *copy = NULL;
-
-	copy = HKL_MALLOC(HklAxis);
-
-	*copy = *self;
-
-	return copy;
-}
-
-void hkl_axis_free(HklAxis *self)
-{
-	if(self)
-		free(self);
-}
-
 void hkl_axis_init(HklAxis *self, const char* name, const HklVector *axis_v)
 {
 	static HklAxis axis0 = {
 		.parameter = {
 			HKL_PARAMETER_DEFAULTS_ANGLE,
-			.ops = &axis_operations,
+			.ops = &hkl_parameter_operations_axis,
 		},
 		.q = {{1, 0, 0, 0}},
 	};
@@ -201,15 +230,10 @@ void hkl_axis_set_value_smallest_in_range(HklAxis *self)
 
 	if(value < min)
 		hkl_axis_set_value_real(&self->parameter,
-					value + 2*M_PI*ceil((min - value)/(2*M_PI)));
+					value + 2*M_PI*ceil((min - value)/(2*M_PI)),
+					NULL);
 	else
 		hkl_axis_set_value_real(&self->parameter,
-					value - 2*M_PI*floor((value - min)/(2*M_PI)));
-}
-
-void hkl_axis_fprintf(FILE *f, HklAxis *self)
-{
-	hkl_parameter_fprintf(f, &self->parameter);
-	hkl_vector_fprintf(f, &self->axis_v);
-	hkl_quaternion_fprintf(f, &self->q);
+					value - 2*M_PI*floor((value - min)/(2*M_PI)),
+					NULL);
 }

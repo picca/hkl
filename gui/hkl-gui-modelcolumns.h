@@ -91,23 +91,21 @@ public:
 class PseudoAxeModelColumns : public Gtk::TreeModel::ColumnRecord
 {
 public:
-	Gtk::TreeModelColumn<HklPseudoAxis *> pseudoAxis;
+	Gtk::TreeModelColumn<HklParameter *> parameter;
 	Gtk::TreeModelColumn<Glib::ustring> name;
 	Gtk::TreeModelColumn<double> read;
 	Gtk::TreeModelColumn<double> write;
 	Gtk::TreeModelColumn<double> min;
 	Gtk::TreeModelColumn<double> max;
-	Gtk::TreeModelColumn<bool> is_initialized;
 
 	PseudoAxeModelColumns()
 		{
-			this->add(pseudoAxis);
+			this->add(parameter);
 			this->add(name);
 			this->add(read);
 			this->add(write);
 			this->add(min);
 			this->add(max);
-			this->add(is_initialized);
 		}
 };
 

@@ -35,7 +35,7 @@ static void hkl_test_bench_run_real(HklPseudoAxisEngine *engine, HklGeometry *ge
 
 		hkl_pseudo_axis_engine_select_mode(engine, mode);
 		if (mode->parameters_len)
-			hkl_parameter_set_value(&mode->parameters[0], 1.);
+			hkl_parameter_set_value(&mode->parameters[0], 1., NULL);
 
 		mean = max = 0;
 		min = 1000; /* arbitrary value always greater than the real min */
@@ -63,15 +63,15 @@ static void hkl_test_bench_run_v(HklPseudoAxisEngineList *engines, HklGeometry *
 				 char const *name, int n, ...)
 {
 	HklPseudoAxisEngine *engine;
-	HklPseudoAxis *pseudo_axis;
+	HklParameter *parameter;
 	va_list ap;
 
 	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, name);
 
 	va_start(ap, n);
-	list_for_each(&engine->pseudo_axes, pseudo_axis, list){
-		hkl_parameter_set_value(&pseudo_axis->parameter,
-					va_arg(ap, double));
+	/* TODO replace with a specialise HklParameterList */
+	list_for_each(&engine->pseudo_axes.parameters, parameter, list){
+		hkl_parameter_set_value(parameter, va_arg(ap, double), NULL);
 	}
 	va_end(ap);
 
@@ -137,14 +137,14 @@ static void hkl_test_bench_eulerians(void)
 		hkl_pseudo_axis_engine_select_mode(engine, mode);
 
 		/* studdy this degenerated case */
-		hkl_pseudo_axis_engine_set_values(engine, eulerians, 3);
+		hkl_parameter_list_set_values(&engine->pseudo_axes, eulerians, 3, NULL);
 		if (hkl_pseudo_axis_engine_set(engine, NULL)) {
 			HklGeometryListItem *item;
 
 			list_for_each(&engines->geometries->items, item, node){
 				static double null[] = {0, 0, 0};
 
-				hkl_pseudo_axis_engine_set_values(engine, null,3);
+				hkl_parameter_list_set_values(&engine->pseudo_axes, null, 3, NULL);
 				hkl_geometry_init_geometry(engine->geometry,
 							   item->geometry);
 				hkl_pseudo_axis_engine_get(engine, NULL);

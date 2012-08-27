@@ -50,17 +50,17 @@ static void degenerated(void)
 	list_for_each(&engine->modes, mode, list) {
 		hkl_pseudo_axis_engine_select_mode(engine, mode);
 		if(mode->parameters_len)
-			hkl_parameter_set_value(&engine->mode->parameters[0], 1.);
+			hkl_parameter_set_value(&engine->mode->parameters[0], 1., NULL);
 
 		/* studdy this degenerated case */
-		hkl_pseudo_axis_engine_set_values(engine, hkl, 3);
+		hkl_parameter_list_set_values(&engine->pseudo_axes, hkl, 3, NULL);
 		if (hkl_pseudo_axis_engine_set(engine, NULL)){
 			HklGeometryListItem *item;
 
 			list_for_each(&engines->geometries->items, item, node) {
 				static double null[] = {0, 0, 0};
 
-				hkl_pseudo_axis_engine_set_values(engine, null, 3);
+				hkl_parameter_list_set_values(&engine->pseudo_axes, null, 3, NULL);
 				hkl_geometry_init_geometry(geom, item->geometry);
 				hkl_pseudo_axis_engine_get(engine, NULL);
 				res &= check_pseudoaxes(engine, hkl, 3);
@@ -103,10 +103,10 @@ static void eulerians(void)
 	list_for_each(&engine->modes, mode, list){
 		hkl_pseudo_axis_engine_select_mode(engine, mode);
 		if(mode->parameters_len)
-			hkl_parameter_set_value(&mode->parameters[0], 1.);
+			hkl_parameter_set_value(&mode->parameters[0], 1., NULL);
 
 		/* studdy this degenerated case */
-		hkl_pseudo_axis_engine_set_values(engine, eulerians, 3);
+		hkl_parameter_list_set_values(&engine->pseudo_axes, eulerians, 3, NULL);
 		if (hkl_pseudo_axis_engine_set(engine, NULL)) {
 			HklGeometryListItem *item;
 
@@ -166,7 +166,7 @@ static void q(void)
 
 		hkl_pseudo_axis_engine_select_mode(engine, mode);
 		for(q=-1.; q<1.; q += 0.1){
-			hkl_pseudo_axis_engine_set_values_v(engine, q);
+			hkl_pseudo_axis_engine_set_values_v(engine, q, NULL);
 			if(hkl_pseudo_axis_engine_set(engine, NULL)){
 				HklGeometryListItem *item;
 

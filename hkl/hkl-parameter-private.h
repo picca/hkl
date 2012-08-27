@@ -23,25 +23,52 @@
 #ifndef __HKL_PARAMETER_PRIVATE_H__
 #define __HKL_PARAMETER_PRIVATE_H__
 
+#include <ccan/list/list.h>
 #include <hkl/hkl-parameter.h>
 
 HKL_BEGIN_DECLS
 
+/****************/
+/* HklParameter */
+/****************/
+
 struct _HklParameterOperations {
+	HklParameter *(*copy)(const HklParameter *self);
+	void (*free)(HklParameter *self);
 	double (*get_value_closest)(const HklParameter *self,
 				    const HklParameter *other);
-	void (*set_value)(HklParameter *self, double value);
-	void (*set_value_unit)(HklParameter *self, double value);
+	unsigned int (*set_value)(HklParameter *self, double value,
+				  HklError **error);
+	unsigned int (*set_value_unit)(HklParameter *self, double value,
+				       HklError **error);
 	void (*randomize)(HklParameter *self);
 	int (*is_valid)(const HklParameter *self);
+	void (*fprintf)(FILE *f, const HklParameter *self);
 };
 
-#define HKL_PARAMETER_OPERATIONS_DEFAULT				\
-	.get_value_closest = hkl_parameter_get_value_closest_real,	\
+#define HKL_PARAMETER_OPERATIONS_DEFAULTS				\
+	.copy = hkl_parameter_copy_real,				\
+		.free = hkl_parameter_free_real,			\
+		.get_value_closest = hkl_parameter_get_value_closest_real, \
 		.set_value = hkl_parameter_set_value_real,		\
 		.set_value_unit = hkl_parameter_set_value_unit_real,	\
 		.randomize = hkl_parameter_randomize_real,		\
-		.is_valid = hkl_parameter_is_valid_real
+		.is_valid = hkl_parameter_is_valid_real,		\
+		.fprintf = hkl_parameter_fprintf_real
+
+static inline HklParameter *hkl_parameter_copy_real(const HklParameter *self)
+{
+	HklParameter *dup = HKL_MALLOC(HklParameter);
+
+	*dup = *self;
+
+	return dup;
+}
+
+static inline void hkl_parameter_free_real(HklParameter *self)
+{
+	free(self);
+}
 
 static inline double hkl_parameter_get_value_closest_real(const HklParameter *self,
 							  const HklParameter *ref)
@@ -49,17 +76,23 @@ static inline double hkl_parameter_get_value_closest_real(const HklParameter *se
 	return self->_value;
 }
 
-static inline void hkl_parameter_set_value_real(HklParameter *self, double value)
+static inline unsigned int hkl_parameter_set_value_real(
+	HklParameter *self, double value,
+	HklError **error)
 {
 	self->_value = value;
 	self->changed = HKL_TRUE;
+
+	return HKL_TRUE;
 }
 
-static inline void hkl_parameter_set_value_unit_real(HklParameter *self, double value)
+static inline unsigned int hkl_parameter_set_value_unit_real(
+	HklParameter *self, double value,
+	HklError **error)
 {
 	double factor = hkl_unit_factor(self->unit, self->punit);
 
-	hkl_parameter_set_value_real(self, value / factor);
+	return hkl_parameter_set_value_real(self, value / factor, error);
 }
 
 static inline void hkl_parameter_randomize_real(HklParameter *self)
@@ -81,9 +114,164 @@ static inline int hkl_parameter_is_valid_real(const HklParameter *self)
 		return HKL_TRUE;
 }
 
+static inline void hkl_parameter_fprintf_real(FILE *f, const HklParameter *self)
+{
+	double factor = hkl_unit_factor(self->unit, self->punit);
+	if (self->punit)
+		fprintf(f, "\"%s\" : %.7f %s [%.7f : %.7f] (%d)",
+			self->name,
+			self->_value * factor,
+			self->punit->repr,
+			self->range.min * factor,
+			self->range.max * factor,
+			self->fit);
+	else
+		fprintf(f, "\"%s\" : %.7f [%.7f : %.7f] (%d)",
+			self->name,
+			self->_value * factor,
+			self->range.min * factor,
+			self->range.max * factor,
+			self->fit);
+}
+
 static HklParameterOperations hkl_parameter_operations_defaults = {
-	HKL_PARAMETER_OPERATIONS_DEFAULT,
+	HKL_PARAMETER_OPERATIONS_DEFAULTS,
 };
+
+
+/********************/
+/* HklParameterList */
+/********************/
+
+struct _HklParameterListOperations {
+	void (*get_values)(const HklParameterList *self, double values[], unsigned int *len);
+	unsigned int (*set_values)(HklParameterList *self, double values[], unsigned int len,
+				   HklError **error);
+	double *(*get_values_unit)(const HklParameterList *self, unsigned int *len);
+	unsigned int (*set_values_unit)(HklParameterList *self, double values[], unsigned int len,
+					HklError **error);
+};
+
+#define HKL_PARAMETER_LIST_OPERATIONS_DEFAULTS				\
+	.get_values = hkl_parameter_list_get_values_real,		\
+		.set_values = hkl_parameter_list_set_values_real,	\
+		.get_values_unit = hkl_parameter_list_get_values_unit_real, \
+		.set_values_unit = hkl_parameter_list_set_values_unit_real
+
+static inline void hkl_parameter_list_get_values_real(
+	const HklParameterList *self,
+	double values[], unsigned int *len)
+{
+	HklParameter *parameter;
+	unsigned int i = 0;
+
+	list_for_each(&self->parameters, parameter, list){
+		values[i++] = hkl_parameter_get_value(parameter);
+	}
+
+	*len = self->len;
+}
+
+static inline unsigned int hkl_parameter_list_set_values_real(
+	HklParameterList *self,
+	double values[], unsigned int len,
+	HklError **error)
+{
+	unsigned int i = 0;
+	HklParameter *parameter;
+
+	list_for_each(&self->parameters, parameter, list){
+		if(!hkl_parameter_set_value(parameter, values[i++],
+					    error))
+			return HKL_FALSE;
+	}
+	return HKL_TRUE;
+}
+
+static inline double *hkl_parameter_list_get_values_unit_real(
+	const HklParameterList *self,
+	unsigned int *len)
+{
+	HklParameter *parameter;
+	double *values;
+
+	values = malloc(sizeof(*values) * self->len);
+
+	*len=0;
+	list_for_each(&self->parameters, parameter, list){
+		values[(*len)++] = hkl_parameter_get_value_unit(parameter);
+	}
+
+	return values;
+}
+
+static inline unsigned int hkl_parameter_list_set_values_unit_real(
+	HklParameterList *self,
+	double values[], unsigned int len,
+	HklError **error)
+{
+	unsigned int i = 0;
+	HklParameter *parameter;
+
+	list_for_each(&self->parameters, parameter, list){
+		if(!hkl_parameter_set_value_unit(parameter, values[i++],
+						 error))
+			return HKL_FALSE;
+	}
+	return HKL_TRUE;
+}
+
+static HklParameterListOperations hkl_parameter_list_operations_defaults = {
+	HKL_PARAMETER_LIST_OPERATIONS_DEFAULTS,
+};
+
+static void hkl_parameter_list_init(HklParameterList *self, HklParameterListOperations *ops)
+{
+	list_head_init(&self->parameters);
+	self->len = 0;
+	self->ops = ops;
+}
+
+static void hkl_parameter_list_release(HklParameterList *self)
+{
+	HklParameter *parameter;
+	HklParameter *next;
+
+	list_for_each_safe(&self->parameters, parameter, next, list){
+		list_del(&parameter->list);
+		hkl_parameter_free(parameter);
+	}
+	self->len = 0;
+}
+
+static void hkl_parameter_list_fprintf(FILE *f, const HklParameterList *self)
+{
+	HklParameter *parameter;
+
+	list_for_each(&self->parameters, parameter, list){
+		fprintf(f, "\n     ");
+		hkl_parameter_fprintf(f, parameter);
+	}
+}
+
+extern void hkl_parameter_list_add_parameter(HklParameterList *self,
+					     HklParameter *parameter);
+
+
+/* this method is used to set the Parameter list without triggering
+ * the public API machinery, usually this method is used in the
+ * HklPseudoAxis get method to set the pseudo axis values */
+static inline void _hkl_parameter_list_set_values(
+	HklParameterList *self,
+	double values[], unsigned int len)
+{
+	unsigned int i = 0;
+	HklParameter *parameter;
+
+	list_for_each(&self->parameters, parameter, list){
+		parameter->_value = values[i++];
+	}
+}
 
 HKL_END_DECLS
 

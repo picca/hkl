@@ -102,10 +102,10 @@ static void degenerated(void)
 
 		hkl_pseudo_axis_engine_select_mode(engine, mode);
 		if (mode->parameters_len)
-			hkl_parameter_set_value(&mode->parameters[0], 0.);
+			hkl_parameter_set_value(&mode->parameters[0], 0., NULL);
 
 		/* studdy this degenerated case */
-		hkl_pseudo_axis_engine_set_values(engine, values, 3);
+		hkl_parameter_list_set_values(&engine->pseudo_axes, values, 3, NULL);
 
 		if(hkl_pseudo_axis_engine_set(engine, NULL)){
 			HklGeometryListItem *item;
@@ -113,7 +113,7 @@ static void degenerated(void)
 			list_for_each(&engines->geometries->items, item, node){
 				static double null[] = {0, 0, 0};
 
-				hkl_pseudo_axis_engine_set_values(engine, null, 3);
+				hkl_parameter_list_set_values(&engine->pseudo_axes, null, 3, NULL);
 				hkl_geometry_init_geometry(engines->geometry, item->geometry);
 				hkl_pseudo_axis_engine_get(engine, NULL);
 				res &= check_pseudoaxes(engine, values, 3);
@@ -155,40 +155,40 @@ static void psi_getter(void)
 	hkl_geometry_set_values_unit_v(geom, 30., 0., 0., 60.);
 	hkl_pseudo_axis_engine_initialize(engine, NULL);
 
-	hkl_parameter_set_value(&engine->mode->parameters[0], 1);
-	hkl_parameter_set_value(&engine->mode->parameters[1], 0);
-	hkl_parameter_set_value(&engine->mode->parameters[2], 0);
+	hkl_parameter_set_value(&engine->mode->parameters[0], 1, NULL);
+	hkl_parameter_set_value(&engine->mode->parameters[1], 0, NULL);
+	hkl_parameter_set_value(&engine->mode->parameters[2], 0, NULL);
 	res &= hkl_pseudo_axis_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, 0.);
 
-	hkl_parameter_set_value(&engine->mode->parameters[0], 0);
-	hkl_parameter_set_value(&engine->mode->parameters[1], 1);
-	hkl_parameter_set_value(&engine->mode->parameters[2], 0);
+	hkl_parameter_set_value(&engine->mode->parameters[0], 0, NULL);
+	hkl_parameter_set_value(&engine->mode->parameters[1], 1, NULL);
+	hkl_parameter_set_value(&engine->mode->parameters[2], 0, NULL);
 	res &= hkl_pseudo_axis_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, 90. * HKL_DEGTORAD);
 
 	/* here Q and <h, k, l>_ref are colinear must FAIL */
-	hkl_parameter_set_value(&engine->mode->parameters[0], 0);
-	hkl_parameter_set_value(&engine->mode->parameters[1], 0);
-	hkl_parameter_set_value(&engine->mode->parameters[2], 1);
+	hkl_parameter_set_value(&engine->mode->parameters[0], 0, NULL);
+	hkl_parameter_set_value(&engine->mode->parameters[1], 0, NULL);
+	hkl_parameter_set_value(&engine->mode->parameters[2], 1, NULL);
 	res &= !hkl_pseudo_axis_engine_get(engine, NULL);
 
-	hkl_parameter_set_value(&engine->mode->parameters[0], -1);
-	hkl_parameter_set_value(&engine->mode->parameters[1], 0);
-	hkl_parameter_set_value(&engine->mode->parameters[2], 0);
+	hkl_parameter_set_value(&engine->mode->parameters[0], -1, NULL);
+	hkl_parameter_set_value(&engine->mode->parameters[1], 0, NULL);
+	hkl_parameter_set_value(&engine->mode->parameters[2], 0, NULL);
 	res &= hkl_pseudo_axis_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, 180. * HKL_DEGTORAD);
 
-	hkl_parameter_set_value(&engine->mode->parameters[0], 0);
-	hkl_parameter_set_value(&engine->mode->parameters[1], -1);
-	hkl_parameter_set_value(&engine->mode->parameters[2], 0);
+	hkl_parameter_set_value(&engine->mode->parameters[0], 0, NULL);
+	hkl_parameter_set_value(&engine->mode->parameters[1], -1, NULL);
+	hkl_parameter_set_value(&engine->mode->parameters[2], 0, NULL);
 	res &= hkl_pseudo_axis_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, -90. * HKL_DEGTORAD);
 
 	/* Q and <h, k, l>_ref are colinear so must FAIL */
-	hkl_parameter_set_value(&engine->mode->parameters[0], 0);
-	hkl_parameter_set_value(&engine->mode->parameters[1], 0);
-	hkl_parameter_set_value(&engine->mode->parameters[2], -1);
+	hkl_parameter_set_value(&engine->mode->parameters[0], 0, NULL);
+	hkl_parameter_set_value(&engine->mode->parameters[1], 0, NULL);
+	hkl_parameter_set_value(&engine->mode->parameters[2], -1, NULL);
 	res &= !hkl_pseudo_axis_engine_get(engine, NULL);
 
 	ok(res == HKL_TRUE, "psi getter");
@@ -224,9 +224,9 @@ static void psi_setter(void)
 
 	/* the init part */
 	hkl_geometry_set_values_unit_v(geom, 30., 0., 0., 60.);
-	hkl_parameter_set_value(&engine->mode->parameters[0], 1);
-	hkl_parameter_set_value(&engine->mode->parameters[1], 0);
-	hkl_parameter_set_value(&engine->mode->parameters[2], 0);
+	hkl_parameter_set_value(&engine->mode->parameters[0], 1, NULL);
+	hkl_parameter_set_value(&engine->mode->parameters[1], 0, NULL);
+	hkl_parameter_set_value(&engine->mode->parameters[2], 0, NULL);
 	hkl_pseudo_axis_engine_initialize(engine, NULL);
 
 	list_for_each(&engine->modes, mode, list){
@@ -234,14 +234,14 @@ static void psi_setter(void)
 
 		hkl_pseudo_axis_engine_select_mode(engine, mode);
 		for(psi=-180 * HKL_DEGTORAD;psi<180 * HKL_DEGTORAD;psi += HKL_DEGTORAD){
-			hkl_pseudo_axis_engine_set_values(engine, &psi, 1);
+			hkl_parameter_list_set_values(&engine->pseudo_axes, &psi, 1, NULL);
 			if(hkl_pseudo_axis_engine_set(engine, NULL)){
 				HklGeometryListItem *item;
 
 				list_for_each(&engines->geometries->items, item, node){
 					static double null[] = {0};
 
-					hkl_pseudo_axis_engine_set_values(engine, null, 1);
+					hkl_parameter_list_set_values(&engine->pseudo_axes, null, 1, NULL);
 					hkl_geometry_init_geometry(geom, item->geometry);
 					hkl_pseudo_axis_engine_get(engine, NULL);
 					res &= check_pseudoaxes_v(engine, psi);
@@ -290,14 +290,14 @@ static void q(void)
 
 		hkl_pseudo_axis_engine_select_mode(engine, mode);
 		for(q=-1.; q<1.; q += 0.1){
-			hkl_pseudo_axis_engine_set_values(engine, &q, 1);
+			hkl_parameter_list_set_values(&engine->pseudo_axes, &q, 1, NULL);
 			if(hkl_pseudo_axis_engine_set(engine, NULL)){
 				HklGeometryListItem *item;
 
 				list_for_each(&engines->geometries->items, item, node){
 					static double null[] = {0};
 
-					hkl_pseudo_axis_engine_set_values(engine, null, 1);
+					hkl_parameter_list_set_values(&engine->pseudo_axes, null, 1, NULL);
 					hkl_geometry_init_geometry(geom, item->geometry);
 					hkl_pseudo_axis_engine_get(engine, NULL);
 					res &= check_pseudoaxes(engine, &q, 1);
@@ -342,19 +342,19 @@ static void hkl_psi_constant_vertical(void)
 
 	/* the init part */
 	hkl_geometry_set_values_unit_v(geom, 30., 0., 0., 60.);
-	hkl_parameter_set_value(&engine->mode->parameters[0], 1);
-	hkl_parameter_set_value(&engine->mode->parameters[1], 1);
-	hkl_parameter_set_value(&engine->mode->parameters[2], 0);
+	hkl_parameter_set_value(&engine->mode->parameters[0], 1, NULL);
+	hkl_parameter_set_value(&engine->mode->parameters[1], 1, NULL);
+	hkl_parameter_set_value(&engine->mode->parameters[2], 0, NULL);
 	hkl_pseudo_axis_engine_initialize(engine, NULL);
 
-	hkl_pseudo_axis_engine_set_values(engine, hkl, 3);
+	hkl_parameter_list_set_values(&engine->pseudo_axes, hkl, 3, NULL);
 	if(hkl_pseudo_axis_engine_set(engine, NULL)){
 		HklGeometryListItem *item;
 
 		list_for_each(&engines->geometries->items, item, node){
 			static double null[] = {0, 0, 0};
 
-			hkl_pseudo_axis_engine_set_values(engine, null, 3);
+			hkl_parameter_list_set_values(&engine->pseudo_axes, null, 3, NULL);
 			hkl_geometry_init_geometry(geom, item->geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
 			res &= check_pseudoaxes(engine, hkl, 3);

@@ -223,18 +223,15 @@ HklGeometry *hkl_geometry_new_copy(const HklGeometry *self)
 
 	dup = HKL_MALLOC(HklGeometry);
 
-	dup->config = self->config;
-	dup->source = self->source;
-	dup->len = self->len;
-	dup->holders_len = self->holders_len;
+	*dup = *self;
 
 	/* copy the axes */
-	dup->axes = malloc(sizeof(*dup->axes) * dup->len);
-	memcpy(dup->axes, self->axes, sizeof(*dup->axes) * dup->len);
+	dup->axes = malloc(sizeof(*self->axes) * self->len);
+	memcpy(dup->axes, self->axes, sizeof(*self->axes) * self->len);
 
 	/* copy the holders */
-	dup->holders = malloc(sizeof(*dup->holders) * dup->holders_len);
-	for(i=0; i<dup->holders_len; ++i)
+	dup->holders = malloc(sizeof(*self->holders) * self->holders_len);
+	for(i=0; i<self->holders_len; ++i)
 		hkl_holder_init_copy(&dup->holders[i], dup,
 				     &self->holders[i]);
 
@@ -411,7 +408,7 @@ int hkl_geometry_set_values_v(HklGeometry *self, size_t len, ...)
 	va_start(ap, len);
 	for(i=0; i<len; ++i)
 		hkl_parameter_set_value(&self->axes[i].parameter,
-					va_arg(ap, double));
+					va_arg(ap, double), NULL);
 
 	va_end(ap);
 	hkl_geometry_update(self);
@@ -430,7 +427,7 @@ int hkl_geometry_set_values_unit_v(HklGeometry *self, ...)
 	va_start(ap, self);
 	for(i=0; i<self->len; ++i)
 		hkl_parameter_set_value_unit(&self->axes[i].parameter,
-					     va_arg(ap, double));
+					     va_arg(ap, double), NULL);
 
 	va_end(ap);
 	hkl_geometry_update(self);
@@ -542,7 +539,7 @@ int hkl_geometry_closest_from_geometry_with_range(HklGeometry *self, HklGeometry
 	if(!ko){
 		for(i=0;i<self->len;++i)
 			hkl_parameter_set_value(&self->axes[i].parameter,
-						values[i]);
+						values[i], NULL);
 		hkl_geometry_update(self);
 	}
 	return ko;

@@ -29,6 +29,15 @@
 
 HKL_BEGIN_DECLS
 
+/********************/
+/* HklParameterList */
+/********************/
+
+extern GSList* hkl_parameter_list_parameters(HklParameterList *self);
+
+extern gboolean hkl_parameter_list_set_values_unit_binding(HklParameterList *self,
+							   double *values, uint len,
+							   GError **error);
 /***************/
 /* HklGeometry */
 /***************/
@@ -49,14 +58,10 @@ extern GSList* hkl_geometry_list_items(HklGeometryList *self);
 /* HklPseudoAxisEngine */
 /***********************/
 
-extern GSList* hkl_pseudo_axis_engine_pseudo_axes(HklPseudoAxisEngine *self);
-
-extern double* hkl_pseudo_axis_engine_get_values_unit(HklPseudoAxisEngine *self,
-						      unsigned int *len);
-
-extern gboolean hkl_pseudo_axis_engine_set_values_unit(HklPseudoAxisEngine *self,
-						       double values[], unsigned int len,
-						       GError **error);
+extern gboolean hkl_pseudo_axis_engine_set_values_unit(
+	HklPseudoAxisEngine *self,
+	double values[], unsigned int len,
+	GError **error);
 
 /***************************/
 /* HklPSeudoAxisEngineList */

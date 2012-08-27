@@ -114,7 +114,7 @@ void PseudoAxesFrame::on_cell_TreeView_pseudoAxis_value_edited(Glib::ustring con
 							       Glib::ustring const & newText)
 {
 	double value;
-	HklPseudoAxis *pseudo;
+	HklParameter *parameter;
 
 	Gtk::TreePath path(spath);
 	Gtk::TreeModel::iterator iter = _pseudoAxis_ListStore->get_iter(path);
@@ -122,13 +122,15 @@ void PseudoAxesFrame::on_cell_TreeView_pseudoAxis_value_edited(Glib::ustring con
 
 	sscanf(newText.c_str(), "%lf", &value);
 
-	pseudo = row[_pseudoAxis_columns.pseudo];
-	if(pseudo){
+	parameter = row[_pseudoAxis_columns.parameter];
+	if(parameter){
 		Gtk::CellRenderer *renderer;
 
 		renderer = _treeview1->get_column_cell_renderer(1); // 1 is the index of the value column
 		renderer->property_cell_background().set_value("red");
-		hkl_parameter_set_value_unit((HklParameter *)pseudo, value);
+		/* TODO check the error and change the meaning once
+		the set method will do the computation */ 
+		hkl_parameter_set_value_unit(parameter, value, NULL);
 		row[_pseudoAxis_columns.value] = value;
 	}
 }
@@ -165,7 +167,8 @@ void PseudoAxesFrame::on_cell_treeview2_mode_parameter_value_edited(Glib::ustrin
 
 	parameter = row[_mode_parameter_columns.parameter];
 	if(parameter){
-		hkl_parameter_set_value_unit(parameter, value);
+		/* TODO check the error */
+		hkl_parameter_set_value_unit(parameter, value, NULL);
 		row[_mode_parameter_columns.value] = value;
 	}
 }
@@ -176,14 +179,14 @@ void PseudoAxesFrame::on_cell_treeview2_mode_parameter_value_edited(Glib::ustrin
 
 void PseudoAxesFrame::updatePseudoAxis(void)
 {
-	HklPseudoAxis *pseudo_axis;
+	HklParameter *parameter;
 
 	_pseudoAxis_ListStore->clear();
-	list_for_each(&_engine->pseudo_axes, pseudo_axis, list){
+	list_for_each(&_engine->pseudo_axes.parameters, parameter, list){
 		Gtk::TreeRow row = *(_pseudoAxis_ListStore->append());
-		row[_pseudoAxis_columns.name] = pseudo_axis->parameter.name;
-		row[_pseudoAxis_columns.value] = hkl_parameter_get_value_unit(&pseudo_axis->parameter);
-		row[_pseudoAxis_columns.pseudo] = pseudo_axis;
+		row[_pseudoAxis_columns.name] = parameter->name;
+		row[_pseudoAxis_columns.value] = hkl_parameter_get_value_unit(parameter);
+		row[_pseudoAxis_columns.parameter] = parameter;
 	}
 }
 

@@ -47,7 +47,7 @@ static int _q_func(const gsl_vector *x, void *params, gsl_vector *f)
 	/* update the workspace from x */
 	set_geometry_axes(engine, x->data);
 
-	hkl_pseudo_axis_engine_get_values(engine, values, &n_values);
+	hkl_parameter_list_get_values(&engine->pseudo_axes, values, &n_values);
 
 	tth = gsl_sf_angle_restrict_symm(x->data[0]);
 	q = 2 * HKL_TAU / hkl_source_get_wavelength(&engine->geometry->source) * sin(tth/2.);
@@ -86,7 +86,7 @@ static int get_q_real(HklPseudoAxisEngineMode *self,
 
 	/* update q */
 	q = 2 *HKL_TAU / wavelength * sin(theta);
-	hkl_pseudo_axis_engine_set_values(engine, &q, 1);
+	_hkl_parameter_list_set_values(&engine->pseudo_axes, &q, 1);
 
 	return HKL_TRUE;
 }
@@ -153,7 +153,7 @@ static int _q2_func(const gsl_vector *x, void *params, gsl_vector *f)
 	/* update the workspace from x */
 	set_geometry_axes(engine, x->data);
 
-	hkl_pseudo_axis_engine_get_values(engine, values, &n_values);
+	hkl_parameter_list_get_values(&engine->pseudo_axes, values, &n_values);
 
 	wavelength = hkl_source_get_wavelength(&engine->geometry->source);
 	hkl_source_compute_ki(&engine->geometry->source, &ki);
@@ -202,7 +202,7 @@ static int get_q2_real(HklPseudoAxisEngineMode *self,
 	values[0] = 2 * HKL_TAU / wavelength * sin(theta);
 	values[1] = atan2(kf.data[2], kf.data[1]);
 
-	hkl_pseudo_axis_engine_set_values(engine, values, 2);
+	_hkl_parameter_list_set_values(&engine->pseudo_axes, values, 2);
 
 	return HKL_TRUE;
 }

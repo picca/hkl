@@ -39,7 +39,7 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 	hkl_geometry_randomize(geometry);
 
 	list_for_each(&engine->modes, mode, list){
-		HklPseudoAxis *pseudo_axis;
+		HklParameter *parameter;
 		uint len;
 
 		hkl_pseudo_axis_engine_select_mode(engine, mode);
@@ -51,9 +51,9 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 		for(i=0;i<n && !ko;++i) {
 			/* randomize the pseudoAxes values */
 			j = 0;
-			list_for_each(&engine->pseudo_axes, pseudo_axis, list){
-				hkl_parameter_randomize(&pseudo_axis->parameter);
-				values[j++] = hkl_parameter_get_value(&pseudo_axis->parameter);
+			list_for_each(&engine->pseudo_axes.parameters, parameter, list){
+				hkl_parameter_randomize(parameter);
+				values[j++] = hkl_parameter_get_value(parameter);
 			}
 			len = j;
 
@@ -73,15 +73,15 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 					/* first modify the pseudoAxes values */
 					/* to be sure that the result is the */
 					/* computed result. */
-					list_for_each(&engine->pseudo_axes, pseudo_axis, list)
-						hkl_parameter_set_value(&pseudo_axis->parameter, 0.);
+					list_for_each(&engine->pseudo_axes.parameters, parameter, list)
+						hkl_parameter_set_value(parameter, 0., NULL);
 
 					hkl_geometry_init_geometry(geometry, item->geometry);
 					hkl_pseudo_axis_engine_get(engine, NULL);
 
 					k=0;
-					list_for_each(&engine->pseudo_axes, pseudo_axis, list)
-						ko |= fabs(values[k++] - hkl_parameter_get_value(&pseudo_axis->parameter)) >= HKL_EPSILON;
+					list_for_each(&engine->pseudo_axes.parameters, parameter, list)
+						ko |= fabs(values[k++] - hkl_parameter_get_value(parameter)) >= HKL_EPSILON;
 					if(ko)
 						break;
 				}
@@ -101,9 +101,9 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 			for(k=0; k<len; ++k)
 				fprintf(stderr, " %f", values[k]);
 			fprintf(stderr, " obtained : ");
-			list_for_each(&engine->pseudo_axes, pseudo_axis, list)
+			list_for_each(&engine->pseudo_axes.parameters, parameter, list)
 				fprintf(stderr, " %f",
-					hkl_parameter_get_value(&pseudo_axis->parameter));
+					hkl_parameter_get_value(parameter));
 			hkl_pseudo_axis_engine_fprintf(stdout, engine);
 		}else{
 			fprintf(stderr, " ok");

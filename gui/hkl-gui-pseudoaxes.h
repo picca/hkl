@@ -43,13 +43,13 @@ class PseudoAxisModelColumns : public Gtk::TreeModel::ColumnRecord
 public:
 	Gtk::TreeModelColumn<Glib::ustring> name;
 	Gtk::TreeModelColumn<double> value;
-	Gtk::TreeModelColumn<HklPseudoAxis *> pseudo;
+	Gtk::TreeModelColumn<HklParameter *> parameter;
 
 	PseudoAxisModelColumns()
 		{
 			this->add(name);
 			this->add(value);
-			this->add(pseudo);
+			this->add(parameter);
 		}
 };
 

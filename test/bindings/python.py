@@ -96,12 +96,12 @@ class TestAPI(unittest.TestCase):
 
         # get the hkl engine and do a computation
         hkl = engines.get_by_name("hkl")
-        values = hkl.get_values_unit()
+        values = hkl.pseudo_axes.get_values_unit()
 
         # set the hkl engine and get the results
         for _ in range(100):
             try:
-                hkl.set_values_unit(values)
+                hkl.pseudo_axes.set_values_unit(values)
 
                 for item in engines.geometries.items():
                     item.geometry.get_axes_values_unit()
@@ -116,9 +116,9 @@ class TestAPI(unittest.TestCase):
         for engine in engines.engines():
             self.assertTrue(type(engine) is Hkl.PseudoAxisEngine)
             self.assertTrue(type(engine.info.name) is str)
-            for pseudo_axis in engine.pseudo_axes():
-                self.assertTrue(type(pseudo_axis) is Hkl.PseudoAxis)
-                self.assertTrue(type(pseudo_axis.parameter.get_value()) is float)
+            for parameter in engine.pseudo_axes.parameters():
+                self.assertTrue(type(parameter) is Hkl.Parameter)
+                self.assertTrue(type(parameter.get_value()) is float)
 
         # check the set result
         for item in engines.geometries.items():
@@ -130,6 +130,7 @@ class TestAPI(unittest.TestCase):
     @unittest.skip("for testing figures")
     def test_doc_exemple(self):
         #execfile("../../Documentation/sphinx/source/bindings/python.py")
+        execfile("../../Documentation/sphinx/source/pyplots/trajectory_simple.py")
         execfile("../../Documentation/sphinx/source/pyplots/trajectory_full.py")
 
         self.assertTrue(False)

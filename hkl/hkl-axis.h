@@ -38,6 +38,7 @@ struct _HklAxis {
 	HklVector axis_v;
 	HklQuaternion q;
 	struct list_node engine_list;
+	void *_shit;
 };
 
 /***********/
@@ -46,15 +47,9 @@ struct _HklAxis {
 
 extern HklAxis *hkl_axis_new(char const *name, HklVector const *axis_v);
 
-extern HklAxis *hkl_axis_new_copy(const HklAxis *self);
-
-extern void hkl_axis_free(HklAxis *self);
-
 extern void hkl_axis_init(HklAxis *axis, char const * name, HklVector const *axis_v);
 
 extern void hkl_axis_set_value_smallest_in_range(HklAxis *self);
-
-extern void hkl_axis_fprintf(FILE *f, HklAxis *self);
 
 HKL_END_DECLS
 

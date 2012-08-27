@@ -57,7 +57,7 @@ static int fit_detector_function(const gsl_vector *x, void *params, gsl_vector *
 	/* update the workspace from x; */
 	for(i=0; i<fitp->len; ++i)
 		hkl_parameter_set_value(&fitp->axes[i]->parameter,
-					x->data[i]);
+					x->data[i], NULL);
 
 	hkl_geometry_update(fitp->geometry);
 
@@ -187,8 +187,10 @@ static int fit_detector_position(HklPseudoAxisEngineMode *mode, HklGeometry *geo
 				double value;
 
 				value = hkl_parameter_get_value(&params.axes[i]->parameter);
+				/* TODO one day deal with the error for real */
 				hkl_parameter_set_value(&params.axes[i]->parameter,
-							gsl_sf_angle_restrict_pos(value));
+							gsl_sf_angle_restrict_pos(value),
+							NULL);
 			}
 		}
 		/* release memory */
@@ -267,7 +269,7 @@ int RUBh_minus_Q(double const x[], void *params, double f[])
 	set_geometry_axes(engine, x);
 
 	/* take the hkl vector from the engine pseudo axes */
-	hkl_pseudo_axis_engine_get_values(engine, Hkl.data, &len);
+	hkl_parameter_list_get_values(&engine->pseudo_axes, Hkl.data, &len);
 
 	/* R * UB * h = Q */
 	/* for now the 0 holder is the sample holder. */
@@ -316,7 +318,8 @@ int hkl_pseudo_axis_engine_mode_get_hkl_real(HklPseudoAxisEngineMode *self,
 
 	hkl_matrix_solve(&RUB, &hkl, &Q);
 
-	hkl_pseudo_axis_engine_set_values(engine, hkl.data, ARRAY_SIZE(hkl.data));
+	_hkl_parameter_list_set_values(&engine->pseudo_axes,
+				       hkl.data, ARRAY_SIZE(hkl.data));
 
 	return HKL_TRUE;
 }
@@ -405,8 +408,11 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
 			kf2 = q;
 			hkl_vector_rotated_around_line(&kf2, M_PI, &cp, &op);
 			angle = hkl_vector_oriented_angle_points(&q, &op, &kf2, &axis_v);
-			hkl_parameter_set_value(&axis->parameter,
-						hkl_parameter_get_value(&axis->parameter) + angle);
+			/* TODO parameter list for geometry */
+			if(!hkl_parameter_set_value(&axis->parameter,
+						    hkl_parameter_get_value(&axis->parameter) + angle,
+						    error))
+				return false;
 			hkl_geometry_update(geom);
 #ifdef DEBUG
 			fprintf(stdout, "\n- try to add a solution by rotating Q <%f, %f, %f> around the \"%s\" axis <%f, %f, %f> of %f radian",
@@ -457,7 +463,7 @@ int _double_diffraction(double const x[], void *params, double f[])
 	set_geometry_axes(engine, x);
 
 	/* take the hkl vector from the engine pseudo axes */
-	hkl_pseudo_axis_engine_get_values(engine, hkl.data, &len);
+	hkl_parameter_list_get_values(&engine->pseudo_axes, hkl.data, &len);
 
 	hkl_vector_init(&kf2,
 			hkl_parameter_get_value(&engine->mode->parameters[0]),
@@ -634,11 +640,14 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 				      "\nwhen Q and the <h2, k2, l2> ref vector are colinear."
 				      "\nplease change one or both of them", engine->mode->info->name);
 			return HKL_FALSE;
-		}else
+		}else{
 			/* compute the angle beetween hkl and n and
 			 * store in in the fourth parameter */
-			hkl_parameter_set_value(&self->parameters[3],
-						hkl_vector_oriented_angle(&n, &hkl, &Q));
+			if (!hkl_parameter_set_value(&self->parameters[3],
+						     hkl_vector_oriented_angle(&n, &hkl, &Q),
+						     error))
+				return false;
+		}
 	}
 
 	return HKL_TRUE;

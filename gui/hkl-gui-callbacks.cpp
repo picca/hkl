@@ -30,8 +30,8 @@ void HKLWindow::on_treeView_pseudoAxes_cursor_changed(void)
 	Gtk::TreeViewColumn * column;
 	_TreeView_pseudoAxes->get_cursor(path, column);
 	Gtk::ListStore::Row row = *(_pseudoAxeModel->get_iter(path));
-	HklPseudoAxis *pseudoAxis = row[_pseudoAxeModelColumns.pseudoAxis];
-	_TreeView_pseudoAxes_parameters->set_model(_mapPseudoAxeParameterModel[pseudoAxis]);
+	HklParameter *parameter = row[_pseudoAxeModelColumns.parameter];
+	_TreeView_pseudoAxes_parameters->set_model(_mapPseudoAxeParameterModel[parameter]);
 }
 
 void HKLWindow::on_treeViewCrystals_cursor_changed(void)
@@ -326,7 +326,7 @@ void HKLWindow::on_cell_TreeView_axes_read_edited(Glib::ustring const & spath,
 	double value;
 	sscanf(newText.c_str(), "%lf", &value);
 	HklAxis *axis = hkl_geometry_get_axis_by_name(_geometry, name.c_str());
-	hkl_parameter_set_value_unit(&axis->parameter, value);
+	hkl_parameter_set_value_unit(&axis->parameter, value, NULL);
 	hkl_geometry_update(_geometry);
 
 	row[_axeModelColumns.read] = value;
@@ -355,7 +355,7 @@ void HKLWindow::on_cell_TreeView_axes_write_edited(Glib::ustring const & spath,
 	double value;
 	sscanf(newText.c_str(), "%lf", &value);
 	HklAxis *axis = hkl_geometry_get_axis_by_name(_geometry, name.c_str());
-	hkl_parameter_set_value_unit(&axis->parameter, value);
+	hkl_parameter_set_value_unit(&axis->parameter, value, NULL);
 	hkl_geometry_update(_geometry);
 
 	row[_axeModelColumns.write] = value;
@@ -428,8 +428,7 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & s
 	LOG;
 
 	double value;
-	HklPseudoAxis *pseudoAxis;
-	HklError *error;
+	HklParameter *parameter;
 	int res;
 
 	Gtk::TreePath path(spath);
@@ -437,13 +436,11 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & s
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
 
-	pseudoAxis = row[_pseudoAxeModelColumns.pseudoAxis];
+	parameter= row[_pseudoAxeModelColumns.parameter];
 	Glib::ustring name = row[_pseudoAxeModelColumns.name];
 	sscanf(newText.c_str(), "%lf", &value);
 
-	hkl_parameter_set_value_unit((HklParameter *)pseudoAxis, value);
-	error = NULL;
-	if(hkl_pseudo_axis_engine_set(pseudoAxis->engine, &error)){
+	if(hkl_parameter_set_value_unit(parameter, value, NULL)){
 		HklGeometryListItem *first;
 
 		first = list_top(&_engines->geometries->items, HklGeometryListItem, node);
@@ -464,20 +461,6 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & s
 	}
 }
 
-void HKLWindow::on_cell_TreeView_pseudoAxes_is_initialized_toggled(Glib::ustring const & spath)
-{
-	LOG;
-
-	Gtk::TreePath path(spath);
-	Gtk::TreeModel::iterator iter = _pseudoAxeModel->get_iter(path);
-	Gtk::ListStore::Row row = *(iter);
-	HklPseudoAxis *pseudoAxis = row[_pseudoAxeModelColumns.pseudoAxis];
-	bool old_flag = row[_pseudoAxeModelColumns.is_initialized];
-	if (!old_flag
-	    && hkl_pseudo_axis_engine_initialize(pseudoAxis->engine, NULL))
-		this->updatePseudoAxes();
-}
-
 //PseuodAxes Parameters
 void HKLWindow::on_cell_TreeView_pseudoAxes_parameters_value_edited(Glib::ustring const & spath,
 								    Glib::ustring const & newText)
@@ -493,7 +476,8 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_parameters_value_edited(Glib::ustrin
 	sscanf(newText.c_str(), "%lf", &value);
 
 	parameter = row[_parameterModelColumns.parameter];
-	hkl_parameter_set_value_unit(parameter, value);
+	/* TODO error check */
+	hkl_parameter_set_value_unit(parameter, value, NULL);
 
 	row[_parameterModelColumns.value] = value;
 	this->updatePseudoAxes();

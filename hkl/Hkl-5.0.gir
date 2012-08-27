@@ -30,6 +30,9 @@ and/or use gtk-doc annotations.  -->
       <field name="engine_list" writable="1">
         <type name="gpointer" c:type="gpointer"/>
       </field>
+      <field name="_shit" writable="1">
+        <type name="gpointer" c:type="void*"/>
+      </field>
       <constructor name="new" c:identifier="hkl_axis_new">
         <return-value transfer-ownership="full">
           <type name="Axis" c:type="HklAxis*"/>
@@ -43,11 +46,6 @@ and/or use gtk-doc annotations.  -->
           </parameter>
         </parameters>
       </constructor>
-      <method name="free" c:identifier="hkl_axis_free">
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-      </method>
       <method name="init" c:identifier="hkl_axis_init">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
@@ -61,30 +59,12 @@ and/or use gtk-doc annotations.  -->
           </parameter>
         </parameters>
       </method>
-      <method name="new_copy" c:identifier="hkl_axis_new_copy">
-        <return-value transfer-ownership="full">
-          <type name="Axis" c:type="HklAxis*"/>
-        </return-value>
-      </method>
       <method name="set_value_smallest_in_range"
               c:identifier="hkl_axis_set_value_smallest_in_range">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
       </method>
-      <function name="fprintf" c:identifier="hkl_axis_fprintf">
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="f" transfer-ownership="none">
-            <type name="gpointer" c:type="FILE*"/>
-          </parameter>
-          <parameter name="self" transfer-ownership="none">
-            <type name="Axis" c:type="HklAxis*"/>
-          </parameter>
-        </parameters>
-      </function>
     </record>
     <record name="Detector"
             c:type="HklDetector"
@@ -1644,6 +1624,12 @@ Todo: test</doc>
       <field name="ops" writable="1">
         <type name="ParameterOperations" c:type="HklParameterOperations*"/>
       </field>
+      <field name="list" writable="1">
+        <type name="gpointer" c:type="gpointer"/>
+      </field>
+      <field name="_shit" writable="1">
+        <type name="gpointer" c:type="void*"/>
+      </field>
       <constructor name="new"
                    c:identifier="hkl_parameter_new"
                    introspectable="0">
@@ -1806,12 +1792,18 @@ Returns:</doc>
               c:identifier="hkl_parameter_set_value"
               introspectable="0">
         <doc xml:whitespace="preserve">set the value of an #HklParameter</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
+        <return-value>
+          <doc xml:whitespace="preserve">true if succeed or false otherwise</doc>
+          <type c:type="bool"/>
         </return-value>
         <parameters>
           <parameter name="value" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the value to set</doc>
             <type name="gdouble" c:type="double"/>
+          </parameter>
+          <parameter name="error" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the error set if something goes wrong</doc>
+            <type name="Error" c:type="HklError**"/>
           </parameter>
         </parameters>
       </method>
@@ -1820,13 +1812,18 @@ Returns:</doc>
               introspectable="0">
         <doc xml:whitespace="preserve">set the value of the parameter express in the punit #HklUnit
 @todo test</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
+        <return-value>
+          <doc xml:whitespace="preserve">true if succeed or false otherwise</doc>
+          <type c:type="bool"/>
         </return-value>
         <parameters>
           <parameter name="value" transfer-ownership="none">
             <doc xml:whitespace="preserve">the value to set</doc>
             <type name="gdouble" c:type="double"/>
+          </parameter>
+          <parameter name="error" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the error set if something goes wrong</doc>
+            <type name="Error" c:type="HklError**"/>
           </parameter>
         </parameters>
       </method>
@@ -1847,6 +1844,156 @@ Returns:</doc>
         </parameters>
       </function>
     </record>
+    <record name="ParameterList" c:type="HklParameterList">
+      <field name="len" writable="1">
+        <type name="guint" c:type="unsigned"/>
+      </field>
+      <field name="ops" writable="1">
+        <type name="ParameterListOperations"
+              c:type="HklParameterListOperations*"/>
+      </field>
+      <field name="parameters" writable="1">
+        <type name="gpointer" c:type="gpointer"/>
+      </field>
+      <field name="_shit" writable="1">
+        <type name="gpointer" c:type="void*"/>
+      </field>
+      <method name="get_by_name" c:identifier="hkl_parameter_list_get_by_name">
+        <return-value transfer-ownership="full">
+          <type name="Parameter" c:type="HklParameter*"/>
+        </return-value>
+        <parameters>
+          <parameter name="name" transfer-ownership="none">
+            <type name="utf8" c:type="char*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="get_values"
+              c:identifier="hkl_parameter_list_get_values"
+              introspectable="0">
+        <doc xml:whitespace="preserve">get a list of all the #HklParameter values</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="values" transfer-ownership="none">
+            <doc xml:whitespace="preserve">list of the paremetersc values.</doc>
+            <array length="1" zero-terminated="0" c:type="double">
+              <type name="gdouble" c:type="double"/>
+            </array>
+          </parameter>
+          <parameter name="len"
+                     direction="out"
+                     caller-allocates="1"
+                     transfer-ownership="none">
+            <doc xml:whitespace="preserve">the len of the returned list.</doc>
+            <type name="guint" c:type="unsigned int*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="get_values_unit"
+              c:identifier="hkl_parameter_list_get_values_unit">
+        <doc xml:whitespace="preserve">free the array with free when done</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:whitespace="preserve">list of pseudo axes values with unit</doc>
+          <array length="0" zero-terminated="0" c:type="double*">
+            <type name="gdouble" c:type="double"/>
+          </array>
+        </return-value>
+        <parameters>
+          <parameter name="len"
+                     direction="out"
+                     caller-allocates="1"
+                     transfer-ownership="full">
+            <doc xml:whitespace="preserve">the length of the returned array</doc>
+            <type name="guint" c:type="unsigned int*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="parameters" c:identifier="hkl_parameter_list_parameters">
+        <doc xml:whitespace="preserve">free the list with g_slist_free when done.</doc>
+        <return-value transfer-ownership="container">
+          <doc xml:whitespace="preserve">list of parameters</doc>
+          <type name="GLib.SList" c:type="GSList*">
+            <type name="Parameter"/>
+          </type>
+        </return-value>
+      </method>
+      <method name="set_values" c:identifier="hkl_parameter_list_set_values">
+        <doc xml:whitespace="preserve">set the parameter list with the given values</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">true if succeed or false otherwise</doc>
+          <type name="guint" c:type="unsigned int"/>
+        </return-value>
+        <parameters>
+          <parameter name="values" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the values to set</doc>
+            <array length="1" zero-terminated="0" c:type="double">
+              <type name="gdouble" c:type="double"/>
+            </array>
+          </parameter>
+          <parameter name="len" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the length of the values</doc>
+            <type name="guint" c:type="unsigned int"/>
+          </parameter>
+          <parameter name="error" transfer-ownership="none">
+            <doc xml:whitespace="preserve">error set if something goes wrong</doc>
+            <type name="Error" c:type="HklError**"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_values_unit"
+              c:identifier="hkl_parameter_list_set_values_unit"
+              shadowed-by="set_values_unit_binding">
+        <doc xml:whitespace="preserve">set the parameter list with the given values</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">true if succeed or false otherwise</doc>
+          <type name="guint" c:type="unsigned int"/>
+        </return-value>
+        <parameters>
+          <parameter name="values" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the values to set</doc>
+            <array length="1" zero-terminated="0" c:type="double">
+              <type name="gdouble" c:type="double"/>
+            </array>
+          </parameter>
+          <parameter name="len" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the length of the values</doc>
+            <type name="guint" c:type="unsigned int"/>
+          </parameter>
+          <parameter name="error" transfer-ownership="none">
+            <doc xml:whitespace="preserve">error set if something goes wrong</doc>
+            <type name="Error" c:type="HklError**"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_values_unit_binding"
+              c:identifier="hkl_parameter_list_set_values_unit_binding"
+              shadows="set_values_unit"
+              throws="1">
+        <doc xml:whitespace="preserve">set the parameter list with the given values</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">true if succeed or false otherwise</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <parameter name="values" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the values to set</doc>
+            <array length="1" zero-terminated="0" c:type="double*">
+              <type name="gdouble" c:type="double"/>
+            </array>
+          </parameter>
+          <parameter name="len" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the length of the values</doc>
+            <type name="guint" c:type="uint"/>
+          </parameter>
+        </parameters>
+      </method>
+    </record>
+    <record name="ParameterListOperations"
+            c:type="HklParameterListOperations"
+            disguised="1">
+    </record>
     <record name="ParameterOperations"
             c:type="HklParameterOperations"
             disguised="1">
@@ -1856,34 +2003,6 @@ Returns:</doc>
             glib:type-name="HklPseudoAxis"
             glib:get-type="hkl_pseudo_axis_get_type"
             c:symbol-prefix="pseudo_axis">
-      <field name="parameter" writable="1">
-        <type name="Parameter" c:type="HklParameter"/>
-      </field>
-      <field name="engine" writable="1">
-        <type name="PseudoAxisEngine" c:type="HklPseudoAxisEngine*"/>
-      </field>
-      <field name="list" writable="1">
-        <type name="gpointer" c:type="gpointer"/>
-      </field>
-      <field name="_shit" writable="1">
-        <type name="gpointer" c:type="void*"/>
-      </field>
-      <function name="fprintf"
-                c:identifier="hkl_pseudo_axis_fprintf"
-                introspectable="0">
-        <doc xml:whitespace="preserve">print an HklPseudoAxis into a file</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="f" transfer-ownership="none">
-            <type name="gpointer" c:type="FILE*"/>
-          </parameter>
-          <parameter name="self" transfer-ownership="none">
-            <type name="PseudoAxis" c:type="HklPseudoAxis*"/>
-          </parameter>
-        </parameters>
-      </function>
     </record>
     <record name="PseudoAxisEngine"
             c:type="HklPseudoAxisEngine"
@@ -1908,10 +2027,10 @@ Returns:</doc>
       <field name="engines" writable="1">
         <type name="PseudoAxisEngineList" c:type="HklPseudoAxisEngineList*"/>
       </field>
-      <field name="modes" writable="1">
-        <type name="gpointer" c:type="gpointer"/>
-      </field>
       <field name="pseudo_axes" writable="1">
+        <type name="ParameterList" c:type="HklParameterList"/>
+      </field>
+      <field name="modes" writable="1">
         <type name="gpointer" c:type="gpointer"/>
       </field>
       <field name="axes" writable="1">
@@ -1927,9 +2046,6 @@ Returns:</doc>
         <type name="gpointer" c:type="void*"/>
       </field>
       <field name="_shit3" writable="1">
-        <type name="gpointer" c:type="void*"/>
-      </field>
-      <field name="_shit4" writable="1">
         <type name="gpointer" c:type="void*"/>
       </field>
       <method name="get"
@@ -1948,41 +2064,6 @@ Returns:</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="get_values"
-              c:identifier="hkl_pseudo_axis_engine_get_values"
-              introspectable="0">
-        <doc xml:whitespace="preserve">get the values of all the pseudo axes</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="values" transfer-ownership="none">
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-          <parameter name="len" transfer-ownership="none">
-            <type name="guint" c:type="uint*"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="get_values_unit"
-              c:identifier="hkl_pseudo_axis_engine_get_values_unit">
-        <doc xml:whitespace="preserve">free the array with free when done</doc>
-        <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">list of pseudo axes values with unit</doc>
-          <array length="0" zero-terminated="0" c:type="double*">
-            <type name="gdouble" c:type="double"/>
-          </array>
-        </return-value>
-        <parameters>
-          <parameter name="len"
-                     direction="out"
-                     caller-allocates="1"
-                     transfer-ownership="full">
-            <doc xml:whitespace="preserve">the length of the returned array</doc>
-            <type name="guint" c:type="unsigned int*"/>
-          </parameter>
-        </parameters>
-      </method>
       <method name="initialize"
               c:identifier="hkl_pseudo_axis_engine_initialize"
               introspectable="0">
@@ -1998,16 +2079,6 @@ Returns:</doc>
             <type name="Error" c:type="HklError**"/>
           </parameter>
         </parameters>
-      </method>
-      <method name="pseudo_axes"
-              c:identifier="hkl_pseudo_axis_engine_pseudo_axes">
-        <doc xml:whitespace="preserve">free the list with g_slist_free when done.</doc>
-        <return-value transfer-ownership="container">
-          <doc xml:whitespace="preserve">list of pseudo axes,</doc>
-          <type name="GLib.SList" c:type="GSList*">
-            <type name="PseudoAxis"/>
-          </type>
-        </return-value>
       </method>
       <method name="select_mode"
               c:identifier="hkl_pseudo_axis_engine_select_mode"
@@ -2050,23 +2121,6 @@ Returns:</doc>
           <parameter name="error" transfer-ownership="none" allow-none="1">
             <doc xml:whitespace="preserve">NULL or an HklError</doc>
             <type name="Error" c:type="HklError**"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="set_values"
-              c:identifier="hkl_pseudo_axis_engine_set_values"
-              introspectable="0">
-        <doc xml:whitespace="preserve">set the values of th ePseudoAxes with the given values</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="values" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the values to set</doc>
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-          <parameter name="len" transfer-ownership="none">
-            <type name="guint" c:type="uint"/>
           </parameter>
         </parameters>
       </method>
@@ -2191,7 +2245,7 @@ get method failed.</doc>
         <doc xml:whitespace="preserve">Todo: test</doc>
         <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">the requested #HklPseudoAxis</doc>
-          <type name="PseudoAxis" c:type="HklPseudoAxis*"/>
+          <type name="Parameter" c:type="HklParameter*"/>
         </return-value>
         <parameters>
           <parameter name="name" transfer-ownership="none">
@@ -3739,21 +3793,6 @@ coordinate by coordinate.</doc>
         </parameters>
       </function>
     </record>
-    <function name="axis_fprintf"
-              c:identifier="hkl_axis_fprintf"
-              moved-to="Axis.fprintf">
-      <return-value transfer-ownership="none">
-        <type name="none" c:type="void"/>
-      </return-value>
-      <parameters>
-        <parameter name="f" transfer-ownership="none">
-          <type name="gpointer" c:type="FILE*"/>
-        </parameter>
-        <parameter name="self" transfer-ownership="none">
-          <type name="Axis" c:type="HklAxis*"/>
-        </parameter>
-      </parameters>
-    </function>
     <function name="detector_fprintf"
               c:identifier="hkl_detector_fprintf"
               moved-to="Detector.fprintf"
@@ -4079,23 +4118,6 @@ control over, that could include printf() escape sequences.</doc>
         </parameter>
         <parameter name="self" transfer-ownership="none">
           <type name="PseudoAxisEngineMode" c:type="HklPseudoAxisEngineMode*"/>
-        </parameter>
-      </parameters>
-    </function>
-    <function name="pseudo_axis_fprintf"
-              c:identifier="hkl_pseudo_axis_fprintf"
-              moved-to="PseudoAxis.fprintf"
-              introspectable="0">
-      <doc xml:whitespace="preserve">print an HklPseudoAxis into a file</doc>
-      <return-value transfer-ownership="none">
-        <type name="none" c:type="void"/>
-      </return-value>
-      <parameters>
-        <parameter name="f" transfer-ownership="none">
-          <type name="gpointer" c:type="FILE*"/>
-        </parameter>
-        <parameter name="self" transfer-ownership="none">
-          <type name="PseudoAxis" c:type="HklPseudoAxis*"/>
         </parameter>
       </parameters>
     </function>

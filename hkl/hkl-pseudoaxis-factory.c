@@ -68,9 +68,10 @@ static void hkl_geometry_list_multiply_k4c_real(HklGeometryList *self,
 	kappa_2_kappap(komega, kappa, kphi, 50 * HKL_DEGTORAD, &komegap, &kappap, &kphip);
 
 	copy = hkl_geometry_new_copy(geometry);
-	hkl_parameter_set_value(&copy->axes[0].parameter, komegap);
-	hkl_parameter_set_value(&copy->axes[1].parameter, kappap);
-	hkl_parameter_set_value(&copy->axes[2].parameter, kphip);
+	/* TODO parameter list for the geometry */
+	hkl_parameter_set_value(&copy->axes[0].parameter, komegap, NULL);
+	hkl_parameter_set_value(&copy->axes[1].parameter, kappap, NULL);
+	hkl_parameter_set_value(&copy->axes[2].parameter, kphip, NULL);
 
 	hkl_geometry_update(copy);
 	hkl_geometry_list_add(self, copy);
@@ -94,9 +95,10 @@ static void hkl_geometry_list_multiply_k6c_real(HklGeometryList *self,
 	kappa_2_kappap(komega, kappa, kphi, 50 * HKL_DEGTORAD, &komegap, &kappap, &kphip);
 
 	copy = hkl_geometry_new_copy(geometry);
-	hkl_parameter_set_value(&copy->axes[1].parameter, komegap);
-	hkl_parameter_set_value(&copy->axes[2].parameter, kappap);
-	hkl_parameter_set_value(&copy->axes[3].parameter, kphip);
+	/* TODO parameter list for the geometry */
+	hkl_parameter_set_value(&copy->axes[1].parameter, komegap, NULL);
+	hkl_parameter_set_value(&copy->axes[2].parameter, kappap, NULL);
+	hkl_parameter_set_value(&copy->axes[3].parameter, kphip, NULL);
 
 	hkl_geometry_update(copy);
 	hkl_geometry_list_add(self, copy);

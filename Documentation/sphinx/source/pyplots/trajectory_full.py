@@ -46,12 +46,12 @@ for hh, kk, ll in zip(h, k, l):
             except IndexError:
                 trajectories.append([])
             values = item.geometry.get_axes_values_unit()
-            print values, item.geometry.distance(geometry)
+            #print values, item.geometry.distance(geometry)
             trajectories[i].append(values)
             if i == 0:
                 values0 = values
         geometry.set_axes_values_unit(values0)
-        print
+        #print
     except GLib.GError, err:
         pass
 
