@@ -31,12 +31,19 @@
 HKL_BEGIN_DECLS
 
 typedef struct _HklPseudoAxisEngineModePsi HklPseudoAxisEngineModePsi;
+typedef struct _HklPseudoAxisEnginePsi HklPseudoAxisEnginePsi;
 
 struct _HklPseudoAxisEngineModePsi
 {
 	HklPseudoAxisEngineMode parent;
 	HklVector Q0;
 	HklVector hkl0;
+};
+
+struct _HklPseudoAxisEnginePsi
+{
+	HklPseudoAxisEngine engine;
+	HklParameter *psi;
 };
 
 extern HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_psi_new(

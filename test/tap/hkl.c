@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2012 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -21,7 +21,7 @@
  */
 #include <tap/hkl.h>
 
-int check_pseudoaxes_v(HklPseudoAxisEngine *engine, ...)
+int check_pseudoaxes_v(const HklPseudoAxisEngine *engine, ...)
 {
 	uint i;
 	va_list ap;
@@ -36,17 +36,15 @@ int check_pseudoaxes_v(HklPseudoAxisEngine *engine, ...)
 	return check_pseudoaxes(engine, values, engine->info->n_pseudo_axes);
 }
 
-int check_pseudoaxes(HklPseudoAxisEngine *engine, double expected[], uint len)
+int check_pseudoaxes(const HklPseudoAxisEngine *engine,
+		     double expected[], uint len)
 {
 	int res = HKL_TRUE;
-	uint i;
-	HklParameter *parameter;
 
 	hkl_assert(engine->info->n_pseudo_axes == len);
 
-	i = 0;
-	list_for_each(&engine->pseudo_axes.parameters, parameter, list){
-		const double current = hkl_parameter_get_value(parameter);
+	for(uint i=0; i<engine->pseudo_axes.len; ++i){
+		double current = hkl_parameter_get_value(engine->pseudo_axes.parameters[i]);
 		res &= fabs(current - expected[i]) <= HKL_EPSILON;
 		if (!res){
 			fprintf(stderr, "current: %f, expected: %f, epsilon: %f\n",

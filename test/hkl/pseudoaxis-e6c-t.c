@@ -129,8 +129,12 @@ static void degenerated(void)
 
 	list_for_each(&engine->modes, mode, list) {
 		hkl_pseudo_axis_engine_select_mode(engine, mode);
-		if (engine->mode->parameters_len)
-			hkl_parameter_set_value(&engine->mode->parameters[0], 0., NULL);
+		if (engine->mode->parameters.len){
+			static double zero[] = {0};
+
+			hkl_parameter_list_set_values(&engine->mode->parameters,
+						      zero, ARRAY_SIZE(zero), NULL);
+		}
 
 		/* studdy this degenerated case */
 		hkl_parameter_list_set_values(&engine->pseudo_axes, hkl, 3, NULL);
@@ -218,6 +222,8 @@ static void q2(void)
 
 static void petra3(void)
 {
+	static double values[] = {1, 1, 0};
+	static double parameters[] = {0, 0, 1, 90 * HKL_DEGTORAD};
 	int res = HKL_TRUE;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *hkl;
@@ -226,8 +232,6 @@ static void petra3(void)
 	HklGeometry *geom;
 	HklDetector *detector;
 	HklSample *sample;
-	static double values[] = {1, 1, 0};
-	double PSI = 90;
 
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN6C);
 	geom = hkl_geometry_factory_new(config);
@@ -252,17 +256,17 @@ static void petra3(void)
 	hkl = hkl_pseudo_axis_engine_list_get_by_name(engines, "hkl");
 	hkl_pseudo_axis_engine_select_mode_by_name(hkl, "psi_constant_vertical");
 	hkl_pseudo_axis_engine_set_values_v(hkl, 1, 1, 0);
-	hkl_parameter_set_value_unit( &hkl->mode->parameters[0], 0, NULL); /* h2 */
-	hkl_parameter_set_value_unit( &hkl->mode->parameters[1], 0, NULL); /* k2 */
-	hkl_parameter_set_value_unit( &hkl->mode->parameters[2], 1, NULL); /* l2 */
-	hkl_parameter_set_value_unit( &hkl->mode->parameters[3], PSI, NULL); /* psi */
+	/* set the mode parameters 0, 0, 1, 90. */
+	hkl_parameter_list_set_values(&hkl->mode->parameters,
+				      parameters, ARRAY_SIZE(parameters),
+				      NULL);
 
 	/* set the psi pseudo axis */
 	psi = hkl_pseudo_axis_engine_list_get_by_name(engines, "psi");
 	hkl_pseudo_axis_engine_select_mode_by_name(psi, "psi_constant_vertical");
-	hkl_parameter_set_value_unit( &psi->mode->parameters[0], 0, NULL); /* h2 */
-	hkl_parameter_set_value_unit( &psi->mode->parameters[1], 0, NULL); /* k2 */
-	hkl_parameter_set_value_unit( &psi->mode->parameters[2], 1, NULL); /* l2 */
+	/* set the mode parameters 0, 0, 1 */
+	hkl_parameter_list_set_values(&psi->mode->parameters,
+				      parameters, ARRAY_SIZE(parameters), NULL);
 
 	/* Compute the hkl [1, 1, 0] in psi_constant_vertical mode with */
 	/* h2,k2,l2= [0, 0,1] and psi = 90 */
@@ -270,10 +274,12 @@ static void petra3(void)
 		HklGeometryListItem *item;
 
 		list_for_each(&engines->geometries->items, item, node) {
+			double PSI = parameters[3];
+
 			hkl_geometry_init_geometry(geom, item->geometry);
 			hkl_pseudo_axis_engine_initialize(psi, NULL);
 			hkl_pseudo_axis_engine_list_get(engines);
-			res &= fabs(PSI*HKL_DEGTORAD - hkl_parameter_get_value(list_top(&psi->pseudo_axes.parameters, HklParameter, list))) < HKL_EPSILON;
+			res &= fabs(PSI - hkl_parameter_get_value(psi->pseudo_axes.parameters[0])) < HKL_EPSILON;
 		}
 	}
 
@@ -298,6 +304,7 @@ static void petra3_2(void)
 	HklDetector *detector;
 	HklSample *sample;
 	double PSI;
+	double parameters[4];
 
 	/* Wavelength 1.0332035 */
 	/* Mode       psi_constant_vertical */
@@ -334,19 +341,22 @@ static void petra3_2(void)
 	psi = hkl_pseudo_axis_engine_list_get_by_name(engines, "psi");
 
 	/* PsiRef 0 1 0 */
+	/* freeze 0; ca 0 0 2 */
 	/* for hkl */
-	hkl_parameter_set_value_unit(&hkl->mode->parameters[0], 0, NULL); /* h2 */
-	hkl_parameter_set_value_unit(&hkl->mode->parameters[1], 1, NULL); /* k2 */
-	hkl_parameter_set_value_unit(&hkl->mode->parameters[2], 0, NULL); /* l2 */
+	parameters[0] = 0;
+	parameters[1] = 1;
+	parameters[2] = 0;
+	parameters[3] = PSI = 0;
+	hkl_parameter_list_set_values(&hkl->mode->parameters,
+				      parameters, ARRAY_SIZE(parameters),
+				      NULL);
 	/* for psi */
-	hkl_parameter_set_value_unit(&psi->mode->parameters[0], 0, NULL); /* h1 */
-	hkl_parameter_set_value_unit(&psi->mode->parameters[1], 1, NULL); /* k1 */
-	hkl_parameter_set_value_unit(&psi->mode->parameters[2], 0, NULL); /* l1 */
+	hkl_parameter_list_set_values(&psi->mode->parameters,
+				      parameters, ARRAY_SIZE(parameters),
+				      NULL);
 
 	/* freeze 0; ca 0 0 2 */
-	PSI = 0;
 	hkl_pseudo_axis_engine_set_values_v(hkl, 0., 0., 2.);
-	hkl_parameter_set_value_unit(&hkl->mode->parameters[3], PSI, NULL); /* psi */
 
 	/*      del              th               chi              phi */
 	/*      23.37668         11.68835         90               -90 */
@@ -363,13 +373,14 @@ static void petra3_2(void)
 			hkl_geometry_init_geometry(geometry, item->geometry);
 			hkl_pseudo_axis_engine_initialize(psi, NULL);
 			hkl_pseudo_axis_engine_list_get(engines);
-			res &= fabs(PSI * HKL_DEGTORAD - hkl_parameter_get_value(list_top(&psi->pseudo_axes.parameters, HklParameter, list))) < HKL_EPSILON;
+			res &= fabs(PSI - hkl_parameter_get_value(psi->pseudo_axes.parameters[0])) < HKL_EPSILON;
 		}
 	}
 
 	/* freeze 45; ca 0 0 2 */
-	PSI = 45.0;
-	hkl_parameter_set_value_unit(&hkl->mode->parameters[3], PSI, NULL); /* psi */
+	parameters[3] = PSI = 45.0 * HKL_DEGTORAD;
+	hkl_parameter_list_set_values(&hkl->mode->parameters,
+				      parameters, ARRAY_SIZE(parameters), NULL);
 	hkl_pseudo_axis_engine_set_values_v(hkl, 0., 0., 2.);
 
 	/*      del              th               chi              phi */
@@ -387,24 +398,26 @@ static void petra3_2(void)
 			hkl_geometry_init_geometry(geometry, item->geometry);
 			hkl_pseudo_axis_engine_initialize(psi, NULL);
 			hkl_pseudo_axis_engine_list_get(engines);
-			res &= fabs(PSI * HKL_DEGTORAD - hkl_parameter_get_value(list_top(&psi->pseudo_axes.parameters, HklParameter, list))) < HKL_EPSILON;
+			res &= fabs(PSI - hkl_parameter_get_value(psi->pseudo_axes.parameters[0])) < HKL_EPSILON;
 		}
 	}
 
 	/* PsiRef 1 1 0 */
-	/* for hkl */
-	hkl_parameter_set_value_unit(&hkl->mode->parameters[0], 1, NULL); /* h2 */
-	hkl_parameter_set_value_unit(&hkl->mode->parameters[1], 1, NULL); /* k2 */
-	hkl_parameter_set_value_unit(&hkl->mode->parameters[2], 0, NULL); /* l2 */
-	/* for psi */
-	hkl_parameter_set_value_unit(&psi->mode->parameters[0], 1, NULL); /* h1 */
-	hkl_parameter_set_value_unit(&psi->mode->parameters[1], 1, NULL); /* k1 */
-	hkl_parameter_set_value_unit(&psi->mode->parameters[2], 0, NULL); /* l1 */
-
 	/* freeze 0; ca 0 0 2 */
-	PSI = 0;
-	hkl_parameter_set_value_unit(&hkl->mode->parameters[3], PSI, NULL); /* psi */
+	parameters[0] = 1;
+	parameters[1] = 1;
+	parameters[2] = 0;
+	parameters[3] = PSI = 0;
+	/* for hkl */
+	hkl_parameter_list_set_values(&hkl->mode->parameters,
+				      parameters, ARRAY_SIZE(parameters),
+				      NULL);
 	hkl_pseudo_axis_engine_set_values_v(hkl, 0., 0., 2.);
+
+	/* for psi */
+	hkl_parameter_list_set_values(&psi->mode->parameters,
+				      parameters, ARRAY_SIZE(parameters),
+				      NULL);
 
 	/*      del              th               chi              phi */
 	/*      23.37681         11.68839         90               -90 */
@@ -421,13 +434,16 @@ static void petra3_2(void)
 			hkl_geometry_init_geometry(geometry, item->geometry);
 			hkl_pseudo_axis_engine_initialize(psi, NULL);
 			hkl_pseudo_axis_engine_list_get(engines);
-			res &= fabs(PSI * HKL_DEGTORAD - hkl_parameter_get_value(list_top(&psi->pseudo_axes.parameters, HklParameter, list))) < HKL_EPSILON;
+			res &= fabs(PSI - hkl_parameter_get_value(psi->pseudo_axes.parameters[0])) < HKL_EPSILON;
 		}
 	}
 
 	/* freeze 45; ca 0 0 2 */
-	PSI = 45;
-	hkl_parameter_set_value_unit(&hkl->mode->parameters[3], PSI, NULL); /* psi */
+	parameters[3] = PSI = 45 * HKL_DEGTORAD;
+	/* for hkl */
+	hkl_parameter_list_set_values(&hkl->mode->parameters,
+				      parameters, ARRAY_SIZE(parameters),
+				      NULL);
 	hkl_pseudo_axis_engine_set_values_v(hkl, 0., 0., 2.);
 
 	/*      del              th               chi              phi */
@@ -445,7 +461,7 @@ static void petra3_2(void)
 			hkl_geometry_init_geometry(geometry, item->geometry);
 			hkl_pseudo_axis_engine_initialize(psi, NULL);
 			hkl_pseudo_axis_engine_list_get(engines);
-			res &= fabs(PSI * HKL_DEGTORAD - hkl_parameter_get_value(list_top(&psi->pseudo_axes.parameters, HklParameter, list))) < HKL_EPSILON;
+			res &= fabs(PSI - hkl_parameter_get_value(psi->pseudo_axes.parameters[0])) < HKL_EPSILON;
 		}
 	}
 

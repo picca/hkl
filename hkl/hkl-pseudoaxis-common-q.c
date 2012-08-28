@@ -34,12 +34,17 @@
 /* q */
 /*****/
 
+struct _HklPseudoAxisEngineQ
+{
+	HklPseudoAxisEngine engine;
+	HklParameter *q;
+};
+
 static int _q_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	double q;
 	HklPseudoAxisEngine *engine = params;
-	double values[engine->info->n_pseudo_axes];
-	uint n_values = engine->info->n_pseudo_axes;
+	const HklPseudoAxisEngineQ *engine_q = container_of(engine, HklPseudoAxisEngineQ, engine);
 	double tth;
 
 	CHECK_NAN(x->data, x->size);
@@ -47,12 +52,10 @@ static int _q_func(const gsl_vector *x, void *params, gsl_vector *f)
 	/* update the workspace from x */
 	set_geometry_axes(engine, x->data);
 
-	hkl_parameter_list_get_values(&engine->pseudo_axes, values, &n_values);
-
 	tth = gsl_sf_angle_restrict_symm(x->data[0]);
 	q = 2 * HKL_TAU / hkl_source_get_wavelength(&engine->geometry->source) * sin(tth/2.);
 
-	f->data[0] = values[0] - q;
+	f->data[0] = engine_q->q->_value - q;
 
 	return  GSL_SUCCESS;
 }
@@ -63,7 +66,7 @@ static const HklFunction q_func = {
 };
 
 static int get_q_real(HklPseudoAxisEngineMode *self,
-		      HklPseudoAxisEngine *engine,
+		      HklPseudoAxisEngine *base,
 		      HklGeometry *geometry,
 		      HklDetector *detector,
 		      HklSample *sample,
@@ -71,8 +74,8 @@ static int get_q_real(HklPseudoAxisEngineMode *self,
 {
 	double wavelength;
 	double theta;
-	double q;
 	HklVector ki, kf;
+	HklPseudoAxisEngineQ *engine = container_of(base, HklPseudoAxisEngineQ, engine);
 
 	wavelength = hkl_source_get_wavelength(&geometry->source);
 	hkl_source_compute_ki(&geometry->source, &ki);
@@ -85,8 +88,7 @@ static int get_q_real(HklPseudoAxisEngineMode *self,
 		theta = -theta;
 
 	/* update q */
-	q = 2 *HKL_TAU / wavelength * sin(theta);
-	_hkl_parameter_list_set_values(&engine->pseudo_axes, &q, 1);
+	engine->q->_value = 2 * HKL_TAU / wavelength * sin(theta);
 
 	return HKL_TRUE;
 }
@@ -105,16 +107,23 @@ static HklPseudoAxisEngineMode *mode_q(void)
 		INFO_AUTO("q", axes, functions),
 	};
 	static const HklPseudoAxisEngineModeOperations operations = {
-		HKL_MODE_OPERATIONS_AUTO_DEFAULTS,
+		HKL_PSEUDO_AXIS_ENGINE_MODE_OPERATIONS_AUTO_DEFAULTS,
 		.get = get_q_real,
 	};
 
 	return hkl_pseudo_axis_engine_mode_auto_new(&info, &operations);
 }
 
+static void hkl_pseudo_axis_engine_q_free_real(HklPseudoAxisEngine *base)
+{
+	HklPseudoAxisEngineQ *self=container_of(base, HklPseudoAxisEngineQ, engine);
+	hkl_pseudo_axis_engine_release(&self->engine);
+	free(self);
+}
+
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_q_new(void)
 {
-	HklPseudoAxisEngine *self;
+	HklPseudoAxisEngineQ *self;
 	HklPseudoAxisEngineMode *mode;
 	static const HklPseudoAxis *pseudo_axes[] = {&q};
 	static const HklPseudoAxisEngineInfo info = {
@@ -122,26 +131,39 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_q_new(void)
 		.pseudo_axes = pseudo_axes,
 		.n_pseudo_axes = ARRAY_SIZE(pseudo_axes),
 	};
+	static const HklPseudoAxisEngineOperations operations = {
+		HKL_PSEUDO_AXIS_ENGINE_OPERATIONS_DEFAULTS,
+		.free=hkl_pseudo_axis_engine_q_free_real,
+	};
 
-	self = hkl_pseudo_axis_engine_new(&info);
+	self = HKL_MALLOC(HklPseudoAxisEngineQ);
+
+	hkl_pseudo_axis_engine_init(&self->engine, &info, &operations);
+	self->q = register_pseudo_axis(&self->engine, &q.parameter);
 
 	/* q [default] */
 	mode = mode_q();
-	hkl_pseudo_axis_engine_add_mode(self, mode);
-	hkl_pseudo_axis_engine_select_mode(self, mode);
+	hkl_pseudo_axis_engine_add_mode(&self->engine, mode);
+	hkl_pseudo_axis_engine_select_mode(&self->engine, mode);
 
-	return self;
+	return &self->engine;
 }
 
 /******/
 /* q2 */
 /******/
 
+struct _HklPseudoAxisEngineQ2
+{
+	HklPseudoAxisEngine engine;
+	HklParameter *q;
+	HklParameter *alpha;
+};
+
 static int _q2_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	HklPseudoAxisEngine *engine = params;
-	uint n_values = engine->info->n_pseudo_axes;
-	double values[n_values];
+	const HklPseudoAxisEngineQ2 *engine_q2 = container_of(engine, HklPseudoAxisEngineQ2, engine);
 	double q;
 	double alpha;
 	double wavelength, theta;
@@ -152,8 +174,6 @@ static int _q2_func(const gsl_vector *x, void *params, gsl_vector *f)
 
 	/* update the workspace from x */
 	set_geometry_axes(engine, x->data);
-
-	hkl_parameter_list_get_values(&engine->pseudo_axes, values, &n_values);
 
 	wavelength = hkl_source_get_wavelength(&engine->geometry->source);
 	hkl_source_compute_ki(&engine->geometry->source, &ki);
@@ -166,8 +186,8 @@ static int _q2_func(const gsl_vector *x, void *params, gsl_vector *f)
 	hkl_vector_project_on_plan(&kf, &X);
 	alpha = atan2(kf.data[2], kf.data[1]);
 
-	f->data[0] = values[0] - q;
-	f->data[1] = values[1] - alpha;
+	f->data[0] = engine_q2->q->_value - q;
+	f->data[1] = engine_q2->alpha->_value - alpha;
 
 	return  GSL_SUCCESS;
 }
@@ -184,9 +204,9 @@ static int get_q2_real(HklPseudoAxisEngineMode *self,
 		       HklSample *sample,
 		       HklError **error)
 {
+	HklPseudoAxisEngineQ2 *engine_q2 = container_of(engine, HklPseudoAxisEngineQ2, engine);
 	double wavelength;
 	double theta;
-	double values[2]; /* q, alpha */
 	HklVector x = {{1, 0, 0}};
 	HklVector ki, kf;
 
@@ -199,10 +219,8 @@ static int get_q2_real(HklPseudoAxisEngineMode *self,
 	hkl_vector_project_on_plan(&kf, &x);
 
 	/* update q and alpha */
-	values[0] = 2 * HKL_TAU / wavelength * sin(theta);
-	values[1] = atan2(kf.data[2], kf.data[1]);
-
-	_hkl_parameter_list_set_values(&engine->pseudo_axes, values, 2);
+	engine_q2->q->_value = 2 * HKL_TAU / wavelength * sin(theta);
+	engine_q2->alpha->_value = atan2(kf.data[2], kf.data[1]);
 
 	return HKL_TRUE;
 }
@@ -215,7 +233,7 @@ static HklPseudoAxisEngineMode *mode_q2(void)
 		INFO_AUTO("q2", axes, functions),
 	};
 	static const HklPseudoAxisEngineModeOperations operations = {
-		HKL_MODE_OPERATIONS_AUTO_DEFAULTS,
+		HKL_PSEUDO_AXIS_ENGINE_MODE_OPERATIONS_AUTO_DEFAULTS,
 		.get = get_q2_real,
 	};
 
@@ -226,9 +244,16 @@ static const HklPseudoAxis alpha = {
 	.parameter = {HKL_PARAMETER_DEFAULTS_ANGLE, .name="alpha"},
 };
 
+static void hkl_pseudo_axis_engine_q2_free_real(HklPseudoAxisEngine *base)
+{
+	HklPseudoAxisEngineQ2 *self = container_of(base, HklPseudoAxisEngineQ2, engine);
+	hkl_pseudo_axis_engine_release(&self->engine);
+	free(self);
+}
+
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_q2_new(void)
 {
-	HklPseudoAxisEngine *self;
+	HklPseudoAxisEngineQ2 *self;
 	HklPseudoAxisEngineMode *mode;
 	static const HklPseudoAxis *pseudo_axes[] = {&q, &alpha};
 	static const HklPseudoAxisEngineInfo info = {
@@ -236,13 +261,21 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_q2_new(void)
 		.pseudo_axes = pseudo_axes,
 		.n_pseudo_axes = ARRAY_SIZE(pseudo_axes),
 	};
+	static const HklPseudoAxisEngineOperations operations = {
+		HKL_PSEUDO_AXIS_ENGINE_OPERATIONS_DEFAULTS,
+		.free=hkl_pseudo_axis_engine_q2_free_real,
+	};
 
-	self = hkl_pseudo_axis_engine_new(&info);
+	self = HKL_MALLOC(HklPseudoAxisEngineQ2);
+
+	hkl_pseudo_axis_engine_init(&self->engine, &info, &operations);
+	self->q = register_pseudo_axis(&self->engine, &q.parameter);
+	self->alpha = register_pseudo_axis(&self->engine, &alpha.parameter);
 
 	/* q2 [default] */
 	mode = mode_q2();
-	hkl_pseudo_axis_engine_add_mode(self, mode);
-	hkl_pseudo_axis_engine_select_mode(self, mode);
+	hkl_pseudo_axis_engine_add_mode(&self->engine, mode);
+	hkl_pseudo_axis_engine_select_mode(&self->engine, mode);
 
-	return self;
+	return &self->engine;
 }

@@ -29,7 +29,7 @@
 static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 		       HklDetector *detector, HklSample *sample, unsigned int n)
 {
-	uint i, j, k;
+	uint i;
 	double values[10]; /* this should be the number of pseudo_axis */
 	int unreachable = 0;
 	int ko = HKL_FALSE;
@@ -39,9 +39,6 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 	hkl_geometry_randomize(geometry);
 
 	list_for_each(&engine->modes, mode, list){
-		HklParameter *parameter;
-		uint len;
-
 		hkl_pseudo_axis_engine_select_mode(engine, mode);
 		/* for now unactive the eulerians check */
 		if(!strcmp(engine->mode->info->name, "eulerians"))
@@ -50,16 +47,13 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 
 		for(i=0;i<n && !ko;++i) {
 			/* randomize the pseudoAxes values */
-			j = 0;
-			list_for_each(&engine->pseudo_axes.parameters, parameter, list){
-				hkl_parameter_randomize(parameter);
-				values[j++] = hkl_parameter_get_value(parameter);
+			for(uint j=0; j<engine->pseudo_axes.len; ++j){
+				hkl_parameter_randomize(engine->pseudo_axes.parameters[j]);
+				values[j] = hkl_parameter_get_value(engine->pseudo_axes.parameters[j]);
 			}
-			len = j;
 
 			/* randomize the parameters */
-			for(j=0; j<engine->mode->parameters_len; ++j)
-				hkl_parameter_randomize(&engine->mode->parameters[j]);
+			hkl_parameter_list_randomize(&engine->mode->parameters);
 
 			/* pseudo -> geometry */
 			hkl_pseudo_axis_engine_initialize(engine, NULL);
@@ -73,15 +67,16 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 					/* first modify the pseudoAxes values */
 					/* to be sure that the result is the */
 					/* computed result. */
-					list_for_each(&engine->pseudo_axes.parameters, parameter, list)
-						hkl_parameter_set_value(parameter, 0., NULL);
+
+					for(uint j=0; j<engine->pseudo_axes.len; ++j)
+						hkl_parameter_set_value(engine->pseudo_axes.parameters[j],
+									0., NULL);
 
 					hkl_geometry_init_geometry(geometry, item->geometry);
 					hkl_pseudo_axis_engine_get(engine, NULL);
 
-					k=0;
-					list_for_each(&engine->pseudo_axes.parameters, parameter, list)
-						ko |= fabs(values[k++] - hkl_parameter_get_value(parameter)) >= HKL_EPSILON;
+					for(uint j=0; j<engine->pseudo_axes.len; ++j)
+						ko |= fabs(values[j] - hkl_parameter_get_value(engine->pseudo_axes.parameters[j])) >= HKL_EPSILON;
 					if(ko)
 						break;
 				}
@@ -98,12 +93,12 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 			fprintf(stderr, " ko");
 			/* print the hkl internals if the test failed */
 			fprintf(stderr, "\n    expected : ");
-			for(k=0; k<len; ++k)
-				fprintf(stderr, " %f", values[k]);
+			for(uint j=0; j<engine->pseudo_axes.len; ++j)
+				fprintf(stderr, " %f", values[j]);
 			fprintf(stderr, " obtained : ");
-			list_for_each(&engine->pseudo_axes.parameters, parameter, list)
+			for(uint j=0; j<engine->pseudo_axes.len; ++j)
 				fprintf(stderr, " %f",
-					hkl_parameter_get_value(parameter));
+					hkl_parameter_get_value(engine->pseudo_axes.parameters[j]));
 			hkl_pseudo_axis_engine_fprintf(stdout, engine);
 		}else{
 			fprintf(stderr, " ok");

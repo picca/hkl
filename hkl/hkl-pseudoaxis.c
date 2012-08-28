@@ -62,7 +62,7 @@ static HklParameterOperations hkl_parameter_operations_pseudo_axis = {
 	.fprintf = hkl_pseudo_axis_fprintf_real,
 };
 
-static inline HklParameter *hkl_parameter_new_pseudo_axis(
+HklParameter *hkl_parameter_new_pseudo_axis(
 	const HklParameter *parameter,
 	HklPseudoAxisEngine *engine)
 {
@@ -96,11 +96,7 @@ void hkl_pseudo_axis_engine_mode_fprintf(FILE *f, const HklPseudoAxisEngineMode 
 	fprintf(f, "initialize: %p\n", self->op->init);
 	fprintf(f, "get: %p\n", self->op->get);
 	fprintf(f, "set: %p\n", self->op->set);
-	if(self->parameters)
-		for(i=0; i<self->parameters_len; ++i){
-			hkl_parameter_fprintf(f, &self->parameters[i]);
-			fprintf(f, "\n");
-		}
+	hkl_parameter_list_fprintf(f, &self->parameters);
 	if(self->info->axes){
 		fprintf(f, "axes names:");
 		for(i=0; i<self->info->n_axes; ++i)
@@ -116,29 +112,34 @@ void hkl_pseudo_axis_engine_mode_fprintf(FILE *f, const HklPseudoAxisEngineMode 
 /* HklPseudoAxisEngine */
 /***********************/
 
-HklPseudoAxisEngine *hkl_pseudo_axis_engine_new(const HklPseudoAxisEngineInfo *info)
+void hkl_pseudo_axis_engine_init(HklPseudoAxisEngine *self,
+				 const HklPseudoAxisEngineInfo *info,
+				 const HklPseudoAxisEngineOperations *ops)
 {
-	size_t i;
-	HklPseudoAxisEngine *self = NULL;
-
-	self = HKL_MALLOC(HklPseudoAxisEngine);
-
 	self->info = info;
+	self->ops = ops;
 	list_head_init(&self->modes);
-
-	/* create the pseudoAxes */
 	hkl_parameter_list_init(&self->pseudo_axes,
 				&hkl_parameter_list_operations_defaults);
-	for(i=0; i<self->info->n_pseudo_axes; ++i){
-		HklParameter *parameter;
+	self->geometry = NULL;
+	self->detector = NULL;
+	self->sample = NULL;
+}
 
-	        parameter = hkl_parameter_new_pseudo_axis(
-			&info->pseudo_axes[i]->parameter, self);
-		hkl_parameter_list_add_parameter(&self->pseudo_axes,
-						 parameter);
-	}
+void unregister_pseudo_axis(HklParameter *pseudo_axis)
+{
+	hkl_parameter_free(pseudo_axis);
+}
 
-	return self;
+HklParameter *register_pseudo_axis(HklPseudoAxisEngine *self,
+				   const HklParameter *conf)
+{
+	HklParameter *parameter;
+
+	parameter = hkl_parameter_new_pseudo_axis(conf, self);
+	hkl_parameter_list_add_parameter(&self->pseudo_axes, parameter);
+
+	return parameter;
 }
 
 static void hkl_pseudo_axis_engine_prepare_internal(HklPseudoAxisEngine *self)
@@ -150,9 +151,8 @@ static void hkl_pseudo_axis_engine_prepare_internal(HklPseudoAxisEngine *self)
 
 	/* set */
 	if(self->geometry)
-		hkl_geometry_init_geometry(self->geometry, self->engines->geometry);
-	else
-		self->geometry = hkl_geometry_new_copy(self->engines->geometry);
+		hkl_geometry_free(self->geometry);
+	self->geometry = hkl_geometry_new_copy(self->engines->geometry);
 
 	if(self->detector)
 		hkl_detector_free(self->detector);
@@ -332,20 +332,18 @@ int hkl_pseudo_axis_engine_get(HklPseudoAxisEngine *self, HklError **error)
  *
  * print to a FILE the HklPseudoAxisEngine
  **/
-void hkl_pseudo_axis_engine_fprintf(FILE *f, HklPseudoAxisEngine const *self)
+void hkl_pseudo_axis_engine_fprintf(FILE *f, const HklPseudoAxisEngine *self)
 {
-	size_t i;
-	HklPseudoAxis *pseudo_axis;
-
 	fprintf(f, "\nPseudoAxesEngine : \"%s\"", self->info->name);
 
 	/* mode */
 	if (self->mode) {
 		fprintf(f, " %s", self->mode->info->name);
-
-		for(i=0; i<self->mode->parameters_len; ++i){
+		for(uint i=0; i<self->mode->parameters.len; ++i){
 			fprintf(f, "\n     ");
-			hkl_parameter_fprintf(f, &self->mode->parameters[i]);
+			hkl_parameter_fprintf(
+				f,
+				self->mode->parameters.parameters[i]);
 		}
 		fprintf(f, "\n");
 	}
@@ -468,17 +466,15 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_list_get_by_name(HklPseudoAxisEngine
  *
  * Returns: (transfer none) (allow-none): the requested #HklPseudoAxis
  **/
-HklParameter *hkl_pseudo_axis_engine_list_get_pseudo_axis_by_name(HklPseudoAxisEngineList *self,
-								  const char *name)
+HklParameter *hkl_pseudo_axis_engine_list_get_pseudo_axis_by_name(
+	const HklPseudoAxisEngineList *self, const char *name)
 {
-	HklParameter *parameter;
 	HklPseudoAxisEngine *engine;
 
 	list_for_each(&self->engines, engine, list){
-		list_for_each(&engine->pseudo_axes.parameters, parameter, list){
-			if (!strcmp(parameter->name, name))
-				return parameter;
-		}
+		for(uint i=0; i<engine->pseudo_axes.len; ++i)
+			if (!strcmp(engine->pseudo_axes.parameters[i]->name, name))
+				return engine->pseudo_axes.parameters[i];
 	}
 
 	return NULL;

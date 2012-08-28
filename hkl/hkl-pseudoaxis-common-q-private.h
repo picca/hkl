@@ -24,6 +24,9 @@
 
 #include <hkl/hkl-pseudoaxis.h>
 
+typedef struct _HklPseudoAxisEngineQ HklPseudoAxisEngineQ;
+typedef struct _HklPseudoAxisEngineQ2 HklPseudoAxisEngineQ2;
+
 extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_q_new(void);
 extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_q2_new(void);
 

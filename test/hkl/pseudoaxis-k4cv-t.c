@@ -49,8 +49,12 @@ static void degenerated(void)
 
 	list_for_each(&engine->modes, mode, list) {
 		hkl_pseudo_axis_engine_select_mode(engine, mode);
-		if(mode->parameters_len)
-			hkl_parameter_set_value(&engine->mode->parameters[0], 1., NULL);
+		if(mode->parameters.len){
+			static double one[] = {1};
+			hkl_parameter_list_set_values(&engine->mode->parameters,
+						      one, ARRAY_SIZE(one),
+						      NULL);
+		}
 
 		/* studdy this degenerated case */
 		hkl_parameter_list_set_values(&engine->pseudo_axes, hkl, 3, NULL);
@@ -102,8 +106,12 @@ static void eulerians(void)
 
 	list_for_each(&engine->modes, mode, list){
 		hkl_pseudo_axis_engine_select_mode(engine, mode);
-		if(mode->parameters_len)
-			hkl_parameter_set_value(&mode->parameters[0], 1., NULL);
+		if(mode->parameters.len){
+			static double one[] = {1};
+			hkl_parameter_list_set_values(&mode->parameters,
+						      one, ARRAY_SIZE(one),
+						      NULL);
+		}
 
 		/* studdy this degenerated case */
 		hkl_parameter_list_set_values(&engine->pseudo_axes, eulerians, 3, NULL);

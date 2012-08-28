@@ -260,16 +260,19 @@ int _RUBh_minus_Q_func(const gsl_vector *x, void *params, gsl_vector *f)
 int RUBh_minus_Q(double const x[], void *params, double f[])
 {
 	HklPseudoAxisEngine *engine = params;
-	uint len = engine->info->n_pseudo_axes;
-	HklVector Hkl;
+	HklPseudoAxisEngineHkl *engine_hkl = container_of(engine, HklPseudoAxisEngineHkl, engine);
+	HklVector Hkl = {
+		.data = {
+			engine_hkl->h->_value,
+			engine_hkl->k->_value,
+			engine_hkl->l->_value,
+		},
+	};
 	HklVector ki, dQ;
 	HklHolder *holder;
 
 	/* update the workspace from x; */
 	set_geometry_axes(engine, x);
-
-	/* take the hkl vector from the engine pseudo axes */
-	hkl_parameter_list_get_values(&engine->pseudo_axes, Hkl.data, &len);
 
 	/* R * UB * h = Q */
 	/* for now the 0 holder is the sample holder. */
@@ -301,6 +304,7 @@ int hkl_pseudo_axis_engine_mode_get_hkl_real(HklPseudoAxisEngineMode *self,
 	HklHolder *holder;
 	HklMatrix RUB;
 	HklVector hkl, ki, Q;
+	HklPseudoAxisEngineHkl *engine_hkl = container_of(engine, HklPseudoAxisEngineHkl, engine);
 
 	/* update the geometry internals */
 	hkl_geometry_update(geometry);
@@ -318,8 +322,9 @@ int hkl_pseudo_axis_engine_mode_get_hkl_real(HklPseudoAxisEngineMode *self,
 
 	hkl_matrix_solve(&RUB, &hkl, &Q);
 
-	_hkl_parameter_list_set_values(&engine->pseudo_axes,
-				       hkl.data, ARRAY_SIZE(hkl.data));
+	engine_hkl->h->_value = hkl.data[0];
+	engine_hkl->k->_value = hkl.data[1];
+	engine_hkl->l->_value = hkl.data[2];
 
 	return HKL_TRUE;
 }
@@ -335,10 +340,11 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
 
 	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
-	if(!hkl_pseudo_axis_engine_mode_set_real(self, engine,
-						 geometry, detector, sample,
-						 error)){
+	if(!hkl_pseudo_axis_engine_mode_auto_set_real(self, engine,
+						      geometry, detector, sample,
+						      error)){
 		hkl_assert(error == NULL || *error != NULL);
+		//fprintf(stdout, "message :%s\n", (*error)->message);
 		return HKL_FALSE;
 	}
 	hkl_assert(error == NULL || *error == NULL);
@@ -412,7 +418,7 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
 			if(!hkl_parameter_set_value(&axis->parameter,
 						    hkl_parameter_get_value(&axis->parameter) + angle,
 						    error))
-				return false;
+				return HKL_FALSE;
 			hkl_geometry_update(geom);
 #ifdef DEBUG
 			fprintf(stdout, "\n- try to add a solution by rotating Q <%f, %f, %f> around the \"%s\" axis <%f, %f, %f> of %f radian",
@@ -453,22 +459,25 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
 int _double_diffraction(double const x[], void *params, double f[])
 {
 	HklPseudoAxisEngine *engine = params;
-	uint len = engine->info->n_pseudo_axes;
-	HklVector hkl, kf2;
+	HklPseudoAxisEngineHkl *engine_hkl = container_of(engine, HklPseudoAxisEngineHkl, engine);
+	HklVector hkl = {
+		.data = {
+			engine_hkl->h->_value,
+			engine_hkl->k->_value,
+			engine_hkl->l->_value,
+		},
+	};
+	HklVector kf2;
 	HklVector ki;
 	HklVector dQ;
 	HklHolder *holder;
+	uint shit;
 
 	/* update the workspace from x; */
 	set_geometry_axes(engine, x);
 
-	/* take the hkl vector from the engine pseudo axes */
-	hkl_parameter_list_get_values(&engine->pseudo_axes, hkl.data, &len);
-
-	hkl_vector_init(&kf2,
-			hkl_parameter_get_value(&engine->mode->parameters[0]),
-			hkl_parameter_get_value(&engine->mode->parameters[1]),
-			hkl_parameter_get_value(&engine->mode->parameters[2]));
+	/* get the second hkl from the mode parameters */
+	hkl_parameter_list_get_values(&engine->mode->parameters, kf2.data, &shit);
 
 	/* R * UB * hkl = Q */
 	/* for now the 0 holder is the sample holder. */
@@ -533,6 +542,8 @@ int _psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f
 {
 	HklVector ki, kf, Q;
 	HklPseudoAxisEngine *engine = params;
+	double parameters[4];
+	uint n_parameters;
 
 	CHECK_NAN(x->data, x->size);
 
@@ -547,7 +558,9 @@ int _psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f
 	Q = kf;
 	hkl_vector_minus_vector(&Q, &ki);
 
-	f->data[3] =  hkl_parameter_get_value(&engine->mode->parameters[3]);
+	hkl_parameter_list_get_values(&engine->mode->parameters,
+				      parameters, &n_parameters);
+	f->data[3] = parameters[3];
 
 	/* if |Q| > epsilon ok */
 	if(hkl_vector_normalize(&Q)){
@@ -562,9 +575,9 @@ int _psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f
 		/* compute the hkl ref position in the laboratory */
 		/* referentiel. The geometry was already updated. */
 		/* FIXME for now the 0 holder is the sample holder. */
-		hkl.data[0] = hkl_parameter_get_value(&engine->mode->parameters[0]);
-		hkl.data[1] = hkl_parameter_get_value(&engine->mode->parameters[1]);
-		hkl.data[2] = hkl_parameter_get_value(&engine->mode->parameters[2]);
+		hkl.data[0] = parameters[0];
+		hkl.data[1] = parameters[1];
+		hkl.data[2] = parameters[2];
 		hkl_matrix_times_vector(&engine->sample->UB, &hkl);
 		hkl_vector_rotated_quaternion(&hkl, &engine->geometry->holders[0].q);
 
@@ -615,6 +628,10 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 			      "\nplease select a non-null hkl", engine->mode->info->name);
 		return HKL_FALSE;
 	}else{
+		double parameters[4];
+		uint len;
+
+		hkl_parameter_list_get_values(&self->parameters, parameters, &len);
 		/* needed for a problem of precision */
 		hkl_vector_normalize(&Q);
 
@@ -626,9 +643,9 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 		/* compute hkl in the laboratory referentiel */
 		/* the geometry was already updated in the detector compute kf */
 		/* for now the 0 holder is the sample holder */
-		hkl.data[0] = hkl_parameter_get_value(&self->parameters[0]);
-		hkl.data[1] = hkl_parameter_get_value(&self->parameters[1]);
-		hkl.data[2] = hkl_parameter_get_value(&self->parameters[2]);
+		hkl.data[0] = parameters[0];
+		hkl.data[1] = parameters[1];
+		hkl.data[2] = parameters[2];
 		hkl_matrix_times_vector(&sample->UB, &hkl);
 		hkl_vector_rotated_quaternion(&hkl, &geometry->holders[0].q);
 
@@ -643,19 +660,31 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 		}else{
 			/* compute the angle beetween hkl and n and
 			 * store in in the fourth parameter */
-			if (!hkl_parameter_set_value(&self->parameters[3],
-						     hkl_vector_oriented_angle(&n, &hkl, &Q),
-						     error))
-				return false;
+			if (!hkl_parameter_set_value(
+				    self->parameters.parameters[3],
+				    hkl_vector_oriented_angle(&n, &hkl, &Q),
+				    error))
+				return HKL_FALSE;
 		}
 	}
 
 	return HKL_TRUE;
 }
 
+/***********************/
+/* HklPseudoAxisEngine */
+/***********************/
+
+static void hkl_pseudo_axis_engine_hkl_free_real(HklPseudoAxisEngine *base)
+{
+	HklPseudoAxisEngineHkl *self=container_of(base, HklPseudoAxisEngineHkl, engine);
+	hkl_pseudo_axis_engine_release(&self->engine);
+	free(self);
+}
+
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_hkl_new(void)
 {
-	HklPseudoAxisEngine *self;
+	HklPseudoAxisEngineHkl *self;
 	static const HklPseudoAxis h = {
 		.parameter = { HKL_PARAMETER_DEFAULTS, .name = "h", .range={.min=-1, .max=1}}
 	};
@@ -671,8 +700,18 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_hkl_new(void)
 		.pseudo_axes = pseudo_axes,
 		.n_pseudo_axes = ARRAY_SIZE(pseudo_axes),
 	};
+	static HklPseudoAxisEngineOperations operations = {
+		HKL_PSEUDO_AXIS_ENGINE_OPERATIONS_DEFAULTS,
+		.free=hkl_pseudo_axis_engine_hkl_free_real,
+	};
 
-	self = hkl_pseudo_axis_engine_new(&info);
+	self = HKL_MALLOC(HklPseudoAxisEngineHkl);
 
-	return self;
+	hkl_pseudo_axis_engine_init(&self->engine, &info, &operations);
+
+	self->h = register_pseudo_axis(&self->engine, &h.parameter);
+	self->k = register_pseudo_axis(&self->engine, &k.parameter);
+	self->l = register_pseudo_axis(&self->engine, &l.parameter);
+
+	return &self->engine;
 }

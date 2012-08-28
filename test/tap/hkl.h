@@ -27,9 +27,10 @@
 
 HKL_BEGIN_DECLS
 
-extern int check_pseudoaxes_v(HklPseudoAxisEngine *engine, ...);
+extern int check_pseudoaxes_v(const HklPseudoAxisEngine *engine, ...);
 
-extern int check_pseudoaxes(HklPseudoAxisEngine *engine, double expected[], uint len);
+extern int check_pseudoaxes(const HklPseudoAxisEngine *engine,
+			    double expected[], uint len);
 
 extern void hkl_pseudo_axis_engine_set_values_v(HklPseudoAxisEngine *self, ...);
 

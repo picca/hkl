@@ -84,7 +84,10 @@ static int _constant_omega_f1(const gsl_vector *x, void *params, gsl_vector *f)
 	double const kappa = x->data[1];
 	double omega;
 	HklPseudoAxisEngine *engine = params;
-	double omega0 = hkl_parameter_get_value(&engine->mode->parameters[0]);
+	double omega0;
+	uint shit;
+
+	hkl_parameter_list_get_values(&engine->mode->parameters, &omega0, &shit);
 
 	CHECK_NAN(x->data, x->size);
 
@@ -107,7 +110,10 @@ static int _constant_omega_f2(const gsl_vector *x, void *params, gsl_vector *f)
 	const double kappa = x->data[1];
 	double omega;
 	HklPseudoAxisEngine *engine = params;
-	double omega0 = hkl_parameter_get_value(&engine->mode->parameters[0]);
+	double omega0;
+	uint shit;
+
+	hkl_parameter_list_get_values(&engine->mode->parameters, &omega0, &shit);
 
 	CHECK_NAN(x->data, x->size);
 
@@ -129,7 +135,10 @@ static int _constant_chi_f1(const gsl_vector *x, void *params, gsl_vector *f)
 	const double kappa = x->data[1];
 	double chi;
 	HklPseudoAxisEngine *engine = params;
-	double chi0 = hkl_parameter_get_value(&engine->mode->parameters[0]);
+	double chi0;
+	uint shit;
+
+	hkl_parameter_list_get_values(&engine->mode->parameters, &chi0, &shit);
 
 	CHECK_NAN(x->data, x->size);
 
@@ -151,7 +160,10 @@ static int _constant_chi_f2(const gsl_vector *x, void *params, gsl_vector *f)
 	const double kappa = x->data[1];
 	double chi;
 	HklPseudoAxisEngine *engine = params;
-	double chi0 = hkl_parameter_get_value(&engine->mode->parameters[0]);
+	double chi0;
+	uint shit;
+
+	hkl_parameter_list_get_values(&engine->mode->parameters, &chi0, &shit);
 
 	CHECK_NAN(x->data, x->size);
 
@@ -174,7 +186,10 @@ static int _constant_phi_f1(const gsl_vector *x, void *params, gsl_vector *f)
 	const double kphi = x->data[2];
 	double phi;
 	HklPseudoAxisEngine *engine = params;
-	double phi0 =  hkl_parameter_get_value(&engine->mode->parameters[0]);
+	double phi0;
+	uint shit;
+
+	hkl_parameter_list_get_values(&engine->mode->parameters, &phi0, &shit);
 
 	CHECK_NAN(x->data, x->size);
 
@@ -197,7 +212,10 @@ static int _constant_phi_f2(const gsl_vector *x, void *params, gsl_vector *f)
 	const double kphi = x->data[2];
 	double phi;
 	HklPseudoAxisEngine *engine = params;
-	double phi0 =  hkl_parameter_get_value(&engine->mode->parameters[0]);
+	double phi0;
+	uint shit;
+
+	hkl_parameter_list_get_values(&engine->mode->parameters, &phi0, &shit);
 
 	CHECK_NAN(x->data, x->size);
 

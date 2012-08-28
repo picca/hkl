@@ -85,11 +85,9 @@ gboolean hkl_parameter_list_set_values_unit_binding(HklParameterList *self,
 GSList* hkl_parameter_list_parameters(HklParameterList *self)
 {
 	GSList *list = NULL;
-	HklParameter *parameter;
 
-	list_for_each(&self->parameters, parameter, list){
-		list = g_slist_append(list, parameter);
-	}
+	for(uint i=0; i<self->len; ++i)
+		list = g_slist_append(list, self->parameters[i]);
 
 	return list;
 }

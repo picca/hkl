@@ -403,8 +403,6 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 {
 	LOG;
 
-	size_t j;
-	size_t k;
 	int index;
 	Gtk::CellRenderer * renderer;
 	HklPseudoAxisEngine *engine;
@@ -431,18 +429,15 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 
 	//Fill the models from the diffractometer pseudoAxes
 	list_for_each(&_engines->engines, engine, list){
-		HklParameter *pseudo_axis;
-
-		list_for_each(&engine->pseudo_axes.parameters, pseudo_axis, list){
+		for(uint i=0; i<engine->pseudo_axes.len; ++i){
+			HklParameter *pseudo_axis = engine->pseudo_axes.parameters[i];
 			Gtk::ListStore::Row row = *(_pseudoAxeModel->append());
 			row[_pseudoAxeModelColumns.parameter] = pseudo_axis;
 			row[_pseudoAxeModelColumns.name] = pseudo_axis->name;
-
-			if(engine->mode->parameters_len){
+			if(engine->mode->parameters.len){
 				Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(_parameterModelColumns);
-				for(k=0; k<engine->mode->parameters_len; ++k){
-					HklParameter *parameter = &engine->mode->parameters[k];
-
+				for(uint j=0; i<engine->mode->parameters.len; ++i){
+					HklParameter *parameter = engine->mode->parameters.parameters[j];
 					Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(_parameterModelColumns);
 					row = *(model->append());
 					row[_parameterModelColumns.parameter] = parameter;

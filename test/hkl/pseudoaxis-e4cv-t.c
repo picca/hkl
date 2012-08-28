@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2012 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -101,8 +101,11 @@ static void degenerated(void)
 		static double values[] = {0, 0, 1};
 
 		hkl_pseudo_axis_engine_select_mode(engine, mode);
-		if (mode->parameters_len)
-			hkl_parameter_set_value(&mode->parameters[0], 0., NULL);
+		if (mode->parameters.len){
+			static double zero = 0;
+
+			hkl_parameter_list_set_values(&mode->parameters, &zero, 1, NULL);
+		}
 
 		/* studdy this degenerated case */
 		hkl_parameter_list_set_values(&engine->pseudo_axes, values, 3, NULL);
@@ -138,6 +141,7 @@ static void psi_getter(void)
 	HklGeometry *geom;
 	HklDetector *detector;
 	HklSample *sample;
+	double hkl[3];
 
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
 	geom = hkl_geometry_factory_new(config);
@@ -155,40 +159,40 @@ static void psi_getter(void)
 	hkl_geometry_set_values_unit_v(geom, 30., 0., 0., 60.);
 	hkl_pseudo_axis_engine_initialize(engine, NULL);
 
-	hkl_parameter_set_value(&engine->mode->parameters[0], 1, NULL);
-	hkl_parameter_set_value(&engine->mode->parameters[1], 0, NULL);
-	hkl_parameter_set_value(&engine->mode->parameters[2], 0, NULL);
+	hkl[0] = 1, hkl[1] = 0, hkl[2] = 0;
+	hkl_parameter_list_set_values(&engine->mode->parameters,
+				      hkl, ARRAY_SIZE(hkl), NULL);
 	res &= hkl_pseudo_axis_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, 0.);
 
-	hkl_parameter_set_value(&engine->mode->parameters[0], 0, NULL);
-	hkl_parameter_set_value(&engine->mode->parameters[1], 1, NULL);
-	hkl_parameter_set_value(&engine->mode->parameters[2], 0, NULL);
+	hkl[0] = 0, hkl[1] = 1, hkl[2] = 0;
+	hkl_parameter_list_set_values(&engine->mode->parameters,
+				      hkl, ARRAY_SIZE(hkl), NULL);
 	res &= hkl_pseudo_axis_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, 90. * HKL_DEGTORAD);
 
 	/* here Q and <h, k, l>_ref are colinear must FAIL */
-	hkl_parameter_set_value(&engine->mode->parameters[0], 0, NULL);
-	hkl_parameter_set_value(&engine->mode->parameters[1], 0, NULL);
-	hkl_parameter_set_value(&engine->mode->parameters[2], 1, NULL);
+	hkl[0] = 0, hkl[1] = 0, hkl[2] = 1;
+	hkl_parameter_list_set_values(&engine->mode->parameters,
+				      hkl, ARRAY_SIZE(hkl), NULL);
 	res &= !hkl_pseudo_axis_engine_get(engine, NULL);
 
-	hkl_parameter_set_value(&engine->mode->parameters[0], -1, NULL);
-	hkl_parameter_set_value(&engine->mode->parameters[1], 0, NULL);
-	hkl_parameter_set_value(&engine->mode->parameters[2], 0, NULL);
+	hkl[0] = -1, hkl[1] = 0, hkl[2] = 0;
+	hkl_parameter_list_set_values(&engine->mode->parameters,
+				      hkl, ARRAY_SIZE(hkl), NULL);
 	res &= hkl_pseudo_axis_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, 180. * HKL_DEGTORAD);
 
-	hkl_parameter_set_value(&engine->mode->parameters[0], 0, NULL);
-	hkl_parameter_set_value(&engine->mode->parameters[1], -1, NULL);
-	hkl_parameter_set_value(&engine->mode->parameters[2], 0, NULL);
+	hkl[0] = 0, hkl[1] = -1, hkl[2] = 0;
+	hkl_parameter_list_set_values(&engine->mode->parameters,
+				      hkl, ARRAY_SIZE(hkl), NULL);
 	res &= hkl_pseudo_axis_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, -90. * HKL_DEGTORAD);
 
 	/* Q and <h, k, l>_ref are colinear so must FAIL */
-	hkl_parameter_set_value(&engine->mode->parameters[0], 0, NULL);
-	hkl_parameter_set_value(&engine->mode->parameters[1], 0, NULL);
-	hkl_parameter_set_value(&engine->mode->parameters[2], -1, NULL);
+	hkl[0] = 0, hkl[1] = 0, hkl[2] = -1;
+	hkl_parameter_list_set_values(&engine->mode->parameters,
+				      hkl, ARRAY_SIZE(hkl), NULL);
 	res &= !hkl_pseudo_axis_engine_get(engine, NULL);
 
 	ok(res == HKL_TRUE, "psi getter");
@@ -209,6 +213,7 @@ static void psi_setter(void)
 	HklGeometry *geom;
 	HklDetector *detector;
 	HklSample *sample;
+	static double hkl[] = {1, 0, 0};
 
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
 	geom = hkl_geometry_factory_new(config);
@@ -224,9 +229,8 @@ static void psi_setter(void)
 
 	/* the init part */
 	hkl_geometry_set_values_unit_v(geom, 30., 0., 0., 60.);
-	hkl_parameter_set_value(&engine->mode->parameters[0], 1, NULL);
-	hkl_parameter_set_value(&engine->mode->parameters[1], 0, NULL);
-	hkl_parameter_set_value(&engine->mode->parameters[2], 0, NULL);
+	hkl_parameter_list_set_values(&engine->mode->parameters,
+				      hkl, ARRAY_SIZE(hkl), NULL);
 	hkl_pseudo_axis_engine_initialize(engine, NULL);
 
 	list_for_each(&engine->modes, mode, list){
@@ -313,7 +317,6 @@ static void q(void)
 	hkl_sample_free(sample);
 	hkl_geometry_free(geom);
 }
-
 static void hkl_psi_constant_vertical(void)
 {
 	int res = HKL_TRUE;
@@ -324,6 +327,7 @@ static void hkl_psi_constant_vertical(void)
 	HklDetector *detector;
 	HklSample *sample;
 	static double hkl[] = {1, 0, 1};
+	static double hkl2[] = {1, 1, 0};
 
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
 	geom = hkl_geometry_factory_new(config);
@@ -342,22 +346,24 @@ static void hkl_psi_constant_vertical(void)
 
 	/* the init part */
 	hkl_geometry_set_values_unit_v(geom, 30., 0., 0., 60.);
-	hkl_parameter_set_value(&engine->mode->parameters[0], 1, NULL);
-	hkl_parameter_set_value(&engine->mode->parameters[1], 1, NULL);
-	hkl_parameter_set_value(&engine->mode->parameters[2], 0, NULL);
+	hkl_parameter_list_set_values(&engine->mode->parameters,
+				      hkl2, ARRAY_SIZE(hkl2), NULL);
 	hkl_pseudo_axis_engine_initialize(engine, NULL);
 
-	hkl_parameter_list_set_values(&engine->pseudo_axes, hkl, 3, NULL);
+	hkl_parameter_list_set_values(&engine->pseudo_axes,
+				      hkl, ARRAY_SIZE(hkl), NULL);
 	if(hkl_pseudo_axis_engine_set(engine, NULL)){
 		HklGeometryListItem *item;
 
 		list_for_each(&engines->geometries->items, item, node){
 			static double null[] = {0, 0, 0};
 
-			hkl_parameter_list_set_values(&engine->pseudo_axes, null, 3, NULL);
+			hkl_parameter_list_set_values(&engine->pseudo_axes,
+						      null, ARRAY_SIZE(null),
+						      NULL);
 			hkl_geometry_init_geometry(geom, item->geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
-			res &= check_pseudoaxes(engine, hkl, 3);
+			res &= check_pseudoaxes(engine, hkl, ARRAY_SIZE(hkl));
 		}
 	}
 

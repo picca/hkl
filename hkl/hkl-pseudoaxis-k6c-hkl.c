@@ -204,7 +204,10 @@ static int _constant_omega_v(const gsl_vector *x, void *params, gsl_vector *f)
 	const double kappa = x->data[1];
 	double omega;
 	HklPseudoAxisEngine *engine = params;
-	double omega0 = hkl_parameter_get_value(&engine->mode->parameters[0]);
+	double omega0;
+	uint shit;
+
+	hkl_parameter_list_get_values(&engine->mode->parameters, &omega0, &shit);
 
 	CHECK_NAN(x->data, x->size);
 
@@ -226,7 +229,10 @@ static int _constant_chi_v(const gsl_vector *x, void *params, gsl_vector *f)
 	const double kappa = x->data[1];
 	double chi;
 	HklPseudoAxisEngine *engine = params;
-	double chi0 = hkl_parameter_get_value(&engine->mode->parameters[0]);
+	double chi0;
+	uint shit;
+
+	hkl_parameter_list_get_values(&engine->mode->parameters, &chi0, &shit);
 
 	CHECK_NAN(x->data, x->size);
 
@@ -249,7 +255,10 @@ static int _constant_phi_v(const gsl_vector *x, void *params, gsl_vector *f)
 	const double kphi = x->data[2];
 	double phi;
 	HklPseudoAxisEngine *engine = params;
-	double phi0 = hkl_parameter_get_value(&engine->mode->parameters[0]);
+	double phi0;
+	uint shit;
+
+	hkl_parameter_list_get_values(&engine->mode->parameters, &phi0, &shit);
 
 	CHECK_NAN(x->data, x->size);
 
@@ -289,26 +298,34 @@ static const HklFunction double_diffraction_h = {
 
 static int _constant_incidence_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double incidence;
-	double azimuth;
-	HklPseudoAxisEngine *engine = params;
-	HklVector n = {
-		hkl_parameter_get_value(&engine->mode->parameters[0]),
-		hkl_parameter_get_value(&engine->mode->parameters[1]),
-		hkl_parameter_get_value(&engine->mode->parameters[2]),
-	};
-	double incidence0 = hkl_parameter_get_value(&engine->mode->parameters[3]);
-	double azimuth0 = hkl_parameter_get_value(&engine->mode->parameters[4]);
-	HklVector ki;
 	static const HklVector Y = {
 		.data = {0, 1, 0},
 	};
+	double incidence;
+	double azimuth;
+	HklPseudoAxisEngine *engine = params;
+	double parameters[5];
+	uint shit;
+	HklVector n;
+	double incidence0;
+	double azimuth0;
+	HklVector ki;
 
 	CHECK_NAN(x->data, x->size);
 
 	RUBh_minus_Q(x->data, params, f->data);
 
+	/* get the mode parameters */
+	hkl_parameter_list_get_values(&engine->mode->parameters,
+				      parameters, &shit);
+	n.data[0] = parameters[0];
+	n.data[1] = parameters[1];
+	n.data[2] = parameters[2];
+	incidence0 = parameters[3];
+	azimuth0 = parameters[4];
+
 	/* compute the two angles */
+
 
 	/* first check that the mode was already initialized if not
 	 * the surface is oriented along the nx, ny, nz axis for all

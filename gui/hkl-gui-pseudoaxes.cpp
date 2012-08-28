@@ -129,7 +129,7 @@ void PseudoAxesFrame::on_cell_TreeView_pseudoAxis_value_edited(Glib::ustring con
 		renderer = _treeview1->get_column_cell_renderer(1); // 1 is the index of the value column
 		renderer->property_cell_background().set_value("red");
 		/* TODO check the error and change the meaning once
-		the set method will do the computation */ 
+		   the set method will do the computation */
 		hkl_parameter_set_value_unit(parameter, value, NULL);
 		row[_pseudoAxis_columns.value] = value;
 	}
@@ -179,10 +179,9 @@ void PseudoAxesFrame::on_cell_treeview2_mode_parameter_value_edited(Glib::ustrin
 
 void PseudoAxesFrame::updatePseudoAxis(void)
 {
-	HklParameter *parameter;
-
 	_pseudoAxis_ListStore->clear();
-	list_for_each(&_engine->pseudo_axes.parameters, parameter, list){
+	for(uint i=0; i<_engine->pseudo_axes.len; ++i){
+		HklParameter *parameter = _engine->pseudo_axes.parameters[i];
 		Gtk::TreeRow row = *(_pseudoAxis_ListStore->append());
 		row[_pseudoAxis_columns.name] = parameter->name;
 		row[_pseudoAxis_columns.value] = hkl_parameter_get_value_unit(parameter);
@@ -204,17 +203,15 @@ void PseudoAxesFrame::updateMode(void)
 
 void PseudoAxesFrame::updateModeParameters(void)
 {
-	size_t i;
-
 	if(_engine->mode){
-		size_t len = _engine->mode->parameters_len;
-		if(len){
+		if(_engine->mode->parameters.len){
 			_mode_parameter_ListStore->clear();
-			for(i=0; i<len; ++i){
+			for(uint i=0; i<_engine->mode->parameters.len; ++i){
+				HklParameter *parameter = _engine->mode->parameters.parameters[i];
 				Gtk::TreeRow row = *(_mode_parameter_ListStore->append());
-				row[_mode_parameter_columns.name] = _engine->mode->parameters[i].name;
-				row[_mode_parameter_columns.value] = hkl_parameter_get_value_unit(&_engine->mode->parameters[i]);
-				row[_mode_parameter_columns.parameter] = &_engine->mode->parameters[i];
+				row[_mode_parameter_columns.name] = parameter->name;
+				row[_mode_parameter_columns.value] = hkl_parameter_get_value_unit(parameter);
+				row[_mode_parameter_columns.parameter] = parameter;
 			}
 			_expander1->set_expanded(1);
 			_expander1->show();

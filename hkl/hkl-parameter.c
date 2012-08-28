@@ -105,8 +105,6 @@ HklParameter *hkl_parameter_new_copy(const HklParameter *self)
  * @self:
  *
  * delete an #HklParameter
-extern HklAxis *hkl_axis_new_copy(const HklAxis *self);
-
  **/
 void hkl_parameter_free(HklParameter *self)
 {
@@ -143,7 +141,7 @@ inline double hkl_parameter_get_value_unit(const HklParameter *self)
  * @self: the this ptr
  * @ref: the reference #HklParameter
  *
- * 
+ *
  *
  * Returns: the closest value of the ref #HklParameter from the
  *          current self #HklParameter
@@ -312,8 +310,8 @@ void hkl_parameter_fprintf(FILE *f, HklParameter *self)
  **/
 void hkl_parameter_list_add_parameter(HklParameterList *self, HklParameter *parameter)
 {
-	list_add_tail(&self->parameters, &parameter->list);
-	self->len++;
+	self->parameters = realloc(self->parameters, sizeof(parameter) * (self->len + 1));
+	self->parameters[self->len++] = parameter;
 }
 
 /**
@@ -354,7 +352,7 @@ inline unsigned int hkl_parameter_list_set_values(HklParameterList *self,
  * @len: (out caller-allocates): the length of the returned array
  *
  * Return value: (array length=len) (transfer full): list of pseudo axes values with unit
- *               free the array with free when done 
+ *               free the array with free when done
  **/
 inline double *hkl_parameter_list_get_values_unit(const HklParameterList *self,
 						  unsigned int *len)
@@ -378,4 +376,16 @@ inline unsigned int hkl_parameter_list_set_values_unit(HklParameterList *self,
 						       HklError **error)
 {
 	return self->ops->set_values_unit(self, values, len, error);
+}
+
+/**
+ * hkl_parameter_list_randomize: (skip)
+ * @self: the this ptr
+ *
+ * randomize all parameters of the list
+ **/
+void hkl_parameter_list_randomize(HklParameterList *self)
+{
+	for(uint i=0; i<self->len; ++i)
+		hkl_parameter_randomize(self->parameters[i]);
 }

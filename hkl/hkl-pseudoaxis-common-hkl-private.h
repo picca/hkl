@@ -23,6 +23,14 @@
 #include <gsl/gsl_vector.h>
 #include "hkl-pseudoaxis-auto-private.h"
 
+typedef struct _HklPseudoAxisEngineHkl HklPseudoAxisEngineHkl;
+struct _HklPseudoAxisEngineHkl {
+	HklPseudoAxisEngine engine;
+	HklParameter *h;
+	HklParameter *k;
+	HklParameter *l;
+};
+
 extern int _RUBh_minus_Q_func(const gsl_vector *x, void *params, gsl_vector *f);
 extern int _double_diffraction_func(const gsl_vector *x, void *params, gsl_vector *f);
 extern int _psi_constant_vertical_func(const gsl_vector *x, void *params, gsl_vector *f);
@@ -66,21 +74,22 @@ extern int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudo
 
 extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_hkl_new(void);
 
-#define HKL_MODE_OPERATIONS_HKL_DEFAULTS HKL_MODE_OPERATIONS_AUTO_DEFAULTS, \
+#define HKL_PSEUDO_AXIS_ENGINE_MODE_OPERATIONS_HKL_DEFAULTS	\
+	HKL_PSEUDO_AXIS_ENGINE_MODE_OPERATIONS_AUTO_DEFAULTS,	\
 		.get = hkl_pseudo_axis_engine_mode_get_hkl_real
 
 static const HklPseudoAxisEngineModeOperations hkl_mode_operations = {
-	HKL_MODE_OPERATIONS_HKL_DEFAULTS
+	HKL_PSEUDO_AXIS_ENGINE_MODE_OPERATIONS_HKL_DEFAULTS,
 };
 
 static const HklPseudoAxisEngineModeOperations hkl_full_mode_operations = {
-	HKL_MODE_OPERATIONS_HKL_DEFAULTS,
-	.set = hkl_pseudo_axis_engine_mode_set_hkl_real
+	HKL_PSEUDO_AXIS_ENGINE_MODE_OPERATIONS_HKL_DEFAULTS,
+	.set = hkl_pseudo_axis_engine_mode_set_hkl_real,
 };
 
 static const HklPseudoAxisEngineModeOperations psi_constant_vertical_mode_operations = {
-	HKL_MODE_OPERATIONS_HKL_DEFAULTS,
-	.init = hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real
+	HKL_PSEUDO_AXIS_ENGINE_MODE_OPERATIONS_HKL_DEFAULTS,
+	.init = hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real,
 };
 
 static const HklFunction RUBh_minus_Q_func = {

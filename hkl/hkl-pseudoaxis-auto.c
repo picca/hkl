@@ -153,8 +153,9 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 		fprintf(stdout, "\n");
 		for(i=0; i<len; ++i)
 			fprintf(stdout, "\t f(%d)", i);
-		for(i=0; i<len; ++i)
-			fprintf(stdout, "\t \"%s\"", ((HklParameter *)self->axes[i])->name);
+		list_for_each(&self->axes, axis, engine_list){
+			fprintf(stdout, "\t \"%s\"", axis->parameter.name);
+		}
 #endif
 		/* set the geometry from the gsl_vector */
 		/* in a futur version the geometry must contain a gsl_vector */
@@ -367,12 +368,12 @@ void hkl_pseudo_axis_engine_mode_auto_init(HklPseudoAxisEngineMode *self,
 
 }
 
-int hkl_pseudo_axis_engine_mode_set_real(HklPseudoAxisEngineMode *self,
-					 HklPseudoAxisEngine *engine,
-					 HklGeometry *geometry,
-					 HklDetector *detector,
-					 HklSample *sample,
-					 HklError **error)
+int hkl_pseudo_axis_engine_mode_auto_set_real(HklPseudoAxisEngineMode *self,
+					      HklPseudoAxisEngine *engine,
+					      HklGeometry *geometry,
+					      HklDetector *detector,
+					      HklSample *sample,
+					      HklError **error)
 {
 	size_t i;
 	int ok = HKL_FALSE;

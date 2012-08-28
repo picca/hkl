@@ -162,12 +162,8 @@ static inline void hkl_parameter_list_get_values_real(
 	const HklParameterList *self,
 	double values[], unsigned int *len)
 {
-	HklParameter *parameter;
-	unsigned int i = 0;
-
-	list_for_each(&self->parameters, parameter, list){
-		values[i++] = hkl_parameter_get_value(parameter);
-	}
+	for(unsigned int i=0; i<self->len; ++i)
+		values[i] = hkl_parameter_get_value(self->parameters[i]);
 
 	*len = self->len;
 }
@@ -177,14 +173,11 @@ static inline unsigned int hkl_parameter_list_set_values_real(
 	double values[], unsigned int len,
 	HklError **error)
 {
-	unsigned int i = 0;
-	HklParameter *parameter;
-
-	list_for_each(&self->parameters, parameter, list){
-		if(!hkl_parameter_set_value(parameter, values[i++],
+	for(unsigned int i=0; i<self->len; ++i)
+		if(!hkl_parameter_set_value(self->parameters[i], values[i],
 					    error))
 			return HKL_FALSE;
-	}
+
 	return HKL_TRUE;
 }
 
@@ -192,15 +185,11 @@ static inline double *hkl_parameter_list_get_values_unit_real(
 	const HklParameterList *self,
 	unsigned int *len)
 {
-	HklParameter *parameter;
-	double *values;
+	double *values = malloc(sizeof(*values) * self->len);
 
-	values = malloc(sizeof(*values) * self->len);
-
-	*len=0;
-	list_for_each(&self->parameters, parameter, list){
-		values[(*len)++] = hkl_parameter_get_value_unit(parameter);
-	}
+	for(unsigned int i=0; i<self->len; ++i)
+		values[i] = hkl_parameter_get_value_unit(self->parameters[i]);
+	*len = self->len;
 
 	return values;
 }
@@ -210,14 +199,11 @@ static inline unsigned int hkl_parameter_list_set_values_unit_real(
 	double values[], unsigned int len,
 	HklError **error)
 {
-	unsigned int i = 0;
-	HklParameter *parameter;
-
-	list_for_each(&self->parameters, parameter, list){
-		if(!hkl_parameter_set_value_unit(parameter, values[i++],
+	for(unsigned int i=0; i<self->len; ++i)
+		if(!hkl_parameter_set_value_unit(self->parameters[i], values[i],
 						 error))
 			return HKL_FALSE;
-	}
+
 	return HKL_TRUE;
 }
 
@@ -225,32 +211,30 @@ static HklParameterListOperations hkl_parameter_list_operations_defaults = {
 	HKL_PARAMETER_LIST_OPERATIONS_DEFAULTS,
 };
 
-static void hkl_parameter_list_init(HklParameterList *self, HklParameterListOperations *ops)
+static void hkl_parameter_list_init(HklParameterList *self,
+				    const HklParameterListOperations *ops)
 {
-	list_head_init(&self->parameters);
+	self->parameters = NULL;
 	self->len = 0;
 	self->ops = ops;
 }
 
 static void hkl_parameter_list_release(HklParameterList *self)
 {
-	HklParameter *parameter;
-	HklParameter *next;
-
-	list_for_each_safe(&self->parameters, parameter, next, list){
-		list_del(&parameter->list);
-		hkl_parameter_free(parameter);
+	for(unsigned int i=0; i<self->len; ++i)
+		hkl_parameter_free(self->parameters[i]);
+	if(self->parameters){
+		free(self->parameters);
+		self->parameters = NULL;
+		self->len = 0;
 	}
-	self->len = 0;
 }
 
 static void hkl_parameter_list_fprintf(FILE *f, const HklParameterList *self)
 {
-	HklParameter *parameter;
-
-	list_for_each(&self->parameters, parameter, list){
+	for(unsigned int i=0; i<self->len; ++i){
 		fprintf(f, "\n     ");
-		hkl_parameter_fprintf(f, parameter);
+		hkl_parameter_fprintf(f, self->parameters[i]);
 	}
 }
 
@@ -265,12 +249,8 @@ static inline void _hkl_parameter_list_set_values(
 	HklParameterList *self,
 	double values[], unsigned int len)
 {
-	unsigned int i = 0;
-	HklParameter *parameter;
-
-	list_for_each(&self->parameters, parameter, list){
-		parameter->_value = values[i++];
-	}
+	for(unsigned int i=0; i<self->len; ++i)
+		self->parameters[i]->_value = values[i];
 }
 
 HKL_END_DECLS

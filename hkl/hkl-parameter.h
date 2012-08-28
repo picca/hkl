@@ -49,8 +49,6 @@ struct _HklParameter {
 	int fit;
 	int changed;
 	const HklParameterOperations *ops;
-	struct list_node list;
-	void *_shit;
 };
 
 #define HKL_PARAMETER_DEFAULTS .name="dummy", .range={.min=0, .max=0}, ._value=0, .unit=NULL, .punit=NULL, .fit=HKL_TRUE, .changed=HKL_TRUE, .ops = &hkl_parameter_operations_defaults
@@ -101,8 +99,7 @@ extern void hkl_parameter_fprintf(FILE *f, HklParameter *self);
 struct _HklParameterList {
 	unsigned int len;
 	const HklParameterListOperations *ops;
-	struct list_head parameters;
-	void *_shit;
+	HklParameter **parameters;
 };
 
 extern void hkl_parameter_list_get_values(const HklParameterList *self,
@@ -122,6 +119,9 @@ extern unsigned int hkl_parameter_list_set_values_unit(HklParameterList *self,
 
 extern HklParameter *hkl_parameter_list_get_by_name(HklParameterList *self,
 						    const char *name);
+
+/* only use in the test method for now */
+extern void hkl_parameter_list_randomize(HklParameterList *self);
 
 HKL_END_DECLS
 

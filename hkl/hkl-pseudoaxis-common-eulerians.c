@@ -27,16 +27,14 @@
 #include "hkl-pseudoaxis-auto-private.h"
 #include "hkl-pseudoaxis-common-eulerians-private.h"
 
-static int kappa_to_eulerian(const double angles[], double eulerians[],
+static int kappa_to_eulerian(const double angles[],
+			     double *omega, double *chi, double *phi,
 			     double alpha, int solution)
 {
 	const double komega = angles[0];
 	const double kappa = gsl_sf_angle_restrict_symm(angles[1]);
 	const double kphi = angles[2];
 	const double p = atan(tan(kappa/2.) * cos(alpha));
-	double *omega = &eulerians[0];
-	double *chi = &eulerians[1];
-	double *phi = &eulerians[2];
 
 	if (solution){
 		*omega = komega + p - M_PI_2;
@@ -51,13 +49,11 @@ static int kappa_to_eulerian(const double angles[], double eulerians[],
 	return HKL_TRUE;
 }
 
-static int eulerian_to_kappa(const double eulerians[], double angles[],
+static int eulerian_to_kappa(const double omega, const double chi, const double phi,
+			     double angles[],
 			     double alpha, double solution)
 {
 	int status = HKL_TRUE;
-	const double omega = eulerians[0];
-	const double chi = eulerians[1];
-	const double phi = eulerians[2];
 	double *komega = &angles[0];
 	double *kappa = &angles[1];
 	double *kphi = &angles[2];
@@ -80,6 +76,10 @@ static int eulerian_to_kappa(const double eulerians[], double angles[],
 	return status;
 }
 
+/***************************/
+/* HklPseudoAxisEngineMode */
+/***************************/
+
 static int hkl_pseudo_axis_engine_mode_get_eulerians_real(HklPseudoAxisEngineMode *self,
 							  HklPseudoAxisEngine *engine,
 							  HklGeometry *geometry,
@@ -87,6 +87,7 @@ static int hkl_pseudo_axis_engine_mode_get_eulerians_real(HklPseudoAxisEngineMod
 							  HklSample *sample,
 							  HklError **error)
 {
+	HklPseudoAxisEngineEulerians *eulerians;
 	const double angles[] = {
 		hkl_parameter_get_value(
 			&hkl_geometry_get_axis_by_name(geometry, "komega")->parameter),
@@ -96,15 +97,21 @@ static int hkl_pseudo_axis_engine_mode_get_eulerians_real(HklPseudoAxisEngineMod
 			&hkl_geometry_get_axis_by_name(geometry, "kphi")->parameter),
 	};
 	double values[3];
-	int solution;
+	double solution;
 	HklParameter *parameter;
 	uint i = 0;
+	uint len;
 
 	hkl_geometry_update(geometry);
 
-	solution = hkl_parameter_get_value(&self->parameters[0]);
-	kappa_to_eulerian(angles, values, 50 * HKL_DEGTORAD, solution);
-	_hkl_parameter_list_set_values(&engine->pseudo_axes, values, 3);
+	hkl_parameter_list_get_values(&self->parameters, &solution, &len);
+
+	eulerians = container_of(engine, HklPseudoAxisEngineEulerians, engine);
+	kappa_to_eulerian(angles,
+			  &eulerians->omega->_value,
+			  &eulerians->chi->_value,
+			  &eulerians->phi->_value,
+			  50 * HKL_DEGTORAD, solution);
 
 	return HKL_TRUE;
 }
@@ -116,15 +123,18 @@ static int hkl_pseudo_axis_engine_mode_set_eulerians_real(HklPseudoAxisEngineMod
 							  HklSample *sample,
 							  HklError **error)
 {
-	int solution;
+	double solution;
 	uint n_values = engine->info->n_pseudo_axes;
-	double values[n_values];
+	HklPseudoAxisEngineEulerians *engine_eulerians;
 	double angles[3];
+	uint len;
 
-	solution = hkl_parameter_get_value(&self->parameters[0]);
-	hkl_parameter_list_get_values(&engine->pseudo_axes, values, &n_values);
-
-	if(!eulerian_to_kappa(values, angles, 50 * HKL_DEGTORAD, solution)){
+	hkl_parameter_list_get_values(&self->parameters, &solution, &len);
+	engine_eulerians = container_of(engine, HklPseudoAxisEngineEulerians, engine);
+	if(!eulerian_to_kappa(engine_eulerians->omega->_value,
+			      engine_eulerians->chi->_value,
+			      engine_eulerians->phi->_value,
+			      angles, 50 * HKL_DEGTORAD, solution)){
 		hkl_error_set(error, "unreachable solution : 0° < chi < 50°");
 		return HKL_FALSE;
 	}else
@@ -145,6 +155,7 @@ static HklPseudoAxisEngineMode *mode_eulerians()
 		INFO_WITH_PARAMS("eulerians", axes, parameters),
 	};
 	static const HklPseudoAxisEngineModeOperations operations = {
+		HKL_PSEUDO_AXIS_ENGINE_MODE_OPERATIONS_DEFAULTS,
 		.get = hkl_pseudo_axis_engine_mode_get_eulerians_real,
 		.set = hkl_pseudo_axis_engine_mode_set_eulerians_real,
 	};
@@ -152,9 +163,22 @@ static HklPseudoAxisEngineMode *mode_eulerians()
 	return hkl_pseudo_axis_engine_mode_new(&info, &operations);
 };
 
+/***********************/
+/* HklPseudoAxisEngine */
+/***********************/
+
+static void hkl_pseudo_axis_engine_eulerians_free_real(HklPseudoAxisEngine *base)
+{
+	HklPseudoAxisEngineEulerians *self;
+
+	self = container_of(base, HklPseudoAxisEngineEulerians, engine);
+	hkl_pseudo_axis_engine_release(&self->engine);
+	free(self);
+}
+
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_eulerians_new(void)
 {
-	HklPseudoAxisEngine *self;
+	HklPseudoAxisEngineEulerians *self;
 	HklPseudoAxisEngineMode *mode;
 	static const HklPseudoAxis omega = {
 		.parameter = { HKL_PARAMETER_DEFAULTS_ANGLE, .name = "omega"}
@@ -171,13 +195,23 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_eulerians_new(void)
 		.pseudo_axes = pseudo_axes,
 		.n_pseudo_axes = ARRAY_SIZE(pseudo_axes),
 	};
+	static HklPseudoAxisEngineOperations operations = {
+		HKL_PSEUDO_AXIS_ENGINE_OPERATIONS_DEFAULTS,
+		.free=hkl_pseudo_axis_engine_eulerians_free_real,
+	};
 
-	self = hkl_pseudo_axis_engine_new(&info);
+	self = HKL_MALLOC(HklPseudoAxisEngineEulerians);
+	hkl_pseudo_axis_engine_init(&self->engine, &info, &operations);
+
+	/* add the pseudo axes with the new API */
+	self->omega = register_pseudo_axis(&self->engine, &omega.parameter);
+	self->chi = register_pseudo_axis(&self->engine, &chi.parameter);
+	self->phi = register_pseudo_axis(&self->engine, &phi.parameter);
 
 	/* eulerians [default] */
 	mode = mode_eulerians();
-	hkl_pseudo_axis_engine_add_mode(self, mode);
-	hkl_pseudo_axis_engine_select_mode(self, mode);
+	hkl_pseudo_axis_engine_add_mode(&self->engine, mode);
+	hkl_pseudo_axis_engine_select_mode(&self->engine, mode);
 
-	return self;
+	return &self->engine;
 }

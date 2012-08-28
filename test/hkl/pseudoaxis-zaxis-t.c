@@ -75,6 +75,8 @@ static void solution(void)
 		}
 	}else
 		res = HKL_FALSE;
+	if(!res)
+		hkl_pseudo_axis_engine_fprintf(stdout, engine);
 
 	hkl_pseudo_axis_engine_list_free(engines);
 	hkl_detector_free(detector);

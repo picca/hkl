@@ -30,6 +30,37 @@
 
 HKL_BEGIN_DECLS
 
+#define INFO(n, ax) .name = n, .axes=ax, .n_axes=ARRAY_SIZE(ax)
+#define INFO_WITH_PARAMS(name, axes, parameters) INFO(name, axes), .parameters=parameters, .n_parameters=ARRAY_SIZE(parameters)
+
+static inline void set_geometry_axes(HklPseudoAxisEngine *engine, const double values[])
+{
+	HklAxis *axis;
+	uint i = 0;
+
+	list_for_each(&engine->axes, axis, engine_list)
+		hkl_parameter_set_value(&axis->parameter, values[i++], NULL);
+	hkl_geometry_update(engine->geometry);
+}
+
+/*****************/
+/* HklPseudoAxis */
+/*****************/
+
+struct _HklPseudoAxis
+{
+	HklParameter parameter;
+	HklPseudoAxisEngine *engine;
+};
+
+extern HklParameter *hkl_parameter_new_pseudo_axis(
+	const HklParameter *parameter,
+	HklPseudoAxisEngine *engine);
+
+/***************************/
+/* HklPseudoAxisEngineMode */
+/***************************/
+
 struct _HklPseudoAxisEngineModeOperations
 {
 	int (* init)(HklPseudoAxisEngineMode *self,
@@ -52,96 +83,11 @@ struct _HklPseudoAxisEngineModeOperations
 		    HklError **error);
 };
 
-#define INFO(n, ax) .name = n, .axes=ax, .n_axes=ARRAY_SIZE(ax)
-#define INFO_WITH_PARAMS(name, axes, parameters) INFO(name, axes), .parameters=parameters, .n_parameters=ARRAY_SIZE(parameters)
+#define HKL_PSEUDO_AXIS_ENGINE_MODE_OPERATIONS_DEFAULTS		\
+	.init=hkl_pseudo_axis_engine_mode_init_real,		\
+		.get=hkl_pseudo_axis_engine_mode_get_real,	\
+		.set=hkl_pseudo_axis_engine_mode_set_real
 
-static inline void set_geometry_axes(HklPseudoAxisEngine *engine, const double values[])
-{
-	HklAxis *axis;
-	uint i = 0;
-
-	list_for_each(&engine->axes, axis, engine_list)
-		hkl_parameter_set_value(&axis->parameter, values[i++], NULL);
-	hkl_geometry_update(engine->geometry);
-}
-
-struct _HklPseudoAxis
-{
-	HklParameter parameter;
-	HklPseudoAxisEngine *engine;
-};
-
-/***************************/
-/* HklPseudoAxisEngineMode */
-/***************************/
-
-static inline int hkl_pseudo_axis_engine_mode_init(
-	HklPseudoAxisEngineMode *self,
-	const HklPseudoAxisEngineModeInfo *info,
-	const HklPseudoAxisEngineModeOperations *op)
-{
-	size_t i;
-
-	/* ensure part */
-	if (!self)
-		return HKL_FALSE;
-
-	self->info = info;
-	self->op = op;
-
-	/* parameters */
-	self->parameters = realloc(self->parameters, sizeof(*self->parameters) * self->info->n_parameters);
-	self->parameters_len = self->info->n_parameters;
-	memcpy(self->parameters, self->info->parameters, sizeof(*self->parameters) * self->parameters_len);
-
-	/* init part */
-	self->geometry_init = NULL;
-	self->detector_init = NULL;
-	self->sample_init = NULL;
-
-	return HKL_TRUE;
-}
-
-static inline HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
-	const HklPseudoAxisEngineModeInfo *info,
-	const HklPseudoAxisEngineModeOperations *op)
-{
-	HklPseudoAxisEngineMode *self = NULL;
-
-
-	self = HKL_MALLOC(HklPseudoAxisEngineMode);
-
-	self->parameters = NULL;
-	hkl_pseudo_axis_engine_mode_init(self, info, op);
-
-	return self;
-}
-
-/**
- * hkl_pseudo_axis_engine_mode_free: (skip)
- * @self:
- *
- * delete an HklPseudoAxisEngineMode
- **/
-static inline void hkl_pseudo_axis_engine_mode_free(HklPseudoAxisEngineMode *self)
-{
-	free(self->parameters);
-	self->parameters_len = 0;
-
-	if(self->geometry_init){
-		hkl_geometry_free(self->geometry_init);
-		self->geometry_init = NULL;
-	}
-	if(self->detector_init){
-		hkl_detector_free(self->detector_init);
-		self->detector_init = NULL;
-	}
-	if(self->sample_init){
-		hkl_sample_free(self->sample_init);
-		self->sample_init = NULL;
-	}
-	free(self);
-}
 
 static int hkl_pseudo_axis_engine_mode_init_real(HklPseudoAxisEngineMode *mode,
 						 HklPseudoAxisEngine *self,
@@ -171,28 +117,105 @@ static int hkl_pseudo_axis_engine_mode_init_real(HklPseudoAxisEngineMode *mode,
 	return HKL_TRUE;
 }
 
+static int hkl_pseudo_axis_engine_mode_get_real(HklPseudoAxisEngineMode *self,
+						HklPseudoAxisEngine *engine,
+						HklGeometry *geometry,
+						HklDetector *detector,
+						HklSample *sample,
+						HklError **error)
+{
+}
+
+static int hkl_pseudo_axis_engine_mode_set_real(HklPseudoAxisEngineMode *self,
+						HklPseudoAxisEngine *engine,
+						HklGeometry *geometry,
+						HklDetector *detector,
+						HklSample *sample,
+						HklError **error)
+{
+}
+
+static inline int hkl_pseudo_axis_engine_mode_init(
+	HklPseudoAxisEngineMode *self,
+	const HklPseudoAxisEngineModeInfo *info,
+	const HklPseudoAxisEngineModeOperations *op)
+{
+	size_t i;
+
+	/* ensure part */
+	if (!self)
+		return HKL_FALSE;
+
+	self->info = info;
+	self->op = op;
+
+	/* parameters */
+	hkl_parameter_list_init(&self->parameters,
+				&hkl_parameter_list_operations_defaults);
+	for(i=0; i<self->info->n_parameters; ++i){
+		HklParameter *parameter;
+
+		parameter = hkl_parameter_new_copy(&self->info->parameters[i]);
+		hkl_parameter_list_add_parameter(&self->parameters, parameter);
+	}
+
+	/* init part */
+	self->geometry_init = NULL;
+	self->detector_init = NULL;
+	self->sample_init = NULL;
+
+	return HKL_TRUE;
+}
+
+static inline HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
+	const HklPseudoAxisEngineModeInfo *info,
+	const HklPseudoAxisEngineModeOperations *op)
+{
+	HklPseudoAxisEngineMode *self = NULL;
+
+
+	self = HKL_MALLOC(HklPseudoAxisEngineMode);
+
+	hkl_pseudo_axis_engine_mode_init(self, info, op);
+
+	return self;
+}
+
+/**
+ * hkl_pseudo_axis_engine_mode_free: (skip)
+ * @self:
+ *
+ * delete an HklPseudoAxisEngineMode
+ **/
+static inline void hkl_pseudo_axis_engine_mode_free(HklPseudoAxisEngineMode *self)
+{
+	hkl_parameter_list_release(&self->parameters);
+
+	if(self->geometry_init){
+		hkl_geometry_free(self->geometry_init);
+		self->geometry_init = NULL;
+	}
+	if(self->detector_init){
+		hkl_detector_free(self->detector_init);
+		self->detector_init = NULL;
+	}
+	if(self->sample_init){
+		hkl_sample_free(self->sample_init);
+		self->sample_init = NULL;
+	}
+	free(self);
+}
+
 /***********************/
 /* HklPseudoAxisEngine */
 /***********************/
 
-extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_new(
-	const HklPseudoAxisEngineInfo *info);
-
-/**
- * hkl_pseudo_axis_engine_free: (skip)
- * @self: the engine to release
- *
- * release the memory of an HklPseudoAxisEngine
- **/
-static inline void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self)
+static void hkl_pseudo_axis_engine_release(HklPseudoAxisEngine *self)
 {
-	size_t i;
 	HklPseudoAxisEngineMode *mode;
 	HklPseudoAxisEngineMode *next;
-	HklPseudoAxis *pseudo_axis;
-	HklPseudoAxis *pseudo_axis_next;
 
-	if (self->geometry)
+	if(self->geometry)
 		hkl_geometry_free(self->geometry);
 
 	if(self->detector)
@@ -210,9 +233,34 @@ static inline void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self)
 
 	/* release the HklPseudoAxe memory */
 	hkl_parameter_list_release(&self->pseudo_axes);
-
-	free(self);
 }
+
+struct _HklPseudoAxisEngineOperations
+{
+	void (*free)(HklPseudoAxisEngine *self);
+};
+
+#define HKL_PSEUDO_AXIS_ENGINE_OPERATIONS_DEFAULTS	\
+	.free=hkl_pseudo_axis_engine_free_real
+
+static inline void hkl_pseudo_axis_engine_free_real(HklPseudoAxisEngine *self)
+{
+}
+
+static void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self)
+{
+	self->ops->free(self);
+}
+
+extern void hkl_pseudo_axis_engine_init(HklPseudoAxisEngine *engine,
+					const HklPseudoAxisEngineInfo *info,
+					const HklPseudoAxisEngineOperations *ops);
+
+
+extern void unregister_pseudo_axis(HklParameter *pseudo_axis);
+
+extern HklParameter *register_pseudo_axis(HklPseudoAxisEngine *self,
+					  const HklParameter *parameter);
 
 /**
  * hkl_pseudo_axis_engine_add_mode: (skip)

@@ -338,9 +338,11 @@ void hkl_sample_free(HklSample *self)
 	hkl_parameter_free(self->uz);
 	for(i=0; i<self->reflections_len;  ++i)
 		hkl_sample_reflection_free(self->reflections[i]);
-	free(self->reflections);
-	self->reflections = NULL;
-	self->reflections_len = 0;
+	if(self->reflections){
+		free(self->reflections);
+		self->reflections = NULL;
+		self->reflections_len = 0;
+	}
 	free(self);
 }
 

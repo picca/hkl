@@ -1624,12 +1624,6 @@ Todo: test</doc>
       <field name="ops" writable="1">
         <type name="ParameterOperations" c:type="HklParameterOperations*"/>
       </field>
-      <field name="list" writable="1">
-        <type name="gpointer" c:type="gpointer"/>
-      </field>
-      <field name="_shit" writable="1">
-        <type name="gpointer" c:type="void*"/>
-      </field>
       <constructor name="new"
                    c:identifier="hkl_parameter_new"
                    introspectable="0">
@@ -1853,10 +1847,7 @@ Returns:</doc>
               c:type="HklParameterListOperations*"/>
       </field>
       <field name="parameters" writable="1">
-        <type name="gpointer" c:type="gpointer"/>
-      </field>
-      <field name="_shit" writable="1">
-        <type name="gpointer" c:type="void*"/>
+        <type name="Parameter" c:type="HklParameter**"/>
       </field>
       <method name="get_by_name" c:identifier="hkl_parameter_list_get_by_name">
         <return-value transfer-ownership="full">
@@ -1917,6 +1908,14 @@ Returns:</doc>
           <type name="GLib.SList" c:type="GSList*">
             <type name="Parameter"/>
           </type>
+        </return-value>
+      </method>
+      <method name="randomize"
+              c:identifier="hkl_parameter_list_randomize"
+              introspectable="0">
+        <doc xml:whitespace="preserve">randomize all parameters of the list</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
         </return-value>
       </method>
       <method name="set_values" c:identifier="hkl_parameter_list_set_values">
@@ -2011,6 +2010,10 @@ Returns:</doc>
             c:symbol-prefix="pseudo_axis_engine">
       <field name="info" writable="1">
         <type name="PseudoAxisEngineInfo" c:type="HklPseudoAxisEngineInfo*"/>
+      </field>
+      <field name="ops" writable="1">
+        <type name="PseudoAxisEngineOperations"
+              c:type="HklPseudoAxisEngineOperations*"/>
       </field>
       <field name="geometry" writable="1">
         <type name="Geometry" c:type="HklGeometry*"/>
@@ -2316,12 +2319,6 @@ Geometry, a detector and a sample.</doc>
         <type name="PseudoAxisEngineModeOperations"
               c:type="HklPseudoAxisEngineModeOperations*"/>
       </field>
-      <field name="parameters" writable="1">
-        <type name="Parameter" c:type="HklParameter*"/>
-      </field>
-      <field name="parameters_len" writable="1">
-        <type name="gulong" c:type="size_t"/>
-      </field>
       <field name="geometry_init" writable="1">
         <type name="Geometry" c:type="HklGeometry*"/>
       </field>
@@ -2330,6 +2327,9 @@ Geometry, a detector and a sample.</doc>
       </field>
       <field name="sample_init" writable="1">
         <type name="Sample" c:type="HklSample*"/>
+      </field>
+      <field name="parameters" writable="1">
+        <type name="ParameterList" c:type="HklParameterList"/>
       </field>
       <field name="list" writable="1">
         <type name="gpointer" c:type="gpointer"/>
@@ -2375,6 +2375,10 @@ Geometry, a detector and a sample.</doc>
     </record>
     <record name="PseudoAxisEngineModeOperations"
             c:type="HklPseudoAxisEngineModeOperations"
+            disguised="1">
+    </record>
+    <record name="PseudoAxisEngineOperations"
+            c:type="HklPseudoAxisEngineOperations"
             disguised="1">
     </record>
     <record name="Quaternion"
