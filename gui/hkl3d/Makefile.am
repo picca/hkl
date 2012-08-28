@@ -1,4 +1,5 @@
 AM_CXXFLAGS = \
+	-fpermissive \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/hkl \
 	-I$(top_srcdir)/hkl3d \
