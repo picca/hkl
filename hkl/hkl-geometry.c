@@ -334,7 +334,7 @@ void hkl_geometry_update(HklGeometry *self)
  *
  * Returns: -1 if the axis was not found
  **/
-int hkl_geometry_get_axis_idx_by_name(HklGeometry *self, const char *name)
+int hkl_geometry_get_axis_idx_by_name(const HklGeometry *self, const char *name)
 {
 	uint i;
 	HklAxis *axis;
@@ -444,7 +444,8 @@ int hkl_geometry_set_values_unit_v(HklGeometry *self, ...)
  *
  * Returns: the distance between the two geometries
  **/
-double hkl_geometry_distance(HklGeometry *self, HklGeometry *ref)
+double hkl_geometry_distance(const HklGeometry *self,
+			     const HklGeometry *ref)
 {
 	size_t i;
 	double value1, value2;
@@ -454,8 +455,8 @@ double hkl_geometry_distance(HklGeometry *self, HklGeometry *ref)
 		return 0.;
 
 	for(i=0; i<self->len; ++i){
-		value1 = hkl_parameter_get_value(&self->axes[i].parameter);
-		value2 = hkl_parameter_get_value(&ref->axes[i].parameter);
+		value1 = self->axes[i].parameter._value;
+		value2 = ref->axes[i].parameter._value;
 		distance += fabs(value2 - value1);
 	}
 
@@ -469,7 +470,8 @@ double hkl_geometry_distance(HklGeometry *self, HklGeometry *ref)
  *
  * Returns: the orthodromique distance
  **/
-double hkl_geometry_distance_orthodromic(HklGeometry *self, HklGeometry *ref)
+double hkl_geometry_distance_orthodromic(const HklGeometry *self,
+					 const HklGeometry *ref)
 {
 	size_t i;
 	double value1, value2;
@@ -481,8 +483,8 @@ double hkl_geometry_distance_orthodromic(HklGeometry *self, HklGeometry *ref)
 	for(i=0; i<self->len; ++i){
 		double d;
 
-		value1 = hkl_parameter_get_value(&self->axes[i].parameter);
-		value2 = hkl_parameter_get_value(&ref->axes[i].parameter);
+		value1 = self->axes[i].parameter._value;
+		value2 = ref->axes[i].parameter._value;
 		d = fabs(gsl_sf_angle_restrict_symm(value2) - gsl_sf_angle_restrict_symm(value1));
 		/* as M_PI and -M_PI are included in the GSL restriction */
 		if (d > M_PI)
@@ -522,7 +524,8 @@ int hkl_geometry_is_valid(const HklGeometry *self)
  *
  * Returns:
  **/
-int hkl_geometry_closest_from_geometry_with_range(HklGeometry *self, HklGeometry *ref)
+int hkl_geometry_closest_from_geometry_with_range(HklGeometry *self,
+						  const HklGeometry *ref)
 {
 	size_t i;
 	double *values = alloca(self->len * sizeof(*values));
@@ -817,11 +820,12 @@ void hkl_geometry_list_multiply(HklGeometryList *self)
 	}
 }
 
-static void perm_r(HklGeometryList *self, HklGeometry *ref, HklGeometry *geometry,
-		   int perm[], size_t axis_idx)
+static void perm_r(HklGeometryList *self, const HklGeometry *ref,
+		   const HklGeometry *geometry, const int perm[],
+		   const unsigned int axis_idx)
 {
 	if (axis_idx == geometry->len){
-		if(hkl_geometry_distance(ref, geometry) > HKL_EPSILON){
+		if(hkl_geometry_distance(geometry, ref) > HKL_EPSILON){
 			HklGeometryListItem *item;
 
 			item = hkl_geometry_list_item_new(geometry);
@@ -830,15 +834,12 @@ static void perm_r(HklGeometryList *self, HklGeometry *ref, HklGeometry *geometr
 		}
 	}else{
 		if(perm[axis_idx]){
-			HklAxis *axis;
-			double max;
+			HklAxis *axis = &geometry->axes[axis_idx];
+			const double max = axis->parameter.range.max;;
+			const double value0 = axis->parameter._value;
 			double value;
-			double value0;
 
-			axis = &geometry->axes[axis_idx];
-			max = hkl_parameter_get_max(&axis->parameter);
-			value = hkl_parameter_get_value(&axis->parameter);
-			value0 = value;
+			value = value0;
 			do{
 				/* fprintf(stdout, "\n%d %s, %f", axis_idx, hkl_axis_get_name(axis), value * HKL_RADTODEG); */
 				perm_r(self, ref, geometry, perm, axis_idx + 1);
@@ -878,10 +879,9 @@ void hkl_geometry_list_multiply_from_range(HklGeometryList *self)
 	last = list_tail(&self->items, HklGeometryListItem, node);
 	list_for_each(&self->items, item, node){
 		HklGeometry *geometry;
-		HklGeometry *ref;
+		const HklGeometry *ref = item->geometry;
 		int *perm;
 
-		ref = item->geometry;
 		geometry = hkl_geometry_new_copy(ref);
 		perm = alloca(geometry->len * sizeof(*perm));
 
@@ -939,7 +939,7 @@ void hkl_geometry_list_remove_invalid(HklGeometryList *self)
  *
  * Returns:
  **/
-HklGeometryListItem *hkl_geometry_list_item_new(HklGeometry *geometry)
+HklGeometryListItem *hkl_geometry_list_item_new(const HklGeometry *geometry)
 {
 	HklGeometryListItem *self;
 

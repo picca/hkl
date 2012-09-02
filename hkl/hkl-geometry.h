@@ -118,7 +118,7 @@ extern HklHolder *hkl_geometry_add_holder(HklGeometry *self);
 
 extern void hkl_geometry_update(HklGeometry *self);
 
-extern int hkl_geometry_get_axis_idx_by_name(HklGeometry *self,
+extern int hkl_geometry_get_axis_idx_by_name(const HklGeometry *self,
 					     const char *name);
 
 extern HklAxis *hkl_geometry_get_axis_by_name(HklGeometry *self,
@@ -131,11 +131,14 @@ extern int hkl_geometry_set_values_v(HklGeometry *self,
 
 extern int hkl_geometry_set_values_unit_v(HklGeometry *self, ...);
 
-extern double hkl_geometry_distance(HklGeometry *self, HklGeometry *ref);
+extern double hkl_geometry_distance(const HklGeometry *self,
+				    const HklGeometry *ref);
 
-extern double hkl_geometry_distance_orthodromic(HklGeometry *self, HklGeometry *ref);
+extern double hkl_geometry_distance_orthodromic(const HklGeometry *self,
+						const HklGeometry *ref);
 
-extern int hkl_geometry_closest_from_geometry_with_range(HklGeometry *self, HklGeometry *ref);
+extern int hkl_geometry_closest_from_geometry_with_range(HklGeometry *self,
+							 const HklGeometry *ref);
 
 extern int hkl_geometry_is_valid(const HklGeometry *self);
 
@@ -169,7 +172,7 @@ extern void hkl_geometry_list_remove_invalid(HklGeometryList *self);
 /* HklGeometryListItem */
 /***********************/
 
-extern HklGeometryListItem *hkl_geometry_list_item_new(HklGeometry *geometry);
+extern HklGeometryListItem *hkl_geometry_list_item_new(const HklGeometry *geometry);
 
 extern HklGeometryListItem *hkl_geometry_list_item_new_copy(const HklGeometryListItem *self);
 
