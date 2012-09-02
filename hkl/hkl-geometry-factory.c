@@ -246,7 +246,7 @@ HklGeometry *hkl_geometry_factory_new(const HklGeometryConfig *config, ...)
 		break;
 	}
 	geometry = hkl_geometry_factory_newv(config, parameters, len);
-	if(len)
+	if(parameters)
 		free(parameters);
 
 	return geometry;
