@@ -14,6 +14,9 @@ from gi.repository import Hkl
 
 
 def compute_hkl_trajectories(sample, detector, geometry, engine, engines):
+    """
+    compute all the trajectories for a given engine already configured
+    """
     n = 10
     h = numpy.linspace(0, 0, n + 1)
     k = numpy.linspace(0, 1, n + 1)
@@ -40,29 +43,35 @@ def compute_hkl_trajectories(sample, detector, geometry, engine, engines):
 
     return trajectories
 
-def plot_hkl_trajectory(filename, sample, detector, geometry, engines):
+
+def plot_hkl_trajectory(filename, sample, detector,
+                        geometry, engines, max_traj=None):
+    """
+    plot the trajectory for a engine. It is possible to limit the
+    number of trajectory using the max_traj keyword
+    """
     axes_names = [axis.parameter.name for axis in geometry.axes()]
 
     hkl = engines.get_by_name("hkl")
     trajectories = compute_hkl_trajectories(sample, detector, geometry, hkl, engines)
 
-    n = min(len(trajectories), 1)
+    n = min(len(trajectories), max_traj)
     plt.clf()
     for i, trajectory in enumerate(trajectories):
         ax = plt.subplot(1, n, i + 1)
         plt.title("%d solution" % i)
         plt.plot(trajectory, 'o-')
-        #plt.ylim(-180, 180)
         if i != 0:
             for tl in ax.get_yticklabels():
                 tl.set_visible(False)
-        if i+1 == n:
+        if i + 1 == n:
             break
     plt.suptitle(filename + " " + hkl.mode.info.name)
     pp.savefig()
 
 
 pp = PdfPages('trajectories.pdf')
+
 
 def main():
     sample = Hkl.Sample.new("toto", Hkl.SampleType.MONOCRYSTAL)
@@ -84,7 +93,8 @@ def main():
         print gtype.value_nick,
         engines_names = [engine.info.name for engine in engines.engines()]
         if 'hkl' in engines_names:
-            plot_hkl_trajectory(gtype.value_nick, sample, detector, geometry, engines)
+            plot_hkl_trajectory(gtype.value_nick, sample, detector,
+                                geometry, engines, max_traj=1)
             print
         else:
             print ' skiped'
