@@ -180,13 +180,12 @@ static void hkl_pseudo_axis_engine_prepare_internal(HklPseudoAxisEngine *self)
 }
 
 /**
- * hkl_pseudo_axis_engine_select_mode: (skip)
+ * hkl_pseudo_axis_engine_select_mode:
  * @self: the HklPseudoAxisEngine
  * @mode: the #HklPseudoAxisMode to select
  *
  * This method also populate the self->axes from the mode->axes_names.
- * this is to speed the computation of the numerical axes. this method
- * is usually only use with numerical pseudoAxes.
+ * this is to speed the computation of the numerical axes.
  **/
 void hkl_pseudo_axis_engine_select_mode(HklPseudoAxisEngine *self,
 					HklPseudoAxisEngineMode *mode)

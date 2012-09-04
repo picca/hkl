@@ -9,43 +9,56 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 from matplotlib.backends.backend_pdf import PdfPages
+from matplotlib import rcParams
 from gi.repository import GLib
 from gi.repository import Hkl
 
 
-def compute_hkl_trajectories(sample, detector, geometry, engine, engines):
+def compute_hkl_trajectories(engine, hkl1=None, hkl2=None, n=100):
     """
     compute all the trajectories for a given engine already configured
     """
-    n = 10
-    h = numpy.linspace(0, 0, n + 1)
-    k = numpy.linspace(0, 1, n + 1)
-    l = numpy.linspace(1, 1, n + 1)
+    if not hkl1:
+        hkl1 = [0, 0, 1]
+    if not hkl2:
+        hkl2 = [0, 1, 1]
+
+    h = numpy.linspace(hkl1[0], hkl2[0], n + 1)
+    k = numpy.linspace(hkl1[1], hkl2[1], n + 1)
+    l = numpy.linspace(hkl1[2], hkl2[2], n + 1)
 
     # set the hkl engine and get the results
     trajectories = []
     for hh, kk, ll in zip(h, k, l):
         try:
             engine.set_values_unit([hh, kk, ll])
-            for i, item in enumerate(engines.geometries.items()):
+            for i, item in enumerate(engine.engines.geometries.items()):
                 try:
                     trajectories[i]
                 except IndexError:
                     trajectories.append([])
                 values = item.geometry.get_axes_values_unit()
-                #print values, item.geometry.distance(geometry)
                 trajectories[i].append(values)
                 if i == 0:
                     values0 = values
-            geometry.set_axes_values_unit(values0)
+            engine.engines.geometry.set_axes_values_unit(values0)
         except GLib.GError, err:
             pass
 
     return trajectories
 
 
-def plot_hkl_trajectory(filename, sample, detector,
-                        geometry, engines, max_traj=None):
+def _plot_legend(axes):
+    plt.subplot(3, 4, 1)
+    plt.title("legend")
+    print "legende", 1
+    for name in axes:
+        plt.plot([0, 0], label=name)
+    plt.legend()
+
+
+def plot_hkl_trajectory(filename, geometry, engines,
+                        hkl1=None, hkl2=None, n=100):
     """
     plot the trajectory for a engine. It is possible to limit the
     number of trajectory using the max_traj keyword
@@ -53,24 +66,48 @@ def plot_hkl_trajectory(filename, sample, detector,
     axes_names = [axis.parameter.name for axis in geometry.axes()]
 
     hkl = engines.get_by_name("hkl")
-    trajectories = compute_hkl_trajectories(sample, detector, geometry, hkl, engines)
-
-    n = min(len(trajectories), max_traj)
+    page = 1
     plt.clf()
-    for i, trajectory in enumerate(trajectories):
-        ax = plt.subplot(1, n, i + 1)
-        plt.title("%d solution" % i)
-        plt.plot(trajectory, 'o-')
-        if i != 0:
-            for tl in ax.get_yticklabels():
-                tl.set_visible(False)
-        if i + 1 == n:
-            break
-    plt.suptitle(filename + " " + hkl.mode.info.name)
+    plt.suptitle(filename + " " + repr(hkl1) + " -> " + repr(hkl2) + " page " + str(page))
+    modes = hkl.modes()
+    _plot_legend(axes_names)
+    idx = 2
+    for mode in modes:
+        hkl.select_mode(mode)
+        trajectories = compute_hkl_trajectories(hkl, hkl1=hkl1, hkl2=hkl2, n=n)
+        print filename, idx, hkl.mode.info.name, len(trajectories)
+
+        plt.subplot(3, 4, idx)
+        plt.title("%s" % (hkl.mode.info.name,))
+        if not len(trajectories):
+            plt.text(0.5, 0.5, "Failed", size=20, rotation=0.,
+                     ha="center", va="center",
+                     bbox=dict(boxstyle="round",
+                               ec=(1., 0.5, 0.5),
+                               fc=(1., 0.8, 0.8),
+                               )
+                     )
+            plt.draw()
+        else:
+            plt.ylim(-180, 180)
+            if len(trajectories[0]) == 1:
+                plt.plot(trajectories[0], 'o-')
+            else:
+                plt.plot(trajectories[0], '-')
+
+        idx += 1
+        if idx > 12:
+            pp.savefig()
+            plt.clf()
+            page += 1
+            _plot_legend(axes_names)
+            plt.suptitle(filename + " " + repr(hkl1) + " -> " + repr(hkl2) + " page " + str(page))
+            idx = 2
     pp.savefig()
 
 
 pp = PdfPages('trajectories.pdf')
+rcParams['font.size'] = 6
 
 
 def main():
@@ -87,17 +124,21 @@ def main():
         gtype = Hkl.GeometryType(i)
         config = Hkl.geometry_factory_get_config_from_type(gtype)
         geometry = Hkl.Geometry.factory_newv(config, [math.radians(50.)])
+
+        # here we set the detector arm with only positiv values for
+        # now tth or delta arm
+        axis = geometry.get_axis_by_name("tth") \
+            or geometry.get_axis_by_name('delta')
+        if axis:
+            axis.parameter.range.min = 0
+
         engines = Hkl.PseudoAxisEngineList.factory(config)
         engines.init(geometry, detector, sample)
 
-        print gtype.value_nick,
         engines_names = [engine.info.name for engine in engines.engines()]
         if 'hkl' in engines_names:
-            plot_hkl_trajectory(gtype.value_nick, sample, detector,
-                                geometry, engines, max_traj=1)
-            print
-        else:
-            print ' skiped'
+            plot_hkl_trajectory(gtype.value_nick, geometry, engines,
+                                hkl1=[0, 0, 1], hkl2=[0, 1, 1], n=100)
     pp.close()
 
 if __name__ == '__main__':

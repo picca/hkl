@@ -2083,12 +2083,19 @@ Returns:</doc>
           </parameter>
         </parameters>
       </method>
+      <method name="modes" c:identifier="hkl_pseudo_axis_engine_modes">
+        <doc xml:whitespace="preserve">free the list with g_slist_free when done.</doc>
+        <return-value transfer-ownership="container">
+          <doc xml:whitespace="preserve">list of mdoe,</doc>
+          <type name="GLib.SList" c:type="GSList*">
+            <type name="PseudoAxisEngineMode"/>
+          </type>
+        </return-value>
+      </method>
       <method name="select_mode"
-              c:identifier="hkl_pseudo_axis_engine_select_mode"
-              introspectable="0">
+              c:identifier="hkl_pseudo_axis_engine_select_mode">
         <doc xml:whitespace="preserve">This method also populate the self-&gt;axes from the mode-&gt;axes_names.
-this is to speed the computation of the numerical axes. this method
-is usually only use with numerical pseudoAxes.</doc>
+this is to speed the computation of the numerical axes.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>

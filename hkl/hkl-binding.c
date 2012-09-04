@@ -198,6 +198,26 @@ typedef enum {
 	HKL_PSEUDO_AXIS_ENGINE_ERROR_SET /* can not set the pseudo axis engine */
 } HklPseudoAxisEngineError;
 
+
+/**
+ * hkl_pseudo_axis_engine_modes:
+ * @self: the this ptr
+ *
+ * Return value: (element-type HklPseudoAxisEngineMode) (transfer container): list of mdoe,
+ *               free the list with g_slist_free when done.
+ **/
+GSList* hkl_pseudo_axis_engine_modes(HklPseudoAxisEngine *self)
+{
+	GSList *list = NULL;
+	HklPseudoAxisEngineMode *mode;
+
+	list_for_each(&self->modes, mode, list){
+		list = g_slist_append(list, mode);
+	}
+
+	return list;
+}
+
 /**
  * hkl_pseudo_axis_engine_set_values_unit:
  * @self: the this ptr
@@ -209,9 +229,9 @@ typedef enum {
  *
  * Return value: TRUE on success or FALSE if an error occurred
  **/
-extern gboolean hkl_pseudo_axis_engine_set_values_unit(HklPseudoAxisEngine *self,
-						       double values[], unsigned int len,
-						       GError **error)
+gboolean hkl_pseudo_axis_engine_set_values_unit(HklPseudoAxisEngine *self,
+						double values[], unsigned int len,
+						GError **error)
 {
 	HklParameter *parameter;
 	uint i = 0;

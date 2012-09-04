@@ -58,6 +58,8 @@ extern GSList* hkl_geometry_list_items(HklGeometryList *self);
 /* HklPseudoAxisEngine */
 /***********************/
 
+extern GSList* hkl_pseudo_axis_engine_modes(HklPseudoAxisEngine *self);
+
 extern gboolean hkl_pseudo_axis_engine_set_values_unit(
 	HklPseudoAxisEngine *self,
 	double values[], unsigned int len,
