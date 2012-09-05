@@ -140,6 +140,7 @@ HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_factory(const HklGeometryCo
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_e6c_hkl_new());
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_e6c_psi_new());
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_q2_new());
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_qper_qpar_new());
 		break;
 	case HKL_GEOMETRY_TYPE_KAPPA6C:
 		self->geometries->multiply = hkl_geometry_list_multiply_k6c_real;
@@ -147,18 +148,22 @@ HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_factory(const HklGeometryCo
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_eulerians_new());
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_k6c_psi_new());
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_q2_new());
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_qper_qpar_new());
 		break;
 	case HKL_GEOMETRY_TYPE_ZAXIS:
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_zaxis_hkl_new());
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_q2_new());
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_qper_qpar_new());
 		break;
 	case HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_2:
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_soleil_sixs_med_2_2_hkl_new());
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_q2_new());
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_qper_qpar_new());
 		break;
 	case HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2:
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_soleil_sixs_med_1_2_hkl_new());
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_q2_new());
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_qper_qpar_new());
 		break;
 	case HKL_GEOMETRY_TYPE_PETRA3_P09_EH2:
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_petra3_p09_eh2_hkl_new());

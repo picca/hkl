@@ -128,7 +128,7 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 	do {
 		++iter;
 		status = gsl_multiroot_fsolver_iterate(s);
-		if (status || iter % 100 == 0) {
+		if (status || iter % 300 == 0) {
 			/* Restart from another point. */
 			for(i=0; i<len; ++i)
 				x_data[i] = (double)rand() / RAND_MAX * 180. / M_PI;
@@ -136,7 +136,7 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 			gsl_multiroot_fsolver_iterate(s);
 		}
 		status = gsl_multiroot_test_residual (s->f, HKL_EPSILON);
-	} while (status == GSL_CONTINUE && iter < 1000);
+	} while (status == GSL_CONTINUE && iter < 2000);
 
 #ifdef DEBUG
 	fprintf(stdout, "\nstatus : %d iter : %d", status, iter);

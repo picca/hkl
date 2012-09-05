@@ -106,6 +106,7 @@ static void hkl_test_bench_k6c(int n)
 	hkl_test_bench_run_v(engines, geom, "eulerians", n, 0., 90*HKL_DEGTORAD, 0.);
 	hkl_test_bench_run_v(engines, geom, "psi", n, 10.*HKL_DEGTORAD);
 	hkl_test_bench_run_v(engines, geom, "q2", n, 1., 10.*HKL_DEGTORAD);
+	hkl_test_bench_run_v(engines, geom, "qper_qpar", n, 1., 1.);
 
 	hkl_pseudo_axis_engine_list_free(engines);
 	hkl_sample_free(sample);
