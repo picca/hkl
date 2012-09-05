@@ -417,7 +417,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_qper_qpar_new(void)
 
 	hkl_pseudo_axis_engine_init(&self->engine, &info, &operations);
 	self->qper = register_pseudo_axis(&self->engine, &qper.parameter);
-	self->qpar = register_pseudo_axis(&self->engine, &qper.parameter);
+	self->qpar = register_pseudo_axis(&self->engine, &qpar.parameter);
 
 	/* qper_qpar [default] */
 	mode = mode_qper_qpar();
