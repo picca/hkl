@@ -114,6 +114,20 @@ static void hkl_test_bench_q2_real(HklPseudoAxisEngineList *engines, HklGeometry
 	hkl_test_bench_run(engine, geometry, n);
 }
 
+static void hkl_test_bench_qper_qpar_real(HklPseudoAxisEngineList *engines, HklGeometry *geometry,
+					  char const *name, int n,
+					  double qper, double qpar)
+{
+	HklPseudoAxisEngine *engine;
+
+	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, name);
+
+	((HklParameter *)engine->pseudoAxes[0])->value = qper;
+	((HklParameter *)engine->pseudoAxes[1])->value = qpar;
+
+	hkl_test_bench_run(engine, geometry, n);
+}
+
 static void hkl_test_bench_k6c(void)
 {
 	HklPseudoAxisEngineList *engines;
@@ -140,6 +154,7 @@ static void hkl_test_bench_k6c(void)
 	hkl_test_bench_eulerians_real(engines, geom, "eulerians", 1000, 0, 90*HKL_DEGTORAD, 0 );
 	hkl_test_bench_psi_real(engines, geom, "psi", 1000, 10*HKL_DEGTORAD);
 	hkl_test_bench_q2_real(engines, geom, "q2", 1000, 1, 10*HKL_DEGTORAD);
+	hkl_test_bench_qper_qpar_real(engines, geom, "qper_qpar", 1000, .5, .5);
 
 	hkl_pseudo_axis_engine_list_free(engines);
 	hkl_sample_free(sample);

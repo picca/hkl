@@ -60,13 +60,13 @@ or 2nd one
    \begin{eqnarray*}
 	\omega & = & \kappa_\omega + p + \frac{\pi}{2} \\
 	\chi   & = & -2 \arcsin\left(\sin\frac{\kappa}{2} \sin\alpha\right) \\
-	\phi   & = & \kappa_\phi + p - \frac{\pi}{2};
+	\phi   & = & \kappa_\phi + p - \frac{\pi}{2}
    \end{eqnarray*}
 
 where
 
 .. math::
-   p = \arctan\left(\tan\frac{\kappa}{2} \cos\alpha\right);
+   p = \arctan\left(\tan\frac{\kappa}{2} \cos\alpha\right)
 
 
 .. figure:: ../../figures/e2k_1.png
@@ -92,3 +92,22 @@ where
    :width: 8cm
 
    :math:`\omega = 0`, :math:`\chi = 90`, :math:`\phi = 0`, 2nd solution
+
+Qper and Qpar
+*************
+
+this pseudo axis engine compute the perpendicular
+(:math:`\left|\left|\vec{q_\text{per}}\right|\right|`) and parallel
+(:math:`\left|\left|\vec{q_\text{par}}\right|\right|`) contribution of
+:math:`\vec{Q}` relatively to the surface of the sample defined by the
+:math:`\vec{n}` vector.
+
+.. math::
+   :nowrap:
+
+   \begin{eqnarray*}
+   \vec{q} & = & \vec{k_\text{f}} - \vec{k_\text{i}} \\
+   \vec{q} & = & \vec{q_\text{per}} + \vec{q_\text{par}} \\
+   \vec{q_\text{per}} & = & \frac{\vec{q} \cdot \vec{n}}{\left|\left|\vec{n}\right|\right|} \frac{\vec{n}}{\left|\left|\vec{n}\right|\right|}
+   \end{eqnarray*}
+

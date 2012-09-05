@@ -243,3 +243,116 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_q2_new(void)
 
 	return self;
 }
+
+/************/
+/* QperQpar */
+/************/
+
+static void _qper_qpar(HklPseudoAxisEngine *engine,
+		       HklGeometry *geometry, HklDetector *detector,
+		       double *qper, double *qpar)
+{
+	HklVector ki;
+	HklVector q;
+	HklVector n;
+	HklVector qper_v;
+	HklVector qpar_v;
+
+	/* compute q */
+	hkl_source_compute_ki(&geometry->source, &ki);
+	hkl_detector_compute_kf(detector, geometry, &q);
+	hkl_vector_minus_vector(&q, &ki);
+
+	/* compute the real orientation of n */
+	hkl_vector_init(&n, 
+			engine->mode->parameters[0].value,
+			engine->mode->parameters[1].value,
+			engine->mode->parameters[2].value);
+
+	hkl_vector_rotated_quaternion(&n, &geometry->holders[0].q);
+	hkl_vector_normalize(&n);
+
+	qper_v = n;
+	hkl_vector_times_double(&qper_v, hkl_vector_scalar_product(&q, &n));
+
+	qpar_v = q;
+	hkl_vector_minus_vector(&qpar_v, &qper_v);
+
+	*qper = hkl_vector_norm2(&qper_v);
+	*qpar = hkl_vector_norm2(&qpar_v);
+}
+
+static int _qper_qpar_func(const gsl_vector *x, void *params, gsl_vector *f)
+{
+	unsigned int i;
+	HklPseudoAxisEngine *engine = params;
+	double qper;
+	double qpar;
+
+	/* update the workspace from x */
+	for(i=0; i<HKL_LIST_LEN(engine->axes); ++i)
+		hkl_axis_set_value(engine->axes[i], x->data[i]);
+	hkl_geometry_update(engine->geometry);
+
+
+	_qper_qpar(engine, engine->geometry, engine->detector,
+		   &qper, &qpar);
+
+	f->data[0] = engine->pseudoAxes[0]->parent.value - qper;
+	f->data[1] = engine->pseudoAxes[1]->parent.value - qpar;
+
+	return  GSL_SUCCESS;
+}
+
+static int get_qper_qpar_real(HklPseudoAxisEngineMode *self,
+			      HklPseudoAxisEngine *engine,
+			      HklGeometry *geometry,
+			      HklDetector *detector,
+			      HklSample *sample,
+			      HklError **error)
+{
+	_qper_qpar(engine, geometry, detector,
+		   &engine->pseudoAxes[0]->parent.value,
+		   &engine->pseudoAxes[1]->parent.value);
+
+	return HKL_TRUE;
+}
+
+HklPseudoAxisEngine *hkl_pseudo_axis_engine_qper_qpar_new(void)
+{
+	HklPseudoAxisEngine *self;
+	HklPseudoAxisEngineMode *mode;
+
+	self = hkl_pseudo_axis_engine_new("qper_qpar", 2, "qper", "qpar");
+
+	/* qper */
+	hkl_parameter_init((HklParameter *)self->pseudoAxes[0],
+			   "qper",
+			   0., 0., 1,
+			   HKL_TRUE, HKL_TRUE,
+			   NULL, NULL);
+
+	/* qpar */
+	hkl_parameter_init((HklParameter *)self->pseudoAxes[0],
+			   "qpar",
+			   0., 0., 1,
+			   HKL_TRUE, HKL_TRUE,
+			   NULL, NULL);
+
+
+	/* qper_qpar */
+	mode = hkl_pseudo_axis_engine_mode_new(
+		"qper_qpar",
+		NULL,
+		get_qper_qpar_real,
+		hkl_pseudo_axis_engine_mode_set_real,
+		1, _qper_qpar_func,
+		(size_t)0,
+		(size_t)2, "gamma", "delta");
+	hkl_pseudo_axis_engine_add_mode(self, mode);
+
+
+	hkl_pseudo_axis_engine_select_mode(self, 0);
+
+	return self;
+}
