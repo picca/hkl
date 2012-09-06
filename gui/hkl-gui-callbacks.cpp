@@ -429,6 +429,7 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & s
 
 	double value;
 	HklParameter *parameter;
+	HklPseudoAxisEngine *engine;
 	int res;
 
 	Gtk::TreePath path(spath);
@@ -436,32 +437,34 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & s
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
 
-	parameter= row[_pseudoAxeModelColumns.parameter];
+	parameter = row[_pseudoAxeModelColumns.parameter];
+	engine = row[_pseudoAxeModelColumns.engine];
 	Glib::ustring name = row[_pseudoAxeModelColumns.name];
 	sscanf(newText.c_str(), "%lf", &value);
 
-	if(hkl_parameter_set_value_unit(parameter, value, NULL)){
-		HklGeometryListItem *first;
+	if(hkl_parameter_set_value_unit(parameter, value, NULL))
+		if(hkl_pseudo_axis_engine_set(engine, NULL)){
+			HklGeometryListItem *first;
 
-		first = list_top(&_engines->geometries->items, HklGeometryListItem, node);
-		hkl_geometry_init_geometry(_geometry, first->geometry);
-		hkl_pseudo_axis_engine_list_get(_engines);
-		row[_pseudoAxeModelColumns.write] = value;
-		this->updateAxes();
-		this->updatePseudoAxes();
-		this->updatePseudoAxesFrames();
-		this->updateSolutions();
+			first = list_top(&_engines->geometries->items, HklGeometryListItem, node);
+			hkl_geometry_init_geometry(_geometry, first->geometry);
+			hkl_pseudo_axis_engine_list_get(_engines);
+			row[_pseudoAxeModelColumns.write] = value;
+			this->updateAxes();
+			this->updatePseudoAxes();
+			this->updatePseudoAxesFrames();
+			this->updateSolutions();
 
 #ifdef HKL3D
-		if(_Scene){
-			_Scene->is_colliding();
-			_Scene->invalidate();
-		}
+			if(_Scene){
+				_Scene->is_colliding();
+				_Scene->invalidate();
+			}
 #endif
-	}
+		}
 }
 
-//PseuodAxes Parameters
+//PseudoAxes Parameters
 void HKLWindow::on_cell_TreeView_pseudoAxes_parameters_value_edited(Glib::ustring const & spath,
 								    Glib::ustring const & newText)
 {

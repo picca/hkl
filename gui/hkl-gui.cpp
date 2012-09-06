@@ -432,6 +432,7 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 		for(uint i=0; i<engine->pseudo_axes.len; ++i){
 			HklParameter *pseudo_axis = engine->pseudo_axes.parameters[i];
 			Gtk::ListStore::Row row = *(_pseudoAxeModel->append());
+			row[_pseudoAxeModelColumns.engine] = engine;
 			row[_pseudoAxeModelColumns.parameter] = pseudo_axis;
 			row[_pseudoAxeModelColumns.name] = pseudo_axis->name;
 			if(engine->mode->parameters.len){

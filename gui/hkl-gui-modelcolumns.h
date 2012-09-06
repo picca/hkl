@@ -97,6 +97,7 @@ public:
 	Gtk::TreeModelColumn<double> write;
 	Gtk::TreeModelColumn<double> min;
 	Gtk::TreeModelColumn<double> max;
+	Gtk::TreeModelColumn<HklPseudoAxisEngine *> engine;
 
 	PseudoAxeModelColumns()
 		{
@@ -106,6 +107,7 @@ public:
 			this->add(write);
 			this->add(min);
 			this->add(max);
+			this->add(engine);
 		}
 };
 
