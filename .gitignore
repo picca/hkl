@@ -41,3 +41,4 @@ ghkl3d
 /test/runtests
 /test/tap/libtap.a
 /Documentation/hkl.html
+*_flymake.h
