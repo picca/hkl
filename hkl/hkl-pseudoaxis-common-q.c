@@ -333,7 +333,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_qper_qpar_new(void)
 			   NULL, NULL);
 
 	/* qpar */
-	hkl_parameter_init((HklParameter *)self->pseudoAxes[0],
+	hkl_parameter_init((HklParameter *)self->pseudoAxes[1],
 			   "qpar",
 			   0., 0., 1,
 			   HKL_TRUE, HKL_TRUE,
