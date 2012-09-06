@@ -322,6 +322,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_qper_qpar_new(void)
 {
 	HklPseudoAxisEngine *self;
 	HklPseudoAxisEngineMode *mode;
+	HklParameter x, y, z;
 
 	self = hkl_pseudo_axis_engine_new("qper_qpar", 2, "qper", "qpar");
 
@@ -341,16 +342,18 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_qper_qpar_new(void)
 
 
 	/* qper_qpar */
+	hkl_parameter_init(&x, "x", -1, 0, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
+	hkl_parameter_init(&y, "y", -1, 1, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
+	hkl_parameter_init(&z, "z", -1, 0, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"qper_qpar",
 		NULL,
 		get_qper_qpar_real,
 		hkl_pseudo_axis_engine_mode_set_real,
 		1, _qper_qpar_func,
-		(size_t)0,
+		(size_t)3, x, y, z,
 		(size_t)2, "gamma", "delta");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
-
 
 	hkl_pseudo_axis_engine_select_mode(self, 0);
 

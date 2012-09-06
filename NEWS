@@ -1,12 +1,19 @@
 4.0.4	UNRELEASED
 	* add the SOLEIL SIXS MED2+2 diffractometer
-	  - mode: hkl reflectivity.
+	  - engine: hkl
+	    - mode: reflectivity.
+	  - engine: qper_qpar
 	* add the SOLEIL MARS diffractometer
+	  - engine: qper_qpar
 	* add the PETRA3 P09 EH2 diffractometer
+	  - engine: qper_qpar
 	* modified E6C
+	  - engine: qper_qpar
 	  - add modes : hkl psi_constant_horizontal, constant_mu_horizontal
 	* K6C
-	  - add the constant_incidence mode
+	  - engine hkl:
+	    - add the constant_incidence mode
+	  - engine: qper_qpar
 	* add the sphinx documentation
 
 4.0.3	06-06-2010
