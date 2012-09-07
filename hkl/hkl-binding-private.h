@@ -69,7 +69,7 @@ extern gboolean hkl_pseudo_axis_engine_set_values_unit(
 /* HklPSeudoAxisEngineList */
 /***************************/
 
-extern GSList* hkl_pseudo_axis_engine_list_engines(HklPseudoAxisEngineList *self);
+extern GSList* hkl_engine_list_engines(HklEngineList *self);
 
 HKL_END_DECLS
 

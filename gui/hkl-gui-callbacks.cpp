@@ -46,7 +46,7 @@ void HKLWindow::on_treeViewCrystals_cursor_changed(void)
 
 	Glib::ustring name = row[_crystalModelColumns.name];
 	hkl_sample_list_select_current(_samples, name.c_str());
-	hkl_pseudo_axis_engine_list_init(_engines, _geometry, _detector, _samples->current);
+	hkl_engine_list_init(_engines, _geometry, _detector, _samples->current);
 	_treeViewReflections->set_model(_mapReflectionModel[name]);
 	this->updateLattice();
 	this->updateLatticeParameters();
@@ -448,7 +448,7 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & s
 
 			first = list_top(&_engines->geometries->items, HklGeometryListItem, node);
 			hkl_geometry_init_geometry(_geometry, first->geometry);
-			hkl_pseudo_axis_engine_list_get(_engines);
+			hkl_engine_list_get(_engines);
 			row[_pseudoAxeModelColumns.write] = value;
 			this->updateAxes();
 			this->updatePseudoAxes();
@@ -908,7 +908,7 @@ void HKLWindow::on_treeview1_cursor_changed(void)
 	item = row[_solutionModelColumns->item];
 
 	hkl_geometry_init_geometry(_geometry, item->geometry);
-	hkl_pseudo_axis_engine_list_get(_engines);
+	hkl_engine_list_get(_engines);
 
 	/*
 	  this->updateLattice();
@@ -964,10 +964,10 @@ void HKLWindow::on_combobox1_changed(void)
 	_geometry = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
 
 	if(_engines)
-		hkl_pseudo_axis_engine_list_free(_engines);
+		hkl_engine_list_free(_engines);
 
-	_engines = hkl_pseudo_axis_engine_list_factory(config);
-	hkl_pseudo_axis_engine_list_init(_engines, _geometry, _detector, _samples->current);
+	_engines = hkl_engine_list_factory(config);
+	hkl_engine_list_init(_engines, _geometry, _detector, _samples->current);
 
 	this->set_up_pseudo_axes_frames();
 	this->set_up_TreeView_axes();

@@ -26,7 +26,7 @@
 static void degenerated(void)
 {
 	int res = HKL_TRUE;
-	HklPseudoAxisEngineList *engines;
+	HklEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	HklPseudoAxisEngineMode *mode;
 	const HklGeometryConfig *config;
@@ -42,10 +42,10 @@ static void degenerated(void)
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_pseudo_axis_engine_list_factory(config);
-	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
+	engines = hkl_engine_list_factory(config);
+	hkl_engine_list_init(engines, geom, detector, sample);
 
-	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "hkl");
+	engine = hkl_engine_list_get_by_name(engines, "hkl");
 
 	list_for_each(&engine->modes, mode, list) {
 		hkl_pseudo_axis_engine_select_mode(engine, mode);
@@ -74,7 +74,7 @@ static void degenerated(void)
 
 	ok(res == HKL_TRUE, "degenerated");
 
-	hkl_pseudo_axis_engine_list_free(engines);
+	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
 	hkl_geometry_free(geom);
@@ -83,7 +83,7 @@ static void degenerated(void)
 static void eulerians(void)
 {
 	int res = HKL_TRUE;
-	HklPseudoAxisEngineList *engines;
+	HklEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	HklPseudoAxisEngineMode *mode;
 	const HklGeometryConfig *config;
@@ -99,10 +99,10 @@ static void eulerians(void)
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_pseudo_axis_engine_list_factory(config);
-	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
+	engines = hkl_engine_list_factory(config);
+	hkl_engine_list_init(engines, geom, detector, sample);
 
-	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "eulerians");
+	engine = hkl_engine_list_get_by_name(engines, "eulerians");
 
 	list_for_each(&engine->modes, mode, list){
 		hkl_pseudo_axis_engine_select_mode(engine, mode);
@@ -136,7 +136,7 @@ static void eulerians(void)
 
 	ok(res == HKL_TRUE, "eulerians");
 
-	hkl_pseudo_axis_engine_list_free(engines);
+	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
 	hkl_geometry_free(geom);
@@ -145,7 +145,7 @@ static void eulerians(void)
 static void q(void)
 {
 	int res = HKL_TRUE;
-	HklPseudoAxisEngineList *engines;
+	HklEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	HklPseudoAxisEngineMode *mode;
 	const HklGeometryConfig *config;
@@ -160,10 +160,10 @@ static void q(void)
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_pseudo_axis_engine_list_factory(config);
-	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
+	engines = hkl_engine_list_factory(config);
+	hkl_engine_list_init(engines, geom, detector, sample);
 
-	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "q");
+	engine = hkl_engine_list_get_by_name(engines, "q");
 
 	/* the init part */
 	hkl_geometry_set_values_unit_v(geom, 30., 0., 0., 60.);
@@ -190,7 +190,7 @@ static void q(void)
 
 	ok(res == HKL_TRUE, "q");
 
-	hkl_pseudo_axis_engine_list_free(engines);
+	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
 	hkl_geometry_free(geom);

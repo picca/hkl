@@ -303,17 +303,17 @@ static inline void hkl_pseudo_axis_engine_add_geometry(HklPseudoAxisEngine *self
 }
 
 /***************************/
-/* HklPseudoAxisEngineList */
+/* HklEngineList */
 /***************************/
 
-extern HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_new(void);
+extern HklEngineList *hkl_engine_list_new(void);
 
-extern const HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_new_copy(const HklPseudoAxisEngineList *self);
+extern const HklEngineList *hkl_engine_list_new_copy(const HklEngineList *self);
 
-extern int hkl_pseudo_axis_engine_list_add(HklPseudoAxisEngineList *self,
+extern int hkl_engine_list_add(HklEngineList *self,
 					   HklPseudoAxisEngine *engine);
 
-extern void hkl_pseudo_axis_engine_list_clear(HklPseudoAxisEngineList *self);
+extern void hkl_engine_list_clear(HklEngineList *self);
 
 HKL_END_DECLS
 

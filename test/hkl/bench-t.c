@@ -62,13 +62,13 @@ static void hkl_test_bench_run_real(HklPseudoAxisEngine *engine, HklGeometry *ge
 	}
 }
 
-static void hkl_test_bench_run_v(HklPseudoAxisEngineList *engines, HklGeometry *geometry,
+static void hkl_test_bench_run_v(HklEngineList *engines, HklGeometry *geometry,
 				 char const *name, int n, ...)
 {
 	HklPseudoAxisEngine *engine;
 	va_list ap;
 
-	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, name);
+	engine = hkl_engine_list_get_by_name(engines, name);
 
 	va_start(ap, n);
 	/* TODO replace with a specialise HklParameterList */
@@ -82,7 +82,7 @@ static void hkl_test_bench_run_v(HklPseudoAxisEngineList *engines, HklGeometry *
 
 static void hkl_test_bench_k6c(int n)
 {
-	HklPseudoAxisEngineList *engines;
+	HklEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
@@ -99,8 +99,8 @@ static void hkl_test_bench_k6c(int n)
 
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
-	engines = hkl_pseudo_axis_engine_list_factory(config);
-	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
+	engines = hkl_engine_list_factory(config);
+	hkl_engine_list_init(engines, geom, detector, sample);
 
 	hkl_test_bench_run_v(engines, geom, "hkl", n, 1., 0., 0.);
 	hkl_test_bench_run_v(engines, geom, "eulerians", n, 0., 90*HKL_DEGTORAD, 0.);
@@ -108,7 +108,7 @@ static void hkl_test_bench_k6c(int n)
 	hkl_test_bench_run_v(engines, geom, "q2", n, 1., 10.*HKL_DEGTORAD);
 	hkl_test_bench_run_v(engines, geom, "qper_qpar", n, 1., 1.);
 
-	hkl_pseudo_axis_engine_list_free(engines);
+	hkl_engine_list_free(engines);
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);
 	hkl_geometry_free(geom);
@@ -116,7 +116,7 @@ static void hkl_test_bench_k6c(int n)
 
 static void hkl_test_bench_eulerians(void)
 {
-	HklPseudoAxisEngineList *engines;
+	HklEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	HklPseudoAxisEngineMode *mode;
 	const HklGeometryConfig *config;
@@ -129,10 +129,10 @@ static void hkl_test_bench_eulerians(void)
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
-	engines = hkl_pseudo_axis_engine_list_factory(config);
-	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
+	engines = hkl_engine_list_factory(config);
+	hkl_engine_list_init(engines, geom, detector, sample);
 
-	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "eulerians");
+	engine = hkl_engine_list_get_by_name(engines, "eulerians");
 
 	list_for_each(&engine->modes, mode, list){
 		static double eulerians[] = {0, 90 * HKL_DEGTORAD, 0};
@@ -155,7 +155,7 @@ static void hkl_test_bench_eulerians(void)
 		}
 	}
 
-	hkl_pseudo_axis_engine_list_free(engines);
+	hkl_engine_list_free(engines);
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);
 	hkl_geometry_free(geom);

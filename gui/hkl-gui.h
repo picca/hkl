@@ -236,7 +236,7 @@ private:
 	HklDetector *_detector;
 	HklSampleList *_samples;
 	HklLattice *_reciprocal;
-	HklPseudoAxisEngineList *_engines;
+	HklEngineList *_engines;
 
 	unsigned int _nb_axes;
 	unsigned int _nb_sampleAxes;

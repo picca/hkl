@@ -274,13 +274,13 @@ gboolean hkl_pseudo_axis_engine_set_values_unit(HklPseudoAxisEngine *self,
 }
 
 /**
- * hkl_pseudo_axis_engine_list_engines:
- * @self: the #HklPseudoAxisEngineList
+ * hkl_engine_list_engines:
+ * @self: the #HklEngineList
  *
  * Return value: (element-type HklPseudoAxisEngine) (transfer container): list of engines,
  *               free the list with g_slist_free when done.
  **/
-GSList* hkl_pseudo_axis_engine_list_engines(HklPseudoAxisEngineList *self)
+GSList* hkl_engine_list_engines(HklEngineList *self)
 {
 	GSList *list = NULL;
 	HklPseudoAxisEngine *engine;

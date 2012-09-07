@@ -79,7 +79,7 @@ HKLWindow::~HKLWindow()
 
 	hkl_geometry_free(_geometry);
 	hkl_detector_free(_detector);
-	hkl_pseudo_axis_engine_list_free(_engines);
+	hkl_engine_list_free(_engines);
 	hkl_sample_list_free(_samples);
 	hkl_lattice_free(_reciprocal);
 
@@ -639,7 +639,7 @@ void HKLWindow::updatePseudoAxes(void)
 	LOG;
 
 	// first compute all the pseudoAxes values
-	hkl_pseudo_axis_engine_list_get(_engines);
+	hkl_engine_list_get(_engines);
 
 	// update the model
 	Gtk::TreeModel::Children rows = _pseudoAxeModel->children();

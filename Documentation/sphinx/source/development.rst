@@ -167,14 +167,14 @@ it ``psi constant vertical`` to the eulerian 6 circle geometry.
 
 The starting point is to look in the file ``src/hkl-pseudoaxis-factory.c`` for::
 
-    HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_factory(HklGeometryType type)
+    HklEngineList *hkl_engine_list_factory(HklGeometryType type)
 
 in that method you can see this in the eulerian 6 circle part::
 
    case HKL_GEOMETRY_EULERIAN6C:
-	hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_e6c_hkl_new());
-	hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_e6c_psi_new());
-	hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_q2_new());
+	hkl_engine_list_add(self, hkl_pseudo_axis_engine_e6c_hkl_new());
+	hkl_engine_list_add(self, hkl_pseudo_axis_engine_e6c_psi_new());
+	hkl_engine_list_add(self, hkl_pseudo_axis_engine_q2_new());
    break;
 
 so as you can see there is three pseudo axis engine for this

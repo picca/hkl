@@ -113,7 +113,7 @@ hkl_parameter_fprintf
 HklPseudoAxis
 HklPseudoAxisEngineMode
 HklPseudoAxisEngine
-HklPseudoAxisEngineList
+HklEngineList
 HklPseudoAxisEngineModeFunc
 HklFunction
 hkl_pseudo_axis_new
@@ -132,15 +132,15 @@ hkl_pseudo_axis_engine_initialize
 hkl_pseudo_axis_engine_set
 hkl_pseudo_axis_engine_get
 hkl_pseudo_axis_engine_fprintf
-hkl_pseudo_axis_engine_list_new
-hkl_pseudo_axis_engine_list_free
-hkl_pseudo_axis_engine_list_add
-hkl_pseudo_axis_engine_list_get_by_name
-hkl_pseudo_axis_engine_list_get_pseudo_axis_by_name
-hkl_pseudo_axis_engine_list_clear
-hkl_pseudo_axis_engine_list_init
-hkl_pseudo_axis_engine_list_get
-hkl_pseudo_axis_engine_list_fprintf
+hkl_engine_list_new
+hkl_engine_list_free
+hkl_engine_list_add
+hkl_engine_list_get_by_name
+hkl_engine_list_get_pseudo_axis_by_name
+hkl_engine_list_clear
+hkl_engine_list_init
+hkl_engine_list_get
+hkl_engine_list_fprintf
 </SECTION>
 
 <SECTION>
@@ -369,7 +369,7 @@ hkl_axis_fprintf
 
 <SECTION>
 <FILE>hkl-pseudoaxis-factory</FILE>
-hkl_pseudo_axis_engine_list_factory
+hkl_engine_list_factory
 </SECTION>
 
 <SECTION>

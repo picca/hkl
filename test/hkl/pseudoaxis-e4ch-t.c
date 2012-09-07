@@ -27,7 +27,7 @@
 static void getter(void)
 {
 	int res = HKL_TRUE;
-	HklPseudoAxisEngineList *engines;
+	HklEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
@@ -41,10 +41,10 @@ static void getter(void)
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_pseudo_axis_engine_list_factory(config);
-	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
+	engines = hkl_engine_list_factory(config);
+	hkl_engine_list_init(engines, geom, detector, sample);
 
-	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "hkl");
+	engine = hkl_engine_list_get_by_name(engines, "hkl");
 
 	/* geometry -> pseudo */
 	hkl_geometry_set_values_unit_v(geom, 30., 0., 0., 60.);
@@ -69,7 +69,7 @@ static void getter(void)
 
 	ok(res == HKL_TRUE, "getter");
 
-	hkl_pseudo_axis_engine_list_free(engines);
+	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
 	hkl_geometry_free(geom);
@@ -78,7 +78,7 @@ static void getter(void)
 static void degenerated(void)
 {
 	int res = HKL_TRUE;
-	HklPseudoAxisEngineList *engines;
+	HklEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	HklPseudoAxisEngineMode *mode;
 	const HklGeometryConfig *config;
@@ -93,10 +93,10 @@ static void degenerated(void)
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_pseudo_axis_engine_list_factory(config);
-	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
+	engines = hkl_engine_list_factory(config);
+	hkl_engine_list_init(engines, geom, detector, sample);
 
-	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "hkl");
+	engine = hkl_engine_list_get_by_name(engines, "hkl");
 
 	list_for_each(&engine->modes, mode, list){
 		static double values[] = {0, 0, 1};
@@ -126,7 +126,7 @@ static void degenerated(void)
 
 	ok(res == HKL_TRUE, "degenerated");
 
-	hkl_pseudo_axis_engine_list_free(engines);
+	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
 	hkl_geometry_free(geom);
@@ -135,7 +135,7 @@ static void degenerated(void)
 static void psi_getter(void)
 {
 	int res = HKL_TRUE;
-	HklPseudoAxisEngineList *engines;
+	HklEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
@@ -150,10 +150,10 @@ static void psi_getter(void)
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_pseudo_axis_engine_list_factory(config);
-	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
+	engines = hkl_engine_list_factory(config);
+	hkl_engine_list_init(engines, geom, detector, sample);
 
-	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "psi");
+	engine = hkl_engine_list_get_by_name(engines, "psi");
 
 	/* the getter part */
 	hkl_geometry_set_values_unit_v(geom, 30., 0., 0., 60.);
@@ -191,7 +191,7 @@ static void psi_getter(void)
 
 	ok(res == HKL_TRUE, "psi getter");
 
-	hkl_pseudo_axis_engine_list_free(engines);
+	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
 	hkl_geometry_free(geom);
@@ -200,7 +200,7 @@ static void psi_getter(void)
 static void psi_setter(void)
 {
 	int res = HKL_TRUE;
-	HklPseudoAxisEngineList *engines;
+	HklEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	HklPseudoAxisEngineMode *mode;
 	const HklGeometryConfig *config;
@@ -216,10 +216,10 @@ static void psi_setter(void)
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_pseudo_axis_engine_list_factory(config);
-	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
+	engines = hkl_engine_list_factory(config);
+	hkl_engine_list_init(engines, geom, detector, sample);
 
-	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "psi");
+	engine = hkl_engine_list_get_by_name(engines, "psi");
 
 	/* the init part */
 	hkl_geometry_set_values_unit_v(geom, 30., 0., 0., 60.);
@@ -250,7 +250,7 @@ static void psi_setter(void)
 
 	ok(res == HKL_TRUE, "psi setter");
 
-	hkl_pseudo_axis_engine_list_free(engines);
+	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
 	hkl_geometry_free(geom);
@@ -260,7 +260,7 @@ static void psi_setter(void)
 static void q(void)
 {
 	int res = HKL_TRUE;
-	HklPseudoAxisEngineList *engines;
+	HklEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	HklPseudoAxisEngineMode *mode;
 	const HklGeometryConfig *config;
@@ -275,10 +275,10 @@ static void q(void)
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_pseudo_axis_engine_list_factory(config);
-	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
+	engines = hkl_engine_list_factory(config);
+	hkl_engine_list_init(engines, geom, detector, sample);
 
-	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "q");
+	engine = hkl_engine_list_get_by_name(engines, "q");
 
 	/* the init part */
 	hkl_geometry_set_values_unit_v(geom, 30., 0., 0., 60.);
@@ -308,7 +308,7 @@ static void q(void)
 
 	ok(res == HKL_TRUE, "q");
 
-	hkl_pseudo_axis_engine_list_free(engines);
+	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
 	hkl_geometry_free(geom);
@@ -317,7 +317,7 @@ static void q(void)
 static void hkl_psi_constant_horizontal(void)
 {
 	int res = HKL_TRUE;
-	HklPseudoAxisEngineList *engines;
+	HklEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
@@ -333,10 +333,10 @@ static void hkl_psi_constant_horizontal(void)
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_pseudo_axis_engine_list_factory(config);
-	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
+	engines = hkl_engine_list_factory(config);
+	hkl_engine_list_init(engines, geom, detector, sample);
 
-	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "hkl");
+	engine = hkl_engine_list_get_by_name(engines, "hkl");
 
 	hkl_pseudo_axis_engine_select_mode_by_name(engine,
 						   "psi_constant");
@@ -366,7 +366,7 @@ static void hkl_psi_constant_horizontal(void)
 
 	ok(res == HKL_TRUE, "psi constant horizontal");
 
-	hkl_pseudo_axis_engine_list_free(engines);
+	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
 	hkl_geometry_free(geom);
