@@ -25,7 +25,7 @@ from gi.repository import Hkl
 
 """
 static int test_engine(struct hkl_test *test,
-		       HklPseudoAxisEngine *engine, HklGeometry *geometry,
+		       HklEngine *engine, HklGeometry *geometry,
 		       HklDetector *detector, HklSample *sample)
 {
 	size_t i, j, k, f_idx;
@@ -36,7 +36,7 @@ static int test_engine(struct hkl_test *test,
 	hkl_geometry_randomize(geometry);
 	
 	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->modes); ++f_idx) {
-		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
+		hkl_engine_select_mode(engine, f_idx);
 		/* for now unactive the eulerians check */
 		if(!strcmp(engine->mode->name, "eulerians"))
 			continue;
@@ -58,15 +58,15 @@ static int test_engine(struct hkl_test *test,
 				hkl_parameter_randomize(&engine->mode->parameters[j]);
 
 			/* pseudo -> geometry */
-			hkl_pseudo_axis_engine_initialize(engine, NULL);
-			/* hkl_pseudo_axis_engine_fprintf(stderr, engine); */
-			res = hkl_pseudo_axis_engine_set(engine, NULL);
+			hkl_engine_initialize(engine, NULL);
+			/* hkl_engine_fprintf(stderr, engine); */
+			res = hkl_engine_set(engine, NULL);
 
 			/* geometry -> pseudo */
 			if (res == HKL_SUCCESS) {
 				size_t g_len = hkl_geometry_list_len(engine->engines->geometries);
 				/* check all finded geometries */
-				/* hkl_pseudo_axis_engine_fprintf(stderr, engine); */
+				/* hkl_engine_fprintf(stderr, engine); */
 
 				for(j=0; j<g_len; ++j) {
 					/* first modify the pseudoAxes values */
@@ -77,7 +77,7 @@ static int test_engine(struct hkl_test *test,
 
 					hkl_geometry_init_geometry(geometry,
 								   engine->engines->geometries->items[j]->geometry);
-					hkl_pseudo_axis_engine_get(engine, NULL);
+					hkl_engine_get(engine, NULL);
 
 					for(k=0; k<len; ++k) {
 						HKL_ASSERT_DOUBLES_EQUAL(values[k],
@@ -132,8 +132,8 @@ def test_all():
     sample = Hkl.Sample.new("toto", Hkl.SampleType.MONOCRYSTAL)
     sample.set_lattice(1.54, 1.54, 1.54, 90., 90., 90.)
 
-    # create the PseudoAxisEngines
-    engines = Hkl.pseudo_axis_engine_list_factory(config)
+    # create the Engines
+    engines = Hkl.engine_list_factory(config)
     for engine in engines.engines:
         print engine
 

@@ -65,7 +65,7 @@ static HklParameterOperations hkl_parameter_operations_pseudo_axis = {
 
 HklParameter *hkl_parameter_new_pseudo_axis(
 	const HklParameter *parameter,
-	HklPseudoAxisEngine *engine)
+	HklEngine *engine)
 {
 	HklPseudoAxis *self;
 
@@ -110,12 +110,12 @@ void hkl_mode_fprintf(FILE *f, const HklMode *self)
 }
 
 /***********************/
-/* HklPseudoAxisEngine */
+/* HklEngine */
 /***********************/
 
-void hkl_pseudo_axis_engine_init(HklPseudoAxisEngine *self,
-				 const HklPseudoAxisEngineInfo *info,
-				 const HklPseudoAxisEngineOperations *ops)
+void hkl_engine_init(HklEngine *self,
+				 const HklEngineInfo *info,
+				 const HklEngineOperations *ops)
 {
 	self->info = info;
 	self->ops = ops;
@@ -132,7 +132,7 @@ void unregister_pseudo_axis(HklParameter *pseudo_axis)
 	hkl_parameter_free(pseudo_axis);
 }
 
-HklParameter *register_pseudo_axis(HklPseudoAxisEngine *self,
+HklParameter *register_pseudo_axis(HklEngine *self,
 				   const HklParameter *conf)
 {
 	HklParameter *parameter;
@@ -143,7 +143,7 @@ HklParameter *register_pseudo_axis(HklPseudoAxisEngine *self,
 	return parameter;
 }
 
-static void hkl_pseudo_axis_engine_prepare_internal(HklPseudoAxisEngine *self)
+static void hkl_engine_prepare_internal(HklEngine *self)
 {
 	uint i;
 
@@ -181,24 +181,24 @@ static void hkl_pseudo_axis_engine_prepare_internal(HklPseudoAxisEngine *self)
 }
 
 /**
- * hkl_pseudo_axis_engine_select_mode:
- * @self: the HklPseudoAxisEngine
+ * hkl_engine_select_mode:
+ * @self: the HklEngine
  * @mode: the #HklPseudoAxisMode to select
  *
  * This method also populate the self->axes from the mode->axes_names.
  * this is to speed the computation of the numerical axes.
  **/
-void hkl_pseudo_axis_engine_select_mode(HklPseudoAxisEngine *self,
+void hkl_engine_select_mode(HklEngine *self,
 					HklMode *mode)
 {
 	if(!self || !mode)
 		return;
 
 	self->mode = mode;
-	hkl_pseudo_axis_engine_prepare_internal(self);
+	hkl_engine_prepare_internal(self);
 }
 
-void hkl_pseudo_axis_engine_select_mode_by_name(HklPseudoAxisEngine *self,
+void hkl_engine_select_mode_by_name(HklEngine *self,
 						const char *name)
 {
 	HklMode *mode;
@@ -208,20 +208,20 @@ void hkl_pseudo_axis_engine_select_mode_by_name(HklPseudoAxisEngine *self,
 
 	list_for_each(&self->modes, mode, list){
 		if(!strcmp(mode->info->name, name))
-			hkl_pseudo_axis_engine_select_mode(self, mode);
+			hkl_engine_select_mode(self, mode);
 	}
 }
 
 /**
- * hkl_pseudo_axis_engine_initialize: (skip)
- * @self: the HklPseudoAxisEngine
+ * hkl_engine_initialize: (skip)
+ * @self: the HklEngine
  * @error: (allow-none): NULL or an HklError to check for error's during the initialization
  *
- * initialize the HklPseudoAxisEngine
+ * initialize the HklEngine
  *
  * Returns:
  **/
-int hkl_pseudo_axis_engine_initialize(HklPseudoAxisEngine *self, HklError **error)
+int hkl_engine_initialize(HklEngine *self, HklError **error)
 {
 	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
@@ -249,15 +249,15 @@ int hkl_pseudo_axis_engine_initialize(HklPseudoAxisEngine *self, HklError **erro
 }
 
 /**
- * hkl_pseudo_axis_engine_set: (skip)
- * @self: the HklPseudoAxisEngine
+ * hkl_engine_set: (skip)
+ * @self: the HklEngine
  * @error: (allow-none): NULL or an HklError
  *
  * use the HklPseudoaxisEngine values to compute the real axes values.
  *
  * Returns:
  **/
-int hkl_pseudo_axis_engine_set(HklPseudoAxisEngine *self, HklError **error)
+int hkl_engine_set(HklEngine *self, HklError **error)
 {
 	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
@@ -267,7 +267,7 @@ int hkl_pseudo_axis_engine_set(HklPseudoAxisEngine *self, HklError **error)
 		return HKL_FALSE;
 	}
 
-	hkl_pseudo_axis_engine_prepare_internal(self);
+	hkl_engine_prepare_internal(self);
 
 	if (!self->mode->op->set(self->mode, self,
 				 self->geometry,
@@ -293,15 +293,15 @@ int hkl_pseudo_axis_engine_set(HklPseudoAxisEngine *self, HklError **error)
 }
 
 /**
- * hkl_pseudo_axis_engine_get: (skip)
- * @self: The HklPseudoAxisEngine
+ * hkl_engine_get: (skip)
+ * @self: The HklEngine
  * @error: (allow-none): NULL or an HklError
  *
  * get the values of the pseudo-axes from the real-axes values
  *
  * Returns:
  **/
-int hkl_pseudo_axis_engine_get(HklPseudoAxisEngine *self, HklError **error)
+int hkl_engine_get(HklEngine *self, HklError **error)
 {
 	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
@@ -326,13 +326,13 @@ int hkl_pseudo_axis_engine_get(HklPseudoAxisEngine *self, HklError **error)
 }
 
 /**
- * hkl_pseudo_axis_engine_fprintf: (skip)
+ * hkl_engine_fprintf: (skip)
  * @f: the FILE
- * @self: the HklPseudoAxisEngine
+ * @self: the HklEngine
  *
- * print to a FILE the HklPseudoAxisEngine
+ * print to a FILE the HklEngine
  **/
-void hkl_pseudo_axis_engine_fprintf(FILE *f, const HklPseudoAxisEngine *self)
+void hkl_engine_fprintf(FILE *f, const HklEngine *self)
 {
 	fprintf(f, "\nPseudoAxesEngine : \"%s\"", self->info->name);
 
@@ -417,12 +417,12 @@ void hkl_engine_list_free(HklEngineList *self)
  * @self: the engine list
  * @engine: the engine to add
  *
- * add an #HklPseudoAxisEngine to the #HklEngineList
+ * add an #HklEngine to the #HklEngineList
  *
  * Returns: HKL_SUCCESS or HKL_FAIL
  **/
 int hkl_engine_list_add(HklEngineList *self,
-				    HklPseudoAxisEngine *engine)
+				    HklEngine *engine)
 {
 	if (!engine)
 		return HKL_FALSE;
@@ -440,14 +440,14 @@ int hkl_engine_list_add(HklEngineList *self,
  * @self: the this ptr
  * @name: the name of the requested #HklPseudoAxisEngin
  *
- * get the #HklPseudoAxisEngine by its name from the list.
+ * get the #HklEngine by its name from the list.
  *
  * Returns: (transfer none) (allow-none): the requested engine
  **/
-HklPseudoAxisEngine *hkl_engine_list_get_by_name(HklEngineList *self,
+HklEngine *hkl_engine_list_get_by_name(HklEngineList *self,
 							     const char *name)
 {
-	HklPseudoAxisEngine *engine;
+	HklEngine *engine;
 
 	list_for_each(&self->engines, engine, list){
 		if (!strcmp(engine->info->name, name))
@@ -469,7 +469,7 @@ HklPseudoAxisEngine *hkl_engine_list_get_by_name(HklEngineList *self,
 HklParameter *hkl_engine_list_get_pseudo_axis_by_name(
 	const HklEngineList *self, const char *name)
 {
-	HklPseudoAxisEngine *engine;
+	HklEngine *engine;
 
 	list_for_each(&self->engines, engine, list){
 		for(uint i=0; i<engine->pseudo_axes.len; ++i)
@@ -488,12 +488,12 @@ HklParameter *hkl_engine_list_get_pseudo_axis_by_name(
  **/
 void hkl_engine_list_clear(HklEngineList *self)
 {
-	HklPseudoAxisEngine *engine;
-	HklPseudoAxisEngine *next;
+	HklEngine *engine;
+	HklEngine *next;
 
 	list_for_each_safe(&self->engines, engine, next, list){
 		list_del(&engine->list);
-		hkl_pseudo_axis_engine_free(engine);
+		hkl_engine_free(engine);
 	}
 }
 
@@ -512,37 +512,37 @@ void hkl_engine_list_init(HklEngineList *self,
 				      HklDetector *detector,
 				      HklSample *sample)
 {
-	HklPseudoAxisEngine *engine;
+	HklEngine *engine;
 
 	self->geometry = geometry;
 	self->detector = detector;
 	self->sample = sample;
 
 	list_for_each(&self->engines, engine, list){
-		hkl_pseudo_axis_engine_prepare_internal(engine);
+		hkl_engine_prepare_internal(engine);
 	}
 }
 
 /**
  * hkl_engine_list_get:
- * @self: the list of #HklPseudoAxisEngine
+ * @self: the list of #HklEngine
  *
- * apply the get method to all the #HklPseudoAxisEngine of the list
+ * apply the get method to all the #HklEngine of the list
  * after this it is possible to retrive all the #HklPseudoAxis values.
  *
- * Returns: HKL_SUCCESS or HKL_FAIL if one of the #HklPseudoAxisEngine
+ * Returns: HKL_SUCCESS or HKL_FAIL if one of the #HklEngine
  * get method failed.
  **/
 int hkl_engine_list_get(HklEngineList *self)
 {
-	HklPseudoAxisEngine *engine;
+	HklEngine *engine;
 	int res = HKL_TRUE;
 
 	if (!self)
 		return res;
 
 	list_for_each(&self->engines, engine, list){
-		res &= hkl_pseudo_axis_engine_get(engine, NULL);
+		res &= hkl_engine_get(engine, NULL);
 	}
 
 	return res;
@@ -558,9 +558,9 @@ int hkl_engine_list_get(HklEngineList *self)
 void hkl_engine_list_fprintf(FILE *f,
 					 const HklEngineList *self)
 {
-	HklPseudoAxisEngine *engine;
+	HklEngine *engine;
 
 	list_for_each(&self->engines, engine, list){
-		hkl_pseudo_axis_engine_fprintf(f, engine);
+		hkl_engine_fprintf(f, engine);
 	}
 }

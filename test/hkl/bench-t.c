@@ -24,7 +24,7 @@
 #include <tap/basic.h>
 #include <hkl.h>
 
-static void hkl_test_bench_run_real(HklPseudoAxisEngine *engine, HklGeometry *geometry, size_t n)
+static void hkl_test_bench_run_real(HklEngine *engine, HklGeometry *geometry, size_t n)
 {
 	size_t i;
 	HklMode *mode;
@@ -33,7 +33,7 @@ static void hkl_test_bench_run_real(HklPseudoAxisEngine *engine, HklGeometry *ge
 	list_for_each(&engine->modes, mode, list){
 		double min, max, mean;
 
-		hkl_pseudo_axis_engine_select_mode(engine, mode);
+		hkl_engine_select_mode(engine, mode);
 		if (mode->parameters.len){
 			static double one = 1;
 
@@ -48,7 +48,7 @@ static void hkl_test_bench_run_real(HklPseudoAxisEngine *engine, HklGeometry *ge
 
 			hkl_geometry_set_values_unit_v(geometry, 0, 0, 0, 0, 10, 10);
 			gettimeofday(&debut, NULL);
-			hkl_pseudo_axis_engine_set(engine, NULL);
+			hkl_engine_set(engine, NULL);
 			gettimeofday(&fin, NULL);
 			timersub(&fin, &debut, &dt);
 			t = dt.tv_sec * 1000. + dt.tv_usec / 1000.;
@@ -65,7 +65,7 @@ static void hkl_test_bench_run_real(HklPseudoAxisEngine *engine, HklGeometry *ge
 static void hkl_test_bench_run_v(HklEngineList *engines, HklGeometry *geometry,
 				 char const *name, int n, ...)
 {
-	HklPseudoAxisEngine *engine;
+	HklEngine *engine;
 	va_list ap;
 
 	engine = hkl_engine_list_get_by_name(engines, name);
@@ -83,7 +83,7 @@ static void hkl_test_bench_run_v(HklEngineList *engines, HklGeometry *geometry,
 static void hkl_test_bench_k6c(int n)
 {
 	HklEngineList *engines;
-	HklPseudoAxisEngine *engine;
+	HklEngine *engine;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;
@@ -117,7 +117,7 @@ static void hkl_test_bench_k6c(int n)
 static void hkl_test_bench_eulerians(void)
 {
 	HklEngineList *engines;
-	HklPseudoAxisEngine *engine;
+	HklEngine *engine;
 	HklMode *mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
@@ -137,11 +137,11 @@ static void hkl_test_bench_eulerians(void)
 	list_for_each(&engine->modes, mode, list){
 		static double eulerians[] = {0, 90 * HKL_DEGTORAD, 0};
 
-		hkl_pseudo_axis_engine_select_mode(engine, mode);
+		hkl_engine_select_mode(engine, mode);
 
 		/* studdy this degenerated case */
 		hkl_parameter_list_set_values(&engine->pseudo_axes, eulerians, 3, NULL);
-		if (hkl_pseudo_axis_engine_set(engine, NULL)) {
+		if (hkl_engine_set(engine, NULL)) {
 			HklGeometryListItem *item;
 
 			list_for_each(&engines->geometries->items, item, node){
@@ -150,7 +150,7 @@ static void hkl_test_bench_eulerians(void)
 				hkl_parameter_list_set_values(&engine->pseudo_axes, null, 3, NULL);
 				hkl_geometry_init_geometry(engine->geometry,
 							   item->geometry);
-				hkl_pseudo_axis_engine_get(engine, NULL);
+				hkl_engine_get(engine, NULL);
 			}
 		}
 	}

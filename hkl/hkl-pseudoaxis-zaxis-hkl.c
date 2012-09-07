@@ -83,18 +83,18 @@ static HklMode* reflectivity()
 /* pseudo axis engine */
 /**********************/
 
-HklPseudoAxisEngine *hkl_pseudo_axis_engine_zaxis_hkl_new(void)
+HklEngine *hkl_engine_zaxis_hkl_new(void)
 {
-	HklPseudoAxisEngine *self;
+	HklEngine *self;
 	HklMode *default_mode;
 
-	self = hkl_pseudo_axis_engine_hkl_new();
+	self = hkl_engine_hkl_new();
 
 	default_mode = zaxis();
-	hkl_pseudo_axis_engine_add_mode(self, default_mode);
-	hkl_pseudo_axis_engine_select_mode(self, default_mode);
+	hkl_engine_add_mode(self, default_mode);
+	hkl_engine_select_mode(self, default_mode);
 
-	hkl_pseudo_axis_engine_add_mode(self, reflectivity());
+	hkl_engine_add_mode(self, reflectivity());
 
 	return self;
 }

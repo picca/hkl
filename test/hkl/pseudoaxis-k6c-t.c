@@ -27,7 +27,7 @@ static void degenerated(void)
 {
 	int res = HKL_TRUE;
 	HklEngineList *engines;
-	HklPseudoAxisEngine *engine;
+	HklEngine *engine;
 	HklMode *mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
@@ -48,7 +48,7 @@ static void degenerated(void)
 	engine = hkl_engine_list_get_by_name(engines, "hkl");
 
 	list_for_each(&engine->modes, mode, list){
-		hkl_pseudo_axis_engine_select_mode(engine, mode);
+		hkl_engine_select_mode(engine, mode);
 		if (mode->parameters.len){
 			static double one[] = {1.};
 
@@ -58,7 +58,7 @@ static void degenerated(void)
 
 		/* studdy this degenerated case */
 		hkl_parameter_list_set_values(&engine->pseudo_axes, hkl, 3, NULL);
-		if (hkl_pseudo_axis_engine_set(engine, NULL)){
+		if (hkl_engine_set(engine, NULL)){
 			HklGeometryListItem *item;
 
 			list_for_each(&engines->geometries->items, item, node) {
@@ -66,7 +66,7 @@ static void degenerated(void)
 
 				hkl_parameter_list_set_values(&engine->pseudo_axes, null, 3, NULL);
 				hkl_geometry_init_geometry(geom, item->geometry);
-				hkl_pseudo_axis_engine_get(engine, NULL);
+				hkl_engine_get(engine, NULL);
 				res &= check_pseudoaxes(engine, hkl, 3);
 			}
 		}
@@ -84,7 +84,7 @@ static void eulerians(void)
 {
 	int res = HKL_TRUE;
 	HklEngineList *engines;
-	HklPseudoAxisEngine *engine;
+	HklEngine *engine;
 	HklMode *mode;
 	HklGeometryListItem *item;
 	const HklGeometryConfig *config;
@@ -107,7 +107,7 @@ static void eulerians(void)
 	list_for_each(&engine->modes, mode, list){
 		double omega, chi, phi;
 
-		hkl_pseudo_axis_engine_select_mode(engine, mode);
+		hkl_engine_select_mode(engine, mode);
 		if (mode->parameters.len){
 			static double one[] = {1};
 
@@ -116,20 +116,20 @@ static void eulerians(void)
 		}
 
 		/* studdy this degenerated case */
-		hkl_pseudo_axis_engine_set_values_v(engine, 0., 90. * HKL_DEGTORAD, 0.);
-		if (hkl_pseudo_axis_engine_set(engine, NULL)) {
+		hkl_engine_set_values_v(engine, 0., 90. * HKL_DEGTORAD, 0.);
+		if (hkl_engine_set(engine, NULL)) {
 			res &= engines->geometries->len == 2;
 
 			/* first solution = 0, 90, 0 */
 			item = list_tail(&engines->geometries->items, HklGeometryListItem, node);
 			hkl_geometry_init_geometry(geom, item->geometry);
-			hkl_pseudo_axis_engine_get(engine, NULL);
+			hkl_engine_get(engine, NULL);
 			res &= check_pseudoaxes_v(engine, 0., 90. * HKL_DEGTORAD, 0.);
 
 			/* second solution = -180, -90, 180 */
 			item = list_top(&engines->geometries->items, HklGeometryListItem, node);
 			hkl_geometry_init_geometry(geom, item->geometry);
-			hkl_pseudo_axis_engine_get(engine, NULL);
+			hkl_engine_get(engine, NULL);
 			res &= check_pseudoaxes_v(engine, -180. * HKL_DEGTORAD, -90. * HKL_DEGTORAD, 180. * HKL_DEGTORAD);
 		}
 	}
@@ -146,7 +146,7 @@ static void q2(void)
 {
 	int res = HKL_TRUE;
 	HklEngineList *engines;
-	HklPseudoAxisEngine *engine;
+	HklEngine *engine;
 	HklMode *mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
@@ -167,19 +167,19 @@ static void q2(void)
 
 	/* the init part */
 	hkl_geometry_set_values_unit_v(geom, 0., 30., 0., 0., 0., 60.);
-	hkl_pseudo_axis_engine_initialize(engine, NULL);
+	hkl_engine_initialize(engine, NULL);
 
 
 	list_for_each(&engine->modes, mode, list){
 		double q, alpha;
 
-		hkl_pseudo_axis_engine_select_mode(engine, mode);
+		hkl_engine_select_mode(engine, mode);
 		for(q=0.1; q<1.; q += 0.1)
 			for(alpha = -M_PI; alpha<M_PI; alpha += M_PI/180.){
 				double values[] = {q, alpha};
 
 				hkl_parameter_list_set_values(&engine->pseudo_axes, values, 2, NULL);
-				if(hkl_pseudo_axis_engine_set(engine, NULL)){
+				if(hkl_engine_set(engine, NULL)){
 					HklGeometryListItem *item;
 
 					list_for_each(&engines->geometries->items, item, node){
@@ -187,7 +187,7 @@ static void q2(void)
 
 						hkl_parameter_list_set_values(&engine->pseudo_axes, null, 2, NULL);
 						hkl_geometry_init_geometry(geom, item->geometry);
-						hkl_pseudo_axis_engine_get(engine, NULL);
+						hkl_engine_get(engine, NULL);
 						res &= check_pseudoaxes(engine, values, 2);
 					}
 				}
@@ -207,7 +207,7 @@ static void m15110(void)
 {
 	int res = HKL_TRUE;
 	HklEngineList *engines;
-	HklPseudoAxisEngine *engine;
+	HklEngine *engine;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;
@@ -227,7 +227,7 @@ static void m15110(void)
 
 	/* the init part must succed */
 	hkl_geometry_set_values_unit_v(geom, 0., 62.95, 134.75, 0., 0., 60.);
-	res &= hkl_pseudo_axis_engine_initialize(engine, NULL);
+	res &= hkl_engine_initialize(engine, NULL);
 
 	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);

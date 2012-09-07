@@ -27,7 +27,7 @@ static void solution(void)
 {
 	int res = HKL_TRUE;
 	HklEngineList *engines;
-	HklPseudoAxisEngine *engine;
+	HklEngine *engine;
 	const HklGeometryConfig *config;
 	HklGeometry *geometry;
 	HklDetector *detector;
@@ -62,7 +62,7 @@ static void solution(void)
 
 	/* compute the 1 1 0 */
 	hkl_parameter_list_set_values(&engine->pseudo_axes, hkl, 3, NULL);
-	if (hkl_pseudo_axis_engine_set(engine, NULL)){
+	if (hkl_engine_set(engine, NULL)){
 		HklGeometryListItem *item;
 
 		list_for_each(&engines->geometries->items, item, node){
@@ -70,13 +70,13 @@ static void solution(void)
 
 			hkl_parameter_list_set_values(&engine->pseudo_axes, null, 3, NULL);
 			hkl_geometry_init_geometry(geometry, item->geometry);
-			hkl_pseudo_axis_engine_get(engine, NULL);
+			hkl_engine_get(engine, NULL);
 			res &= check_pseudoaxes(engine, hkl, 3);
 		}
 	}else
 		res = HKL_FALSE;
 	if(!res)
-		hkl_pseudo_axis_engine_fprintf(stdout, engine);
+		hkl_engine_fprintf(stdout, engine);
 
 	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);

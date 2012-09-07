@@ -49,16 +49,16 @@ static HklMode *psi()
 /* pseudo axis engine */
 /**********************/
 
-HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_psi_new(void)
+HklEngine *hkl_engine_k4cv_psi_new(void)
 {
-	HklPseudoAxisEngine *self;
+	HklEngine *self;
 	HklMode *default_mode;
 
-	self = hkl_pseudo_axis_engine_psi_new();
+	self = hkl_engine_psi_new();
 
 	default_mode = psi();
-	hkl_pseudo_axis_engine_add_mode(self, default_mode);
-	hkl_pseudo_axis_engine_select_mode(self, default_mode);
+	hkl_engine_add_mode(self, default_mode);
+	hkl_engine_select_mode(self, default_mode);
 
 	return self;
 }

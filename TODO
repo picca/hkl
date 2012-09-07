@@ -2,7 +2,7 @@ Roadmap
 -------
 
 * 5.0.0 UNRELEASE
-** TODO [hkl] HklPseudoAxisEngine "q" -> "qper" and "qpar"
+** TODO [hkl] HklEngine "q" -> "qper" and "qpar"
 ** TODO [hkl] HklAxis degenerated.
    an axis is degenerated if its position have no effect
    on the HklPseudoAxis calculus. Add a degenerated member to the axis.
@@ -14,8 +14,8 @@ Roadmap
 ** TODO [hkl] add a fit on the Hklaxis offsets.
 ** TODO [hkl] API to put a detector and a sample on the Geometry.
 ** TODO [hkl] HklSample add the cell volum computation.
-** TODO [hkl] HklPseudoAxisEngine "zone"
-** TODO [hkl] HklPseudoAxisEngine "custom"
+** TODO [hkl] HklEngine "zone"
+** TODO [hkl] HklEngine "custom"
 		for now this pseudoaxis let you select the axis you
 		want to use for the computation.
 ** TODO [hkl] create a macro to help compare two real the right way

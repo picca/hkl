@@ -26,13 +26,13 @@
 
 HKL_BEGIN_DECLS
 
-typedef struct _HklPseudoAxisEngineQ HklPseudoAxisEngineQ;
-typedef struct _HklPseudoAxisEngineQ2 HklPseudoAxisEngineQ2;
-typedef struct _HklPseudoAxisEngineQperQpar HklPseudoAxisEngineQperQpar;
+typedef struct _HklEngineQ HklEngineQ;
+typedef struct _HklEngineQ2 HklEngineQ2;
+typedef struct _HklEngineQperQpar HklEngineQperQpar;
 
-extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_q_new(void);
-extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_q2_new(void);
-extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_qper_qpar_new(void);
+extern HklEngine *hkl_engine_q_new(void);
+extern HklEngine *hkl_engine_q2_new(void);
+extern HklEngine *hkl_engine_qper_qpar_new(void);
 
 HKL_END_DECLS
 

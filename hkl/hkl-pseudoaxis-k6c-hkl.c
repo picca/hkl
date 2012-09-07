@@ -203,7 +203,7 @@ static int _constant_omega_v(const gsl_vector *x, void *params, gsl_vector *f)
 	const double komega = x->data[0];
 	const double kappa = x->data[1];
 	double omega;
-	HklPseudoAxisEngine *engine = params;
+	HklEngine *engine = params;
 	double omega0;
 	uint shit;
 
@@ -228,7 +228,7 @@ static int _constant_chi_v(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	const double kappa = x->data[1];
 	double chi;
-	HklPseudoAxisEngine *engine = params;
+	HklEngine *engine = params;
 	double chi0;
 	uint shit;
 
@@ -254,7 +254,7 @@ static int _constant_phi_v(const gsl_vector *x, void *params, gsl_vector *f)
 	const double kappa = x->data[1];
 	const double kphi = x->data[2];
 	double phi;
-	HklPseudoAxisEngine *engine = params;
+	HklEngine *engine = params;
 	double phi0;
 	uint shit;
 
@@ -303,7 +303,7 @@ static int _constant_incidence_func(const gsl_vector *x, void *params, gsl_vecto
 	};
 	double incidence;
 	double azimuth;
-	HklPseudoAxisEngine *engine = params;
+	HklEngine *engine = params;
 	double parameters[5];
 	uint shit;
 	HklVector n;
@@ -567,30 +567,30 @@ static HklMode *constant_incidence(void)
 /* pseudo axis engine */
 /**********************/
 
-HklPseudoAxisEngine *hkl_pseudo_axis_engine_k6c_hkl_new(void)
+HklEngine *hkl_engine_k6c_hkl_new(void)
 {
-	HklPseudoAxisEngine *self;
+	HklEngine *self;
 	HklMode *default_mode;
 
-	self = hkl_pseudo_axis_engine_hkl_new();
+	self = hkl_engine_hkl_new();
 
 	default_mode = bissector_vertical();
-	hkl_pseudo_axis_engine_add_mode(self, default_mode);
-	hkl_pseudo_axis_engine_select_mode(self, default_mode);
+	hkl_engine_add_mode(self, default_mode);
+	hkl_engine_select_mode(self, default_mode);
 
-	hkl_pseudo_axis_engine_add_mode(self, constant_omega_vertical());
-	hkl_pseudo_axis_engine_add_mode(self, constant_chi_vertical());
-	hkl_pseudo_axis_engine_add_mode(self, constant_phi_vertical());
-	hkl_pseudo_axis_engine_add_mode(self, lifting_detector_kphi());
-	hkl_pseudo_axis_engine_add_mode(self, lifting_detector_komega());
-	hkl_pseudo_axis_engine_add_mode(self, lifting_detector_mu());
-	hkl_pseudo_axis_engine_add_mode(self, double_diffraction_vertical());
-	hkl_pseudo_axis_engine_add_mode(self, bissector_horizontal());
-	hkl_pseudo_axis_engine_add_mode(self, constant_phi_horizontal());
-	hkl_pseudo_axis_engine_add_mode(self, constant_kphi_horizontal());
-	hkl_pseudo_axis_engine_add_mode(self, double_diffraction_horizontal());
-	hkl_pseudo_axis_engine_add_mode(self, psi_constant_vertical());
-	hkl_pseudo_axis_engine_add_mode(self, constant_incidence());
+	hkl_engine_add_mode(self, constant_omega_vertical());
+	hkl_engine_add_mode(self, constant_chi_vertical());
+	hkl_engine_add_mode(self, constant_phi_vertical());
+	hkl_engine_add_mode(self, lifting_detector_kphi());
+	hkl_engine_add_mode(self, lifting_detector_komega());
+	hkl_engine_add_mode(self, lifting_detector_mu());
+	hkl_engine_add_mode(self, double_diffraction_vertical());
+	hkl_engine_add_mode(self, bissector_horizontal());
+	hkl_engine_add_mode(self, constant_phi_horizontal());
+	hkl_engine_add_mode(self, constant_kphi_horizontal());
+	hkl_engine_add_mode(self, double_diffraction_horizontal());
+	hkl_engine_add_mode(self, psi_constant_vertical());
+	hkl_engine_add_mode(self, constant_incidence());
 
 	return self;
 }

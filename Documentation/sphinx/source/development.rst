@@ -172,14 +172,14 @@ The starting point is to look in the file ``src/hkl-pseudoaxis-factory.c`` for::
 in that method you can see this in the eulerian 6 circle part::
 
    case HKL_GEOMETRY_EULERIAN6C:
-	hkl_engine_list_add(self, hkl_pseudo_axis_engine_e6c_hkl_new());
-	hkl_engine_list_add(self, hkl_pseudo_axis_engine_e6c_psi_new());
-	hkl_engine_list_add(self, hkl_pseudo_axis_engine_q2_new());
+	hkl_engine_list_add(self, hkl_engine_e6c_hkl_new());
+	hkl_engine_list_add(self, hkl_engine_e6c_psi_new());
+	hkl_engine_list_add(self, hkl_engine_q2_new());
    break;
 
 so as you can see there is three pseudo axis engine for this
 geometry. Your mode if for the hkl pseudo axis. so let look in the
-``hkl_pseudo_axis_engine_e6c_hkl_new()`` method.  You can find it
+``hkl_engine_e6c_hkl_new()`` method.  You can find it
 in the file ``include/hkl/hkl-pseudoaxis-e6c.h`` which contain this::
 
    #ifndef __HKL_PSEUDOAXIS_E6C_H__
@@ -189,38 +189,38 @@ in the file ``include/hkl/hkl-pseudoaxis-e6c.h`` which contain this::
 
    HKL_BEGIN_DECLS
 
-   extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void);
-   extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_psi_new(void);
+   extern HklEngine *hkl_engine_e6c_hkl_new(void);
+   extern HklEngine *hkl_engine_e6c_psi_new(void);
 
    HKL_END_DECLS
 
    #endif /* __HKL_PSEUDOAXIS_E6C_H__ */
 
 strange only 2 methods nothing about
-``hkl_pseudo_axis_engine_q2_new()``. This is because the
+``hkl_engine_q2_new()``. This is because the
 implementation of this method is common to more than one geometry. So
 you can find it in the file ``hkl/hkl-pseudoaxis-common-q.h``
 
 now you need to change the code of
-``hkl_pseudo_axis_engine_e6c_hkl_new(void)``. Lets look about it in
+``hkl_engine_e6c_hkl_new(void)``. Lets look about it in
 the file ``src/hkl-pseudoaxis-e6c-hkl.c``::
 
-    HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
+    HklEngine *hkl_engine_e6c_hkl_new(void)
     {
-	HklPseudoAxisEngine *self;
+	HklEngine *self;
 	HklMode *mode;
 
-	self = hkl_pseudo_axis_engine_hkl_new();
+	self = hkl_engine_hkl_new();
 
 	/* bissector_vertical */
 	mode = hkl_mode_new(
 		"bissector_vertical",
 		NULL,
 		hkl_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_setter_func_bissector_vertical,
+		hkl_engine_setter_func_bissector_vertical,
 		0,
 		4, "omega", "chi", "phi", "delta");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
+	hkl_engine_add_mode(self, mode);
 
 	/* constant_omega_vertical */
 	mode = hkl_mode_new(
@@ -230,7 +230,7 @@ the file ``src/hkl-pseudoaxis-e6c-hkl.c``::
 		hkl_mode_set_hkl_real,
 		0,
 		3, "chi", "phi", "delta");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
+	hkl_engine_add_mode(self, mode);
 
 	/* constant_chi_vertical */
 	mode = hkl_mode_new(
@@ -240,7 +240,7 @@ the file ``src/hkl-pseudoaxis-e6c-hkl.c``::
 		hkl_mode_set_hkl_real,
 		0,
 		3, "omega", "phi", "delta");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
+	hkl_engine_add_mode(self, mode);
 
 	/* constant_phi_vertical */
 	mode = hkl_mode_new(
@@ -250,7 +250,7 @@ the file ``src/hkl-pseudoaxis-e6c-hkl.c``::
 		hkl_mode_set_hkl_real,
 		0,
 		3, "omega", "chi", "delta");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
+	hkl_engine_add_mode(self, mode);
 
 	/* lifting_detector_phi */
 	mode = hkl_mode_new(
@@ -260,7 +260,7 @@ the file ``src/hkl-pseudoaxis-e6c-hkl.c``::
 		hkl_mode_set_hkl_real,
 		0,
 		3, "phi", "gamma", "delta");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
+	hkl_engine_add_mode(self, mode);
 
 	/* lifting_detector_omega */
 	mode = hkl_mode_new(
@@ -270,7 +270,7 @@ the file ``src/hkl-pseudoaxis-e6c-hkl.c``::
 		hkl_mode_set_hkl_real,
 		0,
 		3, "omega", "gamma", "delta");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
+	hkl_engine_add_mode(self, mode);
 
 	/* lifting_detector_mu */
 	mode = hkl_mode_new(
@@ -280,7 +280,7 @@ the file ``src/hkl-pseudoaxis-e6c-hkl.c``::
 		hkl_mode_set_hkl_real,
 		0,
 		3, "mu", "gamma", "delta");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
+	hkl_engine_add_mode(self, mode);
 
 	/* double_diffraction vertical*/
 	HklParameter h2;
@@ -304,17 +304,17 @@ the file ``src/hkl-pseudoaxis-e6c-hkl.c``::
 		hkl_mode_set_double_diffraction_real,
 		3, &h2, &k2, &l2,
 		4, "omega", "chi", "phi", "delta");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
+	hkl_engine_add_mode(self, mode);
 
 	/* bissector_horizontal */
 	mode = hkl_mode_new(
 		"bissector_horizontal",
 		NULL,
 		hkl_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_setter_func_bissector_horizontal,
+		hkl_engine_setter_func_bissector_horizontal,
 		0,
 		5, "mu", "omega", "chi", "phi", "gamma");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
+	hkl_engine_add_mode(self, mode);
 
 	/* double_diffraction_horizontal */
 	mode = hkl_mode_new(
@@ -324,9 +324,9 @@ the file ``src/hkl-pseudoaxis-e6c-hkl.c``::
 		hkl_mode_set_double_diffraction_real,
 		3, &h2, &k2, &l2,
 		4, "mu", "chi", "phi", "gamma");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
+	hkl_engine_add_mode(self, mode);
 
-	hkl_pseudo_axis_engine_select_mode(self, 0);
+	hkl_engine_select_mode(self, 0);
 
 	return self;
     }
@@ -341,7 +341,7 @@ so you "just" need to add a new mode like this::
 		hkl_mode_set_psi_constant_vertical,
 		3, &h2, &k2, &l2,
 		4, "omega", "chi", "phi", "delta");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
+	hkl_engine_add_mode(self, mode);
 
 So the first parameter of the hkl_mode_new method
 
@@ -367,7 +367,7 @@ use a set method with different kind of geometries. The association is
 only done during the mode creation.
 
 At the end you need to add this mode to the pseudo axis engine with
-``hkl_pseudo_axis_engine_add_mode(self, mode);``
+``hkl_engine_add_mode(self, mode);``
 
 that's all.
 
@@ -377,20 +377,20 @@ values keeping the angle between the reference reciprocal space vector
 (h2, k2, l2) and the diffraction plane defined by the incomming beam
 and the outgoing beam::
 
-	    static int hkl_mode_set_psi_constant_vertical(HklPseudoAxisEngine *engine,
+	    static int hkl_mode_set_psi_constant_vertical(HklEngine *engine,
 									     HklGeometry *geometry,
 								             HklDetector *detector,
 								             HklSample *sample)
 	    {
-		hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector,
+		hkl_engine_prepare_internal(engine, geometry, detector,
 							sample);
 
-		return hkl_pseudo_axis_engine_solve_function(engine, psi_constant_vertical);
+		return hkl_engine_solve_function(engine, psi_constant_vertical);
 	    }
 
 the prepare internal part is about initializing the solver with the
 given geometry, detector and sample. Then comes the
-hkl_pseudo_axis_engine_solve_function which need the
+hkl_engine_solve_function which need the
 psi_constant_vertical function to work. This method use the GSL
 library to find the given function roots (where f(x) = 0).  Lets see
 how it works for the "bissector_horizontal" mode::

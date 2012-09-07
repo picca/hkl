@@ -238,27 +238,27 @@ GType hkl_pseudo_axis_get_type (void) {
         return hkl_pseudo_axis_type_id__volatile;
 }
 
-static HklPseudoAxisEngine* hkl_pseudo_axis_engine_fake_ref(HklPseudoAxisEngine *src)
+static HklEngine* hkl_engine_fake_ref(HklEngine *src)
 {
 	return src;
 }
 
-static void hkl_pseudo_axis_engine_fake_unref(HklPseudoAxisEngine *src)
+static void hkl_engine_fake_unref(HklEngine *src)
 {
 	return;
 }
 
-GType hkl_pseudo_axis_engine_get_type (void) {
-        static volatile gsize hkl_pseudo_axis_engine_type_id__volatile = 0;
-        if (g_once_init_enter (&hkl_pseudo_axis_engine_type_id__volatile)) {
-                GType hkl_pseudo_axis_engine_type_id;
-                hkl_pseudo_axis_engine_type_id = g_boxed_type_register_static (
-			"HklPseudoAxisEngine",
-			(GBoxedCopyFunc) hkl_pseudo_axis_engine_fake_ref,
-			(GBoxedFreeFunc) hkl_pseudo_axis_engine_fake_unref);
-                g_once_init_leave (&hkl_pseudo_axis_engine_type_id__volatile, hkl_pseudo_axis_engine_type_id);
+GType hkl_engine_get_type (void) {
+        static volatile gsize hkl_engine_type_id__volatile = 0;
+        if (g_once_init_enter (&hkl_engine_type_id__volatile)) {
+                GType hkl_engine_type_id;
+                hkl_engine_type_id = g_boxed_type_register_static (
+			"HklEngine",
+			(GBoxedCopyFunc) hkl_engine_fake_ref,
+			(GBoxedFreeFunc) hkl_engine_fake_unref);
+                g_once_init_leave (&hkl_engine_type_id__volatile, hkl_engine_type_id);
         }
-        return hkl_pseudo_axis_engine_type_id__volatile;
+        return hkl_engine_type_id__volatile;
 }
 
 GType hkl_engine_list_get_type (void) {

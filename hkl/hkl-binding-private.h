@@ -55,13 +55,13 @@ extern void hkl_geometry_set_axes_values_unit(HklGeometry *self, double *values,
 extern GSList* hkl_geometry_list_items(HklGeometryList *self);
 
 /***********************/
-/* HklPseudoAxisEngine */
+/* HklEngine */
 /***********************/
 
-extern GSList* hkl_pseudo_axis_engine_modes(HklPseudoAxisEngine *self);
+extern GSList* hkl_engine_modes(HklEngine *self);
 
-extern gboolean hkl_pseudo_axis_engine_set_values_unit(
-	HklPseudoAxisEngine *self,
+extern gboolean hkl_engine_set_values_unit(
+	HklEngine *self,
 	double values[], unsigned int len,
 	GError **error);
 

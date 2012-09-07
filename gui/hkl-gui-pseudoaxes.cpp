@@ -21,7 +21,7 @@
  */
 #include "hkl-gui-pseudoaxes.h"
 
-PseudoAxesFrame::PseudoAxesFrame(HklPseudoAxisEngine *engine)
+PseudoAxesFrame::PseudoAxesFrame(HklEngine *engine)
 {
 	Gtk::CellRenderer * renderer;
 
@@ -105,7 +105,7 @@ void PseudoAxesFrame::on_combobox1_changed(void)
 {
 	Gtk::TreeModel::iterator iter = _combobox1->get_active();
 	Gtk::ListStore::Row row = *(iter);
-	hkl_pseudo_axis_engine_select_mode(_engine, row[_mode_columns.mode]);
+	hkl_engine_select_mode(_engine, row[_mode_columns.mode]);
 	this->updateModeParameters();
 	this->_signal_changed();
 }
@@ -137,7 +137,7 @@ void PseudoAxesFrame::on_cell_TreeView_pseudoAxis_value_edited(Glib::ustring con
 
 void PseudoAxesFrame::on_button1_clicked(void)
 {
-	if(hkl_pseudo_axis_engine_set(_engine, NULL)){
+	if(hkl_engine_set(_engine, NULL)){
 		HklGeometryListItem *top;
 
 		top = list_top(&_engine->engines->geometries->items,
@@ -149,7 +149,7 @@ void PseudoAxesFrame::on_button1_clicked(void)
 
 void PseudoAxesFrame::on_button2_clicked(void)
 {
-	if(hkl_pseudo_axis_engine_initialize(_engine, NULL))
+	if(hkl_engine_initialize(_engine, NULL))
 		this->updateModeParameters(); //some initialize function modify the parameters
 }
 

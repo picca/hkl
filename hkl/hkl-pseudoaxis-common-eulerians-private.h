@@ -26,17 +26,17 @@
 
 HKL_BEGIN_DECLS
 
-typedef struct _HklPseudoAxisEngineEulerians HklPseudoAxisEngineEulerians;
+typedef struct _HklEngineEulerians HklEngineEulerians;
 
-struct _HklPseudoAxisEngineEulerians
+struct _HklEngineEulerians
 {
 	HklParameter *omega;
 	HklParameter *chi;
 	HklParameter *phi;
-	HklPseudoAxisEngine engine;
+	HklEngine engine;
 };
 
-extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_eulerians_new(void);
+extern HklEngine *hkl_engine_eulerians_new(void);
 
 HKL_END_DECLS
 

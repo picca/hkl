@@ -71,7 +71,7 @@ public:
 class PseudoAxesFrame
 {
 public:
-	PseudoAxesFrame(HklPseudoAxisEngine *engine);
+	PseudoAxesFrame(HklEngine *engine);
 	Gtk::Frame &frame(void) {return *_frame1;}
 	virtual ~PseudoAxesFrame(void);
 
@@ -101,7 +101,7 @@ protected:
 
 // members
 protected:
-	HklPseudoAxisEngine *_engine;
+	HklEngine *_engine;
 
 	// widget
 	Glib::RefPtr<Gtk::Builder> _refGlade;

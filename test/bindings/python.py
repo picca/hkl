@@ -71,7 +71,7 @@ class TestAPI(unittest.TestCase):
 
     def test_pseudoaxis_api(self):
         """
-        enforce the HklPseudoAxisEngine API
+        enforce the HklEngine API
         """
 
         detector = Hkl.Detector().factory_new(Hkl.DetectorType(0))
@@ -114,7 +114,7 @@ class TestAPI(unittest.TestCase):
 
         # check that all the values computed are reachable
         for engine in engines.engines():
-            self.assertTrue(type(engine) is Hkl.PseudoAxisEngine)
+            self.assertTrue(type(engine) is Hkl.Engine)
             self.assertTrue(type(engine.info.name) is str)
             for parameter in engine.pseudo_axes.parameters():
                 self.assertTrue(type(parameter) is Hkl.Parameter)

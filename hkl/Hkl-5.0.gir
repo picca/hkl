@@ -177,6 +177,181 @@ Returns:</doc>
               c:identifier="HKL_DETECTOR_TYPE_0D"
               glib:nick="0d"/>
     </enumeration>
+    <record name="Engine"
+            c:type="HklEngine"
+            glib:type-name="HklEngine"
+            glib:get-type="hkl_engine_get_type"
+            c:symbol-prefix="engine">
+      <field name="info" writable="1">
+        <type name="EngineInfo" c:type="HklEngineInfo*"/>
+      </field>
+      <field name="ops" writable="1">
+        <type name="EngineOperations" c:type="HklEngineOperations*"/>
+      </field>
+      <field name="geometry" writable="1">
+        <type name="Geometry" c:type="HklGeometry*"/>
+      </field>
+      <field name="detector" writable="1">
+        <type name="Detector" c:type="HklDetector*"/>
+      </field>
+      <field name="sample" writable="1">
+        <type name="Sample" c:type="HklSample*"/>
+      </field>
+      <field name="mode" writable="1">
+        <type name="Mode" c:type="HklMode*"/>
+      </field>
+      <field name="engines" writable="1">
+        <type name="EngineList" c:type="HklEngineList*"/>
+      </field>
+      <field name="pseudo_axes" writable="1">
+        <type name="ParameterList" c:type="HklParameterList"/>
+      </field>
+      <field name="modes" writable="1">
+        <type name="gpointer" c:type="gpointer"/>
+      </field>
+      <field name="axes" writable="1">
+        <type name="gpointer" c:type="gpointer"/>
+      </field>
+      <field name="list" writable="1">
+        <type name="gpointer" c:type="gpointer"/>
+      </field>
+      <field name="_shit1" writable="1">
+        <type name="gpointer" c:type="void*"/>
+      </field>
+      <field name="_shit2" writable="1">
+        <type name="gpointer" c:type="void*"/>
+      </field>
+      <field name="_shit3" writable="1">
+        <type name="gpointer" c:type="void*"/>
+      </field>
+      <method name="get" c:identifier="hkl_engine_get" introspectable="0">
+        <doc xml:whitespace="preserve">get the values of the pseudo-axes from the real-axes values
+
+Returns:</doc>
+        <return-value transfer-ownership="none">
+          <type name="gint" c:type="int"/>
+        </return-value>
+        <parameters>
+          <parameter name="error" transfer-ownership="none" allow-none="1">
+            <doc xml:whitespace="preserve">NULL or an HklError</doc>
+            <type name="Error" c:type="HklError**"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="initialize"
+              c:identifier="hkl_engine_initialize"
+              introspectable="0">
+        <doc xml:whitespace="preserve">initialize the HklEngine
+
+Returns:</doc>
+        <return-value transfer-ownership="none">
+          <type name="gint" c:type="int"/>
+        </return-value>
+        <parameters>
+          <parameter name="error" transfer-ownership="none" allow-none="1">
+            <doc xml:whitespace="preserve">NULL or an HklError to check for error's during the initialization</doc>
+            <type name="Error" c:type="HklError**"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="modes" c:identifier="hkl_engine_modes">
+        <doc xml:whitespace="preserve">free the list with g_slist_free when done.</doc>
+        <return-value transfer-ownership="container">
+          <doc xml:whitespace="preserve">list of mdoe,</doc>
+          <type name="GLib.SList" c:type="GSList*">
+            <type name="Mode"/>
+          </type>
+        </return-value>
+      </method>
+      <method name="select_mode" c:identifier="hkl_engine_select_mode">
+        <doc xml:whitespace="preserve">This method also populate the self-&gt;axes from the mode-&gt;axes_names.
+this is to speed the computation of the numerical axes.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="mode" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklPseudoAxisMode to select</doc>
+            <type name="Mode" c:type="HklMode*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="select_mode_by_name"
+              c:identifier="hkl_engine_select_mode_by_name">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="name" transfer-ownership="none">
+            <type name="utf8" c:type="char*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set" c:identifier="hkl_engine_set" introspectable="0">
+        <doc xml:whitespace="preserve">use the HklPseudoaxisEngine values to compute the real axes values.
+
+Returns:</doc>
+        <return-value transfer-ownership="none">
+          <type name="gint" c:type="int"/>
+        </return-value>
+        <parameters>
+          <parameter name="error" transfer-ownership="none" allow-none="1">
+            <doc xml:whitespace="preserve">NULL or an HklError</doc>
+            <type name="Error" c:type="HklError**"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_values_unit"
+              c:identifier="hkl_engine_set_values_unit"
+              throws="1">
+        <doc xml:whitespace="preserve">compute the #HklGeometry angles for this #HklEngine</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">TRUE on success or FALSE if an error occurred</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <parameter name="values" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the values to set</doc>
+            <array length="1" zero-terminated="0" c:type="double">
+              <type name="gdouble" c:type="double"/>
+            </array>
+          </parameter>
+          <parameter name="len" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the len of the values array</doc>
+            <type name="guint" c:type="unsigned int"/>
+          </parameter>
+        </parameters>
+      </method>
+      <function name="fprintf"
+                c:identifier="hkl_engine_fprintf"
+                introspectable="0">
+        <doc xml:whitespace="preserve">print to a FILE the HklEngine</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="f" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the FILE</doc>
+            <type name="gpointer" c:type="FILE*"/>
+          </parameter>
+          <parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the HklEngine</doc>
+            <type name="Engine" c:type="HklEngine*"/>
+          </parameter>
+        </parameters>
+      </function>
+    </record>
+    <record name="EngineInfo" c:type="HklEngineInfo">
+      <field name="name" writable="1">
+        <type name="utf8" c:type="char*"/>
+      </field>
+      <field name="pseudo_axes" writable="1">
+        <type name="PseudoAxis" c:type="HklPseudoAxis**"/>
+      </field>
+      <field name="n_pseudo_axes" writable="1">
+        <type name="guint" c:type="uint"/>
+      </field>
+    </record>
     <record name="EngineList"
             c:type="HklEngineList"
             glib:type-name="HklEngineList"
@@ -205,7 +380,7 @@ Returns:</doc>
         <return-value transfer-ownership="container">
           <doc xml:whitespace="preserve">list of engines,</doc>
           <type name="GLib.SList" c:type="GSList*">
-            <type name="PseudoAxisEngine"/>
+            <type name="Engine"/>
           </type>
         </return-value>
       </method>
@@ -218,20 +393,20 @@ Returns:</doc>
         </return-value>
       </method>
       <method name="get" c:identifier="hkl_engine_list_get">
-        <doc xml:whitespace="preserve">apply the get method to all the #HklPseudoAxisEngine of the list
+        <doc xml:whitespace="preserve">apply the get method to all the #HklEngine of the list
 after this it is possible to retrive all the #HklPseudoAxis values.
 
 get method failed.</doc>
         <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">HKL_SUCCESS or HKL_FAIL if one of the #HklPseudoAxisEngine</doc>
+          <doc xml:whitespace="preserve">HKL_SUCCESS or HKL_FAIL if one of the #HklEngine</doc>
           <type name="gint" c:type="int"/>
         </return-value>
       </method>
       <method name="get_by_name" c:identifier="hkl_engine_list_get_by_name">
-        <doc xml:whitespace="preserve">get the #HklPseudoAxisEngine by its name from the list.</doc>
+        <doc xml:whitespace="preserve">get the #HklEngine by its name from the list.</doc>
         <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">the requested engine</doc>
-          <type name="PseudoAxisEngine" c:type="HklPseudoAxisEngine*"/>
+          <type name="Engine" c:type="HklEngine*"/>
         </return-value>
         <parameters>
           <parameter name="name" transfer-ownership="none">
@@ -304,6 +479,8 @@ Geometry, a detector and a sample.</doc>
           </parameter>
         </parameters>
       </function>
+    </record>
+    <record name="EngineOperations" c:type="HklEngineOperations" disguised="1">
     </record>
     <record name="Error"
             c:type="HklError"
@@ -2192,191 +2369,6 @@ Returns:</doc>
             glib:get-type="hkl_pseudo_axis_get_type"
             c:symbol-prefix="pseudo_axis">
     </record>
-    <record name="PseudoAxisEngine"
-            c:type="HklPseudoAxisEngine"
-            glib:type-name="HklPseudoAxisEngine"
-            glib:get-type="hkl_pseudo_axis_engine_get_type"
-            c:symbol-prefix="pseudo_axis_engine">
-      <field name="info" writable="1">
-        <type name="PseudoAxisEngineInfo" c:type="HklPseudoAxisEngineInfo*"/>
-      </field>
-      <field name="ops" writable="1">
-        <type name="PseudoAxisEngineOperations"
-              c:type="HklPseudoAxisEngineOperations*"/>
-      </field>
-      <field name="geometry" writable="1">
-        <type name="Geometry" c:type="HklGeometry*"/>
-      </field>
-      <field name="detector" writable="1">
-        <type name="Detector" c:type="HklDetector*"/>
-      </field>
-      <field name="sample" writable="1">
-        <type name="Sample" c:type="HklSample*"/>
-      </field>
-      <field name="mode" writable="1">
-        <type name="Mode" c:type="HklMode*"/>
-      </field>
-      <field name="engines" writable="1">
-        <type name="EngineList" c:type="HklEngineList*"/>
-      </field>
-      <field name="pseudo_axes" writable="1">
-        <type name="ParameterList" c:type="HklParameterList"/>
-      </field>
-      <field name="modes" writable="1">
-        <type name="gpointer" c:type="gpointer"/>
-      </field>
-      <field name="axes" writable="1">
-        <type name="gpointer" c:type="gpointer"/>
-      </field>
-      <field name="list" writable="1">
-        <type name="gpointer" c:type="gpointer"/>
-      </field>
-      <field name="_shit1" writable="1">
-        <type name="gpointer" c:type="void*"/>
-      </field>
-      <field name="_shit2" writable="1">
-        <type name="gpointer" c:type="void*"/>
-      </field>
-      <field name="_shit3" writable="1">
-        <type name="gpointer" c:type="void*"/>
-      </field>
-      <method name="get"
-              c:identifier="hkl_pseudo_axis_engine_get"
-              introspectable="0">
-        <doc xml:whitespace="preserve">get the values of the pseudo-axes from the real-axes values
-
-Returns:</doc>
-        <return-value transfer-ownership="none">
-          <type name="gint" c:type="int"/>
-        </return-value>
-        <parameters>
-          <parameter name="error" transfer-ownership="none" allow-none="1">
-            <doc xml:whitespace="preserve">NULL or an HklError</doc>
-            <type name="Error" c:type="HklError**"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="initialize"
-              c:identifier="hkl_pseudo_axis_engine_initialize"
-              introspectable="0">
-        <doc xml:whitespace="preserve">initialize the HklPseudoAxisEngine
-
-Returns:</doc>
-        <return-value transfer-ownership="none">
-          <type name="gint" c:type="int"/>
-        </return-value>
-        <parameters>
-          <parameter name="error" transfer-ownership="none" allow-none="1">
-            <doc xml:whitespace="preserve">NULL or an HklError to check for error's during the initialization</doc>
-            <type name="Error" c:type="HklError**"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="modes" c:identifier="hkl_pseudo_axis_engine_modes">
-        <doc xml:whitespace="preserve">free the list with g_slist_free when done.</doc>
-        <return-value transfer-ownership="container">
-          <doc xml:whitespace="preserve">list of mdoe,</doc>
-          <type name="GLib.SList" c:type="GSList*">
-            <type name="Mode"/>
-          </type>
-        </return-value>
-      </method>
-      <method name="select_mode"
-              c:identifier="hkl_pseudo_axis_engine_select_mode">
-        <doc xml:whitespace="preserve">This method also populate the self-&gt;axes from the mode-&gt;axes_names.
-this is to speed the computation of the numerical axes.</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="mode" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the #HklPseudoAxisMode to select</doc>
-            <type name="Mode" c:type="HklMode*"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="select_mode_by_name"
-              c:identifier="hkl_pseudo_axis_engine_select_mode_by_name">
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="name" transfer-ownership="none">
-            <type name="utf8" c:type="char*"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="set"
-              c:identifier="hkl_pseudo_axis_engine_set"
-              introspectable="0">
-        <doc xml:whitespace="preserve">use the HklPseudoaxisEngine values to compute the real axes values.
-
-Returns:</doc>
-        <return-value transfer-ownership="none">
-          <type name="gint" c:type="int"/>
-        </return-value>
-        <parameters>
-          <parameter name="error" transfer-ownership="none" allow-none="1">
-            <doc xml:whitespace="preserve">NULL or an HklError</doc>
-            <type name="Error" c:type="HklError**"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="set_values_unit"
-              c:identifier="hkl_pseudo_axis_engine_set_values_unit"
-              throws="1">
-        <doc xml:whitespace="preserve">compute the #HklGeometry angles for this #HklPseudoAxisEngine</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">TRUE on success or FALSE if an error occurred</doc>
-          <type name="gboolean" c:type="gboolean"/>
-        </return-value>
-        <parameters>
-          <parameter name="values" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the values to set</doc>
-            <array length="1" zero-terminated="0" c:type="double">
-              <type name="gdouble" c:type="double"/>
-            </array>
-          </parameter>
-          <parameter name="len" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the len of the values array</doc>
-            <type name="guint" c:type="unsigned int"/>
-          </parameter>
-        </parameters>
-      </method>
-      <function name="fprintf"
-                c:identifier="hkl_pseudo_axis_engine_fprintf"
-                introspectable="0">
-        <doc xml:whitespace="preserve">print to a FILE the HklPseudoAxisEngine</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="f" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the FILE</doc>
-            <type name="gpointer" c:type="FILE*"/>
-          </parameter>
-          <parameter name="self" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the HklPseudoAxisEngine</doc>
-            <type name="PseudoAxisEngine" c:type="HklPseudoAxisEngine*"/>
-          </parameter>
-        </parameters>
-      </function>
-    </record>
-    <record name="PseudoAxisEngineInfo" c:type="HklPseudoAxisEngineInfo">
-      <field name="name" writable="1">
-        <type name="utf8" c:type="char*"/>
-      </field>
-      <field name="pseudo_axes" writable="1">
-        <type name="PseudoAxis" c:type="HklPseudoAxis**"/>
-      </field>
-      <field name="n_pseudo_axes" writable="1">
-        <type name="guint" c:type="uint"/>
-      </field>
-    </record>
-    <record name="PseudoAxisEngineOperations"
-            c:type="HklPseudoAxisEngineOperations"
-            disguised="1">
-    </record>
     <record name="Quaternion"
             c:type="HklQuaternion"
             glib:type-name="HklQuaternion"
@@ -3810,6 +3802,25 @@ coordinate by coordinate.</doc>
         </parameter>
       </parameters>
     </function>
+    <function name="engine_fprintf"
+              c:identifier="hkl_engine_fprintf"
+              moved-to="Engine.fprintf"
+              introspectable="0">
+      <doc xml:whitespace="preserve">print to a FILE the HklEngine</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="f" transfer-ownership="none">
+          <doc xml:whitespace="preserve">the FILE</doc>
+          <type name="gpointer" c:type="FILE*"/>
+        </parameter>
+        <parameter name="self" transfer-ownership="none">
+          <doc xml:whitespace="preserve">the HklEngine</doc>
+          <type name="Engine" c:type="HklEngine*"/>
+        </parameter>
+      </parameters>
+    </function>
     <function name="engine_list_factory"
               c:identifier="hkl_engine_list_factory"
               moved-to="EngineList.factory">
@@ -4099,25 +4110,6 @@ control over, that could include printf() escape sequences.</doc>
         </parameter>
         <parameter name="self" transfer-ownership="none">
           <type name="Parameter" c:type="HklParameter*"/>
-        </parameter>
-      </parameters>
-    </function>
-    <function name="pseudo_axis_engine_fprintf"
-              c:identifier="hkl_pseudo_axis_engine_fprintf"
-              moved-to="PseudoAxisEngine.fprintf"
-              introspectable="0">
-      <doc xml:whitespace="preserve">print to a FILE the HklPseudoAxisEngine</doc>
-      <return-value transfer-ownership="none">
-        <type name="none" c:type="void"/>
-      </return-value>
-      <parameters>
-        <parameter name="f" transfer-ownership="none">
-          <doc xml:whitespace="preserve">the FILE</doc>
-          <type name="gpointer" c:type="FILE*"/>
-        </parameter>
-        <parameter name="self" transfer-ownership="none">
-          <doc xml:whitespace="preserve">the HklPseudoAxisEngine</doc>
-          <type name="PseudoAxisEngine" c:type="HklPseudoAxisEngine*"/>
         </parameter>
       </parameters>
     </function>

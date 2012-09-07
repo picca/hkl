@@ -26,7 +26,7 @@
 
 #define with_log 1
 
-static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
+static int test_engine(HklEngine *engine, HklGeometry *geometry,
 		       HklDetector *detector, HklSample *sample, unsigned int n)
 {
 	uint i;
@@ -39,7 +39,7 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 	hkl_geometry_randomize(geometry);
 
 	list_for_each(&engine->modes, mode, list){
-		hkl_pseudo_axis_engine_select_mode(engine, mode);
+		hkl_engine_select_mode(engine, mode);
 		/* for now unactive the eulerians check */
 		if(!strcmp(engine->mode->info->name, "eulerians"))
 			continue;
@@ -56,11 +56,11 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 			hkl_parameter_list_randomize(&engine->mode->parameters);
 
 			/* pseudo -> geometry */
-			hkl_pseudo_axis_engine_initialize(engine, NULL);
-			/* hkl_pseudo_axis_engine_fprintf(stderr, engine); */
+			hkl_engine_initialize(engine, NULL);
+			/* hkl_engine_fprintf(stderr, engine); */
 
 			/* geometry -> pseudo */
-			if(hkl_pseudo_axis_engine_set(engine, NULL)) {
+			if(hkl_engine_set(engine, NULL)) {
 				HklGeometryListItem *item;
 
 				list_for_each(&engine->engines->geometries->items, item, node){
@@ -73,7 +73,7 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 									0., NULL);
 
 					hkl_geometry_init_geometry(geometry, item->geometry);
-					hkl_pseudo_axis_engine_get(engine, NULL);
+					hkl_engine_get(engine, NULL);
 
 					for(uint j=0; j<engine->pseudo_axes.len; ++j)
 						ko |= fabs(values[j] - hkl_parameter_get_value(engine->pseudo_axes.parameters[j])) >= HKL_EPSILON;
@@ -99,7 +99,7 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 			for(uint j=0; j<engine->pseudo_axes.len; ++j)
 				fprintf(stderr, " %f",
 					hkl_parameter_get_value(engine->pseudo_axes.parameters[j]));
-			hkl_pseudo_axis_engine_fprintf(stdout, engine);
+			hkl_engine_fprintf(stdout, engine);
 		}else{
 			fprintf(stderr, " ok");
 		}
@@ -113,7 +113,7 @@ static int test_engines(HklEngineList *engines, int n)
 {
 	int res = HKL_TRUE;
 
-	HklPseudoAxisEngine *engine;
+	HklEngine *engine;
 	list_for_each(&engines->engines, engine, list)
 		res &= test_engine(engine,
 				   engines->geometry,

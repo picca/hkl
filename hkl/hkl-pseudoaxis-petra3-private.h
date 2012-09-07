@@ -26,7 +26,7 @@
 
 HKL_BEGIN_DECLS
 
-extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_petra3_p09_eh2_hkl_new(void);
+extern HklEngine *hkl_engine_petra3_p09_eh2_hkl_new(void);
 
 HKL_END_DECLS
 

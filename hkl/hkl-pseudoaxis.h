@@ -33,10 +33,10 @@ typedef struct _HklPseudoAxis HklPseudoAxis;
 typedef struct _HklModeOperations HklModeOperations;
 typedef struct _HklModeInfo HklModeInfo;
 typedef struct _HklMode HklMode;
-typedef struct _HklPseudoAxisEngineInfo HklPseudoAxisEngineInfo;
-typedef struct _HklPseudoAxisEngine HklPseudoAxisEngine;
+typedef struct _HklEngineInfo HklEngineInfo;
+typedef struct _HklEngine HklEngine;
 typedef struct _HklEngineList HklEngineList;
-typedef struct _HklPseudoAxisEngineOperations HklPseudoAxisEngineOperations;
+typedef struct _HklEngineOperations HklEngineOperations;
 
 struct _HklModeInfo {
 	const char *name;
@@ -58,16 +58,16 @@ struct _HklMode
 	void *_shit;
 };
 
-struct _HklPseudoAxisEngineInfo {
+struct _HklEngineInfo {
 	const char *name;
 	const HklPseudoAxis **pseudo_axes;
 	uint n_pseudo_axes;
 };
 
-struct _HklPseudoAxisEngine
+struct _HklEngine
 {
-	const HklPseudoAxisEngineInfo *info;
-	const HklPseudoAxisEngineOperations *ops;
+	const HklEngineInfo *info;
+	const HklEngineOperations *ops;
 	HklGeometry *geometry;
 	HklDetector *detector;
 	HklSample *sample;
@@ -76,7 +76,7 @@ struct _HklPseudoAxisEngine
 	HklParameterList pseudo_axes;
 	struct list_head modes; /* owned */
 	struct list_head axes; /* item not owned */
-	struct list_node list; /* PseudoAxisEngineList */
+	struct list_node list; /* EngineList */
 	void *_shit1;
 	void *_shit2;
 	void *_shit3;
@@ -102,22 +102,22 @@ struct _HklEngineList
 extern void hkl_mode_fprintf(FILE *f, const HklMode *self);
 
 /***********************/
-/* HklPseudoAxisEngine */
+/* HklEngine */
 /***********************/
 
-extern void hkl_pseudo_axis_engine_select_mode(HklPseudoAxisEngine *self,
+extern void hkl_engine_select_mode(HklEngine *self,
 					       HklMode *mode);
 
-extern void hkl_pseudo_axis_engine_select_mode_by_name(HklPseudoAxisEngine *self,
+extern void hkl_engine_select_mode_by_name(HklEngine *self,
 						       const char *name);
 
-extern int hkl_pseudo_axis_engine_initialize(HklPseudoAxisEngine *self, HklError **error);
+extern int hkl_engine_initialize(HklEngine *self, HklError **error);
 
-extern int hkl_pseudo_axis_engine_set(HklPseudoAxisEngine *self, HklError **error);
+extern int hkl_engine_set(HklEngine *self, HklError **error);
 
-extern int hkl_pseudo_axis_engine_get(HklPseudoAxisEngine *self, HklError **error);
+extern int hkl_engine_get(HklEngine *self, HklError **error);
 
-extern void hkl_pseudo_axis_engine_fprintf(FILE *f, const HklPseudoAxisEngine *self);
+extern void hkl_engine_fprintf(FILE *f, const HklEngine *self);
 
 /***************************/
 /* HklEngineList */
@@ -125,7 +125,7 @@ extern void hkl_pseudo_axis_engine_fprintf(FILE *f, const HklPseudoAxisEngine *s
 
 extern void hkl_engine_list_free(HklEngineList *self);
 
-extern HklPseudoAxisEngine *hkl_engine_list_get_by_name(HklEngineList *self,
+extern HklEngine *hkl_engine_list_get_by_name(HklEngineList *self,
 								    const char *name);
 
 extern HklParameter *hkl_engine_list_get_pseudo_axis_by_name(

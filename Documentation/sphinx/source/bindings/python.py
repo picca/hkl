@@ -46,7 +46,7 @@ sample.set_lattice(1.54, 1.54, 1.54,
                    math.radians(90.))
 
 # compute all the pseudo axes managed by all engines
-engines = Hkl.PseudoAxisEngineList.factory(config)
+engines = Hkl.EngineList.factory(config)
 engines.init(geometry, detector, sample)
 engines.get()
 

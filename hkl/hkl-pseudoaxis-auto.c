@@ -47,7 +47,7 @@
  * Once we know this the axis is mark as degenerated and we do not need to
  * change is sector.
  */
-static void find_degenerated_axes(HklPseudoAxisEngine *self,
+static void find_degenerated_axes(HklEngine *self,
 				  gsl_multiroot_function *func,
 				  gsl_vector const *x, gsl_vector const *f,
 				  int degenerated[])
@@ -92,7 +92,7 @@ static void find_degenerated_axes(HklPseudoAxisEngine *self,
  * @see find_degenerated
  * @return HKL_TRUE or HKL_FALSE.
  */
-static int find_first_geometry(HklPseudoAxisEngine *self,
+static int find_first_geometry(HklEngine *self,
 			       gsl_multiroot_function *f,
 			       int degenerated[])
 {
@@ -282,7 +282,7 @@ static void perm_r(size_t axes_len, size_t op_len[], int p[], size_t axes_idx,
 		double *x_data = _x->data;
 		change_sector(x_data, x0, p, axes_len);
 		if (test_sector(_x, f, _f))
-			hkl_pseudo_axis_engine_add_geometry(f->params, x_data);
+			hkl_engine_add_geometry(f->params, x_data);
 	} else
 		for (i=0; i<op_len[axes_idx]; ++i)
 			perm_r(axes_len, op_len, p, axes_idx, i, f, x0, _x, _f);
@@ -291,7 +291,7 @@ static void perm_r(size_t axes_len, size_t op_len[], int p[], size_t axes_idx,
 /**
  * @brief Find all numerical solutions of a mode.
  *
- * @param self the current HklPseudoAxisEngine
+ * @param self the current HklEngine
  * @param function The mode function
  *
  * @return HKL_TRUE or HKL_FALSE
@@ -301,7 +301,7 @@ static void perm_r(size_t axes_len, size_t op_len[], int p[], size_t axes_idx,
  * solutions from this starting point using cosinus/sinus properties.
  * It addes all valid solutions to the self->geometries.
  */
-static int solve_function(HklPseudoAxisEngine *self,
+static int solve_function(HklEngine *self,
 			  const HklFunction *function)
 {
 
@@ -369,7 +369,7 @@ void hkl_mode_auto_init(HklMode *self,
 }
 
 int hkl_mode_auto_set_real(HklMode *self,
-					      HklPseudoAxisEngine *engine,
+					      HklEngine *engine,
 					      HklGeometry *geometry,
 					      HklDetector *detector,
 					      HklSample *sample,
@@ -395,7 +395,7 @@ int hkl_mode_auto_set_real(HklMode *self,
 	}
 
 #ifdef DEBUG
-	hkl_pseudo_axis_engine_fprintf(stdout, engine);
+	hkl_engine_fprintf(stdout, engine);
 #endif
 
 	return HKL_TRUE;

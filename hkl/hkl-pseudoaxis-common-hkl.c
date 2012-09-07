@@ -259,8 +259,8 @@ int _RUBh_minus_Q_func(const gsl_vector *x, void *params, gsl_vector *f)
  **/
 int RUBh_minus_Q(double const x[], void *params, double f[])
 {
-	HklPseudoAxisEngine *engine = params;
-	HklPseudoAxisEngineHkl *engine_hkl = container_of(engine, HklPseudoAxisEngineHkl, engine);
+	HklEngine *engine = params;
+	HklEngineHkl *engine_hkl = container_of(engine, HklEngineHkl, engine);
 	HklVector Hkl = {
 		.data = {
 			engine_hkl->h->_value,
@@ -295,7 +295,7 @@ int RUBh_minus_Q(double const x[], void *params, double f[])
 }
 
 int hkl_mode_get_hkl_real(HklMode *self,
-					     HklPseudoAxisEngine *engine,
+					     HklEngine *engine,
 					     HklGeometry *geometry,
 					     HklDetector *detector,
 					     HklSample *sample,
@@ -304,7 +304,7 @@ int hkl_mode_get_hkl_real(HklMode *self,
 	HklHolder *holder;
 	HklMatrix RUB;
 	HklVector hkl, ki, Q;
-	HklPseudoAxisEngineHkl *engine_hkl = container_of(engine, HklPseudoAxisEngineHkl, engine);
+	HklEngineHkl *engine_hkl = container_of(engine, HklEngineHkl, engine);
 
 	/* update the geometry internals */
 	hkl_geometry_update(geometry);
@@ -330,7 +330,7 @@ int hkl_mode_get_hkl_real(HklMode *self,
 }
 
 int hkl_mode_set_hkl_real(HklMode *self,
-					     HklPseudoAxisEngine *engine,
+					     HklEngine *engine,
 					     HklGeometry *geometry,
 					     HklDetector *detector,
 					     HklSample *sample,
@@ -458,8 +458,8 @@ int hkl_mode_set_hkl_real(HklMode *self,
  **/
 int _double_diffraction(double const x[], void *params, double f[])
 {
-	HklPseudoAxisEngine *engine = params;
-	HklPseudoAxisEngineHkl *engine_hkl = container_of(engine, HklPseudoAxisEngineHkl, engine);
+	HklEngine *engine = params;
+	HklEngineHkl *engine_hkl = container_of(engine, HklEngineHkl, engine);
 	HklVector hkl = {
 		.data = {
 			engine_hkl->h->_value,
@@ -541,7 +541,7 @@ int _double_diffraction_func(gsl_vector const *x, void *params, gsl_vector *f)
 int _psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f)
 {
 	HklVector ki, kf, Q;
-	HklPseudoAxisEngine *engine = params;
+	HklEngine *engine = params;
 	double parameters[4];
 	uint n_parameters;
 
@@ -602,7 +602,7 @@ int _psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f
 }
 
 int hkl_mode_init_psi_constant_vertical_real(HklMode *self,
-								HklPseudoAxisEngine *engine,
+								HklEngine *engine,
 								HklGeometry *geometry,
 								HklDetector *detector,
 								HklSample *sample,
@@ -672,19 +672,19 @@ int hkl_mode_init_psi_constant_vertical_real(HklMode *self,
 }
 
 /***********************/
-/* HklPseudoAxisEngine */
+/* HklEngine */
 /***********************/
 
-static void hkl_pseudo_axis_engine_hkl_free_real(HklPseudoAxisEngine *base)
+static void hkl_engine_hkl_free_real(HklEngine *base)
 {
-	HklPseudoAxisEngineHkl *self=container_of(base, HklPseudoAxisEngineHkl, engine);
-	hkl_pseudo_axis_engine_release(&self->engine);
+	HklEngineHkl *self=container_of(base, HklEngineHkl, engine);
+	hkl_engine_release(&self->engine);
 	free(self);
 }
 
-HklPseudoAxisEngine *hkl_pseudo_axis_engine_hkl_new(void)
+HklEngine *hkl_engine_hkl_new(void)
 {
-	HklPseudoAxisEngineHkl *self;
+	HklEngineHkl *self;
 	static const HklPseudoAxis h = {
 		.parameter = { HKL_PARAMETER_DEFAULTS, .name = "h", .range={.min=-1, .max=1}}
 	};
@@ -695,19 +695,19 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_hkl_new(void)
 		.parameter = { HKL_PARAMETER_DEFAULTS, .name = "l", .range={.min=-1, .max=1}}
 	};
 	static const HklPseudoAxis *pseudo_axes[] = {&h, &k, &l};
-	static HklPseudoAxisEngineInfo info = {
+	static HklEngineInfo info = {
 		.name = "hkl",
 		.pseudo_axes = pseudo_axes,
 		.n_pseudo_axes = ARRAY_SIZE(pseudo_axes),
 	};
-	static HklPseudoAxisEngineOperations operations = {
-		HKL_PSEUDO_AXIS_ENGINE_OPERATIONS_DEFAULTS,
-		.free=hkl_pseudo_axis_engine_hkl_free_real,
+	static HklEngineOperations operations = {
+		HKL_ENGINE_OPERATIONS_DEFAULTS,
+		.free=hkl_engine_hkl_free_real,
 	};
 
-	self = HKL_MALLOC(HklPseudoAxisEngineHkl);
+	self = HKL_MALLOC(HklEngineHkl);
 
-	hkl_pseudo_axis_engine_init(&self->engine, &info, &operations);
+	hkl_engine_init(&self->engine, &info, &operations);
 
 	self->h = register_pseudo_axis(&self->engine, &h.parameter);
 	self->k = register_pseudo_axis(&self->engine, &k.parameter);

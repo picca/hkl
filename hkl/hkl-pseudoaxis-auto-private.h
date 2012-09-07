@@ -65,7 +65,7 @@ void hkl_mode_auto_init(HklMode *self,
 					   const HklModeOperations *ops);
 
 extern int hkl_mode_auto_set_real(HklMode *self,
-						     HklPseudoAxisEngine *engine,
+						     HklEngine *engine,
 						     HklGeometry *geometry,
 						     HklDetector *detector,
 						     HklSample *sample,

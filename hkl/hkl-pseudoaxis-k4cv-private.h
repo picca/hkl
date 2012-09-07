@@ -26,8 +26,8 @@
 
 HKL_BEGIN_DECLS
 
-extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_hkl_new(void);
-extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_psi_new(void);
+extern HklEngine *hkl_pseudo_axis_engine_k4cv_hkl_new(void);
+extern HklEngine *hkl_pseudo_axis_engine_k4cv_psi_new(void);
 
 HKL_END_DECLS
 

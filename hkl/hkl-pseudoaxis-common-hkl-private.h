@@ -23,9 +23,9 @@
 #include <gsl/gsl_vector.h>
 #include "hkl-pseudoaxis-auto-private.h"
 
-typedef struct _HklPseudoAxisEngineHkl HklPseudoAxisEngineHkl;
-struct _HklPseudoAxisEngineHkl {
-	HklPseudoAxisEngine engine;
+typedef struct _HklEngineHkl HklEngineHkl;
+struct _HklEngineHkl {
+	HklEngine engine;
 	HklParameter *h;
 	HklParameter *k;
 	HklParameter *l;
@@ -52,27 +52,27 @@ extern int _double_diffraction(double const x[], void *params, double f[]);
  * in getter/setter.
  */
 extern int hkl_mode_get_hkl_real(HklMode *self,
-						    HklPseudoAxisEngine *engine,
+						    HklEngine *engine,
 						    HklGeometry *geometry,
 						    HklDetector *detector,
 						    HklSample *sample,
 						    HklError **error);
 
 extern int hkl_mode_set_hkl_real(HklMode *self,
-						    HklPseudoAxisEngine *engine,
+						    HklEngine *engine,
 						    HklGeometry *geometry,
 						    HklDetector *detector,
 						    HklSample *sample,
 						    HklError **error);
 
 extern int hkl_mode_init_psi_constant_vertical_real(HklMode *base,
-								       HklPseudoAxisEngine *engine,
+								       HklEngine *engine,
 								       HklGeometry *geometry,
 								       HklDetector *detector,
 								       HklSample *sample,
 								       HklError **error);
 
-extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_hkl_new(void);
+extern HklEngine *hkl_engine_hkl_new(void);
 
 #define HKL_MODE_OPERATIONS_HKL_DEFAULTS	\
 	HKL_MODE_OPERATIONS_AUTO_DEFAULTS,	\

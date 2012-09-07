@@ -159,23 +159,23 @@ static HklMode *fourc_constant_phi_horizontal()
 /* pseudo axis engine */
 /**********************/
 
-HklPseudoAxisEngine *hkl_pseudo_axis_engine_petra3_p09_eh2_hkl_new(void)
+HklEngine *hkl_engine_petra3_p09_eh2_hkl_new(void)
 {
-	HklPseudoAxisEngine *self;
+	HklEngine *self;
 	HklMode *default_mode;
 
-	self = hkl_pseudo_axis_engine_hkl_new();
+	self = hkl_engine_hkl_new();
 
 	default_mode = zaxis_alpha_fixed();
-	hkl_pseudo_axis_engine_add_mode(self, default_mode);
-	hkl_pseudo_axis_engine_select_mode(self, default_mode);
+	hkl_engine_add_mode(self, default_mode);
+	hkl_engine_select_mode(self, default_mode);
 
-	hkl_pseudo_axis_engine_add_mode(self, zaxis_beta_fixed());
-	hkl_pseudo_axis_engine_add_mode(self, zaxis_alpha_eq_beta());
-	hkl_pseudo_axis_engine_add_mode(self, fourc_bissector_horizontal());
-	hkl_pseudo_axis_engine_add_mode(self, fourc_constant_omega_horizontal());
-	hkl_pseudo_axis_engine_add_mode(self, fourc_constant_chi_horizontal());
-	hkl_pseudo_axis_engine_add_mode(self, fourc_constant_phi_horizontal());
+	hkl_engine_add_mode(self, zaxis_beta_fixed());
+	hkl_engine_add_mode(self, zaxis_alpha_eq_beta());
+	hkl_engine_add_mode(self, fourc_bissector_horizontal());
+	hkl_engine_add_mode(self, fourc_constant_omega_horizontal());
+	hkl_engine_add_mode(self, fourc_constant_chi_horizontal());
+	hkl_engine_add_mode(self, fourc_constant_phi_horizontal());
 
 	return self;
 }

@@ -305,7 +305,7 @@ void HKLWindow::set_up_pseudo_axes_frames(void)
 	LOG;
 
 	size_t i;
-	HklPseudoAxisEngine *engine;
+	HklEngine *engine;
 	Gtk::VBox *vbox2 = NULL;
 	PseudoAxesFrame *pseudo;
 
@@ -405,7 +405,7 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 
 	int index;
 	Gtk::CellRenderer * renderer;
-	HklPseudoAxisEngine *engine;
+	HklEngine *engine;
 
 	/* add the columns */
 	_TreeView_pseudoAxes->remove_all_columns();

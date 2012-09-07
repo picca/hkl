@@ -31,7 +31,7 @@
 HKL_BEGIN_DECLS
 
 typedef struct _HklModePsi HklModePsi;
-typedef struct _HklPseudoAxisEnginePsi HklPseudoAxisEnginePsi;
+typedef struct _HklEnginePsi HklEnginePsi;
 
 struct _HklModePsi
 {
@@ -40,16 +40,16 @@ struct _HklModePsi
 	HklVector hkl0;
 };
 
-struct _HklPseudoAxisEnginePsi
+struct _HklEnginePsi
 {
-	HklPseudoAxisEngine engine;
+	HklEngine engine;
 	HklParameter *psi;
 };
 
 extern HklMode *hkl_mode_psi_new(
 	const HklModeAutoInfo *info);
 
-extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_psi_new(void);
+extern HklEngine *hkl_engine_psi_new(void);
 
 extern int _psi_func(const gsl_vector *x, void *params, gsl_vector *f);
 

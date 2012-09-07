@@ -184,29 +184,29 @@ GSList* hkl_geometry_list_items(HklGeometryList *self)
 }
 
 /***********************/
-/* HklPseudoAxisEngine */
+/* HklEngine */
 /***********************/
 
-#define HKL_PSEUDO_AXIS_ENGINE_ERROR hkl_pseudo_axis_engine_error_quark ()
+#define HKL_ENGINE_ERROR hkl_engine_error_quark ()
 
-GQuark hkl_pseudo_axis_engine_error_quark (void)
+GQuark hkl_engine_error_quark (void)
 {
 	return g_quark_from_static_string ("hkl-pseudo-axis-engine-error-quark");
 }
 
 typedef enum {
-	HKL_PSEUDO_AXIS_ENGINE_ERROR_SET /* can not set the pseudo axis engine */
-} HklPseudoAxisEngineError;
+	HKL_ENGINE_ERROR_SET /* can not set the pseudo axis engine */
+} HklEngineError;
 
 
 /**
- * hkl_pseudo_axis_engine_modes:
+ * hkl_engine_modes:
  * @self: the this ptr
  *
  * Return value: (element-type HklMode) (transfer container): list of mdoe,
  *               free the list with g_slist_free when done.
  **/
-GSList* hkl_pseudo_axis_engine_modes(HklPseudoAxisEngine *self)
+GSList* hkl_engine_modes(HklEngine *self)
 {
 	GSList *list = NULL;
 	HklMode *mode;
@@ -219,17 +219,17 @@ GSList* hkl_pseudo_axis_engine_modes(HklPseudoAxisEngine *self)
 }
 
 /**
- * hkl_pseudo_axis_engine_set_values_unit:
+ * hkl_engine_set_values_unit:
  * @self: the this ptr
  * @values: (array length=len): the values to set
  * @len: the len of the values array
  * @error: return location of a GError or NULL
  *
- * compute the #HklGeometry angles for this #HklPseudoAxisEngine
+ * compute the #HklGeometry angles for this #HklEngine
  *
  * Return value: TRUE on success or FALSE if an error occurred
  **/
-gboolean hkl_pseudo_axis_engine_set_values_unit(HklPseudoAxisEngine *self,
+gboolean hkl_engine_set_values_unit(HklEngine *self,
 						double values[], unsigned int len,
 						GError **error)
 {
@@ -247,8 +247,8 @@ gboolean hkl_pseudo_axis_engine_set_values_unit(HklPseudoAxisEngine *self,
 		g_assert(&err == NULL || err != NULL);
 
 		g_set_error(error,
-			    HKL_PSEUDO_AXIS_ENGINE_ERROR,
-			    HKL_PSEUDO_AXIS_ENGINE_ERROR_SET,
+			    HKL_ENGINE_ERROR,
+			    HKL_ENGINE_ERROR_SET,
 			    strdup(err->message));
 
 		hkl_error_clear(&err);
@@ -256,12 +256,12 @@ gboolean hkl_pseudo_axis_engine_set_values_unit(HklPseudoAxisEngine *self,
 		return FALSE;
 	}
 
-	if(!hkl_pseudo_axis_engine_set(self, &err)){
+	if(!hkl_engine_set(self, &err)){
 		g_assert(&err == NULL || err != NULL);
 
 		g_set_error(error,
-			    HKL_PSEUDO_AXIS_ENGINE_ERROR,
-			    HKL_PSEUDO_AXIS_ENGINE_ERROR_SET,
+			    HKL_ENGINE_ERROR,
+			    HKL_ENGINE_ERROR_SET,
 			    strdup(err->message));
 
 		hkl_error_clear(&err);
@@ -277,13 +277,13 @@ gboolean hkl_pseudo_axis_engine_set_values_unit(HklPseudoAxisEngine *self,
  * hkl_engine_list_engines:
  * @self: the #HklEngineList
  *
- * Return value: (element-type HklPseudoAxisEngine) (transfer container): list of engines,
+ * Return value: (element-type HklEngine) (transfer container): list of engines,
  *               free the list with g_slist_free when done.
  **/
 GSList* hkl_engine_list_engines(HklEngineList *self)
 {
 	GSList *list = NULL;
-	HklPseudoAxisEngine *engine;
+	HklEngine *engine;
 
 	list_for_each(&self->engines, engine, list){
 		list = g_slist_append(list, engine);

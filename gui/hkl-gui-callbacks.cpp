@@ -429,7 +429,7 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & s
 
 	double value;
 	HklParameter *parameter;
-	HklPseudoAxisEngine *engine;
+	HklEngine *engine;
 	int res;
 
 	Gtk::TreePath path(spath);
@@ -443,7 +443,7 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & s
 	sscanf(newText.c_str(), "%lf", &value);
 
 	if(hkl_parameter_set_value_unit(parameter, value, NULL))
-		if(hkl_pseudo_axis_engine_set(engine, NULL)){
+		if(hkl_engine_set(engine, NULL)){
 			HklGeometryListItem *first;
 
 			first = list_top(&_engines->geometries->items, HklGeometryListItem, node);

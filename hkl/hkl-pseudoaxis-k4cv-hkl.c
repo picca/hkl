@@ -83,7 +83,7 @@ static int _constant_omega_f1(const gsl_vector *x, void *params, gsl_vector *f)
 	double const komega = x->data[0];
 	double const kappa = x->data[1];
 	double omega;
-	HklPseudoAxisEngine *engine = params;
+	HklEngine *engine = params;
 	double omega0;
 	uint shit;
 
@@ -109,7 +109,7 @@ static int _constant_omega_f2(const gsl_vector *x, void *params, gsl_vector *f)
 	const double komega = x->data[0];
 	const double kappa = x->data[1];
 	double omega;
-	HklPseudoAxisEngine *engine = params;
+	HklEngine *engine = params;
 	double omega0;
 	uint shit;
 
@@ -134,7 +134,7 @@ static int _constant_chi_f1(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	const double kappa = x->data[1];
 	double chi;
-	HklPseudoAxisEngine *engine = params;
+	HklEngine *engine = params;
 	double chi0;
 	uint shit;
 
@@ -159,7 +159,7 @@ static int _constant_chi_f2(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	const double kappa = x->data[1];
 	double chi;
-	HklPseudoAxisEngine *engine = params;
+	HklEngine *engine = params;
 	double chi0;
 	uint shit;
 
@@ -185,7 +185,7 @@ static int _constant_phi_f1(const gsl_vector *x, void *params, gsl_vector *f)
 	const double kappa = x->data[1];
 	const double kphi = x->data[2];
 	double phi;
-	HklPseudoAxisEngine *engine = params;
+	HklEngine *engine = params;
 	double phi0;
 	uint shit;
 
@@ -211,7 +211,7 @@ static int _constant_phi_f2(const gsl_vector *x, void *params, gsl_vector *f)
 	const double kappa = x->data[1];
 	const double kphi = x->data[2];
 	double phi;
-	HklPseudoAxisEngine *engine = params;
+	HklEngine *engine = params;
 	double phi0;
 	uint shit;
 
@@ -332,22 +332,22 @@ static HklMode *psi_constant(void)
 /* pseudo axis engine */
 /**********************/
 
-HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_hkl_new(void)
+HklEngine *hkl_engine_k4cv_hkl_new(void)
 {
-	HklPseudoAxisEngine *self;
+	HklEngine *self;
 	HklMode *default_mode;
 
-	self = hkl_pseudo_axis_engine_hkl_new();
+	self = hkl_engine_hkl_new();
 
 	default_mode = bissector();
-	hkl_pseudo_axis_engine_add_mode(self, default_mode);
-	hkl_pseudo_axis_engine_select_mode(self, default_mode);
+	hkl_engine_add_mode(self, default_mode);
+	hkl_engine_select_mode(self, default_mode);
 
-	hkl_pseudo_axis_engine_add_mode(self, constant_omega());
-	hkl_pseudo_axis_engine_add_mode(self, constant_chi());
-	hkl_pseudo_axis_engine_add_mode(self, constant_phi());
-	hkl_pseudo_axis_engine_add_mode(self, double_diffraction());
-	hkl_pseudo_axis_engine_add_mode(self, psi_constant());
+	hkl_engine_add_mode(self, constant_omega());
+	hkl_engine_add_mode(self, constant_chi());
+	hkl_engine_add_mode(self, constant_phi());
+	hkl_engine_add_mode(self, double_diffraction());
+	hkl_engine_add_mode(self, psi_constant());
 
 	return self;
 }

@@ -40,8 +40,8 @@ int _psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 	HklVector dhkl0, hkl1;
 	HklVector ki, kf, Q, n;
 	HklMatrix RUB;
-	HklPseudoAxisEngine *engine = params;
-	HklPseudoAxisEnginePsi *psi_engine = container_of(engine, HklPseudoAxisEnginePsi, engine);
+	HklEngine *engine = params;
+	HklEnginePsi *psi_engine = container_of(engine, HklEnginePsi, engine);
 	HklModePsi *modepsi = container_of(engine->mode, HklModePsi, parent);
 	HklHolder *holder;
 
@@ -108,7 +108,7 @@ int _psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 }
 
 static int hkl_mode_init_psi_real(HklMode *base,
-						     HklPseudoAxisEngine *engine,
+						     HklEngine *engine,
 						     HklGeometry *geometry,
 						     HklDetector *detector,
 						     HklSample *sample,
@@ -152,7 +152,7 @@ static int hkl_mode_init_psi_real(HklMode *base,
 }
 
 static int hkl_mode_get_psi_real(HklMode *base,
-						    HklPseudoAxisEngine *engine,
+						    HklEngine *engine,
 						    HklGeometry *geometry,
 						    HklDetector *detector,
 						    HklSample *sample,
@@ -202,7 +202,7 @@ static int hkl_mode_get_psi_real(HklMode *base,
 			hkl_error_set(error, "can not compute psi when Q and the ref vector are colinear");
 			return HKL_FALSE;
 		}else{
-			HklPseudoAxisEnginePsi *psi_engine = container_of(engine, HklPseudoAxisEnginePsi, engine);
+			HklEnginePsi *psi_engine = container_of(engine, HklEnginePsi, engine);
 
 			/* compute the angle beetween hkl1 and n */
 			psi_engine->psi->_value = hkl_vector_oriented_angle(&n, &hkl1, &Q);
@@ -237,36 +237,36 @@ HklMode *hkl_mode_psi_new(const HklModeAutoInfo *info)
 }
 
 /***********************/
-/* HklPseudoAxisEngine */
+/* HklEngine */
 /***********************/
 
-static void hkl_pseudo_axis_engine_psi_free_real(HklPseudoAxisEngine *base)
+static void hkl_engine_psi_free_real(HklEngine *base)
 {
-	HklPseudoAxisEnginePsi *self=container_of(base, HklPseudoAxisEnginePsi, engine);
-	hkl_pseudo_axis_engine_release(&self->engine);
+	HklEnginePsi *self=container_of(base, HklEnginePsi, engine);
+	hkl_engine_release(&self->engine);
 	free(self);
 }
 
-HklPseudoAxisEngine *hkl_pseudo_axis_engine_psi_new(void)
+HklEngine *hkl_engine_psi_new(void)
 {
-	HklPseudoAxisEnginePsi *self;
+	HklEnginePsi *self;
 	static const HklPseudoAxis psi = {
 		.parameter = { HKL_PARAMETER_DEFAULTS_ANGLE, .name = "psi"}
 	};
 	static const HklPseudoAxis *pseudo_axes[] = {&psi};
-	static const HklPseudoAxisEngineInfo info = {
+	static const HklEngineInfo info = {
 		.name = "psi",
 		.pseudo_axes = pseudo_axes,
 		.n_pseudo_axes = ARRAY_SIZE(pseudo_axes),
 	};
-	static const HklPseudoAxisEngineOperations operations = {
-		HKL_PSEUDO_AXIS_ENGINE_OPERATIONS_DEFAULTS,
-		.free=hkl_pseudo_axis_engine_psi_free_real,
+	static const HklEngineOperations operations = {
+		HKL_ENGINE_OPERATIONS_DEFAULTS,
+		.free=hkl_engine_psi_free_real,
 	};
 
-	self = HKL_MALLOC(HklPseudoAxisEnginePsi);
+	self = HKL_MALLOC(HklEnginePsi);
 
-	hkl_pseudo_axis_engine_init(&self->engine, &info, &operations);
+	hkl_engine_init(&self->engine, &info, &operations);
 
 	self->psi = register_pseudo_axis(&self->engine, &psi.parameter);
 

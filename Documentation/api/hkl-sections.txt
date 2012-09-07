@@ -1,17 +1,17 @@
 <SECTION>
 <FILE>hkl-pseudoaxis-zaxis</FILE>
-hkl_pseudo_axis_engine_zaxis_hkl_new
+hkl_engine_zaxis_hkl_new
 </SECTION>
 
 <SECTION>
 <FILE>hkl-pseudoaxis-common-eulerians</FILE>
-hkl_pseudo_axis_engine_eulerians_new
+hkl_engine_eulerians_new
 </SECTION>
 
 <SECTION>
 <FILE>hkl-pseudoaxis-e6c</FILE>
-hkl_pseudo_axis_engine_e6c_hkl_new
-hkl_pseudo_axis_engine_e6c_psi_new
+hkl_engine_e6c_hkl_new
+hkl_engine_e6c_psi_new
 </SECTION>
 
 <SECTION>
@@ -69,8 +69,8 @@ hkl_quaternion_to_angle_and_axe
 
 <SECTION>
 <FILE>hkl-pseudoaxis-k4cv</FILE>
-hkl_pseudo_axis_engine_k4cv_hkl_new
-hkl_pseudo_axis_engine_k4cv_psi_new
+hkl_engine_k4cv_hkl_new
+hkl_engine_k4cv_psi_new
 </SECTION>
 
 <SECTION>
@@ -112,7 +112,7 @@ hkl_parameter_fprintf
 <FILE>hkl-pseudoaxis</FILE>
 HklPseudoAxis
 HklMode
-HklPseudoAxisEngine
+HklEngine
 HklEngineList
 HklModeFunc
 HklFunction
@@ -123,15 +123,15 @@ hkl_pseudo_axis_fprintf
 hkl_mode_new
 hkl_mode_init
 hkl_mode_free
-hkl_pseudo_axis_engine_new
-hkl_pseudo_axis_engine_free
-hkl_pseudo_axis_engine_add_mode
-hkl_pseudo_axis_engine_add_geometry
-hkl_pseudo_axis_engine_select_mode
-hkl_pseudo_axis_engine_initialize
-hkl_pseudo_axis_engine_set
-hkl_pseudo_axis_engine_get
-hkl_pseudo_axis_engine_fprintf
+hkl_engine_new
+hkl_engine_free
+hkl_engine_add_mode
+hkl_engine_add_geometry
+hkl_engine_select_mode
+hkl_engine_initialize
+hkl_engine_set
+hkl_engine_get
+hkl_engine_fprintf
 hkl_engine_list_new
 hkl_engine_list_free
 hkl_engine_list_add
@@ -194,8 +194,8 @@ hkl_mode_set_real
 
 <SECTION>
 <FILE>hkl-pseudoaxis-e4cv</FILE>
-hkl_pseudo_axis_engine_e4cv_hkl_new
-hkl_pseudo_axis_engine_e4cv_psi_new
+hkl_engine_e4cv_hkl_new
+hkl_engine_e4cv_psi_new
 </SECTION>
 
 <SECTION>
@@ -230,8 +230,8 @@ HKL_MALLOC
 
 <SECTION>
 <FILE>hkl-pseudoaxis-k6c</FILE>
-hkl_pseudo_axis_engine_k6c_hkl_new
-hkl_pseudo_axis_engine_k6c_psi_new
+hkl_engine_k6c_hkl_new
+hkl_engine_k6c_psi_new
 </SECTION>
 
 <SECTION>
@@ -261,7 +261,7 @@ RUBh_minus_Q
 double_diffraction
 hkl_mode_get_hkl_real
 hkl_mode_init_psi_constant_vertical_real
-hkl_pseudo_axis_engine_hkl_new
+hkl_engine_hkl_new
 </SECTION>
 
 <SECTION>
@@ -299,7 +299,7 @@ HKL_LIST_DEL_ITEM_DESTRUCTOR
 
 <SECTION>
 <FILE>hkl-pseudoaxis-common</FILE>
-hkl_pseudo_axis_engine_init_func
+hkl_engine_init_func
 </SECTION>
 
 <SECTION>
@@ -376,13 +376,13 @@ hkl_engine_list_factory
 <FILE>hkl-pseudoaxis-common-psi</FILE>
 HklModePsi
 hkl_mode_psi_new
-hkl_pseudo_axis_engine_psi_new
+hkl_engine_psi_new
 </SECTION>
 
 <SECTION>
 <FILE>hkl-pseudoaxis-common-q</FILE>
-hkl_pseudo_axis_engine_q_new
-hkl_pseudo_axis_engine_q2_new
+hkl_engine_q_new
+hkl_engine_q2_new
 </SECTION>
 
 <SECTION>

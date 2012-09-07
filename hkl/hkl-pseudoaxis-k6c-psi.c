@@ -41,16 +41,16 @@ static HklMode *psi_vertical()
 	return hkl_mode_psi_new(&info);
 }
 
-HklPseudoAxisEngine *hkl_pseudo_axis_engine_k6c_psi_new(void)
+HklEngine *hkl_engine_k6c_psi_new(void)
 {
-	HklPseudoAxisEngine *self;
+	HklEngine *self;
 	HklMode *default_mode;
 
-	self = hkl_pseudo_axis_engine_psi_new();
+	self = hkl_engine_psi_new();
 
 	default_mode = psi_vertical();
-	hkl_pseudo_axis_engine_add_mode(self, default_mode);
-	hkl_pseudo_axis_engine_select_mode(self, default_mode);
+	hkl_engine_add_mode(self, default_mode);
+	hkl_engine_select_mode(self, default_mode);
 
 	return self;
 }

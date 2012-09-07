@@ -145,22 +145,22 @@ static HklMode *psi_constant(void)
 /* pseudo axes engines */
 /***********************/
 
-HklPseudoAxisEngine *hkl_pseudo_axis_engine_e4c_hkl_new(void)
+HklEngine *hkl_engine_e4c_hkl_new(void)
 {
-	HklPseudoAxisEngine *self;
+	HklEngine *self;
 	HklMode *default_mode;
 
-	self = hkl_pseudo_axis_engine_hkl_new();
+	self = hkl_engine_hkl_new();
 
 	default_mode = bissector();
-	hkl_pseudo_axis_engine_add_mode(self, default_mode);
-	hkl_pseudo_axis_engine_select_mode(self, default_mode);
+	hkl_engine_add_mode(self, default_mode);
+	hkl_engine_select_mode(self, default_mode);
 
-	hkl_pseudo_axis_engine_add_mode(self, constant_omega());
-	hkl_pseudo_axis_engine_add_mode(self, constant_chi());
-	hkl_pseudo_axis_engine_add_mode(self, constant_phi());
-	hkl_pseudo_axis_engine_add_mode(self, double_diffraction());
-	hkl_pseudo_axis_engine_add_mode(self, psi_constant());
+	hkl_engine_add_mode(self, constant_omega());
+	hkl_engine_add_mode(self, constant_chi());
+	hkl_engine_add_mode(self, constant_phi());
+	hkl_engine_add_mode(self, double_diffraction());
+	hkl_engine_add_mode(self, psi_constant());
 
 	return self;
 }

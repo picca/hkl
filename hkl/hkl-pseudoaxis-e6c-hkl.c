@@ -258,29 +258,29 @@ static HklMode *constant_mu_horizontal(void)
 /* E6C PseudoAxeEngine */
 /***********************/
 
-HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
+HklEngine *hkl_engine_e6c_hkl_new(void)
 {
-	HklPseudoAxisEngine *self;
+	HklEngine *self;
 	HklMode *default_mode;
 
-	self = hkl_pseudo_axis_engine_hkl_new();
+	self = hkl_engine_hkl_new();
 
 	default_mode = bissector_vertical();
-	hkl_pseudo_axis_engine_add_mode(self, default_mode);
-	hkl_pseudo_axis_engine_select_mode(self, default_mode);
+	hkl_engine_add_mode(self, default_mode);
+	hkl_engine_select_mode(self, default_mode);
 
-	hkl_pseudo_axis_engine_add_mode(self, constant_omega_vertical());
-	hkl_pseudo_axis_engine_add_mode(self, constant_chi_vertical());
-	hkl_pseudo_axis_engine_add_mode(self, constant_phi_vertical());
-	hkl_pseudo_axis_engine_add_mode(self, lifting_detector_phi());
-	hkl_pseudo_axis_engine_add_mode(self, lifting_detector_omega());
-	hkl_pseudo_axis_engine_add_mode(self, lifting_detector_mu());
-	hkl_pseudo_axis_engine_add_mode(self, double_diffraction_vertical());
-	hkl_pseudo_axis_engine_add_mode(self, bissector_horizontal());
-	hkl_pseudo_axis_engine_add_mode(self, double_diffraction_horizontal());
-	hkl_pseudo_axis_engine_add_mode(self, psi_constant_vertical());
-	hkl_pseudo_axis_engine_add_mode(self, psi_constant_horizontal());
-	hkl_pseudo_axis_engine_add_mode(self, constant_mu_horizontal());
+	hkl_engine_add_mode(self, constant_omega_vertical());
+	hkl_engine_add_mode(self, constant_chi_vertical());
+	hkl_engine_add_mode(self, constant_phi_vertical());
+	hkl_engine_add_mode(self, lifting_detector_phi());
+	hkl_engine_add_mode(self, lifting_detector_omega());
+	hkl_engine_add_mode(self, lifting_detector_mu());
+	hkl_engine_add_mode(self, double_diffraction_vertical());
+	hkl_engine_add_mode(self, bissector_horizontal());
+	hkl_engine_add_mode(self, double_diffraction_horizontal());
+	hkl_engine_add_mode(self, psi_constant_vertical());
+	hkl_engine_add_mode(self, psi_constant_horizontal());
+	hkl_engine_add_mode(self, constant_mu_horizontal());
 
 	return self;
 }

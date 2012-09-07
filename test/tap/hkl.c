@@ -21,7 +21,7 @@
  */
 #include <tap/hkl.h>
 
-int check_pseudoaxes_v(const HklPseudoAxisEngine *engine, ...)
+int check_pseudoaxes_v(const HklEngine *engine, ...)
 {
 	uint i;
 	va_list ap;
@@ -36,7 +36,7 @@ int check_pseudoaxes_v(const HklPseudoAxisEngine *engine, ...)
 	return check_pseudoaxes(engine, values, engine->info->n_pseudo_axes);
 }
 
-int check_pseudoaxes(const HklPseudoAxisEngine *engine,
+int check_pseudoaxes(const HklEngine *engine,
 		     double expected[], uint len)
 {
 	int res = HKL_TRUE;
@@ -56,14 +56,14 @@ int check_pseudoaxes(const HklPseudoAxisEngine *engine,
 }
 
 /**
- * hkl_pseudo_axis_engine_set_values_v: (skip)
- * @self: the PseudoAxisEngine
+ * hkl_engine_set_values_v: (skip)
+ * @self: the Engine
  * @values: the values to set 
  *
  * set the values of the PseudoAxes with the given values. This method
  * is only available for test as it is sort of brittle.
  **/
-void hkl_pseudo_axis_engine_set_values_v(HklPseudoAxisEngine *self, ...)
+void hkl_engine_set_values_v(HklEngine *self, ...)
 {
 	uint i;
 	va_list ap;
