@@ -28,7 +28,7 @@ static void degenerated(void)
 	int res = HKL_TRUE;
 	HklEngineList *engines;
 	HklPseudoAxisEngine *engine;
-	HklPseudoAxisEngineMode *mode;
+	HklMode *mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;
@@ -85,7 +85,7 @@ static void eulerians(void)
 	int res = HKL_TRUE;
 	HklEngineList *engines;
 	HklPseudoAxisEngine *engine;
-	HklPseudoAxisEngineMode *mode;
+	HklMode *mode;
 	HklGeometryListItem *item;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
@@ -147,7 +147,7 @@ static void q2(void)
 	int res = HKL_TRUE;
 	HklEngineList *engines;
 	HklPseudoAxisEngine *engine;
-	HklPseudoAxisEngineMode *mode;
+	HklMode *mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;

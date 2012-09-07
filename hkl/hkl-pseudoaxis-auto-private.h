@@ -29,7 +29,7 @@
 HKL_BEGIN_DECLS
 
 typedef struct _HklFunction HklFunction;
-typedef struct _HklPseudoAxisEngineModeAutoInfo HklPseudoAxisEngineModeAutoInfo;
+typedef struct _HklModeAutoInfo HklModeAutoInfo;
 
 struct _HklFunction
 {
@@ -37,15 +37,15 @@ struct _HklFunction
 	int (* function) (const gsl_vector *x, void *params, gsl_vector *f);
 };
 
-struct _HklPseudoAxisEngineModeAutoInfo {
-	const HklPseudoAxisEngineModeInfo mode;
+struct _HklModeAutoInfo {
+	const HklModeInfo mode;
 	const HklFunction **functions;
 	const uint n_functions;
 };
 
-#define HKL_PSEUDO_AXIS_ENGINE_MODE_OPERATIONS_AUTO_DEFAULTS		\
-	HKL_PSEUDO_AXIS_ENGINE_MODE_OPERATIONS_DEFAULTS,		\
-		.set = hkl_pseudo_axis_engine_mode_auto_set_real
+#define HKL_MODE_OPERATIONS_AUTO_DEFAULTS		\
+	HKL_MODE_OPERATIONS_DEFAULTS,		\
+		.set = hkl_mode_auto_set_real
 
 #define CHECK_NAN(x, len) do{				\
 		for(uint i=0; i<len; ++i)		\
@@ -56,15 +56,15 @@ struct _HklPseudoAxisEngineModeAutoInfo {
 #define INFO_AUTO(name, axes, fn) .mode={INFO(name, axes),}, .functions=fn, .n_functions=ARRAY_SIZE(fn)
 #define INFO_AUTO_WITH_PARAMS(name, axes, fn, parameters) .mode={INFO_WITH_PARAMS(name, axes, parameters)}, .functions=fn, .n_functions=ARRAY_SIZE(fn)
 
-extern HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_auto_new(
-	const HklPseudoAxisEngineModeAutoInfo *info,
-	const HklPseudoAxisEngineModeOperations *ops);
+extern HklMode *hkl_mode_auto_new(
+	const HklModeAutoInfo *info,
+	const HklModeOperations *ops);
 
-void hkl_pseudo_axis_engine_mode_auto_init(HklPseudoAxisEngineMode *self,
-					   const HklPseudoAxisEngineModeAutoInfo *info,
-					   const HklPseudoAxisEngineModeOperations *ops);
+void hkl_mode_auto_init(HklMode *self,
+					   const HklModeAutoInfo *info,
+					   const HklModeOperations *ops);
 
-extern int hkl_pseudo_axis_engine_mode_auto_set_real(HklPseudoAxisEngineMode *self,
+extern int hkl_mode_auto_set_real(HklMode *self,
 						     HklPseudoAxisEngine *engine,
 						     HklGeometry *geometry,
 						     HklDetector *detector,

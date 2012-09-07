@@ -29,7 +29,7 @@ sample.set_lattice(1.54, 1.54, 1.54,
                    math.radians(90.))
 
 # get all engines for a given configuration
-engines = Hkl.PseudoAxisEngineList.factory(config)
+engines = Hkl.EngineList.factory(config)
 
 # prepare the engines to work with the related geometry, detector and
 # sample

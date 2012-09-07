@@ -25,7 +25,7 @@
 #include "hkl-pseudoaxis-auto-private.h"
 #include "hkl-pseudoaxis-common-psi-private.h"
 
-static HklPseudoAxisEngineMode *psi_vertical()
+static HklMode *psi_vertical()
 {
 	static const HklFunction *functions[] = {&psi_func};
 	static const char *axes[] = {"komega", "kappa", "kphi", "delta"};
@@ -34,17 +34,17 @@ static HklPseudoAxisEngineMode *psi_vertical()
 		{HKL_PARAMETER_DEFAULTS, .name = "k1", .range = {.min=-1, .max=1}, ._value=1,},
 		{HKL_PARAMETER_DEFAULTS, .name = "l1", .range = {.min=-1, .max=1}, ._value=1,},
 	};
-	static const HklPseudoAxisEngineModeAutoInfo info = {
+	static const HklModeAutoInfo info = {
 		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
 	};
 
-	return hkl_pseudo_axis_engine_mode_psi_new(&info);
+	return hkl_mode_psi_new(&info);
 }
 
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_k6c_psi_new(void)
 {
 	HklPseudoAxisEngine *self;
-	HklPseudoAxisEngineMode *default_mode;
+	HklMode *default_mode;
 
 	self = hkl_pseudo_axis_engine_psi_new();
 

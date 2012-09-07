@@ -30,15 +30,15 @@
 HKL_BEGIN_DECLS
 
 typedef struct _HklPseudoAxis HklPseudoAxis;
-typedef struct _HklPseudoAxisEngineModeOperations HklPseudoAxisEngineModeOperations;
-typedef struct _HklPseudoAxisEngineModeInfo HklPseudoAxisEngineModeInfo;
-typedef struct _HklPseudoAxisEngineMode HklPseudoAxisEngineMode;
+typedef struct _HklModeOperations HklModeOperations;
+typedef struct _HklModeInfo HklModeInfo;
+typedef struct _HklMode HklMode;
 typedef struct _HklPseudoAxisEngineInfo HklPseudoAxisEngineInfo;
 typedef struct _HklPseudoAxisEngine HklPseudoAxisEngine;
 typedef struct _HklEngineList HklEngineList;
 typedef struct _HklPseudoAxisEngineOperations HklPseudoAxisEngineOperations;
 
-struct _HklPseudoAxisEngineModeInfo {
+struct _HklModeInfo {
 	const char *name;
 	const char **axes;
 	uint n_axes;
@@ -46,10 +46,10 @@ struct _HklPseudoAxisEngineModeInfo {
 	uint n_parameters;
 };
 
-struct _HklPseudoAxisEngineMode
+struct _HklMode
 {
-	const HklPseudoAxisEngineModeInfo *info;
-	const HklPseudoAxisEngineModeOperations *op;
+	const HklModeInfo *info;
+	const HklModeOperations *op;
 	HklGeometry *geometry_init;
 	HklDetector *detector_init;
 	HklSample *sample_init;
@@ -71,7 +71,7 @@ struct _HklPseudoAxisEngine
 	HklGeometry *geometry;
 	HklDetector *detector;
 	HklSample *sample;
-	HklPseudoAxisEngineMode *mode; /* not owned */
+	HklMode *mode; /* not owned */
 	HklEngineList *engines; /* not owned */
 	HklParameterList pseudo_axes;
 	struct list_head modes; /* owned */
@@ -96,17 +96,17 @@ struct _HklEngineList
 };
 
 /***************************/
-/* HklPseudoAxisEngineMode */
+/* HklMode */
 /***************************/
 
-extern void hkl_pseudo_axis_engine_mode_fprintf(FILE *f, const HklPseudoAxisEngineMode *self);
+extern void hkl_mode_fprintf(FILE *f, const HklMode *self);
 
 /***********************/
 /* HklPseudoAxisEngine */
 /***********************/
 
 extern void hkl_pseudo_axis_engine_select_mode(HklPseudoAxisEngine *self,
-					       HklPseudoAxisEngineMode *mode);
+					       HklMode *mode);
 
 extern void hkl_pseudo_axis_engine_select_mode_by_name(HklPseudoAxisEngine *self,
 						       const char *name);

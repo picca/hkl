@@ -208,76 +208,76 @@ the file ``src/hkl-pseudoaxis-e6c-hkl.c``::
     HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
     {
 	HklPseudoAxisEngine *self;
-	HklPseudoAxisEngineMode *mode;
+	HklMode *mode;
 
 	self = hkl_pseudo_axis_engine_hkl_new();
 
 	/* bissector_vertical */
-	mode = hkl_pseudo_axis_engine_mode_new(
+	mode = hkl_mode_new(
 		"bissector_vertical",
 		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
+		hkl_mode_get_hkl_real,
 		hkl_pseudo_axis_engine_setter_func_bissector_vertical,
 		0,
 		4, "omega", "chi", "phi", "delta");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 	/* constant_omega_vertical */
-	mode = hkl_pseudo_axis_engine_mode_new(
+	mode = hkl_mode_new(
 		"constant_omega_vertical",
 		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_hkl_real,
+		hkl_mode_get_hkl_real,
+		hkl_mode_set_hkl_real,
 		0,
 		3, "chi", "phi", "delta");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 	/* constant_chi_vertical */
-	mode = hkl_pseudo_axis_engine_mode_new(
+	mode = hkl_mode_new(
 		"constant_chi_vertical",
 		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_hkl_real,
+		hkl_mode_get_hkl_real,
+		hkl_mode_set_hkl_real,
 		0,
 		3, "omega", "phi", "delta");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 	/* constant_phi_vertical */
-	mode = hkl_pseudo_axis_engine_mode_new(
+	mode = hkl_mode_new(
 		"constant_phi_vertical",
 		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_hkl_real,
+		hkl_mode_get_hkl_real,
+		hkl_mode_set_hkl_real,
 		0,
 		3, "omega", "chi", "delta");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 	/* lifting_detector_phi */
-	mode = hkl_pseudo_axis_engine_mode_new(
+	mode = hkl_mode_new(
 		"lifting_detector_phi",
 		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_hkl_real,
+		hkl_mode_get_hkl_real,
+		hkl_mode_set_hkl_real,
 		0,
 		3, "phi", "gamma", "delta");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 	/* lifting_detector_omega */
-	mode = hkl_pseudo_axis_engine_mode_new(
+	mode = hkl_mode_new(
 		"lifting_detector_omega",
 		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_hkl_real,
+		hkl_mode_get_hkl_real,
+		hkl_mode_set_hkl_real,
 		0,
 		3, "omega", "gamma", "delta");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 	/* lifting_detector_mu */
-	mode = hkl_pseudo_axis_engine_mode_new(
+	mode = hkl_mode_new(
 		"lifting_detector_mu",
 		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_hkl_real,
+		hkl_mode_get_hkl_real,
+		hkl_mode_set_hkl_real,
 		0,
 		3, "mu", "gamma", "delta");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
@@ -297,31 +297,31 @@ the file ``src/hkl-pseudoaxis-e6c-hkl.c``::
 			   HKL_TRUE, HKL_TRUE,
 			   NULL, NULL);
 
-	mode = hkl_pseudo_axis_engine_mode_new(
+	mode = hkl_mode_new(
 		"double_diffraction_vertical",
 		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_double_diffraction_real,
+		hkl_mode_get_hkl_real,
+		hkl_mode_set_double_diffraction_real,
 		3, &h2, &k2, &l2,
 		4, "omega", "chi", "phi", "delta");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 	/* bissector_horizontal */
-	mode = hkl_pseudo_axis_engine_mode_new(
+	mode = hkl_mode_new(
 		"bissector_horizontal",
 		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
+		hkl_mode_get_hkl_real,
 		hkl_pseudo_axis_engine_setter_func_bissector_horizontal,
 		0,
 		5, "mu", "omega", "chi", "phi", "gamma");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 	/* double_diffraction_horizontal */
-	mode = hkl_pseudo_axis_engine_mode_new(
+	mode = hkl_mode_new(
 		"double_diffraction_horizontal",
 		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_double_diffraction_real,
+		hkl_mode_get_hkl_real,
+		hkl_mode_set_double_diffraction_real,
 		3, &h2, &k2, &l2,
 		4, "mu", "chi", "phi", "gamma");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
@@ -334,21 +334,21 @@ the file ``src/hkl-pseudoaxis-e6c-hkl.c``::
 so you "just" need to add a new mode like this::
 
 	/* double_diffraction_horizontal */
-	mode = hkl_pseudo_axis_engine_mode_new(
+	mode = hkl_mode_new(
 		"psi_constant_vertical",
 		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_psi_constant_vertical,
+		hkl_mode_get_hkl_real,
+		hkl_mode_set_psi_constant_vertical,
 		3, &h2, &k2, &l2,
 		4, "omega", "chi", "phi", "delta");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
-So the first parameter of the hkl_pseudo_axis_engine_mode_new method
+So the first parameter of the hkl_mode_new method
 
 + name is the name of the mode
 + then the init functions (usually you need to store the current state of the geometry to be able to use the pseudo axis). Here no need for this init method so we put ``NULL``.
 
-+ then the get method which compute for a given geometry the pseudo axis value. the hkl get method ``hkl_pseudo_axis_engine_mode_get_hkl_real`` is completely generic and do not depend of the geometry. No need to write it.
++ then the get method which compute for a given geometry the pseudo axis value. the hkl get method ``hkl_mode_get_hkl_real`` is completely generic and do not depend of the geometry. No need to write it.
 
 + then the set method which compute a geometry for the given pseudo axis values. Now you need to work a little bit and write the set method.
 
@@ -377,7 +377,7 @@ values keeping the angle between the reference reciprocal space vector
 (h2, k2, l2) and the diffraction plane defined by the incomming beam
 and the outgoing beam::
 
-	    static int hkl_pseudo_axis_engine_mode_set_psi_constant_vertical(HklPseudoAxisEngine *engine,
+	    static int hkl_mode_set_psi_constant_vertical(HklPseudoAxisEngine *engine,
 									     HklGeometry *geometry,
 								             HklDetector *detector,
 								             HklSample *sample)

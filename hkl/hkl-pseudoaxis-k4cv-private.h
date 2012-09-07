@@ -22,7 +22,7 @@
 #ifndef __HKL_PSEUDOAXIS_K4CV_H__
 #define __HKL_PSEUDOAXIS_K4CV_H__
 
-#include <hkl/hkl-pseudoaxis-auto.h>
+#include <hkl/hkl-pseudoaxis-auto-private.h>
 
 HKL_BEGIN_DECLS
 

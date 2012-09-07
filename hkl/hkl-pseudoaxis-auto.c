@@ -343,32 +343,32 @@ static int solve_function(HklPseudoAxisEngine *self,
 }
 
 /* check that the number of axis of the mode is the right number of variables expected by mode functions */
-static inline void check_validity(const HklPseudoAxisEngineModeAutoInfo *info)
+static inline void check_validity(const HklModeAutoInfo *info)
 {
 	for(uint i=0; i<info->n_functions; ++i)
 		hkl_assert(info->functions[i]->size == info->mode.n_axes);
 }
 
-HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_auto_new(const HklPseudoAxisEngineModeAutoInfo *info,
-							      const HklPseudoAxisEngineModeOperations *ops)
+HklMode *hkl_mode_auto_new(const HklModeAutoInfo *info,
+							      const HklModeOperations *ops)
 {
 	check_validity(info);
 
-	return hkl_pseudo_axis_engine_mode_new(&info->mode, ops);
+	return hkl_mode_new(&info->mode, ops);
 
 }
 
-void hkl_pseudo_axis_engine_mode_auto_init(HklPseudoAxisEngineMode *self,
-					   const HklPseudoAxisEngineModeAutoInfo *info,
-					   const HklPseudoAxisEngineModeOperations *ops)
+void hkl_mode_auto_init(HklMode *self,
+					   const HklModeAutoInfo *info,
+					   const HklModeOperations *ops)
 {
 	check_validity(info);
 
-	hkl_pseudo_axis_engine_mode_init(self, &info->mode, ops);
+	hkl_mode_init(self, &info->mode, ops);
 
 }
 
-int hkl_pseudo_axis_engine_mode_auto_set_real(HklPseudoAxisEngineMode *self,
+int hkl_mode_auto_set_real(HklMode *self,
 					      HklPseudoAxisEngine *engine,
 					      HklGeometry *geometry,
 					      HklDetector *detector,
@@ -377,7 +377,7 @@ int hkl_pseudo_axis_engine_mode_auto_set_real(HklPseudoAxisEngineMode *self,
 {
 	size_t i;
 	int ok = HKL_FALSE;
-	HklPseudoAxisEngineModeAutoInfo *info = container_of(self->info, HklPseudoAxisEngineModeAutoInfo, mode);
+	HklModeAutoInfo *info = container_of(self->info, HklModeAutoInfo, mode);
 
 	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 

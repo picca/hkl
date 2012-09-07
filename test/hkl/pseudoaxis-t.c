@@ -33,7 +33,7 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 	double values[10]; /* this should be the number of pseudo_axis */
 	int unreachable = 0;
 	int ko = HKL_FALSE;
-	HklPseudoAxisEngineMode *mode;
+	HklMode *mode;
 
 	/* randomize the geometry */
 	hkl_geometry_randomize(geometry);

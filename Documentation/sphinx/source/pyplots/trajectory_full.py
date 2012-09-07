@@ -24,7 +24,7 @@ geometry = Hkl.Geometry.factory_newv(config, [math.radians(50.)])
 axes_names = [axis.parameter.name for axis in geometry.axes()]
 geometry.set_axes_values_unit([0., 120, 0., -90., 0., 60.])
 
-engines = Hkl.PseudoAxisEngineList.factory(config)
+engines = Hkl.EngineList.factory(config)
 engines.init(geometry, detector, sample)
 
 n = 10

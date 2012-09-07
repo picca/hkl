@@ -111,18 +111,18 @@ hkl_parameter_fprintf
 <SECTION>
 <FILE>hkl-pseudoaxis</FILE>
 HklPseudoAxis
-HklPseudoAxisEngineMode
+HklMode
 HklPseudoAxisEngine
 HklEngineList
-HklPseudoAxisEngineModeFunc
+HklModeFunc
 HklFunction
 hkl_pseudo_axis_new
 hkl_pseudo_axis_init
 hkl_pseudo_axis_free
 hkl_pseudo_axis_fprintf
-hkl_pseudo_axis_engine_mode_new
-hkl_pseudo_axis_engine_mode_init
-hkl_pseudo_axis_engine_mode_free
+hkl_mode_new
+hkl_mode_init
+hkl_mode_free
 hkl_pseudo_axis_engine_new
 hkl_pseudo_axis_engine_free
 hkl_pseudo_axis_engine_add_mode
@@ -189,7 +189,7 @@ hkl_geometry_factory_new
 
 <SECTION>
 <FILE>hkl-pseudoaxis-auto</FILE>
-hkl_pseudo_axis_engine_mode_set_real
+hkl_mode_set_real
 </SECTION>
 
 <SECTION>
@@ -259,8 +259,8 @@ double_diffraction_func
 psi_constant_vertical_func
 RUBh_minus_Q
 double_diffraction
-hkl_pseudo_axis_engine_mode_get_hkl_real
-hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real
+hkl_mode_get_hkl_real
+hkl_mode_init_psi_constant_vertical_real
 hkl_pseudo_axis_engine_hkl_new
 </SECTION>
 
@@ -374,8 +374,8 @@ hkl_engine_list_factory
 
 <SECTION>
 <FILE>hkl-pseudoaxis-common-psi</FILE>
-HklPseudoAxisEngineModePsi
-hkl_pseudo_axis_engine_mode_psi_new
+HklModePsi
+hkl_mode_psi_new
 hkl_pseudo_axis_engine_psi_new
 </SECTION>
 

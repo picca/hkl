@@ -90,7 +90,7 @@ class TestAPI(unittest.TestCase):
                            math.radians(90.0))
 
         # compute all the pseudo axes managed by all engines
-        engines = Hkl.PseudoAxisEngineList.factory(config)
+        engines = Hkl.EngineList.factory(config)
         engines.init(geometry, detector, sample)
         engines.get()
 

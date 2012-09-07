@@ -79,7 +79,7 @@ static void degenerated(void)
 	int res = HKL_TRUE;
 	HklEngineList *engines;
 	HklPseudoAxisEngine *engine;
-	HklPseudoAxisEngineMode *mode;
+	HklMode *mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;
@@ -208,7 +208,7 @@ static void psi_setter(void)
 	int res = HKL_TRUE;
 	HklEngineList *engines;
 	HklPseudoAxisEngine *engine;
-	HklPseudoAxisEngineMode *mode;
+	HklMode *mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;
@@ -267,7 +267,7 @@ static void q(void)
 	int res = HKL_TRUE;
 	HklEngineList *engines;
 	HklPseudoAxisEngine *engine;
-	HklPseudoAxisEngineMode *mode;
+	HklMode *mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;

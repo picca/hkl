@@ -191,7 +191,7 @@ void PseudoAxesFrame::updatePseudoAxis(void)
 
 void PseudoAxesFrame::updateMode(void)
 {
-	HklPseudoAxisEngineMode *mode;;
+	HklMode *mode;;
 
 	_mode_ListStore->clear();
 	list_for_each(&this->_engine->modes, mode, list){

@@ -42,7 +42,7 @@ int _psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 	HklMatrix RUB;
 	HklPseudoAxisEngine *engine = params;
 	HklPseudoAxisEnginePsi *psi_engine = container_of(engine, HklPseudoAxisEnginePsi, engine);
-	HklPseudoAxisEngineModePsi *modepsi = container_of(engine->mode, HklPseudoAxisEngineModePsi, parent);
+	HklModePsi *modepsi = container_of(engine->mode, HklModePsi, parent);
 	HklHolder *holder;
 
 	CHECK_NAN(x->data, x->size);
@@ -107,7 +107,7 @@ int _psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 	return GSL_SUCCESS;
 }
 
-static int hkl_pseudo_axis_engine_mode_init_psi_real(HklPseudoAxisEngineMode *base,
+static int hkl_mode_init_psi_real(HklMode *base,
 						     HklPseudoAxisEngine *engine,
 						     HklGeometry *geometry,
 						     HklDetector *detector,
@@ -116,12 +116,12 @@ static int hkl_pseudo_axis_engine_mode_init_psi_real(HklPseudoAxisEngineMode *ba
 {
 	HklVector ki;
 	HklMatrix RUB;
-	HklPseudoAxisEngineModePsi *self = container_of(base, HklPseudoAxisEngineModePsi, parent);
+	HklModePsi *self = container_of(base, HklModePsi, parent);
 	HklHolder *holder;
 
 	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
-	if (!hkl_pseudo_axis_engine_mode_init_real(base, engine, geometry, detector, sample, error)){
+	if (!hkl_mode_init_real(base, engine, geometry, detector, sample, error)){
 		hkl_error_set(error, "internal error");
 		return HKL_FALSE;
 	}
@@ -151,7 +151,7 @@ static int hkl_pseudo_axis_engine_mode_init_psi_real(HklPseudoAxisEngineMode *ba
 	return HKL_TRUE;
 }
 
-static int hkl_pseudo_axis_engine_mode_get_psi_real(HklPseudoAxisEngineMode *base,
+static int hkl_mode_get_psi_real(HklMode *base,
 						    HklPseudoAxisEngine *engine,
 						    HklGeometry *geometry,
 						    HklDetector *detector,
@@ -212,24 +212,24 @@ static int hkl_pseudo_axis_engine_mode_get_psi_real(HklPseudoAxisEngineMode *bas
 	return HKL_TRUE;
 }
 
-HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_psi_new(const HklPseudoAxisEngineModeAutoInfo *info)
+HklMode *hkl_mode_psi_new(const HklModeAutoInfo *info)
 {
-	static const HklPseudoAxisEngineModeOperations operations = {
-		HKL_PSEUDO_AXIS_ENGINE_MODE_OPERATIONS_AUTO_DEFAULTS,
-		.init = hkl_pseudo_axis_engine_mode_init_psi_real,
-		.get = hkl_pseudo_axis_engine_mode_get_psi_real,
+	static const HklModeOperations operations = {
+		HKL_MODE_OPERATIONS_AUTO_DEFAULTS,
+		.init = hkl_mode_init_psi_real,
+		.get = hkl_mode_get_psi_real,
 	};
-	HklPseudoAxisEngineModePsi *self;
+	HklModePsi *self;
 
 	if (info->mode.n_axes != 4){
-		fprintf(stderr, "This generic HklPseudoAxisEngineModePsi need exactly 4 axes");
+		fprintf(stderr, "This generic HklModePsi need exactly 4 axes");
 		exit(128);
 	}
 
-	self = HKL_MALLOC(HklPseudoAxisEngineModePsi);
+	self = HKL_MALLOC(HklModePsi);
 
 	/* the base constructor; */
-	hkl_pseudo_axis_engine_mode_auto_init(&self->parent,
+	hkl_mode_auto_init(&self->parent,
 					      info,
 					      &operations);
 

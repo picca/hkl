@@ -77,10 +77,10 @@ static int eulerian_to_kappa(const double omega, const double chi, const double 
 }
 
 /***************************/
-/* HklPseudoAxisEngineMode */
+/* HklMode */
 /***************************/
 
-static int hkl_pseudo_axis_engine_mode_get_eulerians_real(HklPseudoAxisEngineMode *self,
+static int hkl_mode_get_eulerians_real(HklMode *self,
 							  HklPseudoAxisEngine *engine,
 							  HklGeometry *geometry,
 							  HklDetector *detector,
@@ -116,7 +116,7 @@ static int hkl_pseudo_axis_engine_mode_get_eulerians_real(HklPseudoAxisEngineMod
 	return HKL_TRUE;
 }
 
-static int hkl_pseudo_axis_engine_mode_set_eulerians_real(HklPseudoAxisEngineMode *self,
+static int hkl_mode_set_eulerians_real(HklMode *self,
 							  HklPseudoAxisEngine *engine,
 							  HklGeometry *geometry,
 							  HklDetector *detector,
@@ -144,23 +144,23 @@ static int hkl_pseudo_axis_engine_mode_set_eulerians_real(HklPseudoAxisEngineMod
 }
 
 
-static HklPseudoAxisEngineMode *mode_eulerians()
+static HklMode *mode_eulerians()
 {
-	HklPseudoAxisEngineMode *mode;
+	HklMode *mode;
 	static const char *axes[] = {"komega", "kappa", "kphi"};
 	static const HklParameter parameters[] = {
 		{ HKL_PARAMETER_DEFAULTS, .name = "solution", .range = {.max = 1}, ._value = 1,},
 	};
-	static const HklPseudoAxisEngineModeInfo info = {
+	static const HklModeInfo info = {
 		INFO_WITH_PARAMS("eulerians", axes, parameters),
 	};
-	static const HklPseudoAxisEngineModeOperations operations = {
-		HKL_PSEUDO_AXIS_ENGINE_MODE_OPERATIONS_DEFAULTS,
-		.get = hkl_pseudo_axis_engine_mode_get_eulerians_real,
-		.set = hkl_pseudo_axis_engine_mode_set_eulerians_real,
+	static const HklModeOperations operations = {
+		HKL_MODE_OPERATIONS_DEFAULTS,
+		.get = hkl_mode_get_eulerians_real,
+		.set = hkl_mode_set_eulerians_real,
 	};
 
-	return hkl_pseudo_axis_engine_mode_new(&info, &operations);
+	return hkl_mode_new(&info, &operations);
 };
 
 /***********************/
@@ -179,7 +179,7 @@ static void hkl_pseudo_axis_engine_eulerians_free_real(HklPseudoAxisEngine *base
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_eulerians_new(void)
 {
 	HklPseudoAxisEngineEulerians *self;
-	HklPseudoAxisEngineMode *mode;
+	HklMode *mode;
 	static const HklPseudoAxis omega = {
 		.parameter = { HKL_PARAMETER_DEFAULTS_ANGLE, .name = "omega"}
 	};

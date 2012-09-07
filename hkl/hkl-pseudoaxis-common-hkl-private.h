@@ -51,21 +51,21 @@ extern int _double_diffraction(double const x[], void *params, double f[]);
  * This method can be used with all geometries of diffractometers
  * in getter/setter.
  */
-extern int hkl_pseudo_axis_engine_mode_get_hkl_real(HklPseudoAxisEngineMode *self,
+extern int hkl_mode_get_hkl_real(HklMode *self,
 						    HklPseudoAxisEngine *engine,
 						    HklGeometry *geometry,
 						    HklDetector *detector,
 						    HklSample *sample,
 						    HklError **error);
 
-extern int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
+extern int hkl_mode_set_hkl_real(HklMode *self,
 						    HklPseudoAxisEngine *engine,
 						    HklGeometry *geometry,
 						    HklDetector *detector,
 						    HklSample *sample,
 						    HklError **error);
 
-extern int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEngineMode *base,
+extern int hkl_mode_init_psi_constant_vertical_real(HklMode *base,
 								       HklPseudoAxisEngine *engine,
 								       HklGeometry *geometry,
 								       HklDetector *detector,
@@ -74,22 +74,22 @@ extern int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudo
 
 extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_hkl_new(void);
 
-#define HKL_PSEUDO_AXIS_ENGINE_MODE_OPERATIONS_HKL_DEFAULTS	\
-	HKL_PSEUDO_AXIS_ENGINE_MODE_OPERATIONS_AUTO_DEFAULTS,	\
-		.get = hkl_pseudo_axis_engine_mode_get_hkl_real
+#define HKL_MODE_OPERATIONS_HKL_DEFAULTS	\
+	HKL_MODE_OPERATIONS_AUTO_DEFAULTS,	\
+		.get = hkl_mode_get_hkl_real
 
-static const HklPseudoAxisEngineModeOperations hkl_mode_operations = {
-	HKL_PSEUDO_AXIS_ENGINE_MODE_OPERATIONS_HKL_DEFAULTS,
+static const HklModeOperations hkl_mode_operations = {
+	HKL_MODE_OPERATIONS_HKL_DEFAULTS,
 };
 
-static const HklPseudoAxisEngineModeOperations hkl_full_mode_operations = {
-	HKL_PSEUDO_AXIS_ENGINE_MODE_OPERATIONS_HKL_DEFAULTS,
-	.set = hkl_pseudo_axis_engine_mode_set_hkl_real,
+static const HklModeOperations hkl_full_mode_operations = {
+	HKL_MODE_OPERATIONS_HKL_DEFAULTS,
+	.set = hkl_mode_set_hkl_real,
 };
 
-static const HklPseudoAxisEngineModeOperations psi_constant_vertical_mode_operations = {
-	HKL_PSEUDO_AXIS_ENGINE_MODE_OPERATIONS_HKL_DEFAULTS,
-	.init = hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real,
+static const HklModeOperations psi_constant_vertical_mode_operations = {
+	HKL_MODE_OPERATIONS_HKL_DEFAULTS,
+	.init = hkl_mode_init_psi_constant_vertical_real,
 };
 
 static const HklFunction RUBh_minus_Q_func = {

@@ -1723,6 +1723,67 @@ Todo: test</doc>
         </parameters>
       </function>
     </record>
+    <record name="Mode" c:type="HklMode">
+      <field name="info" writable="1">
+        <type name="ModeInfo" c:type="HklModeInfo*"/>
+      </field>
+      <field name="op" writable="1">
+        <type name="ModeOperations" c:type="HklModeOperations*"/>
+      </field>
+      <field name="geometry_init" writable="1">
+        <type name="Geometry" c:type="HklGeometry*"/>
+      </field>
+      <field name="detector_init" writable="1">
+        <type name="Detector" c:type="HklDetector*"/>
+      </field>
+      <field name="sample_init" writable="1">
+        <type name="Sample" c:type="HklSample*"/>
+      </field>
+      <field name="parameters" writable="1">
+        <type name="ParameterList" c:type="HklParameterList"/>
+      </field>
+      <field name="list" writable="1">
+        <type name="gpointer" c:type="gpointer"/>
+      </field>
+      <field name="_shit" writable="1">
+        <type name="gpointer" c:type="void*"/>
+      </field>
+      <function name="fprintf"
+                c:identifier="hkl_mode_fprintf"
+                introspectable="0">
+        <doc xml:whitespace="preserve">print to a FILE the HklPSeudoAxisEngineMode members</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="f" transfer-ownership="none">
+            <type name="gpointer" c:type="FILE*"/>
+          </parameter>
+          <parameter name="self" transfer-ownership="none">
+            <type name="Mode" c:type="HklMode*"/>
+          </parameter>
+        </parameters>
+      </function>
+    </record>
+    <record name="ModeInfo" c:type="HklModeInfo">
+      <field name="name" writable="1">
+        <type name="utf8" c:type="char*"/>
+      </field>
+      <field name="axes" writable="1">
+        <type name="utf8" c:type="char**"/>
+      </field>
+      <field name="n_axes" writable="1">
+        <type name="guint" c:type="uint"/>
+      </field>
+      <field name="parameters" writable="1">
+        <type name="Parameter" c:type="HklParameter*"/>
+      </field>
+      <field name="n_parameters" writable="1">
+        <type name="guint" c:type="uint"/>
+      </field>
+    </record>
+    <record name="ModeOperations" c:type="HklModeOperations" disguised="1">
+    </record>
     <record name="Parameter"
             c:type="HklParameter"
             glib:type-name="HklParameter"
@@ -2153,7 +2214,7 @@ Returns:</doc>
         <type name="Sample" c:type="HklSample*"/>
       </field>
       <field name="mode" writable="1">
-        <type name="PseudoAxisEngineMode" c:type="HklPseudoAxisEngineMode*"/>
+        <type name="Mode" c:type="HklMode*"/>
       </field>
       <field name="engines" writable="1">
         <type name="EngineList" c:type="HklEngineList*"/>
@@ -2216,7 +2277,7 @@ Returns:</doc>
         <return-value transfer-ownership="container">
           <doc xml:whitespace="preserve">list of mdoe,</doc>
           <type name="GLib.SList" c:type="GSList*">
-            <type name="PseudoAxisEngineMode"/>
+            <type name="Mode"/>
           </type>
         </return-value>
       </method>
@@ -2230,8 +2291,7 @@ this is to speed the computation of the numerical axes.</doc>
         <parameters>
           <parameter name="mode" transfer-ownership="none">
             <doc xml:whitespace="preserve">the #HklPseudoAxisMode to select</doc>
-            <type name="PseudoAxisEngineMode"
-                  c:type="HklPseudoAxisEngineMode*"/>
+            <type name="Mode" c:type="HklMode*"/>
           </parameter>
         </parameters>
       </method>
@@ -2312,73 +2372,6 @@ Returns:</doc>
       <field name="n_pseudo_axes" writable="1">
         <type name="guint" c:type="uint"/>
       </field>
-    </record>
-    <record name="PseudoAxisEngineMode" c:type="HklPseudoAxisEngineMode">
-      <field name="info" writable="1">
-        <type name="PseudoAxisEngineModeInfo"
-              c:type="HklPseudoAxisEngineModeInfo*"/>
-      </field>
-      <field name="op" writable="1">
-        <type name="PseudoAxisEngineModeOperations"
-              c:type="HklPseudoAxisEngineModeOperations*"/>
-      </field>
-      <field name="geometry_init" writable="1">
-        <type name="Geometry" c:type="HklGeometry*"/>
-      </field>
-      <field name="detector_init" writable="1">
-        <type name="Detector" c:type="HklDetector*"/>
-      </field>
-      <field name="sample_init" writable="1">
-        <type name="Sample" c:type="HklSample*"/>
-      </field>
-      <field name="parameters" writable="1">
-        <type name="ParameterList" c:type="HklParameterList"/>
-      </field>
-      <field name="list" writable="1">
-        <type name="gpointer" c:type="gpointer"/>
-      </field>
-      <field name="_shit" writable="1">
-        <type name="gpointer" c:type="void*"/>
-      </field>
-      <function name="fprintf"
-                c:identifier="hkl_pseudo_axis_engine_mode_fprintf"
-                introspectable="0">
-        <doc xml:whitespace="preserve">print to a FILE the HklPSeudoAxisEngineMode members</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="f" transfer-ownership="none">
-            <type name="gpointer" c:type="FILE*"/>
-          </parameter>
-          <parameter name="self" transfer-ownership="none">
-            <type name="PseudoAxisEngineMode"
-                  c:type="HklPseudoAxisEngineMode*"/>
-          </parameter>
-        </parameters>
-      </function>
-    </record>
-    <record name="PseudoAxisEngineModeInfo"
-            c:type="HklPseudoAxisEngineModeInfo">
-      <field name="name" writable="1">
-        <type name="utf8" c:type="char*"/>
-      </field>
-      <field name="axes" writable="1">
-        <type name="utf8" c:type="char**"/>
-      </field>
-      <field name="n_axes" writable="1">
-        <type name="guint" c:type="uint"/>
-      </field>
-      <field name="parameters" writable="1">
-        <type name="Parameter" c:type="HklParameter*"/>
-      </field>
-      <field name="n_parameters" writable="1">
-        <type name="guint" c:type="uint"/>
-      </field>
-    </record>
-    <record name="PseudoAxisEngineModeOperations"
-            c:type="HklPseudoAxisEngineModeOperations"
-            disguised="1">
     </record>
     <record name="PseudoAxisEngineOperations"
             c:type="HklPseudoAxisEngineOperations"
@@ -4075,6 +4068,23 @@ control over, that could include printf() escape sequences.</doc>
         </parameter>
       </parameters>
     </function>
+    <function name="mode_fprintf"
+              c:identifier="hkl_mode_fprintf"
+              moved-to="Mode.fprintf"
+              introspectable="0">
+      <doc xml:whitespace="preserve">print to a FILE the HklPSeudoAxisEngineMode members</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="f" transfer-ownership="none">
+          <type name="gpointer" c:type="FILE*"/>
+        </parameter>
+        <parameter name="self" transfer-ownership="none">
+          <type name="Mode" c:type="HklMode*"/>
+        </parameter>
+      </parameters>
+    </function>
     <function name="parameter_fprintf"
               c:identifier="hkl_parameter_fprintf"
               moved-to="Parameter.fprintf"
@@ -4108,23 +4118,6 @@ control over, that could include printf() escape sequences.</doc>
         <parameter name="self" transfer-ownership="none">
           <doc xml:whitespace="preserve">the HklPseudoAxisEngine</doc>
           <type name="PseudoAxisEngine" c:type="HklPseudoAxisEngine*"/>
-        </parameter>
-      </parameters>
-    </function>
-    <function name="pseudo_axis_engine_mode_fprintf"
-              c:identifier="hkl_pseudo_axis_engine_mode_fprintf"
-              moved-to="PseudoAxisEngineMode.fprintf"
-              introspectable="0">
-      <doc xml:whitespace="preserve">print to a FILE the HklPSeudoAxisEngineMode members</doc>
-      <return-value transfer-ownership="none">
-        <type name="none" c:type="void"/>
-      </return-value>
-      <parameters>
-        <parameter name="f" transfer-ownership="none">
-          <type name="gpointer" c:type="FILE*"/>
-        </parameter>
-        <parameter name="self" transfer-ownership="none">
-          <type name="PseudoAxisEngineMode" c:type="HklPseudoAxisEngineMode*"/>
         </parameter>
       </parameters>
     </function>

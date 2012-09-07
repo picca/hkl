@@ -203,13 +203,13 @@ typedef enum {
  * hkl_pseudo_axis_engine_modes:
  * @self: the this ptr
  *
- * Return value: (element-type HklPseudoAxisEngineMode) (transfer container): list of mdoe,
+ * Return value: (element-type HklMode) (transfer container): list of mdoe,
  *               free the list with g_slist_free when done.
  **/
 GSList* hkl_pseudo_axis_engine_modes(HklPseudoAxisEngine *self)
 {
 	GSList *list = NULL;
-	HklPseudoAxisEngineMode *mode;
+	HklMode *mode;
 
 	list_for_each(&self->modes, mode, list){
 		list = g_slist_append(list, mode);

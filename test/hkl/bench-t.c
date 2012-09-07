@@ -27,7 +27,7 @@
 static void hkl_test_bench_run_real(HklPseudoAxisEngine *engine, HklGeometry *geometry, size_t n)
 {
 	size_t i;
-	HklPseudoAxisEngineMode *mode;
+	HklMode *mode;
 
 	/* pseudo -> geometry */
 	list_for_each(&engine->modes, mode, list){
@@ -118,7 +118,7 @@ static void hkl_test_bench_eulerians(void)
 {
 	HklEngineList *engines;
 	HklPseudoAxisEngine *engine;
-	HklPseudoAxisEngineMode *mode;
+	HklMode *mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;

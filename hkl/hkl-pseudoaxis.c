@@ -1,4 +1,5 @@
-/* This file is part of the hkl library.
+/*
+ * This file is part of the hkl library.
  *
  * The hkl library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -78,17 +79,17 @@ HklParameter *hkl_parameter_new_pseudo_axis(
 }
 
 /*****************************/
-/* HklPseudoAxisEngineMode */
+/* HklMode */
 /*****************************/
 
 /**
- * hkl_pseudo_axis_engine_mode_fprintf: (skip)
+ * hkl_mode_fprintf: (skip)
  * @f:
  * @self:
  *
  * print to a FILE the HklPSeudoAxisEngineMode members
  **/
-void hkl_pseudo_axis_engine_mode_fprintf(FILE *f, const HklPseudoAxisEngineMode *self)
+void hkl_mode_fprintf(FILE *f, const HklMode *self)
 {
 	unsigned int i;
 
@@ -188,7 +189,7 @@ static void hkl_pseudo_axis_engine_prepare_internal(HklPseudoAxisEngine *self)
  * this is to speed the computation of the numerical axes.
  **/
 void hkl_pseudo_axis_engine_select_mode(HklPseudoAxisEngine *self,
-					HklPseudoAxisEngineMode *mode)
+					HklMode *mode)
 {
 	if(!self || !mode)
 		return;
@@ -200,7 +201,7 @@ void hkl_pseudo_axis_engine_select_mode(HklPseudoAxisEngine *self,
 void hkl_pseudo_axis_engine_select_mode_by_name(HklPseudoAxisEngine *self,
 						const char *name)
 {
-	HklPseudoAxisEngineMode *mode;
+	HklMode *mode;
 
 	if(!self || !name)
 		return;

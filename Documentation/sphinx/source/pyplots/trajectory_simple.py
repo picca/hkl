@@ -27,7 +27,7 @@ axes_names = [axis.parameter.name for axis in geometry.axes()]
 geometry.set_axes_values_unit([0, 120, 0, -90, 0, 60])
 
 # get all engines for a given configuration
-engines = Hkl.PseudoAxisEngineList.factory(config)
+engines = Hkl.EngineList.factory(config)
 
 # prepare the engines to work with the related geometry, detector and
 # sample

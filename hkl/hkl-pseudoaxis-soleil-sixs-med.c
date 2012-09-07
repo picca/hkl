@@ -50,39 +50,39 @@ static const HklFunction reflectivity_func = {
 /* mode */
 /********/
 
-static HklPseudoAxisEngineMode* mu_fixed()
+static HklMode* mu_fixed()
 {
 	static const char* axes[] = {"omega", "gamma", "delta"};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
-	static const HklPseudoAxisEngineModeAutoInfo info = {
+	static const HklModeAutoInfo info = {
 		INFO_AUTO(__func__, axes, functions),
 	};
 
-	return hkl_pseudo_axis_engine_mode_auto_new(&info,
+	return hkl_mode_auto_new(&info,
 						    &hkl_full_mode_operations);
 }
 
-static HklPseudoAxisEngineMode* reflectivity()
+static HklMode* reflectivity()
 {
 	static const char* axes[] = {"mu", "omega", "gamma", "delta"};
 	static const HklFunction *functions[] = {&reflectivity_func};
-	static const HklPseudoAxisEngineModeAutoInfo info = {
+	static const HklModeAutoInfo info = {
 		INFO_AUTO(__func__, axes, functions),
 	};
 
-	return hkl_pseudo_axis_engine_mode_auto_new(&info,
+	return hkl_mode_auto_new(&info,
 						    &hkl_full_mode_operations);
 }
 
-static HklPseudoAxisEngineMode* pitch_fixed()
+static HklMode* pitch_fixed()
 {
 	static const char* axes[] = {"mu", "gamma", "delta"};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
-	static const HklPseudoAxisEngineModeAutoInfo info = {
+	static const HklModeAutoInfo info = {
 		INFO_AUTO(__func__, axes, functions),
 	};
 
-	return hkl_pseudo_axis_engine_mode_auto_new(&info,
+	return hkl_mode_auto_new(&info,
 						    &hkl_full_mode_operations);
 }
 
@@ -93,7 +93,7 @@ static HklPseudoAxisEngineMode* pitch_fixed()
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_soleil_sixs_med_2_2_hkl_new(void)
 {
 	HklPseudoAxisEngine *self;
-	HklPseudoAxisEngineMode *default_mode;
+	HklMode *default_mode;
 
 	self = hkl_pseudo_axis_engine_hkl_new();
 
@@ -113,7 +113,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_soleil_sixs_med_2_2_hkl_new(void)
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_soleil_sixs_med_1_2_hkl_new(void)
 {
 	HklPseudoAxisEngine *self;
-	HklPseudoAxisEngineMode *default_mode;
+	HklMode *default_mode;
 
 	self = hkl_pseudo_axis_engine_hkl_new();
 

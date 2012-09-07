@@ -58,24 +58,24 @@ extern HklParameter *hkl_parameter_new_pseudo_axis(
 	HklPseudoAxisEngine *engine);
 
 /***************************/
-/* HklPseudoAxisEngineMode */
+/* HklMode */
 /***************************/
 
-struct _HklPseudoAxisEngineModeOperations
+struct _HklModeOperations
 {
-	int (* init)(HklPseudoAxisEngineMode *self,
+	int (* init)(HklMode *self,
 		     HklPseudoAxisEngine *engine,
 		     HklGeometry *geometry,
 		     HklDetector *detector,
 		     HklSample *sample,
 		     HklError **error);
-	int (* get)(HklPseudoAxisEngineMode *self,
+	int (* get)(HklMode *self,
 		    HklPseudoAxisEngine *engine,
 		    HklGeometry *geometry,
 		    HklDetector *detector,
 		    HklSample *sample,
 		    HklError **error);
-	int (* set)(HklPseudoAxisEngineMode *self,
+	int (* set)(HklMode *self,
 		    HklPseudoAxisEngine *engine,
 		    HklGeometry *geometry,
 		    HklDetector *detector,
@@ -83,13 +83,13 @@ struct _HklPseudoAxisEngineModeOperations
 		    HklError **error);
 };
 
-#define HKL_PSEUDO_AXIS_ENGINE_MODE_OPERATIONS_DEFAULTS		\
-	.init=hkl_pseudo_axis_engine_mode_init_real,		\
-		.get=hkl_pseudo_axis_engine_mode_get_real,	\
-		.set=hkl_pseudo_axis_engine_mode_set_real
+#define HKL_MODE_OPERATIONS_DEFAULTS		\
+	.init=hkl_mode_init_real,		\
+		.get=hkl_mode_get_real,	\
+		.set=hkl_mode_set_real
 
 
-static int hkl_pseudo_axis_engine_mode_init_real(HklPseudoAxisEngineMode *mode,
+static int hkl_mode_init_real(HklMode *mode,
 						 HklPseudoAxisEngine *self,
 						 HklGeometry *geometry,
 						 HklDetector *detector,
@@ -117,7 +117,7 @@ static int hkl_pseudo_axis_engine_mode_init_real(HklPseudoAxisEngineMode *mode,
 	return HKL_TRUE;
 }
 
-static int hkl_pseudo_axis_engine_mode_get_real(HklPseudoAxisEngineMode *self,
+static int hkl_mode_get_real(HklMode *self,
 						HklPseudoAxisEngine *engine,
 						HklGeometry *geometry,
 						HklDetector *detector,
@@ -126,7 +126,7 @@ static int hkl_pseudo_axis_engine_mode_get_real(HklPseudoAxisEngineMode *self,
 {
 }
 
-static int hkl_pseudo_axis_engine_mode_set_real(HklPseudoAxisEngineMode *self,
+static int hkl_mode_set_real(HklMode *self,
 						HklPseudoAxisEngine *engine,
 						HklGeometry *geometry,
 						HklDetector *detector,
@@ -135,10 +135,10 @@ static int hkl_pseudo_axis_engine_mode_set_real(HklPseudoAxisEngineMode *self,
 {
 }
 
-static inline int hkl_pseudo_axis_engine_mode_init(
-	HklPseudoAxisEngineMode *self,
-	const HklPseudoAxisEngineModeInfo *info,
-	const HklPseudoAxisEngineModeOperations *op)
+static inline int hkl_mode_init(
+	HklMode *self,
+	const HklModeInfo *info,
+	const HklModeOperations *op)
 {
 	size_t i;
 
@@ -167,27 +167,27 @@ static inline int hkl_pseudo_axis_engine_mode_init(
 	return HKL_TRUE;
 }
 
-static inline HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
-	const HklPseudoAxisEngineModeInfo *info,
-	const HklPseudoAxisEngineModeOperations *op)
+static inline HklMode *hkl_mode_new(
+	const HklModeInfo *info,
+	const HklModeOperations *op)
 {
-	HklPseudoAxisEngineMode *self = NULL;
+	HklMode *self = NULL;
 
 
-	self = HKL_MALLOC(HklPseudoAxisEngineMode);
+	self = HKL_MALLOC(HklMode);
 
-	hkl_pseudo_axis_engine_mode_init(self, info, op);
+	hkl_mode_init(self, info, op);
 
 	return self;
 }
 
 /**
- * hkl_pseudo_axis_engine_mode_free: (skip)
+ * hkl_mode_free: (skip)
  * @self:
  *
- * delete an HklPseudoAxisEngineMode
+ * delete an HklMode
  **/
-static inline void hkl_pseudo_axis_engine_mode_free(HklPseudoAxisEngineMode *self)
+static inline void hkl_mode_free(HklMode *self)
 {
 	hkl_parameter_list_release(&self->parameters);
 
@@ -212,8 +212,8 @@ static inline void hkl_pseudo_axis_engine_mode_free(HklPseudoAxisEngineMode *sel
 
 static void hkl_pseudo_axis_engine_release(HklPseudoAxisEngine *self)
 {
-	HklPseudoAxisEngineMode *mode;
-	HklPseudoAxisEngineMode *next;
+	HklMode *mode;
+	HklMode *next;
 
 	if(self->geometry)
 		hkl_geometry_free(self->geometry);
@@ -227,7 +227,7 @@ static void hkl_pseudo_axis_engine_release(HklPseudoAxisEngine *self)
 	/* release the mode added */
 	list_for_each_safe(&self->modes, mode, next, list){
 		list_del(&mode->list);
-		hkl_pseudo_axis_engine_mode_free(mode);
+		hkl_mode_free(mode);
 	}
 	self->mode = NULL;
 
@@ -267,10 +267,10 @@ extern HklParameter *register_pseudo_axis(HklPseudoAxisEngine *self,
  * @self:
  * @mode: the mode to add
  *
- * add an HklPseudoAxisEngineMode to the self HklPseudoAxisEngine
+ * add an HklMode to the self HklPseudoAxisEngine
  **/
 static inline void hkl_pseudo_axis_engine_add_mode(HklPseudoAxisEngine *self,
-						   HklPseudoAxisEngineMode *mode)
+						   HklMode *mode)
 {
 	list_add_tail(&self->modes, &mode->list);
 }

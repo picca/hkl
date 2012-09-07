@@ -85,7 +85,7 @@ static int fit_detector_function(const gsl_vector *x, void *params, gsl_vector *
 }
 
 
-static int fit_detector_position(HklPseudoAxisEngineMode *mode, HklGeometry *geometry,
+static int fit_detector_position(HklMode *mode, HklGeometry *geometry,
 				 HklDetector *detector, HklVector *kf)
 {
 	size_t i;
@@ -294,7 +294,7 @@ int RUBh_minus_Q(double const x[], void *params, double f[])
 	return GSL_SUCCESS;
 }
 
-int hkl_pseudo_axis_engine_mode_get_hkl_real(HklPseudoAxisEngineMode *self,
+int hkl_mode_get_hkl_real(HklMode *self,
 					     HklPseudoAxisEngine *engine,
 					     HklGeometry *geometry,
 					     HklDetector *detector,
@@ -329,7 +329,7 @@ int hkl_pseudo_axis_engine_mode_get_hkl_real(HklPseudoAxisEngineMode *self,
 	return HKL_TRUE;
 }
 
-int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
+int hkl_mode_set_hkl_real(HklMode *self,
 					     HklPseudoAxisEngine *engine,
 					     HklGeometry *geometry,
 					     HklDetector *detector,
@@ -340,7 +340,7 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
 
 	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
-	if(!hkl_pseudo_axis_engine_mode_auto_set_real(self, engine,
+	if(!hkl_mode_auto_set_real(self, engine,
 						      geometry, detector, sample,
 						      error)){
 		hkl_assert(error == NULL || *error != NULL);
@@ -601,7 +601,7 @@ int _psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f
 	return  GSL_SUCCESS;
 }
 
-int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEngineMode *self,
+int hkl_mode_init_psi_constant_vertical_real(HklMode *self,
 								HklPseudoAxisEngine *engine,
 								HklGeometry *geometry,
 								HklDetector *detector,
@@ -612,7 +612,7 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 	HklVector ki, kf, Q, n;
 
 	if (!self || !engine || !engine->mode || !geometry || !detector || !sample
-	    || !hkl_pseudo_axis_engine_mode_init_real(self, engine, geometry, detector, sample, error)){
+	    || !hkl_mode_init_real(self, engine, geometry, detector, sample, error)){
 		hkl_error_set(error, "internal error");
 		return HKL_FALSE;
 	}

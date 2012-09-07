@@ -29,7 +29,7 @@ class ModeModelColumns : public Gtk::TreeModel::ColumnRecord
 {
 public:
 	Gtk::TreeModelColumn<Glib::ustring> name;
-	Gtk::TreeModelColumn<HklPseudoAxisEngineMode *> mode;
+	Gtk::TreeModelColumn<HklMode *> mode;
 
 	ModeModelColumns()
 		{

@@ -132,7 +132,7 @@ def main():
         if axis:
             axis.parameter.range.min = 0
 
-        engines = Hkl.PseudoAxisEngineList.factory(config)
+        engines = Hkl.EngineList.factory(config)
         engines.init(geometry, detector, sample)
 
         engines_names = [engine.info.name for engine in engines.engines()]
