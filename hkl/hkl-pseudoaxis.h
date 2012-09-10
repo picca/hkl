@@ -104,10 +104,10 @@ extern void hkl_mode_fprintf(FILE *f, const HklMode *self);
 /***********************/
 
 extern void hkl_engine_select_mode(HklEngine *self,
-					       HklMode *mode);
+				   HklMode *mode);
 
 extern void hkl_engine_select_mode_by_name(HklEngine *self,
-						       const char *name);
+					   const char *name);
 
 extern int hkl_engine_initialize(HklEngine *self, HklError **error);
 
@@ -124,20 +124,20 @@ extern void hkl_engine_fprintf(FILE *f, const HklEngine *self);
 extern void hkl_engine_list_free(HklEngineList *self);
 
 extern HklEngine *hkl_engine_list_get_by_name(HklEngineList *self,
-								    const char *name);
+					      const char *name);
 
 extern HklParameter *hkl_engine_list_get_pseudo_axis_by_name(
 	const HklEngineList *self, const char *name);
 
 extern void hkl_engine_list_init(HklEngineList *self,
-					     HklGeometry *geometry,
-					     HklDetector *detector,
-					     HklSample *sample);
+				 HklGeometry *geometry,
+				 HklDetector *detector,
+				 HklSample *sample);
 
 extern int hkl_engine_list_get(HklEngineList *self);
 
 extern void hkl_engine_list_fprintf(FILE *f,
-						const HklEngineList *self);
+				    const HklEngineList *self);
 
 HKL_END_DECLS
 

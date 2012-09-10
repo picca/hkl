@@ -108,11 +108,11 @@ int _psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 }
 
 static int hkl_mode_init_psi_real(HklMode *base,
-						     HklEngine *engine,
-						     HklGeometry *geometry,
-						     HklDetector *detector,
-						     HklSample *sample,
-						     HklError **error)
+				  HklEngine *engine,
+				  HklGeometry *geometry,
+				  HklDetector *detector,
+				  HklSample *sample,
+				  HklError **error)
 {
 	HklVector ki;
 	HklMatrix RUB;
@@ -152,11 +152,11 @@ static int hkl_mode_init_psi_real(HklMode *base,
 }
 
 static int hkl_mode_get_psi_real(HklMode *base,
-						    HklEngine *engine,
-						    HklGeometry *geometry,
-						    HklDetector *detector,
-						    HklSample *sample,
-						    HklError **error)
+				 HklEngine *engine,
+				 HklGeometry *geometry,
+				 HklDetector *detector,
+				 HklSample *sample,
+				 HklError **error)
 {
 	HklVector ki;
 	HklVector kf;
@@ -230,8 +230,8 @@ HklMode *hkl_mode_psi_new(const HklModeAutoInfo *info)
 
 	/* the base constructor; */
 	hkl_mode_auto_init(&self->parent,
-					      info,
-					      &operations);
+			   info,
+			   &operations);
 
 	return &self->parent;
 }

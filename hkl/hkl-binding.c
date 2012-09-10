@@ -232,8 +232,8 @@ GSList* hkl_engine_modes(HklEngine *self)
  * Return value: TRUE on success or FALSE if an error occurred
  **/
 gboolean hkl_engine_set_values_unit(HklEngine *self,
-						double values[], unsigned int len,
-						GError **error)
+				    double values[], unsigned int len,
+				    GError **error)
 {
 	HklParameter *parameter;
 	uint i = 0;

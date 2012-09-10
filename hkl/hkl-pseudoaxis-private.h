@@ -86,16 +86,16 @@ struct _HklModeOperations
 
 #define HKL_MODE_OPERATIONS_DEFAULTS		\
 	.init=hkl_mode_init_real,		\
-		.get=hkl_mode_get_real,	\
+		.get=hkl_mode_get_real,		\
 		.set=hkl_mode_set_real
 
 
 static int hkl_mode_init_real(HklMode *mode,
-						 HklEngine *self,
-						 HklGeometry *geometry,
-						 HklDetector *detector,
-						 HklSample *sample,
-						 HklError **error)
+			      HklEngine *self,
+			      HklGeometry *geometry,
+			      HklDetector *detector,
+			      HklSample *sample,
+			      HklError **error)
 {
 	if (!self || !mode || !geometry || !detector || !sample)
 		return HKL_FALSE;
@@ -119,20 +119,20 @@ static int hkl_mode_init_real(HklMode *mode,
 }
 
 static int hkl_mode_get_real(HklMode *self,
-						HklEngine *engine,
-						HklGeometry *geometry,
-						HklDetector *detector,
-						HklSample *sample,
-						HklError **error)
+			     HklEngine *engine,
+			     HklGeometry *geometry,
+			     HklDetector *detector,
+			     HklSample *sample,
+			     HklError **error)
 {
 }
 
 static int hkl_mode_set_real(HklMode *self,
-						HklEngine *engine,
-						HklGeometry *geometry,
-						HklDetector *detector,
-						HklSample *sample,
-						HklError **error)
+			     HklEngine *engine,
+			     HklGeometry *geometry,
+			     HklDetector *detector,
+			     HklSample *sample,
+			     HklError **error)
 {
 }
 
@@ -239,7 +239,7 @@ struct _HklEngineOperations
 	void (*free)(HklEngine *self);
 };
 
-#define HKL_ENGINE_OPERATIONS_DEFAULTS	\
+#define HKL_ENGINE_OPERATIONS_DEFAULTS		\
 	.free=hkl_engine_free_real
 
 static inline void hkl_engine_free_real(HklEngine *self)
@@ -252,8 +252,8 @@ static void hkl_engine_free(HklEngine *self)
 }
 
 extern void hkl_engine_init(HklEngine *engine,
-					const HklEngineInfo *info,
-					const HklEngineOperations *ops);
+			    const HklEngineInfo *info,
+			    const HklEngineOperations *ops);
 
 
 extern void unregister_pseudo_axis(HklParameter *pseudo_axis);
@@ -269,7 +269,7 @@ extern HklParameter *register_pseudo_axis(HklEngine *self,
  * add an HklMode to the self HklEngine
  **/
 static inline void hkl_engine_add_mode(HklEngine *self,
-						   HklMode *mode)
+				       HklMode *mode)
 {
 	darray_append(self->modes, mode);
 }
@@ -286,7 +286,7 @@ static inline void hkl_engine_add_mode(HklEngine *self,
  *
  **/
 static inline void hkl_engine_add_geometry(HklEngine *self,
-						       double const x[])
+					   double const x[])
 {
 	HklParameter **axis;
 	uint i = 0;
@@ -310,7 +310,7 @@ extern HklEngineList *hkl_engine_list_new(void);
 extern const HklEngineList *hkl_engine_list_new_copy(const HklEngineList *self);
 
 extern int hkl_engine_list_add(HklEngineList *self,
-					   HklEngine *engine);
+			       HklEngine *engine);
 
 extern void hkl_engine_list_clear(HklEngineList *self);
 

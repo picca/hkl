@@ -114,8 +114,8 @@ void hkl_mode_fprintf(FILE *f, const HklMode *self)
 /***********************/
 
 void hkl_engine_init(HklEngine *self,
-				 const HklEngineInfo *info,
-				 const HklEngineOperations *ops)
+		     const HklEngineInfo *info,
+		     const HklEngineOperations *ops)
 {
 	self->info = info;
 	self->ops = ops;
@@ -189,7 +189,7 @@ static void hkl_engine_prepare_internal(HklEngine *self)
  * this is to speed the computation of the numerical axes.
  **/
 void hkl_engine_select_mode(HklEngine *self,
-					HklMode *mode)
+			    HklMode *mode)
 {
 	if(!self || !mode)
 		return;
@@ -199,7 +199,7 @@ void hkl_engine_select_mode(HklEngine *self,
 }
 
 void hkl_engine_select_mode_by_name(HklEngine *self,
-						const char *name)
+				    const char *name)
 {
 	HklMode **mode;
 
@@ -422,7 +422,7 @@ void hkl_engine_list_free(HklEngineList *self)
  * Returns: HKL_SUCCESS or HKL_FAIL
  **/
 int hkl_engine_list_add(HklEngineList *self,
-				    HklEngine *engine)
+			HklEngine *engine)
 {
 	if (!engine)
 		return HKL_FALSE;
@@ -445,7 +445,7 @@ int hkl_engine_list_add(HklEngineList *self,
  * Returns: (transfer none) (allow-none): the requested engine
  **/
 HklEngine *hkl_engine_list_get_by_name(HklEngineList *self,
-							     const char *name)
+				       const char *name)
 {
 	HklEngine **engine;
 
@@ -509,9 +509,9 @@ void hkl_engine_list_clear(HklEngineList *self)
  * Geometry, a detector and a sample.
  **/
 void hkl_engine_list_init(HklEngineList *self,
-				      HklGeometry *geometry,
-				      HklDetector *detector,
-				      HklSample *sample)
+			  HklGeometry *geometry,
+			  HklDetector *detector,
+			  HklSample *sample)
 {
 	HklEngine **engine;
 
@@ -557,7 +557,7 @@ int hkl_engine_list_get(HklEngineList *self)
  * print to a FILE the #HklEngineList
  **/
 void hkl_engine_list_fprintf(FILE *f,
-					 const HklEngineList *self)
+			     const HklEngineList *self)
 {
 	HklEngine **engine;
 

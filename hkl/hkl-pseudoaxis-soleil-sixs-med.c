@@ -59,7 +59,7 @@ static HklMode* mu_fixed()
 	};
 
 	return hkl_mode_auto_new(&info,
-						    &hkl_full_mode_operations);
+				 &hkl_full_mode_operations);
 }
 
 static HklMode* reflectivity()
@@ -71,7 +71,7 @@ static HklMode* reflectivity()
 	};
 
 	return hkl_mode_auto_new(&info,
-						    &hkl_full_mode_operations);
+				 &hkl_full_mode_operations);
 }
 
 static HklMode* pitch_fixed()
@@ -83,7 +83,7 @@ static HklMode* pitch_fixed()
 	};
 
 	return hkl_mode_auto_new(&info,
-						    &hkl_full_mode_operations);
+				 &hkl_full_mode_operations);
 }
 
 /**********************/

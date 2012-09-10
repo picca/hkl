@@ -351,7 +351,7 @@ static inline void check_validity(const HklModeAutoInfo *info)
 }
 
 HklMode *hkl_mode_auto_new(const HklModeAutoInfo *info,
-							      const HklModeOperations *ops)
+			   const HklModeOperations *ops)
 {
 	check_validity(info);
 
@@ -360,8 +360,8 @@ HklMode *hkl_mode_auto_new(const HklModeAutoInfo *info,
 }
 
 void hkl_mode_auto_init(HklMode *self,
-					   const HklModeAutoInfo *info,
-					   const HklModeOperations *ops)
+			const HklModeAutoInfo *info,
+			const HklModeOperations *ops)
 {
 	check_validity(info);
 
@@ -370,11 +370,11 @@ void hkl_mode_auto_init(HklMode *self,
 }
 
 int hkl_mode_auto_set_real(HklMode *self,
-					      HklEngine *engine,
-					      HklGeometry *geometry,
-					      HklDetector *detector,
-					      HklSample *sample,
-					      HklError **error)
+			   HklEngine *engine,
+			   HklGeometry *geometry,
+			   HklDetector *detector,
+			   HklSample *sample,
+			   HklError **error)
 {
 	size_t i;
 	int ok = HKL_FALSE;

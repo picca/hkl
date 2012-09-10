@@ -295,11 +295,11 @@ int RUBh_minus_Q(double const x[], void *params, double f[])
 }
 
 int hkl_mode_get_hkl_real(HklMode *self,
-					     HklEngine *engine,
-					     HklGeometry *geometry,
-					     HklDetector *detector,
-					     HklSample *sample,
-					     HklError **error)
+			  HklEngine *engine,
+			  HklGeometry *geometry,
+			  HklDetector *detector,
+			  HklSample *sample,
+			  HklError **error)
 {
 	HklHolder *holder;
 	HklMatrix RUB;
@@ -330,19 +330,19 @@ int hkl_mode_get_hkl_real(HklMode *self,
 }
 
 int hkl_mode_set_hkl_real(HklMode *self,
-					     HklEngine *engine,
-					     HklGeometry *geometry,
-					     HklDetector *detector,
-					     HklSample *sample,
-					     HklError **error)
+			  HklEngine *engine,
+			  HklGeometry *geometry,
+			  HklDetector *detector,
+			  HklSample *sample,
+			  HklError **error)
 {
 	int last_axis;
 
 	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
 	if(!hkl_mode_auto_set_real(self, engine,
-						      geometry, detector, sample,
-						      error)){
+				   geometry, detector, sample,
+				   error)){
 		hkl_assert(error == NULL || *error != NULL);
 		//fprintf(stdout, "message :%s\n", (*error)->message);
 		return HKL_FALSE;
@@ -600,11 +600,11 @@ int _psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f
 }
 
 int hkl_mode_init_psi_constant_vertical_real(HklMode *self,
-								HklEngine *engine,
-								HklGeometry *geometry,
-								HklDetector *detector,
-								HklSample *sample,
-								HklError **error)
+					     HklEngine *engine,
+					     HklGeometry *geometry,
+					     HklDetector *detector,
+					     HklSample *sample,
+					     HklError **error)
 {
 	HklVector hkl;
 	HklVector ki, kf, Q, n;

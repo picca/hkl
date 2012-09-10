@@ -43,7 +43,7 @@ struct _HklModeAutoInfo {
 	const uint n_functions;
 };
 
-#define HKL_MODE_OPERATIONS_AUTO_DEFAULTS		\
+#define HKL_MODE_OPERATIONS_AUTO_DEFAULTS	\
 	HKL_MODE_OPERATIONS_DEFAULTS,		\
 		.set = hkl_mode_auto_set_real
 
@@ -61,15 +61,15 @@ extern HklMode *hkl_mode_auto_new(
 	const HklModeOperations *ops);
 
 void hkl_mode_auto_init(HklMode *self,
-					   const HklModeAutoInfo *info,
-					   const HklModeOperations *ops);
+			const HklModeAutoInfo *info,
+			const HklModeOperations *ops);
 
 extern int hkl_mode_auto_set_real(HklMode *self,
-						     HklEngine *engine,
-						     HklGeometry *geometry,
-						     HklDetector *detector,
-						     HklSample *sample,
-						     HklError **error);
+				  HklEngine *engine,
+				  HklGeometry *geometry,
+				  HklDetector *detector,
+				  HklSample *sample,
+				  HklError **error);
 
 HKL_END_DECLS
 

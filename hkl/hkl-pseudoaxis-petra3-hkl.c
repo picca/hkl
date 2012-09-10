@@ -80,7 +80,7 @@ static HklMode *zaxis_alpha_fixed()
 	};
 
 	return hkl_mode_auto_new(&info,
-						    &hkl_full_mode_operations);
+				 &hkl_full_mode_operations);
 }
 
 static HklMode *zaxis_beta_fixed()
@@ -92,7 +92,7 @@ static HklMode *zaxis_beta_fixed()
 	};
 
 	return hkl_mode_auto_new(&info,
-						    &hkl_full_mode_operations);
+				 &hkl_full_mode_operations);
 }
 
 static HklMode *zaxis_alpha_eq_beta()
@@ -104,7 +104,7 @@ static HklMode *zaxis_alpha_eq_beta()
 	};
 
 	return hkl_mode_auto_new(&info,
-						    &hkl_full_mode_operations);
+				 &hkl_full_mode_operations);
 }
 
 static HklMode *fourc_bissector_horizontal()
@@ -116,7 +116,7 @@ static HklMode *fourc_bissector_horizontal()
 	};
 
 	return hkl_mode_auto_new(&info,
-						    &hkl_full_mode_operations);
+				 &hkl_full_mode_operations);
 }
 
 static HklMode *fourc_constant_omega_horizontal()
@@ -128,7 +128,7 @@ static HklMode *fourc_constant_omega_horizontal()
 	};
 
 	return hkl_mode_auto_new(&info,
-						    &hkl_full_mode_operations);
+				 &hkl_full_mode_operations);
 }
 
 static HklMode *fourc_constant_chi_horizontal()
@@ -140,7 +140,7 @@ static HklMode *fourc_constant_chi_horizontal()
 	};
 
 	return hkl_mode_auto_new(&info,
-						    &hkl_full_mode_operations);
+				 &hkl_full_mode_operations);
 }
 
 static HklMode *fourc_constant_phi_horizontal()
@@ -152,7 +152,7 @@ static HklMode *fourc_constant_phi_horizontal()
 	};
 
 	return hkl_mode_auto_new(&info,
-						    &hkl_full_mode_operations);
+				 &hkl_full_mode_operations);
 }
 
 /**********************/

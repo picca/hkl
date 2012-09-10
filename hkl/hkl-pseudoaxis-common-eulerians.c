@@ -81,11 +81,11 @@ static int eulerian_to_kappa(const double omega, const double chi, const double 
 /***************************/
 
 static int hkl_mode_get_eulerians_real(HklMode *self,
-							  HklEngine *engine,
-							  HklGeometry *geometry,
-							  HklDetector *detector,
-							  HklSample *sample,
-							  HklError **error)
+				       HklEngine *engine,
+				       HklGeometry *geometry,
+				       HklDetector *detector,
+				       HklSample *sample,
+				       HklError **error)
 {
 	HklEngineEulerians *eulerians;
 	const double angles[] = {
@@ -115,11 +115,11 @@ static int hkl_mode_get_eulerians_real(HklMode *self,
 }
 
 static int hkl_mode_set_eulerians_real(HklMode *self,
-							  HklEngine *engine,
-							  HklGeometry *geometry,
-							  HklDetector *detector,
-							  HklSample *sample,
-							  HklError **error)
+				       HklEngine *engine,
+				       HklGeometry *geometry,
+				       HklDetector *detector,
+				       HklSample *sample,
+				       HklError **error)
 {
 	double solution;
 	uint n_values = engine->info->n_pseudo_axes;

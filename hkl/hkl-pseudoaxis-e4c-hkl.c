@@ -65,7 +65,7 @@ static HklMode *bissector(void)
 	};
 
 	return hkl_mode_auto_new(&info,
-						    &hkl_mode_operations);
+				 &hkl_mode_operations);
 }
 
 static HklMode *constant_omega(void)
@@ -77,7 +77,7 @@ static HklMode *constant_omega(void)
 	};
 
 	return hkl_mode_auto_new(&info,
-						    &hkl_mode_operations);
+				 &hkl_mode_operations);
 }
 
 static HklMode *constant_chi(void)
@@ -89,7 +89,7 @@ static HklMode *constant_chi(void)
 	};
 
 	return hkl_mode_auto_new(&info,
-						    &hkl_mode_operations);
+				 &hkl_mode_operations);
 }
 
 static HklMode *constant_phi(void)
@@ -101,7 +101,7 @@ static HklMode *constant_phi(void)
 	};
 
 	return hkl_mode_auto_new(&info,
-						    &hkl_mode_operations);
+				 &hkl_mode_operations);
 }
 
 static HklMode *double_diffraction(void)
@@ -119,7 +119,7 @@ static HklMode *double_diffraction(void)
 	};
 
 	return hkl_mode_auto_new(&info,
-						    &hkl_mode_operations);
+				 &hkl_mode_operations);
 }
 
 static HklMode *psi_constant(void)
@@ -138,7 +138,7 @@ static HklMode *psi_constant(void)
 	};
 
 	return hkl_mode_auto_new(&info,
-						    &psi_constant_vertical_mode_operations);
+				 &psi_constant_vertical_mode_operations);
 }
 
 /***********************/

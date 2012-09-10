@@ -52,25 +52,25 @@ extern int _double_diffraction(double const x[], void *params, double f[]);
  * in getter/setter.
  */
 extern int hkl_mode_get_hkl_real(HklMode *self,
-						    HklEngine *engine,
-						    HklGeometry *geometry,
-						    HklDetector *detector,
-						    HklSample *sample,
-						    HklError **error);
+				 HklEngine *engine,
+				 HklGeometry *geometry,
+				 HklDetector *detector,
+				 HklSample *sample,
+				 HklError **error);
 
 extern int hkl_mode_set_hkl_real(HklMode *self,
+				 HklEngine *engine,
+				 HklGeometry *geometry,
+				 HklDetector *detector,
+				 HklSample *sample,
+				 HklError **error);
+
+extern int hkl_mode_init_psi_constant_vertical_real(HklMode *base,
 						    HklEngine *engine,
 						    HklGeometry *geometry,
 						    HklDetector *detector,
 						    HklSample *sample,
 						    HklError **error);
-
-extern int hkl_mode_init_psi_constant_vertical_real(HklMode *base,
-								       HklEngine *engine,
-								       HklGeometry *geometry,
-								       HklDetector *detector,
-								       HklSample *sample,
-								       HklError **error);
 
 extern HklEngine *hkl_engine_hkl_new(void);
 
