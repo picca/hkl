@@ -307,10 +307,10 @@ static int solve_function(HklEngine *self,
 {
 
 	size_t i;
-	int *p = alloca(function->size * sizeof(*p));
-	double *x0 = alloca(function->size * sizeof(*x0));
-	int *degenerated = alloca(function->size * sizeof(*degenerated));
-	size_t *op_len = alloca(function->size * sizeof(*op_len));
+	int p[function->size];
+	double x0[function->size];
+	int degenerated[function->size];
+	size_t op_len[function->size];
 	int res;
 	gsl_vector *_x; /* use to compute sectors in perm_r (avoid copy) */
 	gsl_vector *_f; /* use to test sectors in perm_r (avoid copy) */

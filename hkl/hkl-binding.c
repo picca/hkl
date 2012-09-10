@@ -73,6 +73,7 @@ gboolean hkl_parameter_list_set_values_unit_binding(HklParameterList *self,
 
 		return FALSE;
 	}
+	return TRUE;
 }
 
 /**

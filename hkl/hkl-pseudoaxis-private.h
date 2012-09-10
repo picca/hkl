@@ -125,6 +125,7 @@ static int hkl_mode_get_real(HklMode *self,
 			     HklSample *sample,
 			     HklError **error)
 {
+	return HKL_TRUE;
 }
 
 static int hkl_mode_set_real(HklMode *self,
@@ -134,6 +135,7 @@ static int hkl_mode_set_real(HklMode *self,
 			     HklSample *sample,
 			     HklError **error)
 {
+	return HKL_TRUE;
 }
 
 static inline int hkl_mode_init(
