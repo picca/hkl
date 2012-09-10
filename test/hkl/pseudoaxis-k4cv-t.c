@@ -28,7 +28,7 @@ static void degenerated(void)
 	int res = HKL_TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
-	HklMode *mode;
+	HklMode **mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;
@@ -47,14 +47,10 @@ static void degenerated(void)
 
 	engine = hkl_engine_list_get_by_name(engines, "hkl");
 
-	list_for_each(&engine->modes, mode, list) {
-		hkl_engine_select_mode(engine, mode);
-		if(darray_size(mode->parameters)){
-			static double one[] = {1};
-			hkl_parameter_list_set_values(&engine->mode->parameters,
-						      one, ARRAY_SIZE(one),
-						      NULL);
-		}
+	darray_foreach(mode, engine->modes) {
+		hkl_engine_select_mode(engine, *mode);
+		if(darray_size((*mode)->parameters))
+			hkl_parameter_set_value(darray_item(engine->mode->parameters, 0), 1, NULL);
 
 		/* studdy this degenerated case */
 		hkl_parameter_list_set_values(&engine->pseudo_axes, hkl, 3, NULL);
@@ -85,7 +81,7 @@ static void eulerians(void)
 	int res = HKL_TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
-	HklMode *mode;
+	HklMode **mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;
@@ -104,14 +100,10 @@ static void eulerians(void)
 
 	engine = hkl_engine_list_get_by_name(engines, "eulerians");
 
-	list_for_each(&engine->modes, mode, list){
-		hkl_engine_select_mode(engine, mode);
-		if(darray_size(mode->parameters)){
-			static double one[] = {1};
-			hkl_parameter_list_set_values(&mode->parameters,
-						      one, ARRAY_SIZE(one),
-						      NULL);
-		}
+	darray_foreach(mode, engine->modes){
+		hkl_engine_select_mode(engine, *mode);
+		if(darray_size((*mode)->parameters))
+			hkl_parameter_set_value(darray_item((*mode)->parameters, 0), 1, NULL);
 
 		/* studdy this degenerated case */
 		hkl_parameter_list_set_values(&engine->pseudo_axes, eulerians, 3, NULL);
@@ -147,7 +139,7 @@ static void q(void)
 	int res = HKL_TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
-	HklMode *mode;
+	HklMode **mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;
@@ -169,10 +161,10 @@ static void q(void)
 	hkl_geometry_set_values_unit_v(geom, 30., 0., 0., 60.);
 	hkl_engine_initialize(engine, NULL);
 
-	list_for_each(&engine->modes, mode, list){
+	darray_foreach(mode, engine->modes){
 		double q;
 
-		hkl_engine_select_mode(engine, mode);
+		hkl_engine_select_mode(engine, *mode);
 		for(q=-1.; q<1.; q += 0.1){
 			hkl_engine_set_values_v(engine, q, NULL);
 			if(hkl_engine_set(engine, NULL)){

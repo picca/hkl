@@ -27,18 +27,15 @@
 static void hkl_test_bench_run_real(HklEngine *engine, HklGeometry *geometry, size_t n)
 {
 	size_t i;
-	HklMode *mode;
+	HklMode **mode;
 
 	/* pseudo -> geometry */
-	list_for_each(&engine->modes, mode, list){
+	darray_foreach(mode, engine->modes){
 		double min, max, mean;
 
-		hkl_engine_select_mode(engine, mode);
-		if (darray_size(mode->parameters)){
-			static double one = 1;
-
-			hkl_parameter_list_set_values(&mode->parameters, &one, 1, NULL);
-		}
+		hkl_engine_select_mode(engine, *mode);
+		if (darray_size((*mode)->parameters))
+			hkl_parameter_set_value(darray_item((*mode)->parameters, 0), 1, NULL);
 
 		mean = max = 0;
 		min = 1000; /* arbitrary value always greater than the real min */
@@ -58,7 +55,7 @@ static void hkl_test_bench_run_real(HklEngine *engine, HklGeometry *geometry, si
 		}
 		fprintf(stdout, "\"%s\" \"%s\" \"%s\" (%d/%d) iterations %f / %f / %f [min/mean/max] ms each\n",
 			geometry->config->name, engine->info->name,
-			mode->info->name, n, i, min, mean/n, max);
+			(*mode)->info->name, n, i, min, mean/n, max);
 	}
 }
 
@@ -118,7 +115,7 @@ static void hkl_test_bench_eulerians(void)
 {
 	HklEngineList *engines;
 	HklEngine *engine;
-	HklMode *mode;
+	HklMode **mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;
@@ -134,10 +131,10 @@ static void hkl_test_bench_eulerians(void)
 
 	engine = hkl_engine_list_get_by_name(engines, "eulerians");
 
-	list_for_each(&engine->modes, mode, list){
+	darray_foreach(mode, engine->modes){
 		static double eulerians[] = {0, 90 * HKL_DEGTORAD, 0};
 
-		hkl_engine_select_mode(engine, mode);
+		hkl_engine_select_mode(engine, *mode);
 
 		/* studdy this degenerated case */
 		hkl_parameter_list_set_values(&engine->pseudo_axes, eulerians, 3, NULL);

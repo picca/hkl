@@ -35,11 +35,12 @@ HKL_BEGIN_DECLS
 
 static inline void set_geometry_axes(HklEngine *engine, const double values[])
 {
-	HklAxis *axis;
+	HklParameter **axis;
 	uint i = 0;
 
-	list_for_each(&engine->axes, axis, engine_list)
-		hkl_parameter_set_value(&axis->parameter, values[i++], NULL);
+	darray_foreach(axis, engine->axes){
+		hkl_parameter_set_value(*axis, values[i++], NULL);
+	}
 	hkl_geometry_update(engine->geometry);
 }
 
@@ -212,8 +213,7 @@ static inline void hkl_mode_free(HklMode *self)
 
 static void hkl_engine_release(HklEngine *self)
 {
-	HklMode *mode;
-	HklMode *next;
+	HklMode **mode;
 
 	if(self->geometry)
 		hkl_geometry_free(self->geometry);
@@ -225,11 +225,10 @@ static void hkl_engine_release(HklEngine *self)
 		hkl_sample_free(self->sample);
 
 	/* release the mode added */
-	list_for_each_safe(&self->modes, mode, next, list){
-		list_del(&mode->list);
-		hkl_mode_free(mode);
+	darray_foreach(mode, self->modes){
+		hkl_mode_free(*mode);
 	}
-	self->mode = NULL;
+	darray_free(self->modes);
 
 	/* release the HklPseudoAxe memory */
 	hkl_parameter_list_release(&self->pseudo_axes);
@@ -272,7 +271,7 @@ extern HklParameter *register_pseudo_axis(HklEngine *self,
 static inline void hkl_engine_add_mode(HklEngine *self,
 						   HklMode *mode)
 {
-	list_add_tail(&self->modes, &mode->list);
+	darray_append(self->modes, mode);
 }
 
 /**
@@ -289,12 +288,12 @@ static inline void hkl_engine_add_mode(HklEngine *self,
 static inline void hkl_engine_add_geometry(HklEngine *self,
 						       double const x[])
 {
-	HklAxis *axis;
+	HklParameter **axis;
 	uint i = 0;
 
 	/* copy the axes configuration into the engine->geometry */
-	list_for_each(&self->axes, axis, engine_list){
-		hkl_parameter_set_value(&axis->parameter,
+	darray_foreach(axis, self->axes){
+		hkl_parameter_set_value(*axis,
 					gsl_sf_angle_restrict_symm(x[i++]),
 					NULL);
 	}

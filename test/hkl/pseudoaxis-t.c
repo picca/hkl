@@ -33,13 +33,13 @@ static int test_engine(HklEngine *engine, HklGeometry *geometry,
 	double values[10]; /* this should be the number of pseudo_axis */
 	int unreachable = 0;
 	int ko = HKL_FALSE;
-	HklMode *mode;
+	HklMode **mode;
 
 	/* randomize the geometry */
 	hkl_geometry_randomize(geometry);
 
-	list_for_each(&engine->modes, mode, list){
-		hkl_engine_select_mode(engine, mode);
+	darray_foreach(mode, engine->modes){
+		hkl_engine_select_mode(engine, *mode);
 		/* for now unactive the eulerians check */
 		if(!strcmp(engine->mode->info->name, "eulerians"))
 			continue;
@@ -122,13 +122,14 @@ static int test_engines(HklEngineList *engines, int n)
 {
 	int res = HKL_TRUE;
 
-	HklEngine *engine;
-	list_for_each(&engines->engines, engine, list)
-		res &= test_engine(engine,
+	HklEngine **engine;
+	darray_foreach(engine, *engines){
+		res &= test_engine(*engine,
 				   engines->geometry,
 				   engines->detector,
 				   engines->sample,
 				   n);
+	}
 
 #if with_log
 	fprintf(stderr, "\n");

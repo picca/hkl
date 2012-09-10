@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2012 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -22,7 +22,7 @@
 #ifndef __HKL_PSEUDOAXIS_H__
 #define __HKL_PSEUDOAXIS_H__
 
-#include <ccan/list/list.h>
+#include <ccan/darray/darray.h>
 #include <hkl/hkl-detector.h>
 #include <hkl/hkl-sample.h>
 #include <hkl/hkl-error.h>
@@ -54,8 +54,6 @@ struct _HklMode
 	HklDetector *detector_init;
 	HklSample *sample_init;
 	HklParameterList parameters;
-	struct list_node list;
-	void *_shit;
 };
 
 struct _HklEngineInfo {
@@ -63,6 +61,9 @@ struct _HklEngineInfo {
 	const HklPseudoAxis **pseudo_axes;
 	uint n_pseudo_axes;
 };
+
+typedef darray(HklMode *) HklDArrayMode;
+typedef darray(HklParameter *) HklDArrayParameter;
 
 struct _HklEngine
 {
@@ -74,12 +75,8 @@ struct _HklEngine
 	HklMode *mode; /* not owned */
 	HklEngineList *engines; /* not owned */
 	HklParameterList pseudo_axes;
-	struct list_head modes; /* owned */
-	struct list_head axes; /* item not owned */
-	struct list_node list; /* EngineList */
-	void *_shit1;
-	void *_shit2;
-	void *_shit3;
+	HklDArrayMode modes;
+	HklDArrayParameter axes;
 };
 
 /**
@@ -91,8 +88,9 @@ struct _HklEngineList
 	HklGeometry *geometry;
 	HklDetector *detector;
 	HklSample *sample;
-	struct list_head engines;
-	void *_shit;
+	HklEngine **item;
+	size_t size;
+	size_t alloc;
 };
 
 /***************************/

@@ -121,8 +121,8 @@ extern void hkl_geometry_update(HklGeometry *self);
 extern int hkl_geometry_get_axis_idx_by_name(const HklGeometry *self,
 					     const char *name);
 
-extern HklAxis *hkl_geometry_get_axis_by_name(HklGeometry *self,
-					      const char *name);
+extern HklParameter *hkl_geometry_get_axis_by_name(HklGeometry *self,
+						   const char *name);
 
 extern void hkl_geometry_randomize(HklGeometry *self);
 

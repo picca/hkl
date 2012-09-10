@@ -325,8 +325,8 @@ void HKLWindow::on_cell_TreeView_axes_read_edited(Glib::ustring const & spath,
 	Glib::ustring name = row[_axeModelColumns.name];
 	double value;
 	sscanf(newText.c_str(), "%lf", &value);
-	HklAxis *axis = hkl_geometry_get_axis_by_name(_geometry, name.c_str());
-	hkl_parameter_set_value_unit(&axis->parameter, value, NULL);
+	HklParameter *axis = hkl_geometry_get_axis_by_name(_geometry, name.c_str());
+	hkl_parameter_set_value_unit(axis, value, NULL);
 	hkl_geometry_update(_geometry);
 
 	row[_axeModelColumns.read] = value;
@@ -354,8 +354,8 @@ void HKLWindow::on_cell_TreeView_axes_write_edited(Glib::ustring const & spath,
 	Glib::ustring name = row[_axeModelColumns.name];
 	double value;
 	sscanf(newText.c_str(), "%lf", &value);
-	HklAxis *axis = hkl_geometry_get_axis_by_name(_geometry, name.c_str());
-	hkl_parameter_set_value_unit(&axis->parameter, value, NULL);
+	HklParameter *axis = hkl_geometry_get_axis_by_name(_geometry, name.c_str());
+	hkl_parameter_set_value_unit(axis, value, NULL);
 	hkl_geometry_update(_geometry);
 
 	row[_axeModelColumns.write] = value;
@@ -383,14 +383,14 @@ void HKLWindow::on_cell_TreeView_axes_min_edited(Glib::ustring const & spath,
 	double shit;
 	double max;
 	double value;
-	HklAxis *axis;
+	HklParameter *axis;
 
 	Glib::ustring name = row[_axeModelColumns.name];
 	sscanf(newText.c_str(), "%lf", &value);
 
 	axis = hkl_geometry_get_axis_by_name(_geometry, name.c_str());
-	hkl_parameter_get_range_unit((HklParameter *)axis, &shit, &max);
-	hkl_parameter_set_range_unit((HklParameter *)axis, value, max);
+	hkl_parameter_get_range_unit(axis, &shit, &max);
+	hkl_parameter_set_range_unit(axis, value, max);
 
 	row[_axeModelColumns.min] = value;
 	this->updatePseudoAxes();
@@ -408,14 +408,14 @@ void HKLWindow::on_cell_TreeView_axes_max_edited(Glib::ustring const & spath,
 
 	double min, shit;
 	double value;
-	HklAxis *axis;
+	HklParameter *axis;
 
 	Glib::ustring name = row[_axeModelColumns.name];
 	sscanf(newText.c_str(), "%lf", &value);
 
 	axis = hkl_geometry_get_axis_by_name(_geometry, name.c_str());
-	hkl_parameter_get_range_unit((HklParameter *)axis, &min, &shit);
-	hkl_parameter_set_range_unit((HklParameter *)axis, min, value);
+	hkl_parameter_get_range_unit(axis, &min, &shit);
+	hkl_parameter_set_range_unit(axis, min, value);
 
 	row[_axeModelColumns.max] = value;
 	this->updatePseudoAxes();

@@ -108,7 +108,7 @@ static void degenerated(void)
 	int res = HKL_TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
-	HklMode *mode;
+	HklMode **mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;
@@ -127,14 +127,10 @@ static void degenerated(void)
 
 	engine = hkl_engine_list_get_by_name(engines, "hkl");
 
-	list_for_each(&engine->modes, mode, list) {
-		hkl_engine_select_mode(engine, mode);
-		if (darray_size(engine->mode->parameters)){
-			static double zero[] = {0};
-
-			hkl_parameter_list_set_values(&engine->mode->parameters,
-						      zero, ARRAY_SIZE(zero), NULL);
-		}
+	darray_foreach(mode, engine->modes) {
+		hkl_engine_select_mode(engine, *mode);
+		if (darray_size(engine->mode->parameters))
+			hkl_parameter_set_value(darray_item(engine->mode->parameters, 0), 0, NULL);
 
 		/* studdy this degenerated case */
 		hkl_parameter_list_set_values(&engine->pseudo_axes, hkl, 3, NULL);
@@ -165,7 +161,7 @@ static void q2(void)
 	int res = HKL_TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
-	HklMode *mode;
+	HklMode **mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;
@@ -188,10 +184,10 @@ static void q2(void)
 	hkl_engine_initialize(engine, NULL);
 
 
-	list_for_each(&engine->modes, mode, list){
+	darray_foreach(mode, engine->modes){
 		double q, alpha;
 
-		hkl_engine_select_mode(engine, mode);
+		hkl_engine_select_mode(engine, *mode);
 		for(q=0.1; q<1.; q += 0.1)
 			for(alpha = -M_PI; alpha<M_PI; alpha += M_PI/180.){
 				double values[] = {q, alpha};

@@ -28,7 +28,7 @@ static void degenerated(void)
 	int res = HKL_TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
-	HklMode *mode;
+	HklMode **mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;
@@ -47,14 +47,10 @@ static void degenerated(void)
 
 	engine = hkl_engine_list_get_by_name(engines, "hkl");
 
-	list_for_each(&engine->modes, mode, list){
-		hkl_engine_select_mode(engine, mode);
-		if (darray_size(mode->parameters)){
-			static double one[] = {1.};
-
-			hkl_parameter_list_set_values(&engine->mode->parameters,
-						      one, 1, NULL);
-		}
+	darray_foreach(mode, engine->modes){
+		hkl_engine_select_mode(engine, *mode);
+		if (darray_size((*mode)->parameters))
+			hkl_parameter_set_value(darray_item(engine->mode->parameters, 0), 1, NULL);
 
 		/* studdy this degenerated case */
 		hkl_parameter_list_set_values(&engine->pseudo_axes, hkl, 3, NULL);
@@ -85,7 +81,7 @@ static void eulerians(void)
 	int res = HKL_TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
-	HklMode *mode;
+	HklMode **mode;
 	HklGeometryListItem *item;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
@@ -104,16 +100,12 @@ static void eulerians(void)
 
 	engine = hkl_engine_list_get_by_name(engines, "eulerians");
 
-	list_for_each(&engine->modes, mode, list){
+	darray_foreach(mode, engine->modes){
 		double omega, chi, phi;
 
-		hkl_engine_select_mode(engine, mode);
-		if (darray_size(mode->parameters)){
-			static double one[] = {1};
-
-			hkl_parameter_list_set_values(&engine->mode->parameters,
-						      one, 1, NULL);
-		}
+		hkl_engine_select_mode(engine, *mode);
+		if (darray_size((*mode)->parameters))
+			hkl_parameter_set_value(darray_item(engine->mode->parameters, 0), 1, NULL);
 
 		/* studdy this degenerated case */
 		hkl_engine_set_values_v(engine, 0., 90. * HKL_DEGTORAD, 0.);
@@ -147,7 +139,7 @@ static void q2(void)
 	int res = HKL_TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
-	HklMode *mode;
+	HklMode **mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;
@@ -170,10 +162,10 @@ static void q2(void)
 	hkl_engine_initialize(engine, NULL);
 
 
-	list_for_each(&engine->modes, mode, list){
+	darray_foreach(mode, engine->modes){
 		double q, alpha;
 
-		hkl_engine_select_mode(engine, mode);
+		hkl_engine_select_mode(engine, *mode);
 		for(q=0.1; q<1.; q += 0.1)
 			for(alpha = -M_PI; alpha<M_PI; alpha += M_PI/180.){
 				double values[] = {q, alpha};

@@ -106,15 +106,16 @@ static int find_first_geometry(HklEngine *self,
 	int status;
 	int res = HKL_FALSE;
 	size_t i;
-	HklAxis *axis;
+	HklParameter **axis;
 
 	/* get the starting point from the geometry */
 	/* must be put in the auto_set method */
 	x = gsl_vector_alloc(len);
 	x_data = (double *)x->data;
 	i = 0;
-	list_for_each(&self->axes, axis, engine_list)
-		x_data[i++] = hkl_parameter_get_value(&axis->parameter);
+	darray_foreach(axis, self->axes){
+		x_data[i++] = (*axis)->_value;
+	}
 
 	/* keep a copy of the first axes positions to deal with degenerated axes */
 	memcpy(x_data0, x_data, len * sizeof(double));
@@ -162,8 +163,8 @@ static int find_first_geometry(HklEngine *self,
 		/* to avoid this. */
 		x_data = (double *)s->x->data;
 		i = 0;
-		list_for_each(&self->axes, axis, engine_list){
-			hkl_parameter_set_value(&axis->parameter,
+		darray_foreach(axis, self->axes){
+			hkl_parameter_set_value(*axis,
 						degenerated[i] ? x_data0[i] : x_data[i],
 						NULL);
 			++i;
@@ -314,7 +315,7 @@ static int solve_function(HklEngine *self,
 	gsl_vector *_x; /* use to compute sectors in perm_r (avoid copy) */
 	gsl_vector *_f; /* use to test sectors in perm_r (avoid copy) */
 	gsl_multiroot_function f;
-	HklAxis *axis;
+	HklParameter **axis;
 
 	_x = gsl_vector_alloc(function->size);
 	_f = gsl_vector_alloc(function->size);
@@ -328,8 +329,8 @@ static int solve_function(HklEngine *self,
 		memset(p, 0, sizeof(p));
 		/* use first solution as starting point for permutations */
 		i = 0;
-		list_for_each(&self->axes, axis, engine_list){
-			x0[i] = hkl_parameter_get_value(&axis->parameter);
+		darray_foreach(axis, self->axes){
+			x0[i] = (*axis)->_value;
 			op_len[i] = degenerated[i] ? 1 : 4;
 			++i;
 		}

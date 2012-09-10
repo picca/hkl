@@ -305,7 +305,7 @@ void HKLWindow::set_up_pseudo_axes_frames(void)
 	LOG;
 
 	size_t i;
-	HklEngine *engine;
+	HklEngine **engine;
 	Gtk::VBox *vbox2 = NULL;
 	PseudoAxesFrame *pseudo;
 
@@ -318,8 +318,8 @@ void HKLWindow::set_up_pseudo_axes_frames(void)
 	}
 	_pseudoAxesFrames.clear();
 
-	list_for_each(&_engines->engines, engine, list){
-		pseudo = new PseudoAxesFrame (engine);
+	darray_foreach(engine, *this->_engines){
+		pseudo = new PseudoAxesFrame (*engine);
 		_pseudoAxesFrames.push_back (pseudo);
 		vbox2->add (pseudo->frame());
 		pseudo->signal_changed ().connect (
@@ -405,7 +405,8 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 
 	int index;
 	Gtk::CellRenderer * renderer;
-	HklEngine *engine;
+	HklEngine **engine;
+	HklParameter **pseudo_axis;
 
 	/* add the columns */
 	_TreeView_pseudoAxes->remove_all_columns();
@@ -428,19 +429,17 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 	_pseudoAxeModel = Gtk::ListStore::create(_pseudoAxeModelColumns);
 
 	//Fill the models from the diffractometer pseudoAxes
-	list_for_each(&_engines->engines, engine, list){
-		HklParameter **pseudo_axis;
-
-		darray_foreach(pseudo_axis, engine->pseudo_axes){
+	darray_foreach(engine, *this->_engines){
+		darray_foreach(pseudo_axis, (*engine)->pseudo_axes){
 			Gtk::ListStore::Row row = *(_pseudoAxeModel->append());
-			row[_pseudoAxeModelColumns.engine] = engine;
+			row[_pseudoAxeModelColumns.engine] = *engine;
 			row[_pseudoAxeModelColumns.parameter] = *pseudo_axis;
 			row[_pseudoAxeModelColumns.name] = (*pseudo_axis)->name;
-			if(darray_size(engine->mode->parameters)){
+			if(darray_size((*engine)->mode->parameters)){
 				Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(_parameterModelColumns);
 				HklParameter **parameter;
 
-				darray_foreach(parameter, engine->mode->parameters){
+				darray_foreach(parameter, (*engine)->mode->parameters){
 					Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(_parameterModelColumns);
 					row = *(model->append());
 					row[_parameterModelColumns.parameter] = *parameter;

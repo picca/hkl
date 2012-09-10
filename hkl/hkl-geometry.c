@@ -360,13 +360,11 @@ int hkl_geometry_get_axis_idx_by_name(const HklGeometry *self, const char *name)
  *
  * Returns: (transfer none):
  **/
-HklAxis *hkl_geometry_get_axis_by_name(HklGeometry *self, const char *name)
+HklParameter *hkl_geometry_get_axis_by_name(HklGeometry *self, const char *name)
 {
-	size_t i;
-	HklAxis *axis;
-	for(i=0; i<self->len; ++i) {
-		axis = &self->axes[i];
-		if (!strcmp(axis->parameter.name, name))
+	for(unsigned int i=0; i<self->len; ++i) {
+		HklParameter *axis = &self->axes[i].parameter;
+		if (!strcmp(axis->name, name))
 			return axis;
 	}
 	return NULL;

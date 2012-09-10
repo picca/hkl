@@ -85,7 +85,7 @@ static void update(void)
 	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
 	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
 
-	axis1 = hkl_geometry_get_axis_by_name(g, "B");
+	axis1 = container_of(hkl_geometry_get_axis_by_name(g, "B"), HklAxis, parameter);
 	hkl_parameter_set_value(&axis1->parameter, M_PI_2, NULL);
 	/* now axis1 is dirty */
 	ok(HKL_TRUE == axis1->parameter.changed, __func__);
@@ -234,7 +234,7 @@ static void  list_multiply_from_range(void)
 	HklGeometry *g;
 	HklGeometryList *list;
 	HklHolder *holder;
-	HklAxis *axisA, *axisB, *axisC;
+	HklParameter *axisA, *axisB, *axisC;
 
 	g = hkl_geometry_new();
 	holder = hkl_geometry_add_holder(g);
@@ -246,9 +246,9 @@ static void  list_multiply_from_range(void)
 	axisB = hkl_geometry_get_axis_by_name(g, "B");
 	axisC = hkl_geometry_get_axis_by_name(g, "C");
 
-	hkl_parameter_set_range_unit(&axisA->parameter, -190, 190);
-	hkl_parameter_set_range_unit(&axisB->parameter, -190, 190);
-	hkl_parameter_set_range_unit(&axisC->parameter, -190, 190);
+	hkl_parameter_set_range_unit(axisA, -190, 190);
+	hkl_parameter_set_range_unit(axisB, -190, 190);
+	hkl_parameter_set_range_unit(axisC, -190, 190);
 
 	list = hkl_geometry_list_new();
 
@@ -266,7 +266,7 @@ static void  list_remove_invalid(void)
 	HklGeometry *g;
 	HklGeometryList *list;
 	HklHolder *holder;
-	HklAxis *axisA, *axisB, *axisC;
+	HklParameter *axisA, *axisB, *axisC;
 
 	g = hkl_geometry_new();
 	holder = hkl_geometry_add_holder(g);
@@ -278,9 +278,9 @@ static void  list_remove_invalid(void)
 	axisB = hkl_geometry_get_axis_by_name(g, "B");
 	axisC = hkl_geometry_get_axis_by_name(g, "C");
 
-	hkl_parameter_set_range_unit(&axisA->parameter, -100, 180.);
-	hkl_parameter_set_range_unit(&axisB->parameter, -100., 180.);
-	hkl_parameter_set_range_unit(&axisC->parameter, -100., 180.);
+	hkl_parameter_set_range_unit(axisA, -100, 180.);
+	hkl_parameter_set_range_unit(axisB, -100., 180.);
+	hkl_parameter_set_range_unit(axisC, -100., 180.);
 
 	list = hkl_geometry_list_new();
 

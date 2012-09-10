@@ -130,7 +130,7 @@ def main():
         axis = geometry.get_axis_by_name("tth") \
             or geometry.get_axis_by_name('delta')
         if axis:
-            axis.parameter.range.min = 0
+            axis.range.min = 0
 
         engines = Hkl.EngineList.factory(config)
         engines.init(geometry, detector, sample)

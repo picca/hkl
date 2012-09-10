@@ -192,13 +192,13 @@ void PseudoAxesFrame::updatePseudoAxis(void)
 
 void PseudoAxesFrame::updateMode(void)
 {
-	HklMode *mode;;
+	HklMode **mode;
 
 	_mode_ListStore->clear();
-	list_for_each(&this->_engine->modes, mode, list){
+	darray_foreach(mode, this->_engine->modes){
 		Gtk::TreeRow row = *(_mode_ListStore->append());
-		row[_mode_columns.name] = mode->info->name;
-		row[_mode_columns.mode] = mode;
+		row[_mode_columns.name] = (*mode)->info->name;
+		row[_mode_columns.mode] = *mode;
 	}
 }
 

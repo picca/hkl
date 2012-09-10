@@ -211,10 +211,10 @@ typedef enum {
 GSList* hkl_engine_modes(HklEngine *self)
 {
 	GSList *list = NULL;
-	HklMode *mode;
+	HklMode **mode;
 
-	list_for_each(&self->modes, mode, list){
-		list = g_slist_append(list, mode);
+	darray_foreach(mode, self->modes){
+		list = g_slist_append(list, *mode);
 	}
 
 	return list;
@@ -285,10 +285,10 @@ gboolean hkl_engine_set_values_unit(HklEngine *self,
 GSList* hkl_engine_list_engines(HklEngineList *self)
 {
 	GSList *list = NULL;
-	HklEngine *engine;
+	HklEngine **engine;
 
-	list_for_each(&self->engines, engine, list){
-		list = g_slist_append(list, engine);
+	darray_foreach(engine, *self){
+		list = g_slist_append(list, *engine);
 	}
 
 	return list;

@@ -119,7 +119,7 @@ void hkl_engine_init(HklEngine *self,
 {
 	self->info = info;
 	self->ops = ops;
-	list_head_init(&self->modes);
+	darray_init(self->modes);
 	hkl_parameter_list_init(&self->pseudo_axes,
 				&hkl_parameter_list_operations_defaults);
 	self->geometry = NULL;
@@ -165,14 +165,14 @@ static void hkl_engine_prepare_internal(HklEngine *self)
 
 	/* fill the axes member from the function */
 	if(self->mode){
-		list_head_init(&self->axes);
+		darray_init(self->axes);
 		for(i=0; i<self->mode->info->n_axes; ++i){
-			HklAxis *axis;
+			HklParameter *axis;
 
 			axis = hkl_geometry_get_axis_by_name(self->geometry,
 							     self->mode->info->axes[i]);
 
-			list_add_tail(&self->axes, &axis->engine_list);
+			darray_append(self->axes, axis);
 		}
 	}
 
@@ -201,14 +201,14 @@ void hkl_engine_select_mode(HklEngine *self,
 void hkl_engine_select_mode_by_name(HklEngine *self,
 						const char *name)
 {
-	HklMode *mode;
+	HklMode **mode;
 
 	if(!self || !name)
 		return;
 
-	list_for_each(&self->modes, mode, list){
-		if(!strcmp(mode->info->name, name))
-			hkl_engine_select_mode(self, mode);
+	darray_foreach(mode, self->modes){
+		if(!strcmp((*mode)->info->name, name))
+			hkl_engine_select_mode(self, (*mode));
 	}
 }
 
@@ -375,7 +375,7 @@ HklEngineList *hkl_engine_list_new(void)
 
 	self = HKL_MALLOC(HklEngineList);
 
-	list_head_init(&self->engines);
+	darray_init(*self);
 
 	self->geometries = hkl_geometry_list_new();
 
@@ -430,7 +430,7 @@ int hkl_engine_list_add(HklEngineList *self,
 	/* set the engines to access the Geometries list. */
 	engine->engines = self;
 
-	list_add_tail(&self->engines, &engine->list);
+	darray_append(*self, engine);
 
 	return HKL_TRUE;
 }
@@ -447,11 +447,11 @@ int hkl_engine_list_add(HklEngineList *self,
 HklEngine *hkl_engine_list_get_by_name(HklEngineList *self,
 							     const char *name)
 {
-	HklEngine *engine;
+	HklEngine **engine;
 
-	list_for_each(&self->engines, engine, list){
-		if (!strcmp(engine->info->name, name))
-			return engine;
+	darray_foreach(engine, *self){
+		if (!strcmp((*engine)->info->name, name))
+			return *engine;
 	}
 
 	return NULL;
@@ -469,12 +469,12 @@ HklEngine *hkl_engine_list_get_by_name(HklEngineList *self,
 HklParameter *hkl_engine_list_get_pseudo_axis_by_name(
 	const HklEngineList *self, const char *name)
 {
-	HklEngine *engine;
+	HklEngine **engine;
+	HklParameter **parameter;
 
-	list_for_each(&self->engines, engine, list){
-		HklParameter **parameter;
-		darray_foreach(parameter, engine->pseudo_axes){
-		if (!strcmp((*parameter)->name, name))
+	darray_foreach(engine, *self){
+		darray_foreach(parameter, (*engine)->pseudo_axes){
+			if (!strcmp((*parameter)->name, name))
 				return *parameter;
 		}
 	}
@@ -490,13 +490,12 @@ HklParameter *hkl_engine_list_get_pseudo_axis_by_name(
  **/
 void hkl_engine_list_clear(HklEngineList *self)
 {
-	HklEngine *engine;
-	HklEngine *next;
+	HklEngine **engine;
 
-	list_for_each_safe(&self->engines, engine, next, list){
-		list_del(&engine->list);
-		hkl_engine_free(engine);
+	darray_foreach(engine, *self){
+		hkl_engine_free(*engine);
 	}
+	darray_free(*self);
 }
 
 /**
@@ -514,14 +513,14 @@ void hkl_engine_list_init(HklEngineList *self,
 				      HklDetector *detector,
 				      HklSample *sample)
 {
-	HklEngine *engine;
+	HklEngine **engine;
 
 	self->geometry = geometry;
 	self->detector = detector;
 	self->sample = sample;
 
-	list_for_each(&self->engines, engine, list){
-		hkl_engine_prepare_internal(engine);
+	darray_foreach(engine, *self){
+		hkl_engine_prepare_internal(*engine);
 	}
 }
 
@@ -537,14 +536,14 @@ void hkl_engine_list_init(HklEngineList *self,
  **/
 int hkl_engine_list_get(HklEngineList *self)
 {
-	HklEngine *engine;
+	HklEngine **engine;
 	int res = HKL_TRUE;
 
 	if (!self)
 		return res;
 
-	list_for_each(&self->engines, engine, list){
-		res &= hkl_engine_get(engine, NULL);
+	darray_foreach(engine, *self){
+		res &= hkl_engine_get(*engine, NULL);
 	}
 
 	return res;
@@ -560,9 +559,9 @@ int hkl_engine_list_get(HklEngineList *self)
 void hkl_engine_list_fprintf(FILE *f,
 					 const HklEngineList *self)
 {
-	HklEngine *engine;
+	HklEngine **engine;
 
-	list_for_each(&self->engines, engine, list){
-		hkl_engine_fprintf(f, engine);
+	darray_foreach(engine, *self){
+		hkl_engine_fprintf(f, *engine);
 	}
 }

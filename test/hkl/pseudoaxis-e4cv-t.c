@@ -79,7 +79,7 @@ static void degenerated(void)
 	int res = HKL_TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
-	HklMode *mode;
+	HklMode **mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;
@@ -97,15 +97,12 @@ static void degenerated(void)
 
 	engine = hkl_engine_list_get_by_name(engines, "hkl");
 
-	list_for_each(&engine->modes, mode, list){
+	darray_foreach(mode, engine->modes){
 		static double values[] = {0, 0, 1};
 
-		hkl_engine_select_mode(engine, mode);
-		if (darray_size(mode->parameters)){
-			static double zero = 0;
-
-			hkl_parameter_list_set_values(&mode->parameters, &zero, 1, NULL);
-		}
+		hkl_engine_select_mode(engine, *mode);
+		if (darray_size((*mode)->parameters))
+			hkl_parameter_set_value(darray_item((*mode)->parameters, 0), 0, NULL);
 
 		/* studdy this degenerated case */
 		hkl_parameter_list_set_values(&engine->pseudo_axes, values, 3, NULL);
@@ -208,7 +205,7 @@ static void psi_setter(void)
 	int res = HKL_TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
-	HklMode *mode;
+	HklMode **mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;
@@ -233,10 +230,10 @@ static void psi_setter(void)
 				      hkl, ARRAY_SIZE(hkl), NULL);
 	hkl_engine_initialize(engine, NULL);
 
-	list_for_each(&engine->modes, mode, list){
+	darray_foreach(mode, engine->modes){
 		double psi;
 
-		hkl_engine_select_mode(engine, mode);
+		hkl_engine_select_mode(engine, *mode);
 		for(psi=-180 * HKL_DEGTORAD;psi<180 * HKL_DEGTORAD;psi += HKL_DEGTORAD){
 			hkl_parameter_list_set_values(&engine->pseudo_axes, &psi, 1, NULL);
 			if(hkl_engine_set(engine, NULL)){
@@ -267,7 +264,7 @@ static void q(void)
 	int res = HKL_TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
-	HklMode *mode;
+	HklMode **mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;
@@ -289,10 +286,10 @@ static void q(void)
 	hkl_geometry_set_values_unit_v(geom, 30., 0., 0., 60.);
 	hkl_engine_initialize(engine, NULL);
 
-	list_for_each(&engine->modes, mode, list){
+	darray_foreach(mode, engine->modes){
 		double q;
 
-		hkl_engine_select_mode(engine, mode);
+		hkl_engine_select_mode(engine, *mode);
 		for(q=-1.; q<1.; q += 0.1){
 			hkl_parameter_list_set_values(&engine->pseudo_axes, &q, 1, NULL);
 			if(hkl_engine_set(engine, NULL)){
