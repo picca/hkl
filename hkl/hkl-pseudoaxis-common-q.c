@@ -296,9 +296,9 @@ static void _qper_qpar(HklEngine *engine,
 	HklVector q;
 	HklVector n = {
 		.data = {
-			engine->mode->parameters.parameters[0]->_value,
-			engine->mode->parameters.parameters[1]->_value,
-			engine->mode->parameters.parameters[2]->_value,
+			darray_item(engine->mode->parameters, 0)->_value,
+			darray_item(engine->mode->parameters, 1)->_value,
+			darray_item(engine->mode->parameters, 2)->_value,
 		},
 	};
 	HklVector qper_v;

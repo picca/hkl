@@ -102,7 +102,7 @@ static void degenerated(void)
 		static double values[] = {0, 0, 1};
 
 		hkl_engine_select_mode(engine, mode);
-		if (engine->mode->parameters.len){
+		if (darray_size(engine->mode->parameters)){
 			static double zero[] = {0};
 			hkl_parameter_list_set_values(&engine->mode->parameters,
 						      zero, 1, NULL);

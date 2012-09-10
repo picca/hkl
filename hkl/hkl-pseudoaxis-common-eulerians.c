@@ -99,12 +99,10 @@ static int hkl_mode_get_eulerians_real(HklMode *self,
 	double values[3];
 	double solution;
 	HklParameter *parameter;
-	uint i = 0;
-	uint len;
 
 	hkl_geometry_update(geometry);
 
-	hkl_parameter_list_get_values(&self->parameters, &solution, &len);
+	solution = darray_item(self->parameters, 0)->_value;
 
 	eulerians = container_of(engine, HklEngineEulerians, engine);
 	kappa_to_eulerian(angles,
@@ -127,9 +125,8 @@ static int hkl_mode_set_eulerians_real(HklMode *self,
 	uint n_values = engine->info->n_pseudo_axes;
 	HklEngineEulerians *engine_eulerians;
 	double angles[3];
-	uint len;
 
-	hkl_parameter_list_get_values(&self->parameters, &solution, &len);
+	solution = darray_item(self->parameters, 0)->_value;
 	engine_eulerians = container_of(engine, HklEngineEulerians, engine);
 	if(!eulerian_to_kappa(engine_eulerians->omega->_value,
 			      engine_eulerians->chi->_value,

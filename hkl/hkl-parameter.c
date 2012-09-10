@@ -310,8 +310,7 @@ void hkl_parameter_fprintf(FILE *f, HklParameter *self)
  **/
 void hkl_parameter_list_add_parameter(HklParameterList *self, HklParameter *parameter)
 {
-	self->parameters = realloc(self->parameters, sizeof(parameter) * (self->len + 1));
-	self->parameters[self->len++] = parameter;
+	darray_append(*self, parameter);
 }
 
 /**
@@ -386,6 +385,9 @@ inline unsigned int hkl_parameter_list_set_values_unit(HklParameterList *self,
  **/
 void hkl_parameter_list_randomize(HklParameterList *self)
 {
-	for(uint i=0; i<self->len; ++i)
-		hkl_parameter_randomize(self->parameters[i]);
+	HklParameter **parameter;
+
+	darray_foreach(parameter, *self){
+		hkl_parameter_randomize(*parameter);
+	}
 }

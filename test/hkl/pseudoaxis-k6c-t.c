@@ -49,7 +49,7 @@ static void degenerated(void)
 
 	list_for_each(&engine->modes, mode, list){
 		hkl_engine_select_mode(engine, mode);
-		if (mode->parameters.len){
+		if (darray_size(mode->parameters)){
 			static double one[] = {1.};
 
 			hkl_parameter_list_set_values(&engine->mode->parameters,
@@ -108,7 +108,7 @@ static void eulerians(void)
 		double omega, chi, phi;
 
 		hkl_engine_select_mode(engine, mode);
-		if (mode->parameters.len){
+		if (darray_size(mode->parameters)){
 			static double one[] = {1};
 
 			hkl_parameter_list_set_values(&engine->mode->parameters,

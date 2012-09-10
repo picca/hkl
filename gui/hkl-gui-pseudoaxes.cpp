@@ -179,13 +179,14 @@ void PseudoAxesFrame::on_cell_treeview2_mode_parameter_value_edited(Glib::ustrin
 
 void PseudoAxesFrame::updatePseudoAxis(void)
 {
+	HklParameter **parameter;
+
 	_pseudoAxis_ListStore->clear();
-	for(uint i=0; i<_engine->pseudo_axes.len; ++i){
-		HklParameter *parameter = _engine->pseudo_axes.parameters[i];
+	darray_foreach(parameter, _engine->pseudo_axes){
 		Gtk::TreeRow row = *(_pseudoAxis_ListStore->append());
-		row[_pseudoAxis_columns.name] = parameter->name;
-		row[_pseudoAxis_columns.value] = hkl_parameter_get_value_unit(parameter);
-		row[_pseudoAxis_columns.parameter] = parameter;
+		row[_pseudoAxis_columns.name] = (*parameter)->name;
+		row[_pseudoAxis_columns.value] = hkl_parameter_get_value_unit(*parameter);
+		row[_pseudoAxis_columns.parameter] = *parameter;
 	}
 }
 
@@ -204,14 +205,15 @@ void PseudoAxesFrame::updateMode(void)
 void PseudoAxesFrame::updateModeParameters(void)
 {
 	if(_engine->mode){
-		if(_engine->mode->parameters.len){
+		if(darray_size(_engine->mode->parameters)){
+			HklParameter **parameter;
+
 			_mode_parameter_ListStore->clear();
-			for(uint i=0; i<_engine->mode->parameters.len; ++i){
-				HklParameter *parameter = _engine->mode->parameters.parameters[i];
+			darray_foreach(parameter, _engine->mode->parameters){
 				Gtk::TreeRow row = *(_mode_parameter_ListStore->append());
-				row[_mode_parameter_columns.name] = parameter->name;
-				row[_mode_parameter_columns.value] = hkl_parameter_get_value_unit(parameter);
-				row[_mode_parameter_columns.parameter] = parameter;
+				row[_mode_parameter_columns.name] = (*parameter)->name;
+				row[_mode_parameter_columns.value] = hkl_parameter_get_value_unit(*parameter);
+				row[_mode_parameter_columns.parameter] = *parameter;
 			}
 			_expander1->set_expanded(1);
 			_expander1->show();

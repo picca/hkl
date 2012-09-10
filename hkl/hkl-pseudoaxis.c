@@ -339,11 +339,11 @@ void hkl_engine_fprintf(FILE *f, const HklEngine *self)
 	/* mode */
 	if (self->mode) {
 		fprintf(f, " %s", self->mode->info->name);
-		for(uint i=0; i<self->mode->parameters.len; ++i){
+		for(uint i=0; i<darray_size(self->mode->parameters); ++i){
 			fprintf(f, "\n     ");
 			hkl_parameter_fprintf(
 				f,
-				self->mode->parameters.parameters[i]);
+				darray_item(self->mode->parameters, i));
 		}
 		fprintf(f, "\n");
 	}
@@ -472,9 +472,11 @@ HklParameter *hkl_engine_list_get_pseudo_axis_by_name(
 	HklEngine *engine;
 
 	list_for_each(&self->engines, engine, list){
-		for(uint i=0; i<engine->pseudo_axes.len; ++i)
-			if (!strcmp(engine->pseudo_axes.parameters[i]->name, name))
-				return engine->pseudo_axes.parameters[i];
+		HklParameter **parameter;
+		darray_foreach(parameter, engine->pseudo_axes){
+		if (!strcmp((*parameter)->name, name))
+				return *parameter;
+		}
 	}
 
 	return NULL;

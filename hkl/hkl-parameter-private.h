@@ -162,10 +162,10 @@ static inline void hkl_parameter_list_get_values_real(
 	const HklParameterList *self,
 	double values[], unsigned int *len)
 {
-	for(unsigned int i=0; i<self->len; ++i)
-		values[i] = hkl_parameter_get_value(self->parameters[i]);
+	for(unsigned int i; i<darray_size(*self); ++i)
+		values[i] = darray_item(*self, i)->_value;
 
-	*len = self->len;
+	*len = darray_size(*self);
 }
 
 static inline unsigned int hkl_parameter_list_set_values_real(
@@ -173,9 +173,11 @@ static inline unsigned int hkl_parameter_list_set_values_real(
 	double values[], unsigned int len,
 	HklError **error)
 {
-	for(unsigned int i=0; i<self->len; ++i)
-		if(!hkl_parameter_set_value(self->parameters[i], values[i],
-					    error))
+	unsigned int n = len < darray_size(*self) ? len : darray_size(*self);
+
+	for(unsigned int i=0; i<n; ++i)
+		if(!hkl_parameter_set_value(darray_item(*self, i),
+					    values[i], error))
 			return HKL_FALSE;
 
 	return HKL_TRUE;
@@ -185,11 +187,12 @@ static inline double *hkl_parameter_list_get_values_unit_real(
 	const HklParameterList *self,
 	unsigned int *len)
 {
-	double *values = malloc(sizeof(*values) * self->len);
+	const unsigned int _len =  darray_size(*self);
+	double *values = malloc(sizeof(*values) * _len);
 
-	for(unsigned int i=0; i<self->len; ++i)
-		values[i] = hkl_parameter_get_value_unit(self->parameters[i]);
-	*len = self->len;
+	for(unsigned int i=0; i<_len; ++i)
+		values[i] = hkl_parameter_get_value_unit(darray_item(*self, i));
+	*len = _len;
 
 	return values;
 }
@@ -199,9 +202,9 @@ static inline unsigned int hkl_parameter_list_set_values_unit_real(
 	double values[], unsigned int len,
 	HklError **error)
 {
-	for(unsigned int i=0; i<self->len; ++i)
-		if(!hkl_parameter_set_value_unit(self->parameters[i], values[i],
-						 error))
+	for(unsigned int i=0; i<darray_size(*self); ++i)
+		if(!hkl_parameter_set_value_unit(
+			   darray_item(*self, i), values[i], error))
 			return HKL_FALSE;
 
 	return HKL_TRUE;
@@ -214,27 +217,27 @@ static HklParameterListOperations hkl_parameter_list_operations_defaults = {
 static void hkl_parameter_list_init(HklParameterList *self,
 				    const HklParameterListOperations *ops)
 {
-	self->parameters = NULL;
-	self->len = 0;
+	darray_init(*self);
 	self->ops = ops;
 }
 
 static void hkl_parameter_list_release(HklParameterList *self)
 {
-	for(unsigned int i=0; i<self->len; ++i)
-		hkl_parameter_free(self->parameters[i]);
-	if(self->parameters){
-		free(self->parameters);
-		self->parameters = NULL;
-		self->len = 0;
+	HklParameter **parameter;
+
+	darray_foreach(parameter, *self){
+		hkl_parameter_free(*parameter);
 	}
+	darray_free(*self);
 }
 
 static void hkl_parameter_list_fprintf(FILE *f, const HklParameterList *self)
 {
-	for(unsigned int i=0; i<self->len; ++i){
+	HklParameter **parameter;
+
+	darray_foreach(parameter, *self){
 		fprintf(f, "\n     ");
-		hkl_parameter_fprintf(f, self->parameters[i]);
+		hkl_parameter_fprintf(f, *parameter);
 	}
 }
 
@@ -249,8 +252,8 @@ static inline void _hkl_parameter_list_set_values(
 	HklParameterList *self,
 	double values[], unsigned int len)
 {
-	for(unsigned int i=0; i<self->len; ++i)
-		self->parameters[i]->_value = values[i];
+	for(unsigned int i=0; i<darray_size(*self); ++i)
+		darray_item(*self, i)->_value = values[i];
 }
 
 HKL_END_DECLS

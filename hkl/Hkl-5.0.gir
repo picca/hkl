@@ -2205,15 +2205,18 @@ Returns:</doc>
       </function>
     </record>
     <record name="ParameterList" c:type="HklParameterList">
-      <field name="len" writable="1">
-        <type name="guint" c:type="unsigned"/>
-      </field>
       <field name="ops" writable="1">
         <type name="ParameterListOperations"
               c:type="HklParameterListOperations*"/>
       </field>
-      <field name="parameters" writable="1">
+      <field name="item" writable="1">
         <type name="Parameter" c:type="HklParameter**"/>
+      </field>
+      <field name="size" writable="1">
+        <type name="gulong" c:type="size_t"/>
+      </field>
+      <field name="alloc" writable="1">
+        <type name="gulong" c:type="size_t"/>
       </field>
       <method name="get_by_name" c:identifier="hkl_parameter_list_get_by_name">
         <return-value transfer-ownership="full">

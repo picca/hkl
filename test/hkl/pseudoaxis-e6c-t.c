@@ -129,7 +129,7 @@ static void degenerated(void)
 
 	list_for_each(&engine->modes, mode, list) {
 		hkl_engine_select_mode(engine, mode);
-		if (engine->mode->parameters.len){
+		if (darray_size(engine->mode->parameters)){
 			static double zero[] = {0};
 
 			hkl_parameter_list_set_values(&engine->mode->parameters,
@@ -279,7 +279,7 @@ static void petra3(void)
 			hkl_geometry_init_geometry(geom, item->geometry);
 			hkl_engine_initialize(psi, NULL);
 			hkl_engine_list_get(engines);
-			res &= fabs(PSI - hkl_parameter_get_value(psi->pseudo_axes.parameters[0])) < HKL_EPSILON;
+			res &= fabs(PSI - hkl_parameter_get_value(darray_item(psi->pseudo_axes, 0))) < HKL_EPSILON;
 		}
 	}
 
@@ -373,7 +373,7 @@ static void petra3_2(void)
 			hkl_geometry_init_geometry(geometry, item->geometry);
 			hkl_engine_initialize(psi, NULL);
 			hkl_engine_list_get(engines);
-			res &= fabs(PSI - hkl_parameter_get_value(psi->pseudo_axes.parameters[0])) < HKL_EPSILON;
+			res &= fabs(PSI - hkl_parameter_get_value(darray_item(psi->pseudo_axes, 0))) < HKL_EPSILON;
 		}
 	}
 
@@ -398,7 +398,7 @@ static void petra3_2(void)
 			hkl_geometry_init_geometry(geometry, item->geometry);
 			hkl_engine_initialize(psi, NULL);
 			hkl_engine_list_get(engines);
-			res &= fabs(PSI - hkl_parameter_get_value(psi->pseudo_axes.parameters[0])) < HKL_EPSILON;
+			res &= fabs(PSI - hkl_parameter_get_value(darray_item(psi->pseudo_axes, 0))) < HKL_EPSILON;
 		}
 	}
 
@@ -434,7 +434,7 @@ static void petra3_2(void)
 			hkl_geometry_init_geometry(geometry, item->geometry);
 			hkl_engine_initialize(psi, NULL);
 			hkl_engine_list_get(engines);
-			res &= fabs(PSI - hkl_parameter_get_value(psi->pseudo_axes.parameters[0])) < HKL_EPSILON;
+			res &= fabs(PSI - hkl_parameter_get_value(darray_item(psi->pseudo_axes, 0))) < HKL_EPSILON;
 		}
 	}
 
@@ -461,7 +461,7 @@ static void petra3_2(void)
 			hkl_geometry_init_geometry(geometry, item->geometry);
 			hkl_engine_initialize(psi, NULL);
 			hkl_engine_list_get(engines);
-			res &= fabs(PSI - hkl_parameter_get_value(psi->pseudo_axes.parameters[0])) < HKL_EPSILON;
+			res &= fabs(PSI - hkl_parameter_get_value(darray_item(psi->pseudo_axes, 0))) < HKL_EPSILON;
 		}
 	}
 

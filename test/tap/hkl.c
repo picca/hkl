@@ -43,8 +43,8 @@ int check_pseudoaxes(const HklEngine *engine,
 
 	hkl_assert(engine->info->n_pseudo_axes == len);
 
-	for(uint i=0; i<engine->pseudo_axes.len; ++i){
-		double current = hkl_parameter_get_value(engine->pseudo_axes.parameters[i]);
+	for(uint i=0; i<darray_size(engine->pseudo_axes); ++i){
+		double current = hkl_parameter_get_value(darray_item(engine->pseudo_axes, i));
 		res &= fabs(current - expected[i]) <= HKL_EPSILON;
 		if (!res){
 			fprintf(stderr, "current: %f, expected: %f, epsilon: %f\n",

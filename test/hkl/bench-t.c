@@ -34,7 +34,7 @@ static void hkl_test_bench_run_real(HklEngine *engine, HklGeometry *geometry, si
 		double min, max, mean;
 
 		hkl_engine_select_mode(engine, mode);
-		if (mode->parameters.len){
+		if (darray_size(mode->parameters)){
 			static double one = 1;
 
 			hkl_parameter_list_set_values(&mode->parameters, &one, 1, NULL);
@@ -72,8 +72,8 @@ static void hkl_test_bench_run_v(HklEngineList *engines, HklGeometry *geometry,
 
 	va_start(ap, n);
 	/* TODO replace with a specialise HklParameterList */
-	for(uint i=0; i<engine->pseudo_axes.len; ++i)
-		hkl_parameter_set_value(engine->pseudo_axes.parameters[i],
+	for(uint i=0; i<darray_size(engine->pseudo_axes); ++i)
+		hkl_parameter_set_value(darray_item(engine->pseudo_axes, i),
 					va_arg(ap, double), NULL);
 	va_end(ap);
 

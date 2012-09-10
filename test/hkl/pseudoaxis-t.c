@@ -47,9 +47,12 @@ static int test_engine(HklEngine *engine, HklGeometry *geometry,
 
 		for(i=0;i<n && !ko;++i) {
 			/* randomize the pseudoAxes values */
-			for(uint j=0; j<engine->pseudo_axes.len; ++j){
-				hkl_parameter_randomize(engine->pseudo_axes.parameters[j]);
-				values[j] = hkl_parameter_get_value(engine->pseudo_axes.parameters[j]);
+			for(uint j=0; j<darray_size(engine->pseudo_axes); ++j){
+				HklParameter *parameter;
+
+				parameter = darray_item(engine->pseudo_axes, j);
+				hkl_parameter_randomize(parameter);
+				values[j] = parameter->_value;
 			}
 
 			/* randomize the parameters */
@@ -64,19 +67,25 @@ static int test_engine(HklEngine *engine, HklGeometry *geometry,
 				HklGeometryListItem *item;
 
 				list_for_each(&engine->engines->geometries->items, item, node){
+					HklParameter **parameter;
+
 					/* first modify the pseudoAxes values */
 					/* to be sure that the result is the */
 					/* computed result. */
 
-					for(uint j=0; j<engine->pseudo_axes.len; ++j)
-						hkl_parameter_set_value(engine->pseudo_axes.parameters[j],
-									0., NULL);
+					darray_foreach(parameter, engine->pseudo_axes){
+						hkl_parameter_set_value(*parameter, 0., NULL);
+					}
 
 					hkl_geometry_init_geometry(geometry, item->geometry);
 					hkl_engine_get(engine, NULL);
 
-					for(uint j=0; j<engine->pseudo_axes.len; ++j)
-						ko |= fabs(values[j] - hkl_parameter_get_value(engine->pseudo_axes.parameters[j])) >= HKL_EPSILON;
+					for(uint j=0; j<darray_size(engine->pseudo_axes); ++j){
+						HklParameter *parameter;
+
+						parameter = darray_item(engine->pseudo_axes, j);
+						ko |= fabs(values[j] - parameter->_value) >= HKL_EPSILON;
+					}
 					if(ko)
 						break;
 				}
@@ -93,12 +102,12 @@ static int test_engine(HklEngine *engine, HklGeometry *geometry,
 			fprintf(stderr, " ko");
 			/* print the hkl internals if the test failed */
 			fprintf(stderr, "\n    expected : ");
-			for(uint j=0; j<engine->pseudo_axes.len; ++j)
+			for(uint j=0; j<darray_size(engine->pseudo_axes); ++j)
 				fprintf(stderr, " %f", values[j]);
 			fprintf(stderr, " obtained : ");
-			for(uint j=0; j<engine->pseudo_axes.len; ++j)
+			for(uint j=0; j<darray_size(engine->pseudo_axes); ++j)
 				fprintf(stderr, " %f",
-					hkl_parameter_get_value(engine->pseudo_axes.parameters[j]));
+					hkl_parameter_get_value(darray_item(engine->pseudo_axes, j)));
 			hkl_engine_fprintf(stdout, engine);
 		}else{
 			fprintf(stderr, " ok");

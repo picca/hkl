@@ -429,23 +429,25 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 
 	//Fill the models from the diffractometer pseudoAxes
 	list_for_each(&_engines->engines, engine, list){
-		for(uint i=0; i<engine->pseudo_axes.len; ++i){
-			HklParameter *pseudo_axis = engine->pseudo_axes.parameters[i];
+		HklParameter **pseudo_axis;
+
+		darray_foreach(pseudo_axis, engine->pseudo_axes){
 			Gtk::ListStore::Row row = *(_pseudoAxeModel->append());
 			row[_pseudoAxeModelColumns.engine] = engine;
-			row[_pseudoAxeModelColumns.parameter] = pseudo_axis;
-			row[_pseudoAxeModelColumns.name] = pseudo_axis->name;
-			if(engine->mode->parameters.len){
+			row[_pseudoAxeModelColumns.parameter] = *pseudo_axis;
+			row[_pseudoAxeModelColumns.name] = (*pseudo_axis)->name;
+			if(darray_size(engine->mode->parameters)){
 				Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(_parameterModelColumns);
-				for(uint j=0; j<engine->mode->parameters.len; ++j){
-					HklParameter *parameter = engine->mode->parameters.parameters[j];
+				HklParameter **parameter;
+
+				darray_foreach(parameter, engine->mode->parameters){
 					Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(_parameterModelColumns);
 					row = *(model->append());
-					row[_parameterModelColumns.parameter] = parameter;
-					row[_parameterModelColumns.name] = parameter->name;
-					row[_parameterModelColumns.value] = hkl_parameter_get_value_unit(parameter);
+					row[_parameterModelColumns.parameter] = *parameter;
+					row[_parameterModelColumns.name] = (*parameter)->name;
+					row[_parameterModelColumns.value] = hkl_parameter_get_value_unit(*parameter);
 				}
-				_mapPseudoAxeParameterModel.insert(std::pair<HklParameter *, Glib::RefPtr<Gtk::ListStore> >(pseudo_axis, model));
+				_mapPseudoAxeParameterModel.insert(std::pair<HklParameter *, Glib::RefPtr<Gtk::ListStore> >(*pseudo_axis, model));
 			}
 		}
 	}

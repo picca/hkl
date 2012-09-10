@@ -471,13 +471,15 @@ int _double_diffraction(double const x[], void *params, double f[])
 	HklVector ki;
 	HklVector dQ;
 	HklHolder *holder;
-	uint shit;
 
 	/* update the workspace from x; */
 	set_geometry_axes(engine, x);
 
 	/* get the second hkl from the mode parameters */
-	hkl_parameter_list_get_values(&engine->mode->parameters, kf2.data, &shit);
+	hkl_vector_init(&kf2,
+			darray_item(engine->mode->parameters, 0)->_value,
+			darray_item(engine->mode->parameters, 1)->_value,
+			darray_item(engine->mode->parameters, 2)->_value);
 
 	/* R * UB * hkl = Q */
 	/* for now the 0 holder is the sample holder. */
@@ -542,8 +544,6 @@ int _psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f
 {
 	HklVector ki, kf, Q;
 	HklEngine *engine = params;
-	double parameters[4];
-	uint n_parameters;
 
 	CHECK_NAN(x->data, x->size);
 
@@ -558,9 +558,7 @@ int _psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f
 	Q = kf;
 	hkl_vector_minus_vector(&Q, &ki);
 
-	hkl_parameter_list_get_values(&engine->mode->parameters,
-				      parameters, &n_parameters);
-	f->data[3] = parameters[3];
+	f->data[3] = darray_item(engine->mode->parameters, 3)->_value;
 
 	/* if |Q| > epsilon ok */
 	if(hkl_vector_normalize(&Q)){
@@ -575,9 +573,9 @@ int _psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f
 		/* compute the hkl ref position in the laboratory */
 		/* referentiel. The geometry was already updated. */
 		/* FIXME for now the 0 holder is the sample holder. */
-		hkl.data[0] = parameters[0];
-		hkl.data[1] = parameters[1];
-		hkl.data[2] = parameters[2];
+		hkl.data[0] = darray_item(engine->mode->parameters, 0)->_value;
+		hkl.data[1] = darray_item(engine->mode->parameters, 1)->_value;
+		hkl.data[2] = darray_item(engine->mode->parameters, 2)->_value;
 		hkl_matrix_times_vector(&engine->sample->UB, &hkl);
 		hkl_vector_rotated_quaternion(&hkl, &engine->geometry->holders[0].q);
 
@@ -628,10 +626,6 @@ int hkl_mode_init_psi_constant_vertical_real(HklMode *self,
 			      "\nplease select a non-null hkl", engine->mode->info->name);
 		return HKL_FALSE;
 	}else{
-		double parameters[4];
-		uint len;
-
-		hkl_parameter_list_get_values(&self->parameters, parameters, &len);
 		/* needed for a problem of precision */
 		hkl_vector_normalize(&Q);
 
@@ -643,9 +637,9 @@ int hkl_mode_init_psi_constant_vertical_real(HklMode *self,
 		/* compute hkl in the laboratory referentiel */
 		/* the geometry was already updated in the detector compute kf */
 		/* for now the 0 holder is the sample holder */
-		hkl.data[0] = parameters[0];
-		hkl.data[1] = parameters[1];
-		hkl.data[2] = parameters[2];
+		hkl.data[0] = darray_item(self->parameters, 0)->_value;
+		hkl.data[1] = darray_item(self->parameters, 1)->_value;
+		hkl.data[2] = darray_item(self->parameters, 2)->_value;
 		hkl_matrix_times_vector(&sample->UB, &hkl);
 		hkl_vector_rotated_quaternion(&hkl, &geometry->holders[0].q);
 
@@ -661,7 +655,7 @@ int hkl_mode_init_psi_constant_vertical_real(HklMode *self,
 			/* compute the angle beetween hkl and n and
 			 * store in in the fourth parameter */
 			if (!hkl_parameter_set_value(
-				    self->parameters.parameters[3],
+				    darray_item(self->parameters, 3),
 				    hkl_vector_oriented_angle(&n, &hkl, &Q),
 				    error))
 				return HKL_FALSE;
