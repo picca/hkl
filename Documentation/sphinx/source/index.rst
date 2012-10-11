@@ -21,6 +21,7 @@ Contents:
    diffractometers/zaxis
    diffractometers/med1_2
    diffractometers/med2_2
+   diffractometers/med2_3
    diffractometers/mars
    diffractometers/petra3
    pseudo

@@ -183,6 +183,24 @@ static void hkl_geometry_init_petra3_p09_eh2(HklGeometry *self,
 	hkl_holder_add_rotation_axis(h, "gamma", 0, -1, 0);
 }
 
+static void hkl_geometry_init_soleil_sixs_med_2_3(HklGeometry *self,
+						  const HklGeometryConfig *config)
+{
+	HklHolder *h;
+
+	self->config = config;
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "beta", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, "omega", 0, -1, 0);
+
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "beta", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, "eta_a", 1, 0, 0);
+}
+
 const HklGeometryConfig *hkl_geometry_factory_get_config_from_type(HklGeometryType type)
 {
 	const HklGeometryConfig *config;
@@ -240,6 +258,9 @@ HklGeometry *hkl_geometry_factory_new(const HklGeometryConfig *config, ...)
 		break;
 	case HKL_GEOMETRY_TYPE_PETRA3_P09_EH2:
 		hkl_geometry_init_petra3_p09_eh2(geom, config);
+		break;
+	case HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_3:
+		hkl_geometry_init_soleil_sixs_med_2_3(geom, config);
 		break;
 	}
 
