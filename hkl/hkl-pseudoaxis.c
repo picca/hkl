@@ -94,9 +94,9 @@ void hkl_mode_fprintf(FILE *f, const HklMode *self)
 	unsigned int i;
 
 	fprintf(f, "mode: \"%s\"\n", self->info->name);
-	fprintf(f, "initialize: %p\n", self->op->init);
-	fprintf(f, "get: %p\n", self->op->get);
-	fprintf(f, "set: %p\n", self->op->set);
+	fprintf(f, "initialize: %p\n", self->ops->init);
+	fprintf(f, "get: %p\n", self->ops->get);
+	fprintf(f, "set: %p\n", self->ops->set);
 	hkl_parameter_list_fprintf(f, &self->parameters);
 	if(self->info->axes){
 		fprintf(f, "axes names:");
@@ -232,13 +232,13 @@ int hkl_engine_initialize(HklEngine *self, HklError **error)
 	}
 
 	/* a NULL initialize method is valid */
-	if(self->mode->op->init
-	   && !self->mode->op->init(self->mode,
-				    self,
-				    self->engines->geometry,
-				    self->engines->detector,
-				    self->engines->sample,
-				    error)){
+	if(self->mode->ops->init
+	   && !self->mode->ops->init(self->mode,
+				     self,
+				     self->engines->geometry,
+				     self->engines->detector,
+				     self->engines->sample,
+				     error)){
 		hkl_assert(error == NULL || *error != NULL);
 		return HKL_FALSE;
 	}
@@ -262,18 +262,18 @@ int hkl_engine_set(HklEngine *self, HklError **error)
 	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
 	if(!self || !self->geometry || !self->detector || !self->sample
-	   || !self->mode || !self->mode->op->set){
+	   || !self->mode || !self->mode->ops->set){
 		hkl_error_set(error, "Internal error");
 		return HKL_FALSE;
 	}
 
 	hkl_engine_prepare_internal(self);
 
-	if (!self->mode->op->set(self->mode, self,
-				 self->geometry,
-				 self->detector,
-				 self->sample,
-				 error)){
+	if (!self->mode->ops->set(self->mode, self,
+				  self->geometry,
+				  self->detector,
+				  self->sample,
+				  error)){
 		hkl_assert(error == NULL || *error != NULL);
 		return HKL_FALSE;
 	}
@@ -306,17 +306,17 @@ int hkl_engine_get(HklEngine *self, HklError **error)
 	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
 	if(!self || !self->engines || !self->engines->geometry || !self->engines->detector
-	   || !self->engines->sample || !self->mode || !self->mode->op->get){
+	   || !self->engines->sample || !self->mode || !self->mode->ops->get){
 		hkl_error_set(error, "Internal error");
 		return HKL_FALSE;
 	}
 
-	if (!self->mode->op->get(self->mode,
-				 self,
-				 self->engines->geometry,
-				 self->engines->detector,
-				 self->engines->sample,
-				 error)){
+	if (!self->mode->ops->get(self->mode,
+				  self,
+				  self->engines->geometry,
+				  self->engines->detector,
+				  self->engines->sample,
+				  error)){
 		hkl_assert(error == NULL || *error != NULL);
 		return HKL_FALSE;
 	}

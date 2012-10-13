@@ -141,7 +141,7 @@ static int hkl_mode_set_real(HklMode *self,
 static inline int hkl_mode_init(
 	HklMode *self,
 	const HklModeInfo *info,
-	const HklModeOperations *op)
+	const HklModeOperations *ops)
 {
 	size_t i;
 
@@ -150,7 +150,7 @@ static inline int hkl_mode_init(
 		return HKL_FALSE;
 
 	self->info = info;
-	self->op = op;
+	self->ops = ops;
 
 	/* parameters */
 	hkl_parameter_list_init(&self->parameters,

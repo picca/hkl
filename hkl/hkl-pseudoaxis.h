@@ -49,7 +49,7 @@ struct _HklModeInfo {
 struct _HklMode
 {
 	const HklModeInfo *info;
-	const HklModeOperations *op;
+	const HklModeOperations *ops;
 	HklGeometry *geometry_init;
 	HklDetector *detector_init;
 	HklSample *sample_init;

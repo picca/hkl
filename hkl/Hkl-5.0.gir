@@ -1917,7 +1917,7 @@ Todo: test</doc>
       <field name="info" writable="1">
         <type name="ModeInfo" c:type="HklModeInfo*"/>
       </field>
-      <field name="op" writable="1">
+      <field name="ops" writable="1">
         <type name="ModeOperations" c:type="HklModeOperations*"/>
       </field>
       <field name="geometry_init" writable="1">
