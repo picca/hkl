@@ -104,9 +104,6 @@ void hkl_mode_fprintf(FILE *f, const HklMode *self)
 			fprintf(f, " %s", self->info->axes[i]);
 		fprintf(f, "\n");
 	}
-	hkl_geometry_fprintf(f, self->geometry_init);
-	hkl_detector_fprintf(f, self->detector_init);
-	hkl_sample_fprintf(f, self->sample_init);
 }
 
 /***********************/

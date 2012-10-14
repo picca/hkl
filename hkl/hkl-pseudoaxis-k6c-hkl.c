@@ -304,6 +304,7 @@ static int _constant_incidence_func(const gsl_vector *x, void *params, gsl_vecto
 	double incidence;
 	double azimuth;
 	HklEngine *engine = params;
+	HklModeAutoWithInit *mode = container_of(engine->mode, HklModeAutoWithInit, mode);
 	double parameters[5];
 	uint shit;
 	HklVector n;
@@ -330,8 +331,8 @@ static int _constant_incidence_func(const gsl_vector *x, void *params, gsl_vecto
 	/* first check that the mode was already initialized if not
 	 * the surface is oriented along the nx, ny, nz axis for all
 	 * diffractometer angles equal to zero */
-	if(engine->mode->geometry_init){
-		HklQuaternion q0 = engine->mode->geometry_init->holders[0].q;
+	if(mode->geometry){
+		HklQuaternion q0 = mode->geometry->holders[0].q;
 
 		hkl_quaternion_conjugate(&q0);
 		hkl_vector_rotated_quaternion(&n, &q0);
@@ -558,9 +559,11 @@ static HklMode *constant_incidence(void)
 	static const HklModeAutoInfo info = {
 		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
 	};
+	static const HklModeOperations ops = {
+		HKL_MODE_OPERATIONS_AUTO_WITH_INIT_DEFAULTS,
+	};
 
-	return hkl_mode_auto_new(&info,
-				 &hkl_mode_operations);
+	return hkl_mode_auto_with_init_new(&info, &ops);
 }
 
 /**********************/

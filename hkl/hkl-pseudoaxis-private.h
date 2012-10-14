@@ -58,12 +58,13 @@ extern HklParameter *hkl_parameter_new_pseudo_axis(
 	const HklParameter *parameter,
 	HklEngine *engine);
 
-/***************************/
+/***********/
 /* HklMode */
-/***************************/
+/***********/
 
 struct _HklModeOperations
 {
+	void (* free)(HklMode *self);
 	int (* init)(HklMode *self,
 		     HklEngine *engine,
 		     HklGeometry *geometry,
@@ -85,10 +86,17 @@ struct _HklModeOperations
 };
 
 #define HKL_MODE_OPERATIONS_DEFAULTS		\
-	.init=hkl_mode_init_real,		\
+	.free=hkl_mode_free_real,		\
+		.init=hkl_mode_init_real,	\
 		.get=hkl_mode_get_real,		\
 		.set=hkl_mode_set_real
 
+static inline void hkl_mode_free_real(HklMode *self)
+{
+	hkl_parameter_list_release(&self->parameters);
+
+	free(self);
+}
 
 static int hkl_mode_init_real(HklMode *mode,
 			      HklEngine *self,
@@ -102,18 +110,6 @@ static int hkl_mode_init_real(HklMode *mode,
 
 	/* update the geometry internals */
 	hkl_geometry_update(geometry);
-
-	if(mode->geometry_init)
-		hkl_geometry_free(mode->geometry_init);
-	mode->geometry_init = hkl_geometry_new_copy(geometry);
-
-	if(mode->detector_init)
-		hkl_detector_free(mode->detector_init);
-	mode->detector_init = hkl_detector_new_copy(detector);
-
-	if(mode->sample_init)
-		hkl_sample_free(mode->sample_init);
-	mode->sample_init = hkl_sample_new_copy(sample);
 
 	return HKL_TRUE;
 }
@@ -162,11 +158,6 @@ static inline int hkl_mode_init(
 		hkl_parameter_list_add_parameter(&self->parameters, parameter);
 	}
 
-	/* init part */
-	self->geometry_init = NULL;
-	self->detector_init = NULL;
-	self->sample_init = NULL;
-
 	return HKL_TRUE;
 }
 
@@ -192,26 +183,12 @@ static inline HklMode *hkl_mode_new(
  **/
 static inline void hkl_mode_free(HklMode *self)
 {
-	hkl_parameter_list_release(&self->parameters);
-
-	if(self->geometry_init){
-		hkl_geometry_free(self->geometry_init);
-		self->geometry_init = NULL;
-	}
-	if(self->detector_init){
-		hkl_detector_free(self->detector_init);
-		self->detector_init = NULL;
-	}
-	if(self->sample_init){
-		hkl_sample_free(self->sample_init);
-		self->sample_init = NULL;
-	}
-	free(self);
+	self->ops->free(self);
 }
 
-/***********************/
+/*************/
 /* HklEngine */
-/***********************/
+/*************/
 
 static void hkl_engine_release(HklEngine *self)
 {
@@ -303,9 +280,9 @@ static inline void hkl_engine_add_geometry(HklEngine *self,
 	hkl_geometry_list_add(self->engines->geometries, self->geometry);
 }
 
-/***************************/
+/*****************/
 /* HklEngineList */
-/***************************/
+/*****************/
 
 extern HklEngineList *hkl_engine_list_new(void);
 

@@ -1920,15 +1920,6 @@ Todo: test</doc>
       <field name="ops" writable="1">
         <type name="ModeOperations" c:type="HklModeOperations*"/>
       </field>
-      <field name="geometry_init" writable="1">
-        <type name="Geometry" c:type="HklGeometry*"/>
-      </field>
-      <field name="detector_init" writable="1">
-        <type name="Detector" c:type="HklDetector*"/>
-      </field>
-      <field name="sample_init" writable="1">
-        <type name="Sample" c:type="HklSample*"/>
-      </field>
       <field name="parameters" writable="1">
         <type name="ParameterList" c:type="HklParameterList"/>
       </field>

@@ -401,3 +401,16 @@ int hkl_mode_auto_set_real(HklMode *self,
 
 	return HKL_TRUE;
 }
+
+HklMode *hkl_mode_auto_with_init_new(const HklModeAutoInfo *info,
+				     const HklModeOperations *ops)
+{
+	HklModeAutoWithInit *self = HKL_MALLOC(HklModeAutoWithInit);
+
+	hkl_mode_auto_init(&self->mode, info, ops);
+	self->geometry = NULL;
+	self->detector = NULL;
+	self->sample = NULL;
+
+	return &self->mode;
+}

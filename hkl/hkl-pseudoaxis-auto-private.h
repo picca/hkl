@@ -30,6 +30,7 @@ HKL_BEGIN_DECLS
 
 typedef struct _HklFunction HklFunction;
 typedef struct _HklModeAutoInfo HklModeAutoInfo;
+typedef struct _HklModeAutoWithInit HklModeAutoWithInit;
 
 struct _HklFunction
 {
@@ -47,6 +48,19 @@ struct _HklModeAutoInfo {
 	HKL_MODE_OPERATIONS_DEFAULTS,		\
 		.set = hkl_mode_auto_set_real
 
+struct _HklModeAutoWithInit {
+	HklMode mode;
+	HklGeometry *geometry;
+	HklDetector *detector;
+	HklSample *sample;
+};
+
+#define HKL_MODE_OPERATIONS_AUTO_WITH_INIT_DEFAULTS		\
+	HKL_MODE_OPERATIONS_AUTO_DEFAULTS,			\
+		.free = hkl_mode_auto_with_init_free_real,	\
+		.init = hkl_mode_auto_with_init_init_real
+
+
 #define CHECK_NAN(x, len) do{				\
 		for(uint i=0; i<len; ++i)		\
 			if(gsl_isnan(x[i]))		\
@@ -55,6 +69,10 @@ struct _HklModeAutoInfo {
 
 #define INFO_AUTO(name, axes, fn) .mode={INFO(name, axes),}, .functions=fn, .n_functions=ARRAY_SIZE(fn)
 #define INFO_AUTO_WITH_PARAMS(name, axes, fn, parameters) .mode={INFO_WITH_PARAMS(name, axes, parameters)}, .functions=fn, .n_functions=ARRAY_SIZE(fn)
+
+/***************/
+/* HklModeAuto */
+/***************/
 
 extern HklMode *hkl_mode_auto_new(
 	const HklModeAutoInfo *info,
@@ -70,6 +88,62 @@ extern int hkl_mode_auto_set_real(HklMode *self,
 				  HklDetector *detector,
 				  HklSample *sample,
 				  HklError **error);
+
+/***********************/
+/* HklModeAutoWithInit */
+/***********************/
+
+static void hkl_mode_auto_with_init_free_real(HklMode *mode)
+{
+	HklModeAutoWithInit *self = container_of(mode, HklModeAutoWithInit, mode);
+
+	if(self->geometry)
+		hkl_geometry_free(self->geometry);
+	if(self->detector)
+		hkl_detector_free(self->detector);
+	if(self->sample)
+		hkl_sample_free(self->sample);
+
+	hkl_mode_free_real(mode);
+}
+
+static int hkl_mode_auto_with_init_init_real(HklMode *mode,
+					     HklEngine *engine,
+					     HklGeometry *geometry,
+					     HklDetector *detector,
+					     HklSample *sample,
+					     HklError **error)
+{
+	HklModeAutoWithInit *self = container_of(mode, HklModeAutoWithInit, mode);
+
+	hkl_return_val_if_fail(error == NULL || *error == NULL, HKL_FALSE);
+
+	if (!hkl_mode_init_real(mode, engine, geometry, detector, sample, error)){
+		hkl_error_set(error, "internal error");
+	}
+	hkl_assert(error == NULL || *error == NULL);
+
+	if(geometry){
+		if(self->geometry)
+			hkl_geometry_free(self->geometry);
+		self->geometry = hkl_geometry_new_copy(geometry);
+	}
+	if(detector){
+		if(self->detector)
+			hkl_detector_free(self->detector);
+		self->detector = hkl_detector_new_copy(detector);
+	}
+	if(sample){
+		if(self->sample)
+			hkl_sample_free(self->sample);
+		self->sample = hkl_sample_new_copy(sample);
+	}
+
+	return HKL_TRUE;
+}
+
+extern HklMode *hkl_mode_auto_with_init_new(const HklModeAutoInfo *info,
+					    const HklModeOperations *ops);
 
 HKL_END_DECLS
 
