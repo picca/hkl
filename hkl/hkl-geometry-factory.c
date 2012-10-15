@@ -198,7 +198,7 @@ static void hkl_geometry_init_soleil_sixs_med_2_3(HklGeometry *self,
 	hkl_holder_add_rotation_axis(h, "beta", 0, -1, 0);
 	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1);
 	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
-	hkl_holder_add_rotation_axis(h, "eta_a", 1, 0, 0);
+	hkl_holder_add_rotation_axis(h, "eta_a", -1, 0, 0);
 }
 
 const HklGeometryConfig *hkl_geometry_factory_get_config_from_type(HklGeometryType type)

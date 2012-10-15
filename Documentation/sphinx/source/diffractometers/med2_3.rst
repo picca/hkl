@@ -16,7 +16,7 @@ Geometry
   + **beta** : rotation around the :math:`-\vec{y}` direction (0, -1, 0)
   + **gamma** : rotation around the :math:`\vec{z}` direction (0, 0, 1)
   + **delta** : rotation around the :math:`-\vec{y}` direction (0, -1, 0)
-  + **eta_a** : rotation around the :math:`\vec{x}` direction (1, 0, 0)
+  + **eta_a** : rotation around the :math:`-\vec{x}` direction (-1, 0, 0)
 
 PseudoAxes
 **********
