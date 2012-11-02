@@ -83,6 +83,7 @@ static void degenerated(void)
 	HklMode **mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
+	const HklGeometryList *geometries;
 	HklDetector *detector;
 	HklSample *sample;
 
@@ -95,6 +96,7 @@ static void degenerated(void)
 
 	engines = hkl_engine_list_factory(config);
 	hkl_engine_list_init(engines, geom, detector, sample);
+	geometries = hkl_engine_list_geometries(engines);
 
 	engine = hkl_engine_list_get_by_name(engines, "hkl");
 
@@ -110,11 +112,11 @@ static void degenerated(void)
 		if(hkl_engine_set(engine, NULL)){
 			HklGeometryListItem *item;
 
-			list_for_each(&engines->geometries->items, item, node){
+			list_for_each(&geometries->items, item, node){
 				static double null[] = {0, 0, 0};
 
 				hkl_parameter_list_set_values(&engine->pseudo_axes, null, 3, NULL);
-				hkl_geometry_init_geometry(engines->geometry, item->geometry);
+				hkl_geometry_init_geometry(geom, item->geometry);
 				hkl_engine_get(engine, NULL);
 				res &= check_pseudoaxes(engine, values, 3);
 			}
@@ -202,6 +204,7 @@ static void psi_setter(void)
 	HklMode **mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
+	const HklGeometryList *geometries;
 	HklDetector *detector;
 	HklSample *sample;
 	static double hkl[] = {1, 0, 0};
@@ -215,6 +218,7 @@ static void psi_setter(void)
 
 	engines = hkl_engine_list_factory(config);
 	hkl_engine_list_init(engines, geom, detector, sample);
+	geometries = hkl_engine_list_geometries(engines);
 
 	engine = hkl_engine_list_get_by_name(engines, "psi");
 
@@ -233,7 +237,7 @@ static void psi_setter(void)
 			if(hkl_engine_set(engine, NULL)){
 				HklGeometryListItem *item;
 
-				list_for_each(&engines->geometries->items, item, node){
+				list_for_each(&geometries->items, item, node){
 					static double null[] = {0};
 
 					hkl_parameter_list_set_values(&engine->pseudo_axes, null, 1, NULL);
@@ -262,6 +266,7 @@ static void q(void)
 	HklMode **mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
+	const HklGeometryList *geometries;
 	HklDetector *detector;
 	HklSample *sample;
 
@@ -274,6 +279,7 @@ static void q(void)
 
 	engines = hkl_engine_list_factory(config);
 	hkl_engine_list_init(engines, geom, detector, sample);
+	geometries = hkl_engine_list_geometries(engines);
 
 	engine = hkl_engine_list_get_by_name(engines, "q");
 
@@ -291,7 +297,7 @@ static void q(void)
 			if(hkl_engine_set(engine, NULL)){
 				HklGeometryListItem *item;
 
-				list_for_each(&engines->geometries->items, item, node){
+				list_for_each(&geometries->items, item, node){
 					static double null[] = {0};
 					hkl_parameter_list_set_values(&engine->pseudo_axes, null, 1, NULL);
 
@@ -318,6 +324,7 @@ static void hkl_psi_constant_horizontal(void)
 	HklEngine *engine;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
+	const HklGeometryList *geometries;
 	HklDetector *detector;
 	HklSample *sample;
 	static double hkl[] = {1, 0, 1};
@@ -332,6 +339,7 @@ static void hkl_psi_constant_horizontal(void)
 
 	engines = hkl_engine_list_factory(config);
 	hkl_engine_list_init(engines, geom, detector, sample);
+	geometries = hkl_engine_list_geometries(engines);
 
 	engine = hkl_engine_list_get_by_name(engines, "hkl");
 
@@ -349,7 +357,7 @@ static void hkl_psi_constant_horizontal(void)
 	if(hkl_engine_set(engine, NULL)){
 		HklGeometryListItem *item;
 
-		list_for_each(&engines->geometries->items, item, node){
+		list_for_each(&geometries->items, item, node){
 			static double null[] = {0, 0, 0};
 
 			hkl_parameter_list_set_values(&engine->pseudo_axes,

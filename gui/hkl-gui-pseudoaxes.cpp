@@ -138,11 +138,7 @@ void PseudoAxesFrame::on_cell_TreeView_pseudoAxis_value_edited(Glib::ustring con
 void PseudoAxesFrame::on_button1_clicked(void)
 {
 	if(hkl_engine_set(_engine, NULL)){
-		HklGeometryListItem *top;
-
-		top = list_top(&_engine->engines->geometries->items,
-			       HklGeometryListItem, node);
-		hkl_geometry_init_geometry(_engine->engines->geometry, top->geometry);
+		hkl_engine_list_select_solution(this->_engine->engines, 0);
 		this->_signal_changed();
 	}
 }

@@ -26,14 +26,15 @@
 
 #define with_log 1
 
-static int test_engine(HklEngine *engine, HklGeometry *geometry,
-		       HklDetector *detector, HklSample *sample, unsigned int n)
+static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
 {
 	uint i;
 	double values[10]; /* this should be the number of pseudo_axis */
 	int unreachable = 0;
 	int ko = HKL_FALSE;
 	HklMode **mode;
+	const HklGeometryList *geometries = hkl_engine_list_geometries(engine_list);
+	HklGeometry *geometry = hkl_engine_list_get_geometry(engine_list);
 
 	/* randomize the geometry */
 	hkl_geometry_randomize(geometry);
@@ -66,7 +67,7 @@ static int test_engine(HklEngine *engine, HklGeometry *geometry,
 			if(hkl_engine_set(engine, NULL)) {
 				HklGeometryListItem *item;
 
-				list_for_each(&engine->engines->geometries->items, item, node){
+				list_for_each(&geometries->items, item, node){
 					HklParameter **parameter;
 
 					/* first modify the pseudoAxes values */
@@ -118,17 +119,14 @@ static int test_engine(HklEngine *engine, HklGeometry *geometry,
 	return !ko;
 }
 
-static int test_engines(HklEngineList *engines, int n)
+static int test_engines(HklEngineList *engine_list, int n)
 {
 	int res = HKL_TRUE;
-
 	HklEngine **engine;
+	darray_engine *engines = hkl_engine_list_engines(engine_list);
+
 	darray_foreach(engine, *engines){
-		res &= test_engine(*engine,
-				   engines->geometry,
-				   engines->detector,
-				   engines->sample,
-				   n);
+		res &= test_engine(*engine, engine_list, n);
 	}
 
 #if with_log

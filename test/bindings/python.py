@@ -102,8 +102,8 @@ class TestAPI(unittest.TestCase):
         for _ in range(100):
             try:
                 hkl.pseudo_axes.set_values_unit(values)
-
-                for item in engines.geometries.items():
+                solutions = engines.geometries()
+                for item in solutions.items():
                     item.geometry.get_axes_values_unit()
             except GLib.GError, err:
                 print values, err
@@ -121,7 +121,7 @@ class TestAPI(unittest.TestCase):
                 self.assertTrue(type(parameter.get_value()) is float)
 
         # check the set result
-        for item in engines.geometries.items():
+        for item in engines.geometries().items():
             self.assertTrue(type(item) is Hkl.GeometryListItem)
             self.assertTrue(type(item.geometry) is Hkl.Geometry)
 

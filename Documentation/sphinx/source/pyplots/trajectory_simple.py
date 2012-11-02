@@ -49,11 +49,9 @@ for idx, hh, kk, ll in zip(range(n), h, k, l):
     try:
         hkl.set_values_unit([hh, kk, ll])
         # if no exception raised we have at least one solution
-        first = engines.geometries.items()[0].geometry
-        positions = first.get_axes_values_unit()
-        motors_positions.append(positions)
         # move the diffractometer to the solution
-        geometry.set_axes_values_unit(positions)
+        engines.select_solution(0)
+        motors_positions.append(geometry.get_axes_values_unit())
     except GLib.GError, err:
         pass
 

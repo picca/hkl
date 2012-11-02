@@ -22,6 +22,7 @@
 
 #include <glib.h>
 #include <string.h>
+#include "hkl-pseudoaxis-private.h"
 #include "hkl-binding-private.h"
 
 /********************/
@@ -277,13 +278,15 @@ gboolean hkl_engine_set_values_unit(HklEngine *self,
 }
 
 /**
- * hkl_engine_list_engines:
- * @self: the #HklEngineList
+ * hkl_engine_list_engines_as_gslist:
+ * @self: the this ptr
  *
  * Return value: (element-type HklEngine) (transfer container): list of engines,
  *               free the list with g_slist_free when done.
+ *
+ * Rename to: hkl_engine_list_engines
  **/
-GSList* hkl_engine_list_engines(HklEngineList *self)
+GSList* hkl_engine_list_engines_as_gslist(HklEngineList *self)
 {
 	GSList *list = NULL;
 	HklEngine **engine;

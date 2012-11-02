@@ -367,28 +367,18 @@ Returns:</doc>
             glib:type-name="HklEngineList"
             glib:get-type="hkl_engine_list_get_type"
             c:symbol-prefix="engine_list">
-      <field name="geometries" writable="1">
-        <type name="GeometryList" c:type="HklGeometryList*"/>
-      </field>
-      <field name="geometry" writable="1">
-        <type name="Geometry" c:type="HklGeometry*"/>
-      </field>
-      <field name="detector" writable="1">
-        <type name="Detector" c:type="HklDetector*"/>
-      </field>
-      <field name="sample" writable="1">
-        <type name="Sample" c:type="HklSample*"/>
-      </field>
-      <field name="item" writable="1">
-        <type name="Engine" c:type="HklEngine**"/>
-      </field>
-      <field name="size" writable="1">
-        <type name="gulong" c:type="size_t"/>
-      </field>
-      <field name="alloc" writable="1">
-        <type name="gulong" c:type="size_t"/>
-      </field>
-      <method name="engines" c:identifier="hkl_engine_list_engines">
+      <method name="engines"
+              c:identifier="hkl_engine_list_engines"
+              shadowed-by="engines_as_gslist"
+              introspectable="0">
+        <return-value>
+          <doc xml:whitespace="preserve">a pointer on the engine array</doc>
+          <type c:type="darray_engine*"/>
+        </return-value>
+      </method>
+      <method name="engines_as_gslist"
+              c:identifier="hkl_engine_list_engines_as_gslist"
+              shadows="engines">
         <doc xml:whitespace="preserve">free the list with g_slist_free when done.</doc>
         <return-value transfer-ownership="container">
           <doc xml:whitespace="preserve">list of engines,</doc>
@@ -403,6 +393,12 @@ Returns:</doc>
         <doc xml:whitespace="preserve">destructor</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
+        </return-value>
+      </method>
+      <method name="geometries" c:identifier="hkl_engine_list_geometries">
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">a pointer on the engine array</doc>
+          <type name="GeometryList" c:type="HklGeometryList*"/>
         </return-value>
       </method>
       <method name="get" c:identifier="hkl_engine_list_get">
@@ -427,6 +423,14 @@ get method failed.</doc>
             <type name="utf8" c:type="char*"/>
           </parameter>
         </parameters>
+      </method>
+      <method name="get_geometry"
+              c:identifier="hkl_engine_list_get_geometry"
+              introspectable="0">
+        <return-value transfer-ownership="full">
+          <doc xml:whitespace="preserve">a pointer on the geometry member</doc>
+          <type name="Geometry" c:type="HklGeometry*"/>
+        </return-value>
       </method>
       <method name="get_pseudo_axis_by_name"
               c:identifier="hkl_engine_list_get_pseudo_axis_by_name">
@@ -460,6 +464,21 @@ Geometry, a detector and a sample.</doc>
           <parameter name="sample" transfer-ownership="none">
             <doc xml:whitespace="preserve">the associated #HklSample</doc>
             <type name="Sample" c:type="HklSample*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="select_solution"
+              c:identifier="hkl_engine_list_select_solution">
+        <doc xml:whitespace="preserve">this method set the geometry member with the ith selected solution.
+if the index is out of range (idx &gt; number of solution) the method
+do nothing.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="idx" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the index of the solution to select</doc>
+            <type name="guint" c:type="unsigned int"/>
           </parameter>
         </parameters>
       </method>

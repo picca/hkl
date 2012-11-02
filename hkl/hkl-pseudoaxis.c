@@ -433,6 +433,62 @@ int hkl_engine_list_add(HklEngineList *self,
 }
 
 /**
+ * hkl_engine_list_engines: (skip)
+ * @self: the this ptr
+ *
+ * Return: a pointer on the engine array
+ **/
+darray_engine *hkl_engine_list_engines(HklEngineList *self)
+{
+	return (darray_engine *)self;
+}
+
+/**
+ * hkl_engine_list_geometries:
+ * @self: the this ptr
+ *
+ * Return: a pointer on the engine array
+ **/
+const HklGeometryList *hkl_engine_list_geometries(const HklEngineList *self)
+{
+	return self->geometries;
+}
+
+/**
+ * hkl_engine_list_get_geometry: (skip)
+ * @self: the this ptr
+ *
+ * Return: a pointer on the geometry member
+ **/
+HklGeometry *hkl_engine_list_get_geometry(HklEngineList *self)
+{
+	return self->geometry;
+}
+
+/**
+ * hkl_engine_list_select_solution:
+ * @self: the this ptr
+ * @idx: the index of the solution to select
+ *
+ * this method set the geometry member with the ith selected solution.
+ * if the index is out of range (idx > number of solution) the method
+ * do nothing.
+ **/
+void hkl_engine_list_select_solution(HklEngineList *self, unsigned int idx)
+{
+	unsigned int i=0;
+	HklGeometryListItem *item;
+
+	list_for_each(&self->geometries->items, item, node){
+		if(i == idx){
+			hkl_geometry_init_geometry(self->geometry, item->geometry);
+			break;
+		}
+		i++;
+	}
+}
+
+/**
  * hkl_engine_list_get_by_name:
  * @self: the this ptr
  * @name: the name of the requested #HklPseudoAxisEngin

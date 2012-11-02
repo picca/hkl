@@ -23,7 +23,7 @@
 #include <tap/basic.h>
 #include <tap/hkl.h>
 
-static int hkl_geometry_list_check_geometry_unit(HklGeometryList *self,
+static int hkl_geometry_list_check_geometry_unit(const HklGeometryList *self,
 						 double mu,
 						 double omega,
 						 double chi,
@@ -111,6 +111,7 @@ static void degenerated(void)
 	HklMode **mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
+	const HklGeometryList *geometries;
 	HklDetector *detector;
 	HklSample *sample;
 	static double hkl[] = {0, 0, 1};
@@ -124,6 +125,7 @@ static void degenerated(void)
 
 	engines = hkl_engine_list_factory(config);
 	hkl_engine_list_init(engines, geom, detector, sample);
+	geometries = hkl_engine_list_geometries(engines);
 
 	engine = hkl_engine_list_get_by_name(engines, "hkl");
 
@@ -137,7 +139,7 @@ static void degenerated(void)
 		if (hkl_engine_set(engine, NULL)){
 			HklGeometryListItem *item;
 
-			list_for_each(&engines->geometries->items, item, node) {
+			list_for_each(&geometries->items, item, node) {
 				static double null[] = {0, 0, 0};
 
 				hkl_parameter_list_set_values(&engine->pseudo_axes, null, 3, NULL);
@@ -164,6 +166,7 @@ static void q2(void)
 	HklMode **mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
+	const HklGeometryList *geometries;
 	HklDetector *detector;
 	HklSample *sample;
 
@@ -176,6 +179,7 @@ static void q2(void)
 
 	engines = hkl_engine_list_factory(config);
 	hkl_engine_list_init(engines, geom, detector, sample);
+	geometries = hkl_engine_list_geometries(engines);
 
 	engine = hkl_engine_list_get_by_name(engines, "q2");
 
@@ -196,7 +200,7 @@ static void q2(void)
 				if(hkl_engine_set(engine, NULL)){
 					HklGeometryListItem *item;
 
-					list_for_each(&engines->geometries->items, item, node){
+					list_for_each(&geometries->items, item, node){
 						static double null[] = {0, 0};
 
 						hkl_parameter_list_set_values(&engine->pseudo_axes, null, 2, NULL);
@@ -226,6 +230,7 @@ static void petra3(void)
 	HklEngine *psi;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
+	const HklGeometryList *geometries;
 	HklDetector *detector;
 	HklSample *sample;
 
@@ -247,6 +252,7 @@ static void petra3(void)
 
 	engines = hkl_engine_list_factory(config);
 	hkl_engine_list_init(engines, geom, detector, sample);
+	geometries = hkl_engine_list_geometries(engines);
 
 	/* set the hkl pseudo axis in psi_constant_vertical */
 	hkl = hkl_engine_list_get_by_name(engines, "hkl");
@@ -269,7 +275,7 @@ static void petra3(void)
 	if(hkl_engine_set(hkl, NULL)){
 		HklGeometryListItem *item;
 
-		list_for_each(&engines->geometries->items, item, node) {
+		list_for_each(&geometries->items, item, node) {
 			double PSI = parameters[3];
 
 			hkl_geometry_init_geometry(geom, item->geometry);
@@ -297,6 +303,7 @@ static void petra3_2(void)
 	const HklGeometryConfig *config;
 	HklGeometryListItem *item;
 	HklGeometry *geometry;
+	const HklGeometryList *geometries;
 	HklDetector *detector;
 	HklSample *sample;
 	double PSI;
@@ -329,6 +336,7 @@ static void petra3_2(void)
 
 	engines = hkl_engine_list_factory(config);
 	hkl_engine_list_init(engines, geometry, detector, sample);
+	geometries = hkl_engine_list_geometries(engines);
 
 	/* set the hkl pseudo axis in psi_constant_vertical */
 	hkl = hkl_engine_list_get_by_name(engines, "hkl");
@@ -361,11 +369,11 @@ static void petra3_2(void)
 	/* the -90 value of phi is problematic, the right value is 0 */
 	if(hkl_engine_set(hkl, NULL)){
 		res &= hkl_geometry_list_check_geometry_unit(
-			engines->geometries,
+			geometries,
 			0, 11.688393153063114, 90, 0, 0,  23.376786185344031);
 
 		/* check that all solution gives the right psi */
-		list_for_each(&engines->geometries->items, item, node) {
+		list_for_each(&geometries->items, item, node) {
 			hkl_geometry_init_geometry(geometry, item->geometry);
 			hkl_engine_initialize(psi, NULL);
 			hkl_engine_list_get(engines);
@@ -386,11 +394,11 @@ static void petra3_2(void)
 	/* -135 n'est pas bon il faudrait plutôt -45 */
 	if(hkl_engine_set(hkl, NULL)){
 		res &= hkl_geometry_list_check_geometry_unit(
-			engines->geometries,
+			geometries,
 			0, 11.688393153063114, 90, -45, 0,  23.376786185344031);
 
 		/* check that all solution gives the right psi */
-		list_for_each(&engines->geometries->items, item, node) {
+		list_for_each(&geometries->items, item, node) {
 			hkl_geometry_init_geometry(geometry, item->geometry);
 			hkl_engine_initialize(psi, NULL);
 			hkl_engine_list_get(engines);
@@ -422,11 +430,11 @@ static void petra3_2(void)
 	/* phi is wrong it should be -45 */
 	if(hkl_engine_set(hkl, NULL)){
 		res &= hkl_geometry_list_check_geometry_unit(
-			engines->geometries,
+			geometries,
 			0, 11.688393153063114, 90, -45, 0,  23.376786185344031);
 
 		/* check that all solution gives the right psi */
-		list_for_each(&engines->geometries->items, item, node) {
+		list_for_each(&geometries->items, item, node) {
 			hkl_geometry_init_geometry(geometry, item->geometry);
 			hkl_engine_initialize(psi, NULL);
 			hkl_engine_list_get(engines);
@@ -449,11 +457,11 @@ static void petra3_2(void)
 	/* phi is wrong it should be -90 */
 	if(hkl_engine_set(hkl, NULL)){
 		res &= hkl_geometry_list_check_geometry_unit(
-			engines->geometries,
+			geometries,
 			0, 11.688393153063114, 90, -90, 0,  23.376786185344031);
 
 		/* check that all solution gives the right psi */
-		list_for_each(&engines->geometries->items, item, node) {
+		list_for_each(&geometries->items, item, node) {
 			hkl_geometry_init_geometry(geometry, item->geometry);
 			hkl_engine_initialize(psi, NULL);
 			hkl_engine_list_get(engines);

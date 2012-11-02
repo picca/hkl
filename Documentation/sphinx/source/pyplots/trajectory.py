@@ -57,7 +57,7 @@ for idx, h, k, l in zip(range(n), h, k, l):
         #print geometry.get_axes_values_unit()
         if engines.geometries.len != 4:
             print idx, h, k, l
-        for i, item in enumerate(engines.geometries.items()):
+        for i, item in enumerate(engines.geometries().items()):
             try:
                 trajectories[i]
             except IndexError:

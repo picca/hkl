@@ -61,6 +61,7 @@ struct _HklEngineInfo {
 
 typedef darray(HklMode *) HklDArrayMode;
 typedef darray(HklParameter *) HklDArrayParameter;
+typedef darray(HklEngine *) darray_engine;
 
 struct _HklEngine
 {
@@ -76,29 +77,15 @@ struct _HklEngine
 	HklDArrayParameter axes;
 };
 
-/**
- * HklEngineList:
- **/
-struct _HklEngineList
-{
-	HklGeometryList *geometries;
-	HklGeometry *geometry;
-	HklDetector *detector;
-	HklSample *sample;
-	HklEngine **item;
-	size_t size;
-	size_t alloc;
-};
-
-/***************************/
+/***********/
 /* HklMode */
-/***************************/
+/***********/
 
 extern void hkl_mode_fprintf(FILE *f, const HklMode *self);
 
-/***********************/
+/*************/
 /* HklEngine */
-/***********************/
+/*************/
 
 extern void hkl_engine_select_mode(HklEngine *self,
 				   HklMode *mode);
@@ -114,11 +101,19 @@ extern int hkl_engine_get(HklEngine *self, HklError **error);
 
 extern void hkl_engine_fprintf(FILE *f, const HklEngine *self);
 
-/***************************/
+/*****************/
 /* HklEngineList */
-/***************************/
+/*****************/
 
 extern void hkl_engine_list_free(HklEngineList *self);
+
+extern darray_engine *hkl_engine_list_engines(HklEngineList *self);
+
+extern const HklGeometryList *hkl_engine_list_geometries(const HklEngineList *self);
+
+extern HklGeometry *hkl_engine_list_get_geometry(HklEngineList *self);
+
+extern void hkl_engine_list_select_solution(HklEngineList *self, unsigned int idx);
 
 extern HklEngine *hkl_engine_list_get_by_name(HklEngineList *self,
 					      const char *name);

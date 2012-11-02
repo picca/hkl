@@ -308,6 +308,7 @@ void HKLWindow::set_up_pseudo_axes_frames(void)
 	HklEngine **engine;
 	Gtk::VBox *vbox2 = NULL;
 	PseudoAxesFrame *pseudo;
+	darray_engine *engines = hkl_engine_list_engines(this->_engines);
 
 	_refGlade->get_widget("vbox2", vbox2);
 
@@ -318,7 +319,7 @@ void HKLWindow::set_up_pseudo_axes_frames(void)
 	}
 	_pseudoAxesFrames.clear();
 
-	darray_foreach(engine, *this->_engines){
+	darray_foreach(engine, *engines){
 		pseudo = new PseudoAxesFrame (*engine);
 		_pseudoAxesFrames.push_back (pseudo);
 		vbox2->add (pseudo->frame());
@@ -407,6 +408,7 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 	Gtk::CellRenderer * renderer;
 	HklEngine **engine;
 	HklParameter **pseudo_axis;
+	darray_engine *engines = hkl_engine_list_engines(this->_engines);
 
 	/* add the columns */
 	_TreeView_pseudoAxes->remove_all_columns();
@@ -429,7 +431,7 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 	_pseudoAxeModel = Gtk::ListStore::create(_pseudoAxeModelColumns);
 
 	//Fill the models from the diffractometer pseudoAxes
-	darray_foreach(engine, *this->_engines){
+	darray_foreach(engine, *engines){
 		darray_foreach(pseudo_axis, (*engine)->pseudo_axes){
 			Gtk::ListStore::Row row = *(_pseudoAxeModel->append());
 			row[_pseudoAxeModelColumns.engine] = *engine;
@@ -945,11 +947,12 @@ void HKLWindow::updateSolutions(void)
 	LOG;
 
 	size_t i = 0;
+	const HklGeometryList *geometries = hkl_engine_list_geometries(this->_engines);
 	HklGeometryListItem *item;
 
 	_solutionModel->clear();
 	Gtk::ListStore::Row row;
-	list_for_each(&_engines->geometries->items, item, node){
+	list_for_each(&geometries->items, item, node){
 		size_t j;
 
 		row = *(_solutionModel->append());

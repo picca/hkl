@@ -44,6 +44,15 @@ static inline void set_geometry_axes(HklEngine *engine, const double values[])
 	hkl_geometry_update(engine->geometry);
 }
 
+struct _HklEngineList
+{
+	_darray(HklEngine *);
+	HklGeometryList *geometries;
+	HklGeometry *geometry;
+	HklDetector *detector;
+	HklSample *sample;
+};
+
 /*****************/
 /* HklPseudoAxis */
 /*****************/

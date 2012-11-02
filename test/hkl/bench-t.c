@@ -139,9 +139,10 @@ static void hkl_test_bench_eulerians(void)
 		/* studdy this degenerated case */
 		hkl_parameter_list_set_values(&engine->pseudo_axes, eulerians, 3, NULL);
 		if (hkl_engine_set(engine, NULL)) {
+			const HklGeometryList *geometries = hkl_engine_list_geometries(engines);
 			HklGeometryListItem *item;
 
-			list_for_each(&engines->geometries->items, item, node){
+			list_for_each(&geometries->items, item, node){
 				static double null[] = {0, 0, 0};
 
 				hkl_parameter_list_set_values(&engine->pseudo_axes, null, 3, NULL);

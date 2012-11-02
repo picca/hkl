@@ -40,7 +40,7 @@ trajectories = []
 for hh, kk, ll in zip(h, k, l):
     try:
         hkl.set_values_unit([hh, kk, ll])
-        for i, item in enumerate(engines.geometries.items()):
+        for i, item in enumerate(engines.geometries().items()):
             try:
                 trajectories[i]
             except IndexError:
@@ -48,9 +48,7 @@ for hh, kk, ll in zip(h, k, l):
             values = item.geometry.get_axes_values_unit()
             #print values, item.geometry.distance(geometry)
             trajectories[i].append(values)
-            if i == 0:
-                values0 = values
-        geometry.set_axes_values_unit(values0)
+        engines.select_solution(0)
         #print
     except GLib.GError, err:
         pass

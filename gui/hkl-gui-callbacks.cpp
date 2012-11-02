@@ -444,9 +444,10 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & s
 
 	if(hkl_parameter_set_value_unit(parameter, value, NULL))
 		if(hkl_engine_set(engine, NULL)){
+			const HklGeometryList *geometries = hkl_engine_list_geometries(_engines);
 			HklGeometryListItem *first;
 
-			first = list_top(&_engines->geometries->items, HklGeometryListItem, node);
+			first = list_top(&geometries->items, HklGeometryListItem, node);
 			hkl_geometry_init_geometry(_geometry, first->geometry);
 			hkl_engine_list_get(_engines);
 			row[_pseudoAxeModelColumns.write] = value;

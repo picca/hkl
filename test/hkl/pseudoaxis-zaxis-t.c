@@ -30,6 +30,7 @@ static void solution(void)
 	HklEngine *engine;
 	const HklGeometryConfig *config;
 	HklGeometry *geometry;
+	const HklGeometryList *geometries;
 	HklDetector *detector;
 	HklSample *sample;
 	static double hkl[] = {1, 1, 0};
@@ -55,6 +56,7 @@ static void solution(void)
 	/* select the hkl pseudo axis */
 	engines = hkl_engine_list_factory(config);
 	hkl_engine_list_init(engines, geometry, detector, sample);
+	geometries = hkl_engine_list_geometries(engines);
 	engine = hkl_engine_list_get_by_name(engines, "hkl");
 
 	/* the init part must succed */
@@ -65,7 +67,7 @@ static void solution(void)
 	if (hkl_engine_set(engine, NULL)){
 		HklGeometryListItem *item;
 
-		list_for_each(&engines->geometries->items, item, node){
+		list_for_each(&geometries->items, item, node){
 			static double null[] = {0, 0, 0};
 
 			hkl_parameter_list_set_values(&engine->pseudo_axes, null, 3, NULL);
