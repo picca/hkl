@@ -59,8 +59,8 @@ struct _HklEngineInfo {
 	uint n_pseudo_axes;
 };
 
-typedef darray(HklMode *) HklDArrayMode;
-typedef darray(HklParameter *) HklDArrayParameter;
+typedef darray(HklMode *) darray_mode;
+typedef darray(HklParameter *) darray_parameter;
 typedef darray(HklEngine *) darray_engine;
 
 struct _HklEngine
@@ -73,8 +73,8 @@ struct _HklEngine
 	HklMode *mode; /* not owned */
 	HklEngineList *engines; /* not owned */
 	HklParameterList pseudo_axes;
-	HklDArrayMode modes;
-	HklDArrayParameter axes;
+	darray_mode modes;
+	darray_parameter axes;
 };
 
 /***********/

@@ -66,28 +66,6 @@ and/or use gtk-doc annotations.  -->
         </return-value>
       </method>
     </record>
-    <record name="DArrayMode" c:type="HklDArrayMode">
-      <field name="item" writable="1">
-        <type name="Mode" c:type="HklMode**"/>
-      </field>
-      <field name="size" writable="1">
-        <type name="gulong" c:type="size_t"/>
-      </field>
-      <field name="alloc" writable="1">
-        <type name="gulong" c:type="size_t"/>
-      </field>
-    </record>
-    <record name="DArrayParameter" c:type="HklDArrayParameter">
-      <field name="item" writable="1">
-        <type name="Parameter" c:type="HklParameter**"/>
-      </field>
-      <field name="size" writable="1">
-        <type name="gulong" c:type="size_t"/>
-      </field>
-      <field name="alloc" writable="1">
-        <type name="gulong" c:type="size_t"/>
-      </field>
-    </record>
     <record name="Detector"
             c:type="HklDetector"
             glib:type-name="HklDetector"
@@ -228,11 +206,11 @@ Returns:</doc>
       <field name="pseudo_axes" writable="1">
         <type name="ParameterList" c:type="HklParameterList"/>
       </field>
-      <field name="modes" writable="1">
-        <type name="DArrayMode" c:type="HklDArrayMode"/>
+      <field name="modes" introspectable="0" writable="1">
+        <type c:type="darray_mode"/>
       </field>
-      <field name="axes" writable="1">
-        <type name="DArrayParameter" c:type="HklDArrayParameter"/>
+      <field name="axes" introspectable="0" writable="1">
+        <type c:type="darray_parameter"/>
       </field>
       <method name="get" c:identifier="hkl_engine_get" introspectable="0">
         <doc xml:whitespace="preserve">get the values of the pseudo-axes from the real-axes values
