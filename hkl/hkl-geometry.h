@@ -68,6 +68,7 @@ struct _HklHolder {
 struct _HklGeometryConfig {
 	const char *name;
 	HklGeometryType type;
+	const char *description;
 };
 
 struct _HklGeometry

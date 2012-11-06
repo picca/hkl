@@ -26,20 +26,185 @@
 
 HKL_BEGIN_DECLS
 
+#define HKL_GEOMETRY_TWOC_DESCRIPTION					\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 1 axes for the sample\n"					\
+	"\n"								\
+	"  + **omega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"\n"								\
+	"+ 1 axis for the detector\n"					\
+	"\n"								\
+	"  + **tth** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
+
+#define HKL_GEOMETRY_EULERIAN4C_VERTICAL_DESCRIPTION					\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 3 axes for the sample\n"					\
+	"\n"								\
+	"  + **omega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **chi** : rotating around the :math:`\\vec{x}` direction (1, 0, 0)\n"	\
+	"  + **phi** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"\n"								\
+	"+ 1 axis for the detector\n"					\
+	"\n"								\
+	"  + **tth** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
+
+
+#define HKL_GEOMETRY_EULERIAN6C_DESCRIPTION				\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 4 axes for the sample\n"					\
+	"\n"								\
+	"  + **mu** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **omega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **chi** : rotating around the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"  + **phi** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"\n"								\
+	"+ 2 axes for the detector\n"					\
+	"\n"								\
+	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
+
+#define HKL_GEOMETRY_KAPPA4C_VERTICAL_DESCRIPTION			\
+	"For this geometry there is a special parameters called :math:`\\alpha` which is the\n" \
+	"angle between the kappa rotation axis and the  :math:`\\vec{y}` direction.\n" \
+	"\n"								\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 3 axes for the sample\n"					\
+	"\n"								\
+	"  + **komega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **kappa** : rotating around the :math:`\\vec{x}` direction (0, :math:`-\\cos\\alpha`, :math:`-\\sin\\alpha`)\n"	\
+	"  + **kphi** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"\n"								\
+	"+ 1 axis for the detector\n"					\
+	"\n"								\
+	"  + **tth** : rotation around the :math:`-\\\vec{y}` direction (0, -1, 0)\n"
+
+#define HKL_GEOMETRY_KAPPA6C_DESCRIPTION				\
+	"For this geometry there is a special parameters called :math:`\\alpha` which is the\n" \
+	"angle between the kappa rotation axis and the  :math:`\\vec{y}` direction.\n" \
+	"\n"								\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 4 axes for the sample\n"					\
+	"\n"								\
+	"  + **mu** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **komega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **kappa** : rotating around the :math:`\\vec{x}` direction (0, :math:`-\\cos\\alpha`, :math:`-\\sin\\alpha`)\n" \
+	"  + **kphi** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"\n"								\
+	"+ 2 axes for the detector\n"					\
+	"\n"								\
+	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
+
+#define HKL_GEOMETRY_TYPE_ZAXIS_DESCRIPTION				\
+	"For this geometry the **mu** axis is common to the sample and the detector.\n" \
+	"\n"								\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 2 axes for the sample\n"					\
+	"\n"								\
+	"  + **mu** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **omega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"\n"								\
+	"+ 3 axis for the detector\n"					\
+	"\n"								\
+	"  + **mu** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n"
+
+#define HKL_GEOMETRY_TYPE_SOLEIL_MARS_DESCRIPTION			\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 3 axes for the sample\n"					\
+	"\n"								\
+	"  + **omega** : rotating around the :math:`\\vec{z}` direction (0, -1, 0)\n" \
+	"  + **chi** : rotating around the :math:`\\vec{x}` direction (-1, 0, 0)\n" \
+	"  + **phi** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"\n"								\
+	"+ 1 axis for the detector\n"					\
+	"\n"								\
+	"  + **tth** : rotation around the :math:`\\vec{z}` direction (0, -1, 0)\n"
+
+#define HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2_DESCRIPTION		\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 2 axes for the sample\n"					\
+	"\n"								\
+	"  + **pitch** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **mu** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"\n"								\
+	"+ 3 axis for the detector\n"					\
+	"\n"								\
+	"  + **pitch** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
+
+#define HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_2_DESCRIPTION		\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 3 axes for the sample\n"					\
+	"\n"								\
+	"  + **beta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **mu** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **omega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"\n"								\
+	"+ 3 axis for the detector\n"					\
+	"\n"								\
+	"  + **beta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
+
+#define HKL_GEOMETRY_TYPE_PETRA3_P09_EH2_DESCRIPTION			\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 4 axes for the sample\n"					\
+	"\n"								\
+	"  + **mu** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **omega** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **chi** : rotating around the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"  + **phi** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"\n"								\
+	"+ 3 axis for the detector\n"					\
+	"\n"								\
+	"  + **mu** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **delta** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **gamma** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
+
+#define HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_3_DESCRIPTION		\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 3 axes for the sample\n"					\
+	"\n"								\
+	"  + **beta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **mu** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **omega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"\n"								\
+	"+ 4 axis for the detector\n"					\
+	"\n"								\
+	"  + **beta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **eta_a** : rotation around the :math:`-\\vec{x}` direction (-1, 0, 0)\n"
+
+#define HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL_DESCRIPTION		\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 3 axes for the sample\n"					\
+	"\n"								\
+	"  + **omega** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **chi** : rotating around the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"  + **phi** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"\n"								\
+	"+ 1 axis for the detector\n"					\
+	"\n"								\
+	"  + **tth** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n"
+
 static const HklGeometryConfig hkl_geometry_factory_configs[] =
 {
-	{"TwoC", HKL_GEOMETRY_TYPE_TWOC_VERTICAL},
-	{"E4CV", HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL},
-	{"K4CV", HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL},
-	{"E6C", HKL_GEOMETRY_TYPE_EULERIAN6C},
-	{"K6C", HKL_GEOMETRY_TYPE_KAPPA6C},
-	{"ZAXIS", HKL_GEOMETRY_TYPE_ZAXIS},
-	{"SOLEIL SIXS MED2+2", HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_2},
-	{"SOLEIL MARS", HKL_GEOMETRY_TYPE_SOLEIL_MARS},
-	{"SOLEIL SIXS MED1+2", HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2},
-	{"PETRA3 P09 EH2", HKL_GEOMETRY_TYPE_PETRA3_P09_EH2},
-	{"SOLEIL SIXS MED2+3", HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_3},
-	{"E4CH", HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL},
+	{"TwoC", HKL_GEOMETRY_TYPE_TWOC_VERTICAL, HKL_GEOMETRY_TWOC_DESCRIPTION},
+	{"E4CV", HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL, HKL_GEOMETRY_EULERIAN4C_VERTICAL_DESCRIPTION},
+	{"K4CV", HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL, HKL_GEOMETRY_KAPPA4C_VERTICAL_DESCRIPTION},
+	{"E6C", HKL_GEOMETRY_TYPE_EULERIAN6C, HKL_GEOMETRY_EULERIAN6C_DESCRIPTION},
+	{"K6C", HKL_GEOMETRY_TYPE_KAPPA6C, HKL_GEOMETRY_KAPPA6C_DESCRIPTION},
+	{"ZAXIS", HKL_GEOMETRY_TYPE_ZAXIS, HKL_GEOMETRY_TYPE_ZAXIS_DESCRIPTION},
+	{"SOLEIL SIXS MED2+2", HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_2, HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_2_DESCRIPTION},
+	{"SOLEIL MARS", HKL_GEOMETRY_TYPE_SOLEIL_MARS, HKL_GEOMETRY_TYPE_SOLEIL_MARS_DESCRIPTION},
+	{"SOLEIL SIXS MED1+2", HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2, HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2_DESCRIPTION},
+	{"PETRA3 P09 EH2", HKL_GEOMETRY_TYPE_PETRA3_P09_EH2, HKL_GEOMETRY_TYPE_PETRA3_P09_EH2_DESCRIPTION},
+	{"SOLEIL SIXS MED2+3", HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_3, HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_3_DESCRIPTION},
+	{"E4CH", HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL, HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL_DESCRIPTION},
 	{NULL}
 };
 
