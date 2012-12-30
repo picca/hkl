@@ -340,17 +340,6 @@ Returns:</doc>
         </parameters>
       </function>
     </record>
-    <record name="EngineInfo" c:type="HklEngineInfo">
-      <field name="name" writable="1">
-        <type name="utf8" c:type="char*"/>
-      </field>
-      <field name="pseudo_axes" writable="1">
-        <type name="PseudoAxis" c:type="HklPseudoAxis**"/>
-      </field>
-      <field name="n_pseudo_axes" writable="1">
-        <type name="guint" c:type="uint"/>
-      </field>
-    </record>
     <record name="EngineList"
             c:type="HklEngineList"
             glib:type-name="HklEngineList"

@@ -30,6 +30,14 @@
 
 HKL_BEGIN_DECLS
 
+typedef struct _HklEngineInfo HklEngineInfo;
+
+struct _HklEngineInfo {
+	const char *name;
+	const HklPseudoAxis **pseudo_axes;
+	uint n_pseudo_axes;
+};
+
 struct _HklEngine
 {
 	const HklEngineInfo *info;

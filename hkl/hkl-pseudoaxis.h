@@ -33,7 +33,6 @@ typedef struct _HklPseudoAxis HklPseudoAxis;
 typedef struct _HklModeOperations HklModeOperations;
 typedef struct _HklModeInfo HklModeInfo;
 typedef struct _HklMode HklMode;
-typedef struct _HklEngineInfo HklEngineInfo;
 typedef struct _HklEngine HklEngine;
 typedef struct _HklEngineList HklEngineList;
 typedef struct _HklEngineOperations HklEngineOperations;
@@ -51,12 +50,6 @@ struct _HklMode
 	const HklModeInfo *info;
 	const HklModeOperations *ops;
 	HklParameterList parameters;
-};
-
-struct _HklEngineInfo {
-	const char *name;
-	const HklPseudoAxis **pseudo_axes;
-	uint n_pseudo_axes;
 };
 
 typedef darray(HklMode *) darray_mode;
