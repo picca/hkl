@@ -106,10 +106,12 @@ static void degenerated(void)
 
 	darray_foreach(mode, *modes){
 		static double values[] = {0, 0, 1};
+		HklParameterList *parameters;
 
 		hkl_engine_select_mode(engine, *mode);
-		if (darray_size((*mode)->parameters))
-			hkl_parameter_set_value(darray_item((*mode)->parameters, 0), 0, NULL);
+		parameters = hkl_mode_parameters(*mode);
+		if (darray_size(*parameters))
+			hkl_parameter_set_value(darray_item(*parameters, 0), 0, NULL);
 
 		/* studdy this degenerated case */
 		hkl_parameter_list_set_values(pseudo_axes, values, 3, NULL);
@@ -146,6 +148,7 @@ static void psi_getter(void)
 	HklSample *sample;
 	double hkl[3];
 	HklMode *mode;
+	HklParameterList *parameters;
 
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL);
 	geom = hkl_geometry_factory_new(config);
@@ -159,38 +162,39 @@ static void psi_getter(void)
 
 	engine = hkl_engine_list_get_by_name(engines, "psi");
 	mode = hkl_engine_mode(engine);
+	parameters = hkl_mode_parameters(mode);
 
 	/* the getter part */
 	hkl_geometry_set_values_unit_v(geom, 30., 0., 0., 60.);
 	hkl_engine_initialize(engine, NULL);
 
 	hkl[0] = 1, hkl[1] = 0, hkl[2] = 0;
-	hkl_parameter_list_set_values(&mode->parameters,
+	hkl_parameter_list_set_values(parameters,
 				      hkl, ARRAY_SIZE(hkl), NULL);
 	res &= hkl_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, 0.);
 
 	/* here Q and <h, k, l>_ref are colinear must FAIL */
 	hkl[0] = 0, hkl[1] = 1, hkl[2] = 0;
-	hkl_parameter_list_set_values(&mode->parameters,
+	hkl_parameter_list_set_values(parameters,
 				      hkl, ARRAY_SIZE(hkl), NULL);
 	res &= !hkl_engine_get(engine, NULL);
 
 	hkl[0] = -1, hkl[1] = 0, hkl[2] = 0;
-	hkl_parameter_list_set_values(&mode->parameters,
+	hkl_parameter_list_set_values(parameters,
 				      hkl, ARRAY_SIZE(hkl), NULL);
 	res &= hkl_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, 180. * HKL_DEGTORAD);
 
 	hkl[0] = 0, hkl[1] = 0, hkl[2] = -1;
-	hkl_parameter_list_set_values(&mode->parameters,
+	hkl_parameter_list_set_values(parameters,
 				      hkl, ARRAY_SIZE(hkl), NULL);
 	res &= hkl_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, 90. * HKL_DEGTORAD);
 
 	/* Q and <h, k, l>_ref are colinear so must FAIL */
 	hkl[0] = 0, hkl[1] = -1, hkl[2] = 0;
-	hkl_parameter_list_set_values(&mode->parameters,
+	hkl_parameter_list_set_values(parameters,
 				      hkl, ARRAY_SIZE(hkl), NULL);
 	res &= !hkl_engine_get(engine, NULL);
 
@@ -234,7 +238,7 @@ static void psi_setter(void)
 
 	/* the init part */
 	hkl_geometry_set_values_unit_v(geom, 30., 0., 0., 60.);
-	hkl_parameter_list_set_values(&hkl_engine_mode(engine)->parameters,
+	hkl_parameter_list_set_values(hkl_mode_parameters(hkl_engine_mode(engine)),
 				      hkl, ARRAY_SIZE(hkl), NULL);
 	hkl_engine_initialize(engine, NULL);
 
@@ -370,7 +374,7 @@ static void hkl_psi_constant_horizontal(void)
 
 	/* the init part */
 	hkl_geometry_set_values_unit_v(geom, 30., 0., 0., 60.);
-	hkl_parameter_list_set_values(&mode->parameters,
+	hkl_parameter_list_set_values(hkl_mode_parameters(mode),
 				      hkl2, ARRAY_SIZE(hkl2), NULL);
 	hkl_engine_initialize(engine, NULL);
 

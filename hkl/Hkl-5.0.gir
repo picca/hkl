@@ -1910,16 +1910,19 @@ Todo: test</doc>
         </parameters>
       </function>
     </record>
-    <record name="Mode" c:type="HklMode">
-      <field name="info" writable="1">
-        <type name="ModeInfo" c:type="HklModeInfo*"/>
-      </field>
-      <field name="ops" writable="1">
-        <type name="ModeOperations" c:type="HklModeOperations*"/>
-      </field>
-      <field name="parameters" writable="1">
-        <type name="ParameterList" c:type="HklParameterList"/>
-      </field>
+    <record name="Mode" c:type="HklMode" disguised="1">
+      <method name="name" c:identifier="hkl_mode_name">
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">the name of the HklMode</doc>
+          <type name="utf8" c:type="char*"/>
+        </return-value>
+      </method>
+      <method name="parameters" c:identifier="hkl_mode_parameters">
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">the parameters of the HklMode</doc>
+          <type name="ParameterList" c:type="HklParameterList*"/>
+        </return-value>
+      </method>
       <function name="fprintf"
                 c:identifier="hkl_mode_fprintf"
                 introspectable="0">
@@ -1936,25 +1939,6 @@ Todo: test</doc>
           </parameter>
         </parameters>
       </function>
-    </record>
-    <record name="ModeInfo" c:type="HklModeInfo">
-      <field name="name" writable="1">
-        <type name="utf8" c:type="char*"/>
-      </field>
-      <field name="axes" writable="1">
-        <type name="utf8" c:type="char**"/>
-      </field>
-      <field name="n_axes" writable="1">
-        <type name="guint" c:type="uint"/>
-      </field>
-      <field name="parameters" writable="1">
-        <type name="Parameter" c:type="HklParameter*"/>
-      </field>
-      <field name="n_parameters" writable="1">
-        <type name="guint" c:type="uint"/>
-      </field>
-    </record>
-    <record name="ModeOperations" c:type="HklModeOperations" disguised="1">
     </record>
     <record name="Parameter"
             c:type="HklParameter"

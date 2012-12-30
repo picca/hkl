@@ -33,10 +33,12 @@ static void hkl_test_bench_run_real(HklEngine *engine, HklGeometry *geometry, si
 	/* pseudo -> geometry */
 	darray_foreach(mode, *modes){
 		double min, max, mean;
+		HklParameterList *parameters;
 
 		hkl_engine_select_mode(engine, *mode);
-		if (darray_size((*mode)->parameters))
-			hkl_parameter_set_value(darray_item((*mode)->parameters, 0), 1, NULL);
+		parameters = hkl_mode_parameters(*mode);
+		if (darray_size(*parameters))
+			hkl_parameter_set_value(darray_item(*parameters, 0), 1, NULL);
 
 		mean = max = 0;
 		min = 1000; /* arbitrary value always greater than the real min */
@@ -56,7 +58,7 @@ static void hkl_test_bench_run_real(HklEngine *engine, HklGeometry *geometry, si
 		}
 		fprintf(stdout, "\"%s\" \"%s\" \"%s\" (%d/%d) iterations %f / %f / %f [min/mean/max] ms each\n",
 			geometry->config->name, hkl_engine_name(engine),
-			(*mode)->info->name, n, i, min, mean/n, max);
+			hkl_mode_name(*mode), n, i, min, mean/n, max);
 	}
 }
 

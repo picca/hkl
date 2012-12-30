@@ -83,6 +83,28 @@ HklParameter *hkl_parameter_new_pseudo_axis(
 /***********/
 
 /**
+ * hkl_mode_name:
+ * @self: the this ptr
+ *
+ * Return value: the name of the HklMode
+ **/
+const char *hkl_mode_name(const HklMode *self)
+{
+	return self->info->name;
+}
+
+/**
+ * hkl_mode_parameters:
+ * @self: the this ptr
+ *
+ * Return value: (transfer none): the parameters of the HklMode
+ **/
+HklParameterList *hkl_mode_parameters(HklMode *self)
+{
+	return &self->parameters;
+}
+
+/**
  * hkl_mode_fprintf: (skip)
  * @f:
  * @self:

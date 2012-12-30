@@ -30,27 +30,10 @@
 HKL_BEGIN_DECLS
 
 typedef struct _HklPseudoAxis HklPseudoAxis;
-typedef struct _HklModeOperations HklModeOperations;
-typedef struct _HklModeInfo HklModeInfo;
 typedef struct _HklMode HklMode;
 typedef struct _HklEngine HklEngine;
 typedef struct _HklEngineList HklEngineList;
 typedef struct _HklEngineOperations HklEngineOperations;
-
-struct _HklModeInfo {
-	const char *name;
-	const char **axes;
-	uint n_axes;
-	const HklParameter *parameters;
-	uint n_parameters;
-};
-
-struct _HklMode
-{
-	const HklModeInfo *info;
-	const HklModeOperations *ops;
-	HklParameterList parameters;
-};
 
 typedef darray(HklMode *) darray_mode;
 typedef darray(HklParameter *) darray_parameter;
@@ -59,6 +42,10 @@ typedef darray(HklEngine *) darray_engine;
 /***********/
 /* HklMode */
 /***********/
+
+extern const char * hkl_mode_name(const HklMode *self);
+
+extern HklParameterList *hkl_mode_parameters(HklMode *self);
 
 extern void hkl_mode_fprintf(FILE *f, const HklMode *self);
 

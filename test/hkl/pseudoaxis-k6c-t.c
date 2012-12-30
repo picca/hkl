@@ -54,11 +54,16 @@ static void degenerated(void)
 	pseudo_axes = hkl_engine_pseudo_axes(engine);
 
 	darray_foreach(mode, *modes){
+		HklParameterList *parameters;
+
 		hkl_engine_select_mode(engine, *mode);
-		if (!strcasecmp((*mode)->info->name, "constant_chi_vertical"))
-			hkl_parameter_set_value(darray_item((*mode)->parameters, 0), 1, NULL);
-		if (!strcasecmp((*mode)->info->name, "constant_incidence"))
-			hkl_parameter_set_value(darray_item((*mode)->parameters, 3), 1, NULL);
+		parameters = hkl_mode_parameters(*mode);
+		if (!strcasecmp(hkl_mode_name(*mode),
+				"constant_chi_vertical"))
+			hkl_parameter_set_value(darray_item(*parameters, 0), 1, NULL);
+		if (!strcasecmp(hkl_mode_name(*mode),
+				"constant_incidence"))
+			hkl_parameter_set_value(darray_item(*parameters, 3), 1, NULL);
 
 		/* studdy this degenerated case */
 		hkl_parameter_list_set_values(pseudo_axes,
@@ -117,10 +122,12 @@ static void eulerians(void)
 
 	darray_foreach(mode, *modes){
 		double omega, chi, phi;
+		HklParameterList *parameters; 
 
 		hkl_engine_select_mode(engine, *mode);
-		if (darray_size((*mode)->parameters))
-			hkl_parameter_set_value(darray_item((*mode)->parameters, 0), 1, NULL);
+		parameters = hkl_mode_parameters(*mode);
+		if (darray_size(*parameters))
+			hkl_parameter_set_value(darray_item(*parameters, 0), 1, NULL);
 
 		/* studdy this degenerated case */
 		hkl_engine_set_values_v(engine, 0., 90. * HKL_DEGTORAD, 0.);

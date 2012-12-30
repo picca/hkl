@@ -69,6 +69,26 @@ class TestAPI(unittest.TestCase):
         for r, w in zip(values_w, values_r):
             self.assertAlmostEqual(r, w)
 
+    def test_mode_api(self):
+        """
+        enforce the HklMode API
+        """
+        config = Hkl.geometry_factory_get_config_from_type(
+            Hkl.GeometryType.KAPPA6C)
+        engines = Hkl.EngineList.factory(config)
+        engine = engines.get_by_name("hkl")
+
+        # check for all modes
+        for mode in engine.modes():
+            self.assertTrue(type(mode) is Hkl.Mode)
+            self.assertTrue(type(mode.name()) is str)
+
+            # check the parameters
+            parameters = mode.parameters()
+            self.assertTrue(type(parameters) is Hkl.ParameterList)
+            for parameter in parameters.parameters():
+                self.assertTrue(type(parameter) is Hkl.Parameter)
+
     def test_engine_api(self):
         """
         enforce the HklEngine API

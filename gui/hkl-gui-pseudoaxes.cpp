@@ -196,7 +196,7 @@ void PseudoAxesFrame::updateMode(void)
 	_mode_ListStore->clear();
 	darray_foreach(mode, *modes){
 		Gtk::TreeRow row = *(_mode_ListStore->append());
-		row[_mode_columns.name] = (*mode)->info->name;
+		row[_mode_columns.name] = hkl_mode_name(*mode);
 		row[_mode_columns.mode] = *mode;
 	}
 }
@@ -206,11 +206,13 @@ void PseudoAxesFrame::updateModeParameters(void)
 	HklMode *mode = hkl_engine_mode(this->_engine);
 
 	if(mode){
-		if(darray_size(mode->parameters)){
+		HklParameterList *parameters = hkl_mode_parameters(mode);
+
+		if(darray_size(*parameters)){
 			HklParameter **parameter;
 
 			_mode_parameter_ListStore->clear();
-			darray_foreach(parameter, mode->parameters){
+			darray_foreach(parameter, *parameters){
 				Gtk::TreeRow row = *(_mode_parameter_ListStore->append());
 				row[_mode_parameter_columns.name] = (*parameter)->name;
 				row[_mode_parameter_columns.value] = hkl_parameter_get_value_unit(*parameter);

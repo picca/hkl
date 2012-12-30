@@ -44,7 +44,7 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 	darray_foreach(mode, *modes){
 		hkl_engine_select_mode(engine, *mode);
 		/* for now unactive the eulerians check */
-		if(!strcmp((*mode)->info->name, "eulerians"))
+		if(!strcmp(hkl_mode_name(*mode), "eulerians"))
 			continue;
 		unreachable = 0;
 
@@ -59,7 +59,7 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 			}
 
 			/* randomize the parameters */
-			hkl_parameter_list_randomize(&(*mode)->parameters);
+			hkl_parameter_list_randomize(hkl_mode_parameters(*mode));
 
 			/* pseudo -> geometry */
 			hkl_engine_initialize(engine, NULL);
@@ -96,7 +96,7 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 		fprintf(stderr, "\n\"%s\" \"%s\" \"%s\"",
 			geometry->config->name,
 			hkl_engine_name(engine),
-			(*mode)->info->name);
+			hkl_mode_name(*mode));
 		fprintf(stderr, " unreachable : %d/%d", unreachable, i);
 		if(ko){
 			fprintf(stderr, " ko");

@@ -37,6 +37,7 @@ static void degenerated(void)
 	HklSample *sample;
 	static double hkl[] = {0, 1, 0};
 	HklParameterList *pseudo_axes;
+	HklParameterList *parameters;
 
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL);
 	geom = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
@@ -55,8 +56,9 @@ static void degenerated(void)
 
 	darray_foreach(mode, *modes) {
 		hkl_engine_select_mode(engine, *mode);
-		if(darray_size((*mode)->parameters))
-			hkl_parameter_set_value(darray_item((*mode)->parameters, 0), 1, NULL);
+		parameters = hkl_mode_parameters(*mode);
+		if(darray_size(*parameters))
+			hkl_parameter_set_value(darray_item(*parameters, 0), 1, NULL);
 
 		/* studdy this degenerated case */
 		hkl_parameter_list_set_values(pseudo_axes, hkl, ARRAY_SIZE(hkl), NULL);
@@ -115,9 +117,12 @@ static void eulerians(void)
 	pseudo_axes = hkl_engine_pseudo_axes(engine);
 
 	darray_foreach(mode, *modes){
+		HklParameterList *parameters;
+
 		hkl_engine_select_mode(engine, *mode);
-		if(darray_size((*mode)->parameters))
-			hkl_parameter_set_value(darray_item((*mode)->parameters, 0), 1, NULL);
+		parameters = hkl_mode_parameters(*mode);
+		if(darray_size(*parameters))
+			hkl_parameter_set_value(darray_item(*parameters, 0), 1, NULL);
 
 		/* studdy this degenerated case */
 		hkl_parameter_list_set_values(pseudo_axes,

@@ -30,7 +30,24 @@
 
 HKL_BEGIN_DECLS
 
+typedef struct _HklModeOperations HklModeOperations;
+typedef struct _HklModeInfo HklModeInfo;
 typedef struct _HklEngineInfo HklEngineInfo;
+
+struct _HklModeInfo {
+	const char *name;
+	const char **axes;
+	uint n_axes;
+	const HklParameter *parameters;
+	uint n_parameters;
+};
+
+struct _HklMode
+{
+	const HklModeInfo *info;
+	const HklModeOperations *ops;
+	HklParameterList parameters;
+};
 
 struct _HklEngineInfo {
 	const char *name;
