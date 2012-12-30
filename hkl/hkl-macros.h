@@ -34,6 +34,23 @@
 # define HKL_END_DECLS
 #endif
 
+/* deprecated */
+#if    __GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 1)
+#define HKL_DEPRECATED __attribute__((__deprecated__))
+#elif defined(_MSC_VER) && (_MSC_VER >= 1300)
+#define HKL_DEPRECATED __declspec(deprecated)
+#else
+#define HKL_DEPRECATED
+#endif
+
+#if    __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 5)
+#define HKL_DEPRECATED_FOR(f) __attribute__((__deprecated__("Use '" #f "' instead")))
+#elif defined(_MSC_FULL_VER) && (_MSC_FULL_VER > 140050320)
+#define HKL_DEPRECATED_FOR(f) __declspec(deprecated("is deprecated. Use '" #f "' instead"))
+#else
+#define HKL_DEPRECATED_FOR(f) HKL_DEPRECATED
+#endif
+
 /* add the win32 portability part */
 #if _MSC_VER
 # include <float.h>
