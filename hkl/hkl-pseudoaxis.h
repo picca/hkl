@@ -33,7 +33,6 @@ typedef struct _HklPseudoAxis HklPseudoAxis;
 typedef struct _HklMode HklMode;
 typedef struct _HklEngine HklEngine;
 typedef struct _HklEngineList HklEngineList;
-typedef struct _HklEngineOperations HklEngineOperations;
 
 typedef darray(HklMode *) darray_mode;
 typedef darray(HklParameter *) darray_parameter;

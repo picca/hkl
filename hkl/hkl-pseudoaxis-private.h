@@ -33,6 +33,7 @@ HKL_BEGIN_DECLS
 typedef struct _HklModeOperations HklModeOperations;
 typedef struct _HklModeInfo HklModeInfo;
 typedef struct _HklEngineInfo HklEngineInfo;
+typedef struct _HklEngineOperations HklEngineOperations;
 
 struct _HklModeInfo {
 	const char *name;

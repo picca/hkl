@@ -490,8 +490,6 @@ do nothing.</doc>
         </parameters>
       </function>
     </record>
-    <record name="EngineOperations" c:type="HklEngineOperations" disguised="1">
-    </record>
     <record name="Error"
             c:type="HklError"
             glib:type-name="HklError"
