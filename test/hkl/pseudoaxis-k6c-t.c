@@ -29,12 +29,14 @@ static void degenerated(void)
 	HklEngineList *engines;
 	HklEngine *engine;
 	HklMode **mode;
+	darray_mode *modes;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	const HklGeometryList *geometries;
 	HklDetector *detector;
 	HklSample *sample;
 	static double hkl[] = {0, 1, 0};
+	HklParameterList *pseudo_axes;
 
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_KAPPA6C);
 	geom = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
@@ -48,24 +50,31 @@ static void degenerated(void)
 	geometries = hkl_engine_list_geometries(engines);
 
 	engine = hkl_engine_list_get_by_name(engines, "hkl");
+	modes = hkl_engine_modes(engine);
+	pseudo_axes = hkl_engine_pseudo_axes(engine);
 
-	darray_foreach(mode, engine->modes){
+	darray_foreach(mode, *modes){
 		hkl_engine_select_mode(engine, *mode);
-		if (darray_size((*mode)->parameters))
-			hkl_parameter_set_value(darray_item(engine->mode->parameters, 0), 1, NULL);
+		if (!strcasecmp((*mode)->info->name, "constant_chi_vertical"))
+			hkl_parameter_set_value(darray_item((*mode)->parameters, 0), 1, NULL);
+		if (!strcasecmp((*mode)->info->name, "constant_incidence"))
+			hkl_parameter_set_value(darray_item((*mode)->parameters, 3), 1, NULL);
 
 		/* studdy this degenerated case */
-		hkl_parameter_list_set_values(&engine->pseudo_axes, hkl, 3, NULL);
+		hkl_parameter_list_set_values(pseudo_axes,
+					      hkl, ARRAY_SIZE(hkl), NULL);
 		if (hkl_engine_set(engine, NULL)){
 			HklGeometryListItem *item;
 
 			list_for_each(&geometries->items, item, node) {
 				static double null[] = {0, 0, 0};
 
-				hkl_parameter_list_set_values(&engine->pseudo_axes, null, 3, NULL);
+				hkl_parameter_list_set_values(pseudo_axes,
+							      null, ARRAY_SIZE(null),
+							      NULL);
 				hkl_geometry_init_geometry(geom, item->geometry);
 				hkl_engine_get(engine, NULL);
-				res &= check_pseudoaxes(engine, hkl, 3);
+				res &= check_pseudoaxes(engine, hkl, ARRAY_SIZE(hkl));
 			}
 		}
 	}
@@ -84,6 +93,7 @@ static void eulerians(void)
 	HklEngineList *engines;
 	HklEngine *engine;
 	HklMode **mode;
+	darray_mode *modes;
 	HklGeometryListItem *item;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
@@ -103,13 +113,14 @@ static void eulerians(void)
 	geometries = hkl_engine_list_geometries(engines);
 
 	engine = hkl_engine_list_get_by_name(engines, "eulerians");
+	modes = hkl_engine_modes(engine);
 
-	darray_foreach(mode, engine->modes){
+	darray_foreach(mode, *modes){
 		double omega, chi, phi;
 
 		hkl_engine_select_mode(engine, *mode);
 		if (darray_size((*mode)->parameters))
-			hkl_parameter_set_value(darray_item(engine->mode->parameters, 0), 1, NULL);
+			hkl_parameter_set_value(darray_item((*mode)->parameters, 0), 1, NULL);
 
 		/* studdy this degenerated case */
 		hkl_engine_set_values_v(engine, 0., 90. * HKL_DEGTORAD, 0.);
@@ -144,11 +155,13 @@ static void q2(void)
 	HklEngineList *engines;
 	HklEngine *engine;
 	HklMode **mode;
+	darray_mode *modes;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	const HklGeometryList *geometries;
 	HklDetector *detector;
 	HklSample *sample;
+	HklParameterList *pseudo_axes;
 
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_KAPPA6C);
 	geom = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
@@ -162,13 +175,14 @@ static void q2(void)
 	geometries = hkl_engine_list_geometries(engines);
 
 	engine = hkl_engine_list_get_by_name(engines, "q2");
+	modes = hkl_engine_modes(engine);
+	pseudo_axes = hkl_engine_pseudo_axes(engine);
 
 	/* the init part */
 	hkl_geometry_set_values_unit_v(geom, 0., 30., 0., 0., 0., 60.);
 	hkl_engine_initialize(engine, NULL);
 
-
-	darray_foreach(mode, engine->modes){
+	darray_foreach(mode, *modes){
 		double q, alpha;
 
 		hkl_engine_select_mode(engine, *mode);
@@ -176,14 +190,18 @@ static void q2(void)
 			for(alpha = -M_PI; alpha<M_PI; alpha += M_PI/180.){
 				double values[] = {q, alpha};
 
-				hkl_parameter_list_set_values(&engine->pseudo_axes, values, 2, NULL);
+				hkl_parameter_list_set_values(pseudo_axes,
+							      values, ARRAY_SIZE(values),
+							      NULL);
 				if(hkl_engine_set(engine, NULL)){
 					HklGeometryListItem *item;
 
 					list_for_each(&geometries->items, item, node){
 						static double null[] = {0, 0};
 
-						hkl_parameter_list_set_values(&engine->pseudo_axes, null, 2, NULL);
+						hkl_parameter_list_set_values(pseudo_axes,
+									      null, ARRAY_SIZE(null),
+									      NULL);
 						hkl_geometry_init_geometry(geom, item->geometry);
 						hkl_engine_get(engine, NULL);
 						res &= check_pseudoaxes(engine, values, 2);

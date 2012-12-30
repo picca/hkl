@@ -78,9 +78,9 @@ HklParameter *hkl_parameter_new_pseudo_axis(
 	return &self->parameter;
 }
 
-/*****************************/
+/***********/
 /* HklMode */
-/*****************************/
+/***********/
 
 /**
  * hkl_mode_fprintf: (skip)
@@ -106,9 +106,9 @@ void hkl_mode_fprintf(FILE *f, const HklMode *self)
 	}
 }
 
-/***********************/
+/*************/
 /* HklEngine */
-/***********************/
+/*************/
 
 void hkl_engine_init(HklEngine *self,
 		     const HklEngineInfo *info,
@@ -175,6 +175,72 @@ static void hkl_engine_prepare_internal(HklEngine *self)
 
 	/* reset the geometries len */
 	hkl_geometry_list_reset(self->engines->geometries);
+}
+
+/**
+ * hkl_engine_name:
+ * @self: the this ptr
+ *
+ * Return value: the name of the HklEngine
+ **/
+const char *hkl_engine_name(const HklEngine *self)
+{
+	return self->info->name;
+}
+
+/**
+ * hkl_engine_len: (skip)
+ * @self: the this ptr
+ *
+ * Return value: the len of the pseudo axes of the HklEngine
+ **/
+unsigned int hkl_engine_len(const HklEngine *self)
+{
+	return self->info->n_pseudo_axes;
+}
+
+/**
+ * hkl_engine_pseudo_axes:
+ * @self: the this ptr
+ *
+ * Return value: (transfer none): the pseudo_axes managed by this HklEngine
+ **/
+HklParameterList *hkl_engine_pseudo_axes(HklEngine *self)
+{
+	return &self->pseudo_axes;
+}
+
+/**
+ * hkl_engine_mode:
+ * @self: the this ptr
+ *
+ * Return value: (transfer none): the current mode of the HklEngine
+ **/
+HklMode *hkl_engine_mode(HklEngine *self)
+{
+	return self->mode;
+}
+
+/**
+ * hkl_engine_modes: (skip)
+ * @self: the this ptr
+ *
+ * Return value: (transfer none): the current mode of the HklEngine
+ **/
+darray_mode *hkl_engine_modes(HklEngine *self)
+{
+	return &self->modes;
+}
+
+/**
+ * hkl_engine_engines:
+ * @self: the this ptr
+ *
+ * Return value: (transfer none): the HklEngineList which contain this HklEngine
+ **/
+HklEngineList *hkl_engine_engines(HklEngine *self)
+{
+	return self->engines;
 }
 
 /**

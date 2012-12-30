@@ -1,4 +1,4 @@
-SUBDIRS = tap hkl
+SUBDIRS = tap hkl .
 if HAVE_INTROSPECTION
 SUBDIRS += bindings
 endif

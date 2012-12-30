@@ -58,7 +58,7 @@ extern GSList* hkl_geometry_list_items(HklGeometryList *self);
 /* HklEngine */
 /***********************/
 
-extern GSList* hkl_engine_modes(HklEngine *self);
+extern GSList* hkl_engine_modes_as_gslist(HklEngine *self);
 
 extern gboolean hkl_engine_set_values_unit(
 	HklEngine *self,

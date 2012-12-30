@@ -69,7 +69,7 @@ class TestAPI(unittest.TestCase):
         for r, w in zip(values_w, values_r):
             self.assertAlmostEqual(r, w)
 
-    def test_pseudoaxis_api(self):
+    def test_engine_api(self):
         """
         enforce the HklEngine API
         """
@@ -96,12 +96,16 @@ class TestAPI(unittest.TestCase):
 
         # get the hkl engine and do a computation
         hkl = engines.get_by_name("hkl")
-        values = hkl.pseudo_axes.get_values_unit()
+        values = hkl.pseudo_axes().get_values_unit()
+
+        # check for all modes
+        for mode in hkl.modes():
+            self.assertTrue(type(mode) is Hkl.Mode)
 
         # set the hkl engine and get the results
         for _ in range(100):
             try:
-                hkl.pseudo_axes.set_values_unit(values)
+                hkl.pseudo_axes().set_values_unit(values)
                 solutions = engines.geometries()
                 for item in solutions.items():
                     item.geometry.get_axes_values_unit()
@@ -115,8 +119,8 @@ class TestAPI(unittest.TestCase):
         # check that all the values computed are reachable
         for engine in engines.engines():
             self.assertTrue(type(engine) is Hkl.Engine)
-            self.assertTrue(type(engine.info.name) is str)
-            for parameter in engine.pseudo_axes.parameters():
+            self.assertTrue(type(engine.name()) is str)
+            for parameter in engine.pseudo_axes().parameters():
                 self.assertTrue(type(parameter) is Hkl.Parameter)
                 self.assertTrue(type(parameter.get_value()) is float)
 

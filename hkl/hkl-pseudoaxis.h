@@ -63,20 +63,6 @@ typedef darray(HklMode *) darray_mode;
 typedef darray(HklParameter *) darray_parameter;
 typedef darray(HklEngine *) darray_engine;
 
-struct _HklEngine
-{
-	const HklEngineInfo *info;
-	const HklEngineOperations *ops;
-	HklGeometry *geometry;
-	HklDetector *detector;
-	HklSample *sample;
-	HklMode *mode; /* not owned */
-	HklEngineList *engines; /* not owned */
-	HklParameterList pseudo_axes;
-	darray_mode modes;
-	darray_parameter axes;
-};
-
 /***********/
 /* HklMode */
 /***********/
@@ -86,6 +72,18 @@ extern void hkl_mode_fprintf(FILE *f, const HklMode *self);
 /*************/
 /* HklEngine */
 /*************/
+
+extern const char *hkl_engine_name(const HklEngine *self);
+
+extern unsigned int hkl_engine_len(const HklEngine *self);
+
+extern HklParameterList *hkl_engine_pseudo_axes(HklEngine *self);
+
+extern HklMode *hkl_engine_mode(HklEngine *self);
+
+extern darray_mode *hkl_engine_modes(HklEngine *self);
+
+extern HklEngineList *hkl_engine_engines(HklEngine *self);
 
 extern void hkl_engine_select_mode(HklEngine *self,
 				   HklMode *mode);

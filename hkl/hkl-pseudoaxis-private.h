@@ -30,6 +30,29 @@
 
 HKL_BEGIN_DECLS
 
+struct _HklEngine
+{
+	const HklEngineInfo *info;
+	const HklEngineOperations *ops;
+	HklGeometry *geometry;
+	HklDetector *detector;
+	HklSample *sample;
+	HklMode *mode; /* not owned */
+	HklEngineList *engines; /* not owned */
+	HklParameterList pseudo_axes;
+	darray_mode modes;
+	darray_parameter axes;
+};
+
+struct _HklEngineList
+{
+	_darray(HklEngine *);
+	HklGeometryList *geometries;
+	HklGeometry *geometry;
+	HklDetector *detector;
+	HklSample *sample;
+};
+
 #define INFO(n, ax) .name = n, .axes=ax, .n_axes=ARRAY_SIZE(ax)
 #define INFO_WITH_PARAMS(name, axes, parameters) INFO(name, axes), .parameters=parameters, .n_parameters=ARRAY_SIZE(parameters)
 
@@ -43,15 +66,6 @@ static inline void set_geometry_axes(HklEngine *engine, const double values[])
 	}
 	hkl_geometry_update(engine->geometry);
 }
-
-struct _HklEngineList
-{
-	_darray(HklEngine *);
-	HklGeometryList *geometries;
-	HklGeometry *geometry;
-	HklDetector *detector;
-	HklSample *sample;
-};
 
 /*****************/
 /* HklPseudoAxis */

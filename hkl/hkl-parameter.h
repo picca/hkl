@@ -98,10 +98,8 @@ extern void hkl_parameter_fprintf(FILE *f, HklParameter *self);
 /********************/
 
 struct _HklParameterList {
+	_darray(HklParameter *)
 	const HklParameterListOperations *ops;
-	HklParameter **item;
-	size_t size;
-	size_t alloc;
 };
 
 extern void hkl_parameter_list_get_values(const HklParameterList *self,

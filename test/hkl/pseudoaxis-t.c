@@ -35,29 +35,31 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 	HklMode **mode;
 	const HklGeometryList *geometries = hkl_engine_list_geometries(engine_list);
 	HklGeometry *geometry = hkl_engine_list_get_geometry(engine_list);
+	darray_mode *modes = hkl_engine_modes(engine);
+	darray_parameter *pseudo_axes = (darray_parameter *)hkl_engine_pseudo_axes(engine);
 
 	/* randomize the geometry */
 	hkl_geometry_randomize(geometry);
 
-	darray_foreach(mode, engine->modes){
+	darray_foreach(mode, *modes){
 		hkl_engine_select_mode(engine, *mode);
 		/* for now unactive the eulerians check */
-		if(!strcmp(engine->mode->info->name, "eulerians"))
+		if(!strcmp((*mode)->info->name, "eulerians"))
 			continue;
 		unreachable = 0;
 
 		for(i=0;i<n && !ko;++i) {
-			/* randomize the pseudoAxes values */
-			for(uint j=0; j<darray_size(engine->pseudo_axes); ++j){
-				HklParameter *parameter;
+			unsigned int j = 0;
+			HklParameter **pseudo_axis;
 
-				parameter = darray_item(engine->pseudo_axes, j);
-				hkl_parameter_randomize(parameter);
-				values[j] = parameter->_value;
+			/* randomize the pseudoAxes values */
+			darray_foreach(pseudo_axis, *pseudo_axes){
+				hkl_parameter_randomize(*pseudo_axis);
+				values[j++] = (*pseudo_axis)->_value;
 			}
 
 			/* randomize the parameters */
-			hkl_parameter_list_randomize(&engine->mode->parameters);
+			hkl_parameter_list_randomize(&(*mode)->parameters);
 
 			/* pseudo -> geometry */
 			hkl_engine_initialize(engine, NULL);
@@ -68,24 +70,21 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 				HklGeometryListItem *item;
 
 				list_for_each(&geometries->items, item, node){
-					HklParameter **parameter;
-
 					/* first modify the pseudoAxes values */
 					/* to be sure that the result is the */
 					/* computed result. */
 
-					darray_foreach(parameter, engine->pseudo_axes){
-						hkl_parameter_set_value(*parameter, 0., NULL);
+					darray_foreach(pseudo_axis, *pseudo_axes){
+						hkl_parameter_set_value(*pseudo_axis, 0., NULL);
 					}
 
 					hkl_geometry_init_geometry(geometry, item->geometry);
 					hkl_engine_get(engine, NULL);
 
-					for(uint j=0; j<darray_size(engine->pseudo_axes); ++j){
-						HklParameter *parameter;
-
-						parameter = darray_item(engine->pseudo_axes, j);
-						ko |= fabs(values[j] - parameter->_value) >= HKL_EPSILON;
+					j = 0;
+					darray_foreach(pseudo_axis, *pseudo_axes){
+						ko |= fabs(values[j] - (*pseudo_axis)->_value) >= HKL_EPSILON;
+						++j;
 					}
 					if(ko)
 						break;
@@ -95,20 +94,20 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 		}
 #if with_log
 		fprintf(stderr, "\n\"%s\" \"%s\" \"%s\"",
-			engine->geometry->config->name,
-			engine->info->name,
-			engine->mode->info->name);
+			geometry->config->name,
+			hkl_engine_name(engine),
+			(*mode)->info->name);
 		fprintf(stderr, " unreachable : %d/%d", unreachable, i);
 		if(ko){
 			fprintf(stderr, " ko");
 			/* print the hkl internals if the test failed */
 			fprintf(stderr, "\n    expected : ");
-			for(uint j=0; j<darray_size(engine->pseudo_axes); ++j)
+			for(uint j=0; j<darray_size(*pseudo_axes); ++j)
 				fprintf(stderr, " %f", values[j]);
 			fprintf(stderr, " obtained : ");
-			for(uint j=0; j<darray_size(engine->pseudo_axes); ++j)
+			for(uint j=0; j<darray_size(*pseudo_axes); ++j)
 				fprintf(stderr, " %f",
-					hkl_parameter_get_value(darray_item(engine->pseudo_axes, j)));
+					hkl_parameter_get_value(darray_item(*pseudo_axes, j)));
 			hkl_engine_fprintf(stdout, engine);
 		}else{
 			fprintf(stderr, " ok");

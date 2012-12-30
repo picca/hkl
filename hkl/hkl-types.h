@@ -50,6 +50,9 @@ GType hkl_interval_get_type (void) G_GNUC_CONST;
 #define TYPE_HKL_PARAMETER (hkl_parameter_get_type ())
 GType hkl_parameter_get_type (void) G_GNUC_CONST;
 
+#define TYPE_HKL_PARAMETER_LIST (hkl_parameter_list_get_type ())
+GType hkl_parameter_list_get_type (void) G_GNUC_CONST;
+
 #define TYPE_HKL_AXIS (hkl_axis_get_type ())
 GType hkl_axis_get_type (void) G_GNUC_CONST;
 

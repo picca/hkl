@@ -182,36 +182,12 @@ Returns:</doc>
             glib:type-name="HklEngine"
             glib:get-type="hkl_engine_get_type"
             c:symbol-prefix="engine">
-      <field name="info" writable="1">
-        <type name="EngineInfo" c:type="HklEngineInfo*"/>
-      </field>
-      <field name="ops" writable="1">
-        <type name="EngineOperations" c:type="HklEngineOperations*"/>
-      </field>
-      <field name="geometry" writable="1">
-        <type name="Geometry" c:type="HklGeometry*"/>
-      </field>
-      <field name="detector" writable="1">
-        <type name="Detector" c:type="HklDetector*"/>
-      </field>
-      <field name="sample" writable="1">
-        <type name="Sample" c:type="HklSample*"/>
-      </field>
-      <field name="mode" writable="1">
-        <type name="Mode" c:type="HklMode*"/>
-      </field>
-      <field name="engines" writable="1">
-        <type name="EngineList" c:type="HklEngineList*"/>
-      </field>
-      <field name="pseudo_axes" writable="1">
-        <type name="ParameterList" c:type="HklParameterList"/>
-      </field>
-      <field name="modes" introspectable="0" writable="1">
-        <type c:type="darray_mode"/>
-      </field>
-      <field name="axes" introspectable="0" writable="1">
-        <type c:type="darray_parameter"/>
-      </field>
+      <method name="engines" c:identifier="hkl_engine_engines">
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">the HklEngineList which contain this HklEngine</doc>
+          <type name="EngineList" c:type="HklEngineList*"/>
+        </return-value>
+      </method>
       <method name="get" c:identifier="hkl_engine_get" introspectable="0">
         <doc xml:whitespace="preserve">get the values of the pseudo-axes from the real-axes values
 
@@ -242,13 +218,48 @@ Returns:</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="modes" c:identifier="hkl_engine_modes">
+      <method name="len" c:identifier="hkl_engine_len" introspectable="0">
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">the len of the pseudo axes of the HklEngine</doc>
+          <type name="guint" c:type="unsigned int"/>
+        </return-value>
+      </method>
+      <method name="mode" c:identifier="hkl_engine_mode">
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">the current mode of the HklEngine</doc>
+          <type name="Mode" c:type="HklMode*"/>
+        </return-value>
+      </method>
+      <method name="modes"
+              c:identifier="hkl_engine_modes"
+              shadowed-by="modes_as_gslist"
+              introspectable="0">
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">the current mode of the HklEngine</doc>
+          <type c:type="darray_mode*"/>
+        </return-value>
+      </method>
+      <method name="modes_as_gslist"
+              c:identifier="hkl_engine_modes_as_gslist"
+              shadows="modes">
         <doc xml:whitespace="preserve">free the list with g_slist_free when done.</doc>
         <return-value transfer-ownership="container">
           <doc xml:whitespace="preserve">list of mdoe,</doc>
           <type name="GLib.SList" c:type="GSList*">
             <type name="Mode"/>
           </type>
+        </return-value>
+      </method>
+      <method name="name" c:identifier="hkl_engine_name">
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">the name of the HklEngine</doc>
+          <type name="utf8" c:type="char*"/>
+        </return-value>
+      </method>
+      <method name="pseudo_axes" c:identifier="hkl_engine_pseudo_axes">
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">the pseudo_axes managed by this HklEngine</doc>
+          <type name="ParameterList" c:type="HklParameterList*"/>
         </return-value>
       </method>
       <method name="select_mode" c:identifier="hkl_engine_select_mode">
@@ -2199,11 +2210,11 @@ Returns:</doc>
         </parameters>
       </function>
     </record>
-    <record name="ParameterList" c:type="HklParameterList">
-      <field name="ops" writable="1">
-        <type name="ParameterListOperations"
-              c:type="HklParameterListOperations*"/>
-      </field>
+    <record name="ParameterList"
+            c:type="HklParameterList"
+            glib:type-name="HklParameterList"
+            glib:get-type="hkl_parameter_list_get_type"
+            c:symbol-prefix="parameter_list">
       <field name="item" writable="1">
         <type name="Parameter" c:type="HklParameter**"/>
       </field>
@@ -2212,6 +2223,10 @@ Returns:</doc>
       </field>
       <field name="alloc" writable="1">
         <type name="gulong" c:type="size_t"/>
+      </field>
+      <field name="ops" writable="1">
+        <type name="ParameterListOperations"
+              c:type="HklParameterListOperations*"/>
       </field>
       <method name="get_by_name" c:identifier="hkl_parameter_list_get_by_name">
         <return-value transfer-ownership="full">

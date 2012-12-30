@@ -32,7 +32,7 @@ def compute_hkl_trajectories(engine, hkl1=None, hkl2=None, n=100):
     for hh, kk, ll in zip(h, k, l):
         try:
             engine.set_values_unit([hh, kk, ll])
-            solutions = engine.engines.geometries()
+            solutions = engine.engines().geometries()
             for i, item in enumerate(solutions.items()):
                 try:
                     trajectories[i]
@@ -40,7 +40,7 @@ def compute_hkl_trajectories(engine, hkl1=None, hkl2=None, n=100):
                     trajectories.append([])
                 values = item.geometry.get_axes_values_unit()
                 trajectories[i].append(values)
-            engine.engines.select_solution(0)
+            engine.engines().select_solution(0)
         except GLib.GError, err:
             pass
 
@@ -68,16 +68,15 @@ def plot_hkl_trajectory(filename, geometry, engines,
     page = 1
     plt.clf()
     plt.suptitle(filename + " " + repr(hkl1) + " -> " + repr(hkl2) + " page " + str(page))
-    modes = hkl.modes()
     _plot_legend(axes_names)
     idx = 2
-    for mode in modes:
+    for mode in hkl.modes():
         hkl.select_mode(mode)
         trajectories = compute_hkl_trajectories(hkl, hkl1=hkl1, hkl2=hkl2, n=n)
-        print filename, idx, hkl.mode.info.name, len(trajectories)
+        print filename, idx, mode.info.name, len(trajectories)
 
         plt.subplot(3, 4, idx)
-        plt.title("%s" % (hkl.mode.info.name,))
+        plt.title("%s" % (mode.info.name,))
         if not len(trajectories):
             plt.text(0.5, 0.5, "Failed", size=20, rotation=0.,
                      ha="center", va="center",
@@ -134,7 +133,7 @@ def main():
         engines = Hkl.EngineList.factory(config)
         engines.init(geometry, detector, sample)
 
-        engines_names = [engine.info.name for engine in engines.engines()]
+        engines_names = [engine.name() for engine in engines.engines()]
         if 'hkl' in engines_names:
             plot_hkl_trajectory(gtype.value_nick, geometry, engines,
                                 hkl1=[0, 0, 1], hkl2=[0, 1, 1], n=100)

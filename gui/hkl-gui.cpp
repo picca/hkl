@@ -432,16 +432,20 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 
 	//Fill the models from the diffractometer pseudoAxes
 	darray_foreach(engine, *engines){
-		darray_foreach(pseudo_axis, (*engine)->pseudo_axes){
+		darray_parameter *pseudo_axes = (darray_parameter *)hkl_engine_pseudo_axes(*engine);
+		HklMode *mode = hkl_engine_mode(*engine);
+
+		darray_foreach(pseudo_axis, *pseudo_axes){
 			Gtk::ListStore::Row row = *(_pseudoAxeModel->append());
 			row[_pseudoAxeModelColumns.engine] = *engine;
 			row[_pseudoAxeModelColumns.parameter] = *pseudo_axis;
 			row[_pseudoAxeModelColumns.name] = (*pseudo_axis)->name;
-			if(darray_size((*engine)->mode->parameters)){
+
+			if(darray_size(mode->parameters)){
 				Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(_parameterModelColumns);
 				HklParameter **parameter;
 
-				darray_foreach(parameter, (*engine)->mode->parameters){
+				darray_foreach(parameter, mode->parameters){
 					Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(_parameterModelColumns);
 					row = *(model->append());
 					row[_parameterModelColumns.parameter] = *parameter;

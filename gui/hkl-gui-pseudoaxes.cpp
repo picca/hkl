@@ -56,7 +56,7 @@ PseudoAxesFrame::PseudoAxesFrame(HklEngine *engine)
 		_refGlade->get_object("liststore3"));
 
 	// title
-	_label2->set_label(_engine->info->name);
+	_label2->set_label(hkl_engine_name(engine));
 
 	// update all the liststore
 	this->updatePseudoAxis();
@@ -138,7 +138,8 @@ void PseudoAxesFrame::on_cell_TreeView_pseudoAxis_value_edited(Glib::ustring con
 void PseudoAxesFrame::on_button1_clicked(void)
 {
 	if(hkl_engine_set(_engine, NULL)){
-		hkl_engine_list_select_solution(this->_engine->engines, 0);
+		HklEngineList *engines = hkl_engine_engines(this->_engine);
+		hkl_engine_list_select_solution(engines, 0);
 		this->_signal_changed();
 	}
 }
@@ -176,9 +177,10 @@ void PseudoAxesFrame::on_cell_treeview2_mode_parameter_value_edited(Glib::ustrin
 void PseudoAxesFrame::updatePseudoAxis(void)
 {
 	HklParameter **parameter;
+	darray_parameter *pseudo_axes = (darray_parameter *)hkl_engine_pseudo_axes(this->_engine);
 
 	_pseudoAxis_ListStore->clear();
-	darray_foreach(parameter, _engine->pseudo_axes){
+	darray_foreach(parameter, *pseudo_axes){
 		Gtk::TreeRow row = *(_pseudoAxis_ListStore->append());
 		row[_pseudoAxis_columns.name] = (*parameter)->name;
 		row[_pseudoAxis_columns.value] = hkl_parameter_get_value_unit(*parameter);
@@ -189,9 +191,10 @@ void PseudoAxesFrame::updatePseudoAxis(void)
 void PseudoAxesFrame::updateMode(void)
 {
 	HklMode **mode;
+	darray_mode *modes = hkl_engine_modes(this->_engine);
 
 	_mode_ListStore->clear();
-	darray_foreach(mode, this->_engine->modes){
+	darray_foreach(mode, *modes){
 		Gtk::TreeRow row = *(_mode_ListStore->append());
 		row[_mode_columns.name] = (*mode)->info->name;
 		row[_mode_columns.mode] = *mode;
@@ -200,12 +203,14 @@ void PseudoAxesFrame::updateMode(void)
 
 void PseudoAxesFrame::updateModeParameters(void)
 {
-	if(_engine->mode){
-		if(darray_size(_engine->mode->parameters)){
+	HklMode *mode = hkl_engine_mode(this->_engine);
+
+	if(mode){
+		if(darray_size(mode->parameters)){
 			HklParameter **parameter;
 
 			_mode_parameter_ListStore->clear();
-			darray_foreach(parameter, _engine->mode->parameters){
+			darray_foreach(parameter, mode->parameters){
 				Gtk::TreeRow row = *(_mode_parameter_ListStore->append());
 				row[_mode_parameter_columns.name] = (*parameter)->name;
 				row[_mode_parameter_columns.value] = hkl_parameter_get_value_unit(*parameter);

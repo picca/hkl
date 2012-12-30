@@ -106,6 +106,28 @@ GType hkl_parameter_get_type (void) {
         return hkl_parameter_type_id__volatile;
 }
 
+static HklEngine* hkl_parameter_list_fake_ref(HklEngine *src)
+{
+	return src;
+}
+
+static void hkl_parameter_list_fake_unref(HklEngine *src)
+{
+	return;
+}
+
+GType hkl_parameter_list_get_type (void) {
+        static volatile gsize hkl_parameter_list_type_id__volatile = 0;
+        if (g_once_init_enter (&hkl_parameter_list_type_id__volatile)) {
+                GType hkl_parameter_list_type_id;
+                hkl_parameter_list_type_id = g_boxed_type_register_static ("HklParameterList",
+									   (GBoxedCopyFunc) hkl_parameter_list_fake_ref,
+									   (GBoxedFreeFunc) hkl_parameter_list_fake_unref);
+                g_once_init_leave (&hkl_parameter_list_type_id__volatile, hkl_parameter_list_type_id);
+        }
+        return hkl_parameter_list_type_id__volatile;
+}
+
 GType hkl_axis_get_type (void) {
         static volatile gsize hkl_axis_type_id__volatile = 0;
         if (g_once_init_enter (&hkl_axis_type_id__volatile)) {
