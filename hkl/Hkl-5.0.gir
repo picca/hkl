@@ -1259,8 +1259,12 @@ Returns:</doc>
               value="9"
               c:identifier="HKL_GEOMETRY_TYPE_PETRA3_P09_EH2"
               glib:nick="petra3-p09-eh2"/>
-      <member name="eulerian4c_horizontal"
+      <member name="soleil_sixs_med_2_3"
               value="10"
+              c:identifier="HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_3"
+              glib:nick="soleil-sixs-med-2-3"/>
+      <member name="eulerian4c_horizontal"
+              value="11"
               c:identifier="HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL"
               glib:nick="eulerian4c-horizontal"/>
     </enumeration>

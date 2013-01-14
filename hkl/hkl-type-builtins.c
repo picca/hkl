@@ -38,6 +38,7 @@ hkl_geometry_type_get_type (void)
             { HKL_GEOMETRY_TYPE_SOLEIL_MARS, "HKL_GEOMETRY_TYPE_SOLEIL_MARS", "soleil-mars" },
             { HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2, "HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2", "soleil-sixs-med-1-2" },
             { HKL_GEOMETRY_TYPE_PETRA3_P09_EH2, "HKL_GEOMETRY_TYPE_PETRA3_P09_EH2", "petra3-p09-eh2" },
+            { HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_3, "HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_3", "soleil-sixs-med-2-3" },
             { HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL, "HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL", "eulerian4c-horizontal" },
             { 0, NULL, NULL }
         };

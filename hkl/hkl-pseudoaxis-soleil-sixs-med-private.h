@@ -28,6 +28,7 @@ HKL_BEGIN_DECLS
 
 extern HklEngine *hkl_engine_soleil_sixs_med_2_2_hkl_new(void);
 extern HklEngine *hkl_engine_soleil_sixs_med_1_2_hkl_new(void);
+extern HklEngine *hkl_engine_soleil_sixs_med_2_3_hkl_new(void);
 
 HKL_END_DECLS
 
