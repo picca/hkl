@@ -51,6 +51,20 @@ AC_FUNC_REALLOC
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([floor getcwd gettimeofday memmove memset pow select sqrt strchr strdup strstr])
 
+dnl OPTION_DEFAULT_OFF(NAME, HELP-STRING)
+dnl Create a new --with option that defaults to being disabled.
+dnl NAME is the base name of the option.  The shell variable with_NAME
+dnl   will be set to either the user's value (if the option is
+dnl   specified; 'yes' for a plain --with-NAME) or to 'no' (if the
+dnl   option is not specified).  Note that the shell variable name is
+dnl   constructed as autoconf does, by replacing non-alphanumeric
+dnl   characters with "_".
+dnl HELP-STRING is the help text for the option.
+AC_DEFUN([OPTION_DEFAULT_OFF], [dnl
+  AC_ARG_WITH([$1],[AS_HELP_STRING([--with-$1],[$2])],[],[dnl
+    m4_bpatsubst([with_$1], [[^0-9a-z]], [_])=no])dnl
+])dnl
+
 dnl ***************
 dnl *** gtk-doc ***
 dnl ***************
@@ -273,6 +287,19 @@ GOBJECT_INTROSPECTION_CHECK([0.6.7])
 AM_COND_IF([HAVE_INTROSPECTION],
 	[PKG_CHECK_MODULES([GOBJECT], [gobject-2.0])
 	AM_PATH_GLIB_2_0])
+
+dnl ********************
+dnl *** swig binding ***
+dnl ********************
+
+OPTION_DEFAULT_OFF([swig-binding],[build a binding with swig valabind DOES NOT WORK])
+AM_CONDITIONAL([SWIG_BINDING], [test "$with_swig_binding" != no])
+if test "$with_swig_binding" != no; then
+  AM_PATH_PYTHON
+  AX_PKG_SWIG
+  AX_SWIG_ENABLE_CXX
+  AX_SWIG_PYTHON
+fi
 
 AC_CONFIG_FILES([Makefile
 		 ccan/Makefile
