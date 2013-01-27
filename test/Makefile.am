@@ -3,11 +3,11 @@ TESTS = $(check_PROGRAMS)
 
 check_PROGRAMS = test bench
 
-AM_CPPFLAGS = -std=c89 -ansi -pedantic -D_BSD_SOURCE \
+AM_CPPFLAGS = -std=c99 -pedantic -D_BSD_SOURCE\
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/hkl
 
-AM_LDFLAGS = $(top_builddir)/hkl/libhkl.la $(GSL_LIBS)
+AM_LDFLAGS = $(top_builddir)/hkl/libhkl.la $(GSL_LIBS) -lm
 
 test_SOURCES = \
 hkl-test.h \
@@ -29,6 +29,7 @@ hkl-test-vector.c \
 hkl-test-geometry.c \
 hkl-test-parameter.c \
 hkl-test-pseudoaxis-k6c.c \
+hkl-test-pseudoaxis-soleil-sixs-med.c \
 main.c
 
 bench_SOURCES = \

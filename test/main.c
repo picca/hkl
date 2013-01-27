@@ -48,6 +48,7 @@ int main(int argc, char **argv)
 	HKL_TEST_SUITE( pseudoaxis_E6C );
 	HKL_TEST_SUITE( pseudoaxis_K4CV );
 	HKL_TEST_SUITE( pseudoaxis_K6C );
+	HKL_TEST_SUITE( pseudoaxis_soleil_sixs_med );
 
 	res = hkl_tests_run(&tests);
 	hkl_tests_release(&tests);

@@ -21,6 +21,7 @@
  *          Jens Krüger <Jens.Krueger@frm2.tum.de>
  */
 #include <string.h>
+#include <math.h>
 #include <hkl/hkl-pseudoaxis.h>
 #include <hkl/hkl-pseudoaxis-common.h>
 #include <hkl/hkl-pseudoaxis-common-q.h>
@@ -255,31 +256,43 @@ static void _qper_qpar(HklPseudoAxisEngine *engine,
 	HklVector ki;
 	HklVector q;
 	HklVector n;
+	HklVector npar;
 	HklVector qper_v;
 	HklVector qpar_v;
+	double norm;
 
-	/* compute q */
+	/* compute q = kf - ki */
 	hkl_source_compute_ki(&geometry->source, &ki);
 	hkl_detector_compute_kf(detector, geometry, &q);
 	hkl_vector_minus_vector(&q, &ki);
 
-	/* compute the real orientation of n */
+	/* compute the real orientation of the surface n */
 	hkl_vector_init(&n, 
 			engine->mode->parameters[0].value,
 			engine->mode->parameters[1].value,
 			engine->mode->parameters[2].value);
-
 	hkl_vector_rotated_quaternion(&n, &geometry->holders[0].q);
 	hkl_vector_normalize(&n);
 
+	/* compute the npar used to define the sign of qpar */
+	npar = ki;
+	hkl_vector_vectorial_product(&npar, &n);
+
+	/* qper */
 	qper_v = n;
-	hkl_vector_times_double(&qper_v, hkl_vector_scalar_product(&q, &n));
-
-	qpar_v = q;
-	hkl_vector_minus_vector(&qpar_v, &qper_v);
-
+	norm = hkl_vector_scalar_product(&q, &n);
+	hkl_vector_times_double(&qper_v, norm);
 	*qper = hkl_vector_norm2(&qper_v);
+	if (signbit(norm))
+		*qper *= -1;
+
+	/* qpar */
+	qpar_v = q;
+	norm = hkl_vector_scalar_product(&q, &npar);
+	hkl_vector_minus_vector(&qpar_v, &qper_v);
 	*qpar = hkl_vector_norm2(&qpar_v);
+	if (signbit(norm))
+		*qpar *= -1;
 }
 
 static int _qper_qpar_func(const gsl_vector *x, void *params, gsl_vector *f)
