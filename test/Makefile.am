@@ -29,7 +29,6 @@ hkl-test-vector.c \
 hkl-test-geometry.c \
 hkl-test-parameter.c \
 hkl-test-pseudoaxis-k6c.c \
-hkl-test-pseudoaxis-soleil-sixs-med.c \
 main.c
 
 bench_SOURCES = \
