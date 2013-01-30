@@ -30,6 +30,8 @@ extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_soleil_sixs_med_2_2_hkl_new(v
 extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_soleil_sixs_med_1_2_hkl_new(void);
 extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_soleil_sixs_med_2_3_hkl_new(void);
 
+extern void hkl_geometry_list_multiply_soleil_sixs_med_2_3(HklGeometryList *self, size_t idx);
+
 HKL_END_DECLS
 
 #endif /* __HKL_PSEUDOAXIS_SOLEIL_SIXS_MED_H__ */
