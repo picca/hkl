@@ -2,7 +2,7 @@
 
 AM_LDFLAGS = -no-undefined -version-info 4:0:0
 AM_LDFLAGS += $(GSL_LIBS)
-AM_CFLAGS = -Wmissing-declarations -std=c99 -pedantic \
+AM_CFLAGS = -Wmissing-declarations -pedantic \
 	-I$(top_srcdir) \
 	$(GSL_CFLAGS)
 

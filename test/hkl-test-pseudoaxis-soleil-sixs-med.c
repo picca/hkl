@@ -77,8 +77,8 @@ HKL_TEST_SUITE_FUNC(qper_qpar)
 	*Qpar = 4.;
 	if(hkl_pseudo_axis_engine_set(engine, NULL) == HKL_SUCCESS){
 		gamma = hkl_axis_get_value_unit(&engines->geometries->items[0]->geometry->axes[3]);
-		HKL_ASSERT_DOUBLES_EQUAL(2.6107707, gamma,
-					 HKL_EPSILON);
+		HKL_ASSERT_DOUBLES_EQUAL(2.61077, gamma,
+					 HKL_EPSILON * 10);
 	}
 
 	/* gamma must be negatif */
@@ -87,7 +87,7 @@ HKL_TEST_SUITE_FUNC(qper_qpar)
 	if(hkl_pseudo_axis_engine_set(engine, NULL) == HKL_SUCCESS){
 		gamma = hkl_axis_get_value_unit(&engines->geometries->items[0]->geometry->axes[3]);
 		HKL_ASSERT_DOUBLES_EQUAL(-2.7956354, gamma,
-					 HKL_EPSILON);
+					 HKL_EPSILON * 10);
 	}
 
 	hkl_pseudo_axis_engine_list_free(engines);
