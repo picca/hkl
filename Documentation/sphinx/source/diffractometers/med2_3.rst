@@ -60,5 +60,5 @@ qper_qpar
 PseudoAxis provided : **qper**, **qpar**
 
 where **qper** and **qpar** are the perpendicular and parallel
-composants of the :math:`|\vec{Q}| vector. projected respectively to
+composants of the :math:`|\vec{Q}|` vector. projected respectively to
 the surface vector of the sample.
