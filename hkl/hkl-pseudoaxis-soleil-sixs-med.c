@@ -228,80 +228,40 @@ static int fit_slits_orientation(HklSlitsFit *params)
 	return res;
 }
 
-static int hkl_mode_med_2_3_set_hkl_with_slits_real(
-	HklMode *self,
-	HklEngine *engine,
-	HklGeometry *geometry,
-	HklDetector *detector,
-	HklSample *sample,
-	HklError **error)
+void hkl_geometry_list_multiply_soleil_sixs_med_2_3(HklGeometryList *self,
+						    HklGeometryListItem *item)
 {
-	int res = HKL_TRUE;
+	unsigned int i;
+	unsigned int len;
+	HklSlitsFit params;
+	HklGeometry *geometry;
+	double slits_position;
 
-	res &= hkl_mode_set_hkl_real(self, engine,
-				     geometry, detector, sample,
-				     error);
+	/* For each solution already found we will generate another one */
+	/* we will set the right slit orientation for a given detector arm position */
+	geometry = item->geometry;
 
-	if(res == HKL_TRUE){
-		unsigned int i;
-		unsigned int len;
-		HklSlitsFit params;
-		HklGeometryListItem *item;
+	/* get the index of the axis corresponding to the slits */
+	/* for now the last holder is the detector one */
+	params.slits_id = geometry->holders[1].config->idx[geometry->holders[1].config->len-1];
+	params.len = 1; /* only one axis to fit */
+	params.geometry = geometry;
+	params.axis = &params.geometry->axes[params.slits_id];
 
-		/* For each solution already found we will generate another one */
-		/* we will set the right slit orientation for a given detector arm position */
-
-		/* get the index of the axis corresponding to the slits */
-		/* for now the last holder is the detector one */
-		params.slits_id = geometry->holders[1].config->idx[geometry->holders[1].config->len - 1];
-		params.len = 1; /* only one axis to fit */
-
-		/* we will add solution to the geometries so save its length before */
-		list_for_each(&engine->engines->geometries->items, item, node){
-			params.geometry = item->geometry;
-			params.axis = &params.geometry->axes[params.slits_id];
-
-			/* compute the surface orientation fixed during the fit */
-			params.surface = ((HklAxis *)(darray_item(engine->axes, 0)))->axis_v;
-			hkl_vector_rotated_quaternion(&params.surface,
-						      &params.geometry->holders[0].q);
+	/* compute the surface orientation fixed during the fit */
+	/* use the last sample axis as sample surface normal */
+	params.surface = geometry->axes[geometry->holders[0].config->idx[geometry->holders[0].config->len - 1]].axis_v;
+	hkl_vector_rotated_quaternion(&params.surface,
+				      &params.geometry->holders[0].q);
 
 
-			/* we just need to fit the slits orientation */
-			res &= fit_slits_orientation(&params);
-		}
-	}
-	return res;
+	/* we just need to fit the slits orientation */
+	/* save it's value before */
+	slits_position = hkl_parameter_get_value(&params.axis->parameter);
+	if (fit_slits_orientation(&params) != HKL_TRUE)
+		hkl_parameter_set_value(&params.axis->parameter, slits_position, NULL);
 }
 
-static HklMode* mu_eta_a_fixed()
-{
-	static const char* axes[] = {"omega", "gamma", "delta"};
-	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
-	static const HklModeAutoInfo info = {
-		INFO_AUTO(__func__, axes, functions),
-	};
-
-	return hkl_mode_auto_new(&info,
-				 &hkl_full_mode_operations);
-}
-
-static HklMode* med_2_3_mu_fixed()
-{
-	static const char* axes[] = {"omega", "gamma", "delta"};
-	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
-	static const HklModeAutoInfo info = {
-		/* the real name is "mu_fixed" */
-		INFO_AUTO("mu_fixed", axes, functions),
-	};
-	static const HklModeOperations mode_operations = {
-		HKL_MODE_OPERATIONS_HKL_DEFAULTS,
-		.set = hkl_mode_med_2_3_set_hkl_with_slits_real,
-	};
-
-	return hkl_mode_auto_new(&info,
-				 &mode_operations);
-}
 
 HklEngine *hkl_engine_soleil_sixs_med_2_3_hkl_new(void)
 {
@@ -310,11 +270,9 @@ HklEngine *hkl_engine_soleil_sixs_med_2_3_hkl_new(void)
 
 	self = hkl_engine_hkl_new();
 
-	default_mode = mu_eta_a_fixed();
+	default_mode = mu_fixed();
 	hkl_engine_add_mode(self, default_mode);
 	hkl_engine_select_mode(self, default_mode);
-
-	hkl_engine_add_mode(self, med_2_3_mu_fixed());
 
 	return self;
 }

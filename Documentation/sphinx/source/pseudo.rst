@@ -96,9 +96,13 @@ where
 Qper and Qpar
 *************
 
+.. figure:: ../../figures/qper_qpar.png
+   :align: center
+   :width: 12cm
+
 this pseudo axis engine compute the perpendicular
-(:math:`\left|\left|\vec{q_\text{per}}\right|\right|`) and parallel
-(:math:`\left|\left|\vec{q_\text{par}}\right|\right|`) contribution of
+(:math:`\left|\left|\vec{Q_\text{per}}\right|\right|`) and parallel
+(:math:`\left|\left|\vec{Q_\text{par}}\right|\right|`) contribution of
 :math:`\vec{Q}` relatively to the surface of the sample defined by the
 :math:`\vec{n}` vector.
 

@@ -169,6 +169,7 @@ HklEngineList *hkl_engine_list_factory(const HklGeometryConfig *config)
 		hkl_engine_list_add(self, hkl_engine_petra3_p09_eh2_hkl_new());
 		break;
 	case HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_3:
+		self->geometries->multiply = hkl_geometry_list_multiply_soleil_sixs_med_2_3;
 		hkl_engine_list_add(self, hkl_engine_soleil_sixs_med_2_3_hkl_new());
 		hkl_engine_list_add(self, hkl_engine_q2_new());
 		hkl_engine_list_add(self, hkl_engine_qper_qpar_new());

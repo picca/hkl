@@ -21,7 +21,8 @@ dist_pkgdata_DATA = \
 	e2k_1.png \
 	e2k_2.png \
 	e2k_3.png \
-	e2k_4.png
+	e2k_4.png \
+	qper_qpar.png
 
 CLEANFILES = $(dist_pkgdata_DATA)
 
@@ -44,4 +45,5 @@ EXTRA_DIST = \
 	e2k_1.asy \
 	e2k_2.asy \
 	e2k_3.asy \
-	e2k_4.asy
+	e2k_4.asy \
+	qper_qpar.asy

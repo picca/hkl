@@ -19,7 +19,8 @@ check_PROGRAMS = \
 	geometry-t \
 	parameter-t \
 	pseudoaxis-k6c-t \
-	pseudoaxis-zaxis-t
+	pseudoaxis-zaxis-t \
+	pseudoaxis-soleil-sixs-med-t
 
 AM_CPPFLAGS = -Wextra -pedantic -D_BSD_SOURCE \
 	-I$(top_srcdir) \
