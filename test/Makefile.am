@@ -1,9 +1,10 @@
-SUBDIRS = tap hkl .
+SUBDIRS = tap hkl
 if HAVE_INTROSPECTION
 SUBDIRS += bindings
 endif
 if HKL3D
 SUBDIRS += hkl3d
+endif
 
 ## tap tests
 
@@ -17,5 +18,3 @@ AM_CPPFLAGS = \
 
 check-local: $(check_PROGRAMS)
 	./runtests -s $(abs_top_srcdir) $(abs_top_srcdir)/test/TESTS
-
-endif
