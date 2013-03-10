@@ -7,6 +7,7 @@ bin_PROGRAMS = ghkl
 AM_CXXFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/hkl \
+	-I$(top_srcdir)/ccan \
 	-DPKGDATA=\""$(pkgdatadir)"\" \
 	$(GSL_CFLAGS) \
 	$(GTKMM_CFLAGS) \

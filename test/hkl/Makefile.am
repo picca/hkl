@@ -25,6 +25,7 @@ check_PROGRAMS = \
 AM_CPPFLAGS = -Wextra -pedantic -D_BSD_SOURCE \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/hkl \
+	-I$(top_srcdir)/ccan \
 	-I$(top_srcdir)/test
 
 LDADD = $(top_builddir)/hkl/libhkl.la \

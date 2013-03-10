@@ -56,3 +56,18 @@ dist-hook:
         else \
                 echo A git clone is required to generate a ChangeLog >&2; \
         fi
+
+CCAN_MODULES=darray autodata list array_size container_of
+CCAN_TMPDIR=/tmp/ccan
+ccan-update:
+	echo Clonning ccan repository to get the latest version
+	git clone git://git.ozlabs.org/~ccan/ccan $(CCAN_TMPDIR)
+	echo Extracting modules: $(CCAN_MODULES)
+	$(CCAN_TMPDIR)/tools/create-ccan-tree -b automake $(top_srcdir)/ccan.tmp $(CCAN_MODULES)
+	echo modify since we want shared libccan
+	sed -i -e 's/noinst_LIBRARIES = libccan.a/noinst_LTLIBRARIES = libccan.la/' $(top_srcdir)/ccan.tmp/Makefile.am
+	sed -i -e 's/libccan_a_SOURCES/libccan_la_SOURCES/' $(top_srcdir)/ccan.tmp/Makefile.am
+	rsync -av $(top_srcdir)/ccan.tmp/* $(top_srcdir)/ccan
+	rm -rf $(top_srcdir)/ccan.tmp
+	rm -rf $(CCAN_TMPDIR)
+

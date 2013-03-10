@@ -112,7 +112,6 @@
 
 /*** Life cycle ***/
 
-#define _darray(type) type *item; size_t size; size_t alloc;
 #define darray(type) struct {type *item; size_t size; size_t alloc;}
 
 #define darray_new() {0,0,0}
@@ -298,6 +297,7 @@ static inline size_t darray_next_alloc(size_t alloc, size_t need)
  */
 #define darray_foreach_reverse(i, arr) \
 	for ((i) = &(arr).item[(arr).size]; (i)-- > &(arr).item[0]; )
+
 
 #endif /* CCAN_DARRAY_H */
 

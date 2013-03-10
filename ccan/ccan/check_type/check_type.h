@@ -1,3 +1,4 @@
+/* CC0 (Public domain) - see LICENSE file for details */
 #ifndef CCAN_CHECK_TYPE_H
 #define CCAN_CHECK_TYPE_H
 #include "config.h"
@@ -38,7 +39,7 @@
  *
  * Example:
  *	// Do subtraction to get to enclosing type, but make sure that
- *	// pointer is of correct type for that member. 
+ *	// pointer is of correct type for that member.
  *	#define container_of(mbr_ptr, encl_type, mbr)			\
  *		(check_types_match((mbr_ptr), &((encl_type *)0)->mbr),	\
  *		 ((encl_type *)						\

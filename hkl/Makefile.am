@@ -4,6 +4,7 @@ AM_LDFLAGS = -no-undefined -version-info 5:0:0
 AM_LDFLAGS += $(GSL_LIBS)
 AM_CFLAGS = -I$(top_srcdir) \
 	-I$(top_builddir) \
+	-I$(top_srcdir)/ccan \
 	$(GSL_CFLAGS)
 
 hkl_c_sources = \

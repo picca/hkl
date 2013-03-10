@@ -98,7 +98,7 @@ extern void hkl_parameter_fprintf(FILE *f, HklParameter *self);
 /********************/
 
 struct _HklParameterList {
-	_darray(HklParameter *)
+	_darray(HklParameter *);
 	const HklParameterListOperations *ops;
 };
 

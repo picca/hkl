@@ -132,6 +132,8 @@ extern int vasprintf(char **strp, const char *fmt, va_list ap);
 
 #define hkl_return_val_if_fail(expr, val) if (expr) { } else return val
 
+#define _darray(type) type *item; size_t size; size_t alloc
+
 HKL_BEGIN_DECLS
 
 extern void hkl_printbt(void);
