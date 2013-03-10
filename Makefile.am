@@ -57,7 +57,7 @@ dist-hook:
                 echo A git clone is required to generate a ChangeLog >&2; \
         fi
 
-CCAN_MODULES=darray autodata list array_size container_of
+CCAN_MODULES=darray list array_size container_of
 CCAN_TMPDIR=/tmp/ccan
 ccan-update:
 	echo Clonning ccan repository to get the latest version
@@ -67,6 +67,7 @@ ccan-update:
 	echo modify since we want shared libccan
 	sed -i -e 's/noinst_LIBRARIES = libccan.a/noinst_LTLIBRARIES = libccan.la/' $(top_srcdir)/ccan.tmp/Makefile.am
 	sed -i -e 's/libccan_a_SOURCES/libccan_la_SOURCES/' $(top_srcdir)/ccan.tmp/Makefile.am
+	rm -rf $(top_srcdir)/ccan/ccan $(top_srcdir)/ccan/licenses
 	rsync -av $(top_srcdir)/ccan.tmp/* $(top_srcdir)/ccan
 	rm -rf $(top_srcdir)/ccan.tmp
 	rm -rf $(CCAN_TMPDIR)
