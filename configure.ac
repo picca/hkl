@@ -288,19 +288,6 @@ AM_COND_IF([HAVE_INTROSPECTION],
 	[PKG_CHECK_MODULES([GOBJECT], [gobject-2.0])
 	AM_PATH_GLIB_2_0])
 
-dnl ********************
-dnl *** swig binding ***
-dnl ********************
-
-OPTION_DEFAULT_OFF([swig-binding],[build a binding with swig valabind DOES NOT WORK])
-AM_CONDITIONAL([SWIG_BINDING], [test "$with_swig_binding" != no])
-if test "$with_swig_binding" != no; then
-  AM_PATH_PYTHON
-  AX_PKG_SWIG
-  AX_SWIG_ENABLE_CXX
-  AX_SWIG_PYTHON
-fi
-
 AC_CONFIG_FILES([Makefile
 		 ccan/Makefile
 		 hkl/Makefile

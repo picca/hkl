@@ -192,27 +192,6 @@ EXTRA_DIST = \
 
 CLEANFILES = $(gir_DATA) $(typelibs_DATA) stamp-hkl-type-builtins.h hkl-type-builtins.h hkl-type-builtins.c
 
-if SWIG_BINDING
-
-Hkl-5.0.vapi: Hkl-5.0.gir
-	vapigen --library=Hkl-5.0 Hkl-5.0.gir
-
-Hkl.i: Hkl-5.0.vapi
-	valabind --module=Hkl --swig Hkl-5.0.vapi
-
-pkgpython_PYTHON = Hkl.py
-
-pkgpyexec_LTLIBRARIES = _Hkl.la
-_Hkl_la_SOURCES = $(srcdir)/Hkl_wrap.cxx Hkl.i
-_Hkl_la_CPPFLAGS = $(AX_SWIG_PYTHON_CPPFLAGS) -I$(top_srcdir)/hkl -I$(top_srcdir) $(AM_CFLAGS)
-_Hkl_la_LDFLAGS = -module -avoid-version
-_Hkl_la_LIBADD = libhkl.la
-
-Hkl_wrap.cxx : Hkl.i Makefile
-	$(SWIG) $(AX_SWIG_PYTHON_OPT) -I$(top_srcdir)/src -o $@ $<
-
-endif
-
 endif
 
 # Support for GNU Flymake, in Emacs.
