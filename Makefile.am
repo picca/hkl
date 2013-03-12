@@ -3,7 +3,7 @@
 ACLOCAL_AMFLAGS = -I m4
 AM_DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --enable-introspection
 
-SUBDIRS = ccan hkl
+SUBDIRS = hkl
 if HKL3D
 SUBDIRS += hkl3d data
 endif
@@ -57,18 +57,52 @@ dist-hook:
                 echo A git clone is required to generate a ChangeLog >&2; \
         fi
 
-CCAN_MODULES=darray list array_size container_of
-CCAN_TMPDIR=/tmp/ccan
+## Update the ccan library
+
+CCAN_PUBLIC_MODULES=darray list
+CCAN_PRIVATE_MODULES=array_size container_of
+CCAN_LOCAL_REPO=/tmp/ccan
+CCAN_LOCAL_EXTRACT=/tmp/ccan.tmp
+CCAN_URL=git://git.ozlabs.org/~ccan/ccan
+CCAN_CREATE_TREE=rm -rf $(CCAN_LOCAL_EXTRACT) && $(CCAN_LOCAL_REPO)/tools/create-ccan-tree -b automake $(CCAN_LOCAL_EXTRACT)
+CCAN_DEST=$(top_srcdir)/hkl/
+CCAN_TMP_DEST=/tmp/ccan.next
 ccan-update:
-	echo Clonning ccan repository to get the latest version
-	git clone git://git.ozlabs.org/~ccan/ccan $(CCAN_TMPDIR)
-	echo Extracting modules: $(CCAN_MODULES)
-	$(CCAN_TMPDIR)/tools/create-ccan-tree -b automake $(top_srcdir)/ccan.tmp $(CCAN_MODULES)
-	echo modify since we want shared libccan
-	sed -i -e 's/noinst_LIBRARIES = libccan.a/noinst_LTLIBRARIES = libccan.la/' $(top_srcdir)/ccan.tmp/Makefile.am
-	sed -i -e 's/libccan_a_SOURCES/libccan_la_SOURCES/' $(top_srcdir)/ccan.tmp/Makefile.am
-	rm -rf $(top_srcdir)/ccan/ccan $(top_srcdir)/ccan/licenses
-	rsync -av $(top_srcdir)/ccan.tmp/* $(top_srcdir)/ccan
-	rm -rf $(top_srcdir)/ccan.tmp
-	rm -rf $(CCAN_TMPDIR)
+	@if test -d $(CCAN_LOCAL_REPO); \
+	then \
+		cd $(CCAN_LOCAL_REPO) && git pull; \
+	else \
+		git clone $(CCAN_URL) $(CCAN_LOCAL_REPO); \
+	fi
+
+	@echo Extracting all the modules
+	@$(CCAN_CREATE_TREE) $(CCAN_PUBLIC_MODULES) $(CCAN_PRIVATE_MODULES)
+
+	@rm -rf $(CCAN_TMP_DEST) && mkdir -p $(CCAN_TMP_DEST)
+	@rsync -av --exclude=Makefile.am $(CCAN_LOCAL_EXTRACT)/* $(CCAN_TMP_DEST)
+	@find $(CCAN_TMP_DEST)/ccan -maxdepth 2 -name '*.[ch]' | xargs sed -i -e 's,ccan/,hkl/ccan/,'
+
+	@$(CCAN_CREATE_TREE) $(CCAN_PUBLIC_MODULES)
+
+	@echo Generating the Makefile.am
+	@(\
+		echo "AM_CFLAGS=-I\$$(top_srcdir)"; echo;\
+		echo "noinst_LTLIBRARIES=libccan.la";\
+		echo "libccan_la_SOURCES = \\";\
+		(\
+			cd $(CCAN_TMP_DEST)/ccan && find . -maxdepth 2 -name '*.[ch]'\
+				| sed -e 's,^./,\t,;$$!s,$$, \\,'; echo;\
+		);\
+		echo "ccanincludedir=\$$(includedir)/hkl/ccan";\
+		echo "nobase_ccaninclude_HEADERS= \\";\
+		(\
+			cd $(CCAN_LOCAL_EXTRACT)/ccan && find . -maxdepth 2 -name '*.[h]'\
+				| sed -e 's,^./,\t,;$$!s,$$, \\,';\
+		);\
+	) > $(CCAN_TMP_DEST)/ccan/Makefile.am
+
+	@echo purge the previous ccan directory
+	cd $(CCAN_DEST) && rm -rf licenses && find ccan -type d \! -name ".*" | xargs rm -rf
+	rsync -av $(CCAN_TMP_DEST)/* $(top_srcdir)/hkl
+
 

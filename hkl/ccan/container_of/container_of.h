@@ -4,7 +4,7 @@
 #include <stddef.h>
 
 #include "config.h"
-#include <ccan/check_type/check_type.h>
+#include <hkl/ccan/check_type/check_type.h>
 
 /**
  * container_of - get pointer to enclosing structure

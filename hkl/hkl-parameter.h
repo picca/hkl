@@ -24,8 +24,8 @@
 
 #include <stdio.h>
 
-#include <ccan/list/list.h>
-#include <ccan/darray/darray.h>
+#include <hkl/ccan/list/list.h>
+#include <hkl/ccan/darray/darray.h>
 #include <hkl/hkl-error.h>
 #include <hkl/hkl-interval.h>
 #include <hkl/hkl-unit.h>

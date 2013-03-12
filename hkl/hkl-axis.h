@@ -22,7 +22,7 @@
 #ifndef __HKL_AXIS_H__
 #define __HKL_AXIS_H__
 
-#include <ccan/list/list.h>
+#include <hkl/ccan/list/list.h>
 #include <hkl/hkl-macros.h>
 #include <hkl/hkl-interval.h>
 #include <hkl/hkl-vector.h>

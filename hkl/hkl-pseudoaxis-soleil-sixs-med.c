@@ -19,7 +19,7 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <ccan/array_size/array_size.h>
+#include <hkl/ccan/array_size/array_size.h>
 #include <gsl/gsl_multiroots.h>
 #include <gsl/gsl_sf_trig.h>
 

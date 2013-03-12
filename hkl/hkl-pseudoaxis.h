@@ -22,7 +22,7 @@
 #ifndef __HKL_PSEUDOAXIS_H__
 #define __HKL_PSEUDOAXIS_H__
 
-#include <ccan/darray/darray.h>
+#include <hkl/ccan/darray/darray.h>
 #include <hkl/hkl-detector.h>
 #include <hkl/hkl-sample.h>
 #include <hkl/hkl-error.h>

@@ -23,7 +23,7 @@
 #ifndef __HKL_PARAMETER_PRIVATE_H__
 #define __HKL_PARAMETER_PRIVATE_H__
 
-#include <ccan/list/list.h>
+#include <hkl/ccan/list/list.h>
 #include <hkl/hkl-parameter.h>
 
 HKL_BEGIN_DECLS

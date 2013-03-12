@@ -1,10 +1,10 @@
 ## Process this file with automake to produce Makefile.in
+SUBDIRS = ccan
 
 AM_LDFLAGS = -no-undefined -version-info 5:0:0
 AM_LDFLAGS += $(GSL_LIBS)
 AM_CFLAGS = -I$(top_srcdir) \
 	-I$(top_builddir) \
-	-I$(top_srcdir)/ccan \
 	$(GSL_CFLAGS)
 
 hkl_c_sources = \
@@ -81,7 +81,7 @@ hkl_private_h_sources = \
 
 lib_LTLIBRARIES = libhkl.la
 libhkl_la_SOURCES = $(hkl_c_sources) $(hkl_private_h_sources)
-libhkl_la_LIBADD = $(top_builddir)/ccan/libccan.la
+libhkl_la_LIBADD = ccan/libccan.la
 hklincludedir=$(includedir)/hkl
 hklinclude_HEADERS = $(hkl_public_h_sources)
 

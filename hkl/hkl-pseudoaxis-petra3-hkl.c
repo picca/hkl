@@ -22,7 +22,7 @@
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_vector.h>
 
-#include <ccan/array_size/array_size.h>
+#include <hkl/ccan/array_size/array_size.h>
 
 #include "hkl-pseudoaxis-auto-private.h"
 #include "hkl-pseudoaxis-common-hkl-private.h"

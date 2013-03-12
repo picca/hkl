@@ -22,7 +22,7 @@
 #ifndef __HKL_GEOMETRY_H__
 #define __HKL_GEOMETRY_H__
 
-#include <ccan/list/list.h>
+#include <hkl/ccan/list/list.h>
 
 #include <hkl/hkl-source.h>
 #include <hkl/hkl-quaternion.h>

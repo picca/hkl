@@ -3,7 +3,6 @@ check_PROGRAMS = test-t
 AM_CFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/hkl \
-	-I$(top_srcdir)/ccan \
 	-I$(top_srcdir)/hkl3d \
 	-I$(top_srcdir)/test \
 	$(G3D_CFLAGS)

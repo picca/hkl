@@ -3,8 +3,8 @@
 #define CCAN_LIST_H
 #include <stdbool.h>
 #include <assert.h>
-#include <ccan/container_of/container_of.h>
-#include <ccan/check_type/check_type.h>
+#include <hkl/ccan/container_of/container_of.h>
+#include <hkl/ccan/check_type/check_type.h>
 
 /**
  * struct list_node - an entry in a doubly-linked list

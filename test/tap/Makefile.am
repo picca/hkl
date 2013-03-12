@@ -1,7 +1,6 @@
 AM_CFLAGS = \
 	-I$(abs_top_srcdir)/test \
-	-I$(top_srcdir) \
-	-I$(top_srcdir)/ccan
+	-I$(top_srcdir)
 
 check_LIBRARIES = libtap.a
 libtap_a_SOURCES = \
