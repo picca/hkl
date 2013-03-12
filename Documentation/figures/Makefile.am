@@ -4,7 +4,7 @@
 .asy.pdf:
 	@ASY@ -config "" -render=0 -f pdf -noprc -o $@ $<
 
-dist_pkgdata_DATA = \
+dist_noinst_DATA = \
 	3S+1D.png \
 	B_b3_y.png \
 	B_a.png \
@@ -24,7 +24,7 @@ dist_pkgdata_DATA = \
 	e2k_4.png \
 	qper_qpar.png
 
-CLEANFILES = $(dist_pkgdata_DATA)
+CLEANFILES = $(dist_noinst_DATA)
 
 EXTRA_DIST = \
 	3S+1D.asy \
