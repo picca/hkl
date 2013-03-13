@@ -102,7 +102,7 @@ ccan-update:
 	) > $(CCAN_TMP_DEST)/ccan/Makefile.am
 
 	@echo purge the previous ccan directory
-	cd $(CCAN_DEST) && rm -rf licenses && find ccan -type d \! -name ".*" | xargs rm -rf
+	cd $(CCAN_DEST) && rm -rf licenses && find ccan -mindepth 1 -type d \! -name ".*" | xargs rm -rf
 	rsync -av $(CCAN_TMP_DEST)/* $(top_srcdir)/hkl
 
 
