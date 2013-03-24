@@ -21,6 +21,7 @@
  */
 #include <hkl.h>
 #include <tap/basic.h>
+#include <tap/float.h>
 
 #define SET_ANGLES(geom, a, b, c, d) hkl_geometry_set_values_v(geom, 4,	\
 							       (a) * HKL_DEGTORAD, \

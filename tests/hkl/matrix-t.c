@@ -21,6 +21,7 @@
  */
 #include <hkl.h>
 #include <tap/basic.h>
+#include <tap/float.h>
 
 static void init(void)
 {

@@ -17,4 +17,4 @@ AM_CPPFLAGS = \
 	-DBUILD='"$(abs_top_builddir)"'
 
 check-local: $(check_PROGRAMS)
-	./runtests -s $(abs_top_srcdir) $(abs_top_srcdir)/test/TESTS
+	./runtests -s $(abs_top_srcdir) -l $(abs_top_srcdir)/tests/TESTS

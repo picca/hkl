@@ -6,14 +6,14 @@
  * number and some number of appropriate arguments, check to be sure the
  * results match the expected output using the arguments, and print out
  * something appropriate for that test number.  Other utility routines help in
- * constructing more complex tests, skipping tests, or setting up the TAP
- * output format.
+ * constructing more complex tests, skipping tests, reporting errors, setting
+ * up the TAP output format, or finding things in the test environment.
  *
  * This file is part of C TAP Harness.  The current version plus supporting
  * documentation is at <http://www.eyrie.org/~eagle/software/c-tap-harness/>.
  *
- * Copyright 2009, 2010 Russ Allbery <rra@stanford.edu>
- * Copyright 2001, 2002, 2004, 2005, 2006, 2007, 2008
+ * Copyright 2009, 2010, 2011, 2012 Russ Allbery <rra@stanford.edu>
+ * Copyright 2001, 2002, 2004, 2005, 2006, 2007, 2008, 2011, 2012
  *     The Board of Trustees of the Leland Stanford Junior University
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
@@ -35,23 +35,26 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-/* Required for isnan() and isinf(). */
-#ifndef _XOPEN_SOURCE
-# define _XOPEN_SOURCE 600
-#endif
-
 #include <errno.h>
-#include <math.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef _WIN32
+# include <direct.h>
+#else
+# include <sys/stat.h>
+#endif
 #include <sys/types.h>
-#include <sys/time.h>
-#include <sys/wait.h>
 #include <unistd.h>
 
-#include <tap/basic.h>
+#include <tests/tap/basic.h>
+
+/* Windows provides mkdir and rmdir under different names. */
+#ifdef _WIN32
+# define mkdir(p, m) _mkdir(p)
+# define rmdir(p)    _rmdir(p)
+#endif
 
 /*
  * The test count.  Always contains the number that will be used for the next
@@ -79,7 +82,9 @@ static int _lazy = 0;
 
 /*
  * Our exit handler.  Called on completion of the test to report a summary of
- * results provided we're still in the original process.
+ * results provided we're still in the original process.  This also handles
+ * printing out the plan if we used plan_lazy(), although that's suppressed if
+ * we never ran a test (due to an early bail, for example).
  */
 static void
 finish(void)
@@ -90,7 +95,7 @@ finish(void)
         return;
     fflush(stderr);
     if (_process != 0 && getpid() == _process) {
-        if (_lazy) {
+        if (_lazy && highest > 0) {
             printf("1..%lu\n", highest);
             _planned = highest;
         }
@@ -344,34 +349,6 @@ is_string(const char *wanted, const char *seen, const char *format, ...)
 
 
 /*
- * Takes an expected double and a seen double and assumes the test passes if
- * those two numbers are within delta of each other.
- */
-void
-is_double(double wanted, double seen, double epsilon, const char *format, ...)
-{
-    fflush(stderr);
-    if ((isnan(wanted) && isnan(seen))
-        || (isinf(wanted) && isinf(seen) && wanted == seen)
-        || fabs(wanted - seen) <= epsilon)
-        printf("ok %lu", testnum++);
-    else {
-        printf("# wanted: %g\n#   seen: %g\n", wanted, seen);
-        printf("not ok %lu", testnum++);
-        _failed++;
-    }
-    if (format != NULL) {
-        va_list args;
-
-        va_start(args, format);
-        print_desc(format, args);
-        va_end(args);
-    }
-    putchar('\n');
-}
-
-
-/*
  * Takes an expected unsigned long and a seen unsigned long and assumes the
  * test passes if the two numbers match.  Otherwise, reports them in hex.
  */
@@ -475,6 +452,92 @@ sysdiag(const char *format, ...)
 
 
 /*
+ * Allocate cleared memory, reporting a fatal error with bail on failure.
+ */
+void *
+bcalloc(size_t n, size_t size)
+{
+    void *p;
+
+    p = calloc(n, size);
+    if (p == NULL)
+        sysbail("failed to calloc %lu", (unsigned long)(n * size));
+    return p;
+}
+
+
+/*
+ * Allocate memory, reporting a fatal error with bail on failure.
+ */
+void *
+bmalloc(size_t size)
+{
+    void *p;
+
+    p = malloc(size);
+    if (p == NULL)
+        sysbail("failed to malloc %lu", (unsigned long) size);
+    return p;
+}
+
+
+/*
+ * Reallocate memory, reporting a fatal error with bail on failure.
+ */
+void *
+brealloc(void *p, size_t size)
+{
+    p = realloc(p, size);
+    if (p == NULL)
+        sysbail("failed to realloc %lu bytes", (unsigned long) size);
+    return p;
+}
+
+
+/*
+ * Copy a string, reporting a fatal error with bail on failure.
+ */
+char *
+bstrdup(const char *s)
+{
+    char *p;
+    size_t len;
+
+    len = strlen(s) + 1;
+    p = malloc(len);
+    if (p == NULL)
+        sysbail("failed to strdup %lu bytes", (unsigned long) len);
+    memcpy(p, s, len);
+    return p;
+}
+
+
+/*
+ * Copy up to n characters of a string, reporting a fatal error with bail on
+ * failure.  Don't use the system strndup function, since it may not exist and
+ * the TAP library doesn't assume any portability support.
+ */
+char *
+bstrndup(const char *s, size_t n)
+{
+    const char *p;
+    char *copy;
+    size_t length;
+
+    /* Don't assume that the source string is nul-terminated. */
+    for (p = s; (size_t) (p - s) < n && *p != '\0'; p++)
+        ;
+    length = p - s;
+    copy = malloc(length + 1);
+    if (p == NULL)
+        sysbail("failed to strndup %lu bytes", (unsigned long) length);
+    memcpy(copy, s, length);
+    copy[length] = '\0';
+    return copy;
+}
+
+
+/*
  * Locate a test file.  Given the partial path to a file, look under BUILD and
  * then SOURCE for the file and return the full path to the file.  Returns
  * NULL if the file doesn't exist.  A non-NULL return should be freed with
@@ -498,9 +561,7 @@ test_file_path(const char *file)
         if (base == NULL)
             continue;
         length = strlen(base) + 1 + strlen(file) + 1;
-        path = malloc(length);
-        if (path == NULL)
-            sysbail("cannot allocate memory");
+        path = bmalloc(length);
         sprintf(path, "%s/%s", base, file);
         if (access(path, R_OK) == 0)
             break;
@@ -519,6 +580,50 @@ test_file_path(const char *file)
 void
 test_file_path_free(char *path)
 {
+    if (path != NULL)
+        free(path);
+}
+
+
+/*
+ * Create a temporary directory, tmp, under BUILD if set and the current
+ * directory if it does not.  Returns the path to the temporary directory in
+ * newly allocated memory, and calls bail on any failure.  The return value
+ * should be freed with test_tmpdir_free.
+ *
+ * This function uses sprintf because it attempts to be independent of all
+ * other portability layers.  The use immediately after a memory allocation
+ * should be safe without using snprintf or strlcpy/strlcat.
+ */
+char *
+test_tmpdir(void)
+{
+    const char *build;
+    char *path = NULL;
+    size_t length;
+
+    build = getenv("BUILD");
+    if (build == NULL)
+        build = ".";
+    length = strlen(build) + strlen("/tmp") + 1;
+    path = bmalloc(length);
+    sprintf(path, "%s/tmp", build);
+    if (access(path, X_OK) < 0)
+        if (mkdir(path, 0777) < 0)
+            sysbail("error creating temporary directory %s", path);
+    return path;
+}
+
+
+/*
+ * Free a path returned from test_tmpdir() and attempt to remove the
+ * directory.  If we can't delete the directory, don't worry; something else
+ * that hasn't yet cleaned up may still be using it.
+ */
+void
+test_tmpdir_free(char *path)
+{
+    rmdir(path);
     if (path != NULL)
         free(path);
 }

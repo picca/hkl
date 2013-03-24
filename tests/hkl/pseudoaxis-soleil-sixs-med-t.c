@@ -21,6 +21,7 @@
  */
 #include <hkl.h>
 #include <tap/basic.h>
+#include <tap/float.h>
 #include <tap/hkl.h>
 
 #define SET_AXES(geometry, beta, mu, omega, gamma, delta, eta_a) do{	\

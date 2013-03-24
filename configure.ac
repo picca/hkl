@@ -296,11 +296,11 @@ AC_CONFIG_FILES([Makefile
 		 hkl3d/bullet/Makefile
 		 hkl3d/bullet/src/Makefile
 		 hkl3d.pc
-		 test/Makefile
-		 test/hkl/Makefile
-		 test/hkl3d/Makefile
-		 test/bindings/Makefile
-		 test/tap/Makefile
+		 tests/Makefile
+		 tests/hkl/Makefile
+		 tests/hkl3d/Makefile
+		 tests/bindings/Makefile
+		 tests/tap/Makefile
 		 Documentation/Makefile
 		 Documentation/api/Makefile
 		 Documentation/figures/Makefile
