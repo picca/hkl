@@ -2,10 +2,6 @@ SUBDIRS = tap
 if HAVE_INTROSPECTION
 SUBDIRS += bindings
 endif
-if HKL3D
-SUBDIRS += hkl3d
-endif
-
 
 check_PROGRAMS = \
 	hkl-unit-t \
@@ -40,6 +36,17 @@ LDADD = $(top_builddir)/hkl/libhkl.la \
 	$(top_builddir)/tests/tap/libtap.a \
 	$(GSL_LIBS)
 
+if HKL3D
+
+check_PROGRAMS += hkl3d-test-t
+
+AM_CPPFLAGS += -I$(top_srcdir)/hkl3d \
+	$(G3D_CFLAGS)
+
+LDADD += $(top_builddir)/hkl3d/libhkl3d.la
+
+endif
+
 ## tap tests
 
 EXTRA_DIST=TESTS
@@ -57,4 +64,3 @@ check-syntax:
 	test -z "$(CHK_SOURCES)" || $(COMPILE) $(CHK_SOURCES)
 
 .PHONY: check-syntax
-

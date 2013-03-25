@@ -297,7 +297,6 @@ AC_CONFIG_FILES([Makefile
 		 hkl3d/bullet/src/Makefile
 		 hkl3d.pc
 		 tests/Makefile
-		 tests/hkl3d/Makefile
 		 tests/bindings/Makefile
 		 tests/tap/Makefile
 		 Documentation/Makefile
