@@ -49,8 +49,6 @@ endif
 
 ## tap tests
 
-EXTRA_DIST=TESTS
-
 AM_CPPFLAGS += \
 	-DSOURCE='"$(abs_top_srcdir)"' \
 	-DBUILD='"$(abs_top_builddir)"'
