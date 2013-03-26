@@ -30,6 +30,21 @@ from gi.repository import Hkl
 
 class TestAPI(unittest.TestCase):
 
+    @unittest.skip("factory not yet ready")
+    def test_factory_api(self):
+        """
+        enforce the Factory API
+        """
+        # factories dict <name, Factory>
+        factories = Hkl.factories()
+        for key, value in factories.iteritems():
+            self.assertTrue(type(key) == str)
+            self.assertTrue(type(value) == Hkl.Factory)
+
+        kappa6C_factory = factories['Kappa6C']
+        geometry = kappa6C_factory.create_new_geometry()
+        engines = kappa6C_factory.create_new_engine_list()
+
     def test_detector_api(self):
         """
         enforce the detector API

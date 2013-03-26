@@ -705,6 +705,20 @@ control over, that could include printf() escape sequences.</doc>
         </parameters>
       </function>
     </record>
+    <record name="Factory" c:type="HklFactory" disguised="1">
+      <method name="create_new_engine_list"
+              c:identifier="hkl_factory_create_new_engine_list">
+        <return-value transfer-ownership="full">
+          <type name="EngineList" c:type="HklEngineList*"/>
+        </return-value>
+      </method>
+      <method name="create_new_geometry"
+              c:identifier="hkl_factory_create_new_geometry">
+        <return-value transfer-ownership="full">
+          <type name="Geometry" c:type="HklGeometry*"/>
+        </return-value>
+      </method>
+    </record>
     <constant name="GEOMETRY_EULERIAN4C_VERTICAL_DESCRIPTION"
               value="+ xrays source fix allong the :math:`\vec{x}` direction (1, 0, 0)
 + 3 axes for the sample
@@ -4187,6 +4201,15 @@ control over, that could include printf() escape sequences.</doc>
           <type name="utf8" c:type="char*"/>
         </parameter>
       </parameters>
+    </function>
+    <function name="factories" c:identifier="hkl_factories">
+      <doc xml:whitespace="preserve">return all the Hkl factories objects as a dictionnary</doc>
+      <return-value transfer-ownership="container">
+        <type name="GLib.HashTable" c:type="GHashTable*">
+          <type name="utf8"/>
+          <type name="Factory"/>
+        </type>
+      </return-value>
     </function>
     <function name="geometry_factory_get_config_from_type"
               c:identifier="hkl_geometry_factory_get_config_from_type"

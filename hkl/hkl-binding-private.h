@@ -22,12 +22,19 @@
 #ifndef __HKL_BINDING_PRIVATE_H__
 #define __HKL_BINDING_PRIVATE_H__
 
+#include <glib/ghash.h>
 #include <glib/gslist.h>
 #include <glib/gerror.h>
 
 #include "hkl-pseudoaxis.h"
 
 HKL_BEGIN_DECLS
+
+/**************/
+/* HklFactory */
+/**************/
+
+extern GHashTable *hkl_factories(void);
 
 /********************/
 /* HklParameterList */

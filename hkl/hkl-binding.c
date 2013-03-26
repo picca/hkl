@@ -22,8 +22,40 @@
 
 #include <glib.h>
 #include <string.h>
+
+#include <hkl/ccan/array_size/array_size.h>
+#include <hkl/hkl-factory.h>
+
 #include "hkl-pseudoaxis-private.h"
 #include "hkl-binding-private.h"
+
+/**************/
+/* HklFactory */
+/**************/
+
+/**
+ * hkl_factories:
+ *
+ * return all the Hkl factories objects as a dictionnary
+ *
+ * Returns: (element-type utf8 Hkl.Factory) (transfer container):
+ **/
+GHashTable *hkl_factories(void)
+{
+	GHashTable *table = NULL;
+	size_t i;
+	size_t n;
+
+	table = g_hash_table_new(g_str_hash, g_str_equal);
+	n = ARRAY_SIZE(hkl_geometry_factory_configs);
+	for(i=0; i<n; ++i){
+		HklGeometryConfig config = hkl_geometry_factory_configs[i];
+		const char * key = config.name;
+		/* g_hash_table_insert(table, key, factory); */
+	}
+
+	return table;
+}
 
 /********************/
 /* HklParameterList */

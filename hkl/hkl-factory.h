@@ -19,12 +19,19 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#ifndef __HKL_GEOMETRY_FACTORY_H__
-#define __HKL_GEOMETRY_FACTORY_H__
+#ifndef __HKL_FACTORY_H__
+#define __HKL_FACTORY_H__
 
 #include <hkl/hkl-geometry.h>
+#include <hkl/hkl-pseudoaxis.h>
 
 HKL_BEGIN_DECLS
+
+typedef struct _HklFactory HklFactory;
+
+extern HklGeometry *hkl_factory_create_new_geometry(HklFactory *self);
+
+extern HklEngineList *hkl_factory_create_new_engine_list(HklFactory *self);
 
 #define HKL_GEOMETRY_TWOC_DESCRIPTION					\
 	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
@@ -215,6 +222,8 @@ extern HklGeometry *hkl_geometry_factory_new(const HklGeometryConfig *config, ..
 extern HklGeometry *hkl_geometry_factory_newv(const HklGeometryConfig *config,
 					      const double parameters[], const int len);
 
+extern HklEngineList *hkl_engine_list_factory(const HklGeometryConfig *config);
+
 HKL_END_DECLS
 
-#endif /* __HKL_GEOMETRY_FACTORY_H__ */
+#endif /* __HKL_FACTORY_H__ */

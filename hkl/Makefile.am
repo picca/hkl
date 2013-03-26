@@ -12,8 +12,8 @@ hkl_c_sources = \
 	hkl-axis.c \
 	hkl-detector.c \
 	hkl-detector-factory.c \
+	hkl-factory.c \
 	hkl-geometry.c \
-	hkl-geometry-factory.c \
 	hkl-interval.c \
 	hkl-lattice.c \
 	hkl-macros.c \
@@ -29,7 +29,6 @@ hkl_c_sources = \
 	hkl-pseudoaxis-e4c-psi.c \
 	hkl-pseudoaxis-e6c-hkl.c \
 	hkl-pseudoaxis-e6c-psi.c \
-	hkl-pseudoaxis-factory.c \
 	hkl-pseudoaxis-k4cv-hkl.c \
 	hkl-pseudoaxis-k4cv-psi.c \
 	hkl-pseudoaxis-k6c-hkl.c \
@@ -48,15 +47,14 @@ hkl_public_h_sources = \
 	hkl-detector.h \
 	hkl-detector-factory.h \
 	hkl-error.h \
+	hkl-factory.h \
 	hkl-geometry.h \
-	hkl-geometry-factory.h \
 	hkl-interval.h \
 	hkl-parameter.h \
 	hkl-lattice.h \
 	hkl-macros.h \
 	hkl-matrix.h \
 	hkl-pseudoaxis.h \
-	hkl-pseudoaxis-factory.h  \
 	hkl-quaternion.h \
 	hkl-sample.h \
 	hkl-source.h \
@@ -119,13 +117,12 @@ introspection_files = \
 	hkl-axis.h \
 	hkl-source.h \
 	hkl-geometry.h \
-	hkl-geometry-factory.h \
 	hkl-detector.h \
 	hkl-detector-factory.h \
 	hkl-lattice.h \
 	hkl-sample.h \
 	hkl-pseudoaxis.h \
-	hkl-pseudoaxis-factory.h \
+	hkl-factory.h \
 	hkl-binding-private.h \
 	hkl-types.h \
 	hkl-error.c \
@@ -138,13 +135,12 @@ introspection_files = \
 	hkl-axis.c \
 	hkl-source.c \
 	hkl-geometry.c \
-	hkl-geometry-factory.c \
 	hkl-detector.c \
 	hkl-detector-factory.c \
 	hkl-lattice.c \
 	hkl-sample.c \
 	hkl-pseudoaxis.c \
-	hkl-pseudoaxis-factory.c \
+	hkl-factory.c \
 	hkl-binding.c \
 	hkl-types.c \
 	hkl-type-builtins.c \
