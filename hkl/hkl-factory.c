@@ -21,8 +21,8 @@
  */
 
 #include <stdarg.h>
-#include <hkl/hkl-factory.h>
 #include <gsl/gsl_sf.h>
+#include <hkl/hkl-factory-private.h>
 
 #include <hkl/hkl-pseudoaxis-private.h>
 #include <hkl/hkl-pseudoaxis-common-eulerians-private.h>
@@ -36,35 +36,223 @@
 #include <hkl/hkl-pseudoaxis-petra3-private.h>
 
 
-typedef struct _HklFactoryOps HklFactoryOps;
 typedef HklGeometry* (* HklFactoryGeometryFunction) (HklFactory *self);
 typedef HklEngineList* (* HklFactoryEngineListFunction) (HklFactory *self);
 
 struct _HklFactory
 {
-	const HklFactoryOps *ops;
-};
-
-struct _HklFactoryOps
-{
-	const char *name;
-	const char *description;
+	const HklGeometryConfig config;
 	HklFactoryGeometryFunction create_new_geometry;
 	HklFactoryEngineListFunction create_new_engine_list;
 };
 
+const char *hkl_factory_name(const HklFactory *self)
+{
+	return self->config.name;
+}
+
 HklGeometry *hkl_factory_create_new_geometry(HklFactory *self)
 {
-	return self->ops->create_new_geometry(self);
+	return self->create_new_geometry(self);
 }
 
 HklEngineList *hkl_factory_create_new_engine_list(HklFactory *self)
 {
-	return self->ops->create_new_engine_list(self);
+	return self->create_new_engine_list(self);
 }
 
-static void hkl_geometry_init_twoC_vertical(HklGeometry *self,
-					    const HklGeometryConfig *config)
+#define CREATE_CONSTRUCTOR(name, type, description)			\
+	static HklGeometry *create_new_geometry_ ## name (HklFactory *factory) \
+	{								\
+		HklGeometry *geometry;					\
+		geometry = hkl_geometry_new();				\
+		hkl_geometry_init_ ## name (geometry, &factory->config); \
+			return geometry;				\
+	}
+
+#define CREATE_CONSTRUCTOR_KAPPA(name, type, description, alpha)	\
+	static HklGeometry *create_new_geometry_ ## name (HklFactory *factory) \
+	{								\
+		HklGeometry *geometry;					\
+		geometry = hkl_geometry_new();				\
+		hkl_geometry_init_ ## name (geometry, &factory->config, alpha); \
+			return geometry;				\
+	}
+
+#define CREATE_ENGINE_LIST_CONSTRUCTOR(name) \
+	static HklEngineList *create_new_engine_list_ ## name (HklFactory *factory) \
+	{								\
+		return hkl_engine_list_factory(&factory->config);	\
+	}
+	
+#define REGISTER_DIFFRACTOMETER(name_, real_name_, type_, description_)	\
+	CREATE_CONSTRUCTOR(name_, type_, description_);			\
+	CREATE_ENGINE_LIST_CONSTRUCTOR(name_);				\
+	static HklFactory name_ = {.config = {.name = real_name_, .type = type_,	.description = description_}, \
+					    .create_new_geometry = &create_new_geometry_ ## name_, \
+					    .create_new_engine_list = &create_new_engine_list_ ## name_ \
+	};\
+	AUTODATA(factories, &name_)
+
+#define REGISTER_DIFFRACTOMETER_KAPPA(name_, real_name_, type_, description_, alpha) \
+	CREATE_CONSTRUCTOR_KAPPA(name_, type_, description_, alpha);	\
+	CREATE_ENGINE_LIST_CONSTRUCTOR(name_);				\
+	static HklFactory name_ = {.config = {.name = real_name_, .type = type_,	.description = description_}, \
+					    .create_new_geometry = &create_new_geometry_ ## name_, \
+					    .create_new_engine_list = &create_new_engine_list_ ## name_ \
+	};								\
+	AUTODATA(factories, &name_)
+
+static void kappa_2_kappap(double komega, double kappa, double kphi, double alpha,
+			   double *komegap, double *kappap, double *kphip)
+{
+	double p;
+	double omega;
+	double phi;
+
+	p = atan(tan(kappa/2.) * cos(alpha));
+	omega = komega + p - M_PI_2;
+	phi = kphi + p + M_PI_2;
+
+	*komegap = gsl_sf_angle_restrict_symm(2*omega - komega);
+	*kappap = -kappa;
+	*kphip = gsl_sf_angle_restrict_symm(2*phi - kphi);
+
+}
+
+static void hkl_geometry_list_multiply_k4c_real(HklGeometryList *self,
+						HklGeometryListItem *item)
+{
+	HklGeometry *geometry;
+	HklGeometry *copy;
+	double komega, komegap;
+	double kappa, kappap;
+	double kphi, kphip;
+
+	geometry = item->geometry;
+	komega = hkl_parameter_get_value(&geometry->axes[0].parameter);
+	kappa = hkl_parameter_get_value(&geometry->axes[1].parameter);
+	kphi = hkl_parameter_get_value(&geometry->axes[2].parameter);
+
+	kappa_2_kappap(komega, kappa, kphi, 50 * HKL_DEGTORAD, &komegap, &kappap, &kphip);
+
+	copy = hkl_geometry_new_copy(geometry);
+	/* TODO parameter list for the geometry */
+	hkl_parameter_set_value(&copy->axes[0].parameter, komegap, NULL);
+	hkl_parameter_set_value(&copy->axes[1].parameter, kappap, NULL);
+	hkl_parameter_set_value(&copy->axes[2].parameter, kphip, NULL);
+
+	hkl_geometry_update(copy);
+	hkl_geometry_list_add(self, copy);
+	hkl_geometry_free(copy);
+}
+
+static void hkl_geometry_list_multiply_k6c_real(HklGeometryList *self,
+						HklGeometryListItem *item)
+{
+	HklGeometry *geometry;
+	HklGeometry *copy;
+	double komega, komegap;
+	double kappa, kappap;
+	double kphi, kphip;
+
+	geometry = item->geometry;
+	komega = hkl_parameter_get_value(&geometry->axes[1].parameter);
+	kappa = hkl_parameter_get_value(&geometry->axes[2].parameter);
+	kphi = hkl_parameter_get_value(&geometry->axes[3].parameter);
+
+	kappa_2_kappap(komega, kappa, kphi, 50 * HKL_DEGTORAD, &komegap, &kappap, &kphip);
+
+	copy = hkl_geometry_new_copy(geometry);
+	/* TODO parameter list for the geometry */
+	hkl_parameter_set_value(&copy->axes[1].parameter, komegap, NULL);
+	hkl_parameter_set_value(&copy->axes[2].parameter, kappap, NULL);
+	hkl_parameter_set_value(&copy->axes[3].parameter, kphip, NULL);
+
+	hkl_geometry_update(copy);
+	hkl_geometry_list_add(self, copy);
+	hkl_geometry_free(copy);
+}
+
+/**
+ * hkl_engine_list_factory:
+ * @config:
+ *
+ * create an #HklEngineList given an #HklGeometryConfig
+ *
+ * Returns: (transfer full):
+ **/
+HklEngineList *hkl_engine_list_factory(const HklGeometryConfig *config)
+{
+	HklEngineList *self = NULL;
+
+	self = hkl_engine_list_new();
+
+	switch(config->type){
+	case HKL_GEOMETRY_TYPE_TWOC_VERTICAL:
+		break;
+	case HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL:
+	case HKL_GEOMETRY_TYPE_SOLEIL_MARS:
+	case HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL:
+		hkl_engine_list_add(self, hkl_engine_e4c_hkl_new());
+		hkl_engine_list_add(self, hkl_engine_e4c_psi_new());
+		hkl_engine_list_add(self, hkl_engine_q_new());
+		break;
+	case HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL:
+		self->geometries->multiply = hkl_geometry_list_multiply_k4c_real;
+		hkl_engine_list_add(self, hkl_engine_k4cv_hkl_new());
+		hkl_engine_list_add(self, hkl_engine_eulerians_new());
+		hkl_engine_list_add(self, hkl_engine_k4cv_psi_new());
+		hkl_engine_list_add(self, hkl_engine_q_new());
+		break;
+	case HKL_GEOMETRY_TYPE_EULERIAN6C:
+		hkl_engine_list_add(self, hkl_engine_e6c_hkl_new());
+		hkl_engine_list_add(self, hkl_engine_e6c_psi_new());
+		hkl_engine_list_add(self, hkl_engine_q2_new());
+		hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
+		break;
+	case HKL_GEOMETRY_TYPE_KAPPA6C:
+		self->geometries->multiply = hkl_geometry_list_multiply_k6c_real;
+		hkl_engine_list_add(self, hkl_engine_k6c_hkl_new());
+		hkl_engine_list_add(self, hkl_engine_eulerians_new());
+		hkl_engine_list_add(self, hkl_engine_k6c_psi_new());
+		hkl_engine_list_add(self, hkl_engine_q2_new());
+		hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
+		break;
+	case HKL_GEOMETRY_TYPE_ZAXIS:
+		hkl_engine_list_add(self, hkl_engine_zaxis_hkl_new());
+		hkl_engine_list_add(self, hkl_engine_q2_new());
+		hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
+		break;
+	case HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_2:
+		hkl_engine_list_add(self, hkl_engine_soleil_sixs_med_2_2_hkl_new());
+		hkl_engine_list_add(self, hkl_engine_q2_new());
+		hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
+		break;
+	case HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2:
+		hkl_engine_list_add(self, hkl_engine_soleil_sixs_med_1_2_hkl_new());
+		hkl_engine_list_add(self, hkl_engine_q2_new());
+		hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
+		break;
+	case HKL_GEOMETRY_TYPE_PETRA3_P09_EH2:
+		hkl_engine_list_add(self, hkl_engine_petra3_p09_eh2_hkl_new());
+		break;
+	case HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_3:
+		self->geometries->multiply = hkl_geometry_list_multiply_soleil_sixs_med_2_3;
+		hkl_engine_list_add(self, hkl_engine_soleil_sixs_med_2_3_hkl_new());
+		hkl_engine_list_add(self, hkl_engine_q2_new());
+		hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
+		break;
+	}
+	return self;
+}
+
+/********/
+/* TwoC */
+/********/
+
+static void hkl_geometry_init_twoC(HklGeometry *self,
+				   const HklGeometryConfig *config)
 {
 	HklHolder *h;
 
@@ -76,8 +264,12 @@ static void hkl_geometry_init_twoC_vertical(HklGeometry *self,
 	hkl_holder_add_rotation_axis(h, "tth", 0, -1, 0);
 }
 
+/********/
+/* E4CV */
+/********/
+
 static void hkl_geometry_init_eulerian4C_vertical(HklGeometry *self,
-						  const HklGeometryConfig *config)
+				   const HklGeometryConfig *config)
 {
 	HklHolder *h;
 
@@ -330,7 +522,7 @@ HklGeometry *hkl_geometry_factory_newv(const HklGeometryConfig *config,
 	geometry = hkl_geometry_new();
 	switch(config->type) {
 	case HKL_GEOMETRY_TYPE_TWOC_VERTICAL:
-		hkl_geometry_init_twoC_vertical(geometry, config);
+		hkl_geometry_init_twoC(geometry, config);
 		break;
 	case HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL:
 		hkl_geometry_init_eulerian4C_vertical(geometry, config);
@@ -371,146 +563,15 @@ HklGeometry *hkl_geometry_factory_newv(const HklGeometryConfig *config,
 	return geometry;
 }
 
-static void kappa_2_kappap(double komega, double kappa, double kphi, double alpha,
-			   double *komegap, double *kappap, double *kphip)
-{
-	double p;
-	double omega;
-	double phi;
-
-	p = atan(tan(kappa/2.) * cos(alpha));
-	omega = komega + p - M_PI_2;
-	phi = kphi + p + M_PI_2;
-
-	*komegap = gsl_sf_angle_restrict_symm(2*omega - komega);
-	*kappap = -kappa;
-	*kphip = gsl_sf_angle_restrict_symm(2*phi - kphi);
-
-}
-
-static void hkl_geometry_list_multiply_k4c_real(HklGeometryList *self,
-						HklGeometryListItem *item)
-{
-	HklGeometry *geometry;
-	HklGeometry *copy;
-	double komega, komegap;
-	double kappa, kappap;
-	double kphi, kphip;
-
-	geometry = item->geometry;
-	komega = hkl_parameter_get_value(&geometry->axes[0].parameter);
-	kappa = hkl_parameter_get_value(&geometry->axes[1].parameter);
-	kphi = hkl_parameter_get_value(&geometry->axes[2].parameter);
-
-	kappa_2_kappap(komega, kappa, kphi, 50 * HKL_DEGTORAD, &komegap, &kappap, &kphip);
-
-	copy = hkl_geometry_new_copy(geometry);
-	/* TODO parameter list for the geometry */
-	hkl_parameter_set_value(&copy->axes[0].parameter, komegap, NULL);
-	hkl_parameter_set_value(&copy->axes[1].parameter, kappap, NULL);
-	hkl_parameter_set_value(&copy->axes[2].parameter, kphip, NULL);
-
-	hkl_geometry_update(copy);
-	hkl_geometry_list_add(self, copy);
-	hkl_geometry_free(copy);
-}
-
-static void hkl_geometry_list_multiply_k6c_real(HklGeometryList *self,
-						HklGeometryListItem *item)
-{
-	HklGeometry *geometry;
-	HklGeometry *copy;
-	double komega, komegap;
-	double kappa, kappap;
-	double kphi, kphip;
-
-	geometry = item->geometry;
-	komega = hkl_parameter_get_value(&geometry->axes[1].parameter);
-	kappa = hkl_parameter_get_value(&geometry->axes[2].parameter);
-	kphi = hkl_parameter_get_value(&geometry->axes[3].parameter);
-
-	kappa_2_kappap(komega, kappa, kphi, 50 * HKL_DEGTORAD, &komegap, &kappap, &kphip);
-
-	copy = hkl_geometry_new_copy(geometry);
-	/* TODO parameter list for the geometry */
-	hkl_parameter_set_value(&copy->axes[1].parameter, komegap, NULL);
-	hkl_parameter_set_value(&copy->axes[2].parameter, kappap, NULL);
-	hkl_parameter_set_value(&copy->axes[3].parameter, kphip, NULL);
-
-	hkl_geometry_update(copy);
-	hkl_geometry_list_add(self, copy);
-	hkl_geometry_free(copy);
-}
-
-/**
- * hkl_engine_list_factory:
- * @config:
- *
- * create an #HklEngineList given an #HklGeometryConfig
- *
- * Returns: (transfer full):
- **/
-HklEngineList *hkl_engine_list_factory(const HklGeometryConfig *config)
-{
-	HklEngineList *self = NULL;
-
-	self = hkl_engine_list_new();
-
-	switch(config->type){
-	case HKL_GEOMETRY_TYPE_TWOC_VERTICAL:
-		break;
-	case HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL:
-	case HKL_GEOMETRY_TYPE_SOLEIL_MARS:
-	case HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL:
-		hkl_engine_list_add(self, hkl_engine_e4c_hkl_new());
-		hkl_engine_list_add(self, hkl_engine_e4c_psi_new());
-		hkl_engine_list_add(self, hkl_engine_q_new());
-		break;
-	case HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL:
-		self->geometries->multiply = hkl_geometry_list_multiply_k4c_real;
-		hkl_engine_list_add(self, hkl_engine_k4cv_hkl_new());
-		hkl_engine_list_add(self, hkl_engine_eulerians_new());
-		hkl_engine_list_add(self, hkl_engine_k4cv_psi_new());
-		hkl_engine_list_add(self, hkl_engine_q_new());
-		break;
-	case HKL_GEOMETRY_TYPE_EULERIAN6C:
-		hkl_engine_list_add(self, hkl_engine_e6c_hkl_new());
-		hkl_engine_list_add(self, hkl_engine_e6c_psi_new());
-		hkl_engine_list_add(self, hkl_engine_q2_new());
-		hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
-		break;
-	case HKL_GEOMETRY_TYPE_KAPPA6C:
-		self->geometries->multiply = hkl_geometry_list_multiply_k6c_real;
-		hkl_engine_list_add(self, hkl_engine_k6c_hkl_new());
-		hkl_engine_list_add(self, hkl_engine_eulerians_new());
-		hkl_engine_list_add(self, hkl_engine_k6c_psi_new());
-		hkl_engine_list_add(self, hkl_engine_q2_new());
-		hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
-		break;
-	case HKL_GEOMETRY_TYPE_ZAXIS:
-		hkl_engine_list_add(self, hkl_engine_zaxis_hkl_new());
-		hkl_engine_list_add(self, hkl_engine_q2_new());
-		hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
-		break;
-	case HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_2:
-		hkl_engine_list_add(self, hkl_engine_soleil_sixs_med_2_2_hkl_new());
-		hkl_engine_list_add(self, hkl_engine_q2_new());
-		hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
-		break;
-	case HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2:
-		hkl_engine_list_add(self, hkl_engine_soleil_sixs_med_1_2_hkl_new());
-		hkl_engine_list_add(self, hkl_engine_q2_new());
-		hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
-		break;
-	case HKL_GEOMETRY_TYPE_PETRA3_P09_EH2:
-		hkl_engine_list_add(self, hkl_engine_petra3_p09_eh2_hkl_new());
-		break;
-	case HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_3:
-		self->geometries->multiply = hkl_geometry_list_multiply_soleil_sixs_med_2_3;
-		hkl_engine_list_add(self, hkl_engine_soleil_sixs_med_2_3_hkl_new());
-		hkl_engine_list_add(self, hkl_engine_q2_new());
-		hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
-		break;
-	}
-	return self;
-}
+REGISTER_DIFFRACTOMETER(twoC, "TwoC", HKL_GEOMETRY_TYPE_TWOC_VERTICAL, HKL_GEOMETRY_TWOC_DESCRIPTION);
+REGISTER_DIFFRACTOMETER(eulerian4C_vertical, "E4CV", HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL, HKL_GEOMETRY_EULERIAN4C_VERTICAL_DESCRIPTION);
+REGISTER_DIFFRACTOMETER_KAPPA(kappa4C_vertical, "K4CV", HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL, HKL_GEOMETRY_KAPPA4C_VERTICAL_DESCRIPTION, 50 * HKL_DEGTORAD);
+REGISTER_DIFFRACTOMETER(eulerian6C, "E6C", HKL_GEOMETRY_TYPE_EULERIAN6C, HKL_GEOMETRY_EULERIAN6C_DESCRIPTION);
+REGISTER_DIFFRACTOMETER_KAPPA(kappa6C, "K6C", HKL_GEOMETRY_TYPE_KAPPA6C, HKL_GEOMETRY_KAPPA6C_DESCRIPTION, 50 * HKL_DEGTORAD);
+REGISTER_DIFFRACTOMETER(zaxis, "ZAXIS", HKL_GEOMETRY_TYPE_ZAXIS, HKL_GEOMETRY_TYPE_ZAXIS_DESCRIPTION);
+REGISTER_DIFFRACTOMETER(soleil_sixs_med_2_2,"SOLEIL SIXS MED2+2", HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_2, HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_2_DESCRIPTION);
+REGISTER_DIFFRACTOMETER(soleil_mars, "SOLEIL MARS", HKL_GEOMETRY_TYPE_SOLEIL_MARS, HKL_GEOMETRY_TYPE_SOLEIL_MARS_DESCRIPTION);
+REGISTER_DIFFRACTOMETER(soleil_sixs_med_1_2, "SOLEIL SIXS MED1+2", HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2, HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2_DESCRIPTION);
+REGISTER_DIFFRACTOMETER(petra3_p09_eh2, "PETRA3 P09 EH2", HKL_GEOMETRY_TYPE_PETRA3_P09_EH2, HKL_GEOMETRY_TYPE_PETRA3_P09_EH2_DESCRIPTION);
+REGISTER_DIFFRACTOMETER(soleil_sixs_med_2_3, "SOLEIL SIXS MED2+3", HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_3, HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_3_DESCRIPTION);
+REGISTER_DIFFRACTOMETER(eulerian4C_horizontal, "E4CH", HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL, HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL_DESCRIPTION);

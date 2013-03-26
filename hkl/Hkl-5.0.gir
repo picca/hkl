@@ -718,6 +718,11 @@ control over, that could include printf() escape sequences.</doc>
           <type name="Geometry" c:type="HklGeometry*"/>
         </return-value>
       </method>
+      <method name="name" c:identifier="hkl_factory_name">
+        <return-value transfer-ownership="none">
+          <type name="utf8" c:type="char*"/>
+        </return-value>
+      </method>
     </record>
     <constant name="GEOMETRY_EULERIAN4C_VERTICAL_DESCRIPTION"
               value="+ xrays source fix allong the :math:`\vec{x}` direction (1, 0, 0)

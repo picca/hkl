@@ -29,6 +29,8 @@ HKL_BEGIN_DECLS
 
 typedef struct _HklFactory HklFactory;
 
+extern const char *hkl_factory_name(const HklFactory *self);
+
 extern HklGeometry *hkl_factory_create_new_geometry(HklFactory *self);
 
 extern HklEngineList *hkl_factory_create_new_engine_list(HklFactory *self);

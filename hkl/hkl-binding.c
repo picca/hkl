@@ -24,10 +24,11 @@
 #include <string.h>
 
 #include <hkl/ccan/array_size/array_size.h>
-#include <hkl/hkl-factory.h>
 
-#include "hkl-pseudoaxis-private.h"
 #include "hkl-binding-private.h"
+#include "hkl-factory-private.h"
+#include "hkl-pseudoaxis-private.h"
+
 
 /**************/
 /* HklFactory */
@@ -43,15 +44,16 @@
 GHashTable *hkl_factories(void)
 {
 	GHashTable *table = NULL;
-	size_t i;
-	size_t n;
+	unsigned int i;
+	unsigned int n;
+	HklFactory **factories;
 
 	table = g_hash_table_new(g_str_hash, g_str_equal);
-	n = ARRAY_SIZE(hkl_geometry_factory_configs);
+	factories = autodata_get(factories, &n);
 	for(i=0; i<n; ++i){
-		HklGeometryConfig config = hkl_geometry_factory_configs[i];
-		const char * key = config.name;
-		/* g_hash_table_insert(table, key, factory); */
+		g_hash_table_insert(table,
+				    hkl_factory_name(factories[i]),
+				    factories[i]);
 	}
 
 	return table;

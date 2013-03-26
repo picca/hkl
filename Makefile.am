@@ -60,7 +60,7 @@ dist-hook:
 ## Update the ccan library
 
 CCAN_PUBLIC_MODULES=darray list
-CCAN_PRIVATE_MODULES=array_size container_of
+CCAN_PRIVATE_MODULES=array_size container_of autodata
 CCAN_LOCAL_REPO=/tmp/ccan
 CCAN_LOCAL_EXTRACT=/tmp/ccan.tmp
 CCAN_URL=git://git.ozlabs.org/~ccan/ccan

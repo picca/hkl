@@ -288,6 +288,24 @@ AM_COND_IF([HAVE_INTROSPECTION],
 	[PKG_CHECK_MODULES([GOBJECT], [gobject-2.0])
 	AM_PATH_GLIB_2_0])
 
+
+dnl ************
+dnl *** ccan ***
+dnl ************
+
+AC_DEFINE([HAVE_SECTION_START_STOP], [1], ["do we support section or not"])
+AC_DEFINE([HAVE_TYPEOF], [1], ["do we have typeof"])
+AC_DEFINE([HAVE_STATEMENT_EXPR], [1], ["do we have typeof"])
+AC_DEFINE([HAVE_ATTRIBUTE_COLD], [1], ["do we have typeof"])
+AC_DEFINE([HAVE_ATTRIBUTE_PRINTF], [1], ["do we have typeof"])
+AC_DEFINE([HAVE_ATTRIBUTE_CONST], [1], ["do we have typeof"])
+AC_DEFINE([HAVE_ATTRIBUTE_UNUSED], [1], ["do we have typeof"])
+AC_DEFINE([HAVE_BUILTIN_CONSTANT_P], [1], ["do we have typeof"])
+AC_DEFINE([HAVE_WARN_UNUSED_RESULT], [1], ["do we have typeof"])
+AC_DEFINE([HAVE_ATTRIBUTE_NORETURN], [1], ["do we have typeof"])
+AC_DEFINE([HAVE_ATTRIBUTE_USED], [1], ["do we have typeof"])
+AC_DEFINE([HAVE_BUILTIN_TYPES_COMPATIBLE_P], [1], ["do we have typeof"])
+
 AC_CONFIG_FILES([Makefile
 		 hkl/Makefile
 		 hkl/ccan/Makefile
