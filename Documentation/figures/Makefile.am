@@ -24,7 +24,7 @@ dist_noinst_DATA = \
 	e2k_4.png \
 	qper_qpar.png
 
-CLEANFILES = $(dist_noinst_DATA)
+MAINTAINERCLEANFILES = $(dist_noinst_DATA)
 
 EXTRA_DIST = \
 	3S+1D.asy \
