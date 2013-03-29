@@ -36,8 +36,8 @@
 #include <hkl/hkl-pseudoaxis-petra3-private.h>
 
 
-typedef HklGeometry* (* HklFactoryGeometryFunction) (HklFactory *self);
-typedef HklEngineList* (* HklFactoryEngineListFunction) (HklFactory *self);
+typedef HklGeometry* (* HklFactoryGeometryFunction) (const HklGeometryConfig *config);
+typedef HklEngineList* (* HklFactoryEngineListFunction) (const HklGeometryConfig *config);
 
 struct _HklFactory
 {
@@ -51,56 +51,28 @@ const char *hkl_factory_name(const HklFactory *self)
 	return self->config.name;
 }
 
-HklGeometry *hkl_factory_create_new_geometry(HklFactory *self)
+HklGeometry *hkl_factory_create_new_geometry(const HklFactory *self)
 {
-	return self->create_new_geometry(self);
+	return self->create_new_geometry(&self->config);
 }
 
-HklEngineList *hkl_factory_create_new_engine_list(HklFactory *self)
+HklEngineList *hkl_factory_create_new_engine_list(const HklFactory *self)
 {
-	return self->create_new_engine_list(self);
+	return self->create_new_engine_list(&self->config);
 }
-
-#define CREATE_CONSTRUCTOR(name, type, description)			\
-	static HklGeometry *create_new_geometry_ ## name (HklFactory *factory) \
-	{								\
-		HklGeometry *geometry;					\
-		geometry = hkl_geometry_new();				\
-		hkl_geometry_init_ ## name (geometry, &factory->config); \
-			return geometry;				\
-	}
-
-#define CREATE_CONSTRUCTOR_KAPPA(name, type, description, alpha)	\
-	static HklGeometry *create_new_geometry_ ## name (HklFactory *factory) \
-	{								\
-		HklGeometry *geometry;					\
-		geometry = hkl_geometry_new();				\
-		hkl_geometry_init_ ## name (geometry, &factory->config, alpha); \
-			return geometry;				\
-	}
 
 #define CREATE_ENGINE_LIST_CONSTRUCTOR(name) \
-	static HklEngineList *create_new_engine_list_ ## name (HklFactory *factory) \
+	static HklEngineList *create_new_engine_list_ ## name (const HklGeometryConfig *config) \
 	{								\
-		return hkl_engine_list_factory(&factory->config);	\
+		return hkl_engine_list_factory(config);			\
 	}
 	
 #define REGISTER_DIFFRACTOMETER(name_, real_name_, type_, description_)	\
-	CREATE_CONSTRUCTOR(name_, type_, description_);			\
 	CREATE_ENGINE_LIST_CONSTRUCTOR(name_);				\
 	static HklFactory name_ = {.config = {.name = real_name_, .type = type_,	.description = description_}, \
-					    .create_new_geometry = &create_new_geometry_ ## name_, \
+					    .create_new_geometry = &hkl_geometry_new_ ## name_, \
 					    .create_new_engine_list = &create_new_engine_list_ ## name_ \
 	};\
-	AUTODATA(factories, &name_)
-
-#define REGISTER_DIFFRACTOMETER_KAPPA(name_, real_name_, type_, description_, alpha) \
-	CREATE_CONSTRUCTOR_KAPPA(name_, type_, description_, alpha);	\
-	CREATE_ENGINE_LIST_CONSTRUCTOR(name_);				\
-	static HklFactory name_ = {.config = {.name = real_name_, .type = type_,	.description = description_}, \
-					    .create_new_geometry = &create_new_geometry_ ## name_, \
-					    .create_new_engine_list = &create_new_engine_list_ ## name_ \
-	};								\
 	AUTODATA(factories, &name_)
 
 static void kappa_2_kappap(double komega, double kappa, double kphi, double alpha,
@@ -251,9 +223,9 @@ HklEngineList *hkl_engine_list_factory(const HklGeometryConfig *config)
 /* TwoC */
 /********/
 
-static void hkl_geometry_init_twoC(HklGeometry *self,
-				   const HklGeometryConfig *config)
+static HklGeometry *hkl_geometry_new_twoC(const HklGeometryConfig *config)
 {
+	HklGeometry *self = hkl_geometry_new();
 	HklHolder *h;
 
 	self->config = config;
@@ -262,15 +234,17 @@ static void hkl_geometry_init_twoC(HklGeometry *self,
 
 	h = hkl_geometry_add_holder(self);
 	hkl_holder_add_rotation_axis(h, "tth", 0, -1, 0);
+
+	return self;
 }
 
 /********/
 /* E4CV */
 /********/
 
-static void hkl_geometry_init_eulerian4C_vertical(HklGeometry *self,
-				   const HklGeometryConfig *config)
+static HklGeometry *hkl_geometry_new_eulerian4C_vertical(const HklGeometryConfig *config)
 {
+	HklGeometry *self = hkl_geometry_new();
 	HklHolder *h;
 
 	self->config = config;
@@ -281,11 +255,14 @@ static void hkl_geometry_init_eulerian4C_vertical(HklGeometry *self,
 
 	h = hkl_geometry_add_holder(self);
 	hkl_holder_add_rotation_axis(h, "tth", 0, -1, 0);
+
+	return self;
 }
 
-static void hkl_geometry_init_kappa4C_vertical(HklGeometry *self,
-					       const HklGeometryConfig *config, double alpha)
+static HklGeometry *hkl_geometry_new_kappa4C_vertical(const HklGeometryConfig *config)
 {
+	HklGeometry *self = hkl_geometry_new();
+	double alpha = 50 * HKL_DEGTORAD;
 	HklHolder *h;
 
 	self->config = config;
@@ -296,11 +273,13 @@ static void hkl_geometry_init_kappa4C_vertical(HklGeometry *self,
 
 	h = hkl_geometry_add_holder(self);
 	hkl_holder_add_rotation_axis(h, "tth", 0, -1, 0);
+
+	return self;
 }
 
-static void hkl_geometry_init_eulerian6C(HklGeometry *self,
-					 const HklGeometryConfig *config)
+static HklGeometry *hkl_geometry_new_eulerian6C(const HklGeometryConfig *config)
 {
+	HklGeometry *self = hkl_geometry_new();
 	HklHolder *h;
 
 	self->config = config;
@@ -313,11 +292,14 @@ static void hkl_geometry_init_eulerian6C(HklGeometry *self,
 	h = hkl_geometry_add_holder(self);
 	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1);
 	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
+
+	return self;
 }
 
-static void hkl_geometry_init_kappa6C(HklGeometry *self,
-				      const  HklGeometryConfig *config, double alpha)
+static HklGeometry *hkl_geometry_new_kappa6C(const HklGeometryConfig *config)
 {
+	HklGeometry *self = hkl_geometry_new();
+	double alpha = 50 * HKL_DEGTORAD;
 	HklHolder *h;
 
 	self->config = config;
@@ -330,11 +312,13 @@ static void hkl_geometry_init_kappa6C(HklGeometry *self,
 	h = hkl_geometry_add_holder(self);
 	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1);
 	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
+
+	return self;
 }
 
-static void hkl_geometry_init_zaxis(HklGeometry *self,
-				    const HklGeometryConfig *config)
+static HklGeometry *hkl_geometry_new_zaxis(const HklGeometryConfig *config)
 {
+	HklGeometry *self = hkl_geometry_new();
 	HklHolder *h;
 
 	self->config = config;
@@ -346,11 +330,13 @@ static void hkl_geometry_init_zaxis(HklGeometry *self,
 	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
 	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
 	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1);
+
+	return self;
 }
 
-static void hkl_geometry_init_soleil_sixs_med_2_2(HklGeometry *self,
-						  const HklGeometryConfig *config)
+static HklGeometry *hkl_geometry_new_soleil_sixs_med_2_2(const HklGeometryConfig *config)
 {
+	HklGeometry *self = hkl_geometry_new();
 	HklHolder *h;
 
 	self->config = config;
@@ -363,11 +349,13 @@ static void hkl_geometry_init_soleil_sixs_med_2_2(HklGeometry *self,
 	hkl_holder_add_rotation_axis(h, "beta", 0, -1, 0);
 	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1);
 	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
+
+	return self;
 }
 
-static void hkl_geometry_init_soleil_mars(HklGeometry *self,
-					  const HklGeometryConfig *config)
+static HklGeometry *hkl_geometry_new_soleil_mars(const HklGeometryConfig *config)
 {
+	HklGeometry *self = hkl_geometry_new();
 	HklHolder *h;
 
 	self->config = config;
@@ -378,11 +366,13 @@ static void hkl_geometry_init_soleil_mars(HklGeometry *self,
 
 	h = hkl_geometry_add_holder(self);
 	hkl_holder_add_rotation_axis(h, "tth", 0, -1, 0);
+
+	return self;
 }
 
-static void hkl_geometry_init_soleil_sixs_med_1_2(HklGeometry *self,
-						  const HklGeometryConfig *config)
+static HklGeometry *hkl_geometry_new_soleil_sixs_med_1_2(const HklGeometryConfig *config)
 {
+	HklGeometry *self = hkl_geometry_new();
 	HklHolder *h;
 
 	self->config = config;
@@ -394,11 +384,13 @@ static void hkl_geometry_init_soleil_sixs_med_1_2(HklGeometry *self,
 	hkl_holder_add_rotation_axis(h, "pitch", 0, -1, 0);
 	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1);
 	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
+
+	return self;
 }
 
-static void hkl_geometry_init_petra3_p09_eh2(HklGeometry *self,
-					     const HklGeometryConfig *config)
+static HklGeometry *hkl_geometry_new_petra3_p09_eh2(const HklGeometryConfig *config)
 {
+	HklGeometry *self = hkl_geometry_new();
 	HklHolder *h;
 
 	self->config = config;
@@ -412,11 +404,13 @@ static void hkl_geometry_init_petra3_p09_eh2(HklGeometry *self,
 	hkl_holder_add_rotation_axis(h, "mu", 0, -1, 0);
 	hkl_holder_add_rotation_axis(h, "delta", 0, 0, 1);
 	hkl_holder_add_rotation_axis(h, "gamma", 0, -1, 0);
+
+	return self;
 }
 
-static void hkl_geometry_init_soleil_sixs_med_2_3(HklGeometry *self,
-						  const HklGeometryConfig *config)
+static HklGeometry *hkl_geometry_new_soleil_sixs_med_2_3(const HklGeometryConfig *config)
 {
+	HklGeometry *self = hkl_geometry_new();
 	HklHolder *h;
 
 	self->config = config;
@@ -430,11 +424,13 @@ static void hkl_geometry_init_soleil_sixs_med_2_3(HklGeometry *self,
 	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1);
 	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
 	hkl_holder_add_rotation_axis(h, "eta_a", -1, 0, 0);
+
+	return self;
 }
 
-static void hkl_geometry_init_eulerian4C_horizontal(HklGeometry *self,
-						    const HklGeometryConfig *config)
+static HklGeometry *hkl_geometry_new_eulerian4C_horizontal(const HklGeometryConfig *config)
 {
+	HklGeometry *self = hkl_geometry_new();
 	HklHolder *h;
 
 	self->config = config;
@@ -445,6 +441,8 @@ static void hkl_geometry_init_eulerian4C_horizontal(HklGeometry *self,
 
 	h = hkl_geometry_add_holder(self);
 	hkl_holder_add_rotation_axis(h, "tth", 0, 0, 1);
+
+	return self;
 }
 
 /**
@@ -516,58 +514,39 @@ HklGeometry *hkl_geometry_factory_new(const HklGeometryConfig *config, ...)
 HklGeometry *hkl_geometry_factory_newv(const HklGeometryConfig *config,
 				       const double parameters[], const int len)
 {
-	HklGeometry *geometry;
-	double alpha;
-
-	geometry = hkl_geometry_new();
 	switch(config->type) {
 	case HKL_GEOMETRY_TYPE_TWOC_VERTICAL:
-		hkl_geometry_init_twoC(geometry, config);
-		break;
+		return hkl_geometry_new_twoC(config);
 	case HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL:
-		hkl_geometry_init_eulerian4C_vertical(geometry, config);
-		break;
+		return hkl_geometry_new_eulerian4C_vertical(config);
 	case HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL:
-		alpha = parameters[0];
-		hkl_geometry_init_kappa4C_vertical(geometry, config, alpha);
-		break;
+		return hkl_geometry_new_kappa4C_vertical(config);
 	case HKL_GEOMETRY_TYPE_EULERIAN6C:
-		hkl_geometry_init_eulerian6C(geometry, config);
-		break;
+		return hkl_geometry_new_eulerian6C(config);
 	case HKL_GEOMETRY_TYPE_KAPPA6C:
-		alpha = parameters[0];
-		hkl_geometry_init_kappa6C(geometry, config, alpha);
-		break;
+		return hkl_geometry_new_kappa6C(config);
 	case HKL_GEOMETRY_TYPE_ZAXIS:
-		hkl_geometry_init_zaxis(geometry, config);
-		break;
+		return hkl_geometry_new_zaxis(config);
 	case HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_2:
-		hkl_geometry_init_soleil_sixs_med_2_2(geometry, config);
-		break;
+		return hkl_geometry_new_soleil_sixs_med_2_2(config);
 	case HKL_GEOMETRY_TYPE_SOLEIL_MARS:
-		hkl_geometry_init_soleil_mars(geometry, config);
-		break;
+		return hkl_geometry_new_soleil_mars(config);
 	case HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2:
-		hkl_geometry_init_soleil_sixs_med_1_2(geometry, config);
-		break;
+		return hkl_geometry_new_soleil_sixs_med_1_2(config);
 	case HKL_GEOMETRY_TYPE_PETRA3_P09_EH2:
-		hkl_geometry_init_petra3_p09_eh2(geometry, config);
-		break;
+		return hkl_geometry_new_petra3_p09_eh2(config);
 	case HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_3:
-		hkl_geometry_init_soleil_sixs_med_2_3(geometry, config);
-		break;
+		return hkl_geometry_new_soleil_sixs_med_2_3(config);
 	case HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL:
-		hkl_geometry_init_eulerian4C_horizontal(geometry, config);
-		break;
+		return hkl_geometry_new_eulerian4C_horizontal(config);
 	}
-	return geometry;
 }
 
 REGISTER_DIFFRACTOMETER(twoC, "TwoC", HKL_GEOMETRY_TYPE_TWOC_VERTICAL, HKL_GEOMETRY_TWOC_DESCRIPTION);
 REGISTER_DIFFRACTOMETER(eulerian4C_vertical, "E4CV", HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL, HKL_GEOMETRY_EULERIAN4C_VERTICAL_DESCRIPTION);
-REGISTER_DIFFRACTOMETER_KAPPA(kappa4C_vertical, "K4CV", HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL, HKL_GEOMETRY_KAPPA4C_VERTICAL_DESCRIPTION, 50 * HKL_DEGTORAD);
+REGISTER_DIFFRACTOMETER(kappa4C_vertical, "K4CV", HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL, HKL_GEOMETRY_KAPPA4C_VERTICAL_DESCRIPTION);
 REGISTER_DIFFRACTOMETER(eulerian6C, "E6C", HKL_GEOMETRY_TYPE_EULERIAN6C, HKL_GEOMETRY_EULERIAN6C_DESCRIPTION);
-REGISTER_DIFFRACTOMETER_KAPPA(kappa6C, "K6C", HKL_GEOMETRY_TYPE_KAPPA6C, HKL_GEOMETRY_KAPPA6C_DESCRIPTION, 50 * HKL_DEGTORAD);
+REGISTER_DIFFRACTOMETER(kappa6C, "K6C", HKL_GEOMETRY_TYPE_KAPPA6C, HKL_GEOMETRY_KAPPA6C_DESCRIPTION);
 REGISTER_DIFFRACTOMETER(zaxis, "ZAXIS", HKL_GEOMETRY_TYPE_ZAXIS, HKL_GEOMETRY_TYPE_ZAXIS_DESCRIPTION);
 REGISTER_DIFFRACTOMETER(soleil_sixs_med_2_2,"SOLEIL SIXS MED2+2", HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_2, HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_2_DESCRIPTION);
 REGISTER_DIFFRACTOMETER(soleil_mars, "SOLEIL MARS", HKL_GEOMETRY_TYPE_SOLEIL_MARS, HKL_GEOMETRY_TYPE_SOLEIL_MARS_DESCRIPTION);

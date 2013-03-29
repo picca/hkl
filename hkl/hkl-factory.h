@@ -31,9 +31,9 @@ typedef struct _HklFactory HklFactory;
 
 extern const char *hkl_factory_name(const HklFactory *self);
 
-extern HklGeometry *hkl_factory_create_new_geometry(HklFactory *self);
+extern HklGeometry *hkl_factory_create_new_geometry(const HklFactory *self);
 
-extern HklEngineList *hkl_factory_create_new_engine_list(HklFactory *self);
+extern HklEngineList *hkl_factory_create_new_engine_list(const HklFactory *self);
 
 #define HKL_GEOMETRY_TWOC_DESCRIPTION					\
 	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
