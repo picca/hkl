@@ -154,8 +154,8 @@ static int find_first_geometry(HklEngine *self,
 		fprintf(stdout, "\n");
 		for(i=0; i<len; ++i)
 			fprintf(stdout, "\t f(%d)", i);
-		list_for_each(&self->axes, axis, engine_list){
-			fprintf(stdout, "\t \"%s\"", axis->parameter.name);
+		darray_foreach(axis, self->axes){
+			fprintf(stdout, "\t \"%s\"", (*axis)->name);
 		}
 #endif
 		/* set the geometry from the gsl_vector */
