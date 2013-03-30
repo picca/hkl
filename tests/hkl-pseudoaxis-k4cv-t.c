@@ -30,7 +30,7 @@ static void degenerated(void)
 	HklEngine *engine;
 	HklMode **mode;
 	darray_mode *modes;
-	const HklGeometryConfig *config;
+	const HklFactory *factory;
 	HklGeometry *geom;
 	const HklGeometryList *geometries;
 	HklDetector *detector;
@@ -39,14 +39,14 @@ static void degenerated(void)
 	HklParameterList *pseudo_axes;
 	HklParameterList *parameters;
 
-	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL);
-	geom = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
+	factory = hkl_factory_get_by_name("K4CV");
+	geom = hkl_factory_create_new_geometry(factory);
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_engine_list_factory(config);
+	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geom, detector, sample);
 	geometries = hkl_engine_list_geometries(engines);
 
@@ -93,7 +93,7 @@ static void eulerians(void)
 	HklEngine *engine;
 	HklMode **mode;
 	darray_mode *modes;
-	const HklGeometryConfig *config;
+	const HklFactory *factory;
 	HklGeometry *geom;
 	const HklGeometryList *geometries;
 	HklDetector *detector;
@@ -101,14 +101,14 @@ static void eulerians(void)
 	static double eulerians[] = {0., 90 * HKL_DEGTORAD, 0.};
 	HklParameterList *pseudo_axes;
 
-	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL);
-	geom = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
+	factory = hkl_factory_get_by_name("K4CV");
+	geom = hkl_factory_create_new_geometry(factory);
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_engine_list_factory(config);
+	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geom, detector, sample);
 	geometries = hkl_engine_list_geometries(engines);
 
@@ -162,20 +162,20 @@ static void q(void)
 	HklEngine *engine;
 	HklMode **mode;
 	darray_mode *modes;
-	const HklGeometryConfig *config;
+	const HklFactory *factory;
 	HklGeometry *geom;
 	const HklGeometryList *geometries;
 	HklDetector *detector;
 	HklSample *sample;
 
-	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL);
-	geom = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
+	factory = hkl_factory_get_by_name("K4CV");
+	geom = hkl_factory_create_new_geometry(factory);
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_engine_list_factory(config);
+	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geom, detector, sample);
 	geometries = hkl_engine_list_geometries(engines);
 

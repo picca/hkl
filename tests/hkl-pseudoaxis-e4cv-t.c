@@ -28,19 +28,19 @@ static void getter(void)
 	int res = HKL_TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
-	const HklGeometryConfig *config;
+	const HklFactory *factory;
 	HklGeometry *geom;
 	HklDetector *detector;
 	HklSample *sample;
 
-	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
-	geom = hkl_geometry_factory_new(config);
+	factory = hkl_factory_get_by_name("E4CV");
+	geom = hkl_factory_create_new_geometry(factory);
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_engine_list_factory(config);
+	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geom, detector, sample);
 
 	engine = hkl_engine_list_get_by_name(engines, "hkl");
@@ -81,20 +81,20 @@ static void degenerated(void)
 	HklEngine *engine;
 	HklMode **mode;
 	darray_mode *modes;
-	const HklGeometryConfig *config;
+	const HklFactory *factory;
 	HklGeometry *geometry;
 	HklDetector *detector;
 	HklSample *sample;
 	const HklGeometryList *geometries;
 
-	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
-	geometry = hkl_geometry_factory_new(config);
+	factory = hkl_factory_get_by_name("E4CV");
+	geometry = hkl_factory_create_new_geometry(factory);
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_engine_list_factory(config);
+	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geometry, detector, sample);
 	geometries = hkl_engine_list_geometries(engines);
 
@@ -142,20 +142,20 @@ static void psi_getter(void)
 	HklEngine *engine;
 	HklMode *mode;
 	HklParameterList *parameters;
-	const HklGeometryConfig *config;
+	const HklFactory *factory;
 	HklGeometry *geom;
 	HklDetector *detector;
 	HklSample *sample;
 	double hkl[3];
 
-	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
-	geom = hkl_geometry_factory_new(config);
+	factory = hkl_factory_get_by_name("E4CV");
+	geom = hkl_factory_create_new_geometry(factory);
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_engine_list_factory(config);
+	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geom, detector, sample);
 
 	engine = hkl_engine_list_get_by_name(engines, "psi");
@@ -219,21 +219,21 @@ static void psi_setter(void)
 	HklMode **mode;
 	darray_mode *modes;
 	HklParameterList *parameters;
-	const HklGeometryConfig *config;
+	const HklFactory *factory;
 	HklGeometry *geometry;
 	HklDetector *detector;
 	HklSample *sample;
 	static double hkl[] = {1, 0, 0};
 	const HklGeometryList *geometries;
 
-	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
-	geometry = hkl_geometry_factory_new(config);
+	factory = hkl_factory_get_by_name("E4CV");
+	geometry = hkl_factory_create_new_geometry(factory);
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_engine_list_factory(config);
+	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geometry, detector, sample);
 	geometries = hkl_engine_list_geometries(engines);
 
@@ -284,20 +284,20 @@ static void q(void)
 	HklEngine *engine;
 	HklMode **mode;
 	darray_mode *modes;
-	const HklGeometryConfig *config;
+	const HklFactory *factory;
 	HklGeometry *geometry;
 	HklDetector *detector;
 	HklSample *sample;
 	const HklGeometryList *geometries;
 
-	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
-	geometry = hkl_geometry_factory_new(config);
+	factory = hkl_factory_get_by_name("E4CV");
+	geometry = hkl_factory_create_new_geometry(factory);
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_engine_list_factory(config);
+	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geometry, detector, sample);
 	geometries = hkl_engine_list_geometries(engines);
 
@@ -343,7 +343,7 @@ static void hkl_psi_constant_vertical(void)
 	int res = HKL_TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
-	const HklGeometryConfig *config;
+	const HklFactory *factory;
 	HklGeometry *geometry;
 	const HklGeometryList *geometries;
 	HklDetector *detector;
@@ -354,14 +354,14 @@ static void hkl_psi_constant_vertical(void)
 	HklMode *mode;
 	HklParameterList *parameters;
 
-	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
-	geometry = hkl_geometry_factory_new(config);
+	factory = hkl_factory_get_by_name("E4CV");
+	geometry = hkl_factory_create_new_geometry(factory);
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_engine_list_factory(config);
+	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geometry, detector, sample);
 	geometries = hkl_engine_list_geometries(engines);
 

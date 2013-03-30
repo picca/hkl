@@ -133,12 +133,12 @@ static void check_no_collision(Hkl3D *hkl3d)
 int main(int argc, char** argv)
 {
 	char* filename;
-	const HklGeometryConfig *config;
+	const HklFactory *factory;
 	HklGeometry *geometry;
 	Hkl3D *hkl3d;
 
-	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_KAPPA6C);
-	geometry = hkl_geometry_factory_new(config, HKL_DEGTORAD * 50.);
+	factory = hkl_factory_get_by_name("K6C");
+	geometry = hkl_factory_create_new_geometry(factory);
 
 	/* compute the filename of the diffractometer config file */
 	filename  = test_file_path(MODEL_FILENAME);

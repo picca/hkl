@@ -21,6 +21,7 @@
  */
 
 #include "hkl-gui.h"
+#include "hkl-factory.h"
 
 HKLWindow::HKLWindow(void)
 {
@@ -331,18 +332,20 @@ void HKLWindow::set_up_pseudo_axes_frames(void)
 
 void HKLWindow::set_up_diffractometer_model(void)
 {
-	size_t i;
+	unsigned int i;
+	unsigned int n;
+	HklFactory **factories;
 
 	if(_diffractometerModelColumns)
 		delete _diffractometerModelColumns;
 	_diffractometerModelColumns = new DiffractometerModelColumns();
 
-	i = 0;
-	while(hkl_geometry_factory_configs[i].name){
+	factories = hkl_factory_get_all(&n);
+	for (i=0; i<n; ++i){
 		Gtk::ListStore::Row row;
 
 		row = *(_diffractometerModel->append());
-		row[_diffractometerModelColumns->name] = hkl_geometry_factory_configs[i++].name;
+		row[_diffractometerModelColumns->name] = hkl_factory_name(factories[i]);
 	}
 }
 

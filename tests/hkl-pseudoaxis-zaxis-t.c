@@ -28,7 +28,7 @@ static void solution(void)
 	int res = HKL_TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
-	const HklGeometryConfig *config;
+	const HklFactory *factory;
 	HklGeometry *geometry;
 	const HklGeometryList *geometries;
 	HklDetector *detector;
@@ -37,8 +37,8 @@ static void solution(void)
 	HklParameterList *pseudo_axes;
 
 	/* get the geometry and set the source */
-	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_ZAXIS);
-	geometry = hkl_geometry_factory_new(config);
+	factory = hkl_factory_get_by_name("ZAXIS");
+	geometry = hkl_factory_create_new_geometry(factory);
 	hkl_source_init(&geometry->source, 0.842, 1, 0, 0);
 
 	/* set up the sample */
@@ -55,7 +55,7 @@ static void solution(void)
 	detector->idx = 1;
 
 	/* select the hkl pseudo axis */
-	engines = hkl_engine_list_factory(config);
+	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geometry, detector, sample);
 	geometries = hkl_engine_list_geometries(engines);
 	engine = hkl_engine_list_get_by_name(engines, "hkl");

@@ -460,17 +460,6 @@ do nothing.</doc>
           </parameter>
         </parameters>
       </method>
-      <function name="factory" c:identifier="hkl_engine_list_factory">
-        <doc xml:whitespace="preserve">create an #HklEngineList given an #HklGeometryConfig</doc>
-        <return-value transfer-ownership="full">
-          <type name="EngineList" c:type="HklEngineList*"/>
-        </return-value>
-        <parameters>
-          <parameter name="config" transfer-ownership="none">
-            <type name="GeometryConfig" c:type="HklGeometryConfig*"/>
-          </parameter>
-        </parameters>
-      </function>
       <function name="fprintf"
                 c:identifier="hkl_engine_list_fprintf"
                 introspectable="0">
@@ -723,207 +712,31 @@ control over, that could include printf() escape sequences.</doc>
           <type name="utf8" c:type="char*"/>
         </return-value>
       </method>
+      <function name="get_all"
+                c:identifier="hkl_factory_get_all"
+                introspectable="0">
+        <return-value>
+          <type name="Factory" c:type="HklFactory**"/>
+        </return-value>
+        <parameters>
+          <parameter name="n" transfer-ownership="none">
+            <type name="guint" c:type="unsigned int*"/>
+          </parameter>
+        </parameters>
+      </function>
+      <function name="get_by_name"
+                c:identifier="hkl_factory_get_by_name"
+                introspectable="0">
+        <return-value>
+          <type name="Factory" c:type="HklFactory*"/>
+        </return-value>
+        <parameters>
+          <parameter name="name" transfer-ownership="none">
+            <type name="utf8" c:type="char*"/>
+          </parameter>
+        </parameters>
+      </function>
     </record>
-    <constant name="GEOMETRY_EULERIAN4C_VERTICAL_DESCRIPTION"
-              value="+ xrays source fix allong the :math:`\vec{x}` direction (1, 0, 0)
-+ 3 axes for the sample
-
-  + **omega** : rotating around the :math:`-\vec{y}` direction (0, -1, 0)
-  + **chi** : rotating around the :math:`\vec{x}` direction (1, 0, 0)
-  + **phi** : rotating around the :math:`-\vec{y}` direction (0, -1, 0)
-
-+ 1 axis for the detector
-
-  + **tth** : rotation around the :math:`-\vec{y}` direction (0, -1, 0)
-"
-              c:type="HKL_GEOMETRY_EULERIAN4C_VERTICAL_DESCRIPTION">
-      <type name="utf8" c:type="gchar*"/>
-    </constant>
-    <constant name="GEOMETRY_EULERIAN6C_DESCRIPTION"
-              value="+ xrays source fix allong the :math:`\vec{x}` direction (1, 0, 0)
-+ 4 axes for the sample
-
-  + **mu** : rotating around the :math:`\vec{z}` direction (0, 0, 1)
-  + **omega** : rotating around the :math:`-\vec{y}` direction (0, -1, 0)
-  + **chi** : rotating around the :math:`\vec{x}` direction (1, 0, 0)
-  + **phi** : rotating around the :math:`-\vec{y}` direction (0, -1, 0)
-
-+ 2 axes for the detector
-
-  + **gamma** : rotation around the :math:`\vec{z}` direction (0, 0, 1)
-  + **delta** : rotation around the :math:`-\vec{y}` direction (0, -1, 0)
-"
-              c:type="HKL_GEOMETRY_EULERIAN6C_DESCRIPTION">
-      <type name="utf8" c:type="gchar*"/>
-    </constant>
-    <constant name="GEOMETRY_KAPPA4C_VERTICAL_DESCRIPTION"
-              value="For this geometry there is a special parameters called :math:`\alpha` which is the
-angle between the kappa rotation axis and the  :math:`\vec{y}` direction.
-
-+ xrays source fix allong the :math:`\vec{x}` direction (1, 0, 0)
-+ 3 axes for the sample
-
-  + **komega** : rotating around the :math:`-\vec{y}` direction (0, -1, 0)
-  + **kappa** : rotating around the :math:`\vec{x}` direction (0, :math:`-\cos\alpha`, :math:`-\sin\alpha`)
-  + **kphi** : rotating around the :math:`-\vec{y}` direction (0, -1, 0)
-
-+ 1 axis for the detector
-
-  + **tth** : rotation around the :math:`-\vec{y}` direction (0, -1, 0)
-"
-              c:type="HKL_GEOMETRY_KAPPA4C_VERTICAL_DESCRIPTION">
-      <type name="utf8" c:type="gchar*"/>
-    </constant>
-    <constant name="GEOMETRY_KAPPA6C_DESCRIPTION"
-              value="For this geometry there is a special parameters called :math:`\alpha` which is the
-angle between the kappa rotation axis and the  :math:`\vec{y}` direction.
-
-+ xrays source fix allong the :math:`\vec{x}` direction (1, 0, 0)
-+ 4 axes for the sample
-
-  + **mu** : rotating around the :math:`\vec{z}` direction (0, 0, 1)
-  + **komega** : rotating around the :math:`-\vec{y}` direction (0, -1, 0)
-  + **kappa** : rotating around the :math:`\vec{x}` direction (0, :math:`-\cos\alpha`, :math:`-\sin\alpha`)
-  + **kphi** : rotating around the :math:`-\vec{y}` direction (0, -1, 0)
-
-+ 2 axes for the detector
-
-  + **gamma** : rotation around the :math:`\vec{z}` direction (0, 0, 1)
-  + **delta** : rotation around the :math:`-\vec{y}` direction (0, -1, 0)
-"
-              c:type="HKL_GEOMETRY_KAPPA6C_DESCRIPTION">
-      <type name="utf8" c:type="gchar*"/>
-    </constant>
-    <constant name="GEOMETRY_TWOC_DESCRIPTION"
-              value="+ xrays source fix allong the :math:`\vec{x}` direction (1, 0, 0)
-+ 1 axes for the sample
-
-  + **omega** : rotating around the :math:`-\vec{y}` direction (0, -1, 0)
-
-+ 1 axis for the detector
-
-  + **tth** : rotation around the :math:`-\vec{y}` direction (0, -1, 0)
-"
-              c:type="HKL_GEOMETRY_TWOC_DESCRIPTION">
-      <type name="utf8" c:type="gchar*"/>
-    </constant>
-    <constant name="GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL_DESCRIPTION"
-              value="+ xrays source fix allong the :math:`\vec{x}` direction (1, 0, 0)
-+ 3 axes for the sample
-
-  + **omega** : rotating around the :math:`\vec{z}` direction (0, 0, 1)
-  + **chi** : rotating around the :math:`\vec{x}` direction (1, 0, 0)
-  + **phi** : rotating around the :math:`\vec{z}` direction (0, 0, 1)
-
-+ 1 axis for the detector
-
-  + **tth** : rotation around the :math:`\vec{z}` direction (0, 0, 1)
-"
-              c:type="HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL_DESCRIPTION">
-      <type name="utf8" c:type="gchar*"/>
-    </constant>
-    <constant name="GEOMETRY_TYPE_PETRA3_P09_EH2_DESCRIPTION"
-              value="+ xrays source fix allong the :math:`\vec{x}` direction (1, 0, 0)
-+ 4 axes for the sample
-
-  + **mu** : rotation around the :math:`-\vec{y}` direction (0, -1, 0)
-  + **omega** : rotation around the :math:`\vec{z}` direction (0, 0, 1)
-  + **chi** : rotating around the :math:`\vec{x}` direction (1, 0, 0)
-  + **phi** : rotating around the :math:`\vec{z}` direction (0, 0, 1)
-
-+ 3 axis for the detector
-
-  + **mu** : rotation around the :math:`-\vec{y}` direction (0, -1, 0)
-  + **delta** : rotation around the :math:`\vec{z}` direction (0, 0, 1)
-  + **gamma** : rotation around the :math:`-\vec{y}` direction (0, -1, 0)
-"
-              c:type="HKL_GEOMETRY_TYPE_PETRA3_P09_EH2_DESCRIPTION">
-      <type name="utf8" c:type="gchar*"/>
-    </constant>
-    <constant name="GEOMETRY_TYPE_SOLEIL_MARS_DESCRIPTION"
-              value="+ xrays source fix allong the :math:`\vec{x}` direction (1, 0, 0)
-+ 3 axes for the sample
-
-  + **omega** : rotating around the :math:`\vec{z}` direction (0, -1, 0)
-  + **chi** : rotating around the :math:`\vec{x}` direction (-1, 0, 0)
-  + **phi** : rotating around the :math:`\vec{z}` direction (0, 0, 1)
-
-+ 1 axis for the detector
-
-  + **tth** : rotation around the :math:`\vec{z}` direction (0, -1, 0)
-"
-              c:type="HKL_GEOMETRY_TYPE_SOLEIL_MARS_DESCRIPTION">
-      <type name="utf8" c:type="gchar*"/>
-    </constant>
-    <constant name="GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2_DESCRIPTION"
-              value="+ xrays source fix allong the :math:`\vec{x}` direction (1, 0, 0)
-+ 2 axes for the sample
-
-  + **pitch** : rotation around the :math:`-\vec{y}` direction (0, -1, 0)
-  + **mu** : rotation around the :math:`\vec{z}` direction (0, 0, 1)
-
-+ 3 axis for the detector
-
-  + **pitch** : rotation around the :math:`-\vec{y}` direction (0, -1, 0)
-  + **gamma** : rotation around the :math:`\vec{z}` direction (0, 0, 1)
-  + **delta** : rotation around the :math:`-\vec{y}` direction (0, -1, 0)
-"
-              c:type="HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2_DESCRIPTION">
-      <type name="utf8" c:type="gchar*"/>
-    </constant>
-    <constant name="GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_2_DESCRIPTION"
-              value="+ xrays source fix allong the :math:`\vec{x}` direction (1, 0, 0)
-+ 3 axes for the sample
-
-  + **beta** : rotation around the :math:`-\vec{y}` direction (0, -1, 0)
-  + **mu** : rotation around the :math:`\vec{z}` direction (0, 0, 1)
-  + **omega** : rotating around the :math:`-\vec{y}` direction (0, -1, 0)
-
-+ 3 axis for the detector
-
-  + **beta** : rotation around the :math:`-\vec{y}` direction (0, -1, 0)
-  + **gamma** : rotation around the :math:`\vec{z}` direction (0, 0, 1)
-  + **delta** : rotation around the :math:`-\vec{y}` direction (0, -1, 0)
-"
-              c:type="HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_2_DESCRIPTION">
-      <type name="utf8" c:type="gchar*"/>
-    </constant>
-    <constant name="GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_3_DESCRIPTION"
-              value="+ xrays source fix allong the :math:`\vec{x}` direction (1, 0, 0)
-+ 3 axes for the sample
-
-  + **beta** : rotation around the :math:`-\vec{y}` direction (0, -1, 0)
-  + **mu** : rotation around the :math:`\vec{z}` direction (0, 0, 1)
-  + **omega** : rotating around the :math:`-\vec{y}` direction (0, -1, 0)
-
-+ 4 axis for the detector
-
-  + **beta** : rotation around the :math:`-\vec{y}` direction (0, -1, 0)
-  + **gamma** : rotation around the :math:`\vec{z}` direction (0, 0, 1)
-  + **delta** : rotation around the :math:`-\vec{y}` direction (0, -1, 0)
-  + **eta_a** : rotation around the :math:`-\vec{x}` direction (-1, 0, 0)
-"
-              c:type="HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_3_DESCRIPTION">
-      <type name="utf8" c:type="gchar*"/>
-    </constant>
-    <constant name="GEOMETRY_TYPE_ZAXIS_DESCRIPTION"
-              value="For this geometry the **mu** axis is common to the sample and the detector.
-
-+ xrays source fix allong the :math:`\vec{x}` direction (1, 0, 0)
-+ 2 axes for the sample
-
-  + **mu** : rotation around the :math:`\vec{z}` direction (0, 0, 1)
-  + **omega** : rotating around the :math:`-\vec{y}` direction (0, -1, 0)
-
-+ 3 axis for the detector
-
-  + **mu** : rotation around the :math:`\vec{z}` direction (0, 0, 1)
-  + **delta** : rotation around the :math:`-\vec{y}` direction (0, -1, 0)
-  + **gamma** : rotation around the :math:`\vec{z}` direction (0, 0, 1)
-"
-              c:type="HKL_GEOMETRY_TYPE_ZAXIS_DESCRIPTION">
-      <type name="utf8" c:type="gchar*"/>
-    </constant>
     <record name="Geometry"
             c:type="HklGeometry"
             glib:type-name="HklGeometry"
@@ -947,45 +760,6 @@ angle between the kappa rotation axis and the  :math:`\vec{y}` direction.
       <field name="holders_len" writable="1">
         <type name="gulong" c:type="size_t"/>
       </field>
-      <constructor name="factory_new"
-                   c:identifier="hkl_geometry_factory_new"
-                   introspectable="0">
-        <doc xml:whitespace="preserve">create an #HklGeometry given an #HklGeometryConfig</doc>
-        <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">a new #HklGeometry</doc>
-          <type name="Geometry" c:type="HklGeometry*"/>
-        </return-value>
-        <parameters>
-          <parameter name="config" transfer-ownership="none">
-            <type name="GeometryConfig" c:type="HklGeometryConfig*"/>
-          </parameter>
-          <parameter transfer-ownership="none">
-            <varargs>
-            </varargs>
-          </parameter>
-        </parameters>
-      </constructor>
-      <constructor name="factory_newv"
-                   c:identifier="hkl_geometry_factory_newv">
-        <doc xml:whitespace="preserve">factory constructor</doc>
-        <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">a new HklGeometry</doc>
-          <type name="Geometry" c:type="HklGeometry*"/>
-        </return-value>
-        <parameters>
-          <parameter name="config" transfer-ownership="none">
-            <type name="GeometryConfig" c:type="HklGeometryConfig*"/>
-          </parameter>
-          <parameter name="parameters" transfer-ownership="none">
-            <array length="2" zero-terminated="0" c:type="double">
-              <type name="gdouble" c:type="double"/>
-            </array>
-          </parameter>
-          <parameter name="len" transfer-ownership="none">
-            <type name="gint" c:type="int"/>
-          </parameter>
-        </parameters>
-      </constructor>
       <constructor name="new"
                    c:identifier="hkl_geometry_new"
                    introspectable="0">
@@ -1208,18 +982,6 @@ Returns:</doc>
           <type name="none" c:type="void"/>
         </return-value>
       </method>
-      <function name="factory_get_config_from_type"
-                c:identifier="hkl_geometry_factory_get_config_from_type">
-        <doc xml:whitespace="preserve">get am #HklGeometryConfig for a given #HklGeometryType</doc>
-        <return-value transfer-ownership="none">
-          <type name="GeometryConfig" c:type="HklGeometryConfig*"/>
-        </return-value>
-        <parameters>
-          <parameter name="type" transfer-ownership="none">
-            <type name="GeometryType" c:type="HklGeometryType"/>
-          </parameter>
-        </parameters>
-      </function>
       <function name="fprintf"
                 c:identifier="hkl_geometry_fprintf"
                 introspectable="0">
@@ -4031,19 +3793,6 @@ coordinate by coordinate.</doc>
         </parameter>
       </parameters>
     </function>
-    <function name="engine_list_factory"
-              c:identifier="hkl_engine_list_factory"
-              moved-to="EngineList.factory">
-      <doc xml:whitespace="preserve">create an #HklEngineList given an #HklGeometryConfig</doc>
-      <return-value transfer-ownership="full">
-        <type name="EngineList" c:type="HklEngineList*"/>
-      </return-value>
-      <parameters>
-        <parameter name="config" transfer-ownership="none">
-          <type name="GeometryConfig" c:type="HklGeometryConfig*"/>
-        </parameter>
-      </parameters>
-    </function>
     <function name="engine_list_fprintf"
               c:identifier="hkl_engine_list_fprintf"
               moved-to="EngineList.fprintf"
@@ -4215,19 +3964,6 @@ control over, that could include printf() escape sequences.</doc>
           <type name="Factory"/>
         </type>
       </return-value>
-    </function>
-    <function name="geometry_factory_get_config_from_type"
-              c:identifier="hkl_geometry_factory_get_config_from_type"
-              moved-to="Geometry.factory_get_config_from_type">
-      <doc xml:whitespace="preserve">get am #HklGeometryConfig for a given #HklGeometryType</doc>
-      <return-value transfer-ownership="none">
-        <type name="GeometryConfig" c:type="HklGeometryConfig*"/>
-      </return-value>
-      <parameters>
-        <parameter name="type" transfer-ownership="none">
-          <type name="GeometryType" c:type="HklGeometryType"/>
-        </parameter>
-      </parameters>
     </function>
     <function name="geometry_fprintf"
               c:identifier="hkl_geometry_fprintf"

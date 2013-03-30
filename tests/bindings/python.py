@@ -65,9 +65,8 @@ class TestAPI(unittest.TestCase):
 
         # get the config for a given geometry and create the
         # corresponding HklGeometry
-        config = Hkl.geometry_factory_get_config_from_type(
-            Hkl.GeometryType.KAPPA6C)
-        geometry = Hkl.Geometry.factory_newv(config, [50. * math.pi / 180.])
+        factory = Hkl.factories()['K6C']
+        geometry = factory.create_new_geometry()
 
         # axes names are accessible
         self.assertTrue(
@@ -88,9 +87,8 @@ class TestAPI(unittest.TestCase):
         """
         enforce the HklMode API
         """
-        config = Hkl.geometry_factory_get_config_from_type(
-            Hkl.GeometryType.KAPPA6C)
-        engines = Hkl.EngineList.factory(config)
+        factory = Hkl.factories()['K6C']
+        engines = factory.create_new_engine_list()
         engine = engines.get_by_name("hkl")
 
         # check for all modes
@@ -112,9 +110,8 @@ class TestAPI(unittest.TestCase):
         detector = Hkl.Detector().factory_new(Hkl.DetectorType(0))
         detector.idx = 1
 
-        config = Hkl.geometry_factory_get_config_from_type(
-            Hkl.GeometryType.KAPPA6C)
-        geometry = Hkl.Geometry.factory_newv(config, [math.radians(50.)])
+        factory = Hkl.factories()['K6C']
+        geometry = factory.create_new_geometry()
         values_w = [0., 30., 0., 0., 0., 60.]
         geometry.set_axes_values_unit(values_w)
 
@@ -125,7 +122,7 @@ class TestAPI(unittest.TestCase):
                            math.radians(90.0))
 
         # compute all the pseudo axes managed by all engines
-        engines = Hkl.EngineList.factory(config)
+        engines = factory.create_new_engine_list()
         engines.init(geometry, detector, sample)
         engines.get()
 

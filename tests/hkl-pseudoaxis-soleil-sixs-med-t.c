@@ -39,7 +39,7 @@ static void qper_qpar(void)
 {
 	HklEngineList *engines;
 	HklEngine *engine;
-	const HklGeometryConfig *config;
+	const HklFactory *factory;
 	HklGeometry *geom;
 	HklDetector *detector;
 	HklSample *sample;
@@ -49,8 +49,8 @@ static void qper_qpar(void)
 	HklParameterList *pseudo_axes;
 	const HklGeometryList *geometries;
 
-	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_3);
-	geom = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
+	factory = hkl_factory_get_by_name("SOLEIL SIXS MED2+3");
+	geom = hkl_factory_create_new_geometry(factory);
 
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
         hkl_sample_set_U_from_euler(sample, -90.0 * HKL_DEGTORAD, 0., 0.);
@@ -58,7 +58,7 @@ static void qper_qpar(void)
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_engine_list_factory(config);
+	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geom, detector, sample);
 	geometries = hkl_engine_list_geometries(engines);
 

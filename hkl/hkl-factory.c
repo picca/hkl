@@ -46,6 +46,24 @@ struct _HklFactory
 	HklFactoryEngineListFunction create_new_engine_list;
 };
 
+HklFactory **hkl_factory_get_all(unsigned int *n)
+{
+	return autodata_get(factories, n);
+}
+
+HklFactory *hkl_factory_get_by_name(const char *name)
+{
+	unsigned int i, n;
+	HklFactory **factories;
+
+	factories = autodata_get(factories, &n);
+	for(i=0;i<n; ++i)
+		if (!strcmp(name, factories[i]->config.name))
+			return factories[i];
+
+	return NULL;
+}
+
 const char *hkl_factory_name(const HklFactory *self)
 {
 	return self->config.name;
@@ -144,6 +162,16 @@ static void hkl_geometry_list_multiply_k6c_real(HklGeometryList *self,
 /* TwoC */
 /********/
 
+#define HKL_GEOMETRY_TWOC_DESCRIPTION					\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 1 axes for the sample\n"					\
+	"\n"								\
+	"  + **omega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"\n"								\
+	"+ 1 axis for the detector\n"					\
+	"\n"								\
+	"  + **tth** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
+
 static HklGeometry *hkl_geometry_new_twoC(const HklGeometryConfig *config)
 {
 	HklGeometry *self = hkl_geometry_new();
@@ -171,6 +199,17 @@ REGISTER_DIFFRACTOMETER(twoC, "TwoC", HKL_GEOMETRY_TYPE_TWOC_VERTICAL, HKL_GEOME
 /********/
 /* E4CV */
 /********/
+#define HKL_GEOMETRY_EULERIAN4C_VERTICAL_DESCRIPTION					\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 3 axes for the sample\n"					\
+	"\n"								\
+	"  + **omega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **chi** : rotating around the :math:`\\vec{x}` direction (1, 0, 0)\n"	\
+	"  + **phi** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"\n"								\
+	"+ 1 axis for the detector\n"					\
+	"\n"								\
+	"  + **tth** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
 
 static HklGeometry *hkl_geometry_new_eulerian4C_vertical(const HklGeometryConfig *config)
 {
@@ -205,6 +244,21 @@ REGISTER_DIFFRACTOMETER(eulerian4C_vertical, "E4CV", HKL_GEOMETRY_TYPE_EULERIAN4
 /********/
 /* K4CV */
 /********/
+
+#define HKL_GEOMETRY_KAPPA4C_VERTICAL_DESCRIPTION			\
+	"For this geometry there is a special parameters called :math:`\\alpha` which is the\n" \
+	"angle between the kappa rotation axis and the  :math:`\\vec{y}` direction.\n" \
+	"\n"								\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 3 axes for the sample\n"					\
+	"\n"								\
+	"  + **komega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **kappa** : rotating around the :math:`\\vec{x}` direction (0, :math:`-\\cos\\alpha`, :math:`-\\sin\\alpha`)\n"	\
+	"  + **kphi** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"\n"								\
+	"+ 1 axis for the detector\n"					\
+	"\n"								\
+	"  + **tth** : rotation around the :math:`-\\\vec{y}` direction (0, -1, 0)\n"
 
 static HklGeometry *hkl_geometry_new_kappa4C_vertical(const HklGeometryConfig *config)
 {
@@ -243,6 +297,20 @@ REGISTER_DIFFRACTOMETER(kappa4C_vertical, "K4CV", HKL_GEOMETRY_TYPE_KAPPA4C_VERT
 /* E6C */
 /*******/
 
+#define HKL_GEOMETRY_EULERIAN6C_DESCRIPTION				\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 4 axes for the sample\n"					\
+	"\n"								\
+	"  + **mu** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **omega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **chi** : rotating around the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"  + **phi** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"\n"								\
+	"+ 2 axes for the detector\n"					\
+	"\n"								\
+	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
+
 static HklGeometry *hkl_geometry_new_eulerian6C(const HklGeometryConfig *config)
 {
 	HklGeometry *self = hkl_geometry_new();
@@ -279,6 +347,23 @@ REGISTER_DIFFRACTOMETER(eulerian6C, "E6C", HKL_GEOMETRY_TYPE_EULERIAN6C, HKL_GEO
 /*******/
 /* K6C */
 /*******/
+
+#define HKL_GEOMETRY_KAPPA6C_DESCRIPTION				\
+	"For this geometry there is a special parameters called :math:`\\alpha` which is the\n" \
+	"angle between the kappa rotation axis and the  :math:`\\vec{y}` direction.\n" \
+	"\n"								\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 4 axes for the sample\n"					\
+	"\n"								\
+	"  + **mu** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **komega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **kappa** : rotating around the :math:`\\vec{x}` direction (0, :math:`-\\cos\\alpha`, :math:`-\\sin\\alpha`)\n" \
+	"  + **kphi** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"\n"								\
+	"+ 2 axes for the detector\n"					\
+	"\n"								\
+	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
 
 static HklGeometry *hkl_geometry_new_kappa6C(const HklGeometryConfig *config)
 {
@@ -320,6 +405,21 @@ REGISTER_DIFFRACTOMETER(kappa6C, "K6C", HKL_GEOMETRY_TYPE_KAPPA6C, HKL_GEOMETRY_
 /* ZAXIS */
 /*********/
 
+#define HKL_GEOMETRY_TYPE_ZAXIS_DESCRIPTION				\
+	"For this geometry the **mu** axis is common to the sample and the detector.\n" \
+	"\n"								\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 2 axes for the sample\n"					\
+	"\n"								\
+	"  + **mu** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **omega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"\n"								\
+	"+ 3 axis for the detector\n"					\
+	"\n"								\
+	"  + **mu** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n"
+
 static HklGeometry *hkl_geometry_new_zaxis(const HklGeometryConfig *config)
 {
 	HklGeometry *self = hkl_geometry_new();
@@ -354,6 +454,20 @@ REGISTER_DIFFRACTOMETER(zaxis, "ZAXIS", HKL_GEOMETRY_TYPE_ZAXIS, HKL_GEOMETRY_TY
 /***********************/
 /* SOLEIL SIXS MED 2+2 */
 /***********************/
+
+#define HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_2_DESCRIPTION		\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 3 axes for the sample\n"					\
+	"\n"								\
+	"  + **beta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **mu** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **omega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"\n"								\
+	"+ 3 axis for the detector\n"					\
+	"\n"								\
+	"  + **beta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
 
 static HklGeometry *hkl_geometry_new_soleil_sixs_med_2_2(const HklGeometryConfig *config)
 {
@@ -391,6 +505,18 @@ REGISTER_DIFFRACTOMETER(soleil_sixs_med_2_2,"SOLEIL SIXS MED2+2", HKL_GEOMETRY_T
 /* SOLEIL MARS */
 /***************/
 
+#define HKL_GEOMETRY_TYPE_SOLEIL_MARS_DESCRIPTION			\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 3 axes for the sample\n"					\
+	"\n"								\
+	"  + **omega** : rotating around the :math:`\\vec{z}` direction (0, -1, 0)\n" \
+	"  + **chi** : rotating around the :math:`\\vec{x}` direction (-1, 0, 0)\n" \
+	"  + **phi** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"\n"								\
+	"+ 1 axis for the detector\n"					\
+	"\n"								\
+	"  + **tth** : rotation around the :math:`\\vec{z}` direction (0, -1, 0)\n"
+
 static HklGeometry *hkl_geometry_new_soleil_mars(const HklGeometryConfig *config)
 {
 	HklGeometry *self = hkl_geometry_new();
@@ -424,6 +550,19 @@ REGISTER_DIFFRACTOMETER(soleil_mars, "SOLEIL MARS", HKL_GEOMETRY_TYPE_SOLEIL_MAR
 /***********************/
 /* SOLEIL SIXS MED 1+2 */
 /***********************/
+
+#define HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2_DESCRIPTION		\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 2 axes for the sample\n"					\
+	"\n"								\
+	"  + **pitch** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **mu** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"\n"								\
+	"+ 3 axis for the detector\n"					\
+	"\n"								\
+	"  + **pitch** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
 
 static HklGeometry *hkl_geometry_new_soleil_sixs_med_1_2(const HklGeometryConfig *config)
 {
@@ -460,6 +599,21 @@ REGISTER_DIFFRACTOMETER(soleil_sixs_med_1_2, "SOLEIL SIXS MED1+2", HKL_GEOMETRY_
 /* PETRA3 P09 EH2 */
 /******************/
 
+#define HKL_GEOMETRY_TYPE_PETRA3_P09_EH2_DESCRIPTION			\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 4 axes for the sample\n"					\
+	"\n"								\
+	"  + **mu** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **omega** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **chi** : rotating around the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"  + **phi** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"\n"								\
+	"+ 3 axis for the detector\n"					\
+	"\n"								\
+	"  + **mu** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **delta** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **gamma** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
+
 static HklGeometry *hkl_geometry_new_petra3_p09_eh2(const HklGeometryConfig *config)
 {
 	HklGeometry *self = hkl_geometry_new();
@@ -494,6 +648,21 @@ REGISTER_DIFFRACTOMETER(petra3_p09_eh2, "PETRA3 P09 EH2", HKL_GEOMETRY_TYPE_PETR
 /***********************/
 /* SOLEIL SIXS MED 2+3 */
 /***********************/
+
+#define HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_3_DESCRIPTION		\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 3 axes for the sample\n"					\
+	"\n"								\
+	"  + **beta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **mu** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **omega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"\n"								\
+	"+ 4 axis for the detector\n"					\
+	"\n"								\
+	"  + **beta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **eta_a** : rotation around the :math:`-\\vec{x}` direction (-1, 0, 0)\n"
 
 static HklGeometry *hkl_geometry_new_soleil_sixs_med_2_3(const HklGeometryConfig *config)
 {
@@ -533,6 +702,18 @@ REGISTER_DIFFRACTOMETER(soleil_sixs_med_2_3, "SOLEIL SIXS MED2+3", HKL_GEOMETRY_
 /* E4CH */
 /********/
 
+#define HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL_DESCRIPTION		\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 3 axes for the sample\n"					\
+	"\n"								\
+	"  + **omega** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **chi** : rotating around the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"  + **phi** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"\n"								\
+	"+ 1 axis for the detector\n"					\
+	"\n"								\
+	"  + **tth** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n"
+
 static HklGeometry *hkl_geometry_new_eulerian4C_horizontal(const HklGeometryConfig *config)
 {
 	HklGeometry *self = hkl_geometry_new();
@@ -562,138 +743,3 @@ static HklEngineList *hkl_engine_list_new_eulerian4C_horizontal(const HklGeometr
 }
 
 REGISTER_DIFFRACTOMETER(eulerian4C_horizontal, "E4CH", HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL, HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL_DESCRIPTION);
-
-/**
- * hkl_geometry_factory_get_config_from_type:
- * @type:
- *
- * get am #HklGeometryConfig for a given #HklGeometryType
- *
- * Returns: (transfer none):
- **/
-const HklGeometryConfig *hkl_geometry_factory_get_config_from_type(HklGeometryType type)
-{
-	const HklGeometryConfig *config;
-
-	config = hkl_geometry_factory_configs;
-	while(config)
-		if(config->type == type)
-			return config;
-		else
-			config++;
-	return NULL;
-}
-
-
-/**
- * hkl_geometry_factory_new: (skip)
- * @config:
- * @...:
- *
- * create an #HklGeometry given an #HklGeometryConfig
- *
- * Returns: (transfer full): a new #HklGeometry
- **/
-HklGeometry *hkl_geometry_factory_new(const HklGeometryConfig *config, ...)
-{
-	HklGeometry *geometry;
-	double *parameters = NULL;
-	int len = 0;
-	va_list ap;
-
-	switch(config->type) {
-	case HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL:
-	case HKL_GEOMETRY_TYPE_KAPPA6C:
-		parameters = malloc(1 * sizeof(*parameters));
-		va_start(ap, config);
-		parameters[0] = va_arg(ap, double);
-		va_end(ap);
-		break;
-	default:
-		break;
-	}
-	geometry = hkl_geometry_factory_newv(config, parameters, len);
-	if(parameters)
-		free(parameters);
-
-	return geometry;
-}
-
-/**
- * hkl_geometry_factory_newv:
- * @config:
- * @parameters: (array length=len):
- * @len:
- *
- * factory constructor
- *
- * Returns: (transfer full): a new HklGeometry
- **/
-HklGeometry *hkl_geometry_factory_newv(const HklGeometryConfig *config,
-				       const double parameters[], const int len)
-{
-	switch(config->type) {
-	case HKL_GEOMETRY_TYPE_TWOC_VERTICAL:
-		return hkl_geometry_new_twoC(config);
-	case HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL:
-		return hkl_geometry_new_eulerian4C_vertical(config);
-	case HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL:
-		return hkl_geometry_new_kappa4C_vertical(config);
-	case HKL_GEOMETRY_TYPE_EULERIAN6C:
-		return hkl_geometry_new_eulerian6C(config);
-	case HKL_GEOMETRY_TYPE_KAPPA6C:
-		return hkl_geometry_new_kappa6C(config);
-	case HKL_GEOMETRY_TYPE_ZAXIS:
-		return hkl_geometry_new_zaxis(config);
-	case HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_2:
-		return hkl_geometry_new_soleil_sixs_med_2_2(config);
-	case HKL_GEOMETRY_TYPE_SOLEIL_MARS:
-		return hkl_geometry_new_soleil_mars(config);
-	case HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2:
-		return hkl_geometry_new_soleil_sixs_med_1_2(config);
-	case HKL_GEOMETRY_TYPE_PETRA3_P09_EH2:
-		return hkl_geometry_new_petra3_p09_eh2(config);
-	case HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_3:
-		return hkl_geometry_new_soleil_sixs_med_2_3(config);
-	case HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL:
-		return hkl_geometry_new_eulerian4C_horizontal(config);
-	}
-}
-
-/**
- * hkl_engine_list_factory:
- * @config:
- *
- * create an #HklEngineList given an #HklGeometryConfig
- *
- * Returns: (transfer full):
- **/
-HklEngineList *hkl_engine_list_factory(const HklGeometryConfig *config)
-{
-	switch(config->type){
-	case HKL_GEOMETRY_TYPE_TWOC_VERTICAL:
-		return hkl_engine_list_new_twoC(config);
-	case HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL:
-		return hkl_engine_list_new_eulerian4C_vertical(config);
-	case HKL_GEOMETRY_TYPE_SOLEIL_MARS:
-		return hkl_engine_list_new_soleil_mars(config);
-	case HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL:
-		return hkl_engine_list_new_eulerian4C_horizontal(config);
-	case HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL:
-		return hkl_engine_list_new_kappa4C_vertical(config);
-	case HKL_GEOMETRY_TYPE_EULERIAN6C:
-		return hkl_engine_list_new_eulerian6C(config);
-	case HKL_GEOMETRY_TYPE_KAPPA6C:
-		return hkl_engine_list_new_kappa6C(config);
-	case HKL_GEOMETRY_TYPE_ZAXIS:
-		return hkl_engine_list_new_zaxis(config);
-	case HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_2:
-		return hkl_engine_list_new_soleil_sixs_med_2_2(config);
-	case HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2:
-		return hkl_engine_list_new_soleil_sixs_med_1_2(config);
-	case HKL_GEOMETRY_TYPE_PETRA3_P09_EH2:
-		return hkl_engine_list_new_petra3_p09_eh2(config);
-	case HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_3:
-		return hkl_engine_list_new_soleil_sixs_med_2_3(config);
-	}
-}

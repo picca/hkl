@@ -40,13 +40,13 @@ static void new(void)
 static void add_reflection(void)
 {
 	HklDetector *detector;
-	const HklGeometryConfig *config;
+	const HklFactory *factory;
 	HklGeometry *geom;
 	HklSample *sample;
 	HklSampleReflection *ref;
 
-	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
-	geom = hkl_geometry_factory_new(config);
+	factory = hkl_factory_get_by_name("E4CV");
+	geom = hkl_factory_create_new_geometry(factory);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
@@ -63,14 +63,14 @@ static void add_reflection(void)
 static void get_reflection(void)
 {
 	HklDetector *detector;
-	const HklGeometryConfig *config;
+	const HklFactory *factory;
 	HklGeometry *geom;
 	HklSample *sample;
 	HklSampleReflection *ref;
 	HklSampleReflection *ref2;
 
-	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
-	geom = hkl_geometry_factory_new(config);
+	factory = hkl_factory_get_by_name("E4CV");
+	geom = hkl_factory_create_new_geometry(factory);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
@@ -94,13 +94,13 @@ static void get_reflection(void)
 static void del_reflection(void)
 {
 	HklDetector *detector;
-	const HklGeometryConfig *config;
+	const HklFactory *factory;
 	HklGeometry *geom;
 	HklSample *sample;
 	HklSampleReflection *ref;
 
-	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
-	geom = hkl_geometry_factory_new(config);
+	factory = hkl_factory_get_by_name("E4CV");
+	geom = hkl_factory_create_new_geometry(factory);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
@@ -140,15 +140,15 @@ static void  set_UB(void )
 static void compute_UB_busing_levy(void)
 {
 	HklDetector *detector;
-	const HklGeometryConfig *config;
+	const HklFactory *factory;
 	HklGeometry *geom;
 	HklSample *sample;
 	HklSampleReflection *ref;
 	HklMatrix m_I = {{{1,0,0}, {0,1,0}, {0, 0, 1}}};
 	HklMatrix m_ref = {{{1., 0., 0.}, {0., 0., 1.}, {0.,-1., 0.}}};
 
-	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
-	geom = hkl_geometry_factory_new(config);
+	factory = hkl_factory_get_by_name("E4CV");
+	geom = hkl_factory_create_new_geometry(factory);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
@@ -187,7 +187,7 @@ static void compute_UB_busing_levy(void)
 static void affine(void)
 {
 	double a, b, c, alpha, beta, gamma;
-	const HklGeometryConfig *config;
+	const HklFactory *factory;
 	HklDetector *detector;
 	HklGeometry *geom;
 	HklSample *sample;
@@ -196,8 +196,8 @@ static void affine(void)
 				   {0., 1., 0.},
 				   {0., 0., 1.}}};
 
-	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
-	geom = hkl_geometry_factory_new(config);
+	factory = hkl_factory_get_by_name("E4CV");
+	geom = hkl_factory_create_new_geometry(factory);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
@@ -251,13 +251,13 @@ static void affine(void)
 static void get_reflections_xxx_angle(void)
 {
 	HklDetector *detector;
-	const HklGeometryConfig *config;
+	const HklFactory *factory;
 	HklGeometry *geom;
 	HklSample *sample;
 	HklSampleReflection *ref;
 
-	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
-	geom = hkl_geometry_factory_new(config);
+	factory = hkl_factory_get_by_name("E4CV");
+	geom = hkl_factory_create_new_geometry(factory);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
@@ -307,14 +307,14 @@ static void reflection_set_geometry(void)
 {
 	double a, b, c, alpha, beta, gamma;
 	HklDetector *detector;
-	const HklGeometryConfig *config;
+	const HklFactory *factory;
 	HklGeometry *geom;
 	HklSample *sample;
 	HklSampleReflection *ref;
 	HklMatrix m_ref = {{{1., 0., 0.}, {0., 1., 0.}, {0., 0., 1.}}};
 
-	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
-	geom = hkl_geometry_factory_new(config);
+	factory = hkl_factory_get_by_name("E4CV");
+	geom = hkl_factory_create_new_geometry(factory);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;

@@ -18,13 +18,12 @@ sample.set_lattice(1.54, 1.54, 1.54,
 detector = Hkl.Detector().factory_new(Hkl.DetectorType(0))
 detector.idx = 1
 
-config = Hkl.geometry_factory_get_config_from_type(
-    Hkl.GeometryType.KAPPA6C)
-geometry = Hkl.Geometry.factory_newv(config, [math.radians(50.)])
+factory = Hkl.factories()['K6C']
+geometry = factory.create_new_geometry()
 axes_names = [axis.parameter.name for axis in geometry.axes()]
 geometry.set_axes_values_unit([0., 120, 0., -90., 0., 60.])
 
-engines = Hkl.EngineList.factory(config)
+engines = factory.create_new_engine_list()
 engines.init(geometry, detector, sample)
 
 n = 10

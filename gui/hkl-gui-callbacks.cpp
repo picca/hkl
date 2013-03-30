@@ -21,6 +21,7 @@
  */
 
 #include "hkl-gui.h"
+#include <hkl/hkl-factory.h>
 
 void HKLWindow::on_treeView_pseudoAxes_cursor_changed(void)
 {
@@ -956,18 +957,18 @@ void HKLWindow::on_combobox1_changed(void)
 {
 	LOG;
 
-	const HklGeometryConfig *config;
 	size_t idx = _combobox1->get_active_row_number();
+	unsigned int n;
+	HklFactory **factories;
 
-	config = &hkl_geometry_factory_configs[idx];
+	factories = hkl_factory_get_all(&n);
 	if(_geometry)
 		hkl_geometry_free(_geometry);
-	_geometry = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
+	_geometry = hkl_factory_create_new_geometry(factories[idx]);
 
 	if(_engines)
 		hkl_engine_list_free(_engines);
-
-	_engines = hkl_engine_list_factory(config);
+	_engines = hkl_factory_create_new_engine_list(factories[idx]);
 	hkl_engine_list_init(_engines, _geometry, _detector, _samples->current);
 
 	this->set_up_pseudo_axes_frames();

@@ -67,13 +67,13 @@ def plot_hkl_trajectory(filename, geometry, engines,
     hkl = engines.get_by_name("hkl")
     page = 1
     plt.clf()
-    plt.suptitle(filename + " " + repr(hkl1) + " -> " + repr(hkl2) + " page " + str(page))
+    plt.suptitle("\"" + filename + "\" " + repr(hkl1) + " -> " + repr(hkl2) + " page " + str(page))
     _plot_legend(axes_names)
     idx = 2
     for mode in hkl.modes():
         hkl.select_mode(mode)
         trajectories = compute_hkl_trajectories(hkl, hkl1=hkl1, hkl2=hkl2, n=n)
-        print filename, idx, mode.name(), len(trajectories)
+        print "\"" + filename + "\"", idx, mode.name(), len(trajectories)
 
         plt.subplot(3, 4, idx)
         plt.title("%s" % (mode.name(),))
@@ -118,10 +118,9 @@ def main():
     detector = Hkl.Detector().factory_new(Hkl.DetectorType(0))
     detector.idx = 1
 
-    for i in range(len(Hkl.GeometryType.__enum_values__)):
-        gtype = Hkl.GeometryType(i)
-        config = Hkl.geometry_factory_get_config_from_type(gtype)
-        geometry = Hkl.Geometry.factory_newv(config, [math.radians(50.)])
+    for key, factory in Hkl.factories().iteritems():
+        geometry = factory.create_new_geometry()
+        engines = factory.create_new_engine_list()
 
         # here we set the detector arm with only positiv values for
         # now tth or delta arm
@@ -130,12 +129,11 @@ def main():
         if axis:
             axis.range.min = 0
 
-        engines = Hkl.EngineList.factory(config)
         engines.init(geometry, detector, sample)
 
         engines_names = [engine.name() for engine in engines.engines()]
         if 'hkl' in engines_names:
-            plot_hkl_trajectory(gtype.value_nick, geometry, engines,
+            plot_hkl_trajectory(key, geometry, engines,
                                 hkl1=[0, 0, 1], hkl2=[0, 1, 1], n=100)
     pp.close()
 

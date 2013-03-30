@@ -29,9 +29,8 @@ from gi.repository import Hkl
 detector = Hkl.Detector().factory_new(Hkl.DetectorType(0))
 detector.idx = 1
 
-config = Hkl.geometry_factory_get_config_from_type(
-    Hkl.GeometryType.KAPPA6C)
-geometry = Hkl.Geometry.factory_newv(config, [math.radians(50.)])
+factory = Hkl.factories()['K6C']
+geometry = factory.create_new_geometry()
 values_w = [0., 30., 0., 0., 0., 60.]
 geometry.set_axes_values_unit(values_w)
 axes_names = [axis.parameter.name for axis in geometry.axes()]
@@ -46,7 +45,7 @@ sample.set_lattice(1.54, 1.54, 1.54,
                    math.radians(90.))
 
 # compute all the pseudo axes managed by all engines
-engines = Hkl.EngineList.factory(config)
+engines = factory.create_new_engine_list()
 engines.init(geometry, detector, sample)
 engines.get()
 
