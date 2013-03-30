@@ -559,11 +559,9 @@ static HklMode *constant_incidence(void)
 	static const HklModeAutoInfo info = {
 		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
 	};
-	static const HklModeOperations ops = {
-		HKL_MODE_OPERATIONS_AUTO_WITH_INIT_DEFAULTS,
-	};
 
-	return hkl_mode_auto_with_init_new(&info, &ops);
+	return hkl_mode_auto_with_init_new(&info,
+					   &constant_incidence_mode_operations);
 }
 
 /**********************/

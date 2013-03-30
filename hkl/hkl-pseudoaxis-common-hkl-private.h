@@ -92,6 +92,12 @@ static const HklModeOperations psi_constant_vertical_mode_operations = {
 	.init = hkl_mode_init_psi_constant_vertical_real,
 };
 
+static const HklModeOperations constant_incidence_mode_operations = {
+	HKL_MODE_OPERATIONS_AUTO_WITH_INIT_DEFAULTS,
+	.get = hkl_mode_get_hkl_real,
+	.set = hkl_mode_set_hkl_real
+};
+
 static const HklFunction RUBh_minus_Q_func = {
 	.function = _RUBh_minus_Q_func,
 	.size = 3,
