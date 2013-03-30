@@ -48,19 +48,6 @@ struct _HklModeAutoInfo {
 	HKL_MODE_OPERATIONS_DEFAULTS,		\
 		.set = hkl_mode_auto_set_real
 
-struct _HklModeAutoWithInit {
-	HklMode mode;
-	HklGeometry *geometry;
-	HklDetector *detector;
-	HklSample *sample;
-};
-
-#define HKL_MODE_OPERATIONS_AUTO_WITH_INIT_DEFAULTS		\
-	HKL_MODE_OPERATIONS_AUTO_DEFAULTS,			\
-		.free = hkl_mode_auto_with_init_free_real,	\
-		.init = hkl_mode_auto_with_init_init_real
-
-
 #define CHECK_NAN(x, len) do{				\
 		for(uint i=0; i<len; ++i)		\
 			if(gsl_isnan(x[i]))		\
@@ -92,6 +79,18 @@ extern int hkl_mode_auto_set_real(HklMode *self,
 /***********************/
 /* HklModeAutoWithInit */
 /***********************/
+
+struct _HklModeAutoWithInit {
+	HklMode mode;
+	HklGeometry *geometry;
+	HklDetector *detector;
+	HklSample *sample;
+};
+
+#define HKL_MODE_OPERATIONS_AUTO_WITH_INIT_DEFAULTS		\
+	HKL_MODE_OPERATIONS_AUTO_DEFAULTS,			\
+		.free = hkl_mode_auto_with_init_free_real,	\
+		.init = hkl_mode_auto_with_init_init_real
 
 static void hkl_mode_auto_with_init_free_real(HklMode *mode)
 {
