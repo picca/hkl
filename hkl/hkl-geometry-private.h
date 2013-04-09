@@ -28,24 +28,9 @@
 #include <hkl/hkl-quaternion.h>
 #include <hkl/hkl-axis.h>
 #include <hkl/hkl-geometry.h>
+#include <hkl/hkl-factory.h>
 
 HKL_BEGIN_DECLS
-
-typedef enum _HklGeometryType
-{
-	HKL_GEOMETRY_TYPE_TWOC_VERTICAL,
-	HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL,
-	HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL,
-	HKL_GEOMETRY_TYPE_EULERIAN6C,
-	HKL_GEOMETRY_TYPE_KAPPA6C,
-	HKL_GEOMETRY_TYPE_ZAXIS,
-	HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_2,
-	HKL_GEOMETRY_TYPE_SOLEIL_MARS,
-	HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2,
-	HKL_GEOMETRY_TYPE_PETRA3_P09_EH2,
-	HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_3,
-	HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL,
-} HklGeometryType;
 
 struct HklHolderConfig {
 	int gc;
@@ -59,15 +44,9 @@ struct _HklHolder {
 	HklQuaternion q;
 };
 
-struct _HklGeometryConfig {
-	const char *name;
-	HklGeometryType type;
-	const char *description;
-};
-
 struct _HklGeometry
 {
-	const HklGeometryConfig *config;
+	const HklFactory *factory;
 	HklSource source;
 	darray_axis axes;
 	darray_holder holders;
@@ -95,7 +74,7 @@ extern HklAxis *hkl_holder_add_rotation_axis(HklHolder *self,
 /* HklGeometry */
 /***************/
 
-extern HklGeometry *hkl_geometry_new(void);
+extern HklGeometry *hkl_geometry_new(const HklFactory *factory);
 
 extern HklGeometry *hkl_geometry_new_copy(const HklGeometry *self);
 

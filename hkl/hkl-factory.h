@@ -25,9 +25,9 @@
 #include <hkl/hkl-geometry.h>
 #include <hkl/hkl-pseudoaxis.h>
 
-HKL_BEGIN_DECLS
-
 typedef struct _HklFactory HklFactory;
+
+HKL_BEGIN_DECLS
 
 extern HklFactory **hkl_factory_get_all(unsigned int *n);
 

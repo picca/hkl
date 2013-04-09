@@ -32,7 +32,6 @@
 HKL_BEGIN_DECLS
 
 typedef struct _HklHolder HklHolder;
-typedef struct _HklGeometryConfig HklGeometryConfig;
 typedef struct _HklGeometry HklGeometry;
 typedef struct _HklGeometryList HklGeometryList;
 typedef struct _HklGeometryListItem HklGeometryListItem;

@@ -887,8 +887,6 @@ control over, that could include printf() escape sequences.</doc>
         </parameters>
       </method>
     </record>
-    <record name="GeometryConfig" c:type="HklGeometryConfig" disguised="1">
-    </record>
     <record name="GeometryList"
             c:type="HklGeometryList"
             glib:type-name="HklGeometryList"

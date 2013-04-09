@@ -185,13 +185,13 @@ HklAxis *hkl_holder_add_rotation_axis(HklHolder *self,
  *
  * Returns:
  **/
-HklGeometry *hkl_geometry_new(void)
+HklGeometry *hkl_geometry_new(const HklFactory *factory)
 {
 	HklGeometry *g = NULL;
 
 	g = HKL_MALLOC(HklGeometry);
 
-	g->config = NULL;
+	g->factory = factory;
 	hkl_source_init(&g->source, 1.54, 1, 0, 0);
 	darray_init(g->axes);
 	darray_init(g->holders);
@@ -218,7 +218,7 @@ HklGeometry *hkl_geometry_new_copy(const HklGeometry *src)
 
 	self = HKL_MALLOC(HklGeometry);
 
-	self->config = src->config;
+	self->factory = src->factory;
 	self->source = src->source;
 
 	/* copy the axes */
@@ -266,9 +266,10 @@ void hkl_geometry_set(HklGeometry *self, const HklGeometry *src)
 {
 	size_t i;
 
-	if(self->config->type != src->config->type)
+	if(self->factory != src->factory)
 		return;
 
+	self->factory = src->factory;
 	self->source = src->source;
 
 	/* copy the axes configuration and mark it as dirty */
@@ -296,11 +297,6 @@ void hkl_geometry_axis_set(HklGeometry *self, const HklAxis *axis)
 			hkl_axis_axis_set(*_axis, axis);
 	}
 	hkl_geometry_update(self);
-}
-
-const char *hkl_geometry_name_get(const HklGeometry *self)
-{
-	return self->config->name;
 }
 
 double hkl_geometry_wavelength_get(const HklGeometry *self)
@@ -371,6 +367,11 @@ void hkl_geometry_update(HklGeometry *self)
 			(*axis)->parameter.changed = HKL_FALSE;
 		}
 	}
+}
+
+const char *hkl_geometry_name_get(const HklGeometry *self)
+{
+	return hkl_factory_name(self->factory);
 }
 
 /**

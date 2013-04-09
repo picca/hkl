@@ -587,6 +587,7 @@ void HKLWindow::set_up_TreeView_crystals(void)
 void HKLWindow::set_up_3D(void)
 {
 	LOG;
+	const char *model;
 
 	if(_Scene)
 		delete _Scene;
@@ -594,17 +595,17 @@ void HKLWindow::set_up_3D(void)
 	// for now the connection with the model is done in the part of the code
 	// It should be store in the config part of the geometry ?
 	const char *name = hkl_geometry_name_get(this->_geometry);
-	if(!strcmp(name, "K6C"))
-		_Scene = new Hkl3DFrame("../data/diffabs.yaml", _geometry);
-	else if (!strcmp(name, "K4CV"))
-		_Scene = new Hkl3DFrame("../data/cristal4C.yaml", _geometry);
-	else
-		_Scene = NULL;
+	if (!strcmp("K6C", name))
+		model = "../data/diffabs.yaml";
+	else if(!strcmp("K4CV", name))
+		model = "../data/cristal4C.yaml";
 
-	if(_Scene){
+	if(model){
+		_Scene = new Hkl3DFrame(model, _geometry);
 		this->_vbox7->pack_start(_Scene->frame());
 		this->_vbox7->show_all();
-	}
+	}else
+		_Scene = NULL;
 }
 
 #endif

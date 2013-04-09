@@ -29,7 +29,7 @@ static void add_holder(void)
 	HklGeometry *g = NULL;
 	HklHolder *holder = NULL;
 
-	g = hkl_geometry_new();
+	g = hkl_geometry_new(NULL);
 	is_int(0, darray_size(g->holders), __func__);
 
 	holder = hkl_geometry_add_holder(g);
@@ -53,7 +53,7 @@ static void get_axis(void)
 	HklHolder *holder = NULL;
 	HklAxis *axis0, *axis1, *axis2;
 
-	g = hkl_geometry_new();
+	g = hkl_geometry_new(NULL);
 
 	holder = hkl_geometry_add_holder(g);
 	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
@@ -77,7 +77,7 @@ static void update(void)
 	HklHolder *holder = NULL;
 	HklAxis *axis0, *axis1, *axis2;
 
-	g = hkl_geometry_new();
+	g = hkl_geometry_new(NULL);
 
 	holder = hkl_geometry_add_holder(g);
 	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
@@ -109,7 +109,7 @@ static void set_values(void)
 	HklGeometry *g;
 	HklHolder *holder;
 
-	g = hkl_geometry_new();
+	g = hkl_geometry_new(NULL);
 	holder = hkl_geometry_add_holder(g);
 	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
 	hkl_holder_add_rotation_axis(holder, "B", 1., 0., 0.);
@@ -128,7 +128,7 @@ static void set_values_unit(void)
 	HklGeometry *g;
 	HklHolder *holder;
 
-	g = hkl_geometry_new();
+	g = hkl_geometry_new(NULL);
 	holder = hkl_geometry_add_holder(g);
 	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
 	hkl_holder_add_rotation_axis(holder, "B", 1., 0., 0.);
@@ -148,7 +148,7 @@ static void distance(void)
 	HklGeometry *g2 = NULL;
 	HklHolder *holder = NULL;
 
-	g1 = hkl_geometry_new();
+	g1 = hkl_geometry_new(NULL);
 	holder = hkl_geometry_add_holder(g1);
 	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
 	hkl_holder_add_rotation_axis(holder, "B", 1., 0., 0.);
@@ -169,7 +169,7 @@ static void is_valid(void)
 	HklGeometry *geom = NULL;
 	HklHolder *holder = NULL;
 
-	geom = hkl_geometry_new();
+	geom = hkl_geometry_new(NULL);
 	holder = hkl_geometry_add_holder(geom);
 	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
 	hkl_holder_add_rotation_axis(holder, "B", 1., 0., 0.);
@@ -197,7 +197,7 @@ static void list(void)
 	HklHolder *holder;
 	static double values[] = {0. * HKL_DEGTORAD, 10 * HKL_DEGTORAD, 30 * HKL_DEGTORAD};
 
-	g = hkl_geometry_new();
+	g = hkl_geometry_new(NULL);
 	holder = hkl_geometry_add_holder(g);
 	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
 	hkl_holder_add_rotation_axis(holder, "B", 1., 0., 0.);
@@ -241,7 +241,7 @@ static void  list_multiply_from_range(void)
 	HklHolder *holder;
 	HklParameter *axisA, *axisB, *axisC;
 
-	g = hkl_geometry_new();
+	g = hkl_geometry_new(NULL);
 	holder = hkl_geometry_add_holder(g);
 	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
 	hkl_holder_add_rotation_axis(holder, "B", 1., 0., 0.);
@@ -273,7 +273,7 @@ static void  list_remove_invalid(void)
 	HklHolder *holder;
 	HklParameter *axisA, *axisB, *axisC;
 
-	g = hkl_geometry_new();
+	g = hkl_geometry_new(NULL);
 	holder = hkl_geometry_add_holder(g);
 	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
 	hkl_holder_add_rotation_axis(holder, "B", 1., 0., 0.);
