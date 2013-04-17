@@ -29,7 +29,7 @@
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_sf_trig.h>
 
-#include <hkl/hkl-geometry.h>
+#include "hkl-geometry-private.h"
 
 /*
  * Try to add a axis to the axes list,

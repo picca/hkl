@@ -742,44 +742,6 @@ control over, that could include printf() escape sequences.</doc>
             glib:type-name="HklGeometry"
             glib:get-type="hkl_geometry_get_type"
             c:symbol-prefix="geometry">
-      <field name="config" writable="1">
-        <type name="GeometryConfig" c:type="HklGeometryConfig*"/>
-      </field>
-      <field name="source" writable="1">
-        <type name="Source" c:type="HklSource"/>
-      </field>
-      <field name="axes" writable="1">
-        <type name="Axis" c:type="HklAxis*"/>
-      </field>
-      <field name="len" writable="1">
-        <type name="gulong" c:type="size_t"/>
-      </field>
-      <field name="holders" writable="1">
-        <type name="Holder" c:type="HklHolder*"/>
-      </field>
-      <field name="holders_len" writable="1">
-        <type name="gulong" c:type="size_t"/>
-      </field>
-      <constructor name="new"
-                   c:identifier="hkl_geometry_new"
-                   introspectable="0">
-        <doc xml:whitespace="preserve">constructor
-
-Returns:</doc>
-        <return-value transfer-ownership="full">
-          <type name="Geometry" c:type="HklGeometry*"/>
-        </return-value>
-      </constructor>
-      <method name="add_holder"
-              c:identifier="hkl_geometry_add_holder"
-              introspectable="0">
-        <doc xml:whitespace="preserve">add an Holder to the #HklGeometry
-
-Returns:</doc>
-        <return-value>
-          <type name="Holder" c:type="HklHolder*"/>
-        </return-value>
-      </method>
       <method name="axes" c:identifier="hkl_geometry_axes">
         <doc xml:whitespace="preserve">free the list with g_slist_free when done.</doc>
         <return-value transfer-ownership="container">
@@ -787,55 +749,6 @@ Returns:</doc>
           <type name="GLib.SList" c:type="GSList*">
             <type name="Axis"/>
           </type>
-        </return-value>
-      </method>
-      <method name="closest_from_geometry_with_range"
-              c:identifier="hkl_geometry_closest_from_geometry_with_range"
-              introspectable="0">
-        <doc xml:whitespace="preserve">get the closest axes values in the HklInterval compatible with the
-current axes values
-
-Returns:</doc>
-        <return-value transfer-ownership="none">
-          <type name="gint" c:type="int"/>
-        </return-value>
-        <parameters>
-          <parameter name="ref" transfer-ownership="none">
-            <type name="Geometry" c:type="HklGeometry*"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="distance" c:identifier="hkl_geometry_distance">
-        <doc xml:whitespace="preserve">compute the distance between two #HklGeometries</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">the distance between the two geometries</doc>
-          <type name="gdouble" c:type="double"/>
-        </return-value>
-        <parameters>
-          <parameter name="ref" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the #HklGeometry to compare with</doc>
-            <type name="Geometry" c:type="HklGeometry*"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="distance_orthodromic"
-              c:identifier="hkl_geometry_distance_orthodromic"
-              introspectable="0">
-        <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">the orthodromique distance</doc>
-          <type name="gdouble" c:type="double"/>
-        </return-value>
-        <parameters>
-          <parameter name="ref" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the reference #HklGeometry to compare with.</doc>
-            <type name="Geometry" c:type="HklGeometry*"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="free" c:identifier="hkl_geometry_free" introspectable="0">
-        <doc xml:whitespace="preserve">destructor</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
         </return-value>
       </method>
       <method name="get_axes_values_unit"
@@ -857,73 +770,6 @@ Returns:</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="get_axis_by_name"
-              c:identifier="hkl_geometry_get_axis_by_name">
-        <doc xml:whitespace="preserve">get an #HklAxis using its name</doc>
-        <return-value transfer-ownership="none">
-          <type name="Parameter" c:type="HklParameter*"/>
-        </return-value>
-        <parameters>
-          <parameter name="name" transfer-ownership="none">
-            <type name="utf8" c:type="char*"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="get_axis_idx_by_name"
-              c:identifier="hkl_geometry_get_axis_idx_by_name"
-              introspectable="0">
-        <doc xml:whitespace="preserve">get the index of the axes named @name in the geometry</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">-1 if the axis was not found</doc>
-          <type name="gint" c:type="int"/>
-        </return-value>
-        <parameters>
-          <parameter name="name" transfer-ownership="none">
-            <type name="utf8" c:type="char*"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="init_geometry"
-              c:identifier="hkl_geometry_init_geometry"
-              introspectable="0">
-        <doc xml:whitespace="preserve">initilize an HklGeometry</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="src" transfer-ownership="none">
-            <type name="Geometry" c:type="HklGeometry*"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="is_valid"
-              c:identifier="hkl_geometry_is_valid"
-              introspectable="0">
-        <doc xml:whitespace="preserve">check if all axes of the #HklGeometry are valid.
-
-Returns:</doc>
-        <return-value transfer-ownership="none">
-          <type name="gint" c:type="int"/>
-        </return-value>
-      </method>
-      <method name="new_copy"
-              c:identifier="hkl_geometry_new_copy"
-              introspectable="0">
-        <doc xml:whitespace="preserve">copy constructor
-
-Returns:</doc>
-        <return-value transfer-ownership="full">
-          <type name="Geometry" c:type="HklGeometry*"/>
-        </return-value>
-      </method>
-      <method name="randomize"
-              c:identifier="hkl_geometry_randomize"
-              introspectable="0">
-        <doc xml:whitespace="preserve">randomize the #HklGeometry</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-      </method>
       <method name="set_axes_values_unit"
               c:identifier="hkl_geometry_set_axes_values_unit">
         <return-value transfer-ownership="none">
@@ -942,120 +788,14 @@ Returns:</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="set_values_unit_v"
-              c:identifier="hkl_geometry_set_values_unit_v"
-              introspectable="0">
-        <return-value transfer-ownership="none">
-          <type name="gint" c:type="int"/>
-        </return-value>
-        <parameters>
-          <parameter transfer-ownership="none">
-            <varargs>
-            </varargs>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="set_values_v"
-              c:identifier="hkl_geometry_set_values_v"
-              introspectable="0">
-        <doc xml:whitespace="preserve">set the axes values
-
-Returns:</doc>
-        <return-value transfer-ownership="none">
-          <type name="gint" c:type="int"/>
-        </return-value>
-        <parameters>
-          <parameter name="len" transfer-ownership="none">
-            <type name="gulong" c:type="size_t"/>
-          </parameter>
-          <parameter transfer-ownership="none">
-            <varargs>
-            </varargs>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="update"
-              c:identifier="hkl_geometry_update"
-              introspectable="0">
-        <doc xml:whitespace="preserve">update the geometry internal once an Axis values changed</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-      </method>
-      <function name="fprintf"
-                c:identifier="hkl_geometry_fprintf"
-                introspectable="0">
-        <doc xml:whitespace="preserve">print into a file the #HklGeometry</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="file" transfer-ownership="none">
-            <type name="gpointer" c:type="FILE*"/>
-          </parameter>
-          <parameter name="self" transfer-ownership="none">
-            <type name="Geometry" c:type="HklGeometry*"/>
-          </parameter>
-        </parameters>
-      </function>
     </record>
-    <record name="GeometryConfig" c:type="HklGeometryConfig">
-      <field name="name" writable="1">
-        <type name="utf8" c:type="char*"/>
-      </field>
-      <field name="type" writable="1">
-        <type name="GeometryType" c:type="HklGeometryType"/>
-      </field>
-      <field name="description" writable="1">
-        <type name="utf8" c:type="char*"/>
-      </field>
+    <record name="GeometryConfig" c:type="HklGeometryConfig" disguised="1">
     </record>
     <record name="GeometryList"
             c:type="HklGeometryList"
             glib:type-name="HklGeometryList"
             glib:get-type="hkl_geometry_list_get_type"
             c:symbol-prefix="geometry_list">
-      <field name="len" writable="1">
-        <type name="gint" c:type="int"/>
-      </field>
-      <field name="multiply" writable="1">
-        <type name="GeometryListMultiplyFunction"
-              c:type="HklGeometryListMultiplyFunction"/>
-      </field>
-      <field name="items" writable="1">
-        <type name="gpointer" c:type="gpointer"/>
-      </field>
-      <field name="_shit" writable="1">
-        <type name="gpointer" c:type="void*"/>
-      </field>
-      <constructor name="new"
-                   c:identifier="hkl_geometry_list_new"
-                   introspectable="0">
-        <doc xml:whitespace="preserve">constructor
-
-Returns:</doc>
-        <return-value transfer-ownership="full">
-          <type name="GeometryList" c:type="HklGeometryList*"/>
-        </return-value>
-      </constructor>
-      <method name="add" c:identifier="hkl_geometry_list_add">
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="geometry" transfer-ownership="none">
-            <type name="Geometry" c:type="HklGeometry*"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="free"
-              c:identifier="hkl_geometry_list_free"
-              introspectable="0">
-        <doc xml:whitespace="preserve">destructor</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-      </method>
       <method name="items" c:identifier="hkl_geometry_list_items">
         <doc xml:whitespace="preserve">free the list with g_slist_free when done.</doc>
         <return-value transfer-ownership="container">
@@ -1065,125 +805,12 @@ Returns:</doc>
           </type>
         </return-value>
       </method>
-      <method name="multiply"
-              c:identifier="hkl_geometry_list_multiply"
-              introspectable="0">
-        <doc xml:whitespace="preserve">apply the multiply lenthod to the #HklGeometry</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-      </method>
-      <method name="multiply_from_range"
-              c:identifier="hkl_geometry_list_multiply_from_range">
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-      </method>
-      <method name="new_copy"
-              c:identifier="hkl_geometry_list_new_copy"
-              introspectable="0">
-        <doc xml:whitespace="preserve">copy constructor
-
-Returns:</doc>
-        <return-value transfer-ownership="full">
-          <type name="GeometryList" c:type="HklGeometryList*"/>
-        </return-value>
-      </method>
-      <method name="remove_invalid"
-              c:identifier="hkl_geometry_list_remove_invalid"
-              introspectable="0">
-        <doc xml:whitespace="preserve">remove all invalid #HklGeometry from the #HklGeometryList</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-      </method>
-      <method name="reset"
-              c:identifier="hkl_geometry_list_reset"
-              introspectable="0">
-        <doc xml:whitespace="preserve">reset the HklGeometry, in fact it is a sort of clean method remove
-all the items of the list.</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-      </method>
-      <method name="sort"
-              c:identifier="hkl_geometry_list_sort"
-              introspectable="0">
-        <doc xml:whitespace="preserve">sort the #HklGeometryList compare to the distance of the given
-#HklGeometry</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="ref" transfer-ownership="none">
-            <type name="Geometry" c:type="HklGeometry*"/>
-          </parameter>
-        </parameters>
-      </method>
-      <function name="fprintf"
-                c:identifier="hkl_geometry_list_fprintf"
-                introspectable="0">
-        <doc xml:whitespace="preserve">print to a file the #HklGeometryList</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="f" transfer-ownership="none">
-            <type name="gpointer" c:type="FILE*"/>
-          </parameter>
-          <parameter name="self" transfer-ownership="none">
-            <type name="GeometryList" c:type="HklGeometryList*"/>
-          </parameter>
-        </parameters>
-      </function>
     </record>
     <record name="GeometryListItem"
             c:type="HklGeometryListItem"
             glib:type-name="HklGeometryListItem"
             glib:get-type="hkl_geometry_list_item_get_type"
             c:symbol-prefix="geometry_list_item">
-      <field name="geometry" writable="1">
-        <type name="Geometry" c:type="HklGeometry*"/>
-      </field>
-      <field name="node" writable="1">
-        <type name="gpointer" c:type="gpointer"/>
-      </field>
-      <field name="_shit" writable="1">
-        <type name="gpointer" c:type="void*"/>
-      </field>
-      <constructor name="new"
-                   c:identifier="hkl_geometry_list_item_new"
-                   introspectable="0">
-        <doc xml:whitespace="preserve">constructor
-
-Returns:</doc>
-        <return-value transfer-ownership="full">
-          <type name="GeometryListItem" c:type="HklGeometryListItem*"/>
-        </return-value>
-        <parameters>
-          <parameter name="geometry" transfer-ownership="none">
-            <type name="Geometry" c:type="HklGeometry*"/>
-          </parameter>
-        </parameters>
-      </constructor>
-      <method name="free"
-              c:identifier="hkl_geometry_list_item_free"
-              introspectable="0">
-        <doc xml:whitespace="preserve">destructor</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-      </method>
-      <method name="new_copy"
-              c:identifier="hkl_geometry_list_item_new_copy"
-              introspectable="0">
-        <doc xml:whitespace="preserve">copy constructor
-
-Returns:</doc>
-        <return-value transfer-ownership="full">
-          <type name="GeometryListItem" c:type="HklGeometryListItem*"/>
-        </return-value>
-      </method>
     </record>
     <callback name="GeometryListMultiplyFunction"
               c:type="HklGeometryListMultiplyFunction">
@@ -1199,100 +826,7 @@ Returns:</doc>
         </parameter>
       </parameters>
     </callback>
-    <enumeration name="GeometryType"
-                 glib:type-name="HklGeometryType"
-                 glib:get-type="hkl_geometry_type_get_type"
-                 c:type="HklGeometryType">
-      <member name="twoc_vertical"
-              value="0"
-              c:identifier="HKL_GEOMETRY_TYPE_TWOC_VERTICAL"
-              glib:nick="twoc-vertical"/>
-      <member name="eulerian4c_vertical"
-              value="1"
-              c:identifier="HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL"
-              glib:nick="eulerian4c-vertical"/>
-      <member name="kappa4c_vertical"
-              value="2"
-              c:identifier="HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL"
-              glib:nick="kappa4c-vertical"/>
-      <member name="eulerian6c"
-              value="3"
-              c:identifier="HKL_GEOMETRY_TYPE_EULERIAN6C"
-              glib:nick="eulerian6c"/>
-      <member name="kappa6c"
-              value="4"
-              c:identifier="HKL_GEOMETRY_TYPE_KAPPA6C"
-              glib:nick="kappa6c"/>
-      <member name="zaxis"
-              value="5"
-              c:identifier="HKL_GEOMETRY_TYPE_ZAXIS"
-              glib:nick="zaxis"/>
-      <member name="soleil_sixs_med_2_2"
-              value="6"
-              c:identifier="HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_2"
-              glib:nick="soleil-sixs-med-2-2"/>
-      <member name="soleil_mars"
-              value="7"
-              c:identifier="HKL_GEOMETRY_TYPE_SOLEIL_MARS"
-              glib:nick="soleil-mars"/>
-      <member name="soleil_sixs_med_1_2"
-              value="8"
-              c:identifier="HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2"
-              glib:nick="soleil-sixs-med-1-2"/>
-      <member name="petra3_p09_eh2"
-              value="9"
-              c:identifier="HKL_GEOMETRY_TYPE_PETRA3_P09_EH2"
-              glib:nick="petra3-p09-eh2"/>
-      <member name="soleil_sixs_med_2_3"
-              value="10"
-              c:identifier="HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_3"
-              glib:nick="soleil-sixs-med-2-3"/>
-      <member name="eulerian4c_horizontal"
-              value="11"
-              c:identifier="HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL"
-              glib:nick="eulerian4c-horizontal"/>
-    </enumeration>
-    <record name="Holder" c:type="HklHolder">
-      <field name="config" writable="1">
-        <type name="gpointer" c:type="gpointer*"/>
-      </field>
-      <field name="geometry" writable="1">
-        <type name="Geometry" c:type="HklGeometry*"/>
-      </field>
-      <field name="q" writable="1">
-        <type name="Quaternion" c:type="HklQuaternion"/>
-      </field>
-      <method name="add_rotation_axis"
-              c:identifier="hkl_holder_add_rotation_axis">
-        <return-value transfer-ownership="full">
-          <type name="Axis" c:type="HklAxis*"/>
-        </return-value>
-        <parameters>
-          <parameter name="name" transfer-ownership="none">
-            <type name="utf8" c:type="char*"/>
-          </parameter>
-          <parameter name="x" transfer-ownership="none">
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-          <parameter name="y" transfer-ownership="none">
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-          <parameter name="z" transfer-ownership="none">
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-        </parameters>
-      </method>
-    </record>
-    <record name="HolderConfig" c:type="HklHolderConfig">
-      <field name="gc" writable="1">
-        <type name="gint" c:type="int"/>
-      </field>
-      <field name="idx" writable="1">
-        <type name="gulong" c:type="size_t*"/>
-      </field>
-      <field name="len" writable="1">
-        <type name="gulong" c:type="size_t"/>
-      </field>
+    <record name="Holder" c:type="HklHolder" disguised="1">
     </record>
     <record name="Interval"
             c:type="HklInterval"
@@ -3964,40 +3498,6 @@ control over, that could include printf() escape sequences.</doc>
           <type name="Factory"/>
         </type>
       </return-value>
-    </function>
-    <function name="geometry_fprintf"
-              c:identifier="hkl_geometry_fprintf"
-              moved-to="Geometry.fprintf"
-              introspectable="0">
-      <doc xml:whitespace="preserve">print into a file the #HklGeometry</doc>
-      <return-value transfer-ownership="none">
-        <type name="none" c:type="void"/>
-      </return-value>
-      <parameters>
-        <parameter name="file" transfer-ownership="none">
-          <type name="gpointer" c:type="FILE*"/>
-        </parameter>
-        <parameter name="self" transfer-ownership="none">
-          <type name="Geometry" c:type="HklGeometry*"/>
-        </parameter>
-      </parameters>
-    </function>
-    <function name="geometry_list_fprintf"
-              c:identifier="hkl_geometry_list_fprintf"
-              moved-to="GeometryList.fprintf"
-              introspectable="0">
-      <doc xml:whitespace="preserve">print to a file the #HklGeometryList</doc>
-      <return-value transfer-ownership="none">
-        <type name="none" c:type="void"/>
-      </return-value>
-      <parameters>
-        <parameter name="f" transfer-ownership="none">
-          <type name="gpointer" c:type="FILE*"/>
-        </parameter>
-        <parameter name="self" transfer-ownership="none">
-          <type name="GeometryList" c:type="HklGeometryList*"/>
-        </parameter>
-      </parameters>
     </function>
     <function name="lattice_fprintf"
               c:identifier="hkl_lattice_fprintf"

@@ -28,7 +28,9 @@
 
 #include <hkl/hkl-sample.h>
 #include <hkl/hkl-matrix.h>
-#include "hkl/hkl-parameter-private.h"
+
+#include "hkl-parameter-private.h"
+#include "hkl-geometry-private.h"
 
 /* private */
 

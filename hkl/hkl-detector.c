@@ -22,6 +22,8 @@
 #include <math.h>
 #include <hkl/hkl-detector.h>
 
+#include "hkl-geometry-private.h"
+
 /**
  * hkl_detector_new: (skip)
  *
