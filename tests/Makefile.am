@@ -1,4 +1,4 @@
-SUBDIRS = tap
+SUBDIRS = tap .
 if HAVE_INTROSPECTION
 SUBDIRS += bindings
 endif
@@ -48,10 +48,6 @@ LDADD += $(top_builddir)/hkl3d/libhkl3d.la
 endif
 
 ## tap tests
-
-AM_CPPFLAGS += \
-	-DSOURCE='"$(abs_top_srcdir)"' \
-	-DBUILD='"$(abs_top_builddir)"'
 
 check-local: $(check_PROGRAMS) runtests
 	./runtests -s $(abs_top_srcdir) $(check_PROGRAMS)

@@ -184,6 +184,7 @@ static void hkl_engine_prepare_internal(HklEngine *self)
 
 	/* fill the axes member from the function */
 	if(self->mode){
+		darray_free(self->axes);
 		darray_init(self->axes);
 		for(i=0; i<self->mode->info->n_axes; ++i){
 			HklParameter *axis;
@@ -369,7 +370,7 @@ int hkl_engine_set(HklEngine *self, HklError **error)
 	hkl_geometry_list_remove_invalid(self->engines->geometries);
 	hkl_geometry_list_sort(self->engines->geometries, self->engines->geometry);
 
-	if(self->engines->geometries->len == 0){
+	if(darray_empty(self->engines->geometries->items)){
 		hkl_error_set(error, "no remaining solutions");
 		return HKL_FALSE;
 	}
@@ -436,16 +437,16 @@ void hkl_engine_fprintf(FILE *f, const HklEngine *self)
 	/* the pseudoAxes part */
 	hkl_parameter_list_fprintf(f, &self->pseudo_axes);
 
-	if(self->engines->geometries->len > 0){
+	if(darray_empty(self->engines->geometries->items)){
 		fprintf(f, "\n   ");
 		hkl_geometry_list_fprintf(f, self->engines->geometries);
 	}
 	fprintf(f, "\n");
 }
 
-/***************************/
+/*****************/
 /* HklEngineList */
-/***************************/
+/*****************/
 
 /**
  * hkl_engine_list_new: (skip)
@@ -553,6 +554,12 @@ HklGeometry *hkl_engine_list_get_geometry(HklEngineList *self)
 	return self->geometry;
 }
 
+void hkl_engine_list_geometry_set(HklEngineList *self, const HklGeometry *geometry)
+{
+	hkl_geometry_set(self->geometry, geometry);
+	hkl_engine_list_get(self);
+}
+
 /**
  * hkl_engine_list_select_solution:
  * @self: the this ptr
@@ -564,16 +571,8 @@ HklGeometry *hkl_engine_list_get_geometry(HklEngineList *self)
  **/
 void hkl_engine_list_select_solution(HklEngineList *self, unsigned int idx)
 {
-	unsigned int i=0;
-	HklGeometryListItem *item;
-
-	list_for_each(&self->geometries->items, item, node){
-		if(i == idx){
-			hkl_geometry_init_geometry(self->geometry, item->geometry);
-			break;
-		}
-		i++;
-	}
+	hkl_geometry_init_geometry(self->geometry,
+				   darray_item(self->geometries->items, idx)->geometry);
 }
 
 /**

@@ -332,13 +332,13 @@ static int _constant_incidence_func(const gsl_vector *x, void *params, gsl_vecto
 	 * the surface is oriented along the nx, ny, nz axis for all
 	 * diffractometer angles equal to zero */
 	if(mode->geometry){
-		HklQuaternion q0 = mode->geometry->holders[0].q;
+		HklQuaternion q0 = darray_item(mode->geometry->holders, 0)->q;
 
 		hkl_quaternion_conjugate(&q0);
 		hkl_vector_rotated_quaternion(&n, &q0);
 	}
 
-	hkl_vector_rotated_quaternion(&n, &engine->geometry->holders[0].q);
+	hkl_vector_rotated_quaternion(&n, &darray_item(engine->geometry->holders, 0)->q);
 
 	hkl_source_compute_ki(&engine->geometry->source, &ki);
 	incidence = M_PI_2 - hkl_vector_angle(&n, &ki);

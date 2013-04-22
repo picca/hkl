@@ -43,7 +43,7 @@ int _psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 	HklEngine *engine = params;
 	HklEnginePsi *psi_engine = container_of(engine, HklEnginePsi, engine);
 	HklModePsi *modepsi = container_of(engine->mode, HklModePsi, parent);
-	HklHolder *holder;
+	HklHolder *sample_holder;
 
 	CHECK_NAN(x->data, x->size);
 
@@ -65,8 +65,8 @@ int _psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 
 		/* R * UB */
 		/* for now the 0 holder is the sample holder. */
-		holder = &engine->geometry->holders[0];
-		hkl_quaternion_to_matrix(&holder->q, &RUB);
+		sample_holder = darray_item(engine->geometry->holders, 0);
+		hkl_quaternion_to_matrix(&sample_holder->q, &RUB);
 		hkl_matrix_times_matrix(&RUB, &engine->sample->UB);
 
 		/* compute dhkl0 */
@@ -87,7 +87,7 @@ int _psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 		/* for now the 0 holder is the sample holder. */
 		hkl_parameter_list_get_values(&engine->mode->parameters, hkl1.data, &len);
 		hkl_matrix_times_vector(&engine->sample->UB, &hkl1);
-		hkl_vector_rotated_quaternion(&hkl1, &engine->geometry->holders[0].q);
+		hkl_vector_rotated_quaternion(&hkl1, &sample_holder->q);
 
 		/* project hkl1 on the plan of normal Q */
 		hkl_vector_project_on_plan(&hkl1, &Q);
@@ -117,7 +117,7 @@ static int hkl_mode_init_psi_real(HklMode *base,
 	HklVector ki;
 	HklMatrix RUB;
 	HklModePsi *self = container_of(base, HklModePsi, parent);
-	HklHolder *holder;
+	HklHolder *sample_holder;
 
 	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
@@ -132,8 +132,8 @@ static int hkl_mode_init_psi_real(HklMode *base,
 
 	/* R * UB */
 	/* for now the 0 holder is the sample holder. */
-	holder = &geometry->holders[0];
-	hkl_quaternion_to_matrix(&holder->q, &RUB);
+	sample_holder = darray_item(geometry->holders, 0);
+	hkl_quaternion_to_matrix(&sample_holder->q, &RUB);
 	hkl_matrix_times_matrix(&RUB, &sample->UB);
 
 	/* kf - ki = Q0 */
@@ -193,7 +193,7 @@ static int hkl_mode_get_psi_real(HklMode *base,
 		/* for now the 0 holder is the sample holder. */
 		hkl_parameter_list_get_values(&base->parameters, hkl1.data, &shit);
 		hkl_matrix_times_vector(&sample->UB, &hkl1);
-		hkl_vector_rotated_quaternion(&hkl1, &geometry->holders[0].q);
+		hkl_vector_rotated_quaternion(&hkl1, &darray_item(geometry->holders, 0)->q);
 
 		/* project hkl1 on the plan of normal Q */
 		hkl_vector_project_on_plan(&hkl1, &Q);

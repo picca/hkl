@@ -152,7 +152,7 @@ static int slits_func(const gsl_vector *x, void *params, gsl_vector *f)
 
 	/* compute the orientation of the slits */
 	hkl_vector_rotated_quaternion(&n_slits,
-				      &parameters->geometry->holders[1].q);
+				      &darray_item(parameters->geometry->holders, 1)->q);
 
 	/* both directions must be perpendicular */
 	f_data[0] = hkl_vector_scalar_product(&parameters->surface, &n_slits);
@@ -236,23 +236,28 @@ void hkl_geometry_list_multiply_soleil_sixs_med_2_3(HklGeometryList *self,
 	HklSlitsFit params;
 	HklGeometry *geometry;
 	double slits_position;
+	HklHolder *sample_holder;
+	HklHolder *detector_holder;
 
 	/* For each solution already found we will generate another one */
 	/* we will set the right slit orientation for a given detector arm position */
 	geometry = item->geometry;
+	sample_holder = darray_item(geometry->holders, 0);
+	detector_holder = darray_item(geometry->holders, 1);
 
 	/* get the index of the axis corresponding to the slits */
 	/* for now the last holder is the detector one */
-	params.slits_id = geometry->holders[1].config->idx[geometry->holders[1].config->len-1];
+	params.slits_id = detector_holder->config->idx[detector_holder->config->len-1];
 	params.len = 1; /* only one axis to fit */
 	params.geometry = geometry;
-	params.axis = &params.geometry->axes[params.slits_id];
+	params.axis = darray_item(params.geometry->axes, params.slits_id);
 
 	/* compute the surface orientation fixed during the fit */
 	/* use the last sample axis as sample surface normal */
-	params.surface = geometry->axes[geometry->holders[0].config->idx[geometry->holders[0].config->len - 1]].axis_v;
+	params.surface = darray_item(geometry->axes,
+				     sample_holder->config->idx[sample_holder->config->len - 1])->axis_v;
 	hkl_vector_rotated_quaternion(&params.surface,
-				      &params.geometry->holders[0].q);
+				      &sample_holder->q);
 
 
 	/* we just need to fit the slits orientation */

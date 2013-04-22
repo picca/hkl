@@ -32,6 +32,8 @@
 #include <g3d/matrix.h>
 
 #include "hkl3d.h"
+#include "hkl-geometry-private.h"
+
 #include "btBulletCollisionCommon.h"
 #include "BulletCollision/Gimpact/btGImpactCollisionAlgorithm.h"
 #include "BulletCollision/Gimpact/btGImpactShape.h"
@@ -512,9 +514,9 @@ static Hkl3DGeometry *hkl3d_geometry_new(HklGeometry *geometry)
 	self = HKL_MALLOC(Hkl3DGeometry);
 
 	self->geometry = geometry;
-	self->axes = (Hkl3DAxis **)malloc(geometry->len * sizeof(*self->axes));
+	self->axes = (Hkl3DAxis **)malloc(darray_size(geometry->axes) * sizeof(*self->axes));
 
-	for(i=0; i<geometry->len; ++i)
+	for(i=0; i<darray_size(geometry->axes); ++i)
 		self->axes[i] = hkl3d_axis_new();
 
 	return self;
@@ -527,7 +529,7 @@ static void hkl3d_geometry_free(Hkl3DGeometry *self)
 	if(!self)
 		return;
 
-	for(i=0; i<self->geometry->len; ++i)
+	for(i=0; i<darray_size(self->geometry->axes); ++i)
 		hkl3d_axis_free(self->axes[i]);
 	free(self->axes);
 	free(self);
@@ -535,17 +537,17 @@ static void hkl3d_geometry_free(Hkl3DGeometry *self)
 
 static void hkl3d_geometry_apply_transformations(Hkl3DGeometry *self)
 {
-	int i;
+	HklHolder **holder;
 
-	for(i=0; i<self->geometry->holders_len; i++){
+	darray_foreach(holder, self->geometry->holders){
 		size_t j;
 		btQuaternion btQ(0, 0, 0, 1);
 
-		size_t len = self->geometry->holders[i].config->len;
+		size_t len = (*holder)->config->len;
 		for(j=0; j<len; j++){
 			size_t k;
-			size_t idx = self->geometry->holders[i].config->idx[j];
-			HklAxis *axis = &self->geometry->axes[idx];
+			size_t idx = (*holder)->config->idx[j];
+			HklAxis *axis = darray_item(self->geometry->axes, idx);
 			G3DMatrix G3DM[16];
 
 			/* conversion beetween hkl -> bullet coordinates */
@@ -577,7 +579,7 @@ static void hkl3d_geometry_fprintf(FILE *f, const Hkl3DGeometry *self)
 
 	fprintf(f, "Hkl3DGeometry : \n");
 	hkl_geometry_fprintf(f, self->geometry);
-	for(i=0; i<self->geometry->len; ++i)
+	for(i=0; i<darray_size(self->geometry->axes); ++i)
 		hkl3d_axis_fprintf(f, self->axes[i]);
 }
 

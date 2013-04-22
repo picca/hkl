@@ -27,12 +27,6 @@ and/or use gtk-doc annotations.  -->
       <field name="q" writable="1">
         <type name="Quaternion" c:type="HklQuaternion"/>
       </field>
-      <field name="engine_list" writable="1">
-        <type name="gpointer" c:type="gpointer"/>
-      </field>
-      <field name="_shit" writable="1">
-        <type name="gpointer" c:type="void*"/>
-      </field>
       <constructor name="new" c:identifier="hkl_axis_new">
         <return-value transfer-ownership="full">
           <type name="Axis" c:type="HklAxis*"/>
@@ -46,6 +40,21 @@ and/or use gtk-doc annotations.  -->
           </parameter>
         </parameters>
       </constructor>
+      <method name="axis_set" c:identifier="hkl_axis_axis_set">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="src" transfer-ownership="none">
+            <type name="Axis" c:type="HklAxis*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="free" c:identifier="hkl_axis_free">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+      </method>
       <method name="init" c:identifier="hkl_axis_init">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
@@ -58,6 +67,11 @@ and/or use gtk-doc annotations.  -->
             <type name="Vector" c:type="HklVector*"/>
           </parameter>
         </parameters>
+      </method>
+      <method name="new_copy" c:identifier="hkl_axis_new_copy">
+        <return-value transfer-ownership="full">
+          <type name="Axis" c:type="HklAxis*"/>
+        </return-value>
       </method>
       <method name="set_value_smallest_in_range"
               c:identifier="hkl_axis_set_value_smallest_in_range">
@@ -378,6 +392,16 @@ Returns:</doc>
           <doc xml:whitespace="preserve">a pointer on the engine array</doc>
           <type name="GeometryList" c:type="HklGeometryList*"/>
         </return-value>
+      </method>
+      <method name="geometry_set" c:identifier="hkl_engine_list_geometry_set">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="geometry" transfer-ownership="none">
+            <type name="Geometry" c:type="HklGeometry*"/>
+          </parameter>
+        </parameters>
       </method>
       <method name="get" c:identifier="hkl_engine_list_get">
         <doc xml:whitespace="preserve">apply the get method to all the #HklEngine of the list
@@ -751,6 +775,29 @@ control over, that could include printf() escape sequences.</doc>
           </type>
         </return-value>
       </method>
+      <method name="axes_get"
+              c:identifier="hkl_geometry_axes_get"
+              introspectable="0">
+        <return-value transfer-ownership="none">
+          <type c:type="darray_axis*"/>
+        </return-value>
+      </method>
+      <method name="axis_set" c:identifier="hkl_geometry_axis_set">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="axis" transfer-ownership="none">
+            <type name="Axis" c:type="HklAxis*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="free" c:identifier="hkl_geometry_free" introspectable="0">
+        <doc xml:whitespace="preserve">destructor</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+      </method>
       <method name="get_axes_values_unit"
               c:identifier="hkl_geometry_get_axes_values_unit">
         <doc xml:whitespace="preserve">free the list with free when done.</doc>
@@ -767,6 +814,29 @@ control over, that could include printf() escape sequences.</doc>
                      transfer-ownership="full">
             <doc xml:whitespace="preserve">the length of the returned array</doc>
             <type name="guint" c:type="unsigned int*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="name_get" c:identifier="hkl_geometry_name_get">
+        <return-value transfer-ownership="none">
+          <type name="utf8" c:type="char*"/>
+        </return-value>
+      </method>
+      <method name="randomize"
+              c:identifier="hkl_geometry_randomize"
+              introspectable="0">
+        <doc xml:whitespace="preserve">randomize the #HklGeometry</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+      </method>
+      <method name="set" c:identifier="hkl_geometry_set">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="src" transfer-ownership="none">
+            <type name="Geometry" c:type="HklGeometry*"/>
           </parameter>
         </parameters>
       </method>
@@ -788,6 +858,34 @@ control over, that could include printf() escape sequences.</doc>
           </parameter>
         </parameters>
       </method>
+      <method name="set_values_unit_v"
+              c:identifier="hkl_geometry_set_values_unit_v"
+              introspectable="0">
+        <return-value transfer-ownership="none">
+          <type name="gint" c:type="int"/>
+        </return-value>
+        <parameters>
+          <parameter transfer-ownership="none">
+            <varargs>
+            </varargs>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="wavelength_get" c:identifier="hkl_geometry_wavelength_get">
+        <return-value transfer-ownership="none">
+          <type name="gdouble" c:type="double"/>
+        </return-value>
+      </method>
+      <method name="wavelength_set" c:identifier="hkl_geometry_wavelength_set">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="wavelength" transfer-ownership="none">
+            <type name="gdouble" c:type="double"/>
+          </parameter>
+        </parameters>
+      </method>
     </record>
     <record name="GeometryConfig" c:type="HklGeometryConfig" disguised="1">
     </record>
@@ -805,12 +903,33 @@ control over, that could include printf() escape sequences.</doc>
           </type>
         </return-value>
       </method>
+      <method name="items_get"
+              c:identifier="hkl_geometry_list_items_get"
+              introspectable="0">
+        <return-value transfer-ownership="none">
+          <type c:type="darray_item*"/>
+        </return-value>
+      </method>
     </record>
     <record name="GeometryListItem"
             c:type="HklGeometryListItem"
             glib:type-name="HklGeometryListItem"
             glib:get-type="hkl_geometry_list_item_get_type"
             c:symbol-prefix="geometry_list_item">
+      <method name="geometry" c:identifier="hkl_geometry_list_item_geometry">
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">The geometry contain inside the HklGeometryListItem</doc>
+          <type name="Geometry" c:type="HklGeometry*"/>
+        </return-value>
+      </method>
+      <method name="geometry_get"
+              c:identifier="hkl_geometry_list_item_geometry_get"
+              introspectable="0">
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">The geometry contain inside the HklGeometryListItem</doc>
+          <type name="Geometry" c:type="HklGeometry*"/>
+        </return-value>
+      </method>
     </record>
     <callback name="GeometryListMultiplyFunction"
               c:type="HklGeometryListMultiplyFunction">

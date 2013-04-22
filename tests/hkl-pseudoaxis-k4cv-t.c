@@ -31,7 +31,7 @@ static void degenerated(void)
 	HklMode **mode;
 	darray_mode *modes;
 	const HklFactory *factory;
-	HklGeometry *geom;
+	HklGeometry *geometry;
 	const HklGeometryList *geometries;
 	HklDetector *detector;
 	HklSample *sample;
@@ -40,14 +40,14 @@ static void degenerated(void)
 	HklParameterList *parameters;
 
 	factory = hkl_factory_get_by_name("K4CV");
-	geom = hkl_factory_create_new_geometry(factory);
+	geometry = hkl_factory_create_new_geometry(factory);
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
 	engines = hkl_factory_create_new_engine_list(factory);
-	hkl_engine_list_init(engines, geom, detector, sample);
+	hkl_engine_list_init(engines, geometry, detector, sample);
 	geometries = hkl_engine_list_geometries(engines);
 
 	engine = hkl_engine_list_get_by_name(engines, "hkl");
@@ -63,15 +63,17 @@ static void degenerated(void)
 		/* studdy this degenerated case */
 		hkl_parameter_list_set_values(pseudo_axes, hkl, ARRAY_SIZE(hkl), NULL);
 		if (hkl_engine_set(engine, NULL)){
-			HklGeometryListItem *item;
+			const darray_item *items = hkl_geometry_list_items_get(geometries);
+			HklGeometryListItem **item;
 
-			list_for_each(&geometries->items, item, node) {
+			darray_foreach(item, *items){
 				static double null[] = {0, 0, 0};
 
 				hkl_parameter_list_set_values(pseudo_axes,
 							      null, ARRAY_SIZE(null),
 							      NULL);
-				hkl_geometry_init_geometry(geom, item->geometry);
+				hkl_geometry_set(geometry,
+						 hkl_geometry_list_item_geometry_get(*item));
 				hkl_engine_get(engine, NULL);
 				res &= check_pseudoaxes(engine, hkl, 3);
 			}
@@ -83,7 +85,7 @@ static void degenerated(void)
 	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
-	hkl_geometry_free(geom);
+	hkl_geometry_free(geometry);
 }
 
 static void eulerians(void)
@@ -94,7 +96,7 @@ static void eulerians(void)
 	HklMode **mode;
 	darray_mode *modes;
 	const HklFactory *factory;
-	HklGeometry *geom;
+	HklGeometry *geometry;
 	const HklGeometryList *geometries;
 	HklDetector *detector;
 	HklSample *sample;
@@ -102,14 +104,14 @@ static void eulerians(void)
 	HklParameterList *pseudo_axes;
 
 	factory = hkl_factory_get_by_name("K4CV");
-	geom = hkl_factory_create_new_geometry(factory);
+	geometry = hkl_factory_create_new_geometry(factory);
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
 	engines = hkl_factory_create_new_engine_list(factory);
-	hkl_engine_list_init(engines, geom, detector, sample);
+	hkl_engine_list_init(engines, geometry, detector, sample);
 	geometries = hkl_engine_list_geometries(engines);
 
 	engine = hkl_engine_list_get_by_name(engines, "eulerians");
@@ -129,19 +131,19 @@ static void eulerians(void)
 					      eulerians, ARRAY_SIZE(eulerians),
 					      NULL);
 		if (hkl_engine_set(engine, NULL)) {
-			HklGeometryListItem *item;
+			const darray_item *items = hkl_geometry_list_items_get(geometries);
 
-			res &= geometries->len == 2;
+			res &= darray_size(*items) == 2;
 
 			/* first solution = 0, 90, 0 */
-			item = list_tail(&geometries->items, HklGeometryListItem, node);
-			hkl_geometry_init_geometry(geom, item->geometry);
+			hkl_geometry_set(geometry,
+					 hkl_geometry_list_item_geometry_get(darray_item(*items, 1)));
 			hkl_engine_get(engine, NULL);
 			res &= check_pseudoaxes_v(engine, 0., 90 * HKL_DEGTORAD, 0.);
 
 			/* second solution = -180, -90, 180 */
-			item = list_top(&geometries->items, HklGeometryListItem, node);
-			hkl_geometry_init_geometry(geom, item->geometry);
+			hkl_geometry_set(geometry,
+					 hkl_geometry_list_item_geometry_get(darray_item(*items, 0)));
 			hkl_engine_get(engine, NULL);
 			res &= check_pseudoaxes_v(engine, -180. * HKL_DEGTORAD, -90 * HKL_DEGTORAD, 180. * HKL_DEGTORAD);
 		}
@@ -152,7 +154,7 @@ static void eulerians(void)
 	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
-	hkl_geometry_free(geom);
+	hkl_geometry_free(geometry);
 }
 
 static void q(void)
@@ -163,27 +165,27 @@ static void q(void)
 	HklMode **mode;
 	darray_mode *modes;
 	const HklFactory *factory;
-	HklGeometry *geom;
+	HklGeometry *geometry;
 	const HklGeometryList *geometries;
 	HklDetector *detector;
 	HklSample *sample;
 
 	factory = hkl_factory_get_by_name("K4CV");
-	geom = hkl_factory_create_new_geometry(factory);
+	geometry = hkl_factory_create_new_geometry(factory);
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
 	engines = hkl_factory_create_new_engine_list(factory);
-	hkl_engine_list_init(engines, geom, detector, sample);
+	hkl_engine_list_init(engines, geometry, detector, sample);
 	geometries = hkl_engine_list_geometries(engines);
 
 	engine = hkl_engine_list_get_by_name(engines, "q");
 	modes = hkl_engine_modes(engine);
 
 	/* the init part */
-	hkl_geometry_set_values_unit_v(geom, 30., 0., 0., 60.);
+	hkl_geometry_set_values_unit_v(geometry, 30., 0., 0., 60.);
 	hkl_engine_initialize(engine, NULL);
 
 	darray_foreach(mode, *modes){
@@ -193,11 +195,13 @@ static void q(void)
 		for(q=-1.; q<1.; q += 0.1){
 			hkl_engine_set_values_v(engine, q, NULL);
 			if(hkl_engine_set(engine, NULL)){
-				HklGeometryListItem *item;
+				const darray_item *items = hkl_geometry_list_items_get(geometries);
+				HklGeometryListItem **item;
 
-				list_for_each(&geometries->items, item, node){
+				darray_foreach(item, *items){
 					hkl_engine_set_values_v(engine, 0.);
-					hkl_geometry_init_geometry(geom, item->geometry);
+					hkl_geometry_set(geometry,
+							 hkl_geometry_list_item_geometry_get(*item));
 					hkl_engine_get(engine, NULL);
 					res &= check_pseudoaxes_v(engine, q);
 				}
@@ -210,7 +214,7 @@ static void q(void)
 	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
-	hkl_geometry_free(geom);
+	hkl_geometry_free(geometry);
 }
 
 int main(int argc, char** argv)

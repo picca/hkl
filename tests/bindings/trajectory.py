@@ -38,7 +38,7 @@ def compute_hkl_trajectories(engine, hkl1=None, hkl2=None, n=100):
                     trajectories[i]
                 except IndexError:
                     trajectories.append([])
-                values = item.geometry.get_axes_values_unit()
+                values = item.geometry().get_axes_values_unit()
                 trajectories[i].append(values)
             engine.engines().select_solution(0)
         except GLib.GError, err:
@@ -124,10 +124,9 @@ def main():
 
         # here we set the detector arm with only positiv values for
         # now tth or delta arm
-        axis = geometry.get_axis_by_name("tth") \
-            or geometry.get_axis_by_name('delta')
-        if axis:
-            axis.range.min = 0
+        for axis in geometry.axes():
+            if axis.parameter.name in ["tth", "delta"]:
+                axis.parameter.range.min = 0
 
         engines.init(geometry, detector, sample)
 

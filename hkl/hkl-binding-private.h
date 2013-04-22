@@ -62,6 +62,12 @@ extern void hkl_geometry_set_axes_values_unit(HklGeometry *self, double *values,
 extern GSList* hkl_geometry_list_items(HklGeometryList *self);
 
 /***********************/
+/* HklGeometryListItem */
+/***********************/
+
+extern const HklGeometry *hkl_geometry_list_item_geometry(const HklGeometryListItem *self);
+
+/***********************/
 /* HklEngine */
 /***********************/
 

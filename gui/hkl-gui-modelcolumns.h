@@ -130,19 +130,20 @@ class SolutionModelColumns : public Gtk::TreeModel::ColumnRecord
 {
 public:
 	Gtk::TreeModelColumn<gint> index;
-	Gtk::TreeModelColumn<HklGeometryListItem *> item;
+	Gtk::TreeModelColumn<const HklGeometryListItem *> item;
 	std::vector<Gtk::TreeModelColumn<gdouble> > axes;
 
 	SolutionModelColumns(HklGeometry *geometry)
 		{
-			size_t i;
+			darray_axis *axes;
+			HklAxis **axis;
 
 			this->add(this->index);
 			this->add(this->item);
 
-			for(i=0; i<geometry->len; ++i){
+			darray_foreach(axis, *axes){
 				this->axes.push_back(Gtk::TreeModelColumn<gdouble>());
-				this->add(this->axes[i]);
+				this->add(this->axes.back());
 			}
 		}
 };

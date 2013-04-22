@@ -205,6 +205,23 @@ HklAxis *hkl_axis_new(char const *name, HklVector const *axis_v)
 	return self;
 }
 
+HklAxis *hkl_axis_new_copy(const HklAxis *src)
+{
+	HklAxis *self = NULL;
+	self = HKL_MALLOC(HklAxis);
+
+	self->parameter = src->parameter;
+	self->axis_v = src->axis_v;
+	self->q = src->q;
+
+	return self;
+}
+
+void hkl_axis_free(HklAxis *self)
+{
+	free(self);
+}
+
 void hkl_axis_init(HklAxis *self, const char* name, const HklVector *axis_v)
 {
 	static HklAxis axis0 = {
@@ -219,6 +236,11 @@ void hkl_axis_init(HklAxis *self, const char* name, const HklVector *axis_v)
 
 	self->parameter.name = name;
 	self->axis_v = *axis_v;
+}
+
+void hkl_axis_axis_set(HklAxis *self, const HklAxis *src)
+{
+	*self = *src;
 }
 
 void hkl_axis_set_value_smallest_in_range(HklAxis *self)

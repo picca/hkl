@@ -67,9 +67,10 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 
 			/* geometry -> pseudo */
 			if(hkl_engine_set(engine, NULL)) {
-				HklGeometryListItem *item;
+				const darray_item *items = hkl_geometry_list_items_get(geometries);
+				HklGeometryListItem **item;
 
-				list_for_each(&geometries->items, item, node){
+				darray_foreach(item, *items){
 					/* first modify the pseudoAxes values */
 					/* to be sure that the result is the */
 					/* computed result. */
@@ -78,7 +79,8 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 						hkl_parameter_set_value(*pseudo_axis, 0., NULL);
 					}
 
-					hkl_geometry_init_geometry(geometry, item->geometry);
+					hkl_geometry_set(geometry,
+							 hkl_geometry_list_item_geometry_get(*item));
 					hkl_engine_get(engine, NULL);
 
 					j = 0;
@@ -94,7 +96,7 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 		}
 #if with_log
 		fprintf(stderr, "\n\"%s\" \"%s\" \"%s\"",
-			geometry->config->name,
+			hkl_geometry_name_get(geometry),
 			hkl_engine_name(engine),
 			hkl_mode_name(*mode));
 		fprintf(stderr, " unreachable : %d/%d", unreachable, i);

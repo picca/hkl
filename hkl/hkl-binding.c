@@ -144,10 +144,11 @@ GSList* hkl_parameter_list_parameters(HklParameterList *self)
 GSList *hkl_geometry_axes(HklGeometry *self)
 {
 	GSList *list = NULL;
-	guint i;
+	HklAxis **axis;
 
-	for(i=0; i<self->len; ++i)
-		list = g_slist_append(list, &self->axes[i]);
+	darray_foreach(axis, self->axes){
+		list = g_slist_append(list, *axis);
+	}
 
 	return list;
 }
@@ -164,16 +165,18 @@ GSList *hkl_geometry_axes(HklGeometry *self)
 double *hkl_geometry_get_axes_values_unit(const HklGeometry *self, guint *len)
 {
 	double *values;
-	uint i;
+	uint i = 0;
+	HklAxis **axis;
 
-	if(!self || !len || self->len == 0)
+	if(!self || !len || darray_size(self->axes) == 0)
 		return NULL;
 
-	*len = self->len;
-	values = malloc(self->len * sizeof(*values));
+	*len = darray_size(self->axes);
+	values = malloc(darray_size(self->axes) * sizeof(*values));
 
-	for(i=0; i<self->len; ++i)
-		values[i] = hkl_parameter_get_value_unit(&self->axes[i].parameter);
+	darray_foreach(axis, self->axes){
+		values[i++] = hkl_parameter_get_value_unit(&(*axis)->parameter);
+	}
 
 	return values;
 }
@@ -186,15 +189,18 @@ double *hkl_geometry_get_axes_values_unit(const HklGeometry *self, guint *len)
  **/
 void hkl_geometry_set_axes_values_unit(HklGeometry *self, double *values, unsigned int len)
 {
-	uint i;
+	uint i = 0;
+	HklAxis **axis;
 
-	if (!self || !values || len != self->len)
+	if (!self || !values || len != darray_size(self->axes))
 		return;
 
-	for(i=0; i<self->len; ++i)
-		hkl_parameter_set_value_unit(&self->axes[i].parameter,
-					     values[i],
+	darray_foreach(axis, self->axes){
+		hkl_parameter_set_value_unit(&(*axis)->parameter,
+					     values[i++],
 					     NULL);
+	}
+
 	hkl_geometry_update(self);
 }
 
@@ -212,18 +218,33 @@ void hkl_geometry_set_axes_values_unit(HklGeometry *self, double *values, unsign
 GSList* hkl_geometry_list_items(HklGeometryList *self)
 {
 	GSList *list = NULL;
-	HklGeometryListItem *item;
+	HklGeometryListItem **item;
 
-	list_for_each(&self->items, item, node){
-		list = g_slist_append(list, item);
+	darray_foreach(item, self->items){
+		list = g_slist_append(list, *item);
 	}
 
 	return list;
 }
 
 /***********************/
-/* HklEngine */
+/* HklGeometryListItem */
 /***********************/
+
+/**
+ * hkl_geometry_list_item_geometry:
+ * @self: the this ptr
+ *
+ * Return value: The geometry contain inside the HklGeometryListItem
+ **/
+const HklGeometry *hkl_geometry_list_item_geometry(const HklGeometryListItem *self)
+{
+	return hkl_geometry_list_item_geometry_get(self);
+}
+
+/*************/
+/* HklEngine */
+/*************/
 
 #define HKL_ENGINE_ERROR hkl_engine_error_quark ()
 

@@ -312,7 +312,7 @@ static void _qper_qpar(HklEngine *engine,
 	hkl_vector_minus_vector(&q, &ki);
 
 	/* compute the real orientation of the surface n */
-	hkl_vector_rotated_quaternion(&n, &geometry->holders[0].q);
+	hkl_vector_rotated_quaternion(&n, &darray_item(geometry->holders, 0)->q);
 	hkl_vector_normalize(&n);
 
 	/* compute the npar used to define the sign of qpar */

@@ -24,15 +24,11 @@
 #include <tap/float.h>
 #include <tap/hkl.h>
 
-#define SET_AXES(geometry, beta, mu, omega, gamma, delta, eta_a) do{	\
-		hkl_geometry_set_values_v(geometry, 6,			\
-					  beta * HKL_DEGTORAD,		\
-					  mu * HKL_DEGTORAD,		\
-					  omega * HKL_DEGTORAD,		\
-					  gamma * HKL_DEGTORAD,		\
-					  delta * HKL_DEGTORAD,		\
-					  eta_a * HKL_DEGTORAD);	\
-	} while(0)
+#define GET_GAMMA(items, index) hkl_parameter_get_value_unit(		\
+		&darray_item(*hkl_geometry_axes_get(			\
+				     hkl_geometry_list_item_geometry_get( \
+					     darray_item(*(items), (index)))), \
+			     3)->parameter)
 
 
 static void qper_qpar(void)
@@ -48,6 +44,7 @@ static void qper_qpar(void)
 	double gamma;
 	HklParameterList *pseudo_axes;
 	const HklGeometryList *geometries;
+	const darray_item *items;
 
 	factory = hkl_factory_get_by_name("SOLEIL SIXS MED2+3");
 	geom = hkl_factory_create_new_geometry(factory);
@@ -61,6 +58,7 @@ static void qper_qpar(void)
 	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geom, detector, sample);
 	geometries = hkl_engine_list_geometries(engines);
+	items = hkl_geometry_list_items_get(geometries);
 
 	engine = hkl_engine_list_get_by_name(engines, "qper_qpar");
 	pseudo_axes = hkl_engine_pseudo_axes(engine);
@@ -69,17 +67,14 @@ static void qper_qpar(void)
 	Qpar = &darray_item(*pseudo_axes, 1)->_value;
 
 	/* the init part */
-	SET_AXES(geom, 0., 0.1, 0., 0., 90., 0.);
+	hkl_geometry_set_values_unit_v(geom, 0., 0.1, 0., 0., 90., 0.);
 	hkl_engine_initialize(engine, NULL);
 
 	/* gamma must be positif */
 	*Qper = 0.1;
 	*Qpar = 4.;
 	if(hkl_engine_set(engine, NULL) == HKL_TRUE){
-		HklGeometryListItem *item;
-
-		item = list_top(&geometries->items, HklGeometryListItem, node);
-		gamma = hkl_parameter_get_value_unit(&item->geometry->axes[3].parameter);
+		gamma = GET_GAMMA(items, 0);
 		is_double(2.61077, gamma, HKL_EPSILON * 10, __func__);
 	}
 
@@ -87,10 +82,7 @@ static void qper_qpar(void)
 	*Qper = -0.1;
 	*Qpar = 4.;
 	if(hkl_engine_set(engine, NULL) == HKL_TRUE){
-		HklGeometryListItem *item;
-
-		item = list_top(&geometries->items, HklGeometryListItem, node);
-		gamma = hkl_parameter_get_value_unit(&item->geometry->axes[3].parameter);
+		gamma = GET_GAMMA(items, 0);
 		is_double(-2.7956354, gamma, HKL_EPSILON * 10, __func__);
 	}
 

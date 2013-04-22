@@ -39,7 +39,7 @@ static void solution(void)
 	/* get the geometry and set the source */
 	factory = hkl_factory_get_by_name("ZAXIS");
 	geometry = hkl_factory_create_new_geometry(factory);
-	hkl_source_init(&geometry->source, 0.842, 1, 0, 0);
+	hkl_geometry_wavelength_set(geometry, 0.842);
 
 	/* set up the sample */
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
@@ -67,13 +67,15 @@ static void solution(void)
 	/* compute the 1 1 0 */
 	hkl_parameter_list_set_values(pseudo_axes, hkl, ARRAY_SIZE(hkl), NULL);
 	if (hkl_engine_set(engine, NULL)){
-		HklGeometryListItem *item;
+		const darray_item *items = hkl_geometry_list_items_get(geometries);
+		HklGeometryListItem **item;
 
-		list_for_each(&geometries->items, item, node){
+		darray_foreach(item, *items){
 			static double null[] = {0, 0, 0};
 
 			hkl_parameter_list_set_values(pseudo_axes, null, ARRAY_SIZE(null), NULL);
-			hkl_geometry_init_geometry(geometry, item->geometry);
+			hkl_geometry_set(geometry,
+					 hkl_geometry_list_item_geometry_get(*item));
 			hkl_engine_get(engine, NULL);
 			res &= check_pseudoaxes(engine, hkl, 3);
 		}

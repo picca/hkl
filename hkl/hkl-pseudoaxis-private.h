@@ -260,6 +260,8 @@ static void hkl_engine_release(HklEngine *self)
 	}
 	darray_free(self->modes);
 
+	darray_free(self->axes);
+
 	/* release the HklPseudoAxe memory */
 	hkl_parameter_list_release(&self->pseudo_axes);
 }

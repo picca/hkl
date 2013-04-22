@@ -39,7 +39,9 @@ typedef struct _HklGeometryListItem HklGeometryListItem;
 typedef void (* HklGeometryListMultiplyFunction) (HklGeometryList *self,
 						  HklGeometryListItem *item);
 
+typedef darray(HklAxis *) darray_axis;
 typedef darray(HklHolder *) darray_holder;
+typedef darray(HklGeometryListItem *) darray_item;
 
 /* /\*************\/ */
 /* /\* HklHolder *\/ */
@@ -56,7 +58,19 @@ typedef darray(HklHolder *) darray_holder;
 
 /* extern HklGeometry *hkl_geometry_new_copy(const HklGeometry *self); */
 
-/* extern void hkl_geometry_free(HklGeometry *self); */
+extern void hkl_geometry_free(HklGeometry *self) HKL_ARG_NONNULL(1);
+
+extern void hkl_geometry_set(HklGeometry *self, const HklGeometry *src) HKL_ARG_NONNULL(1, 2);
+
+extern const darray_axis *hkl_geometry_axes_get(const HklGeometry *self) HKL_ARG_NONNULL(1);
+
+extern void hkl_geometry_axis_set(HklGeometry *self, const HklAxis *axis) HKL_ARG_NONNULL(1, 2);
+
+extern const char *hkl_geometry_name_get(const HklGeometry *self) HKL_ARG_NONNULL(1);
+
+extern double hkl_geometry_wavelength_get(const HklGeometry *self) HKL_ARG_NONNULL(1);
+
+extern void hkl_geometry_wavelength_set(HklGeometry *self, double wavelength) HKL_ARG_NONNULL(1);
 
 /* extern void hkl_geometry_init_geometry(HklGeometry *self, */
 /* 				       const HklGeometry *src); */
@@ -71,12 +85,12 @@ typedef darray(HklHolder *) darray_holder;
 /* extern HklParameter *hkl_geometry_get_axis_by_name(HklGeometry *self, */
 /* 						   const char *name); */
 
-/* extern void hkl_geometry_randomize(HklGeometry *self); */
+extern void hkl_geometry_randomize(HklGeometry *self);
 
 /* extern int hkl_geometry_set_values_v(HklGeometry *self, */
 /* 				     size_t len, ...); */
 
-/* extern int hkl_geometry_set_values_unit_v(HklGeometry *self, ...); */
+extern int hkl_geometry_set_values_unit_v(HklGeometry *self, ...);
 
 /* extern double hkl_geometry_distance(const HklGeometry *self, */
 /* 				    const HklGeometry *ref); */
@@ -94,6 +108,8 @@ typedef darray(HklHolder *) darray_holder;
 /* /\*******************\/ */
 /* /\* HklGeometryList *\/ */
 /* /\*******************\/ */
+
+extern const darray_item *hkl_geometry_list_items_get(const HklGeometryList *self) HKL_ARG_NONNULL(1);
 
 /* extern HklGeometryList *hkl_geometry_list_new(void); */
 
@@ -118,6 +134,8 @@ typedef darray(HklHolder *) darray_holder;
 /* /\***********************\/ */
 /* /\* HklGeometryListItem *\/ */
 /* /\***********************\/ */
+
+extern const HklGeometry *hkl_geometry_list_item_geometry_get(const HklGeometryListItem *self) HKL_ARG_NONNULL(1);
 
 /* extern HklGeometryListItem *hkl_geometry_list_item_new(const HklGeometry *geometry); */
 

@@ -46,10 +46,11 @@ static void hkl_sample_reflection_update(HklSampleReflection *self)
 	/* first Q from angles */
 	hkl_source_compute_ki(&self->geometry->source, &ki);
 	self->_hkl = ki;
-	hkl_vector_rotated_quaternion(&self->_hkl, &self->geometry->holders[self->detector.idx].q);
+	hkl_vector_rotated_quaternion(&self->_hkl,
+				      &darray_item(self->geometry->holders, self->detector.idx)->q);
 	hkl_vector_minus_vector(&self->_hkl, &ki);
 
-	q = self->geometry->holders[0].q;
+	q = darray_item(self->geometry->holders, 0)->q;
 	hkl_quaternion_conjugate(&q);
 	hkl_vector_rotated_quaternion(&self->_hkl, &q);
 }
@@ -689,26 +690,24 @@ void hkl_sample_fprintf(FILE *f, const HklSample *self)
 	len = self->reflections_len;
 	if (len){
 		HklSampleReflection *reflection;
-		HklAxis *axes;
+		HklAxis **axis;
 
 		reflection  = hkl_sample_get_ith_reflection(self, 0);
 
 		fprintf(f, "Reflections:");
 		fprintf(f, "\n");
 		fprintf(f, "i %-10.6s %-10.6s %-10.6s", "h", "k", "l");
-		axes = reflection->geometry->axes;
-		for(i=0; i<reflection->geometry->len; ++i)
-			fprintf(f, " %-10.6s", axes[i].parameter.name);
+		darray_foreach(axis, reflection->geometry->axes){
+			fprintf(f, " %-10.6s", (*axis)->parameter.name);
+		}
 
 		for(i=0; i<len; ++i){
-			size_t j;
-
 			reflection  = hkl_sample_get_ith_reflection(self, i);
-			axes = reflection->geometry->axes;
 			fprintf(f, "\n%d %-10.6f %-10.6f %-10.6f", i,
 				reflection->hkl.data[0], reflection->hkl.data[1], reflection->hkl.data[2]);
-			for(j=0; j<reflection->geometry->len; ++j)
-				fprintf(f, " %-10.6f", hkl_parameter_get_value_unit(&axes[j].parameter));
+			darray_foreach(axis, reflection->geometry->axes){
+				fprintf(f, " %-10.6f", hkl_parameter_get_value_unit(&(*axis)->parameter));
+			}
 		}
 	}
 }

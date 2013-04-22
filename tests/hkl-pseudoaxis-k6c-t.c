@@ -31,7 +31,7 @@ static void degenerated(void)
 	HklMode **mode;
 	darray_mode *modes;
 	const HklFactory *factory;
-	HklGeometry *geom;
+	HklGeometry *geometry;
 	const HklGeometryList *geometries;
 	HklDetector *detector;
 	HklSample *sample;
@@ -39,14 +39,14 @@ static void degenerated(void)
 	HklParameterList *pseudo_axes;
 
 	factory = hkl_factory_get_by_name("K6C");
-	geom = hkl_factory_create_new_geometry(factory);
+	geometry = hkl_factory_create_new_geometry(factory);
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
 	engines = hkl_factory_create_new_engine_list(factory);
-	hkl_engine_list_init(engines, geom, detector, sample);
+	hkl_engine_list_init(engines, geometry, detector, sample);
 	geometries = hkl_engine_list_geometries(engines);
 
 	engine = hkl_engine_list_get_by_name(engines, "hkl");
@@ -69,15 +69,16 @@ static void degenerated(void)
 		hkl_parameter_list_set_values(pseudo_axes,
 					      hkl, ARRAY_SIZE(hkl), NULL);
 		if (hkl_engine_set(engine, NULL)){
-			HklGeometryListItem *item;
+			const darray_item *items = hkl_geometry_list_items_get(geometries);
+			HklGeometryListItem **item;
 
-			list_for_each(&geometries->items, item, node) {
+			darray_foreach(item, *items){
 				static double null[] = {0, 0, 0};
 
 				hkl_parameter_list_set_values(pseudo_axes,
 							      null, ARRAY_SIZE(null),
 							      NULL);
-				hkl_geometry_init_geometry(geom, item->geometry);
+				hkl_geometry_set(geometry, hkl_geometry_list_item_geometry_get(*item));
 				hkl_engine_get(engine, NULL);
 				res &= check_pseudoaxes(engine, hkl, ARRAY_SIZE(hkl));
 			}
@@ -89,7 +90,7 @@ static void degenerated(void)
 	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
-	hkl_geometry_free(geom);
+	hkl_geometry_free(geometry);
 }
 
 static void eulerians(void)
@@ -101,20 +102,20 @@ static void eulerians(void)
 	darray_mode *modes;
 	HklGeometryListItem *item;
 	const HklFactory *factory;
-	HklGeometry *geom;
+	HklGeometry *geometry;
 	const HklGeometryList *geometries;
 	HklDetector *detector;
 	HklSample *sample;
 
 	factory = hkl_factory_get_by_name("K6C");
-	geom = hkl_factory_create_new_geometry(factory);
+	geometry = hkl_factory_create_new_geometry(factory);
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
 	engines = hkl_factory_create_new_engine_list(factory);
-	hkl_engine_list_init(engines, geom, detector, sample);
+	hkl_engine_list_init(engines, geometry, detector, sample);
 	geometries = hkl_engine_list_geometries(engines);
 
 	engine = hkl_engine_list_get_by_name(engines, "eulerians");
@@ -132,17 +133,19 @@ static void eulerians(void)
 		/* studdy this degenerated case */
 		hkl_engine_set_values_v(engine, 0., 90. * HKL_DEGTORAD, 0.);
 		if (hkl_engine_set(engine, NULL)) {
-			res &= geometries->len == 2;
+			const darray_item *items = hkl_geometry_list_items_get(geometries);
+
+			res &= darray_size(*items) == 2;
 
 			/* first solution = 0, 90, 0 */
-			item = list_tail(&geometries->items, HklGeometryListItem, node);
-			hkl_geometry_init_geometry(geom, item->geometry);
+			hkl_geometry_set(geometry,
+					 hkl_geometry_list_item_geometry_get(darray_item(*items, 1)));
 			hkl_engine_get(engine, NULL);
 			res &= check_pseudoaxes_v(engine, 0., 90. * HKL_DEGTORAD, 0.);
 
 			/* second solution = -180, -90, 180 */
-			item = list_top(&geometries->items, HklGeometryListItem, node);
-			hkl_geometry_init_geometry(geom, item->geometry);
+			hkl_geometry_set(geometry,
+					 hkl_geometry_list_item_geometry_get(darray_item(*items, 0)));
 			hkl_engine_get(engine, NULL);
 			res &= check_pseudoaxes_v(engine, -180. * HKL_DEGTORAD, -90. * HKL_DEGTORAD, 180. * HKL_DEGTORAD);
 		}
@@ -153,7 +156,7 @@ static void eulerians(void)
 	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
-	hkl_geometry_free(geom);
+	hkl_geometry_free(geometry);
 }
 
 static void q2(void)
@@ -164,21 +167,21 @@ static void q2(void)
 	HklMode **mode;
 	darray_mode *modes;
 	const HklFactory *factory;
-	HklGeometry *geom;
+	HklGeometry *geometry;
 	const HklGeometryList *geometries;
 	HklDetector *detector;
 	HklSample *sample;
 	HklParameterList *pseudo_axes;
 
 	factory = hkl_factory_get_by_name("K6C");
-	geom = hkl_factory_create_new_geometry(factory);
+	geometry = hkl_factory_create_new_geometry(factory);
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
 	engines = hkl_factory_create_new_engine_list(factory);
-	hkl_engine_list_init(engines, geom, detector, sample);
+	hkl_engine_list_init(engines, geometry, detector, sample);
 	geometries = hkl_engine_list_geometries(engines);
 
 	engine = hkl_engine_list_get_by_name(engines, "q2");
@@ -186,7 +189,7 @@ static void q2(void)
 	pseudo_axes = hkl_engine_pseudo_axes(engine);
 
 	/* the init part */
-	hkl_geometry_set_values_unit_v(geom, 0., 30., 0., 0., 0., 60.);
+	hkl_geometry_set_values_unit_v(geometry, 0., 30., 0., 0., 0., 60.);
 	hkl_engine_initialize(engine, NULL);
 
 	darray_foreach(mode, *modes){
@@ -201,15 +204,17 @@ static void q2(void)
 							      values, ARRAY_SIZE(values),
 							      NULL);
 				if(hkl_engine_set(engine, NULL)){
-					HklGeometryListItem *item;
+					const darray_item *items = hkl_geometry_list_items_get(geometries);
+					HklGeometryListItem **item;
 
-					list_for_each(&geometries->items, item, node){
+					darray_foreach(item, *items){
 						static double null[] = {0, 0};
 
 						hkl_parameter_list_set_values(pseudo_axes,
 									      null, ARRAY_SIZE(null),
 									      NULL);
-						hkl_geometry_init_geometry(geom, item->geometry);
+						hkl_geometry_set(geometry,
+								 hkl_geometry_list_item_geometry_get(*item));
 						hkl_engine_get(engine, NULL);
 						res &= check_pseudoaxes(engine, values, 2);
 					}
@@ -222,7 +227,7 @@ static void q2(void)
 	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
-	hkl_geometry_free(geom);
+	hkl_geometry_free(geometry);
 }
 
 
@@ -232,30 +237,30 @@ static void m15110(void)
 	HklEngineList *engines;
 	HklEngine *engine;
 	const HklFactory *factory;
-	HklGeometry *geom;
+	HklGeometry *geometry;
 	HklDetector *detector;
 	HklSample *sample;
 
 	factory = hkl_factory_get_by_name("K6C");
-	geom = hkl_factory_create_new_geometry(factory);
+	geometry = hkl_factory_create_new_geometry(factory);
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
 	engines = hkl_factory_create_new_engine_list(factory);
-	hkl_engine_list_init(engines, geom, detector, sample);
+	hkl_engine_list_init(engines, geometry, detector, sample);
 
 	engine = hkl_engine_list_get_by_name(engines, "psi");
 
 	/* the init part must succed */
-	hkl_geometry_set_values_unit_v(geom, 0., 62.95, 134.75, 0., 0., 60.);
+	hkl_geometry_set_values_unit_v(geometry, 0., 62.95, 134.75, 0., 0., 60.);
 	res &= hkl_engine_initialize(engine, NULL);
 
 	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
-	hkl_geometry_free(geom);
+	hkl_geometry_free(geometry);
 
 	ok(res == HKL_TRUE, "m15110");
 }

@@ -390,12 +390,14 @@ void HKLWindow::set_up_TreeView_axes(void)
 		sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_axes_max_edited));
 
 	//Fill the models from the diffractometerAxes
-	for(i=0; i<_geometry->len; ++i){
-		HklAxis *axis = &_geometry->axes[i];
+	const darray_axis *axes;
+	HklAxis **axis;
 
+	axes = hkl_geometry_axes_get(this->_geometry);
+	darray_foreach(axis, *axes){
 		Gtk::ListStore::Row row = *(_axeModel->append());
-		row[_axeModelColumns.axis] = axis;
-		row[_axeModelColumns.name] = ((HklParameter *)axis)->name;
+		row[_axeModelColumns.axis] = *axis;
+		row[_axeModelColumns.name] = (*axis)->parameter.name;
 	}
 
 	//Set the model for the TreeView
@@ -493,11 +495,9 @@ void HKLWindow::set_up_TreeView_treeview1(void)
 {
 	LOG;
 
-	size_t i;
-	size_t j;
-	size_t k;
-	int index;
-	Gtk::CellRenderer * renderer;
+	int i=0;
+	const darray_axis *axes;
+	HklAxis **axis;
 
 	//Create the Columns
 	if(_solutionModelColumns)
@@ -506,9 +506,10 @@ void HKLWindow::set_up_TreeView_treeview1(void)
 
 	/* add the columns */
 	_treeview1->remove_all_columns();
-	for(i=0; i<_geometry->len; ++i)
-		_treeview1->append_column_numeric(((HklParameter *)&_geometry->axes[i])->name,
-						  _solutionModelColumns->axes[i],
+	axes = hkl_geometry_axes_get(this->_geometry);
+	darray_foreach(axis, *axes)
+		_treeview1->append_column_numeric((*axis)->parameter.name,
+						  _solutionModelColumns->axes[i++],
 						  "%lf");
 
 	//Create the model from the columns
@@ -592,16 +593,13 @@ void HKLWindow::set_up_3D(void)
 
 	// for now the connection with the model is done in the part of the code
 	// It should be store in the config part of the geometry ?
-	switch(_geometry->config->type){
-	case HKL_GEOMETRY_TYPE_KAPPA6C:
+	const char *name = hkl_geometry_name_get(this->_geometry);
+	if(!strcmp(name, "K6C"))
 		_Scene = new Hkl3DFrame("../data/diffabs.yaml", _geometry);
-		break;
-	case HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL:
+	else if (!strcmp(name, "K4CV"))
 		_Scene = new Hkl3DFrame("../data/cristal4C.yaml", _geometry);
-		break;
-	default:
+	else
 		_Scene = NULL;
-	}
 
 	if(_Scene){
 		this->_vbox7->pack_start(_Scene->frame());
@@ -616,8 +614,8 @@ void HKLWindow::updateSource(void)
 	LOG;
 
 	if(_geometry){
-		double lambda = hkl_source_get_wavelength(&_geometry->source);
-		_spinbutton_lambda->set_value(lambda);
+		double wavelength = hkl_geometry_wavelength_get(this->_geometry);
+		_spinbutton_lambda->set_value(wavelength);
 	}
 }
 
@@ -956,19 +954,24 @@ void HKLWindow::updateSolutions(void)
 
 	size_t i = 0;
 	const HklGeometryList *geometries = hkl_engine_list_geometries(this->_engines);
-	HklGeometryListItem *item;
+	const HklGeometryListItem **item;
 
 	_solutionModel->clear();
 	Gtk::ListStore::Row row;
-	list_for_each(&geometries->items, item, node){
-		size_t j;
+	const darray_item *items = hkl_geometry_list_items_get(geometries);
+	darray_foreach(item, *items){
+		HklAxis **axis;
+		int j = 0;
 
 		row = *(_solutionModel->append());
 		row[_solutionModelColumns->index] = i++;
-		row[_solutionModelColumns->item] = item;
-		for(j=0; j<item->geometry->len; ++j)
-			row[_solutionModelColumns->axes[j]] =
-				hkl_parameter_get_value_unit((HklParameter *)&item->geometry->axes[j]);
+		row[_solutionModelColumns->item] = *item;
 
+		const HklGeometry *geometry = hkl_geometry_list_item_geometry_get(*item);
+		const darray_axis *axes = hkl_geometry_axes_get(geometry);
+		darray_foreach(axis, *axes){
+			row[_solutionModelColumns->axes[j++]] =		\
+				hkl_parameter_get_value_unit(&(*axis)->parameter);
+		}
 	}
 }

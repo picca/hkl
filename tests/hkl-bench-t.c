@@ -57,7 +57,8 @@ static void hkl_test_bench_run_real(HklEngine *engine, HklGeometry *geometry, si
 			mean += t;
 		}
 		fprintf(stdout, "\"%s\" \"%s\" \"%s\" (%d/%d) iterations %f / %f / %f [min/mean/max] ms each\n",
-			geometry->config->name, hkl_engine_name(engine),
+			hkl_geometry_name_get(geometry),
+			hkl_engine_name(engine),
 			hkl_mode_name(*mode), n, i, min, mean/n, max);
 	}
 }
@@ -149,13 +150,15 @@ static void hkl_test_bench_eulerians(void)
 		hkl_parameter_list_set_values(pseudo_axes, eulerians, 3, NULL);
 		if (hkl_engine_set(engine, NULL)) {
 			const HklGeometryList *geometries = hkl_engine_list_geometries(engines);
-			HklGeometryListItem *item;
+			const darray_item *items = hkl_geometry_list_items_get(geometries);
+			HklGeometryListItem **item;
 
-			list_for_each(&geometries->items, item, node){
+			darray_foreach(item, *items){
 				static double null[] = {0, 0, 0};
 
 				hkl_parameter_list_set_values(pseudo_axes, null, 3, NULL);
-				hkl_geometry_init_geometry(geometry, item->geometry);
+				hkl_geometry_set(geometry,
+						 hkl_geometry_list_item_geometry_get(*item));
 				hkl_engine_get(engine, NULL);
 			}
 		}

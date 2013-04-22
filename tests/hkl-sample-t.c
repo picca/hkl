@@ -23,11 +23,6 @@
 #include <tap/basic.h>
 #include <tap/float.h>
 
-#define SET_ANGLES(geom, a, b, c, d) hkl_geometry_set_values_v(geom, 4,	\
-							       (a) * HKL_DEGTORAD, \
-							       (b) * HKL_DEGTORAD, \
-							       (c) * HKL_DEGTORAD, \
-							       (d) * HKL_DEGTORAD)
 static void new(void)
 {
 	HklSample *sample;
@@ -41,79 +36,79 @@ static void add_reflection(void)
 {
 	HklDetector *detector;
 	const HklFactory *factory;
-	HklGeometry *geom;
+	HklGeometry *geometry;
 	HklSample *sample;
 	HklSampleReflection *ref;
 
 	factory = hkl_factory_get_by_name("E4CV");
-	geom = hkl_factory_create_new_geometry(factory);
+	geometry = hkl_factory_create_new_geometry(factory);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
-	ref = hkl_sample_add_reflection(sample, geom, detector, 1, 0, 0);
+	ref = hkl_sample_add_reflection(sample, geometry, detector, 1, 0, 0);
 
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);
-	hkl_geometry_free(geom);
+	hkl_geometry_free(geometry);
 }
 
 static void get_reflection(void)
 {
 	HklDetector *detector;
 	const HklFactory *factory;
-	HklGeometry *geom;
+	HklGeometry *geometry;
 	HklSample *sample;
 	HklSampleReflection *ref;
 	HklSampleReflection *ref2;
 
 	factory = hkl_factory_get_by_name("E4CV");
-	geom = hkl_factory_create_new_geometry(factory);
+	geometry = hkl_factory_create_new_geometry(factory);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
-	ref = hkl_sample_add_reflection(sample, geom, detector, 1, 0, 0);
+	ref = hkl_sample_add_reflection(sample, geometry, detector, 1, 0, 0);
 	ref2 = hkl_sample_get_ith_reflection(sample, 0);
 	ok(0 == !ref, __func__);
 	ok(ref == ref2, __func__);
 	is_int(1, sample->reflections_len, __func__);
 
-	ref = hkl_sample_add_reflection(sample, geom, detector, -1, 0, 0);
-	ref = hkl_sample_add_reflection(sample, geom, detector, 0, 1, 0);
+	ref = hkl_sample_add_reflection(sample, geometry, detector, -1, 0, 0);
+	ref = hkl_sample_add_reflection(sample, geometry, detector, 0, 1, 0);
 
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);
-	hkl_geometry_free(geom);
+	hkl_geometry_free(geometry);
 }
 
 static void del_reflection(void)
 {
 	HklDetector *detector;
 	const HklFactory *factory;
-	HklGeometry *geom;
+	HklGeometry *geometry;
 	HklSample *sample;
 	HklSampleReflection *ref;
 
 	factory = hkl_factory_get_by_name("E4CV");
-	geom = hkl_factory_create_new_geometry(factory);
+	geometry = hkl_factory_create_new_geometry(factory);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
-	ref = hkl_sample_add_reflection(sample, geom, detector, 1, 0, 0);
+	ref = hkl_sample_add_reflection(sample, geometry, detector, 1, 0, 0);
 	hkl_sample_del_reflection(sample, 0);
 	is_int(0, sample->reflections_len, __func__);
 
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);
-	hkl_geometry_free(geom);
+	hkl_geometry_free(geometry);
 }
 
 static void  set_UB(void )
@@ -141,25 +136,25 @@ static void compute_UB_busing_levy(void)
 {
 	HklDetector *detector;
 	const HklFactory *factory;
-	HklGeometry *geom;
+	HklGeometry *geometry;
 	HklSample *sample;
 	HklSampleReflection *ref;
 	HklMatrix m_I = {{{1,0,0}, {0,1,0}, {0, 0, 1}}};
 	HklMatrix m_ref = {{{1., 0., 0.}, {0., 0., 1.}, {0.,-1., 0.}}};
 
 	factory = hkl_factory_get_by_name("E4CV");
-	geom = hkl_factory_create_new_geometry(factory);
+	geometry = hkl_factory_create_new_geometry(factory);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
-	SET_ANGLES(geom, 30, 0, 0, 60);
-	ref = hkl_sample_add_reflection(sample, geom, detector, 0, 0, 1);
+	hkl_geometry_set_values_unit_v(geometry, 30., 0., 0., 60.);
+	ref = hkl_sample_add_reflection(sample, geometry, detector, 0, 0, 1);
 
-	SET_ANGLES(geom, 30, 0, -90, 60);
-	ref = hkl_sample_add_reflection(sample, geom, detector, -1, 0, 0);
+	hkl_geometry_set_values_unit_v(geometry, 30., 0., -90., 60.);
+	ref = hkl_sample_add_reflection(sample, geometry, detector, -1, 0, 0);
 
 	hkl_sample_compute_UB_busing_levy(sample, 0, 1);
 	ok(HKL_TRUE == hkl_matrix_cmp(&m_I, &sample->U), __func__);
@@ -167,11 +162,11 @@ static void compute_UB_busing_levy(void)
 	is_double(0., hkl_parameter_get_value(sample->uy), HKL_EPSILON, __func__);
 	is_double(0., hkl_parameter_get_value(sample->uz), HKL_EPSILON, __func__);
 
-	SET_ANGLES(geom, 30, 0, 90, 60);
-	ref = hkl_sample_add_reflection(sample, geom, detector, 1, 0, 0);
+	hkl_geometry_set_values_unit_v(geometry, 30., 0., 90., 60.);
+	ref = hkl_sample_add_reflection(sample, geometry, detector, 1, 0, 0);
 
-	SET_ANGLES(geom, 30, 0, 180, 60);
-	ref = hkl_sample_add_reflection(sample, geom, detector, 0, 1, 0);
+	hkl_geometry_set_values_unit_v(geometry, 30., 0., 180., 60.);
+	ref = hkl_sample_add_reflection(sample, geometry, detector, 0, 1, 0);
 
 	hkl_sample_compute_UB_busing_levy(sample, 2, 3);
 	ok(HKL_TRUE == hkl_matrix_cmp(&m_ref, &sample->U), __func__);
@@ -181,7 +176,7 @@ static void compute_UB_busing_levy(void)
 
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);
-	hkl_geometry_free(geom);
+	hkl_geometry_free(geometry);
 }
 
 static void affine(void)
@@ -189,7 +184,7 @@ static void affine(void)
 	double a, b, c, alpha, beta, gamma;
 	const HklFactory *factory;
 	HklDetector *detector;
-	HklGeometry *geom;
+	HklGeometry *geometry;
 	HklSample *sample;
 	HklSampleReflection *ref;
 	static HklMatrix m_ref = {{{1., 0., 0.},
@@ -197,7 +192,7 @@ static void affine(void)
 				   {0., 0., 1.}}};
 
 	factory = hkl_factory_get_by_name("E4CV");
-	geom = hkl_factory_create_new_geometry(factory);
+	geometry = hkl_factory_create_new_geometry(factory);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
@@ -209,20 +204,20 @@ static void affine(void)
 			81 * HKL_DEGTORAD,
 			90 * HKL_DEGTORAD);
 
-	SET_ANGLES(geom, 30, 0, 90, 60);
-	ref = hkl_sample_add_reflection(sample, geom, detector, 1, 0, 0);
+	hkl_geometry_set_values_unit_v(geometry, 30., 0., 90., 60.);
+	ref = hkl_sample_add_reflection(sample, geometry, detector, 1, 0, 0);
 
-	SET_ANGLES(geom, 30, 90, 0, 60);
-	ref = hkl_sample_add_reflection(sample, geom, detector, 0, 1, 0);
+	hkl_geometry_set_values_unit_v(geometry, 30., 90., 0., 60.);
+	ref = hkl_sample_add_reflection(sample, geometry, detector, 0, 1, 0);
 
-	SET_ANGLES(geom, 30, 0, 0, 60);
-	ref = hkl_sample_add_reflection(sample, geom, detector, 0, 0, 1);
+	hkl_geometry_set_values_unit_v(geometry, 30., 0., 0., 60.);
+	ref = hkl_sample_add_reflection(sample, geometry, detector, 0, 0, 1);
 
-	SET_ANGLES(geom, 60, 60, 60, 60);
-	ref = hkl_sample_add_reflection(sample, geom, detector, .625, .75, -.216506350946);
+	hkl_geometry_set_values_unit_v(geometry, 60., 60., 60., 60.);
+	ref = hkl_sample_add_reflection(sample, geometry, detector, .625, .75, -.216506350946);
 
-	SET_ANGLES(geom, 45, 45, 45, 60);
-	ref = hkl_sample_add_reflection(sample, geom, detector, .665975615037, .683012701892, .299950211252);
+	hkl_geometry_set_values_unit_v(geometry, 45., 45., 45., 60.);
+	ref = hkl_sample_add_reflection(sample, geometry, detector, .665975615037, .683012701892, .299950211252);
 
 	hkl_sample_affine(sample);
 
@@ -245,19 +240,19 @@ static void affine(void)
 
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);
-	hkl_geometry_free(geom);
+	hkl_geometry_free(geometry);
 }
 
 static void get_reflections_xxx_angle(void)
 {
 	HklDetector *detector;
 	const HklFactory *factory;
-	HklGeometry *geom;
+	HklGeometry *geometry;
 	HklSample *sample;
 	HklSampleReflection *ref;
 
 	factory = hkl_factory_get_by_name("E4CV");
-	geom = hkl_factory_create_new_geometry(factory);
+	geometry = hkl_factory_create_new_geometry(factory);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
@@ -267,20 +262,20 @@ static void get_reflections_xxx_angle(void)
 			       1.54, 1.54, 1.54,
 			       90*HKL_DEGTORAD, 90*HKL_DEGTORAD,90*HKL_DEGTORAD);
 
-	SET_ANGLES(geom, 30, 0, 90, 60);
-	ref = hkl_sample_add_reflection(sample, geom, detector, 1, 0, 0);
+	hkl_geometry_set_values_unit_v(geometry, 30., 0., 90., 60.);
+	ref = hkl_sample_add_reflection(sample, geometry, detector, 1, 0, 0);
 
-	SET_ANGLES(geom, 30, 90, 0, 60);
-	ref = hkl_sample_add_reflection(sample, geom, detector, 0, 1, 0);
+	hkl_geometry_set_values_unit_v(geometry, 30., 90., 0., 60.);
+	ref = hkl_sample_add_reflection(sample, geometry, detector, 0, 1, 0);
 
-	SET_ANGLES(geom, 30, 0, 0, 60);
-	ref = hkl_sample_add_reflection(sample, geom, detector, 0, 0, 1);
+	hkl_geometry_set_values_unit_v(geometry, 30., 0., 0., 60.);
+	ref = hkl_sample_add_reflection(sample, geometry, detector, 0, 0, 1);
 
-	SET_ANGLES(geom, 60, 60, 60, 60);
-	ref = hkl_sample_add_reflection(sample, geom, detector, .625, .75, -.216506350946);
+	hkl_geometry_set_values_unit_v(geometry, 60., 60., 60., 60.);
+	ref = hkl_sample_add_reflection(sample, geometry, detector, .625, .75, -.216506350946);
 
-	SET_ANGLES(geom, 45, 45, 45, 60);
-	ref = hkl_sample_add_reflection(sample, geom, detector, .665975615037, .683012701892, .299950211252);
+	hkl_geometry_set_values_unit_v(geometry, 45., 45., 45., 60.);
+	ref = hkl_sample_add_reflection(sample, geometry, detector, .665975615037, .683012701892, .299950211252);
 
 	is_double(90 * HKL_DEGTORAD,
 		  hkl_sample_get_reflection_theoretical_angle(sample, 0, 1),
@@ -300,7 +295,7 @@ static void get_reflections_xxx_angle(void)
 
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);
-	hkl_geometry_free(geom);
+	hkl_geometry_free(geometry);
 }
 
 static void reflection_set_geometry(void)
@@ -308,13 +303,13 @@ static void reflection_set_geometry(void)
 	double a, b, c, alpha, beta, gamma;
 	HklDetector *detector;
 	const HklFactory *factory;
-	HklGeometry *geom;
+	HklGeometry *geometry;
 	HklSample *sample;
 	HklSampleReflection *ref;
 	HklMatrix m_ref = {{{1., 0., 0.}, {0., 1., 0.}, {0., 0., 1.}}};
 
 	factory = hkl_factory_get_by_name("E4CV");
-	geom = hkl_factory_create_new_geometry(factory);
+	geometry = hkl_factory_create_new_geometry(factory);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
@@ -324,24 +319,24 @@ static void reflection_set_geometry(void)
 			       1.54, 1.54, 1.54,
 			       90*HKL_DEGTORAD, 90*HKL_DEGTORAD,90*HKL_DEGTORAD);
 
-	SET_ANGLES(geom, 30, 0, 90, 60);
-	ref = hkl_sample_add_reflection(sample, geom, detector, 1, 0, 0);
+	hkl_geometry_set_values_unit_v(geometry, 30., 0., 90., 60.);
+	ref = hkl_sample_add_reflection(sample, geometry, detector, 1, 0, 0);
 
-	SET_ANGLES(geom, 30, 90, 0, 60);
-	ref = hkl_sample_add_reflection(sample, geom, detector, 0, 1, 0);
+	hkl_geometry_set_values_unit_v(geometry, 30., 90., 0., 60.);
+	ref = hkl_sample_add_reflection(sample, geometry, detector, 0, 1, 0);
 
-	SET_ANGLES(geom, 30, 0, 0, 60);
-	ref = hkl_sample_add_reflection(sample, geom, detector, 0, 0, 1);
+	hkl_geometry_set_values_unit_v(geometry, 30., 0., 0., 60.);
+	ref = hkl_sample_add_reflection(sample, geometry, detector, 0, 0, 1);
 
-	SET_ANGLES(geom, 60, 60, 60, 60);
-	ref = hkl_sample_add_reflection(sample, geom, detector, .625, .75, -.216506350946);
+	hkl_geometry_set_values_unit_v(geometry, 60., 60., 60., 60.);
+	ref = hkl_sample_add_reflection(sample, geometry, detector, .625, .75, -.216506350946);
 
-	SET_ANGLES(geom, 46, 45, 45, 60);
-	ref = hkl_sample_add_reflection(sample, geom, detector, .665975615037, .683012701892, .299950211252);
+	hkl_geometry_set_values_unit_v(geometry, 46., 45., 45., 60.);
+	ref = hkl_sample_add_reflection(sample, geometry, detector, .665975615037, .683012701892, .299950211252);
 
 	/* correct the last reflection so the sample affinement must be ok. */
-	SET_ANGLES(geom, 45, 45, 45, 60);
-	hkl_sample_reflection_set_geometry(ref, geom);
+	hkl_geometry_set_values_unit_v(geometry, 45., 45., 45., 60.);
+	hkl_sample_reflection_set_geometry(ref, geometry);
 
 	hkl_sample_affine(sample);
 
@@ -364,7 +359,7 @@ static void reflection_set_geometry(void)
 
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);
-	hkl_geometry_free(geom);
+	hkl_geometry_free(geometry);
 }
 
 static void list_new(void)
@@ -463,5 +458,3 @@ int main(int argc, char** argv)
 
 	return 0;
 }
-
-#undef SET_ANGLES

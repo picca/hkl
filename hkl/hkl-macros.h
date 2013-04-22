@@ -36,33 +36,19 @@
 
 /* deprecated */
 #if    __GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 1)
-#define HKL_DEPRECATED __attribute__((__deprecated__))
+# define HKL_DEPRECATED __attribute__((__deprecated__))
 #elif defined(_MSC_VER) && (_MSC_VER >= 1300)
-#define HKL_DEPRECATED __declspec(deprecated)
+# define HKL_DEPRECATED __declspec(deprecated)
 #else
-#define HKL_DEPRECATED
+# define HKL_DEPRECATED
 #endif
 
 #if    __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 5)
-#define HKL_DEPRECATED_FOR(f) __attribute__((__deprecated__("Use '" #f "' instead")))
+# define HKL_DEPRECATED_FOR(f) __attribute__((__deprecated__("Use '" #f "' instead")))
 #elif defined(_MSC_FULL_VER) && (_MSC_FULL_VER > 140050320)
-#define HKL_DEPRECATED_FOR(f) __declspec(deprecated("is deprecated. Use '" #f "' instead"))
+# define HKL_DEPRECATED_FOR(f) __declspec(deprecated("is deprecated. Use '" #f "' instead"))
 #else
-#define HKL_DEPRECATED_FOR(f) HKL_DEPRECATED
-#endif
-
-/* add the win32 portability part */
-#if _MSC_VER
-# include <float.h>
-# define INFINITY DBL_MAX
-# define M_PI     3.14159265358979323846264338328
-# define M_PI_2   1.57079632679489661923132169164
-# define strdup _strdup
-# include <malloc.h>
-# define __inline__
-
-# include <stdarg.h>
-extern int vasprintf(char **strp, const char *fmt, va_list ap);
+# define HKL_DEPRECATED_FOR(f) HKL_DEPRECATED
 #endif
 
 /* common part */
@@ -121,12 +107,14 @@ extern int vasprintf(char **strp, const char *fmt, va_list ap);
 		}						\
 	} while(0)
 
-#ifdef __GNUC__
-# define NORETURN __attribute__((__noreturn__))
-#else
-# define NORETURN
-# ifndef __attribute__
-#  define __attribute__(x)
+#ifndef NORETURN
+# ifdef __GNUC__
+#  define NORETURN __attribute__((__noreturn__))
+# else
+#  define NORETURN
+#  ifndef __attribute__
+#   define __attribute__(x)
+#  endif
 # endif
 #endif
 
@@ -145,4 +133,27 @@ HKL_END_DECLS
 /* malloc method */
 #define HKL_MALLOC(type) (type *)_hkl_malloc(sizeof(type), "Can not allocate memory for a " #type)
 
+#ifdef HKLAPI
+# undef HKLEAPI
+#endif
+
+#ifdef __GNUC__
+# if __GNUC__ >= 4
+#  define HKLAPI __attribute__ ((visibility("default")))
+# else
+#  define HKLAPI
+# endif
+#else
+/**
+ * @def HKLEAPI
+ * @brief Used to export functions(by changing visibility).
+ */
+# define HKLAPI
+#endif
+
+# if (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3))
+#  define HKL_ARG_NONNULL(...) __attribute__ ((__nonnull__(__VA_ARGS__)))
+# else
+#  define HKL_ARG_NONNULL(...)
+# endif
 #endif

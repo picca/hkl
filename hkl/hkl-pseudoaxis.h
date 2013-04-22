@@ -86,6 +86,8 @@ extern void hkl_engine_list_free(HklEngineList *self);
 
 extern darray_engine *hkl_engine_list_engines(HklEngineList *self);
 
+extern void hkl_engine_list_geometry_set(HklEngineList *self, const HklGeometry *geometry) HKL_ARG_NONNULL(1, 2);
+
 extern const HklGeometryList *hkl_engine_list_geometries(const HklEngineList *self);
 
 extern HklGeometry *hkl_engine_list_get_geometry(HklEngineList *self);

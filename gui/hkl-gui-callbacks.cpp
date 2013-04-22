@@ -171,7 +171,8 @@ void HKLWindow::on_spinbutton_lambda_value_changed(void)
 	LOG;
 
 	if(_geometry){
-		_geometry->source.wave_length = _spinbutton_lambda->get_value();
+		hkl_geometry_wavelength_set(this->_geometry,
+					    _spinbutton_lambda->get_value());
 		this->updatePseudoAxes();
 		this->updatePseudoAxesFrames();
 	}
@@ -322,13 +323,12 @@ void HKLWindow::on_cell_TreeView_axes_read_edited(Glib::ustring const & spath,
 	Glib::RefPtr<Gtk::TreeModel> listStore = _TreeView_axes->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
-
-	Glib::ustring name = row[_axeModelColumns.name];
+	HklAxis *axis = row[_axeModelColumns.axis];
 	double value;
+
 	sscanf(newText.c_str(), "%lf", &value);
-	HklParameter *axis = hkl_geometry_get_axis_by_name(_geometry, name.c_str());
-	hkl_parameter_set_value_unit(axis, value, NULL);
-	hkl_geometry_update(_geometry);
+	hkl_parameter_set_value_unit(&axis->parameter, value, NULL);
+	hkl_geometry_axis_set(this->_geometry, axis);
 
 	row[_axeModelColumns.read] = value;
 	this->updatePseudoAxes();
@@ -352,12 +352,11 @@ void HKLWindow::on_cell_TreeView_axes_write_edited(Glib::ustring const & spath,
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
 
-	Glib::ustring name = row[_axeModelColumns.name];
+	HklAxis *axis = row[_axeModelColumns.axis];
 	double value;
 	sscanf(newText.c_str(), "%lf", &value);
-	HklParameter *axis = hkl_geometry_get_axis_by_name(_geometry, name.c_str());
-	hkl_parameter_set_value_unit(axis, value, NULL);
-	hkl_geometry_update(_geometry);
+	hkl_parameter_set_value_unit(&axis->parameter, value, NULL);
+	hkl_geometry_axis_set(this->_geometry, axis);
 
 	row[_axeModelColumns.write] = value;
 	this->updatePseudoAxes();
@@ -380,18 +379,17 @@ void HKLWindow::on_cell_TreeView_axes_min_edited(Glib::ustring const & spath,
 	Glib::RefPtr<Gtk::TreeModel> listStore = _TreeView_axes->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
+	HklAxis *axis = row[_axeModelColumns.axis];
 
 	double shit;
 	double max;
 	double value;
-	HklParameter *axis;
 
-	Glib::ustring name = row[_axeModelColumns.name];
 	sscanf(newText.c_str(), "%lf", &value);
 
-	axis = hkl_geometry_get_axis_by_name(_geometry, name.c_str());
-	hkl_parameter_get_range_unit(axis, &shit, &max);
-	hkl_parameter_set_range_unit(axis, value, max);
+	hkl_parameter_get_range_unit(&axis->parameter, &shit, &max);
+	hkl_parameter_set_range_unit(&axis->parameter, value, max);
+	hkl_geometry_axis_set(this->_geometry, axis);
 
 	row[_axeModelColumns.min] = value;
 	this->updatePseudoAxes();
@@ -406,17 +404,16 @@ void HKLWindow::on_cell_TreeView_axes_max_edited(Glib::ustring const & spath,
 	Glib::RefPtr<Gtk::TreeModel> listStore = _TreeView_axes->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
+	HklAxis *axis = row[_axeModelColumns.axis];
 
 	double min, shit;
 	double value;
-	HklParameter *axis;
 
-	Glib::ustring name = row[_axeModelColumns.name];
 	sscanf(newText.c_str(), "%lf", &value);
 
-	axis = hkl_geometry_get_axis_by_name(_geometry, name.c_str());
-	hkl_parameter_get_range_unit(axis, &min, &shit);
-	hkl_parameter_set_range_unit(axis, min, value);
+	hkl_parameter_get_range_unit(&axis->parameter, &min, &shit);
+	hkl_parameter_set_range_unit(&axis->parameter, min, value);
+	hkl_geometry_axis_set(this->_geometry, axis);
 
 	row[_axeModelColumns.max] = value;
 	this->updatePseudoAxes();
@@ -440,17 +437,12 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & s
 
 	parameter = row[_pseudoAxeModelColumns.parameter];
 	engine = row[_pseudoAxeModelColumns.engine];
-	Glib::ustring name = row[_pseudoAxeModelColumns.name];
 	sscanf(newText.c_str(), "%lf", &value);
 
 	if(hkl_parameter_set_value_unit(parameter, value, NULL))
 		if(hkl_engine_set(engine, NULL)){
-			const HklGeometryList *geometries = hkl_engine_list_geometries(_engines);
-			HklGeometryListItem *first;
+			hkl_engine_list_select_solution(this->_engines, 0);
 
-			first = list_top(&geometries->items, HklGeometryListItem, node);
-			hkl_geometry_init_geometry(_geometry, first->geometry);
-			hkl_engine_list_get(_engines);
 			row[_pseudoAxeModelColumns.write] = value;
 			this->updateAxes();
 			this->updatePseudoAxes();
@@ -488,6 +480,7 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_parameters_value_edited(Glib::ustrin
 	this->updatePseudoAxes();
 	this->update_pseudoAxes_parameters();
 }
+
 void HKLWindow::on_cell_TreeView_crystals_name_edited(Glib::ustring const & spath,
 						      Glib::ustring const & newText)
 {
@@ -671,8 +664,8 @@ void HKLWindow::on_toolbutton_goto_reflection_clicked(void)
 			Gtk::ListStore::Row row = *(liststore->get_iter(path));
 			unsigned int index = row[_reflectionModelColumns.index];
 
-			hkl_geometry_init_geometry(_geometry,
-						   sample->reflections[index]->geometry);
+			hkl_geometry_set(this->_geometry,
+					 sample->reflections[index]->geometry);
 
 			this->updateSource();
 			this->updateAxes();
@@ -899,25 +892,16 @@ void HKLWindow::on_treeview1_cursor_changed(void)
 {
 	LOG;
 
-	HklGeometryListItem *item;;
-
 	Gtk::TreeModel::Path path;
 	Gtk::TreeViewColumn * column;
 	_treeview1->get_cursor(path, column);
 	Gtk::TreeModel::iterator iter = _solutionModel->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
+	const HklGeometryListItem *item = row[_solutionModelColumns->item];
 
-	item = row[_solutionModelColumns->item];
+	const HklGeometry *geometry = hkl_geometry_list_item_geometry_get(item);
+	hkl_engine_list_geometry_set(this->_engines, geometry);
 
-	hkl_geometry_init_geometry(_geometry, item->geometry);
-	hkl_engine_list_get(_engines);
-
-	/*
-	  this->updateLattice();
-	  this->updateLatticeParameters();
-	  this->updateReciprocalLattice();
-	  this->updateUB();
-	*/
 	this->updateAxes();
 	this->updatePseudoAxes();
 	this->updatePseudoAxesFrames();

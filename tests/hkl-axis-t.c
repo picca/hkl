@@ -61,6 +61,31 @@ static void get_quaternions(void)
 	hkl_parameter_free(&axis->parameter);
 }
 
+static void copy(void)
+{
+	HklAxis *axis;
+	HklAxis *copy;
+	static HklVector v = {{1, 0, 0}};
+
+	axis = hkl_axis_new("omega", &v);
+	hkl_parameter_set_value(&axis->parameter, -M_PI_2, NULL);
+
+	copy = hkl_axis_new_copy(axis);
+	is_string("omega", copy->parameter.name, __func__);
+	is_double(-M_PI, copy->parameter.range.min, HKL_EPSILON, __func__);
+	is_double(M_PI, copy->parameter.range.max, HKL_EPSILON, __func__);
+	is_double(-M_PI_2, hkl_parameter_get_value(&copy->parameter), HKL_EPSILON, __func__);
+	ok(HKL_TRUE == copy->parameter.fit, __func__);
+	ok(HKL_TRUE == copy->parameter.changed, __func__);
+	is_double(1./sqrt(2.), copy->q.data[0], HKL_EPSILON, __func__);
+	is_double(-1./sqrt(2.), copy->q.data[1], HKL_EPSILON, __func__);
+	is_double(0., copy->q.data[2], HKL_EPSILON, __func__);
+	is_double(0., copy->q.data[3], HKL_EPSILON, __func__);
+	
+	hkl_parameter_free(&axis->parameter);
+	hkl_parameter_free(&copy->parameter);
+}
+
 static void is_valid(void)
 {
 	HklAxis *axis1;
@@ -163,10 +188,11 @@ static void get_value_closest(void)
 
 int main(int argc, char** argv)
 {
-	plan(30);
+	plan(40);
 
 	new();
 	get_quaternions();
+	copy();
 	is_valid();
 	set_value_smallest_in_range();
 	get_value_closest();
