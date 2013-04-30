@@ -1133,8 +1133,6 @@ control over, that could include printf() escape sequences.</doc>
         </parameters>
       </method>
     </record>
-    <record name="Holder" c:type="HklHolder" disguised="1">
-    </record>
     <record name="Interval"
             c:type="HklInterval"
             glib:type-name="HklInterval"

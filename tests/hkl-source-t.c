@@ -23,6 +23,8 @@
 #include <tap/basic.h>
 #include <tap/float.h>
 
+#include <hkl/hkl-source.h>
+
 static void new_copy(void)
 {
 	HklSource s, c;

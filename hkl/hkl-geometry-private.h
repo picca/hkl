@@ -30,6 +30,7 @@
 
 HKL_BEGIN_DECLS
 
+typedef struct _HklHolder HklHolder;
 typedef void (* HklGeometryListMultiplyFunction) (HklGeometryList *self,
 						  HklGeometryListItem *item);
 

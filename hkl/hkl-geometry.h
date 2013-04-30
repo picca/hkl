@@ -24,13 +24,10 @@
 
 #include <hkl/ccan/darray/darray.h>
 
-#include <hkl/hkl-source.h>
-#include <hkl/hkl-quaternion.h>
 #include <hkl/hkl-axis.h>
 
 HKL_BEGIN_DECLS
 
-typedef struct _HklHolder HklHolder;
 typedef struct _HklGeometry HklGeometry;
 typedef struct _HklGeometryList HklGeometryList;
 typedef struct _HklGeometryListItem HklGeometryListItem;
