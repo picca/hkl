@@ -279,9 +279,6 @@ HklEngineList *hkl_engine_engines(HklEngine *self)
 void hkl_engine_select_mode(HklEngine *self,
 			    HklMode *mode)
 {
-	if(!self || !mode)
-		return;
-
 	self->mode = mode;
 	hkl_engine_prepare_internal(self);
 }
@@ -290,9 +287,6 @@ void hkl_engine_select_mode_by_name(HklEngine *self,
 				    const char *name)
 {
 	HklMode **mode;
-
-	if(!self || !name)
-		return;
 
 	darray_foreach(mode, self->modes){
 		if(!strcmp((*mode)->info->name, name))
@@ -313,7 +307,7 @@ int hkl_engine_initialize(HklEngine *self, HklError **error)
 {
 	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
-	if(!self || !self->geometry || !self->detector || !self->sample
+	if(!self->geometry || !self->detector || !self->sample
 	   || !self->mode) {
 		hkl_error_set(error, "Internal error");
 		return HKL_FALSE;
@@ -349,7 +343,7 @@ int hkl_engine_set(HklEngine *self, HklError **error)
 {
 	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
-	if(!self || !self->geometry || !self->detector || !self->sample
+	if(!self->geometry || !self->detector || !self->sample
 	   || !self->mode || !self->mode->ops->set){
 		hkl_error_set(error, "Internal error");
 		return HKL_FALSE;
@@ -393,7 +387,7 @@ int hkl_engine_get(HklEngine *self, HklError **error)
 {
 	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
-	if(!self || !self->engines || !self->engines->geometry || !self->engines->detector
+	if(!self->engines || !self->engines->geometry || !self->engines->detector
 	   || !self->engines->sample || !self->mode || !self->mode->ops->get){
 		hkl_error_set(error, "Internal error");
 		return HKL_FALSE;
@@ -680,9 +674,6 @@ int hkl_engine_list_get(HklEngineList *self)
 {
 	HklEngine **engine;
 	int res = HKL_TRUE;
-
-	if (!self)
-		return res;
 
 	darray_foreach(engine, *self){
 		res &= hkl_engine_get(*engine, NULL);

@@ -42,73 +42,73 @@ typedef darray(HklEngine *) darray_engine;
 /* HklMode */
 /***********/
 
-extern const char * hkl_mode_name(const HklMode *self);
+HKLAPI const char * hkl_mode_name(const HklMode *self) HKL_ARG_NONNULL(1);
 
-extern HklParameterList *hkl_mode_parameters(HklMode *self);
+HKLAPI HklParameterList *hkl_mode_parameters(HklMode *self) HKL_ARG_NONNULL(1);
 
-extern void hkl_mode_fprintf(FILE *f, const HklMode *self);
+HKLAPI void hkl_mode_fprintf(FILE *f, const HklMode *self) HKL_ARG_NONNULL(1, 2);
 
 /*************/
 /* HklEngine */
 /*************/
 
-extern const char *hkl_engine_name(const HklEngine *self);
+HKLAPI const char *hkl_engine_name(const HklEngine *self) HKL_ARG_NONNULL(1);
 
-extern unsigned int hkl_engine_len(const HklEngine *self);
+HKLAPI unsigned int hkl_engine_len(const HklEngine *self) HKL_ARG_NONNULL(1);
 
-extern HklParameterList *hkl_engine_pseudo_axes(HklEngine *self);
+HKLAPI HklParameterList *hkl_engine_pseudo_axes(HklEngine *self) HKL_ARG_NONNULL(1);
 
-extern HklMode *hkl_engine_mode(HklEngine *self);
+HKLAPI HklMode *hkl_engine_mode(HklEngine *self) HKL_ARG_NONNULL(1);
 
-extern darray_mode *hkl_engine_modes(HklEngine *self);
+HKLAPI darray_mode *hkl_engine_modes(HklEngine *self) HKL_ARG_NONNULL(1);
 
-extern HklEngineList *hkl_engine_engines(HklEngine *self);
+HKLAPI HklEngineList *hkl_engine_engines(HklEngine *self) HKL_ARG_NONNULL(1);
 
-extern void hkl_engine_select_mode(HklEngine *self,
-				   HklMode *mode);
+HKLAPI void hkl_engine_select_mode(HklEngine *self,
+				   HklMode *mode) HKL_ARG_NONNULL(1, 2);
 
-extern void hkl_engine_select_mode_by_name(HklEngine *self,
-					   const char *name);
+HKLAPI void hkl_engine_select_mode_by_name(HklEngine *self,
+					   const char *name) HKL_ARG_NONNULL(1, 2);
 
-extern int hkl_engine_initialize(HklEngine *self, HklError **error);
+HKLAPI int hkl_engine_initialize(HklEngine *self, HklError **error) HKL_ARG_NONNULL(1);
 
-extern int hkl_engine_set(HklEngine *self, HklError **error);
+HKLAPI int hkl_engine_set(HklEngine *self, HklError **error) HKL_ARG_NONNULL(1);
 
-extern int hkl_engine_get(HklEngine *self, HklError **error);
+HKLAPI int hkl_engine_get(HklEngine *self, HklError **error) HKL_ARG_NONNULL(1);
 
-extern void hkl_engine_fprintf(FILE *f, const HklEngine *self);
+HKLAPI void hkl_engine_fprintf(FILE *f, const HklEngine *self) HKL_ARG_NONNULL(1, 2);
 
 /*****************/
 /* HklEngineList */
 /*****************/
 
-extern void hkl_engine_list_free(HklEngineList *self);
+HKLAPI void hkl_engine_list_free(HklEngineList *self) HKL_ARG_NONNULL(1);
 
-extern darray_engine *hkl_engine_list_engines(HklEngineList *self);
+HKLAPI darray_engine *hkl_engine_list_engines(HklEngineList *self) HKL_ARG_NONNULL(1);
 
-extern void hkl_engine_list_geometry_set(HklEngineList *self, const HklGeometry *geometry) HKL_ARG_NONNULL(1, 2);
+HKLAPI void hkl_engine_list_geometry_set(HklEngineList *self, const HklGeometry *geometry) HKL_ARG_NONNULL(1, 2);
 
-extern const HklGeometryList *hkl_engine_list_geometries(const HklEngineList *self);
+HKLAPI const HklGeometryList *hkl_engine_list_geometries(const HklEngineList *self) HKL_ARG_NONNULL(1);
 
-extern HklGeometry *hkl_engine_list_get_geometry(HklEngineList *self);
+HKLAPI HklGeometry *hkl_engine_list_get_geometry(HklEngineList *self) HKL_ARG_NONNULL(1);
 
-extern void hkl_engine_list_select_solution(HklEngineList *self, unsigned int idx);
+HKLAPI void hkl_engine_list_select_solution(HklEngineList *self, unsigned int idx) HKL_ARG_NONNULL(1);
 
-extern HklEngine *hkl_engine_list_get_by_name(HklEngineList *self,
-					      const char *name);
+HKLAPI HklEngine *hkl_engine_list_get_by_name(HklEngineList *self,
+					      const char *name) HKL_ARG_NONNULL(1, 2);
 
-extern HklParameter *hkl_engine_list_get_pseudo_axis_by_name(
-	const HklEngineList *self, const char *name);
+HKLAPI HklParameter *hkl_engine_list_get_pseudo_axis_by_name(const HklEngineList *self,
+							     const char *name) HKL_ARG_NONNULL(1, 2);
 
-extern void hkl_engine_list_init(HklEngineList *self,
+HKLAPI void hkl_engine_list_init(HklEngineList *self,
 				 HklGeometry *geometry,
 				 HklDetector *detector,
-				 HklSample *sample);
+				 HklSample *sample) HKL_ARG_NONNULL(1, 2, 3, 4);
 
-extern int hkl_engine_list_get(HklEngineList *self);
+HKLAPI int hkl_engine_list_get(HklEngineList *self) HKL_ARG_NONNULL(1);
 
-extern void hkl_engine_list_fprintf(FILE *f,
-				    const HklEngineList *self);
+HKLAPI void hkl_engine_list_fprintf(FILE *f,
+				    const HklEngineList *self) HKL_ARG_NONNULL(1, 2);
 
 HKL_END_DECLS
 
