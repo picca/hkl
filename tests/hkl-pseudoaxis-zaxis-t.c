@@ -52,7 +52,7 @@ static void solution(void)
 
 	/* use a 0D detector */
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
-	detector->idx = 1;
+	hkl_detector_idx_set(detector, 1);
 
 	/* select the hkl pseudo axis */
 	engines = hkl_factory_create_new_engine_list(factory);

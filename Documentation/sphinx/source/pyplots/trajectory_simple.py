@@ -15,8 +15,8 @@ sample.set_lattice(1.54, 1.54, 1.54,
                    math.radians(90),
                    math.radians(90))
 
-detector = Hkl.Detector().factory_new(Hkl.DetectorType(0))
-detector.idx = 1
+detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))
+detector.idx_set(1)
 
 factory = Hkl.factories()['K6C']
 geometry = factory.create_new_geometry()

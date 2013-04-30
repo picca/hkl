@@ -52,7 +52,7 @@ struct _HklSample {
 
 struct _HklSampleReflection {
 	HklGeometry *geometry;
-	HklDetector detector;
+	HklDetector *detector;
 	HklVector hkl;
 	HklVector _hkl;
 	int flag;

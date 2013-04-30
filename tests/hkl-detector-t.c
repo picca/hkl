@@ -22,7 +22,7 @@
 #include <hkl.h>
 #include <tap/basic.h>
 
-#include "hkl-geometry-private.h"
+#include "hkl-detector-private.h"
 
 static void new(void)
 {

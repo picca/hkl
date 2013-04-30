@@ -51,12 +51,12 @@ class TestAPI(unittest.TestCase):
         """
 
         # create an 0D HklDetector
-        detector = Hkl.Detector().factory_new(Hkl.DetectorType(0))
+        detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))
+        self.assertTrue(type(detector) is Hkl.Detector)
 
         # mount the detector on the 2nd holder of the geometry
         # yes numbering follow the C convention !
-        detector.idx = 1
-        self.assertTrue(detector.idx == 1)
+        detector.idx_set(1)
 
     def test_geometry_api(self):
         """
@@ -107,8 +107,8 @@ class TestAPI(unittest.TestCase):
         enforce the HklEngine API
         """
 
-        detector = Hkl.Detector().factory_new(Hkl.DetectorType(0))
-        detector.idx = 1
+        detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))
+        detector.idx_set(1)
 
         factory = Hkl.factories()['K6C']
         geometry = factory.create_new_geometry()
@@ -137,16 +137,15 @@ class TestAPI(unittest.TestCase):
         # set the hkl engine and get the results
         for _ in range(100):
             try:
-                hkl.pseudo_axes().set_values_unit(values)
-                solutions = engines.geometries()
-                for item in solutions.items():
-                    item.geometry.get_axes_values_unit()
+                hkl.set_values_unit(values)
             except GLib.GError, err:
                 print values, err
+            solutions = engines.geometries()
+            self.assertTrue(type(solutions) is Hkl.GeometryList)
+            for item in solutions.items():
+                self.assertTrue(type(item) is Hkl.GeometryListItem)
+                self.assertTrue(type(item.geometry()) is Hkl.Geometry)
             values[1] += .01
-
-        # for item in engines.geometries.items():
-        #     print item.geometry.get_axes_values_unit()
 
         # check that all the values computed are reachable
         for engine in engines.engines():
@@ -155,13 +154,6 @@ class TestAPI(unittest.TestCase):
             for parameter in engine.pseudo_axes().parameters():
                 self.assertTrue(type(parameter) is Hkl.Parameter)
                 self.assertTrue(type(parameter.get_value()) is float)
-
-        # check the set result
-        for item in engines.geometries().items():
-            self.assertTrue(type(item) is Hkl.GeometryListItem)
-            self.assertTrue(type(item.geometry) is Hkl.Geometry)
-
-        self.assertTrue(True)
 
     @unittest.skip("for testing figures")
     def test_doc_exemple(self):

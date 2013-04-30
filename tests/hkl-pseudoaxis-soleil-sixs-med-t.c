@@ -53,7 +53,7 @@ static void qper_qpar(void)
         hkl_sample_set_U_from_euler(sample, -90.0 * HKL_DEGTORAD, 0., 0.);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
-	detector->idx = 1;
+	hkl_detector_idx_set(detector, 1);
 
 	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geom, detector, sample);

@@ -26,8 +26,8 @@ import math
 from gi.repository import GLib
 from gi.repository import Hkl
 
-detector = Hkl.Detector().factory_new(Hkl.DetectorType(0))
-detector.idx = 1
+detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))
+detector.idx_set(1)
 
 factory = Hkl.factories()['K6C']
 geometry = factory.create_new_geometry()

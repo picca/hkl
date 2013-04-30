@@ -19,28 +19,29 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
+#ifndef __HKL_DETECTOR_PRIVATE_H__
+#define __HKL_DETECTOR_PRIVATE_H__
 
-#include <hkl/hkl-detector-factory.h>
+#include "hkl-geometry-private.h"
 
-#include "hkl-detector-private.h"
+HKL_BEGIN_DECLS
 
-/**
- * hkl_detector_factory_new:
- * @type:
- *
- * Detector factory
- *
- * Returns:
- **/
-HklDetector *hkl_detector_factory_new(HklDetectorType type)
+struct _HklDetector
 {
-	HklDetector *detector = NULL;
+	size_t idx;
+	HklHolder const *holder;
+};
 
-	switch(type) {
-	case HKL_DETECTOR_TYPE_0D:
-		detector = hkl_detector_new();
-		break;
-	}
+extern HklDetector *hkl_detector_new(void);
 
-	return detector;
-}
+extern HklDetector *hkl_detector_new_copy(HklDetector const *src) HKL_ARG_NONNULL(1);
+
+extern void hkl_detector_attach_to_holder(HklDetector *self,
+					  HklHolder const *holder) HKL_ARG_NONNULL(1, 2);
+
+extern int hkl_detector_compute_kf(HklDetector const *self, HklGeometry *g,
+				   HklVector *kf) HKL_ARG_NONNULL(1, 2, 3);
+
+HKL_END_DECLS
+
+#endif /* __HKL_DETECTOR_PRIVATE_H__ */

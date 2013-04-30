@@ -471,9 +471,6 @@ int hkl_geometry_set_values_unit_v(HklGeometry *self, ...)
 	va_list ap;
 	HklAxis **axis;
 
-	if (!self)
-		return HKL_FALSE;
-
 	va_start(ap, self);
 	darray_foreach(axis, self->axes){
 		hkl_parameter_set_value_unit(&(*axis)->parameter,
@@ -612,9 +609,6 @@ void hkl_geometry_fprintf(FILE *file, const HklGeometry *self)
 {
 	uint i;
 
-	if(!self)
-		return;
-
 	for(i=0; i<darray_size(self->axes); ++i){
 		if(i)
 			fprintf(file, "\n");
@@ -711,7 +705,8 @@ void hkl_geometry_list_add(HklGeometryList *self, HklGeometry *geometry)
 	darray_append(self->items, hkl_geometry_list_item_new(geometry));
 }
 
-const darray_item *hkl_geometry_list_items_get(const HklGeometryList *self){
+const darray_item *hkl_geometry_list_items_get(const HklGeometryList *self)
+{
 	return &self->items;
 }
 

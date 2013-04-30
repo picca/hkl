@@ -34,7 +34,7 @@ HKLWindow::HKLWindow(void)
 	_engines = NULL;
 
 	_detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
-        _detector->idx = 1;
+	hkl_detector_idx_set(_detector, 1);
 
 	_samples = hkl_sample_list_new();
 	// add a default crystal
@@ -955,7 +955,7 @@ void HKLWindow::updateSolutions(void)
 
 	size_t i = 0;
 	const HklGeometryList *geometries = hkl_engine_list_geometries(this->_engines);
-	const HklGeometryListItem **item;
+	HklGeometryListItem **item;
 
 	_solutionModel->clear();
 	Gtk::ListStore::Row row;

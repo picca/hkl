@@ -25,7 +25,9 @@
 # include <alloca.h>
 #endif
 #include <gsl/gsl_sf_trig.h>
-#include <hkl/hkl-pseudoaxis-private.h>
+
+#include "hkl-detector-private.h"
+#include "hkl-pseudoaxis-private.h"
 
 /*****************/
 /* HklPseudoAxis */

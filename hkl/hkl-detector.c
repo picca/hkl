@@ -20,9 +20,8 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 #include <math.h>
-#include <hkl/hkl-detector.h>
 
-#include "hkl-geometry-private.h"
+#include "hkl-detector-private.h"
 
 /**
  * hkl_detector_new: (skip)
@@ -51,12 +50,9 @@ HklDetector *hkl_detector_new(void)
  *
  * Returns:
  **/
-HklDetector *hkl_detector_new_copy(HklDetector const *src)
+HklDetector *hkl_detector_new_copy(const HklDetector *src)
 {
 	HklDetector *self;
-
-	if(!src)
-		return NULL;
 
 	self = HKL_MALLOC(HklDetector);
 
@@ -73,8 +69,19 @@ HklDetector *hkl_detector_new_copy(HklDetector const *src)
  **/
 void hkl_detector_free(HklDetector *self)
 {
-	if(self)
-		free(self);
+	free(self);
+}
+
+/**
+ * hkl_detector_idx_set:
+ * @self: the this ptr
+ * @idx: the index of the holder
+ *
+ * Attach a detector to a given holder
+ **/
+void hkl_detector_idx_set(HklDetector *self, int idx)
+{
+	self->idx = idx;
 }
 
 /**
@@ -86,9 +93,6 @@ void hkl_detector_free(HklDetector *self)
  **/
 void hkl_detector_attach_to_holder(HklDetector *self, HklHolder const *holder)
 {
-	if(!self || !holder)
-		return;
-
 	self->holder = holder;
 }
 
@@ -127,9 +131,6 @@ int hkl_detector_compute_kf(HklDetector const *self, HklGeometry *g,
  **/
 void hkl_detector_fprintf(FILE *f, const HklDetector *self)
 {
-	if(!self)
-		return;
-
 	fprintf(f, "detector->idx: %d\n", self->idx);
 	fprintf(f, "detector->holder: %p\n", self->holder);
 }

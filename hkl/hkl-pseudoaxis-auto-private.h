@@ -24,6 +24,7 @@
 
 #include <gsl/gsl_vector.h>
 
+#include "hkl-detector-private.h"
 #include "hkl-pseudoaxis-private.h"
 
 HKL_BEGIN_DECLS

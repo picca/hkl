@@ -22,8 +22,6 @@
 #ifndef __HKL_GEOMETRY_PRIVATE_H__
 #define __HKL_GEOMETRY_PRIVATE_H__
 
-#include <hkl/ccan/list/list.h>
-
 #include <hkl/hkl-source.h>
 #include <hkl/hkl-quaternion.h>
 #include <hkl/hkl-axis.h>
@@ -31,6 +29,11 @@
 #include <hkl/hkl-factory.h>
 
 HKL_BEGIN_DECLS
+
+typedef void (* HklGeometryListMultiplyFunction) (HklGeometryList *self,
+						  HklGeometryListItem *item);
+
+typedef darray(HklHolder *) darray_holder;
 
 struct HklHolderConfig {
 	int gc;
@@ -78,8 +81,6 @@ extern HklGeometry *hkl_geometry_new(const HklFactory *factory);
 
 extern HklGeometry *hkl_geometry_new_copy(const HklGeometry *self);
 
-extern void hkl_geometry_free(HklGeometry *self);
-
 extern void hkl_geometry_init_geometry(HklGeometry *self,
 				       const HklGeometry *src);
 
@@ -93,12 +94,8 @@ extern int hkl_geometry_get_axis_idx_by_name(const HklGeometry *self,
 extern HklParameter *hkl_geometry_get_axis_by_name(HklGeometry *self,
 						   const char *name);
 
-extern void hkl_geometry_randomize(HklGeometry *self);
-
 extern int hkl_geometry_set_values_v(HklGeometry *self,
 				     size_t len, ...);
-
-extern int hkl_geometry_set_values_unit_v(HklGeometry *self, ...);
 
 extern double hkl_geometry_distance(const HklGeometry *self,
 				    const HklGeometry *ref);
@@ -110,8 +107,6 @@ extern int hkl_geometry_closest_from_geometry_with_range(HklGeometry *self,
 							 const HklGeometry *ref);
 
 extern int hkl_geometry_is_valid(const HklGeometry *self);
-
-extern void hkl_geometry_fprintf(FILE *file, const HklGeometry *self);
 
 /*******************/
 /* HklGeometryList */

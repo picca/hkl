@@ -70,7 +70,7 @@ static void getter(void)
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
-	detector->idx = 1;
+	hkl_detector_idx_set(detector, 1);
 
 	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geometry, detector, sample);
@@ -126,7 +126,7 @@ static void degenerated(void)
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
-	detector->idx = 1;
+	hkl_detector_idx_set(detector, 1);
 
 	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geometry, detector, sample);
@@ -192,7 +192,7 @@ static void q2(void)
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
-	detector->idx = 1;
+	hkl_detector_idx_set(detector, 1);
 
 	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geometry, detector, sample);
@@ -273,7 +273,7 @@ static void petra3(void)
 				    157.48 * HKL_DEGTORAD);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
-	detector->idx = 1;
+	hkl_detector_idx_set(detector, 1);
 
 	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geometry, detector, sample);
@@ -365,7 +365,7 @@ static void petra3_2(void)
 				    -90.0 * HKL_DEGTORAD);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
-	detector->idx = 1;
+	hkl_detector_idx_set(detector, 1);
 
 	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geometry, detector, sample);

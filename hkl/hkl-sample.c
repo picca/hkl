@@ -29,6 +29,7 @@
 #include <hkl/hkl-sample.h>
 #include <hkl/hkl-matrix.h>
 
+#include "hkl-detector-private.h"
 #include "hkl-parameter-private.h"
 #include "hkl-geometry-private.h"
 
@@ -47,7 +48,7 @@ static void hkl_sample_reflection_update(HklSampleReflection *self)
 	hkl_source_compute_ki(&self->geometry->source, &ki);
 	self->_hkl = ki;
 	hkl_vector_rotated_quaternion(&self->_hkl,
-				      &darray_item(self->geometry->holders, self->detector.idx)->q);
+				      &darray_item(self->geometry->holders, self->detector->idx)->q);
 	hkl_vector_minus_vector(&self->_hkl, &ki);
 
 	q = darray_item(self->geometry->holders, 0)->q;
@@ -742,7 +743,7 @@ HklSampleReflection *hkl_sample_reflection_new(HklGeometry *geometry,
 	hkl_geometry_update(geometry);
 
 	self->geometry = hkl_geometry_new_copy(geometry);
-	self->detector = *detector;
+	self->detector = hkl_detector_new_copy(detector);
 	self->hkl.data[0] = h;
 	self->hkl.data[1] = k;
 	self->hkl.data[2] = l;
@@ -768,7 +769,7 @@ HklSampleReflection *hkl_sample_reflection_new_copy(const HklSampleReflection *s
 	dup = HKL_MALLOC(HklSampleReflection);
 
 	dup->geometry = hkl_geometry_new_copy(self->geometry);
-	dup->detector = self->detector;
+	dup->detector = hkl_detector_new_copy(self->detector);
 	dup->hkl = self->hkl;
 	dup->_hkl = self->_hkl;
 	dup->flag = self->flag;
@@ -785,6 +786,7 @@ HklSampleReflection *hkl_sample_reflection_new_copy(const HklSampleReflection *s
 void hkl_sample_reflection_free(HklSampleReflection *self)
 {
 	hkl_geometry_free(self->geometry);
+	hkl_detector_free(self->detector);
 	free(self);
 }
 

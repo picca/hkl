@@ -106,12 +106,6 @@ and/or use gtk-doc annotations.  -->
             glib:type-name="HklDetector"
             glib:get-type="hkl_detector_get_type"
             c:symbol-prefix="detector">
-      <field name="idx" writable="1">
-        <type name="gulong" c:type="size_t"/>
-      </field>
-      <field name="holder" writable="1">
-        <type name="Holder" c:type="HklHolder*"/>
-      </field>
       <constructor name="factory_new" c:identifier="hkl_detector_factory_new">
         <doc xml:whitespace="preserve">Detector factory</doc>
         <return-value transfer-ownership="full">
@@ -123,55 +117,6 @@ and/or use gtk-doc annotations.  -->
           </parameter>
         </parameters>
       </constructor>
-      <constructor name="new"
-                   c:identifier="hkl_detector_new"
-                   introspectable="0">
-        <doc xml:whitespace="preserve">Create a new default #HklDetector</doc>
-        <return-value transfer-ownership="full">
-          <type name="Detector" c:type="HklDetector*"/>
-        </return-value>
-      </constructor>
-      <method name="attach_to_holder"
-              c:identifier="hkl_detector_attach_to_holder"
-              introspectable="0">
-        <doc xml:whitespace="preserve">attach the #HklDetector to an #HklHolder</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <type name="Detector" c:type="HklDetector*"/>
-          </instance-parameter>
-          <parameter name="holder" transfer-ownership="none">
-            <type name="Holder" c:type="HklHolder*"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="compute_kf"
-              c:identifier="hkl_detector_compute_kf"
-              introspectable="0">
-        <doc xml:whitespace="preserve">Compute the kf vector of the #HklDetector</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">HKL_SUCCESS if everythongs goes fine. HKL_FAIL otherwise.</doc>
-          <type name="gint" c:type="int"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <type name="Detector" c:type="HklDetector*"/>
-          </instance-parameter>
-          <parameter name="g" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the diffractometer #HklGeometry use to compute kf.</doc>
-            <type name="Geometry" c:type="HklGeometry*"/>
-          </parameter>
-          <parameter name="kf"
-                     direction="out"
-                     caller-allocates="1"
-                     transfer-ownership="none">
-            <doc xml:whitespace="preserve">the #HklVector fill with the kf coordinates.</doc>
-            <type name="Vector" c:type="HklVector*"/>
-          </parameter>
-        </parameters>
-      </method>
       <method name="free" c:identifier="hkl_detector_free" introspectable="0">
         <doc xml:whitespace="preserve">destructor</doc>
         <return-value transfer-ownership="none">
@@ -183,18 +128,20 @@ and/or use gtk-doc annotations.  -->
           </instance-parameter>
         </parameters>
       </method>
-      <method name="new_copy"
-              c:identifier="hkl_detector_new_copy"
-              introspectable="0">
-        <doc xml:whitespace="preserve">the copy constructor</doc>
-        <return-value transfer-ownership="full">
-          <type name="Detector" c:type="HklDetector*"/>
+      <method name="idx_set" c:identifier="hkl_detector_idx_set">
+        <doc xml:whitespace="preserve">Attach a detector to a given holder</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <instance-parameter name="src" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the detector to copy</doc>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
             <type name="Detector" c:type="HklDetector*"/>
           </instance-parameter>
+          <parameter name="idx" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the index of the holder</doc>
+            <type name="gint" c:type="int"/>
+          </parameter>
         </parameters>
       </method>
       <function name="fprintf"
@@ -1105,6 +1052,22 @@ control over, that could include printf() escape sequences.</doc>
           </parameter>
         </parameters>
       </method>
+      <function name="fprintf"
+                c:identifier="hkl_geometry_fprintf"
+                introspectable="0">
+        <doc xml:whitespace="preserve">print into a file the #HklGeometry</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="file" transfer-ownership="none">
+            <type name="gpointer" c:type="FILE*"/>
+          </parameter>
+          <parameter name="self" transfer-ownership="none">
+            <type name="Geometry" c:type="const HklGeometry*"/>
+          </parameter>
+        </parameters>
+      </function>
     </record>
     <record name="GeometryList"
             c:type="HklGeometryList"
@@ -1170,20 +1133,6 @@ control over, that could include printf() escape sequences.</doc>
         </parameters>
       </method>
     </record>
-    <callback name="GeometryListMultiplyFunction"
-              c:type="HklGeometryListMultiplyFunction">
-      <return-value transfer-ownership="none">
-        <type name="none" c:type="void"/>
-      </return-value>
-      <parameters>
-        <parameter name="self" transfer-ownership="none">
-          <type name="GeometryList" c:type="HklGeometryList*"/>
-        </parameter>
-        <parameter name="item" transfer-ownership="none">
-          <type name="GeometryListItem" c:type="HklGeometryListItem*"/>
-        </parameter>
-      </parameters>
-    </callback>
     <record name="Holder" c:type="HklHolder" disguised="1">
     </record>
     <record name="Interval"
@@ -3249,7 +3198,7 @@ todo test</doc>
         <type name="Geometry" c:type="HklGeometry*"/>
       </field>
       <field name="detector" writable="1">
-        <type name="Detector" c:type="HklDetector"/>
+        <type name="Detector" c:type="HklDetector*"/>
       </field>
       <field name="hkl" writable="1">
         <type name="Vector" c:type="HklVector"/>
@@ -4374,6 +4323,23 @@ control over, that could include printf() escape sequences.</doc>
           <type name="Factory"/>
         </type>
       </return-value>
+    </function>
+    <function name="geometry_fprintf"
+              c:identifier="hkl_geometry_fprintf"
+              moved-to="Geometry.fprintf"
+              introspectable="0">
+      <doc xml:whitespace="preserve">print into a file the #HklGeometry</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="file" transfer-ownership="none">
+          <type name="gpointer" c:type="FILE*"/>
+        </parameter>
+        <parameter name="self" transfer-ownership="none">
+          <type name="Geometry" c:type="const HklGeometry*"/>
+        </parameter>
+      </parameters>
     </function>
     <function name="lattice_fprintf"
               c:identifier="hkl_lattice_fprintf"

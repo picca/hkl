@@ -164,7 +164,7 @@ static void set(int nb_iter)
 	int res = HKL_TRUE;
 
 	/* attach to the second holder */
-	detector->idx = 1;
+	hkl_detector_idx_set(detector, 1);
 
 	factories = hkl_factory_get_all(&n);
 	for(i=0; i<n; i++){

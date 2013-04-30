@@ -9,8 +9,8 @@ from gi.repository import Hkl
 
 import matplotlib.pyplot as plt
 
-detector = Hkl.Detector().factory_new(Hkl.DetectorType(0))
-detector.idx = 1
+detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))
+detector.idx_set(1)
 
 config = Hkl.geometry_factory_get_config_from_type(
     Hkl.GeometryType.KAPPA6C)
