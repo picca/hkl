@@ -86,6 +86,23 @@ static inline unsigned int hkl_axis_set_value_unit_real(
 	return HKL_TRUE;
 }
 
+static inline void hkl_axis_set_value_smallest_in_range_real(HklParameter *self)
+{
+	double value, min;
+
+	value = self->_value;
+	min = self->range.min;
+
+	if(value < min)
+		hkl_axis_set_value_real(self,
+					value + 2*M_PI*ceil((min - value)/(2*M_PI)),
+					NULL);
+	else
+		hkl_axis_set_value_real(self,
+					value - 2*M_PI*floor((value - min)/(2*M_PI)),
+					NULL);
+}
+
 static inline void hkl_axis_randomize_real(HklParameter *self)
 {
 	hkl_parameter_randomize_real(self);
@@ -189,6 +206,7 @@ static HklParameterOperations hkl_parameter_operations_axis = {
 	.get_value_closest = hkl_axis_get_value_closest_real,
 	.set_value = hkl_axis_set_value_real,
 	.set_value_unit = hkl_axis_set_value_unit_real,
+	.set_value_smallest_in_range = hkl_axis_set_value_smallest_in_range_real,
 	.randomize = hkl_axis_randomize_real,
 	.is_valid = hkl_axis_is_valid_real,
 	.fprintf = hkl_axis_fprintf_real
@@ -241,21 +259,4 @@ void hkl_axis_init(HklAxis *self, const char* name, const HklVector *axis_v)
 void hkl_axis_axis_set(HklAxis *self, const HklAxis *src)
 {
 	*self = *src;
-}
-
-void hkl_axis_set_value_smallest_in_range(HklAxis *self)
-{
-	double value, min;
-
-	value = self->parameter._value;
-	min = self->parameter.range.min;
-
-	if(value < min)
-		hkl_axis_set_value_real(&self->parameter,
-					value + 2*M_PI*ceil((min - value)/(2*M_PI)),
-					NULL);
-	else
-		hkl_axis_set_value_real(&self->parameter,
-					value - 2*M_PI*floor((value - min)/(2*M_PI)),
-					NULL);
 }

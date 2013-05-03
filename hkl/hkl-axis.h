@@ -53,8 +53,6 @@ extern void hkl_axis_init(HklAxis *self, char const * name, HklVector const *axi
 
 extern void hkl_axis_axis_set(HklAxis *self, const HklAxis *src);
 
-extern void hkl_axis_set_value_smallest_in_range(HklAxis *self);
-
 HKL_END_DECLS
 
 #endif /* __HKL_AXIS_H__ */

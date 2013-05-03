@@ -79,6 +79,8 @@ extern bool hkl_parameter_set_value(HklParameter *self, double value,
 extern bool hkl_parameter_set_value_unit(HklParameter *self, double value,
 					 HklError **error);
 
+extern void hkl_parameter_set_value_smallest_in_range(HklParameter *self);
+
 extern double hkl_parameter_get_max(const HklParameter *self);
 
 extern void hkl_parameter_get_range_unit(const HklParameter *self, double *min, double *max);

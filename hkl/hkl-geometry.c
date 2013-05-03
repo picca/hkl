@@ -913,7 +913,7 @@ void hkl_geometry_list_multiply_from_range(HklGeometryList *self)
 			perm[j] = hkl_parameter_is_valid(&(*axis)->parameter);
 			/* fprintf(stdout, "%d %d\n", j, perm[j]); */
 			if (perm[j])
-				hkl_axis_set_value_smallest_in_range(*axis);
+				hkl_parameter_set_value_smallest_in_range(&(*axis)->parameter);
 			++j;
 		}
 		/*

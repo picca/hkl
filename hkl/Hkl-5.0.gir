@@ -89,17 +89,6 @@ and/or use gtk-doc annotations.  -->
           </instance-parameter>
         </parameters>
       </method>
-      <method name="set_value_smallest_in_range"
-              c:identifier="hkl_axis_set_value_smallest_in_range">
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <type name="Axis" c:type="HklAxis*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
     </record>
     <record name="Detector"
             c:type="HklDetector"
@@ -2165,6 +2154,19 @@ is |v1 ^ v2|</doc>
             <doc xml:whitespace="preserve">the error set if something goes wrong</doc>
             <type name="Error" c:type="HklError**"/>
           </parameter>
+        </parameters>
+      </method>
+      <method name="set_value_smallest_in_range"
+              c:identifier="hkl_parameter_set_value_smallest_in_range"
+              introspectable="0">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Parameter" c:type="HklParameter*"/>
+          </instance-parameter>
         </parameters>
       </method>
       <method name="set_value_unit"

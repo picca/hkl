@@ -33,17 +33,18 @@ HKL_BEGIN_DECLS
 /****************/
 
 struct _HklParameterOperations {
-	HklParameter *(*copy)(const HklParameter *self);
-	void (*free)(HklParameter *self);
-	double (*get_value_closest)(const HklParameter *self,
+	HklParameter * (*copy)(const HklParameter *self);
+	void           (*free)(HklParameter *self);
+	double         (*get_value_closest)(const HklParameter *self,
 				    const HklParameter *other);
-	unsigned int (*set_value)(HklParameter *self, double value,
+	unsigned int   (*set_value)(HklParameter *self, double value,
 				  HklError **error);
-	unsigned int (*set_value_unit)(HklParameter *self, double value,
+	unsigned int   (*set_value_unit)(HklParameter *self, double value,
 				       HklError **error);
-	void (*randomize)(HklParameter *self);
-	int (*is_valid)(const HklParameter *self);
-	void (*fprintf)(FILE *f, const HklParameter *self);
+	void           (*set_value_smallest_in_range)(HklParameter *self);
+	void           (*randomize)(HklParameter *self);
+	int            (*is_valid)(const HklParameter *self);
+	void           (*fprintf)(FILE *f, const HklParameter *self);
 };
 
 #define HKL_PARAMETER_OPERATIONS_DEFAULTS				\
@@ -52,6 +53,7 @@ struct _HklParameterOperations {
 		.get_value_closest = hkl_parameter_get_value_closest_real, \
 		.set_value = hkl_parameter_set_value_real,		\
 		.set_value_unit = hkl_parameter_set_value_unit_real,	\
+		.set_value_smallest_in_range = hkl_parameter_set_value_smallest_in_range_real, \
 		.randomize = hkl_parameter_randomize_real,		\
 		.is_valid = hkl_parameter_is_valid_real,		\
 		.fprintf = hkl_parameter_fprintf_real
@@ -93,6 +95,11 @@ static inline unsigned int hkl_parameter_set_value_unit_real(
 	double factor = hkl_unit_factor(self->unit, self->punit);
 
 	return hkl_parameter_set_value_real(self, value / factor, error);
+}
+
+static inline void hkl_parameter_set_value_smallest_in_range_real(HklParameter *self)
+{
+	/* DOES NOTHING for a standard parameter */
 }
 
 static inline void hkl_parameter_randomize_real(HklParameter *self)

@@ -186,6 +186,15 @@ inline bool hkl_parameter_set_value_unit(HklParameter *self, double value,
 }
 
 /**
+ * hkl_parameter_set_value_smallest_in_range: (skip)
+ * @self: the this ptr
+ **/
+inline void hkl_parameter_set_value_smallest_in_range(HklParameter *self)
+{
+	self->ops->set_value_smallest_in_range(self);
+}
+
+/**
  * hkl_parameter_get_max: (skip)
  * @self:
  *
