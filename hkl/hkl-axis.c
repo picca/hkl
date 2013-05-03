@@ -225,10 +225,20 @@ static HklParameterOperations hkl_parameter_operations_axis = {
 HklAxis *hkl_axis_new(char const *name, HklVector const *axis_v)
 {
 	HklAxis *self = NULL;
+	static HklAxis axis0 = {
+		.parameter = {
+			HKL_PARAMETER_DEFAULTS_ANGLE,
+			.ops = &hkl_parameter_operations_axis,
+		},
+		.q = {{1, 0, 0, 0}},
+	};
 
 	self = HKL_MALLOC(HklAxis);
 
-	hkl_axis_init(self, name, axis_v);
+
+	*self = axis0;
+	self->parameter.name = name;
+	self->axis_v = *axis_v;
 
 	return self;
 }
@@ -248,20 +258,4 @@ HklAxis *hkl_axis_new_copy(const HklAxis *src)
 void hkl_axis_free(HklAxis *self)
 {
 	free(self);
-}
-
-void hkl_axis_init(HklAxis *self, const char* name, const HklVector *axis_v)
-{
-	static HklAxis axis0 = {
-		.parameter = {
-			HKL_PARAMETER_DEFAULTS_ANGLE,
-			.ops = &hkl_parameter_operations_axis,
-		},
-		.q = {{1, 0, 0, 0}},
-	};
-
-	*self = axis0;
-
-	self->parameter.name = name;
-	self->axis_v = *axis_v;
 }

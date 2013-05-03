@@ -49,8 +49,6 @@ extern HklAxis *hkl_axis_new_copy(const HklAxis *axis);
 
 extern void hkl_axis_free(HklAxis *self);
 
-extern void hkl_axis_init(HklAxis *self, char const * name, HklVector const *axis_v);
-
 HKL_END_DECLS
 
 #endif /* __HKL_AXIS_H__ */

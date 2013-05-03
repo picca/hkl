@@ -50,22 +50,6 @@ and/or use gtk-doc annotations.  -->
           </instance-parameter>
         </parameters>
       </method>
-      <method name="init" c:identifier="hkl_axis_init">
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <type name="Axis" c:type="HklAxis*"/>
-          </instance-parameter>
-          <parameter name="name" transfer-ownership="none">
-            <type name="utf8" c:type="char*"/>
-          </parameter>
-          <parameter name="axis_v" transfer-ownership="none">
-            <type name="Vector" c:type="HklVector*"/>
-          </parameter>
-        </parameters>
-      </method>
       <method name="new_copy" c:identifier="hkl_axis_new_copy">
         <return-value transfer-ownership="full">
           <type name="Axis" c:type="HklAxis*"/>
