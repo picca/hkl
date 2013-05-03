@@ -23,6 +23,8 @@
 #include <tap/basic.h>
 #include <tap/float.h>
 
+#include <hkl/ccan/container_of/container_of.h>
+
 static void new(void)
 {
 	HklAxis *axis;
@@ -70,7 +72,8 @@ static void copy(void)
 	axis = hkl_axis_new("omega", &v);
 	hkl_parameter_set_value(&axis->parameter, -M_PI_2, NULL);
 
-	copy = hkl_axis_new_copy(axis);
+	copy = container_of(hkl_parameter_new_copy(&axis->parameter),
+			    HklAxis, parameter);
 	is_string("omega", copy->parameter.name, __func__);
 	is_double(-M_PI, copy->parameter.range.min, HKL_EPSILON, __func__);
 	is_double(M_PI, copy->parameter.range.max, HKL_EPSILON, __func__);

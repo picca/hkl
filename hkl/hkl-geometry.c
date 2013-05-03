@@ -224,7 +224,9 @@ HklGeometry *hkl_geometry_new_copy(const HklGeometry *src)
 	/* copy the axes */
 	darray_init(self->axes);
 	darray_foreach(axis, src->axes){
-		darray_append(self->axes, hkl_axis_new_copy(*axis));
+		darray_append(self->axes, 
+			      container_of(hkl_parameter_new_copy(&(*axis)->parameter),
+					   HklAxis, parameter));
 	}
 
 

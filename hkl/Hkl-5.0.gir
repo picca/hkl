@@ -40,16 +40,6 @@ and/or use gtk-doc annotations.  -->
           </parameter>
         </parameters>
       </constructor>
-      <method name="new_copy" c:identifier="hkl_axis_new_copy">
-        <return-value transfer-ownership="full">
-          <type name="Axis" c:type="HklAxis*"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="axis" transfer-ownership="none">
-            <type name="Axis" c:type="const HklAxis*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
     </record>
     <record name="Detector"
             c:type="HklDetector"
