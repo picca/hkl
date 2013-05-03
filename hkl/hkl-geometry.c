@@ -274,8 +274,8 @@ void hkl_geometry_set(HklGeometry *self, const HklGeometry *src)
 
 	/* copy the axes configuration and mark it as dirty */
 	for(i=0; i<darray_size(self->axes); ++i)
-		hkl_axis_axis_set(darray_item(self->axes, i),
-				  darray_item(src->axes, i));
+		hkl_parameter_init_copy(&darray_item(self->axes, i)->parameter,
+					&darray_item(src->axes, i)->parameter);
 
 	for(i=0; i<darray_size(src->holders); ++i)
 		darray_item(self->holders, i)->q = darray_item(src->holders, i)->q;
@@ -294,7 +294,8 @@ void hkl_geometry_axis_set(HklGeometry *self, const HklAxis *axis)
 		if (*_axis == axis)
 			break;
 		if (!strcmp(axis->parameter.name, (*_axis)->parameter.name))
-			hkl_axis_axis_set(*_axis, axis);
+			hkl_parameter_init_copy(&(*_axis)->parameter,
+						&axis->parameter);
 	}
 	hkl_geometry_update(self);
 }

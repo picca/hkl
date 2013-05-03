@@ -40,19 +40,6 @@ and/or use gtk-doc annotations.  -->
           </parameter>
         </parameters>
       </constructor>
-      <method name="axis_set" c:identifier="hkl_axis_axis_set">
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <type name="Axis" c:type="HklAxis*"/>
-          </instance-parameter>
-          <parameter name="src" transfer-ownership="none">
-            <type name="Axis" c:type="const HklAxis*"/>
-          </parameter>
-        </parameters>
-      </method>
       <method name="free" c:identifier="hkl_axis_free">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
@@ -2052,6 +2039,23 @@ is |v1 ^ v2|</doc>
             <doc xml:whitespace="preserve">the this ptr</doc>
             <type name="Parameter" c:type="const HklParameter*"/>
           </instance-parameter>
+        </parameters>
+      </method>
+      <method name="init_copy"
+              c:identifier="hkl_parameter_init_copy"
+              introspectable="0">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Parameter" c:type="HklParameter*"/>
+          </instance-parameter>
+          <parameter name="src" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the parameter to copy from</doc>
+            <type name="Parameter" c:type="const HklParameter*"/>
+          </parameter>
         </parameters>
       </method>
       <method name="is_valid"

@@ -66,6 +66,8 @@ extern HklParameter *hkl_parameter_new_copy(const HklParameter *self);
 
 extern void hkl_parameter_free(HklParameter *self);
 
+extern void hkl_parameter_init_copy(HklParameter *self, const HklParameter *src);
+
 extern double hkl_parameter_get_value(const HklParameter *self);
 
 extern double hkl_parameter_get_value_unit(const HklParameter *self);

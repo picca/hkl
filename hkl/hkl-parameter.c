@@ -112,6 +112,16 @@ void hkl_parameter_free(HklParameter *self)
 }
 
 /**
+ * hkl_parameter_init_copy: (skip)
+ * @self: the this ptr
+ * @src: the parameter to copy from
+ **/
+void hkl_parameter_init_copy(HklParameter *self, const HklParameter *src)
+{
+	self->ops->init_copy(self, src);
+}
+
+/**
  * hkl_parameter_get_value:
  * @self: the this ptr
  *

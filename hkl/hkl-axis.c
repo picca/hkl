@@ -58,6 +58,15 @@ static inline void hkl_axis_update(HklAxis *self)
 					       &self->axis_v);
 }
 
+static inline void hkl_axis_init_copy_real(HklParameter *self, const HklParameter *src)
+{
+	HklAxis *axis_self = container_of(self, HklAxis, parameter);
+	HklAxis *axis_src = container_of(src, HklAxis, parameter);
+
+	*axis_self = *axis_src;
+	self->changed = HKL_TRUE;
+}
+
 static inline unsigned int hkl_axis_set_value_real(
 	HklParameter *self, double value,
 	HklError **error)
@@ -203,6 +212,7 @@ static HklParameterOperations hkl_parameter_operations_axis = {
 	HKL_PARAMETER_OPERATIONS_DEFAULTS,
 	.copy = hkl_axis_copy_real,
 	.free = hkl_axis_free_real,
+	.init_copy = hkl_axis_init_copy_real,
 	.get_value_closest = hkl_axis_get_value_closest_real,
 	.set_value = hkl_axis_set_value_real,
 	.set_value_unit = hkl_axis_set_value_unit_real,
@@ -254,9 +264,4 @@ void hkl_axis_init(HklAxis *self, const char* name, const HklVector *axis_v)
 
 	self->parameter.name = name;
 	self->axis_v = *axis_v;
-}
-
-void hkl_axis_axis_set(HklAxis *self, const HklAxis *src)
-{
-	*self = *src;
 }

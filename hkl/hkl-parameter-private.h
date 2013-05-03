@@ -35,6 +35,7 @@ HKL_BEGIN_DECLS
 struct _HklParameterOperations {
 	HklParameter * (*copy)(const HklParameter *self);
 	void           (*free)(HklParameter *self);
+	void           (*init_copy)(HklParameter *self, const HklParameter *src);
 	double         (*get_value_closest)(const HklParameter *self,
 				    const HklParameter *other);
 	unsigned int   (*set_value)(HklParameter *self, double value,
@@ -50,6 +51,7 @@ struct _HklParameterOperations {
 #define HKL_PARAMETER_OPERATIONS_DEFAULTS				\
 	.copy = hkl_parameter_copy_real,				\
 		.free = hkl_parameter_free_real,			\
+		.init_copy = hkl_parameter_init_copy_real,		\
 		.get_value_closest = hkl_parameter_get_value_closest_real, \
 		.set_value = hkl_parameter_set_value_real,		\
 		.set_value_unit = hkl_parameter_set_value_unit_real,	\
@@ -70,6 +72,12 @@ static inline HklParameter *hkl_parameter_copy_real(const HklParameter *self)
 static inline void hkl_parameter_free_real(HklParameter *self)
 {
 	free(self);
+}
+
+static inline void hkl_parameter_init_copy_real(HklParameter *self, const HklParameter *src)
+{
+	*self = *src;
+	self->changed = HKL_TRUE;
 }
 
 static inline double hkl_parameter_get_value_closest_real(const HklParameter *self,
