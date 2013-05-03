@@ -24,6 +24,8 @@
 #include <tap/float.h>
 #include <tap/hkl.h>
 
+#include "hkl-axis-private.h" /* temporary */
+
 #define GET_GAMMA(items, index) hkl_parameter_get_value_unit(		\
 		&darray_item(*hkl_geometry_axes_get(			\
 				     hkl_geometry_list_item_geometry_get( \

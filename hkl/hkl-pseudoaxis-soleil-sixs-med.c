@@ -23,6 +23,7 @@
 #include <gsl/gsl_multiroots.h>
 #include <gsl/gsl_sf_trig.h>
 
+#include "hkl-axis-private.h"
 #include "hkl-pseudoaxis-auto-private.h"
 #include "hkl-pseudoaxis-common-hkl-private.h"
 

@@ -22,6 +22,8 @@
 #include <hkl.h>
 #include <tap/basic.h>
 #include <tap/float.h>
+
+#include "hkl-axis-private.h" /* temporary */
 #include "hkl-geometry-private.h"
 
 static void add_holder(void)

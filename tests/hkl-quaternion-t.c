@@ -23,6 +23,8 @@
 #include <tap/basic.h>
 #include <tap/float.h>
 
+#include "hkl-quaternion.h"
+
 static void assignment(void)
 {
 	HklQuaternion q = {{1, 0, 0, 0}};

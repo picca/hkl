@@ -22,6 +22,7 @@
 #include <hkl.h>
 #include <tap/basic.h>
 
+#include "hkl-axis-private.h" /* temporary */
 #include "hkl-detector-private.h"
 
 static void new(void)

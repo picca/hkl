@@ -25,9 +25,8 @@
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_sf_trig.h>
 
-#include <hkl/hkl-axis.h>
-#include <hkl/hkl-parameter-private.h>
-#include <hkl/hkl-quaternion.h>
+#include "hkl-axis-private.h"
+#include "hkl-parameter-private.h"
 
 /***********/
 /* HklAxis */

@@ -19,23 +19,23 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#ifndef __HKL_AXIS_H__
-#define __HKL_AXIS_H__
+#ifndef __HKL_AXIS_PRIVATE_H__
+#define __HKL_AXIS_PRIVATE_H__
 
 #include <hkl/hkl-macros.h>
 #include <hkl/hkl-vector.h>
+#include <hkl/hkl-quaternion.h>
+#include <hkl/hkl-parameter.h>
+#include <hkl/hkl-axis.h>
 
 HKL_BEGIN_DECLS
 
-typedef struct _HklAxis HklAxis;
-
-/***********/
-/* HklAxis */
-/***********/
-
-extern HklAxis *hkl_axis_new(char const *name, HklVector const *axis_v);
-
+struct _HklAxis {
+	HklParameter parameter;
+	HklVector axis_v;
+	HklQuaternion q;
+};
 
 HKL_END_DECLS
 
-#endif /* __HKL_AXIS_H__ */
+#endif /* __HKL_AXIS_PRIVATE_H__ */

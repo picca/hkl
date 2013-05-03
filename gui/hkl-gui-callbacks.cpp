@@ -23,6 +23,8 @@
 #include "hkl-gui.h"
 #include <hkl/hkl-factory.h>
 
+#include "hkl-axis-private.h" /* temporary */
+
 void HKLWindow::on_treeView_pseudoAxes_cursor_changed(void)
 {
 	LOG;

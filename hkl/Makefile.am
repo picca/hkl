@@ -62,6 +62,7 @@ hkl_public_h_sources = \
 	hkl-vector.h
 
 hkl_private_h_sources = \
+	hkl-axis-private.h \
 	hkl-detector-private.h \
 	hkl-factory-private.h \
 	hkl-geometry-private.h \

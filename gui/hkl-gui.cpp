@@ -23,6 +23,8 @@
 #include "hkl-gui.h"
 #include "hkl-factory.h"
 
+#include "hkl-axis-private.h" /* temporary */
+
 HKLWindow::HKLWindow(void)
 {
 	LOG;

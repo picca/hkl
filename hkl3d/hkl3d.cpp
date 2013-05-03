@@ -32,6 +32,7 @@
 #include <g3d/matrix.h>
 
 #include "hkl3d.h"
+#include "hkl-axis-private.h"
 #include "hkl-geometry-private.h"
 
 #include "btBulletCollisionCommon.h"

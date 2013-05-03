@@ -24,16 +24,17 @@
 #include <gsl/gsl_sf.h>
 #include <hkl/hkl-factory-private.h>
 
-#include <hkl/hkl-pseudoaxis-private.h>
-#include <hkl/hkl-pseudoaxis-common-eulerians-private.h>
-#include <hkl/hkl-pseudoaxis-common-q-private.h>
-#include <hkl/hkl-pseudoaxis-e4c-private.h>
-#include <hkl/hkl-pseudoaxis-k4cv-private.h>
-#include <hkl/hkl-pseudoaxis-e6c-private.h>
-#include <hkl/hkl-pseudoaxis-k6c-private.h>
-#include <hkl/hkl-pseudoaxis-zaxis-private.h>
-#include <hkl/hkl-pseudoaxis-soleil-sixs-med-private.h>
-#include <hkl/hkl-pseudoaxis-petra3-private.h>
+#include "hkl-axis-private.h"
+#include "hkl-pseudoaxis-private.h"
+#include "hkl-pseudoaxis-common-eulerians-private.h"
+#include "hkl-pseudoaxis-common-q-private.h"
+#include "hkl-pseudoaxis-e4c-private.h"
+#include "hkl-pseudoaxis-k4cv-private.h"
+#include "hkl-pseudoaxis-e6c-private.h"
+#include "hkl-pseudoaxis-k6c-private.h"
+#include "hkl-pseudoaxis-zaxis-private.h"
+#include "hkl-pseudoaxis-soleil-sixs-med-private.h"
+#include "hkl-pseudoaxis-petra3-private.h"
 
 
 typedef HklGeometry* (* HklFactoryGeometryFunction) (const HklFactory *factory);

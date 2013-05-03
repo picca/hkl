@@ -29,6 +29,7 @@
 #include <hkl/hkl-sample.h>
 #include <hkl/hkl-matrix.h>
 
+#include "hkl-axis-private.h"
 #include "hkl-detector-private.h"
 #include "hkl-parameter-private.h"
 #include "hkl-geometry-private.h"

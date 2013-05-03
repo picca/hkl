@@ -23,6 +23,8 @@
 #include <tap/basic.h>
 #include <tap/hkl.h>
 
+#include "hkl-axis-private.h" /* temporary */
+
 #define CHECK_AXIS_VALUE(axis, value) fabs((value) - hkl_parameter_get_value(&(axis)->parameter)) < HKL_EPSILON
 
 
@@ -405,8 +407,6 @@ static void petra3_2(void)
 	/*      -2.384186e-09    -1.182388e-14 */
 	/* the -90 value of phi is problematic, the right value is 0 */
 	if(hkl_engine_set(hkl, NULL)){
-		hkl_engine_list_fprintf(stderr, engines);
-		hkl_geometry_list_fprintf(stderr, geometries);
 		res &= hkl_geometry_list_check_geometry_unit(
 			geometries,
 			0., 11.688393153063114, 90., 0., 0.,  23.376786185344031);

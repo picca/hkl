@@ -18,15 +18,6 @@ and/or use gtk-doc annotations.  -->
             glib:type-name="HklAxis"
             glib:get-type="hkl_axis_get_type"
             c:symbol-prefix="axis">
-      <field name="parameter" writable="1">
-        <type name="Parameter" c:type="HklParameter"/>
-      </field>
-      <field name="axis_v" writable="1">
-        <type name="Vector" c:type="HklVector"/>
-      </field>
-      <field name="q" writable="1">
-        <type name="Quaternion" c:type="HklQuaternion"/>
-      </field>
       <constructor name="new" c:identifier="hkl_axis_new">
         <return-value transfer-ownership="full">
           <type name="Axis" c:type="HklAxis*"/>

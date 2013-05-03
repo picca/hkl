@@ -24,6 +24,7 @@
 #include <tap/float.h>
 
 #include <hkl/ccan/container_of/container_of.h>
+#include "hkl-axis-private.h"
 
 static void new(void)
 {
