@@ -254,8 +254,3 @@ HklAxis *hkl_axis_new_copy(const HklAxis *src)
 
 	return self;
 }
-
-void hkl_axis_free(HklAxis *self)
-{
-	free(self);
-}

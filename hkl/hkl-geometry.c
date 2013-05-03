@@ -250,7 +250,7 @@ void hkl_geometry_free(HklGeometry *self)
 	HklHolder **holder;
 
 	darray_foreach(axis, self->axes){
-		hkl_axis_free(*axis);
+		hkl_parameter_free(&(*axis)->parameter);
 	}
 	darray_free(self->axes);
 
