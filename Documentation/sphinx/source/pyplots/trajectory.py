@@ -20,7 +20,7 @@ delta = geometry.axes()[5]
 #values_w = [0., -60, 0., 90., 0., 60.]
 values_w = [0., 120, 0., -90., 0., 60.]
 geometry.set_axes_values_unit(values_w)
-axes_names = [axis.parameter.name for axis in geometry.axes()]
+axes_names = [axis.name for axis in geometry.axes()]
 
 sample = Hkl.Sample.new("toto", Hkl.SampleType.MONOCRYSTAL)
 sample.set_lattice(1.54, 1.54, 1.54,

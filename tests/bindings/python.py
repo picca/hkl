@@ -70,7 +70,7 @@ class TestAPI(unittest.TestCase):
 
         # axes names are accessible
         self.assertTrue(
-            isinstance([axis.parameter.name for axis in geometry.axes()],
+            isinstance([axis.name for axis in geometry.axes()],
                        list))
 
         # set the geometry axes values

@@ -13,25 +13,11 @@ and/or use gtk-doc annotations.  -->
              shared-library="libhkl.so.5"
              c:identifier-prefixes="Hkl"
              c:symbol-prefixes="hkl">
-    <record name="Axis"
-            c:type="HklAxis"
-            glib:type-name="HklAxis"
-            glib:get-type="hkl_axis_get_type"
-            c:symbol-prefix="axis">
-      <constructor name="new" c:identifier="hkl_axis_new">
-        <return-value transfer-ownership="full">
-          <type name="Axis" c:type="HklAxis*"/>
-        </return-value>
-        <parameters>
-          <parameter name="name" transfer-ownership="none">
-            <type name="utf8" c:type="char*"/>
-          </parameter>
-          <parameter name="axis_v" transfer-ownership="none">
-            <type name="Vector" c:type="HklVector*"/>
-          </parameter>
-        </parameters>
-      </constructor>
-    </record>
+    <glib:boxed glib:name="Axis"
+                c:symbol-prefix="axis"
+                glib:type-name="HklAxis"
+                glib:get-type="hkl_axis_get_type">
+    </glib:boxed>
     <record name="Detector"
             c:type="HklDetector"
             glib:type-name="HklDetector"
@@ -816,9 +802,9 @@ control over, that could include printf() escape sequences.</doc>
             c:symbol-prefix="geometry">
       <method name="axes" c:identifier="hkl_geometry_axes">
         <return-value transfer-ownership="container">
-          <doc xml:whitespace="preserve">list of HklAxis, free the list with g_slist_free when done.</doc>
+          <doc xml:whitespace="preserve">list of HklParameter, free the list with g_slist_free when done.</doc>
           <type name="GLib.SList" c:type="GSList*">
-            <type name="Axis"/>
+            <type name="Parameter"/>
           </type>
         </return-value>
         <parameters>
@@ -832,7 +818,7 @@ control over, that could include printf() escape sequences.</doc>
               c:identifier="hkl_geometry_axes_get"
               introspectable="0">
         <return-value transfer-ownership="none">
-          <type c:type="const darray_axis*"/>
+          <type c:type="const darray_parameter*"/>
         </return-value>
         <parameters>
           <instance-parameter name="self" transfer-ownership="none">
@@ -849,7 +835,7 @@ control over, that could include printf() escape sequences.</doc>
             <type name="Geometry" c:type="HklGeometry*"/>
           </instance-parameter>
           <parameter name="axis" transfer-ownership="none">
-            <type name="Axis" c:type="const HklAxis*"/>
+            <type name="Parameter" c:type="const HklParameter*"/>
           </parameter>
         </parameters>
       </method>

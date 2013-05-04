@@ -25,7 +25,7 @@
 
 #include "hkl-axis-private.h" /* temporary */
 
-#define CHECK_AXIS_VALUE(axis, value) fabs((value) - hkl_parameter_get_value(&(axis)->parameter)) < HKL_EPSILON
+#define CHECK_AXIS_VALUE(axis, value) fabs((value) - hkl_parameter_get_value(axis)) < HKL_EPSILON
 
 
 static int hkl_geometry_list_check_geometry_unit(const HklGeometryList *self,
@@ -41,7 +41,7 @@ static int hkl_geometry_list_check_geometry_unit(const HklGeometryList *self,
 	int res;
 
 	darray_foreach(item, *items){
-		const darray_axis *axes = hkl_geometry_axes_get(hkl_geometry_list_item_geometry_get(*item));
+		const darray_parameter *axes = hkl_geometry_axes_get(hkl_geometry_list_item_geometry_get(*item));
 
 		res = HKL_TRUE;
 		res &= CHECK_AXIS_VALUE(darray_item(*axes, 0), mu * HKL_DEGTORAD);

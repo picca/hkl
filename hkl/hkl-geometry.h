@@ -24,7 +24,7 @@
 
 #include <hkl/ccan/darray/darray.h>
 
-#include <hkl/hkl-axis.h>
+#include <hkl/hkl-parameter.h>
 
 HKL_BEGIN_DECLS
 
@@ -32,7 +32,6 @@ typedef struct _HklGeometry HklGeometry;
 typedef struct _HklGeometryList HklGeometryList;
 typedef struct _HklGeometryListItem HklGeometryListItem;
 
-typedef darray(HklAxis *) darray_axis;
 typedef darray(HklGeometryListItem *) darray_item;
 
 /***************/
@@ -43,9 +42,9 @@ HKLAPI void hkl_geometry_free(HklGeometry *self) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_geometry_set(HklGeometry *self, const HklGeometry *src) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI const darray_axis *hkl_geometry_axes_get(const HklGeometry *self) HKL_ARG_NONNULL(1);
+HKLAPI const darray_parameter *hkl_geometry_axes_get(const HklGeometry *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_geometry_axis_set(HklGeometry *self, const HklAxis *axis) HKL_ARG_NONNULL(1, 2);
+HKLAPI void hkl_geometry_axis_set(HklGeometry *self, const HklParameter *axis) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI const char *hkl_geometry_name_get(const HklGeometry *self) HKL_ARG_NONNULL(1);
 

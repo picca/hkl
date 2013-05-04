@@ -23,9 +23,10 @@
 #define __HKL_PARAMETER_H__
 
 #include <stdio.h>
+#include <stdbool.h>
 
-#include <hkl/ccan/list/list.h>
 #include <hkl/ccan/darray/darray.h>
+#include <hkl/hkl-macros.h>
 #include <hkl/hkl-error.h>
 #include <hkl/hkl-interval.h>
 #include <hkl/hkl-unit.h>
@@ -36,6 +37,8 @@ typedef struct _HklParameter HklParameter;
 typedef struct _HklParameterOperations HklParameterOperations;
 typedef struct _HklParameterList HklParameterList;
 typedef struct _HklParameterListOperations HklParameterListOperations;
+
+typedef darray(HklParameter *) darray_parameter;
 
 /****************/
 /* HklParameter */

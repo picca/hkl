@@ -24,6 +24,7 @@
 
 #include <hkl/ccan/darray/darray.h>
 #include <hkl/hkl-detector.h>
+#include <hkl/hkl-parameter.h>
 #include <hkl/hkl-sample.h>
 #include <hkl/hkl-error.h>
 
@@ -35,7 +36,6 @@ typedef struct _HklEngine HklEngine;
 typedef struct _HklEngineList HklEngineList;
 
 typedef darray(HklMode *) darray_mode;
-typedef darray(HklParameter *) darray_parameter;
 typedef darray(HklEngine *) darray_engine;
 
 /***********/

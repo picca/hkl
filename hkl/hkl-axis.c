@@ -221,7 +221,7 @@ static HklParameterOperations hkl_parameter_operations_axis = {
 	.fprintf = hkl_axis_fprintf_real
 };
 
-HklAxis *hkl_axis_new(char const *name, HklVector const *axis_v)
+HklParameter *hkl_parameter_new_axis(char const *name, HklVector const *axis_v)
 {
 	HklAxis *self = NULL;
 	static HklAxis axis0 = {
@@ -239,5 +239,5 @@ HklAxis *hkl_axis_new(char const *name, HklVector const *axis_v)
 	self->parameter.name = name;
 	self->axis_v = *axis_v;
 
-	return self;
+	return &self->parameter;
 }

@@ -139,13 +139,13 @@ GSList* hkl_parameter_list_parameters(HklParameterList *self)
  * hkl_geometry_axes:
  * @self: the this ptr
  *
- * Returns: (element-type HklAxis) (transfer container): list of HklAxis,
+ * Returns: (element-type HklParameter) (transfer container): list of HklParameter,
  *          free the list with g_slist_free when done.
  **/
 GSList *hkl_geometry_axes(HklGeometry *self)
 {
 	GSList *list = NULL;
-	HklAxis **axis;
+	HklParameter **axis;
 
 	darray_foreach(axis, self->axes){
 		list = g_slist_append(list, *axis);
@@ -167,7 +167,7 @@ double *hkl_geometry_get_axes_values_unit(const HklGeometry *self, guint *len)
 {
 	double *values;
 	uint i = 0;
-	HklAxis **axis;
+	HklParameter **axis;
 
 	if(!self || !len || darray_size(self->axes) == 0)
 		return NULL;
@@ -176,7 +176,7 @@ double *hkl_geometry_get_axes_values_unit(const HklGeometry *self, guint *len)
 	values = malloc(darray_size(self->axes) * sizeof(*values));
 
 	darray_foreach(axis, self->axes){
-		values[i++] = hkl_parameter_get_value_unit(&(*axis)->parameter);
+		values[i++] = hkl_parameter_get_value_unit(*axis);
 	}
 
 	return values;
@@ -191,13 +191,13 @@ double *hkl_geometry_get_axes_values_unit(const HklGeometry *self, guint *len)
 void hkl_geometry_set_axes_values_unit(HklGeometry *self, double *values, unsigned int len)
 {
 	uint i = 0;
-	HklAxis **axis;
+	HklParameter **axis;
 
 	if (!self || !values || len != darray_size(self->axes))
 		return;
 
 	darray_foreach(axis, self->axes){
-		hkl_parameter_set_value_unit(&(*axis)->parameter,
+		hkl_parameter_set_value_unit(*axis,
 					     values[i++],
 					     NULL);
 	}

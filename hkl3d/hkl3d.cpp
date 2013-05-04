@@ -31,6 +31,7 @@
 #include <g3d/quat.h>
 #include <g3d/matrix.h>
 
+#include "hkl/ccan/container_of/container_of.h"
 #include "hkl3d.h"
 #include "hkl-axis-private.h"
 #include "hkl-geometry-private.h"
@@ -548,7 +549,8 @@ static void hkl3d_geometry_apply_transformations(Hkl3DGeometry *self)
 		for(j=0; j<len; j++){
 			size_t k;
 			size_t idx = (*holder)->config->idx[j];
-			HklAxis *axis = darray_item(self->geometry->axes, idx);
+			HklAxis *axis = container_of(darray_item(self->geometry->axes, idx),
+						     HklAxis, parameter);
 			G3DMatrix G3DM[16];
 
 			/* conversion beetween hkl -> bullet coordinates */

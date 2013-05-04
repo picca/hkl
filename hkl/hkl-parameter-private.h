@@ -203,7 +203,7 @@ static inline double *hkl_parameter_list_get_values_unit_real(
 	unsigned int *len)
 {
 	const unsigned int _len =  darray_size(*self);
-	double *values = malloc(sizeof(*values) * _len);
+	double *values = (double *)malloc(sizeof(*values) * _len);
 
 	for(unsigned int i=0; i<_len; ++i)
 		values[i] = hkl_parameter_get_value_unit(darray_item(*self, i));

@@ -43,7 +43,7 @@ struct _HklDetectorFit
 	HklGeometry *geometry;
 	HklDetector *detector;
 	HklVector *kf0;
-	HklAxis **axes;
+	HklParameter **axes;
 	size_t len;
 };
 
@@ -57,7 +57,7 @@ static int fit_detector_function(const gsl_vector *x, void *params, gsl_vector *
 
 	/* update the workspace from x; */
 	for(i=0; i<fitp->len; ++i)
-		hkl_parameter_set_value(&fitp->axes[i]->parameter,
+		hkl_parameter_set_value(fitp->axes[i],
 					x->data[i], NULL);
 
 	hkl_geometry_update(fitp->geometry);
@@ -147,7 +147,7 @@ static int fit_detector_position(HklMode *mode, HklGeometry *geometry,
 
 		/* initialize x with the right values */
 		for(i=0; i<params.len; ++i)
-			x->data[i] = hkl_parameter_get_value(&params.axes[i]->parameter);
+			x->data[i] = hkl_parameter_get_value(params.axes[i]);
 
 		f.f = fit_detector_function;
 		f.n = params.len;
@@ -189,9 +189,9 @@ static int fit_detector_position(HklMode *mode, HklGeometry *geometry,
 			for(i=0; i<params.len; ++i){
 				double value;
 
-				value = hkl_parameter_get_value(&params.axes[i]->parameter);
+				value = hkl_parameter_get_value(params.axes[i]);
 				/* TODO one day deal with the error for real */
-				hkl_parameter_set_value(&params.axes[i]->parameter,
+				hkl_parameter_set_value(params.axes[i],
 							gsl_sf_angle_restrict_pos(value),
 							NULL);
 			}
@@ -400,15 +400,17 @@ int hkl_mode_set_hkl_real(HklMode *self,
 			hkl_vector_minus_vector(&q, &ki);
 
 			/* compute the current orientation of the last axis */
-			axis = darray_item(geom->axes,
-					   darray_item(geom->holders, 0)->config->idx[last_axis]);
+			axis = container_of(darray_item(geom->axes,
+							darray_item(geom->holders, 0)->config->idx[last_axis]),
+					    HklAxis, parameter);
 			axis_v = axis->axis_v;
 			hkl_quaternion_init(&qr, 1, 0, 0, 0);
 			for(j=0; j<last_axis; ++j)
 				hkl_quaternion_times_quaternion(
 					&qr,
-					&darray_item(geom->axes,
-						     darray_item(geom->holders, 0)->config->idx[j])->q);
+					&container_of(darray_item(geom->axes,
+								  darray_item(geom->holders, 0)->config->idx[j]),
+						      HklAxis, parameter)->q);
 			hkl_vector_rotated_quaternion(&axis_v, &qr);
 
 			/* - project the center of the ewalds sphere into the same plan (c') */

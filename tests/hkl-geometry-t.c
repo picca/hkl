@@ -118,9 +118,9 @@ static void set_values(void)
 	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
 
 	hkl_geometry_set_values_v(g, 3, 1., 1., 1.);
-	is_double(1., hkl_parameter_get_value(&darray_item(g->axes, 0)->parameter), HKL_EPSILON, __func__);
-	is_double(1., hkl_parameter_get_value(&darray_item(g->axes, 1)->parameter), HKL_EPSILON, __func__);
-	is_double(1., hkl_parameter_get_value(&darray_item(g->axes, 2)->parameter), HKL_EPSILON, __func__);
+	is_double(1., hkl_parameter_get_value(darray_item(g->axes, 0)), HKL_EPSILON, __func__);
+	is_double(1., hkl_parameter_get_value(darray_item(g->axes, 1)), HKL_EPSILON, __func__);
+	is_double(1., hkl_parameter_get_value(darray_item(g->axes, 2)), HKL_EPSILON, __func__);
 
 	hkl_geometry_free(g);
 }
@@ -137,9 +137,9 @@ static void set_values_unit(void)
 	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
 
 	hkl_geometry_set_values_unit_v(g, 10., 10., 10.);
-	is_double(10. * HKL_DEGTORAD, hkl_parameter_get_value(&darray_item(g->axes, 0)->parameter), HKL_EPSILON, __func__);
-	is_double(10. * HKL_DEGTORAD, hkl_parameter_get_value(&darray_item(g->axes, 1)->parameter), HKL_EPSILON, __func__);
-	is_double(10. * HKL_DEGTORAD, hkl_parameter_get_value(&darray_item(g->axes, 2)->parameter), HKL_EPSILON, __func__);
+	is_double(10. * HKL_DEGTORAD, hkl_parameter_get_value(darray_item(g->axes, 0)), HKL_EPSILON, __func__);
+	is_double(10. * HKL_DEGTORAD, hkl_parameter_get_value(darray_item(g->axes, 1)), HKL_EPSILON, __func__);
+	is_double(10. * HKL_DEGTORAD, hkl_parameter_get_value(darray_item(g->axes, 2)), HKL_EPSILON, __func__);
 
 	hkl_geometry_free(g);
 }
@@ -183,7 +183,7 @@ static void is_valid(void)
 	hkl_geometry_set_values_v(geom, 3, -181. * HKL_DEGTORAD, 0., 0.);
 	ok(HKL_TRUE == hkl_geometry_is_valid(geom), __func__);
 
-	hkl_parameter_set_range(&darray_item(geom->axes, 0)->parameter,
+	hkl_parameter_set_range(darray_item(geom->axes, 0),
 				-100 * HKL_DEGTORAD, 100 * HKL_DEGTORAD);
 	ok(HKL_FALSE == hkl_geometry_is_valid(geom), __func__);
 
@@ -228,7 +228,7 @@ static void list(void)
 	hkl_geometry_list_fprintf(stderr, list);
 	darray_foreach(item, list->items){
 		is_double(values[i++],
-			  hkl_parameter_get_value(&darray_item((*item)->geometry->axes, 0)->parameter),
+			  hkl_parameter_get_value(darray_item((*item)->geometry->axes, 0)),
 			  HKL_EPSILON, __func__);
 	}
 

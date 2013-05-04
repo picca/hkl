@@ -20,7 +20,7 @@ detector.idx_set(1)
 
 factory = Hkl.factories()['K6C']
 geometry = factory.create_new_geometry()
-axes_names = [axis.parameter.name for axis in geometry.axes()]
+axes_names = [axis.name for axis in geometry.axes()]
 geometry.set_axes_values_unit([0., 120, 0., -90., 0., 60.])
 
 engines = factory.create_new_engine_list()

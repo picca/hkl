@@ -24,9 +24,10 @@
 
 #include <hkl/hkl-source.h>
 #include <hkl/hkl-quaternion.h>
-#include <hkl/hkl-axis.h>
 #include <hkl/hkl-geometry.h>
 #include <hkl/hkl-factory.h>
+
+#include "hkl-parameter-private.h"
 
 HKL_BEGIN_DECLS
 
@@ -52,7 +53,7 @@ struct _HklGeometry
 {
 	const HklFactory *factory;
 	HklSource source;
-	darray_axis axes;
+	darray_parameter axes;
 	darray_holder holders;
 };
 
@@ -71,8 +72,8 @@ struct _HklGeometryListItem
 /* HklHolder */
 /*************/
 
-extern HklAxis *hkl_holder_add_rotation_axis(HklHolder *self,
-					     char const *name, double x, double y, double z);
+extern HklParameter *hkl_holder_add_rotation_axis(HklHolder *self,
+						  char const *name, double x, double y, double z);
 
 /***************/
 /* HklGeometry */

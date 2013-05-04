@@ -26,15 +26,18 @@
 #include <hkl/hkl-vector.h>
 #include <hkl/hkl-quaternion.h>
 #include <hkl/hkl-parameter.h>
-#include <hkl/hkl-axis.h>
 
 HKL_BEGIN_DECLS
+
+typedef struct _HklAxis HklAxis;
 
 struct _HklAxis {
 	HklParameter parameter;
 	HklVector axis_v;
 	HklQuaternion q;
 };
+
+extern HklParameter *hkl_parameter_new_axis(char const *name, HklVector const *axis_v);
 
 HKL_END_DECLS
 

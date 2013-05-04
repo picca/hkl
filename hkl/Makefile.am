@@ -43,7 +43,6 @@ hkl_c_sources = \
 	hkl-vector.c
 
 hkl_public_h_sources = \
-	hkl-axis.h \
 	hkl-detector.h \
 	hkl-detector-factory.h \
 	hkl-error.h \
@@ -118,7 +117,6 @@ introspection_files = \
 	hkl-unit.h \
 	hkl-interval.h \
 	hkl-parameter.h \
-	hkl-axis.h \
 	hkl-source.h \
 	hkl-geometry.h \
 	hkl-detector.h \

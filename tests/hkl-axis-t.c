@@ -28,19 +28,19 @@
 
 static void new(void)
 {
-	HklAxis *axis;
+	HklParameter *axis;
 	static HklVector v = {{1, 0, 0}};
 
-	axis = hkl_axis_new("omega", &v);
+	axis = hkl_parameter_new_axis("omega", &v);
 
-	is_string("omega", ((HklParameter *)axis)->name, __func__);
-	is_double(-M_PI, ((HklParameter *)axis)->range.min, HKL_EPSILON, __func__);
-	is_double(M_PI, ((HklParameter *)axis)->range.max, HKL_EPSILON, __func__);
-	is_double(0., hkl_parameter_get_value(&axis->parameter), HKL_EPSILON, __func__);
-	ok(HKL_TRUE == ((HklParameter *)axis)->fit, __func__);
-	ok(HKL_TRUE == ((HklParameter *)axis)->changed, __func__);
+	is_string("omega", axis->name, __func__);
+	is_double(-M_PI, axis->range.min, HKL_EPSILON, __func__);
+	is_double(M_PI, axis->range.max, HKL_EPSILON, __func__);
+	is_double(0., hkl_parameter_get_value(axis), HKL_EPSILON, __func__);
+	ok(HKL_TRUE == axis->fit, __func__);
+	ok(HKL_TRUE == axis->changed, __func__);
 
-	hkl_parameter_free(&axis->parameter);
+	hkl_parameter_free(axis);
 }
 
 static void get_quaternions(void)
@@ -48,7 +48,8 @@ static void get_quaternions(void)
 	HklAxis *axis;
 	static HklVector v = {{1, 0, 0}};
 
-	axis = hkl_axis_new("omega", &v);
+	axis = container_of(hkl_parameter_new_axis("omega", &v),
+			    HklAxis, parameter);
 
 	is_double(1., axis->q.data[0], HKL_EPSILON, __func__);
 	is_double(0., axis->q.data[1], HKL_EPSILON, __func__);
@@ -70,7 +71,8 @@ static void copy(void)
 	HklAxis *copy;
 	static HklVector v = {{1, 0, 0}};
 
-	axis = hkl_axis_new("omega", &v);
+	axis = container_of(hkl_parameter_new_axis("omega", &v),
+			    HklAxis, parameter);
 	hkl_parameter_set_value(&axis->parameter, -M_PI_2, NULL);
 
 	copy = container_of(hkl_parameter_new_copy(&axis->parameter),
@@ -95,7 +97,8 @@ static void is_valid(void)
 	HklAxis *axis1;
 	static HklVector v = {{1, 0, 0}};
 
-	axis1 = hkl_axis_new("omega", &v);
+	axis1 = container_of(hkl_parameter_new_axis("omega", &v),
+			     HklAxis, parameter);
 
 	hkl_parameter_set_value_unit(&axis1->parameter, 45, NULL);
 	ok(HKL_TRUE == hkl_parameter_is_valid(&axis1->parameter), __func__);
@@ -127,7 +130,8 @@ static void set_value_smallest_in_range(void)
 	HklAxis *axis;
 	static HklVector v = {{1, 0, 0}};
 
-	axis = hkl_axis_new("omega", &v);
+	axis = container_of(hkl_parameter_new_axis("omega", &v),
+			    HklAxis, parameter);
 
 	hkl_parameter_set_range_unit(&axis->parameter, -190, 190);
 
@@ -163,8 +167,10 @@ static void get_value_closest(void)
 	HklAxis *axis1, *axis2;
 	static HklVector v = {{1, 0, 0}};
 
-	axis1 = hkl_axis_new("omega", &v);
-	axis2 = hkl_axis_new("omega", &v);
+	axis1 = container_of(hkl_parameter_new_axis("omega", &v),
+			     HklAxis, parameter);
+	axis2 = container_of(hkl_parameter_new_axis("omega", &v),
+			     HklAxis, parameter);
 
 	hkl_parameter_set_value_unit(&axis1->parameter, 0, NULL);
 	hkl_parameter_set_value_unit(&axis2->parameter, 0, NULL);

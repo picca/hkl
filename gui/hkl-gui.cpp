@@ -392,14 +392,14 @@ void HKLWindow::set_up_TreeView_axes(void)
 		sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_axes_max_edited));
 
 	//Fill the models from the diffractometerAxes
-	const darray_axis *axes;
-	HklAxis **axis;
+	const darray_parameter *axes;
+	HklParameter **axis;
 
 	axes = hkl_geometry_axes_get(this->_geometry);
 	darray_foreach(axis, *axes){
 		Gtk::ListStore::Row row = *(_axeModel->append());
 		row[_axeModelColumns.axis] = *axis;
-		row[_axeModelColumns.name] = (*axis)->parameter.name;
+		row[_axeModelColumns.name] = (*axis)->name;
 	}
 
 	//Set the model for the TreeView
@@ -498,8 +498,8 @@ void HKLWindow::set_up_TreeView_treeview1(void)
 	LOG;
 
 	int i=0;
-	const darray_axis *axes;
-	HklAxis **axis;
+	const darray_parameter *axes;
+	HklParameter **axis;
 
 	//Create the Columns
 	if(_solutionModelColumns)
@@ -510,7 +510,7 @@ void HKLWindow::set_up_TreeView_treeview1(void)
 	_treeview1->remove_all_columns();
 	axes = hkl_geometry_axes_get(this->_geometry);
 	darray_foreach(axis, *axes)
-		_treeview1->append_column_numeric((*axis)->parameter.name,
+		_treeview1->append_column_numeric((*axis)->name,
 						  _solutionModelColumns->axes[i++],
 						  "%lf");
 
@@ -633,13 +633,13 @@ void HKLWindow::updateAxes(void)
 	while(iter != end){
 		double min;
 		double max;
-		HklAxis * axis;
+		HklParameter * axis;
 
 		Gtk::TreeRow row = *iter;
 		axis = row[_axeModelColumns.axis];
-		row[_axeModelColumns.read] = hkl_parameter_get_value_unit(&axis->parameter);
-		row[_axeModelColumns.write] = hkl_parameter_get_value_unit(&axis->parameter);
-		hkl_parameter_get_range_unit((HklParameter *)axis, &min, &max);
+		row[_axeModelColumns.read] = hkl_parameter_get_value_unit(axis);
+		row[_axeModelColumns.write] = hkl_parameter_get_value_unit(axis);
+		hkl_parameter_get_range_unit(axis, &min, &max);
 		row[_axeModelColumns.min] = min;
 		row[_axeModelColumns.max] = max;
 		++iter;
@@ -963,7 +963,7 @@ void HKLWindow::updateSolutions(void)
 	Gtk::ListStore::Row row;
 	const darray_item *items = hkl_geometry_list_items_get(geometries);
 	darray_foreach(item, *items){
-		HklAxis **axis;
+		HklParameter **axis;
 		int j = 0;
 
 		row = *(_solutionModel->append());
@@ -971,10 +971,10 @@ void HKLWindow::updateSolutions(void)
 		row[_solutionModelColumns->item] = *item;
 
 		const HklGeometry *geometry = hkl_geometry_list_item_geometry_get(*item);
-		const darray_axis *axes = hkl_geometry_axes_get(geometry);
+		const darray_parameter *axes = hkl_geometry_axes_get(geometry);
 		darray_foreach(axis, *axes){
 			row[_solutionModelColumns->axes[j++]] =		\
-				hkl_parameter_get_value_unit(&(*axis)->parameter);
+				hkl_parameter_get_value_unit(*axis);
 		}
 	}
 }

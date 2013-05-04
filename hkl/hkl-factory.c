@@ -116,17 +116,17 @@ static void hkl_geometry_list_multiply_k4c_real(HklGeometryList *self,
 	double kphi, kphip;
 
 	geometry = item->geometry;
-	komega = hkl_parameter_get_value(&darray_item(geometry->axes, 0)->parameter);
-	kappa = hkl_parameter_get_value(&darray_item(geometry->axes, 1)->parameter);
-	kphi = hkl_parameter_get_value(&darray_item(geometry->axes, 2)->parameter);
+	komega = hkl_parameter_get_value(darray_item(geometry->axes, 0));
+	kappa = hkl_parameter_get_value(darray_item(geometry->axes, 1));
+	kphi = hkl_parameter_get_value(darray_item(geometry->axes, 2));
 
 	kappa_2_kappap(komega, kappa, kphi, 50 * HKL_DEGTORAD, &komegap, &kappap, &kphip);
 
 	copy = hkl_geometry_new_copy(geometry);
 	/* TODO parameter list for the geometry */
-	hkl_parameter_set_value(&darray_item(copy->axes, 0)->parameter, komegap, NULL);
-	hkl_parameter_set_value(&darray_item(copy->axes, 1)->parameter, kappap, NULL);
-	hkl_parameter_set_value(&darray_item(copy->axes, 2)->parameter, kphip, NULL);
+	hkl_parameter_set_value(darray_item(copy->axes, 0), komegap, NULL);
+	hkl_parameter_set_value(darray_item(copy->axes, 1), kappap, NULL);
+	hkl_parameter_set_value(darray_item(copy->axes, 2), kphip, NULL);
 
 	hkl_geometry_update(copy);
 	hkl_geometry_list_add(self, copy);
@@ -143,17 +143,17 @@ static void hkl_geometry_list_multiply_k6c_real(HklGeometryList *self,
 	double kphi, kphip;
 
 	geometry = item->geometry;
-	komega = hkl_parameter_get_value(&darray_item(geometry->axes, 1)->parameter);
-	kappa = hkl_parameter_get_value(&darray_item(geometry->axes, 2)->parameter);
-	kphi = hkl_parameter_get_value(&darray_item(geometry->axes, 3)->parameter);
+	komega = hkl_parameter_get_value(darray_item(geometry->axes, 1));
+	kappa = hkl_parameter_get_value(darray_item(geometry->axes, 2));
+	kphi = hkl_parameter_get_value(darray_item(geometry->axes, 3));
 
 	kappa_2_kappap(komega, kappa, kphi, 50 * HKL_DEGTORAD, &komegap, &kappap, &kphip);
 
 	copy = hkl_geometry_new_copy(geometry);
 	/* TODO parameter list for the geometry */
-	hkl_parameter_set_value(&darray_item(copy->axes, 1)->parameter, komegap, NULL);
-	hkl_parameter_set_value(&darray_item(copy->axes, 2)->parameter, kappap, NULL);
-	hkl_parameter_set_value(&darray_item(copy->axes, 3)->parameter, kphip, NULL);
+	hkl_parameter_set_value(darray_item(copy->axes, 1), komegap, NULL);
+	hkl_parameter_set_value(darray_item(copy->axes, 2), kappap, NULL);
+	hkl_parameter_set_value(darray_item(copy->axes, 3), kphip, NULL);
 
 	hkl_geometry_update(copy);
 	hkl_geometry_list_add(self, copy);

@@ -325,11 +325,11 @@ void HKLWindow::on_cell_TreeView_axes_read_edited(Glib::ustring const & spath,
 	Glib::RefPtr<Gtk::TreeModel> listStore = _TreeView_axes->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
-	HklAxis *axis = row[_axeModelColumns.axis];
+	HklParameter *axis = row[_axeModelColumns.axis];
 	double value;
 
 	sscanf(newText.c_str(), "%lf", &value);
-	hkl_parameter_set_value_unit(&axis->parameter, value, NULL);
+	hkl_parameter_set_value_unit(axis, value, NULL);
 	hkl_geometry_axis_set(this->_geometry, axis);
 
 	row[_axeModelColumns.read] = value;
@@ -354,10 +354,10 @@ void HKLWindow::on_cell_TreeView_axes_write_edited(Glib::ustring const & spath,
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
 
-	HklAxis *axis = row[_axeModelColumns.axis];
+	HklParameter *axis = row[_axeModelColumns.axis];
 	double value;
 	sscanf(newText.c_str(), "%lf", &value);
-	hkl_parameter_set_value_unit(&axis->parameter, value, NULL);
+	hkl_parameter_set_value_unit(axis, value, NULL);
 	hkl_geometry_axis_set(this->_geometry, axis);
 
 	row[_axeModelColumns.write] = value;
@@ -381,7 +381,7 @@ void HKLWindow::on_cell_TreeView_axes_min_edited(Glib::ustring const & spath,
 	Glib::RefPtr<Gtk::TreeModel> listStore = _TreeView_axes->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
-	HklAxis *axis = row[_axeModelColumns.axis];
+	HklParameter *axis = row[_axeModelColumns.axis];
 
 	double shit;
 	double max;
@@ -389,8 +389,8 @@ void HKLWindow::on_cell_TreeView_axes_min_edited(Glib::ustring const & spath,
 
 	sscanf(newText.c_str(), "%lf", &value);
 
-	hkl_parameter_get_range_unit(&axis->parameter, &shit, &max);
-	hkl_parameter_set_range_unit(&axis->parameter, value, max);
+	hkl_parameter_get_range_unit(axis, &shit, &max);
+	hkl_parameter_set_range_unit(axis, value, max);
 	hkl_geometry_axis_set(this->_geometry, axis);
 
 	row[_axeModelColumns.min] = value;
@@ -406,15 +406,15 @@ void HKLWindow::on_cell_TreeView_axes_max_edited(Glib::ustring const & spath,
 	Glib::RefPtr<Gtk::TreeModel> listStore = _TreeView_axes->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
-	HklAxis *axis = row[_axeModelColumns.axis];
+	HklParameter *axis = row[_axeModelColumns.axis];
 
 	double min, shit;
 	double value;
 
 	sscanf(newText.c_str(), "%lf", &value);
 
-	hkl_parameter_get_range_unit(&axis->parameter, &min, &shit);
-	hkl_parameter_set_range_unit(&axis->parameter, min, value);
+	hkl_parameter_get_range_unit(axis, &min, &shit);
+	hkl_parameter_set_range_unit(axis, min, value);
 	hkl_geometry_axis_set(this->_geometry, axis);
 
 	row[_axeModelColumns.max] = value;

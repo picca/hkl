@@ -77,8 +77,8 @@ static void compute_kf(void)
 	hkl_holder_add_rotation_axis(holder, "a", 1, 0, 0);
 	hkl_holder_add_rotation_axis(holder, "b", 0, 1, 0);
 
-	hkl_parameter_set_value(&darray_item(geometry->axes, 0)->parameter, M_PI_2, NULL);
-	hkl_parameter_set_value(&darray_item(geometry->axes, 1)->parameter, M_PI_2, NULL);
+	hkl_parameter_set_value(darray_item(geometry->axes, 0), M_PI_2, NULL);
+	hkl_parameter_set_value(darray_item(geometry->axes, 1), M_PI_2, NULL);
 
 	hkl_detector_attach_to_holder(detector, holder);
 	hkl_detector_compute_kf(detector, geometry, &kf);

@@ -21,7 +21,7 @@
  */
 #include <tap/hkl.h>
 
-int check_pseudoaxes_v(const HklEngine *engine, ...)
+int check_pseudoaxes_v(HklEngine *engine, ...)
 {
 	uint i;
 	va_list ap;
@@ -37,13 +37,13 @@ int check_pseudoaxes_v(const HklEngine *engine, ...)
 	return check_pseudoaxes(engine, values, len);
 }
 
-int check_pseudoaxes(const HklEngine *engine,
+int check_pseudoaxes(HklEngine *engine,
 		     double expected[], uint len)
 {
 	int res = HKL_TRUE;
 	unsigned int i = 0;
 	HklParameter **pseudo_axis;
-	darray_parameter *pseudo_axes = (darray_parameter *)hkl_engine_pseudo_axes(engine);
+	darray_parameter *pseudo_axes = hkl_engine_pseudo_axes(engine);
 
 	hkl_assert(hkl_engine_len(engine) == len);
 

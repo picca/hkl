@@ -27,10 +27,10 @@
 #include "hkl-axis-private.h" /* temporary */
 
 #define GET_GAMMA(items, index) hkl_parameter_get_value_unit(		\
-		&darray_item(*hkl_geometry_axes_get(			\
+		darray_item(*hkl_geometry_axes_get(			\
 				     hkl_geometry_list_item_geometry_get( \
 					     darray_item(*(items), (index)))), \
-			     3)->parameter)
+			     3))
 
 
 static void qper_qpar(void)

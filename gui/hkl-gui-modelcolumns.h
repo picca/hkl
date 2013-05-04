@@ -70,7 +70,7 @@ public:
 class AxeModelColumns : public Gtk::TreeModel::ColumnRecord
 {
 public:
-	Gtk::TreeModelColumn<HklAxis *> axis;
+	Gtk::TreeModelColumn<HklParameter *> axis;
 	Gtk::TreeModelColumn<Glib::ustring> name;
 	Gtk::TreeModelColumn<double> read;
 	Gtk::TreeModelColumn<double> write;
@@ -135,8 +135,8 @@ public:
 
 	SolutionModelColumns(HklGeometry *geometry)
 		{
-			darray_axis *axes;
-			HklAxis **axis;
+			darray_parameter *axes;
+			HklParameter **axis;
 
 			this->add(this->index);
 			this->add(this->item);

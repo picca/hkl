@@ -34,7 +34,7 @@ static void check_model_validity(Hkl3D *hkl3d)
 	int res;
 	Hkl3DObject *obji;
 	Hkl3DObject *objj;
-	const darray_axis *axes;
+	const darray_parameter *axes;
 
 	res = TRUE;
 

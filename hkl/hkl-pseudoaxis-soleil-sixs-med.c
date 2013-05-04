@@ -138,7 +138,7 @@ struct _HklSlitsFit
 	HklVector surface;
 	unsigned int slits_id;
 	unsigned int len;
-	HklAxis *axis;
+	HklParameter *axis;
 };
 
 static int slits_func(const gsl_vector *x, void *params, gsl_vector *f)
@@ -148,7 +148,7 @@ static int slits_func(const gsl_vector *x, void *params, gsl_vector *f)
 	HklVector n_slits = {{0, 0, 1}};
 	HklSlitsFit *parameters = params;
 
-	hkl_parameter_set_value(&parameters->axis->parameter, x_data[0], NULL);
+	hkl_parameter_set_value(parameters->axis, x_data[0], NULL);
 	hkl_geometry_update(parameters->geometry);
 
 	/* compute the orientation of the slits */
@@ -181,7 +181,7 @@ static int fit_slits_orientation(HklSlitsFit *params)
 	x_data = gsl_vector_ptr(x, 0);
 
 	/* initialize x with the right values */
-	x_data[0] = params->axis->parameter._value;
+	x_data[0] = params->axis->_value;
 
 	f.f = slits_func;
 	f.n = params->len;
@@ -220,7 +220,7 @@ static int fit_slits_orientation(HklSlitsFit *params)
 	if(status != GSL_CONTINUE){
 		res = HKL_TRUE;
 		/* put the axes in the -pi, pi range. */
-		gsl_sf_angle_restrict_pos_e(&params->axis->parameter._value);
+		gsl_sf_angle_restrict_pos_e(&params->axis->_value);
 	}
 	/* release memory */
 	gsl_vector_free(x);
@@ -255,17 +255,18 @@ void hkl_geometry_list_multiply_soleil_sixs_med_2_3(HklGeometryList *self,
 
 	/* compute the surface orientation fixed during the fit */
 	/* use the last sample axis as sample surface normal */
-	params.surface = darray_item(geometry->axes,
-				     sample_holder->config->idx[sample_holder->config->len - 1])->axis_v;
+	params.surface = container_of(darray_item(geometry->axes,
+						  sample_holder->config->idx[sample_holder->config->len - 1]),
+				      HklAxis, parameter)->axis_v;
 	hkl_vector_rotated_quaternion(&params.surface,
 				      &sample_holder->q);
 
 
 	/* we just need to fit the slits orientation */
 	/* save it's value before */
-	slits_position = hkl_parameter_get_value(&params.axis->parameter);
+	slits_position = hkl_parameter_get_value(params.axis);
 	if (fit_slits_orientation(&params) != HKL_TRUE)
-		hkl_parameter_set_value(&params.axis->parameter, slits_position, NULL);
+		hkl_parameter_set_value(params.axis, slits_position, NULL);
 }
 
 

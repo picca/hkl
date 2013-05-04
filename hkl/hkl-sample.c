@@ -692,7 +692,7 @@ void hkl_sample_fprintf(FILE *f, const HklSample *self)
 	len = self->reflections_len;
 	if (len){
 		HklSampleReflection *reflection;
-		HklAxis **axis;
+		HklParameter **axis;
 
 		reflection  = hkl_sample_get_ith_reflection(self, 0);
 
@@ -700,7 +700,7 @@ void hkl_sample_fprintf(FILE *f, const HklSample *self)
 		fprintf(f, "\n");
 		fprintf(f, "i %-10.6s %-10.6s %-10.6s", "h", "k", "l");
 		darray_foreach(axis, reflection->geometry->axes){
-			fprintf(f, " %-10.6s", (*axis)->parameter.name);
+			fprintf(f, " %-10.6s", (*axis)->name);
 		}
 
 		for(i=0; i<len; ++i){
@@ -708,7 +708,7 @@ void hkl_sample_fprintf(FILE *f, const HklSample *self)
 			fprintf(f, "\n%d %-10.6f %-10.6f %-10.6f", i,
 				reflection->hkl.data[0], reflection->hkl.data[1], reflection->hkl.data[2]);
 			darray_foreach(axis, reflection->geometry->axes){
-				fprintf(f, " %-10.6f", hkl_parameter_get_value_unit(&(*axis)->parameter));
+				fprintf(f, " %-10.6f", hkl_parameter_get_value_unit(*axis));
 			}
 		}
 	}
