@@ -24,6 +24,7 @@
 
 #include <gsl/gsl_vector.h>
 
+#include "hkl/ccan/container_of/container_of.h"
 #include "hkl-detector-private.h"
 #include "hkl-pseudoaxis-private.h"
 

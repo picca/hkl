@@ -25,6 +25,7 @@
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_sf_trig.h>
 
+#include "hkl/ccan/container_of/container_of.h"
 #include "hkl-axis-private.h"
 #include "hkl-parameter-private.h"
 

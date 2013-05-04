@@ -26,6 +26,7 @@
 #endif
 #include <gsl/gsl_sf_trig.h>
 
+#include "hkl/ccan/container_of/container_of.h"
 #include "hkl-detector-private.h"
 #include "hkl-pseudoaxis-private.h"
 

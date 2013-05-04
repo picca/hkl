@@ -23,6 +23,7 @@
 #include <tap/basic.h>
 #include <tap/float.h>
 
+#include "hkl/ccan/container_of/container_of.h"
 #include "hkl-axis-private.h" /* temporary */
 #include "hkl-geometry-private.h"
 
