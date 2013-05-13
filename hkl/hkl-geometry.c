@@ -460,7 +460,7 @@ int hkl_geometry_set_values_v(HklGeometry *self, size_t len, ...)
 
 	va_start(ap, len);
 	darray_foreach(axis, self->axes){
-		hkl_parameter_set_value(*axis,
+		hkl_parameter_value_set(*axis,
 					va_arg(ap, double), NULL);
 	}
 	va_end(ap);
@@ -477,7 +477,7 @@ int hkl_geometry_set_values_unit_v(HklGeometry *self, ...)
 
 	va_start(ap, self);
 	darray_foreach(axis, self->axes){
-		hkl_parameter_set_value_unit(*axis,
+		hkl_parameter_value_unit_set(*axis,
 					     va_arg(ap, double), NULL);
 	}
 	va_end(ap);
@@ -586,7 +586,7 @@ int hkl_geometry_closest_from_geometry_with_range(HklGeometry *self,
 	int ko = HKL_FALSE;
 
 	for(i=0;i<len;++i){
-		values[i] = hkl_parameter_get_value_closest(darray_item(self->axes, i),
+		values[i] = hkl_parameter_value_get_closest(darray_item(self->axes, i),
 							    darray_item(ref->axes, i));
 		if(gsl_isnan(values[i])){
 			ko = HKL_TRUE;
@@ -595,7 +595,7 @@ int hkl_geometry_closest_from_geometry_with_range(HklGeometry *self,
 	}
 	if(!ko){
 		for(i=0;i<len;++i)
-			hkl_parameter_set_value(darray_item(self->axes, i),
+			hkl_parameter_value_set(darray_item(self->axes, i),
 						values[i], NULL);
 		hkl_geometry_update(self);
 	}
@@ -807,7 +807,7 @@ void hkl_geometry_list_fprintf(FILE *f, const HklGeometryList *self)
 		darray_foreach(item, self->items){
 			fprintf(f, "\n%d :", i++);
 			darray_foreach(axis, (*item)->geometry->axes){
-				value = hkl_parameter_get_value_unit(*axis);
+				value = hkl_parameter_value_unit_get(*axis);
 				if ((*axis)->punit)
 					fprintf(f, " % 18.15f %s", value, (*axis)->punit->repr);
 				else
@@ -816,7 +816,7 @@ void hkl_geometry_list_fprintf(FILE *f, const HklGeometryList *self)
 			}
 			fprintf(f, "\n   ");
 			darray_foreach(axis, (*item)->geometry->axes){
-				value = hkl_parameter_get_value(*axis);
+				value = hkl_parameter_value_get(*axis);
 				value = gsl_sf_angle_restrict_symm(value);
 				value *= hkl_unit_factor((*axis)->unit,
 							 (*axis)->punit);
@@ -917,7 +917,7 @@ void hkl_geometry_list_multiply_from_range(HklGeometryList *self)
 			perm[j] = hkl_parameter_is_valid(*axis);
 			/* fprintf(stdout, "%d %d\n", j, perm[j]); */
 			if (perm[j])
-				hkl_parameter_set_value_smallest_in_range(*axis);
+				hkl_parameter_value_set_smallest_in_range(*axis);
 			++j;
 		}
 		/*

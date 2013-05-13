@@ -160,7 +160,7 @@ class TestAPI(unittest.TestCase):
             self.assertTrue(type(engine.name()) is str)
             for parameter in engine.pseudo_axes().parameters():
                 self.assertTrue(type(parameter) is Hkl.Parameter)
-                self.assertTrue(type(parameter.get_value()) is float)
+                self.assertTrue(type(parameter.value_get()) is float)
 
     @unittest.skip("for testing figures")
     def test_doc_exemple(self):

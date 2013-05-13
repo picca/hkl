@@ -57,7 +57,7 @@ static int fit_detector_function(const gsl_vector *x, void *params, gsl_vector *
 
 	/* update the workspace from x; */
 	for(i=0; i<fitp->len; ++i)
-		hkl_parameter_set_value(fitp->axes[i],
+		hkl_parameter_value_set(fitp->axes[i],
 					x->data[i], NULL);
 
 	hkl_geometry_update(fitp->geometry);
@@ -147,7 +147,7 @@ static int fit_detector_position(HklMode *mode, HklGeometry *geometry,
 
 		/* initialize x with the right values */
 		for(i=0; i<params.len; ++i)
-			x->data[i] = hkl_parameter_get_value(params.axes[i]);
+			x->data[i] = hkl_parameter_value_get(params.axes[i]);
 
 		f.f = fit_detector_function;
 		f.n = params.len;
@@ -189,9 +189,9 @@ static int fit_detector_position(HklMode *mode, HklGeometry *geometry,
 			for(i=0; i<params.len; ++i){
 				double value;
 
-				value = hkl_parameter_get_value(params.axes[i]);
+				value = hkl_parameter_value_get(params.axes[i]);
 				/* TODO one day deal with the error for real */
-				hkl_parameter_set_value(params.axes[i],
+				hkl_parameter_value_set(params.axes[i],
 							gsl_sf_angle_restrict_pos(value),
 							NULL);
 			}
@@ -423,8 +423,8 @@ int hkl_mode_set_hkl_real(HklMode *self,
 			hkl_vector_rotated_around_line(&kf2, M_PI, &cp, &op);
 			angle = hkl_vector_oriented_angle_points(&q, &op, &kf2, &axis_v);
 			/* TODO parameter list for geometry */
-			if(!hkl_parameter_set_value(&axis->parameter,
-						    hkl_parameter_get_value(&axis->parameter) + angle,
+			if(!hkl_parameter_value_set(&axis->parameter,
+						    hkl_parameter_value_get(&axis->parameter) + angle,
 						    error))
 				return HKL_FALSE;
 			hkl_geometry_update(geom);
@@ -662,7 +662,7 @@ int hkl_mode_init_psi_constant_vertical_real(HklMode *self,
 		}else{
 			/* compute the angle beetween hkl and n and
 			 * store in in the fourth parameter */
-			if (!hkl_parameter_set_value(
+			if (!hkl_parameter_value_set(
 				    darray_item(self->parameters, 3),
 				    hkl_vector_oriented_angle(&n, &hkl, &Q),
 				    error))

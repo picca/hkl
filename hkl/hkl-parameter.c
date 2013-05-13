@@ -127,23 +127,23 @@ const char *hkl_parameter_name_get(const HklParameter *self)
 }
 
 /**
- * hkl_parameter_get_value:
+ * hkl_parameter_value_get:
  * @self: the this ptr
  *
  * Returns: the value of the #HklParameter
  **/
-inline double hkl_parameter_get_value(const HklParameter *self)
+inline double hkl_parameter_value_get(const HklParameter *self)
 {
 	return self->_value;
 }
 
 /**
- * hkl_parameter_get_value_unit:
+ * hkl_parameter_value_unit_get:
  * @self: the this ptr
  *
  * Returns: the value of the #HklParameter expressed in the user unit
  **/
-inline double hkl_parameter_get_value_unit(const HklParameter *self)
+inline double hkl_parameter_value_unit_get(const HklParameter *self)
 {
 	double factor = hkl_unit_factor(self->unit, self->punit);
 
@@ -152,7 +152,7 @@ inline double hkl_parameter_get_value_unit(const HklParameter *self)
 
 
 /**
- * hkl_parameter_get_value_closest:
+ * hkl_parameter_value_get_closest:
  * @self: the this ptr
  * @ref: the reference #HklParameter
  *
@@ -161,14 +161,14 @@ inline double hkl_parameter_get_value_unit(const HklParameter *self)
  * Returns: the closest value of the ref #HklParameter from the
  *          current self #HklParameter
  **/
-inline double hkl_parameter_get_value_closest(const HklParameter *self,
+inline double hkl_parameter_value_get_closest(const HklParameter *self,
 					      const HklParameter *ref)
 {
 	return self->ops->get_value_closest(self, ref);
 }
 
 /**
- * hkl_parameter_set_value: (skip)
+ * hkl_parameter_value_set: (skip)
  * @self: this ptr
  * @value: the value to set
  * @error: the error set if something goes wrong
@@ -177,14 +177,14 @@ inline double hkl_parameter_get_value_closest(const HklParameter *self,
  *
  * Return value: true if succeed or false otherwise
  **/
-inline bool hkl_parameter_set_value(HklParameter *self, double value,
+inline bool hkl_parameter_value_set(HklParameter *self, double value,
 				    HklError **error)
 {
 	return self->ops->set_value(self, value, error);
 }
 
 /**
- * hkl_parameter_set_value_unit: (skip)
+ * hkl_parameter_value_unit_set: (skip)
  * @self: the this ptr
  * @value: the value to set
  * @error: the error set if something goes wrong
@@ -194,17 +194,17 @@ inline bool hkl_parameter_set_value(HklParameter *self, double value,
  *
  * Return value: true if succeed or false otherwise
  **/
-inline bool hkl_parameter_set_value_unit(HklParameter *self, double value,
+inline bool hkl_parameter_value_unit_set(HklParameter *self, double value,
 					 HklError **error)
 {
 	return self->ops->set_value_unit(self, value, error);
 }
 
 /**
- * hkl_parameter_set_value_smallest_in_range: (skip)
+ * hkl_parameter_value_set_smallest_in_range: (skip)
  * @self: the this ptr
  **/
-inline void hkl_parameter_set_value_smallest_in_range(HklParameter *self)
+inline void hkl_parameter_value_set_smallest_in_range(HklParameter *self)
 {
 	self->ops->set_value_smallest_in_range(self);
 }

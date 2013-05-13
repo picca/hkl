@@ -5,6 +5,7 @@
 #define HKL_ENABLE_BROKEN
 #include <glib-object.h>
 #include "hkl.h"
+#include "hkl-unit.h"
 #include "hkl-type-builtins.h"
 /* enumerations from "hkl-detector-factory.h" */
 GType

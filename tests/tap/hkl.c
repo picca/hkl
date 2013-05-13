@@ -48,7 +48,7 @@ int check_pseudoaxes(HklEngine *engine,
 	hkl_assert(hkl_engine_len(engine) == len);
 
 	darray_foreach(pseudo_axis, *pseudo_axes){
-		double current = hkl_parameter_get_value(*pseudo_axis);
+		double current = hkl_parameter_value_get(*pseudo_axis);
 		res &= fabs(current - expected[i]) <= HKL_EPSILON;
 		if (!res){
 			fprintf(stderr, "current: %f, expected: %f, epsilon: %f\n",

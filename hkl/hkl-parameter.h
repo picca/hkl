@@ -22,19 +22,15 @@
 #ifndef __HKL_PARAMETER_H__
 #define __HKL_PARAMETER_H__
 
-#include <stdio.h>
 #include <stdbool.h>
 
 #include <hkl/ccan/darray/darray.h>
 #include <hkl/hkl-macros.h>
 #include <hkl/hkl-error.h>
-#include <hkl/hkl-interval.h>
-#include <hkl/hkl-unit.h>
 
 HKL_BEGIN_DECLS
 
 typedef struct _HklParameter HklParameter;
-typedef struct _HklParameterOperations HklParameterOperations;
 typedef struct _HklParameterList HklParameterList;
 typedef struct _HklParameterListOperations HklParameterListOperations;
 
@@ -46,14 +42,14 @@ typedef darray(HklParameter *) darray_parameter;
 
 HKLAPI const char *hkl_parameter_name_get(const HklParameter *self) HKL_ARG_NONNULL(1);
 
-HKLAPI double hkl_parameter_get_value(const HklParameter *self) HKL_ARG_NONNULL(1);
+HKLAPI double hkl_parameter_value_get(const HklParameter *self) HKL_ARG_NONNULL(1);
 
-HKLAPI bool hkl_parameter_set_value(HklParameter *self, double value,
+HKLAPI bool hkl_parameter_value_set(HklParameter *self, double value,
 				    HklError **error) HKL_ARG_NONNULL(1);
 
-HKLAPI double hkl_parameter_get_value_unit(const HklParameter *self) HKL_ARG_NONNULL(1);
+HKLAPI double hkl_parameter_value_unit_get(const HklParameter *self) HKL_ARG_NONNULL(1);
 
-HKLAPI bool hkl_parameter_set_value_unit(HklParameter *self, double value,
+HKLAPI bool hkl_parameter_value_unit_set(HklParameter *self, double value,
 					 HklError **error) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_parameter_min_max_get(const HklParameter *self, double *min, double *max) HKL_ARG_NONNULL(1, 2, 3);

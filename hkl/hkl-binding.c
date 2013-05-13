@@ -176,7 +176,7 @@ double *hkl_geometry_get_axes_values_unit(const HklGeometry *self, guint *len)
 	values = malloc(darray_size(self->axes) * sizeof(*values));
 
 	darray_foreach(axis, self->axes){
-		values[i++] = hkl_parameter_get_value_unit(*axis);
+		values[i++] = hkl_parameter_value_unit_get(*axis);
 	}
 
 	return values;
@@ -197,7 +197,7 @@ void hkl_geometry_set_axes_values_unit(HklGeometry *self, double *values, unsign
 		return;
 
 	darray_foreach(axis, self->axes){
-		hkl_parameter_set_value_unit(*axis,
+		hkl_parameter_value_unit_set(*axis,
 					     values[i++],
 					     NULL);
 	}

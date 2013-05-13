@@ -73,7 +73,7 @@ static inline unsigned int hkl_axis_set_value_real(
 {
 	HklAxis *axis = container_of(self, HklAxis, parameter);
 
-	if(!hkl_parameter_set_value_real(self, value, error))
+	if(!hkl_parameter_value_set_real(self, value, error))
 		return HKL_FALSE;
 
 	hkl_axis_update(axis);
@@ -87,7 +87,7 @@ static inline unsigned int hkl_axis_set_value_unit_real(
 {
 	HklAxis *axis = container_of(self, HklAxis, parameter);
 
-	if(!hkl_parameter_set_value_unit_real(self, value, error))
+	if(!hkl_parameter_value_unit_set_real(self, value, error))
 		return HKL_FALSE;
 
 	hkl_axis_update(axis);

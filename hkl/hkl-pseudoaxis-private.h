@@ -90,7 +90,7 @@ static inline void set_geometry_axes(HklEngine *engine, const double values[])
 	uint i = 0;
 
 	darray_foreach(axis, engine->axes){
-		hkl_parameter_set_value(*axis, values[i++], NULL);
+		hkl_parameter_value_set(*axis, values[i++], NULL);
 	}
 	hkl_geometry_update(engine->geometry);
 }
@@ -325,7 +325,7 @@ static inline void hkl_engine_add_geometry(HklEngine *self,
 
 	/* copy the axes configuration into the engine->geometry */
 	darray_foreach(axis, self->axes){
-		hkl_parameter_set_value(*axis,
+		hkl_parameter_value_set(*axis,
 					gsl_sf_angle_restrict_symm(x[i++]),
 					NULL);
 	}

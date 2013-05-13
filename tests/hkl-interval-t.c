@@ -25,6 +25,8 @@
 #include <tap/basic.h>
 #include <tap/float.h>
 
+#include "hkl-interval.h"
+
 static void cmp(void)
 {
 	HklInterval interval_ref = {-1, 1};

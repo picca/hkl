@@ -55,7 +55,7 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 			/* randomize the pseudoAxes values */
 			darray_foreach(pseudo_axis, *pseudo_axes){
 				hkl_parameter_randomize(*pseudo_axis);
-				values[j++] = hkl_parameter_get_value(*pseudo_axis);
+				values[j++] = hkl_parameter_value_get(*pseudo_axis);
 			}
 
 			/* randomize the parameters */
@@ -76,7 +76,7 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 					/* computed result. */
 
 					darray_foreach(pseudo_axis, *pseudo_axes){
-						hkl_parameter_set_value(*pseudo_axis, 0., NULL);
+						hkl_parameter_value_set(*pseudo_axis, 0., NULL);
 					}
 
 					hkl_geometry_set(geometry,
@@ -85,7 +85,7 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 
 					j = 0;
 					darray_foreach(pseudo_axis, *pseudo_axes){
-						ko |= fabs(values[j] - hkl_parameter_get_value(*pseudo_axis)) >= HKL_EPSILON;
+						ko |= fabs(values[j] - hkl_parameter_value_get(*pseudo_axis)) >= HKL_EPSILON;
 						++j;
 					}
 					if(ko)
@@ -109,7 +109,7 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 			fprintf(stderr, " obtained : ");
 			for(uint j=0; j<darray_size(*pseudo_axes); ++j)
 				fprintf(stderr, " %f",
-					hkl_parameter_get_value(darray_item(*pseudo_axes, j)));
+					hkl_parameter_value_get(darray_item(*pseudo_axes, j)));
 			hkl_engine_fprintf(stderr, engine);
 			exit(0);
 		}else{

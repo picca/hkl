@@ -164,7 +164,7 @@ static int find_first_geometry(HklEngine *self,
 		x_data = (double *)s->x->data;
 		i = 0;
 		darray_foreach(axis, self->axes){
-			hkl_parameter_set_value(*axis,
+			hkl_parameter_value_set(*axis,
 						degenerated[i] ? x_data0[i] : x_data[i],
 						NULL);
 			++i;

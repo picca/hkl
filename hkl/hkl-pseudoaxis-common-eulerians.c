@@ -89,11 +89,11 @@ static int hkl_mode_get_eulerians_real(HklMode *self,
 {
 	HklEngineEulerians *eulerians;
 	const double angles[] = {
-		hkl_parameter_get_value(
+		hkl_parameter_value_get(
 			hkl_geometry_get_axis_by_name(geometry, "komega")),
-		hkl_parameter_get_value(
+		hkl_parameter_value_get(
 			hkl_geometry_get_axis_by_name(geometry, "kappa")),
-		hkl_parameter_get_value(
+		hkl_parameter_value_get(
 			hkl_geometry_get_axis_by_name(geometry, "kphi")),
 	};
 	double values[3];

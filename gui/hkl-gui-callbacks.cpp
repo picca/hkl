@@ -329,7 +329,7 @@ void HKLWindow::on_cell_TreeView_axes_read_edited(Glib::ustring const & spath,
 	double value;
 
 	sscanf(newText.c_str(), "%lf", &value);
-	hkl_parameter_set_value_unit(axis, value, NULL);
+	hkl_parameter_value_unit_set(axis, value, NULL);
 	hkl_geometry_axis_set(this->_geometry, axis);
 
 	row[_axeModelColumns.read] = value;
@@ -357,7 +357,7 @@ void HKLWindow::on_cell_TreeView_axes_write_edited(Glib::ustring const & spath,
 	HklParameter *axis = row[_axeModelColumns.axis];
 	double value;
 	sscanf(newText.c_str(), "%lf", &value);
-	hkl_parameter_set_value_unit(axis, value, NULL);
+	hkl_parameter_value_unit_set(axis, value, NULL);
 	hkl_geometry_axis_set(this->_geometry, axis);
 
 	row[_axeModelColumns.write] = value;
@@ -441,7 +441,7 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & s
 	engine = row[_pseudoAxeModelColumns.engine];
 	sscanf(newText.c_str(), "%lf", &value);
 
-	if(hkl_parameter_set_value_unit(parameter, value, NULL))
+	if(hkl_parameter_value_unit_set(parameter, value, NULL))
 		if(hkl_engine_set(engine, NULL)){
 			hkl_engine_list_select_solution(this->_engines, 0);
 
@@ -476,7 +476,7 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_parameters_value_edited(Glib::ustrin
 
 	parameter = row[_parameterModelColumns.parameter];
 	/* TODO error check */
-	hkl_parameter_set_value_unit(parameter, value, NULL);
+	hkl_parameter_value_unit_set(parameter, value, NULL);
 
 	row[_parameterModelColumns.value] = value;
 	this->updatePseudoAxes();

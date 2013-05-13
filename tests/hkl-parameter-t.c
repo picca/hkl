@@ -120,7 +120,7 @@ static void is_valid(void)
 			      &hkl_unit_angle_rad, &hkl_unit_angle_deg);
 	ok(HKL_TRUE == hkl_parameter_is_valid(p), __func__);
 
-	hkl_parameter_set_value(p, 10, NULL);
+	hkl_parameter_value_set(p, 10, NULL);
 	ok(HKL_FALSE == hkl_parameter_is_valid(p), __func__);
 
 	hkl_parameter_free(p);

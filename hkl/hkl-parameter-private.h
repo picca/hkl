@@ -23,9 +23,15 @@
 #ifndef __HKL_PARAMETER_PRIVATE_H__
 #define __HKL_PARAMETER_PRIVATE_H__
 
+#include <stdio.h>
+
 #include <hkl/hkl-parameter.h>
+#include <hkl/hkl-interval.h>
+#include <hkl/hkl-unit.h>
 
 HKL_BEGIN_DECLS
+
+typedef struct _HklParameterOperations HklParameterOperations;
 
 struct _HklParameter {
 	const char *name;
@@ -67,10 +73,10 @@ struct _HklParameterOperations {
 	.copy = hkl_parameter_copy_real,				\
 		.free = hkl_parameter_free_real,			\
 		.init_copy = hkl_parameter_init_copy_real,		\
-		.get_value_closest = hkl_parameter_get_value_closest_real, \
-		.set_value = hkl_parameter_set_value_real,		\
-		.set_value_unit = hkl_parameter_set_value_unit_real,	\
-		.set_value_smallest_in_range = hkl_parameter_set_value_smallest_in_range_real, \
+		.get_value_closest = hkl_parameter_value_get_closest_real, \
+		.set_value = hkl_parameter_value_set_real,		\
+		.set_value_unit = hkl_parameter_value_unit_set_real,	\
+		.set_value_smallest_in_range = hkl_parameter_value_set_smallest_in_range_real, \
 		.randomize = hkl_parameter_randomize_real,		\
 		.is_valid = hkl_parameter_is_valid_real,		\
 		.fprintf = hkl_parameter_fprintf_real
@@ -95,13 +101,13 @@ static inline void hkl_parameter_init_copy_real(HklParameter *self, const HklPar
 	self->changed = HKL_TRUE;
 }
 
-static inline double hkl_parameter_get_value_closest_real(const HklParameter *self,
+static inline double hkl_parameter_value_get_closest_real(const HklParameter *self,
 							  const HklParameter *ref)
 {
 	return self->_value;
 }
 
-static inline unsigned int hkl_parameter_set_value_real(
+static inline unsigned int hkl_parameter_value_set_real(
 	HklParameter *self, double value,
 	HklError **error)
 {
@@ -111,16 +117,16 @@ static inline unsigned int hkl_parameter_set_value_real(
 	return HKL_TRUE;
 }
 
-static inline unsigned int hkl_parameter_set_value_unit_real(
+static inline unsigned int hkl_parameter_value_unit_set_real(
 	HklParameter *self, double value,
 	HklError **error)
 {
 	double factor = hkl_unit_factor(self->unit, self->punit);
 
-	return hkl_parameter_set_value_real(self, value / factor, error);
+	return hkl_parameter_value_set_real(self, value / factor, error);
 }
 
-static inline void hkl_parameter_set_value_smallest_in_range_real(HklParameter *self)
+static inline void hkl_parameter_value_set_smallest_in_range_real(HklParameter *self)
 {
 	/* DOES NOTHING for a standard parameter */
 }
@@ -181,10 +187,10 @@ extern void hkl_parameter_free(HklParameter *self);
 
 extern void hkl_parameter_init_copy(HklParameter *self, const HklParameter *src);
 
-extern double hkl_parameter_get_value_closest(const HklParameter *self,
+extern double hkl_parameter_value_get_closest(const HklParameter *self,
 					      const HklParameter *ref);
 
-extern void hkl_parameter_set_value_smallest_in_range(HklParameter *self);
+extern void hkl_parameter_value_set_smallest_in_range(HklParameter *self);
 
 extern int hkl_parameter_is_valid(const HklParameter *self);
 
@@ -227,7 +233,7 @@ static inline unsigned int hkl_parameter_list_set_values_real(
 	unsigned int n = len < darray_size(*self) ? len : darray_size(*self);
 
 	for(unsigned int i=0; i<n; ++i)
-		if(!hkl_parameter_set_value(darray_item(*self, i),
+		if(!hkl_parameter_value_set(darray_item(*self, i),
 					    values[i], error))
 			return HKL_FALSE;
 
@@ -242,7 +248,7 @@ static inline double *hkl_parameter_list_get_values_unit_real(
 	double *values = (double *)malloc(sizeof(*values) * _len);
 
 	for(unsigned int i=0; i<_len; ++i)
-		values[i] = hkl_parameter_get_value_unit(darray_item(*self, i));
+		values[i] = hkl_parameter_value_unit_get(darray_item(*self, i));
 	*len = _len;
 
 	return values;
@@ -254,7 +260,7 @@ static inline unsigned int hkl_parameter_list_set_values_unit_real(
 	HklError **error)
 {
 	for(unsigned int i=0; i<darray_size(*self); ++i)
-		if(!hkl_parameter_set_value_unit(
+		if(!hkl_parameter_value_unit_set(
 			   darray_item(*self, i), values[i], error))
 			return HKL_FALSE;
 

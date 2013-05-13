@@ -125,9 +125,9 @@ static void  set_UB(void )
 
 	hkl_sample_set_UB(sample, &UB);
 	ok(HKL_TRUE == hkl_matrix_cmp(&U, &sample->U), __func__);
-	is_double(-90. * HKL_DEGTORAD, hkl_parameter_get_value(sample->ux), HKL_EPSILON, __func__);
-	is_double(0., hkl_parameter_get_value(sample->uy), HKL_EPSILON, __func__);
-	is_double(0., hkl_parameter_get_value(sample->uz), HKL_EPSILON, __func__);
+	is_double(-90. * HKL_DEGTORAD, hkl_parameter_value_get(sample->ux), HKL_EPSILON, __func__);
+	is_double(0., hkl_parameter_value_get(sample->uy), HKL_EPSILON, __func__);
+	is_double(0., hkl_parameter_value_get(sample->uz), HKL_EPSILON, __func__);
 
 	hkl_sample_free(sample);
 }
@@ -158,9 +158,9 @@ static void compute_UB_busing_levy(void)
 
 	hkl_sample_compute_UB_busing_levy(sample, 0, 1);
 	ok(HKL_TRUE == hkl_matrix_cmp(&m_I, &sample->U), __func__);
-	is_double(0., hkl_parameter_get_value(sample->ux), HKL_EPSILON, __func__);
-	is_double(0., hkl_parameter_get_value(sample->uy), HKL_EPSILON, __func__);
-	is_double(0., hkl_parameter_get_value(sample->uz), HKL_EPSILON, __func__);
+	is_double(0., hkl_parameter_value_get(sample->ux), HKL_EPSILON, __func__);
+	is_double(0., hkl_parameter_value_get(sample->uy), HKL_EPSILON, __func__);
+	is_double(0., hkl_parameter_value_get(sample->uz), HKL_EPSILON, __func__);
 
 	hkl_geometry_set_values_unit_v(geometry, 30., 0., 90., 60.);
 	ref = hkl_sample_add_reflection(sample, geometry, detector, 1, 0, 0);
@@ -170,9 +170,9 @@ static void compute_UB_busing_levy(void)
 
 	hkl_sample_compute_UB_busing_levy(sample, 2, 3);
 	ok(HKL_TRUE == hkl_matrix_cmp(&m_ref, &sample->U), __func__);
-	is_double(-90. * HKL_DEGTORAD, hkl_parameter_get_value(sample->ux), HKL_EPSILON, __func__);
-	is_double(0., hkl_parameter_get_value(sample->uy), HKL_EPSILON, __func__);
-	is_double(0., hkl_parameter_get_value(sample->uz), HKL_EPSILON, __func__);
+	is_double(-90. * HKL_DEGTORAD, hkl_parameter_value_get(sample->ux), HKL_EPSILON, __func__);
+	is_double(0., hkl_parameter_value_get(sample->uy), HKL_EPSILON, __func__);
+	is_double(0., hkl_parameter_value_get(sample->uz), HKL_EPSILON, __func__);
 
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);
@@ -221,12 +221,12 @@ static void affine(void)
 
 	hkl_sample_affine(sample);
 
-	a = hkl_parameter_get_value(sample->lattice->a);
-	b = hkl_parameter_get_value(sample->lattice->b);
-	c = hkl_parameter_get_value(sample->lattice->c);
-	alpha = hkl_parameter_get_value(sample->lattice->alpha);
-	beta = hkl_parameter_get_value(sample->lattice->beta);
-	gamma = hkl_parameter_get_value(sample->lattice->gamma);
+	a = hkl_parameter_value_get(sample->lattice->a);
+	b = hkl_parameter_value_get(sample->lattice->b);
+	c = hkl_parameter_value_get(sample->lattice->c);
+	alpha = hkl_parameter_value_get(sample->lattice->alpha);
+	beta = hkl_parameter_value_get(sample->lattice->beta);
+	gamma = hkl_parameter_value_get(sample->lattice->gamma);
 	ok(HKL_TRUE == hkl_matrix_cmp(&m_ref, &sample->U), __func__);
 	is_double(1.54, a, HKL_EPSILON, __func__);
 	is_double(1.54, b, HKL_EPSILON, __func__);
@@ -234,9 +234,9 @@ static void affine(void)
 	is_double(90 * HKL_DEGTORAD, alpha, HKL_EPSILON, __func__);
 	is_double(90 * HKL_DEGTORAD, beta, HKL_EPSILON, __func__);
 	is_double(90 * HKL_DEGTORAD, gamma, HKL_EPSILON, __func__);
-	is_double(0., hkl_parameter_get_value(sample->ux), HKL_EPSILON, __func__);
-	is_double(0., hkl_parameter_get_value(sample->uy), HKL_EPSILON, __func__);
-	is_double(0., hkl_parameter_get_value(sample->uz), HKL_EPSILON, __func__);
+	is_double(0., hkl_parameter_value_get(sample->ux), HKL_EPSILON, __func__);
+	is_double(0., hkl_parameter_value_get(sample->uy), HKL_EPSILON, __func__);
+	is_double(0., hkl_parameter_value_get(sample->uz), HKL_EPSILON, __func__);
 
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);
@@ -340,12 +340,12 @@ static void reflection_set_geometry(void)
 
 	hkl_sample_affine(sample);
 
-	a = hkl_parameter_get_value(sample->lattice->a);
-	b = hkl_parameter_get_value(sample->lattice->b);
-	c = hkl_parameter_get_value(sample->lattice->c);
-	alpha = hkl_parameter_get_value(sample->lattice->alpha);
-	beta = hkl_parameter_get_value(sample->lattice->beta);
-	gamma = hkl_parameter_get_value(sample->lattice->gamma);
+	a = hkl_parameter_value_get(sample->lattice->a);
+	b = hkl_parameter_value_get(sample->lattice->b);
+	c = hkl_parameter_value_get(sample->lattice->c);
+	alpha = hkl_parameter_value_get(sample->lattice->alpha);
+	beta = hkl_parameter_value_get(sample->lattice->beta);
+	gamma = hkl_parameter_value_get(sample->lattice->gamma);
 	ok(HKL_TRUE == hkl_matrix_cmp(&m_ref, &sample->U), __func__);
 	is_double(1.54, a, HKL_EPSILON, __func__);
 	is_double(1.54, b, HKL_EPSILON, __func__);
@@ -353,9 +353,9 @@ static void reflection_set_geometry(void)
 	is_double(90 * HKL_DEGTORAD, alpha, HKL_EPSILON, __func__);
 	is_double(90 * HKL_DEGTORAD, beta, HKL_EPSILON, __func__);
 	is_double(90 * HKL_DEGTORAD, gamma, HKL_EPSILON, __func__);
-	is_double(0., hkl_parameter_get_value(sample->ux), HKL_EPSILON, __func__);
-	is_double(0., hkl_parameter_get_value(sample->uy), HKL_EPSILON, __func__);
-	is_double(0., hkl_parameter_get_value(sample->uz), HKL_EPSILON, __func__);
+	is_double(0., hkl_parameter_value_get(sample->ux), HKL_EPSILON, __func__);
+	is_double(0., hkl_parameter_value_get(sample->uy), HKL_EPSILON, __func__);
+	is_double(0., hkl_parameter_value_get(sample->uz), HKL_EPSILON, __func__);
 
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);

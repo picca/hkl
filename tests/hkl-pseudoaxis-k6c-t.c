@@ -60,10 +60,10 @@ static void degenerated(void)
 		parameters = hkl_mode_parameters(*mode);
 		if (!strcasecmp(hkl_mode_name(*mode),
 				"constant_chi_vertical"))
-			hkl_parameter_set_value(darray_item(*parameters, 0), 1, NULL);
+			hkl_parameter_value_set(darray_item(*parameters, 0), 1, NULL);
 		if (!strcasecmp(hkl_mode_name(*mode),
 				"constant_incidence"))
-			hkl_parameter_set_value(darray_item(*parameters, 3), 1, NULL);
+			hkl_parameter_value_set(darray_item(*parameters, 3), 1, NULL);
 
 		/* studdy this degenerated case */
 		hkl_parameter_list_set_values(pseudo_axes,
@@ -128,7 +128,7 @@ static void eulerians(void)
 		hkl_engine_select_mode(engine, *mode);
 		parameters = hkl_mode_parameters(*mode);
 		if (darray_size(*parameters))
-			hkl_parameter_set_value(darray_item(*parameters, 0), 1, NULL);
+			hkl_parameter_value_set(darray_item(*parameters, 0), 1, NULL);
 
 		/* studdy this degenerated case */
 		hkl_engine_set_values_v(engine, 0., 90. * HKL_DEGTORAD, 0.);

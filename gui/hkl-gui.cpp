@@ -458,7 +458,7 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 					row = *(model->append());
 					row[_parameterModelColumns.parameter] = *parameter;
 					row[_parameterModelColumns.name] = (*parameter)->name;
-					row[_parameterModelColumns.value] = hkl_parameter_get_value_unit(*parameter);
+					row[_parameterModelColumns.value] = hkl_parameter_value_unit_get(*parameter);
 				}
 				_mapPseudoAxeParameterModel.insert(std::pair<HklParameter *, Glib::RefPtr<Gtk::ListStore> >(*pseudo_axis, model));
 			}
@@ -637,8 +637,8 @@ void HKLWindow::updateAxes(void)
 
 		Gtk::TreeRow row = *iter;
 		axis = row[_axeModelColumns.axis];
-		row[_axeModelColumns.read] = hkl_parameter_get_value_unit(axis);
-		row[_axeModelColumns.write] = hkl_parameter_get_value_unit(axis);
+		row[_axeModelColumns.read] = hkl_parameter_value_unit_get(axis);
+		row[_axeModelColumns.write] = hkl_parameter_value_unit_get(axis);
 		hkl_parameter_min_max_unit_get(axis, &min, &max);
 		row[_axeModelColumns.min] = min;
 		row[_axeModelColumns.max] = max;
@@ -664,8 +664,8 @@ void HKLWindow::updatePseudoAxes(void)
 
 		Gtk::TreeRow row = *iter;
 		parameter = row[_pseudoAxeModelColumns.parameter];
-		row[_pseudoAxeModelColumns.read] = hkl_parameter_get_value_unit(parameter);
-		row[_pseudoAxeModelColumns.write] = hkl_parameter_get_value_unit(parameter);
+		row[_pseudoAxeModelColumns.read] = hkl_parameter_value_unit_get(parameter);
+		row[_pseudoAxeModelColumns.write] = hkl_parameter_value_unit_get(parameter);
 		hkl_parameter_min_max_unit_get(parameter, &min, &max);
 		row[_pseudoAxeModelColumns.min] = min;
 		row[_pseudoAxeModelColumns.max] = max;
@@ -688,7 +688,7 @@ void HKLWindow::update_pseudoAxes_parameters(void)
 			Gtk::TreeRow row = *iter_row;
 			HklParameter *parameter = row[_parameterModelColumns.parameter];
 			row[_parameterModelColumns.name] = parameter->name;
-			row[_parameterModelColumns.value] = hkl_parameter_get_value_unit(parameter);
+			row[_parameterModelColumns.value] = hkl_parameter_value_unit_get(parameter);
 			++iter_row;
 		}
 		++iter;
@@ -701,12 +701,12 @@ void HKLWindow::updateLattice(void)
 
 	HklSample *sample = _samples->current;
 	if(sample){
-		double a = hkl_parameter_get_value_unit(sample->lattice->a);
-		double b = hkl_parameter_get_value_unit(sample->lattice->b);
-		double c = hkl_parameter_get_value_unit(sample->lattice->c);
-		double alpha = hkl_parameter_get_value_unit(sample->lattice->alpha);
-		double beta = hkl_parameter_get_value_unit(sample->lattice->beta);
-		double gamma = hkl_parameter_get_value_unit(sample->lattice->gamma);
+		double a = hkl_parameter_value_unit_get(sample->lattice->a);
+		double b = hkl_parameter_value_unit_get(sample->lattice->b);
+		double c = hkl_parameter_value_unit_get(sample->lattice->c);
+		double alpha = hkl_parameter_value_unit_get(sample->lattice->alpha);
+		double beta = hkl_parameter_value_unit_get(sample->lattice->beta);
+		double gamma = hkl_parameter_value_unit_get(sample->lattice->gamma);
 
 		_spinbutton_a->set_value(a);
 		_spinbutton_b->set_value(b);
@@ -775,12 +775,12 @@ void HKLWindow::updateReciprocalLattice(void)
 	if(sample){
 		hkl_lattice_reciprocal(sample->lattice, _reciprocal);
 
-		_spinbutton_a_star->set_value(hkl_parameter_get_value_unit(_reciprocal->a));
-		_spinbutton_b_star->set_value(hkl_parameter_get_value_unit(_reciprocal->b));
-		_spinbutton_c_star->set_value(hkl_parameter_get_value_unit(_reciprocal->c));
-		_spinbutton_alpha_star->set_value(hkl_parameter_get_value_unit(_reciprocal->alpha));
-		_spinbutton_beta_star->set_value(hkl_parameter_get_value_unit(_reciprocal->beta));
-		_spinbutton_gamma_star->set_value(hkl_parameter_get_value_unit(_reciprocal->gamma));
+		_spinbutton_a_star->set_value(hkl_parameter_value_unit_get(_reciprocal->a));
+		_spinbutton_b_star->set_value(hkl_parameter_value_unit_get(_reciprocal->b));
+		_spinbutton_c_star->set_value(hkl_parameter_value_unit_get(_reciprocal->c));
+		_spinbutton_alpha_star->set_value(hkl_parameter_value_unit_get(_reciprocal->alpha));
+		_spinbutton_beta_star->set_value(hkl_parameter_value_unit_get(_reciprocal->beta));
+		_spinbutton_gamma_star->set_value(hkl_parameter_value_unit_get(_reciprocal->gamma));
 	}
 }
 
@@ -822,9 +822,9 @@ void HKLWindow::updateUxUyUz(void)
 
 	HklSample *sample = _samples->current;
 	if(sample){
-		_spinbutton_ux->set_value(hkl_parameter_get_value_unit(sample->ux));
-		_spinbutton_uy->set_value(hkl_parameter_get_value_unit(sample->uy));
-		_spinbutton_uz->set_value(hkl_parameter_get_value_unit(sample->uz));
+		_spinbutton_ux->set_value(hkl_parameter_value_unit_get(sample->ux));
+		_spinbutton_uy->set_value(hkl_parameter_value_unit_get(sample->uy));
+		_spinbutton_uz->set_value(hkl_parameter_value_unit_get(sample->uz));
 		_checkbutton_Ux->set_active(sample->ux->fit);
 		_checkbutton_Uy->set_active(sample->uy->fit);
 		_checkbutton_Uz->set_active(sample->uz->fit);
@@ -867,12 +867,12 @@ void HKLWindow::updateTreeViewCrystals(void)
 			iter_current = iter_row;
 		row = *(iter_row);
 		row[_crystalModelColumns.name] = sample->name;
-		row[_crystalModelColumns.a] = hkl_parameter_get_value_unit(lattice->a);
-		row[_crystalModelColumns.b] = hkl_parameter_get_value_unit(lattice->b);
-		row[_crystalModelColumns.c] = hkl_parameter_get_value_unit(lattice->c);
-		row[_crystalModelColumns.alpha] = hkl_parameter_get_value_unit(lattice->alpha);
-		row[_crystalModelColumns.beta] = hkl_parameter_get_value_unit(lattice->beta);
-		row[_crystalModelColumns.gamma] = hkl_parameter_get_value_unit(lattice->gamma);
+		row[_crystalModelColumns.a] = hkl_parameter_value_unit_get(lattice->a);
+		row[_crystalModelColumns.b] = hkl_parameter_value_unit_get(lattice->b);
+		row[_crystalModelColumns.c] = hkl_parameter_value_unit_get(lattice->c);
+		row[_crystalModelColumns.alpha] = hkl_parameter_value_unit_get(lattice->alpha);
+		row[_crystalModelColumns.beta] = hkl_parameter_value_unit_get(lattice->beta);
+		row[_crystalModelColumns.gamma] = hkl_parameter_value_unit_get(lattice->gamma);
 
 		Glib::RefPtr<Gtk::ListStore> listStore = Gtk::ListStore::create(_reflectionModelColumns);
 		_mapReflectionModel[sample->name] = listStore;
@@ -928,12 +928,12 @@ void HKLWindow::updateCrystalModel(HklSample * sample)
 		Gtk::TreeModel::Row const & row = *iter;
 		if (row[_crystalModelColumns.name] == sample->name){
 			HklLattice *lattice = sample->lattice;
-			row[_crystalModelColumns.a] = hkl_parameter_get_value_unit(lattice->a);
-			row[_crystalModelColumns.b] = hkl_parameter_get_value_unit(lattice->b);
-			row[_crystalModelColumns.c] = hkl_parameter_get_value_unit(lattice->c);
-			row[_crystalModelColumns.alpha] = hkl_parameter_get_value_unit(lattice->alpha);
-			row[_crystalModelColumns.beta] = hkl_parameter_get_value_unit(lattice->beta);
-			row[_crystalModelColumns.gamma] = hkl_parameter_get_value_unit(lattice->gamma);
+			row[_crystalModelColumns.a] = hkl_parameter_value_unit_get(lattice->a);
+			row[_crystalModelColumns.b] = hkl_parameter_value_unit_get(lattice->b);
+			row[_crystalModelColumns.c] = hkl_parameter_value_unit_get(lattice->c);
+			row[_crystalModelColumns.alpha] = hkl_parameter_value_unit_get(lattice->alpha);
+			row[_crystalModelColumns.beta] = hkl_parameter_value_unit_get(lattice->beta);
+			row[_crystalModelColumns.gamma] = hkl_parameter_value_unit_get(lattice->gamma);
 			iter = end;
 		}
 		else
@@ -974,7 +974,7 @@ void HKLWindow::updateSolutions(void)
 		const darray_parameter *axes = hkl_geometry_axes_get(geometry);
 		darray_foreach(axis, *axes){
 			row[_solutionModelColumns->axes[j++]] =		\
-				hkl_parameter_get_value_unit(*axis);
+				hkl_parameter_value_unit_get(*axis);
 		}
 	}
 }

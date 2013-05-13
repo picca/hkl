@@ -23,6 +23,8 @@
 #include <tap/basic.h>
 #include <tap/float.h>
 
+#include "hkl-unit.h"
+
 static void compatible(void)
 {
 	int res = HKL_TRUE;

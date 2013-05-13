@@ -1837,31 +1837,6 @@ is |v1 ^ v2|</doc>
             glib:type-name="HklParameter"
             glib:get-type="hkl_parameter_get_type"
             c:symbol-prefix="parameter">
-      <method name="get_value" c:identifier="hkl_parameter_get_value">
-        <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">the value of the #HklParameter</doc>
-          <type name="gdouble" c:type="double"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the this ptr</doc>
-            <type name="Parameter" c:type="const HklParameter*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
-      <method name="get_value_unit"
-              c:identifier="hkl_parameter_get_value_unit">
-        <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">the value of the #HklParameter expressed in the user unit</doc>
-          <type name="gdouble" c:type="double"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the this ptr</doc>
-            <type name="Parameter" c:type="const HklParameter*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
       <method name="min_max_get"
               c:identifier="hkl_parameter_min_max_get"
               introspectable="0">
@@ -1966,8 +1941,20 @@ is |v1 ^ v2|</doc>
           </instance-parameter>
         </parameters>
       </method>
-      <method name="set_value"
-              c:identifier="hkl_parameter_set_value"
+      <method name="value_get" c:identifier="hkl_parameter_value_get">
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">the value of the #HklParameter</doc>
+          <type name="gdouble" c:type="double"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Parameter" c:type="const HklParameter*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="value_set"
+              c:identifier="hkl_parameter_value_set"
               introspectable="0">
         <doc xml:whitespace="preserve">set the value of an #HklParameter</doc>
         <return-value>
@@ -1989,8 +1976,21 @@ is |v1 ^ v2|</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="set_value_unit"
-              c:identifier="hkl_parameter_set_value_unit"
+      <method name="value_unit_get"
+              c:identifier="hkl_parameter_value_unit_get">
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">the value of the #HklParameter expressed in the user unit</doc>
+          <type name="gdouble" c:type="double"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Parameter" c:type="const HklParameter*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="value_unit_set"
+              c:identifier="hkl_parameter_value_unit_set"
               introspectable="0">
         <doc xml:whitespace="preserve">set the value of the parameter express in the punit #HklUnit
 @todo test</doc>
@@ -2207,10 +2207,6 @@ is |v1 ^ v2|</doc>
     </record>
     <record name="ParameterListOperations"
             c:type="HklParameterListOperations"
-            disguised="1">
-    </record>
-    <record name="ParameterOperations"
-            c:type="HklParameterOperations"
             disguised="1">
     </record>
     <record name="PseudoAxis"
