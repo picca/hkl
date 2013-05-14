@@ -22,9 +22,7 @@
 #ifndef __HKL_BINDING_PRIVATE_H__
 #define __HKL_BINDING_PRIVATE_H__
 
-#include <glib/ghash.h>
-#include <glib/gslist.h>
-#include <glib/gerror.h>
+#include <glib.h>
 
 #include "hkl-pseudoaxis.h"
 
