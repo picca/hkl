@@ -333,7 +333,7 @@ double hkl_vector_oriented_angle(const HklVector *self,
  * hkl_vector_oriented_angle_points: (skip)
  * @self: the first point
  * @p2: the second point
- * @p2: the third point
+ * @p3: the third point
  * @ref: the reference #HklVector
  *
  * compute the angles beetween three points (p1, p2, p3) and use

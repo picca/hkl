@@ -37,7 +37,7 @@ static void degenerated(void)
 	HklSample *sample;
 	static double hkl[] = {0, 1, 0};
 	HklParameterList *pseudo_axes;
-	HklParameterList *parameters;
+	darray_parameter *parameters;
 
 	factory = hkl_factory_get_by_name("K4CV");
 	geometry = hkl_factory_create_new_geometry(factory);
@@ -119,7 +119,7 @@ static void eulerians(void)
 	pseudo_axes = hkl_engine_pseudo_axes(engine);
 
 	darray_foreach(mode, *modes){
-		HklParameterList *parameters;
+		darray_parameter *parameters;
 
 		hkl_engine_select_mode(engine, *mode);
 		parameters = hkl_mode_parameters(*mode);

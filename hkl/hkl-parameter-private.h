@@ -200,118 +200,17 @@ extern void hkl_parameter_fprintf(FILE *f, HklParameter *self);
 /* HklParameterList */
 /********************/
 
-struct _HklParameterListOperations {
-	void (*get_values)(const HklParameterList *self, double values[], unsigned int *len);
-	unsigned int (*set_values)(HklParameterList *self, double values[], unsigned int len,
-				   HklError **error);
-	double *(*get_values_unit)(const HklParameterList *self, unsigned int *len);
-	unsigned int (*set_values_unit)(HklParameterList *self, double values[], unsigned int len,
-					HklError **error);
-};
+extern void hkl_parameter_list_get_values(const HklParameterList *self,
+					  double values[], unsigned int *len);
 
-#define HKL_PARAMETER_LIST_OPERATIONS_DEFAULTS				\
-	.get_values = hkl_parameter_list_get_values_real,		\
-		.set_values = hkl_parameter_list_set_values_real,	\
-		.get_values_unit = hkl_parameter_list_get_values_unit_real, \
-		.set_values_unit = hkl_parameter_list_set_values_unit_real
+extern unsigned int hkl_parameter_list_set_values_unit(HklParameterList *self,
+						       double values[],
+						       unsigned int len,
+						       HklError **error);
 
-static inline void hkl_parameter_list_get_values_real(
-	const HklParameterList *self,
-	double values[], unsigned int *len)
-{
-	for(unsigned int i; i<darray_size(*self); ++i)
-		values[i] = darray_item(*self, i)->_value;
+extern void hkl_parameter_list_free(HklParameterList *self);
 
-	*len = darray_size(*self);
-}
-
-static inline unsigned int hkl_parameter_list_set_values_real(
-	HklParameterList *self,
-	double values[], unsigned int len,
-	HklError **error)
-{
-	unsigned int n = len < darray_size(*self) ? len : darray_size(*self);
-
-	for(unsigned int i=0; i<n; ++i)
-		if(!hkl_parameter_value_set(darray_item(*self, i),
-					    values[i], error))
-			return HKL_FALSE;
-
-	return HKL_TRUE;
-}
-
-static inline double *hkl_parameter_list_get_values_unit_real(
-	const HklParameterList *self,
-	unsigned int *len)
-{
-	const unsigned int _len =  darray_size(*self);
-	double *values = (double *)malloc(sizeof(*values) * _len);
-
-	for(unsigned int i=0; i<_len; ++i)
-		values[i] = hkl_parameter_value_unit_get(darray_item(*self, i));
-	*len = _len;
-
-	return values;
-}
-
-static inline unsigned int hkl_parameter_list_set_values_unit_real(
-	HklParameterList *self,
-	double values[], unsigned int len,
-	HklError **error)
-{
-	for(unsigned int i=0; i<darray_size(*self); ++i)
-		if(!hkl_parameter_value_unit_set(
-			   darray_item(*self, i), values[i], error))
-			return HKL_FALSE;
-
-	return HKL_TRUE;
-}
-
-static HklParameterListOperations hkl_parameter_list_operations_defaults = {
-	HKL_PARAMETER_LIST_OPERATIONS_DEFAULTS,
-};
-
-static void hkl_parameter_list_init(HklParameterList *self,
-				    const HklParameterListOperations *ops)
-{
-	darray_init(*self);
-	self->ops = ops;
-}
-
-static void hkl_parameter_list_release(HklParameterList *self)
-{
-	HklParameter **parameter;
-
-	darray_foreach(parameter, *self){
-		hkl_parameter_free(*parameter);
-	}
-	darray_free(*self);
-}
-
-static void hkl_parameter_list_fprintf(FILE *f, const HklParameterList *self)
-{
-	HklParameter **parameter;
-
-	darray_foreach(parameter, *self){
-		fprintf(f, "\n     ");
-		hkl_parameter_fprintf(f, *parameter);
-	}
-}
-
-extern void hkl_parameter_list_add_parameter(HklParameterList *self,
-					     HklParameter *parameter);
-
-
-/* this method is used to set the Parameter list without triggering
- * the public API machinery, usually this method is used in the
- * HklPseudoAxis get method to set the pseudo axis values */
-static inline void _hkl_parameter_list_set_values(
-	HklParameterList *self,
-	double values[], unsigned int len)
-{
-	for(unsigned int i=0; i<darray_size(*self); ++i)
-		darray_item(*self, i)->_value = values[i];
-}
+extern void hkl_parameter_list_fprintf(FILE *f, const HklParameterList *self);
 
 HKL_END_DECLS
 

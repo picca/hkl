@@ -139,7 +139,7 @@ static void degenerated(void)
 	pseudo_axes = hkl_engine_pseudo_axes(engine);
 
 	darray_foreach(mode, *modes) {
-		HklParameterList *parameters;
+		darray_parameter *parameters;
 
 		hkl_engine_select_mode(engine, *mode);
 		parameters = hkl_mode_parameters(*mode);
@@ -304,7 +304,7 @@ static void petra3(void)
 	if(hkl_engine_set(hkl, NULL)){
 		const darray_item *items = hkl_geometry_list_items_get(geometries);
 		HklGeometryListItem **item;
-		HklParameterList *pseudo_axes = hkl_engine_pseudo_axes(psi);
+		darray_parameter *pseudo_axes = hkl_engine_pseudo_axes(psi);
 
 		darray_foreach(item, *items) {
 			double PSI = parameters[3];
@@ -342,7 +342,7 @@ static void petra3_2(void)
 	HklSample *sample;
 	double PSI;
 	double parameters[4];
-	HklParameterList *pseudo_axes;
+	darray_parameter *pseudo_axes;
 
 	/* Wavelength 1.0332035 */
 	/* Mode       psi_constant_vertical */

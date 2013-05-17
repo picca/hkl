@@ -135,7 +135,7 @@ class TestAPI(unittest.TestCase):
 
         # get the hkl engine and do a computation
         hkl = engines.get_by_name("hkl")
-        values = hkl.pseudo_axes().get_values_unit()
+        values = hkl.pseudo_axes().values_unit_get()
 
         # check for all modes
         for mode in hkl.modes():

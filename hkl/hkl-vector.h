@@ -36,8 +36,10 @@ typedef struct _HklQuaternion HklQuaternion;
 typedef struct _HklVector HklVector;
 
 /**
- * HklVector: A struct containing a 3D space coordinates.
+ * HklVector:
  * @data: (skip): contain the vector data
+
+ *  A struct containing a 3D space coordinates.
  **/
 struct _HklVector
 {

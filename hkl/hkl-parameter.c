@@ -326,18 +326,6 @@ void hkl_parameter_fprintf(FILE *f, HklParameter *self)
 /********************/
 
 /**
- * hkl_parameter_list_add_parameter: (skip)
- * @self: the this ptr
- * @parameter: the #HklParameter to add to the list
- *
- * add an #HklParameter to a list of parameter.
- **/
-void hkl_parameter_list_add_parameter(HklParameterList *self, HklParameter *parameter)
-{
-	darray_append(*self, parameter);
-}
-
-/**
  * hkl_parameter_list_get_values: (skip)
  * @self: the this ptr
  * @values: (array length=len): list of the paremetersc values.
@@ -345,10 +333,13 @@ void hkl_parameter_list_add_parameter(HklParameterList *self, HklParameter *para
  *
  * get a list of all the #HklParameter values
  **/
-inline void hkl_parameter_list_get_values(const HklParameterList *self,
-					  double values[], uint *len)
+void hkl_parameter_list_get_values(const HklParameterList *self,
+				   double values[], unsigned int *len)
 {
-	return self->ops->get_values(self, values, len);
+	for(unsigned int i; i<darray_size(*self); ++i)
+		values[i] = darray_item(*self, i)->_value;
+
+	*len = darray_size(*self);
 }
 
 /**
@@ -362,29 +353,43 @@ inline void hkl_parameter_list_get_values(const HklParameterList *self,
  *
  * Return value: true if succeed or false otherwise
  **/
-inline unsigned int hkl_parameter_list_set_values(HklParameterList *self,
-						  double values[], uint len,
-						  HklError **error)
+unsigned int hkl_parameter_list_set_values(HklParameterList *self,
+					   double values[], unsigned int len,
+					   HklError **error)
 {
-	return self->ops->set_values(self, values, len, error);
+	unsigned int n = len < darray_size(*self) ? len : darray_size(*self);
+
+	for(unsigned int i=0; i<n; ++i)
+		if(!hkl_parameter_value_set(darray_item(*self, i),
+					    values[i], error))
+			return HKL_FALSE;
+
+	return HKL_TRUE;
 }
 
 /**
- * hkl_parameter_list_get_values_unit:
+ * hkl_parameter_list_values_unit_get:
  * @self: the this ptr
  * @len: (out caller-allocates): the length of the returned array
  *
  * Return value: (array length=len) (transfer full): list of pseudo axes values with unit
  *               free the array with free when done
  **/
-inline double *hkl_parameter_list_get_values_unit(const HklParameterList *self,
-						  unsigned int *len)
+double *hkl_parameter_list_values_unit_get(const HklParameterList *self,
+					   unsigned int *len)
 {
-	return self->ops->get_values_unit(self, len);
+	const unsigned int _len =  darray_size(*self);
+	double *values = (double *)malloc(sizeof(*values) * _len);
+
+	for(unsigned int i=0; i<_len; ++i)
+		values[i] = hkl_parameter_value_unit_get(darray_item(*self, i));
+	*len = _len;
+
+	return values;
 }
 
 /**
- * hkl_parameter_list_set_values_unit:
+ * hkl_parameter_list_set_values_unit: (skip)
  * @self: the this ptr
  * @values: (array length=len): the values to set
  * @len: the length of the values
@@ -394,11 +399,36 @@ inline double *hkl_parameter_list_get_values_unit(const HklParameterList *self,
  *
  * Return value: true if succeed or false otherwise
  **/
-inline unsigned int hkl_parameter_list_set_values_unit(HklParameterList *self,
-						       double values[], uint len,
-						       HklError **error)
+unsigned int hkl_parameter_list_set_values_unit(HklParameterList *self,
+						double values[], unsigned int len,
+						HklError **error)
 {
-	return self->ops->set_values_unit(self, values, len, error);
+	for(unsigned int i=0; i<darray_size(*self); ++i)
+		if(!hkl_parameter_value_unit_set(
+			   darray_item(*self, i), values[i], error))
+			return HKL_FALSE;
+
+	return HKL_TRUE;
+}
+
+void hkl_parameter_list_free(HklParameterList *self)
+{
+	HklParameter **parameter;
+
+	darray_foreach(parameter, *self){
+		hkl_parameter_free(*parameter);
+	}
+	darray_free(*self);
+}
+
+void hkl_parameter_list_fprintf(FILE *f, const HklParameterList *self)
+{
+	HklParameter **parameter;
+
+	darray_foreach(parameter, *self){
+		fprintf(f, "\n     ");
+		hkl_parameter_fprintf(f, *parameter);
+	}
 }
 
 /**

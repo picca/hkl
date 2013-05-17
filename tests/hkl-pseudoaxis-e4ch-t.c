@@ -106,7 +106,7 @@ static void degenerated(void)
 
 	darray_foreach(mode, *modes){
 		static double values[] = {0, 0, 1};
-		HklParameterList *parameters;
+		darray_parameter *parameters;
 
 		hkl_engine_select_mode(engine, *mode);
 		parameters = hkl_mode_parameters(*mode);

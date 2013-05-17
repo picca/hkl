@@ -2028,72 +2028,6 @@ is |v1 ^ v2|</doc>
       <field name="alloc" writable="1">
         <type name="gulong" c:type="size_t"/>
       </field>
-      <field name="ops" writable="1">
-        <type name="ParameterListOperations"
-              c:type="const HklParameterListOperations*"/>
-      </field>
-      <method name="get_by_name" c:identifier="hkl_parameter_list_get_by_name">
-        <return-value transfer-ownership="full">
-          <type name="Parameter" c:type="HklParameter*"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <type name="ParameterList" c:type="HklParameterList*"/>
-          </instance-parameter>
-          <parameter name="name" transfer-ownership="none">
-            <type name="utf8" c:type="const char*"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="get_values"
-              c:identifier="hkl_parameter_list_get_values"
-              introspectable="0">
-        <doc xml:whitespace="preserve">get a list of all the #HklParameter values</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the this ptr</doc>
-            <type name="ParameterList" c:type="const HklParameterList*"/>
-          </instance-parameter>
-          <parameter name="values" transfer-ownership="none">
-            <doc xml:whitespace="preserve">list of the paremetersc values.</doc>
-            <array length="1" zero-terminated="0" c:type="double">
-              <type name="gdouble" c:type="double"/>
-            </array>
-          </parameter>
-          <parameter name="len"
-                     direction="out"
-                     caller-allocates="1"
-                     transfer-ownership="none">
-            <doc xml:whitespace="preserve">the len of the returned list.</doc>
-            <type name="guint" c:type="unsigned int*"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="get_values_unit"
-              c:identifier="hkl_parameter_list_get_values_unit">
-        <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">list of pseudo axes values with unit free the array with free when done</doc>
-          <array length="0" zero-terminated="0" c:type="double*">
-            <type name="gdouble" c:type="double"/>
-          </array>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the this ptr</doc>
-            <type name="ParameterList" c:type="const HklParameterList*"/>
-          </instance-parameter>
-          <parameter name="len"
-                     direction="out"
-                     caller-allocates="1"
-                     transfer-ownership="full">
-            <doc xml:whitespace="preserve">the length of the returned array</doc>
-            <type name="guint" c:type="unsigned int*"/>
-          </parameter>
-        </parameters>
-      </method>
       <method name="parameters" c:identifier="hkl_parameter_list_parameters">
         <return-value transfer-ownership="container">
           <doc xml:whitespace="preserve">list of parameters free the list with g_slist_free when done.</doc>
@@ -2149,38 +2083,8 @@ is |v1 ^ v2|</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="set_values_unit"
-              c:identifier="hkl_parameter_list_set_values_unit"
-              shadowed-by="set_values_unit_binding">
-        <doc xml:whitespace="preserve">set the parameter list with the given values</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">true if succeed or false otherwise</doc>
-          <type name="guint" c:type="unsigned int"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the this ptr</doc>
-            <type name="ParameterList" c:type="HklParameterList*"/>
-          </instance-parameter>
-          <parameter name="values" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the values to set</doc>
-            <array length="1" zero-terminated="0" c:type="double">
-              <type name="gdouble" c:type="double"/>
-            </array>
-          </parameter>
-          <parameter name="len" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the length of the values</doc>
-            <type name="guint" c:type="unsigned int"/>
-          </parameter>
-          <parameter name="error" transfer-ownership="none">
-            <doc xml:whitespace="preserve">error set if something goes wrong</doc>
-            <type name="Error" c:type="HklError**"/>
-          </parameter>
-        </parameters>
-      </method>
       <method name="set_values_unit_binding"
               c:identifier="hkl_parameter_list_set_values_unit_binding"
-              shadows="set_values_unit"
               throws="1">
         <doc xml:whitespace="preserve">set the parameter list with the given values</doc>
         <return-value transfer-ownership="none">
@@ -2204,10 +2108,28 @@ is |v1 ^ v2|</doc>
           </parameter>
         </parameters>
       </method>
-    </record>
-    <record name="ParameterListOperations"
-            c:type="HklParameterListOperations"
-            disguised="1">
+      <method name="values_unit_get"
+              c:identifier="hkl_parameter_list_values_unit_get">
+        <return-value transfer-ownership="full">
+          <doc xml:whitespace="preserve">list of pseudo axes values with unit free the array with free when done</doc>
+          <array length="0" zero-terminated="0" c:type="double*">
+            <type name="gdouble" c:type="double"/>
+          </array>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="ParameterList" c:type="const HklParameterList*"/>
+          </instance-parameter>
+          <parameter name="len"
+                     direction="out"
+                     caller-allocates="1"
+                     transfer-ownership="full">
+            <doc xml:whitespace="preserve">the length of the returned array</doc>
+            <type name="guint" c:type="unsigned int*"/>
+          </parameter>
+        </parameters>
+      </method>
     </record>
     <record name="PseudoAxis"
             c:type="HklPseudoAxis"
@@ -3271,15 +3193,21 @@ TODO: test</doc>
       <field name="repr" writable="1">
         <type name="utf8" c:type="char*"/>
       </field>
-      <method name="compatible" c:identifier="hkl_unit_compatible">
+      <method name="compatible"
+              c:identifier="hkl_unit_compatible"
+              introspectable="0">
+        <doc xml:whitespace="preserve">check if two units are compatible.</doc>
         <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">HKL_TRUE or HKL_FALSE</doc>
           <type name="gint" c:type="int"/>
         </return-value>
         <parameters>
           <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the first @HklUnit</doc>
             <type name="Unit" c:type="const HklUnit*"/>
           </instance-parameter>
           <parameter name="unit" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the second @HklUnit to check</doc>
             <type name="Unit" c:type="const HklUnit*"/>
           </parameter>
         </parameters>
@@ -3349,6 +3277,7 @@ TODO: test</doc>
             glib:type-name="HklVector"
             glib:get-type="hkl_vector_get_type"
             c:symbol-prefix="vector">
+      <doc xml:whitespace="preserve">A struct containing a 3D space coordinates.</doc>
       <field name="data" writable="1">
         <array zero-terminated="0" c:type="double" fixed-size="3">
           <type name="gdouble" c:type="double"/>
@@ -3613,10 +3542,11 @@ the (self, vector, ref) is a right oriented base.</doc>
             <type name="Vector" c:type="const HklVector*"/>
           </instance-parameter>
           <parameter name="p2" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the third point</doc>
+            <doc xml:whitespace="preserve">the second point</doc>
             <type name="Vector" c:type="const HklVector*"/>
           </parameter>
           <parameter name="p3" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the third point</doc>
             <type name="Vector" c:type="const HklVector*"/>
           </parameter>
           <parameter name="ref" transfer-ownership="none">

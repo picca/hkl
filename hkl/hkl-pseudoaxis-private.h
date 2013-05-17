@@ -49,7 +49,7 @@ struct _HklMode
 {
 	const HklModeInfo *info;
 	const HklModeOperations *ops;
-	HklParameterList parameters;
+	darray_parameter parameters;
 };
 
 struct _HklEngineInfo {
@@ -67,7 +67,7 @@ struct _HklEngine
 	HklSample *sample;
 	HklMode *mode; /* not owned */
 	HklEngineList *engines; /* not owned */
-	HklParameterList pseudo_axes;
+	darray_parameter pseudo_axes;
 	darray_mode modes;
 	darray_parameter axes;
 };
@@ -144,7 +144,7 @@ struct _HklModeOperations
 
 static inline void hkl_mode_free_real(HklMode *self)
 {
-	hkl_parameter_list_release(&self->parameters);
+	hkl_parameter_list_free(&self->parameters);
 
 	free(self);
 }
@@ -200,13 +200,10 @@ static inline int hkl_mode_init(
 	self->ops = ops;
 
 	/* parameters */
-	hkl_parameter_list_init(&self->parameters,
-				&hkl_parameter_list_operations_defaults);
+	darray_init(self->parameters);
 	for(i=0; i<self->info->n_parameters; ++i){
-		HklParameter *parameter;
-
-		parameter = hkl_parameter_new_copy(&self->info->parameters[i]);
-		hkl_parameter_list_add_parameter(&self->parameters, parameter);
+		darray_append(self->parameters,
+			      hkl_parameter_new_copy(&self->info->parameters[i]));
 	}
 
 	return HKL_TRUE;
@@ -263,7 +260,7 @@ static void hkl_engine_release(HklEngine *self)
 	darray_free(self->axes);
 
 	/* release the HklPseudoAxe memory */
-	hkl_parameter_list_release(&self->pseudo_axes);
+	hkl_parameter_list_free(&self->pseudo_axes);
 }
 
 struct _HklEngineOperations

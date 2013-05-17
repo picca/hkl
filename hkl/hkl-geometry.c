@@ -684,7 +684,7 @@ void hkl_geometry_list_free(HklGeometryList *self)
 }
 
 /**
- * @brief: (skip)
+ * hkl_geometry_list_add: (skip)
  * @self: The current #HklGeometryList
  * @geometry: the #HklGeometry to add
  *

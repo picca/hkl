@@ -44,7 +44,7 @@ static void qper_qpar(void)
 	size_t i, f_idx;
 	double *Qper, *Qpar;
 	double gamma;
-	HklParameterList *pseudo_axes;
+	darray_parameter *pseudo_axes;
 	const HklGeometryList *geometries;
 	const darray_item *items;
 

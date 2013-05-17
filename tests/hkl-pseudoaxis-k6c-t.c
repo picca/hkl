@@ -54,7 +54,7 @@ static void degenerated(void)
 	pseudo_axes = hkl_engine_pseudo_axes(engine);
 
 	darray_foreach(mode, *modes){
-		HklParameterList *parameters;
+		darray_parameter *parameters;
 
 		hkl_engine_select_mode(engine, *mode);
 		parameters = hkl_mode_parameters(*mode);
@@ -123,7 +123,7 @@ static void eulerians(void)
 
 	darray_foreach(mode, *modes){
 		double omega, chi, phi;
-		HklParameterList *parameters; 
+		darray_parameter *parameters;
 
 		hkl_engine_select_mode(engine, *mode);
 		parameters = hkl_mode_parameters(*mode);

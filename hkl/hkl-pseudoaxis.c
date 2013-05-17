@@ -142,8 +142,7 @@ void hkl_engine_init(HklEngine *self,
 	self->info = info;
 	self->ops = ops;
 	darray_init(self->modes);
-	hkl_parameter_list_init(&self->pseudo_axes,
-				&hkl_parameter_list_operations_defaults);
+	darray_init(self->pseudo_axes);
 	self->geometry = NULL;
 	self->detector = NULL;
 	self->sample = NULL;
@@ -160,7 +159,7 @@ HklParameter *register_pseudo_axis(HklEngine *self,
 	HklParameter *parameter;
 
 	parameter = hkl_parameter_new_pseudo_axis(conf, self);
-	hkl_parameter_list_add_parameter(&self->pseudo_axes, parameter);
+	darray_append(self->pseudo_axes, parameter);
 
 	return parameter;
 }

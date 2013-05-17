@@ -57,9 +57,11 @@ void hkl_unit_free(HklUnit *self)
 }
 
 /**
- * hkl_unit_compatible: check if two units are compatible.
+ * hkl_unit_compatible: (skip)
  * @self: the first @HklUnit
  * @unit: the second @HklUnit to check
+ *
+ * check if two units are compatible.
  *
  * Returns: HKL_TRUE or HKL_FALSE
  **/

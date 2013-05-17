@@ -33,7 +33,7 @@ static void hkl_test_bench_run_real(HklEngine *engine, HklGeometry *geometry, si
 	/* pseudo -> geometry */
 	darray_foreach(mode, *modes){
 		double min, max, mean;
-		HklParameterList *parameters;
+		darray_parameter *parameters;
 
 		hkl_engine_select_mode(engine, *mode);
 		parameters = hkl_mode_parameters(*mode);

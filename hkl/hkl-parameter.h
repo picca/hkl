@@ -32,9 +32,7 @@ HKL_BEGIN_DECLS
 
 typedef struct _HklParameter HklParameter;
 typedef struct _HklParameterList HklParameterList;
-typedef struct _HklParameterListOperations HklParameterListOperations;
-
-typedef darray(HklParameter *) darray_parameter;
+typedef HklParameterList darray_parameter;
 
 /****************/
 /* HklParameter */
@@ -68,29 +66,17 @@ HKLAPI void hkl_parameter_randomize(HklParameter *self) HKL_ARG_NONNULL(1);
 
 struct _HklParameterList {
 	_darray(HklParameter *);
-	const HklParameterListOperations *ops;
 };
 
-extern void hkl_parameter_list_get_values(const HklParameterList *self,
-					  double values[], unsigned int *len);
-
-extern unsigned int hkl_parameter_list_set_values(HklParameterList *self,
+HKLAPI unsigned int hkl_parameter_list_set_values(HklParameterList *self,
 						  double values[], unsigned int len,
-						  HklError **error);
+						  HklError **error) HKL_ARG_NONNULL(1);
 
-extern double *hkl_parameter_list_get_values_unit(const HklParameterList *self,
-						  unsigned int *len);
-
-extern unsigned int hkl_parameter_list_set_values_unit(HklParameterList *self,
-						       double values[],
-						       unsigned int len,
-						       HklError **error);
-
-extern HklParameter *hkl_parameter_list_get_by_name(HklParameterList *self,
-						    const char *name);
+HKLAPI double *hkl_parameter_list_values_unit_get(const HklParameterList *self,
+						  unsigned int *len) HKL_ARG_NONNULL(1, 2);
 
 /* only use in the test method for now */
-extern void hkl_parameter_list_randomize(HklParameterList *self);
+HKLAPI void hkl_parameter_list_randomize(HklParameterList *self) HKL_ARG_NONNULL(1);
 
 HKL_END_DECLS
 
