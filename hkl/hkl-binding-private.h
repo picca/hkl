@@ -40,7 +40,7 @@ extern GHashTable *hkl_factories(void);
 
 extern GSList* hkl_parameter_list_parameters(HklParameterList *self);
 
-extern gboolean hkl_parameter_list_set_values_unit_binding(HklParameterList *self,
+extern gboolean hkl_parameter_list_values_unit_set_binding(HklParameterList *self,
 							   double *values, uint len,
 							   GError **error);
 /***************/

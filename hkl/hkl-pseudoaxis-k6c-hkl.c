@@ -207,7 +207,7 @@ static int _constant_omega_v(const gsl_vector *x, void *params, gsl_vector *f)
 	double omega0;
 	uint shit;
 
-	hkl_parameter_list_get_values(&engine->mode->parameters, &omega0, &shit);
+	hkl_parameter_list_values_get(&engine->mode->parameters, &omega0, &shit);
 
 	CHECK_NAN(x->data, x->size);
 
@@ -232,7 +232,7 @@ static int _constant_chi_v(const gsl_vector *x, void *params, gsl_vector *f)
 	double chi0;
 	uint shit;
 
-	hkl_parameter_list_get_values(&engine->mode->parameters, &chi0, &shit);
+	hkl_parameter_list_values_get(&engine->mode->parameters, &chi0, &shit);
 
 	CHECK_NAN(x->data, x->size);
 
@@ -258,7 +258,7 @@ static int _constant_phi_v(const gsl_vector *x, void *params, gsl_vector *f)
 	double phi0;
 	uint shit;
 
-	hkl_parameter_list_get_values(&engine->mode->parameters, &phi0, &shit);
+	hkl_parameter_list_values_get(&engine->mode->parameters, &phi0, &shit);
 
 	CHECK_NAN(x->data, x->size);
 
@@ -317,7 +317,7 @@ static int _constant_incidence_func(const gsl_vector *x, void *params, gsl_vecto
 	RUBh_minus_Q(x->data, params, f->data);
 
 	/* get the mode parameters */
-	hkl_parameter_list_get_values(&engine->mode->parameters,
+	hkl_parameter_list_values_get(&engine->mode->parameters,
 				      parameters, &shit);
 	n.data[0] = parameters[0];
 	n.data[1] = parameters[1];

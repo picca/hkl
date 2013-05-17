@@ -68,7 +68,7 @@ struct _HklParameterList {
 	_darray(HklParameter *);
 };
 
-HKLAPI unsigned int hkl_parameter_list_set_values(HklParameterList *self,
+HKLAPI unsigned int hkl_parameter_list_values_set(HklParameterList *self,
 						  double values[], unsigned int len,
 						  HklError **error) HKL_ARG_NONNULL(1);
 

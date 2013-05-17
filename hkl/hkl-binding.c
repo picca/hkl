@@ -72,11 +72,11 @@ GQuark hkl_parameter_list_error_quark (void)
 }
 
 typedef enum {
-	HKL_PARAMETER_LIST_ERROR_SET_VALUES /* can not set the parameter list values */
+	HKL_PARAMETER_LIST_ERROR_VALUES_SET /* can not set the parameter list values */
 } HklParameterListError;
 
 /**
- * hkl_parameter_list_set_values_unit_binding:
+ * hkl_parameter_list_values_unit_set_binding:
  * @self: the this ptr
  * @values: (array length=len): the values to set
  * @len: the length of the values
@@ -84,11 +84,11 @@ typedef enum {
  *
  * set the parameter list with the given values
  *
- * Rename to: hkl_parameter_list_set_values_unit
+ * Rename to: hkl_parameter_list_values_unit_set
  *
  * Return value: true if succeed or false otherwise
  **/
-gboolean hkl_parameter_list_set_values_unit_binding(HklParameterList *self,
+gboolean hkl_parameter_list_values_unit_set_binding(HklParameterList *self,
 						    double values[], uint len,
 						    GError **error)
 {
@@ -96,13 +96,13 @@ gboolean hkl_parameter_list_set_values_unit_binding(HklParameterList *self,
 
 	g_return_val_if_fail(error == NULL ||*error == NULL, FALSE);
 
-	if(!hkl_parameter_list_set_values_unit(self,
+	if(!hkl_parameter_list_values_unit_set(self,
 					       values, len, &err)){
 		g_assert(&err == NULL || err != NULL);
 
 		g_set_error(error,
 			    HKL_PARAMETER_LIST_ERROR,
-			    HKL_PARAMETER_LIST_ERROR_SET_VALUES,
+			    HKL_PARAMETER_LIST_ERROR_VALUES_SET,
 			    strdup(err->message));
 
 		hkl_error_clear(&err);
@@ -304,7 +304,7 @@ gboolean hkl_engine_set_values_unit(HklEngine *self,
 	if(len != self->info->n_pseudo_axes)
 		return FALSE;
 
-	if(!hkl_parameter_list_set_values_unit(&self->pseudo_axes,
+	if(!hkl_parameter_list_values_unit_set(&self->pseudo_axes,
 					       values, len, &err)){
 		g_assert(&err == NULL || err != NULL);
 

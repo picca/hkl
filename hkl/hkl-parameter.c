@@ -326,14 +326,14 @@ void hkl_parameter_fprintf(FILE *f, HklParameter *self)
 /********************/
 
 /**
- * hkl_parameter_list_get_values: (skip)
+ * hkl_parameter_list_values_get: (skip)
  * @self: the this ptr
  * @values: (array length=len): list of the paremetersc values.
  * @len: (out caller-allocates): the len of the returned list.
  *
  * get a list of all the #HklParameter values
  **/
-void hkl_parameter_list_get_values(const HklParameterList *self,
+void hkl_parameter_list_values_get(const HklParameterList *self,
 				   double values[], unsigned int *len)
 {
 	for(unsigned int i; i<darray_size(*self); ++i)
@@ -343,7 +343,7 @@ void hkl_parameter_list_get_values(const HklParameterList *self,
 }
 
 /**
- * hkl_parameter_list_set_values:
+ * hkl_parameter_list_values_set:
  * @self: the this ptr
  * @values: (array length=len): the values to set
  * @len: the length of the values
@@ -353,7 +353,7 @@ void hkl_parameter_list_get_values(const HklParameterList *self,
  *
  * Return value: true if succeed or false otherwise
  **/
-unsigned int hkl_parameter_list_set_values(HklParameterList *self,
+unsigned int hkl_parameter_list_values_set(HklParameterList *self,
 					   double values[], unsigned int len,
 					   HklError **error)
 {
@@ -389,7 +389,7 @@ double *hkl_parameter_list_values_unit_get(const HklParameterList *self,
 }
 
 /**
- * hkl_parameter_list_set_values_unit: (skip)
+ * hkl_parameter_list_values_unit_set: (skip)
  * @self: the this ptr
  * @values: (array length=len): the values to set
  * @len: the length of the values
@@ -399,7 +399,7 @@ double *hkl_parameter_list_values_unit_get(const HklParameterList *self,
  *
  * Return value: true if succeed or false otherwise
  **/
-unsigned int hkl_parameter_list_set_values_unit(HklParameterList *self,
+unsigned int hkl_parameter_list_values_unit_set(HklParameterList *self,
 						double values[], unsigned int len,
 						HklError **error)
 {

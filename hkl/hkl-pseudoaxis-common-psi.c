@@ -85,7 +85,7 @@ int _psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 
 		/* compute hkl1 in the laboratory referentiel */
 		/* for now the 0 holder is the sample holder. */
-		hkl_parameter_list_get_values(&engine->mode->parameters, hkl1.data, &len);
+		hkl_parameter_list_values_get(&engine->mode->parameters, hkl1.data, &len);
 		hkl_matrix_times_vector(&engine->sample->UB, &hkl1);
 		hkl_vector_rotated_quaternion(&hkl1, &sample_holder->q);
 
@@ -191,7 +191,7 @@ static int hkl_mode_get_psi_real(HklMode *base,
 		/* compute hkl1 in the laboratory referentiel */
 		/* the geometry was already updated in the detector compute kf */
 		/* for now the 0 holder is the sample holder. */
-		hkl_parameter_list_get_values(&base->parameters, hkl1.data, &shit);
+		hkl_parameter_list_values_get(&base->parameters, hkl1.data, &shit);
 		hkl_matrix_times_vector(&sample->UB, &hkl1);
 		hkl_vector_rotated_quaternion(&hkl1, &darray_item(geometry->holders, 0)->q);
 

@@ -65,7 +65,7 @@ static void solution(void)
 	hkl_geometry_set_values_unit_v(geometry, 1., 0., 0., 0.);
 
 	/* compute the 1 1 0 */
-	hkl_parameter_list_set_values(pseudo_axes, hkl, ARRAY_SIZE(hkl), NULL);
+	hkl_parameter_list_values_set(pseudo_axes, hkl, ARRAY_SIZE(hkl), NULL);
 	if (hkl_engine_set(engine, NULL)){
 		const darray_item *items = hkl_geometry_list_items_get(geometries);
 		HklGeometryListItem **item;
@@ -73,7 +73,7 @@ static void solution(void)
 		darray_foreach(item, *items){
 			static double null[] = {0, 0, 0};
 
-			hkl_parameter_list_set_values(pseudo_axes, null, ARRAY_SIZE(null), NULL);
+			hkl_parameter_list_values_set(pseudo_axes, null, ARRAY_SIZE(null), NULL);
 			hkl_geometry_set(geometry,
 					 hkl_geometry_list_item_geometry_get(*item));
 			hkl_engine_get(engine, NULL);

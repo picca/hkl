@@ -87,7 +87,7 @@ static int _constant_omega_f1(const gsl_vector *x, void *params, gsl_vector *f)
 	double omega0;
 	uint shit;
 
-	hkl_parameter_list_get_values(&engine->mode->parameters, &omega0, &shit);
+	hkl_parameter_list_values_get(&engine->mode->parameters, &omega0, &shit);
 
 	CHECK_NAN(x->data, x->size);
 
@@ -113,7 +113,7 @@ static int _constant_omega_f2(const gsl_vector *x, void *params, gsl_vector *f)
 	double omega0;
 	uint shit;
 
-	hkl_parameter_list_get_values(&engine->mode->parameters, &omega0, &shit);
+	hkl_parameter_list_values_get(&engine->mode->parameters, &omega0, &shit);
 
 	CHECK_NAN(x->data, x->size);
 
@@ -138,7 +138,7 @@ static int _constant_chi_f1(const gsl_vector *x, void *params, gsl_vector *f)
 	double chi0;
 	uint shit;
 
-	hkl_parameter_list_get_values(&engine->mode->parameters, &chi0, &shit);
+	hkl_parameter_list_values_get(&engine->mode->parameters, &chi0, &shit);
 
 	CHECK_NAN(x->data, x->size);
 
@@ -163,7 +163,7 @@ static int _constant_chi_f2(const gsl_vector *x, void *params, gsl_vector *f)
 	double chi0;
 	uint shit;
 
-	hkl_parameter_list_get_values(&engine->mode->parameters, &chi0, &shit);
+	hkl_parameter_list_values_get(&engine->mode->parameters, &chi0, &shit);
 
 	CHECK_NAN(x->data, x->size);
 
@@ -189,7 +189,7 @@ static int _constant_phi_f1(const gsl_vector *x, void *params, gsl_vector *f)
 	double phi0;
 	uint shit;
 
-	hkl_parameter_list_get_values(&engine->mode->parameters, &phi0, &shit);
+	hkl_parameter_list_values_get(&engine->mode->parameters, &phi0, &shit);
 
 	CHECK_NAN(x->data, x->size);
 
@@ -215,7 +215,7 @@ static int _constant_phi_f2(const gsl_vector *x, void *params, gsl_vector *f)
 	double phi0;
 	uint shit;
 
-	hkl_parameter_list_get_values(&engine->mode->parameters, &phi0, &shit);
+	hkl_parameter_list_values_get(&engine->mode->parameters, &phi0, &shit);
 
 	CHECK_NAN(x->data, x->size);
 

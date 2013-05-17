@@ -80,7 +80,7 @@ void hkl_engine_set_values_v(HklEngine *self, ...)
 		values[i] = va_arg(ap, double);
 		
 	va_end(ap);
-	hkl_parameter_list_set_values(pseudo_axes,
+	hkl_parameter_list_values_set(pseudo_axes,
 				      values, len,
 				      NULL);
 }

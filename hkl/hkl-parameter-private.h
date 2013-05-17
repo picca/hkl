@@ -200,10 +200,10 @@ extern void hkl_parameter_fprintf(FILE *f, HklParameter *self);
 /* HklParameterList */
 /********************/
 
-extern void hkl_parameter_list_get_values(const HklParameterList *self,
+extern void hkl_parameter_list_values_get(const HklParameterList *self,
 					  double values[], unsigned int *len);
 
-extern unsigned int hkl_parameter_list_set_values_unit(HklParameterList *self,
+extern unsigned int hkl_parameter_list_values_unit_set(HklParameterList *self,
 						       double values[],
 						       unsigned int len,
 						       HklError **error);

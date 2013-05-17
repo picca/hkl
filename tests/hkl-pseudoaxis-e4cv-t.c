@@ -111,7 +111,7 @@ static void degenerated(void)
 			hkl_parameter_value_set(darray_item(*parameters, 0), 0, NULL);
 
 		/* studdy this degenerated case */
-		hkl_parameter_list_set_values(pseudo_axes, values, 3, NULL);
+		hkl_parameter_list_values_set(pseudo_axes, values, 3, NULL);
 
 		if(hkl_engine_set(engine, NULL)){
 			const darray_item *items = hkl_geometry_list_items_get(geometries);
@@ -120,7 +120,7 @@ static void degenerated(void)
 			darray_foreach(item, *items){
 				static double null[] = {0, 0, 0};
 
-				hkl_parameter_list_set_values(pseudo_axes, null, 3, NULL);
+				hkl_parameter_list_values_set(pseudo_axes, null, 3, NULL);
 				hkl_geometry_set(geometry,
 						 hkl_geometry_list_item_geometry_get(*item));
 				hkl_engine_get(engine, NULL);
@@ -169,38 +169,38 @@ static void psi_getter(void)
 	hkl_engine_initialize(engine, NULL);
 
 	hkl[0] = 1, hkl[1] = 0, hkl[2] = 0;
-	hkl_parameter_list_set_values(parameters,
+	hkl_parameter_list_values_set(parameters,
 				      hkl, ARRAY_SIZE(hkl), NULL);
 	res &= hkl_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, 0.);
 
 	hkl[0] = 0, hkl[1] = 1, hkl[2] = 0;
-	hkl_parameter_list_set_values(parameters,
+	hkl_parameter_list_values_set(parameters,
 				      hkl, ARRAY_SIZE(hkl), NULL);
 	res &= hkl_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, 90. * HKL_DEGTORAD);
 
 	/* here Q and <h, k, l>_ref are colinear must FAIL */
 	hkl[0] = 0, hkl[1] = 0, hkl[2] = 1;
-	hkl_parameter_list_set_values(parameters,
+	hkl_parameter_list_values_set(parameters,
 				      hkl, ARRAY_SIZE(hkl), NULL);
 	res &= !hkl_engine_get(engine, NULL);
 
 	hkl[0] = -1, hkl[1] = 0, hkl[2] = 0;
-	hkl_parameter_list_set_values(parameters,
+	hkl_parameter_list_values_set(parameters,
 				      hkl, ARRAY_SIZE(hkl), NULL);
 	res &= hkl_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, 180. * HKL_DEGTORAD);
 
 	hkl[0] = 0, hkl[1] = -1, hkl[2] = 0;
-	hkl_parameter_list_set_values(parameters,
+	hkl_parameter_list_values_set(parameters,
 				      hkl, ARRAY_SIZE(hkl), NULL);
 	res &= hkl_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, -90. * HKL_DEGTORAD);
 
 	/* Q and <h, k, l>_ref are colinear so must FAIL */
 	hkl[0] = 0, hkl[1] = 0, hkl[2] = -1;
-	hkl_parameter_list_set_values(parameters,
+	hkl_parameter_list_values_set(parameters,
 				      hkl, ARRAY_SIZE(hkl), NULL);
 	res &= !hkl_engine_get(engine, NULL);
 
@@ -246,7 +246,7 @@ static void psi_setter(void)
 
 	/* the init part */
 	hkl_geometry_set_values_unit_v(geometry, 30., 0., 0., 60.);
-	hkl_parameter_list_set_values(parameters,
+	hkl_parameter_list_values_set(parameters,
 				      hkl, ARRAY_SIZE(hkl), NULL);
 	hkl_engine_initialize(engine, NULL);
 
@@ -255,7 +255,7 @@ static void psi_setter(void)
 
 		hkl_engine_select_mode(engine, *mode);
 		for(psi=-180 * HKL_DEGTORAD;psi<180 * HKL_DEGTORAD;psi += HKL_DEGTORAD){
-			hkl_parameter_list_set_values(pseudo_axes, &psi, 1, NULL);
+			hkl_parameter_list_values_set(pseudo_axes, &psi, 1, NULL);
 			if(hkl_engine_set(engine, NULL)){
 				const darray_item *items = hkl_geometry_list_items_get(geometries);
 				HklGeometryListItem **item;
@@ -263,7 +263,7 @@ static void psi_setter(void)
 				darray_foreach(item, *items){
 					static double null[] = {0};
 
-					hkl_parameter_list_set_values(pseudo_axes, null, 1, NULL);
+					hkl_parameter_list_values_set(pseudo_axes, null, 1, NULL);
 					hkl_geometry_set(geometry,
 							 hkl_geometry_list_item_geometry_get(*item));
 					hkl_engine_get(engine, NULL);
@@ -318,7 +318,7 @@ static void q(void)
 
 		hkl_engine_select_mode(engine, *mode);
 		for(q=-1.; q<1.; q += 0.1){
-			hkl_parameter_list_set_values(pseudo_axes, &q, 1, NULL);
+			hkl_parameter_list_values_set(pseudo_axes, &q, 1, NULL);
 			if(hkl_engine_set(engine, NULL)){
 				const darray_item *items = hkl_geometry_list_items_get(geometries);
 				HklGeometryListItem **item;
@@ -326,7 +326,7 @@ static void q(void)
 				darray_foreach(item, *items){
 					static double null[] = {0};
 
-					hkl_parameter_list_set_values(pseudo_axes, null, 1, NULL);
+					hkl_parameter_list_values_set(pseudo_axes, null, 1, NULL);
 					hkl_geometry_set(geometry,
 							 hkl_geometry_list_item_geometry_get(*item));
 					hkl_engine_get(engine, NULL);
@@ -382,11 +382,11 @@ static void hkl_psi_constant_vertical(void)
 
 	/* the init part */
 	hkl_geometry_set_values_unit_v(geometry, 30., 0., 0., 60.);
-	hkl_parameter_list_set_values(parameters,
+	hkl_parameter_list_values_set(parameters,
 				      hkl2, ARRAY_SIZE(hkl2), NULL);
 	hkl_engine_initialize(engine, NULL);
 
-	hkl_parameter_list_set_values(pseudo_axes,
+	hkl_parameter_list_values_set(pseudo_axes,
 				      hkl, ARRAY_SIZE(hkl), NULL);
 	if(hkl_engine_set(engine, NULL)){
 		const darray_item *items = hkl_geometry_list_items_get(geometries);
@@ -395,7 +395,7 @@ static void hkl_psi_constant_vertical(void)
 		darray_foreach(item, *items){
 			static double null[] = {0, 0, 0};
 
-			hkl_parameter_list_set_values(pseudo_axes,
+			hkl_parameter_list_values_set(pseudo_axes,
 						      null, ARRAY_SIZE(null),
 						      NULL);
 			hkl_geometry_set(geometry,

@@ -147,7 +147,7 @@ static void degenerated(void)
 			hkl_parameter_value_set(darray_item(*parameters, 0), 0, NULL);
 
 		/* studdy this degenerated case */
-		hkl_parameter_list_set_values(pseudo_axes,
+		hkl_parameter_list_values_set(pseudo_axes,
 					      hkl, ARRAY_SIZE(hkl),
 					      NULL);
 		if (hkl_engine_set(engine, NULL)){
@@ -157,7 +157,7 @@ static void degenerated(void)
 			darray_foreach(item, *items) {
 				static double null[] = {0, 0, 0};
 
-				hkl_parameter_list_set_values(pseudo_axes,
+				hkl_parameter_list_values_set(pseudo_axes,
 							      null, ARRAY_SIZE(null),
 							      NULL);
 				hkl_geometry_set(geometry, hkl_geometry_list_item_geometry_get(*item));
@@ -217,7 +217,7 @@ static void q2(void)
 			for(alpha = -M_PI; alpha<M_PI; alpha += M_PI/180.){
 				double values[] = {q, alpha};
 
-				hkl_parameter_list_set_values(pseudo_axes,
+				hkl_parameter_list_values_set(pseudo_axes,
 							      values, ARRAY_SIZE(values),
 							      NULL);
 				if(hkl_engine_set(engine, NULL)){
@@ -227,7 +227,7 @@ static void q2(void)
 					darray_foreach(item, *items){
 						static double null[] = {0, 0};
 
-						hkl_parameter_list_set_values(pseudo_axes,
+						hkl_parameter_list_values_set(pseudo_axes,
 									      null, ARRAY_SIZE(null),
 									      NULL);
 						hkl_geometry_set(geometry, hkl_geometry_list_item_geometry_get(*item));
@@ -287,7 +287,7 @@ static void petra3(void)
 	hkl_engine_set_values_v(hkl, 1, 1, 0);
 	/* set the mode parameters 0, 0, 1, 90. */
 	mode = hkl_engine_mode(hkl);
-	hkl_parameter_list_set_values(hkl_mode_parameters(mode),
+	hkl_parameter_list_values_set(hkl_mode_parameters(mode),
 				      parameters, ARRAY_SIZE(parameters),
 				      NULL);
 
@@ -296,7 +296,7 @@ static void petra3(void)
 	hkl_engine_select_mode_by_name(psi, "psi_constant_vertical");
 	/* set the mode parameters 0, 0, 1 */
 	mode = hkl_engine_mode(psi);
-	hkl_parameter_list_set_values(hkl_mode_parameters(mode),
+	hkl_parameter_list_values_set(hkl_mode_parameters(mode),
 				      parameters, ARRAY_SIZE(parameters), NULL);
 
 	/* Compute the hkl [1, 1, 0] in psi_constant_vertical mode with */
@@ -389,12 +389,12 @@ static void petra3_2(void)
 	parameters[2] = 0;
 	parameters[3] = PSI = 0;
 	mode = hkl_engine_mode(hkl);
-	hkl_parameter_list_set_values(hkl_mode_parameters(mode),
+	hkl_parameter_list_values_set(hkl_mode_parameters(mode),
 				      parameters, ARRAY_SIZE(parameters),
 				      NULL);
 	/* for psi */
 	mode = hkl_engine_mode(psi);
-	hkl_parameter_list_set_values(hkl_mode_parameters(mode),
+	hkl_parameter_list_values_set(hkl_mode_parameters(mode),
 				      parameters, ARRAY_SIZE(parameters),
 				      NULL);
 
@@ -423,7 +423,7 @@ static void petra3_2(void)
 	/* freeze 45; ca 0 0 2 */
 	parameters[3] = PSI = 45.0 * HKL_DEGTORAD;
 	mode = hkl_engine_mode(hkl);
-	hkl_parameter_list_set_values(hkl_mode_parameters(mode),
+	hkl_parameter_list_values_set(hkl_mode_parameters(mode),
 				      parameters, ARRAY_SIZE(parameters), NULL);
 	hkl_engine_set_values_v(hkl, 0., 0., 2.);
 
@@ -454,14 +454,14 @@ static void petra3_2(void)
 	parameters[3] = PSI = 0;
 	/* for hkl */
 	mode = hkl_engine_mode(hkl);
-	hkl_parameter_list_set_values(hkl_mode_parameters(mode),
+	hkl_parameter_list_values_set(hkl_mode_parameters(mode),
 				      parameters, ARRAY_SIZE(parameters),
 				      NULL);
 	hkl_engine_set_values_v(hkl, 0., 0., 2.);
 
 	/* for psi */
 	mode = hkl_engine_mode(psi);
-	hkl_parameter_list_set_values(hkl_mode_parameters(mode),
+	hkl_parameter_list_values_set(hkl_mode_parameters(mode),
 				      parameters, ARRAY_SIZE(parameters),
 				      NULL);
 
@@ -488,7 +488,7 @@ static void petra3_2(void)
 	parameters[3] = PSI = 45 * HKL_DEGTORAD;
 	/* for hkl */
 	mode = hkl_engine_mode(hkl);
-	hkl_parameter_list_set_values(hkl_mode_parameters(mode),
+	hkl_parameter_list_values_set(hkl_mode_parameters(mode),
 				      parameters, ARRAY_SIZE(parameters),
 				      NULL);
 	hkl_engine_set_values_v(hkl, 0., 0., 2.);

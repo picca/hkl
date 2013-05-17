@@ -66,7 +66,7 @@ static void degenerated(void)
 			hkl_parameter_value_set(darray_item(*parameters, 3), 1, NULL);
 
 		/* studdy this degenerated case */
-		hkl_parameter_list_set_values(pseudo_axes,
+		hkl_parameter_list_values_set(pseudo_axes,
 					      hkl, ARRAY_SIZE(hkl), NULL);
 		if (hkl_engine_set(engine, NULL)){
 			const darray_item *items = hkl_geometry_list_items_get(geometries);
@@ -75,7 +75,7 @@ static void degenerated(void)
 			darray_foreach(item, *items){
 				static double null[] = {0, 0, 0};
 
-				hkl_parameter_list_set_values(pseudo_axes,
+				hkl_parameter_list_values_set(pseudo_axes,
 							      null, ARRAY_SIZE(null),
 							      NULL);
 				hkl_geometry_set(geometry, hkl_geometry_list_item_geometry_get(*item));
@@ -200,7 +200,7 @@ static void q2(void)
 			for(alpha = -M_PI; alpha<M_PI; alpha += M_PI/180.){
 				double values[] = {q, alpha};
 
-				hkl_parameter_list_set_values(pseudo_axes,
+				hkl_parameter_list_values_set(pseudo_axes,
 							      values, ARRAY_SIZE(values),
 							      NULL);
 				if(hkl_engine_set(engine, NULL)){
@@ -210,7 +210,7 @@ static void q2(void)
 					darray_foreach(item, *items){
 						static double null[] = {0, 0};
 
-						hkl_parameter_list_set_values(pseudo_axes,
+						hkl_parameter_list_values_set(pseudo_axes,
 									      null, ARRAY_SIZE(null),
 									      NULL);
 						hkl_geometry_set(geometry,

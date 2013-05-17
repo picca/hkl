@@ -2056,7 +2056,7 @@ is |v1 ^ v2|</doc>
           </instance-parameter>
         </parameters>
       </method>
-      <method name="set_values" c:identifier="hkl_parameter_list_set_values">
+      <method name="values_set" c:identifier="hkl_parameter_list_values_set">
         <doc xml:whitespace="preserve">set the parameter list with the given values</doc>
         <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">true if succeed or false otherwise</doc>
@@ -2083,8 +2083,30 @@ is |v1 ^ v2|</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="set_values_unit_binding"
-              c:identifier="hkl_parameter_list_set_values_unit_binding"
+      <method name="values_unit_get"
+              c:identifier="hkl_parameter_list_values_unit_get">
+        <return-value transfer-ownership="full">
+          <doc xml:whitespace="preserve">list of pseudo axes values with unit free the array with free when done</doc>
+          <array length="0" zero-terminated="0" c:type="double*">
+            <type name="gdouble" c:type="double"/>
+          </array>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="ParameterList" c:type="const HklParameterList*"/>
+          </instance-parameter>
+          <parameter name="len"
+                     direction="out"
+                     caller-allocates="1"
+                     transfer-ownership="full">
+            <doc xml:whitespace="preserve">the length of the returned array</doc>
+            <type name="guint" c:type="unsigned int*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="values_unit_set_binding"
+              c:identifier="hkl_parameter_list_values_unit_set_binding"
               throws="1">
         <doc xml:whitespace="preserve">set the parameter list with the given values</doc>
         <return-value transfer-ownership="none">
@@ -2105,28 +2127,6 @@ is |v1 ^ v2|</doc>
           <parameter name="len" transfer-ownership="none">
             <doc xml:whitespace="preserve">the length of the values</doc>
             <type name="guint" c:type="uint"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="values_unit_get"
-              c:identifier="hkl_parameter_list_values_unit_get">
-        <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">list of pseudo axes values with unit free the array with free when done</doc>
-          <array length="0" zero-terminated="0" c:type="double*">
-            <type name="gdouble" c:type="double"/>
-          </array>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the this ptr</doc>
-            <type name="ParameterList" c:type="const HklParameterList*"/>
-          </instance-parameter>
-          <parameter name="len"
-                     direction="out"
-                     caller-allocates="1"
-                     transfer-ownership="full">
-            <doc xml:whitespace="preserve">the length of the returned array</doc>
-            <type name="guint" c:type="unsigned int*"/>
           </parameter>
         </parameters>
       </method>
