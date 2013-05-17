@@ -62,7 +62,7 @@ def plot_hkl_trajectory(filename, geometry, engines,
     plot the trajectory for a engine. It is possible to limit the
     number of trajectory using the max_traj keyword
     """
-    axes_names = [axis.name for axis in geometry.axes()]
+    axes_names = [axis.name_get() for axis in geometry.axes()]
 
     hkl = engines.get_by_name("hkl")
     page = 1
@@ -125,8 +125,8 @@ def main():
         # here we set the detector arm with only positiv values for
         # now tth or delta arm
         for axis in geometry.axes():
-            if axis.name in ["tth", "delta"]:
-                axis.range.min = 0
+            if axis.name_get() in ["tth", "delta"]:
+                axis.min_max_unit_set(0, 180.)
 
         engines.init(geometry, detector, sample)
 

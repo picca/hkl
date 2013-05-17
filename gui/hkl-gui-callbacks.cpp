@@ -208,24 +208,24 @@ void HKLWindow::on_button2_clicked(void)
 					    _spinbutton_uz->get_value() * HKL_DEGTORAD);
 
 		// set min/max
-		hkl_parameter_set_range_unit(sample->lattice->a,
-					     _spinbutton_a_min->get_value(),
-					     _spinbutton_a_max->get_value());
-		hkl_parameter_set_range_unit(sample->lattice->b,
-					     _spinbutton_b_min->get_value(),
-					     _spinbutton_b_max->get_value());
-		hkl_parameter_set_range_unit(sample->lattice->c,
-					     _spinbutton_c_min->get_value(),
-					     _spinbutton_c_max->get_value());
-		hkl_parameter_set_range_unit(sample->lattice->alpha,
-					     _spinbutton_alpha_min->get_value(),
-					     _spinbutton_alpha_max->get_value());
-		hkl_parameter_set_range_unit(sample->lattice->beta,
-					     _spinbutton_beta_min->get_value(),
-					     _spinbutton_beta_max->get_value());
-		hkl_parameter_set_range_unit(sample->lattice->gamma,
-					     _spinbutton_gamma_min->get_value(),
-					     _spinbutton_gamma_max->get_value());
+		hkl_parameter_min_max_unit_set(sample->lattice->a,
+					       _spinbutton_a_min->get_value(),
+					       _spinbutton_a_max->get_value());
+		hkl_parameter_min_max_unit_set(sample->lattice->b,
+					       _spinbutton_b_min->get_value(),
+					       _spinbutton_b_max->get_value());
+		hkl_parameter_min_max_unit_set(sample->lattice->c,
+					       _spinbutton_c_min->get_value(),
+					       _spinbutton_c_max->get_value());
+		hkl_parameter_min_max_unit_set(sample->lattice->alpha,
+					       _spinbutton_alpha_min->get_value(),
+					       _spinbutton_alpha_max->get_value());
+		hkl_parameter_min_max_unit_set(sample->lattice->beta,
+					       _spinbutton_beta_min->get_value(),
+					       _spinbutton_beta_max->get_value());
+		hkl_parameter_min_max_unit_set(sample->lattice->gamma,
+					       _spinbutton_gamma_min->get_value(),
+					       _spinbutton_gamma_max->get_value());
 
 		this->updateCrystalModel(sample);
 		this->updateReciprocalLattice();
@@ -389,8 +389,8 @@ void HKLWindow::on_cell_TreeView_axes_min_edited(Glib::ustring const & spath,
 
 	sscanf(newText.c_str(), "%lf", &value);
 
-	hkl_parameter_get_range_unit(axis, &shit, &max);
-	hkl_parameter_set_range_unit(axis, value, max);
+	hkl_parameter_min_max_unit_get(axis, &shit, &max);
+	hkl_parameter_min_max_unit_set(axis, value, max);
 	hkl_geometry_axis_set(this->_geometry, axis);
 
 	row[_axeModelColumns.min] = value;
@@ -413,8 +413,8 @@ void HKLWindow::on_cell_TreeView_axes_max_edited(Glib::ustring const & spath,
 
 	sscanf(newText.c_str(), "%lf", &value);
 
-	hkl_parameter_get_range_unit(axis, &min, &shit);
-	hkl_parameter_set_range_unit(axis, min, value);
+	hkl_parameter_min_max_unit_get(axis, &min, &shit);
+	hkl_parameter_min_max_unit_set(axis, min, value);
 	hkl_geometry_axis_set(this->_geometry, axis);
 
 	row[_axeModelColumns.max] = value;

@@ -121,6 +121,11 @@ void hkl_parameter_init_copy(HklParameter *self, const HklParameter *src)
 	self->ops->init_copy(self, src);
 }
 
+const char *hkl_parameter_name_get(const HklParameter *self)
+{
+	return self->name;
+}
+
 /**
  * hkl_parameter_get_value:
  * @self: the this ptr
@@ -205,20 +210,20 @@ inline void hkl_parameter_set_value_smallest_in_range(HklParameter *self)
 }
 
 /**
- * hkl_parameter_get_max: (skip)
+ * hkl_parameter_min_max_get: (skip)
  * @self:
  *
  * get the max value of the #HklParameter
  *
- * Returns:
  **/
-double hkl_parameter_get_max(const HklParameter *self)
+void hkl_parameter_min_max_get(const HklParameter *self, double *min, double *max)
 {
-	return self->range.max;
+	*min = self->range.min;
+	*max = self->range.max;
 }
 
 /**
- * hkl_parameter_get_range_unit: (skip)
+ * hkl_parameter_min_max_unit_get: (skip)
  * @self:
  * @min:
  * @max:
@@ -226,7 +231,7 @@ double hkl_parameter_get_max(const HklParameter *self)
  * get the #HklParameter range, min, max
  * @todo test
  **/
-void hkl_parameter_get_range_unit(const HklParameter *self, double *min, double *max)
+void hkl_parameter_min_max_unit_get(const HklParameter *self, double *min, double *max)
 {
 	double factor = hkl_unit_factor(self->unit, self->punit);
 
@@ -235,7 +240,7 @@ void hkl_parameter_get_range_unit(const HklParameter *self, double *min, double 
 }
 
 /**
- * hkl_parameter_set_range: (skip)
+ * hkl_parameter_min_max_set: (skip)
  * @self:
  * @min:
  * @max:
@@ -243,22 +248,22 @@ void hkl_parameter_get_range_unit(const HklParameter *self, double *min, double 
  * set the #HklParameter range.
  * @todo test
  **/
-void hkl_parameter_set_range(HklParameter *self, double min, double max)
+void hkl_parameter_min_max_set(HklParameter *self, double min, double max)
 {
 	self->range.min = min;
 	self->range.max = max;
 }
 
 /**
- * hkl_parameter_set_range_unit: (skip)
- * @self:
- * @min:
- * @max:
+ * hkl_parameter_min_max_unit_set:
+ * @self: the this ptr
+ * @min: the minimum value to set
+ * @max: the maximum value to set
  *
  * set the #HklParameter range express in the punit #HklUnit
  * @todo test
  **/
-void hkl_parameter_set_range_unit(HklParameter *self, double min, double max)
+void hkl_parameter_min_max_unit_set(HklParameter *self, double min, double max)
 {
 	double factor = hkl_unit_factor(self->unit, self->punit);
 	self->range.min = min / factor;

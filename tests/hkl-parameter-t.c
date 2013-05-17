@@ -23,6 +23,8 @@
 #include <tap/basic.h>
 #include <tap/float.h>
 
+#include "hkl-parameter-private.h"
+
 static void new(void)
 {
 	HklParameter *p;

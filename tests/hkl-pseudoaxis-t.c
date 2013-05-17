@@ -55,7 +55,7 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 			/* randomize the pseudoAxes values */
 			darray_foreach(pseudo_axis, *pseudo_axes){
 				hkl_parameter_randomize(*pseudo_axis);
-				values[j++] = (*pseudo_axis)->_value;
+				values[j++] = hkl_parameter_get_value(*pseudo_axis);
 			}
 
 			/* randomize the parameters */
@@ -85,7 +85,7 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 
 					j = 0;
 					darray_foreach(pseudo_axis, *pseudo_axes){
-						ko |= fabs(values[j] - (*pseudo_axis)->_value) >= HKL_EPSILON;
+						ko |= fabs(values[j] - hkl_parameter_get_value(*pseudo_axis)) >= HKL_EPSILON;
 						++j;
 					}
 					if(ko)

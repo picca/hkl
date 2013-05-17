@@ -1837,109 +1837,6 @@ is |v1 ^ v2|</doc>
             glib:type-name="HklParameter"
             glib:get-type="hkl_parameter_get_type"
             c:symbol-prefix="parameter">
-      <field name="name" writable="1">
-        <type name="utf8" c:type="const char*"/>
-      </field>
-      <field name="range" writable="1">
-        <type name="Interval" c:type="HklInterval"/>
-      </field>
-      <field name="_value" writable="1">
-        <type name="gdouble" c:type="double"/>
-      </field>
-      <field name="unit" writable="1">
-        <type name="Unit" c:type="const HklUnit*"/>
-      </field>
-      <field name="punit" writable="1">
-        <type name="Unit" c:type="const HklUnit*"/>
-      </field>
-      <field name="fit" writable="1">
-        <type name="gint" c:type="int"/>
-      </field>
-      <field name="changed" writable="1">
-        <type name="gint" c:type="int"/>
-      </field>
-      <field name="ops" writable="1">
-        <type name="ParameterOperations"
-              c:type="const HklParameterOperations*"/>
-      </field>
-      <constructor name="new"
-                   c:identifier="hkl_parameter_new"
-                   introspectable="0">
-        <doc xml:whitespace="preserve">create a new #HklParameter</doc>
-        <return-value transfer-ownership="full">
-          <type name="Parameter" c:type="HklParameter*"/>
-        </return-value>
-        <parameters>
-          <parameter name="name" transfer-ownership="none">
-            <type name="utf8" c:type="const char*"/>
-          </parameter>
-          <parameter name="min" transfer-ownership="none">
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-          <parameter name="value" transfer-ownership="none">
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-          <parameter name="max" transfer-ownership="none">
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-          <parameter name="fit" transfer-ownership="none">
-            <type name="gint" c:type="int"/>
-          </parameter>
-          <parameter name="changed" transfer-ownership="none">
-            <type name="gint" c:type="int"/>
-          </parameter>
-          <parameter name="unit" transfer-ownership="none">
-            <type name="Unit" c:type="const HklUnit*"/>
-          </parameter>
-          <parameter name="punit" transfer-ownership="none">
-            <type name="Unit" c:type="const HklUnit*"/>
-          </parameter>
-        </parameters>
-      </constructor>
-      <method name="free" c:identifier="hkl_parameter_free" introspectable="0">
-        <doc xml:whitespace="preserve">delete an #HklParameter</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <type name="Parameter" c:type="HklParameter*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
-      <method name="get_max"
-              c:identifier="hkl_parameter_get_max"
-              introspectable="0">
-        <doc xml:whitespace="preserve">get the max value of the #HklParameter</doc>
-        <return-value transfer-ownership="none">
-          <type name="gdouble" c:type="double"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <type name="Parameter" c:type="const HklParameter*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
-      <method name="get_range_unit"
-              c:identifier="hkl_parameter_get_range_unit"
-              introspectable="0">
-        <doc xml:whitespace="preserve">get the #HklParameter range, min, max
-@todo test</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <type name="Parameter" c:type="const HklParameter*"/>
-          </instance-parameter>
-          <parameter name="min" transfer-ownership="none">
-            <type name="gdouble" c:type="double*"/>
-          </parameter>
-          <parameter name="max" transfer-ownership="none">
-            <type name="gdouble" c:type="double*"/>
-          </parameter>
-        </parameters>
-      </method>
       <method name="get_value" c:identifier="hkl_parameter_get_value">
         <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">the value of the #HklParameter</doc>
@@ -1950,23 +1847,6 @@ is |v1 ^ v2|</doc>
             <doc xml:whitespace="preserve">the this ptr</doc>
             <type name="Parameter" c:type="const HklParameter*"/>
           </instance-parameter>
-        </parameters>
-      </method>
-      <method name="get_value_closest"
-              c:identifier="hkl_parameter_get_value_closest">
-        <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">the closest value of the ref #HklParameter from the current self #HklParameter</doc>
-          <type name="gdouble" c:type="double"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the this ptr</doc>
-            <type name="Parameter" c:type="const HklParameter*"/>
-          </instance-parameter>
-          <parameter name="ref" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the reference #HklParameter</doc>
-            <type name="Parameter" c:type="const HklParameter*"/>
-          </parameter>
         </parameters>
       </method>
       <method name="get_value_unit"
@@ -1982,64 +1862,27 @@ is |v1 ^ v2|</doc>
           </instance-parameter>
         </parameters>
       </method>
-      <method name="init_copy"
-              c:identifier="hkl_parameter_init_copy"
+      <method name="min_max_get"
+              c:identifier="hkl_parameter_min_max_get"
               introspectable="0">
+        <doc xml:whitespace="preserve">get the max value of the #HklParameter</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
           <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the this ptr</doc>
-            <type name="Parameter" c:type="HklParameter*"/>
-          </instance-parameter>
-          <parameter name="src" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the parameter to copy from</doc>
             <type name="Parameter" c:type="const HklParameter*"/>
+          </instance-parameter>
+          <parameter name="min" transfer-ownership="none">
+            <type name="gdouble" c:type="double*"/>
+          </parameter>
+          <parameter name="max" transfer-ownership="none">
+            <type name="gdouble" c:type="double*"/>
           </parameter>
         </parameters>
       </method>
-      <method name="is_valid"
-              c:identifier="hkl_parameter_is_valid"
-              introspectable="0">
-        <doc xml:whitespace="preserve">check if the value of the #HklParameter is in the min,max range</doc>
-        <return-value transfer-ownership="none">
-          <type name="gint" c:type="int"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <type name="Parameter" c:type="const HklParameter*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
-      <method name="new_copy"
-              c:identifier="hkl_parameter_new_copy"
-              introspectable="0">
-        <doc xml:whitespace="preserve">copy an #HklParameter</doc>
-        <return-value transfer-ownership="full">
-          <type name="Parameter" c:type="HklParameter*"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <type name="Parameter" c:type="const HklParameter*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
-      <method name="randomize"
-              c:identifier="hkl_parameter_randomize"
-              introspectable="0">
-        <doc xml:whitespace="preserve">randomize the #HklParameter value into the min,max range</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <type name="Parameter" c:type="HklParameter*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
-      <method name="set_range"
-              c:identifier="hkl_parameter_set_range"
+      <method name="min_max_set"
+              c:identifier="hkl_parameter_min_max_set"
               introspectable="0">
         <doc xml:whitespace="preserve">set the #HklParameter range.
 @todo test</doc>
@@ -2058,9 +1901,28 @@ is |v1 ^ v2|</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="set_range_unit"
-              c:identifier="hkl_parameter_set_range_unit"
+      <method name="min_max_unit_get"
+              c:identifier="hkl_parameter_min_max_unit_get"
               introspectable="0">
+        <doc xml:whitespace="preserve">get the #HklParameter range, min, max
+@todo test</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Parameter" c:type="const HklParameter*"/>
+          </instance-parameter>
+          <parameter name="min" transfer-ownership="none">
+            <type name="gdouble" c:type="double*"/>
+          </parameter>
+          <parameter name="max" transfer-ownership="none">
+            <type name="gdouble" c:type="double*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="min_max_unit_set"
+              c:identifier="hkl_parameter_min_max_unit_set">
         <doc xml:whitespace="preserve">set the #HklParameter range express in the punit #HklUnit
 @todo test</doc>
         <return-value transfer-ownership="none">
@@ -2068,14 +1930,40 @@ is |v1 ^ v2|</doc>
         </return-value>
         <parameters>
           <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
             <type name="Parameter" c:type="HklParameter*"/>
           </instance-parameter>
           <parameter name="min" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the minimum value to set</doc>
             <type name="gdouble" c:type="double"/>
           </parameter>
           <parameter name="max" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the maximum value to set</doc>
             <type name="gdouble" c:type="double"/>
           </parameter>
+        </parameters>
+      </method>
+      <method name="name_get" c:identifier="hkl_parameter_name_get">
+        <return-value transfer-ownership="none">
+          <type name="utf8" c:type="const char*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Parameter" c:type="const HklParameter*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="randomize"
+              c:identifier="hkl_parameter_randomize"
+              introspectable="0">
+        <doc xml:whitespace="preserve">randomize the #HklParameter value into the min,max range</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Parameter" c:type="HklParameter*"/>
+          </instance-parameter>
         </parameters>
       </method>
       <method name="set_value"
@@ -2099,19 +1987,6 @@ is |v1 ^ v2|</doc>
             <doc xml:whitespace="preserve">the error set if something goes wrong</doc>
             <type name="Error" c:type="HklError**"/>
           </parameter>
-        </parameters>
-      </method>
-      <method name="set_value_smallest_in_range"
-              c:identifier="hkl_parameter_set_value_smallest_in_range"
-              introspectable="0">
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the this ptr</doc>
-            <type name="Parameter" c:type="HklParameter*"/>
-          </instance-parameter>
         </parameters>
       </method>
       <method name="set_value_unit"
@@ -2138,22 +2013,6 @@ is |v1 ^ v2|</doc>
           </parameter>
         </parameters>
       </method>
-      <function name="fprintf"
-                c:identifier="hkl_parameter_fprintf"
-                introspectable="0">
-        <doc xml:whitespace="preserve">print into the #FILE f an #HklParameter</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="f" transfer-ownership="none">
-            <type name="gpointer" c:type="FILE*"/>
-          </parameter>
-          <parameter name="self" transfer-ownership="none">
-            <type name="Parameter" c:type="HklParameter*"/>
-          </parameter>
-        </parameters>
-      </function>
     </record>
     <record name="ParameterList"
             c:type="HklParameterList"
@@ -4335,23 +4194,6 @@ control over, that could include printf() escape sequences.</doc>
         </parameter>
         <parameter name="self" transfer-ownership="none">
           <type name="Mode" c:type="const HklMode*"/>
-        </parameter>
-      </parameters>
-    </function>
-    <function name="parameter_fprintf"
-              c:identifier="hkl_parameter_fprintf"
-              moved-to="Parameter.fprintf"
-              introspectable="0">
-      <doc xml:whitespace="preserve">print into the #FILE f an #HklParameter</doc>
-      <return-value transfer-ownership="none">
-        <type name="none" c:type="void"/>
-      </return-value>
-      <parameters>
-        <parameter name="f" transfer-ownership="none">
-          <type name="gpointer" c:type="FILE*"/>
-        </parameter>
-        <parameter name="self" transfer-ownership="none">
-          <type name="Parameter" c:type="HklParameter*"/>
         </parameter>
       </parameters>
     </function>

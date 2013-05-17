@@ -184,7 +184,7 @@ static void is_valid(void)
 	hkl_geometry_set_values_v(geom, 3, -181. * HKL_DEGTORAD, 0., 0.);
 	ok(HKL_TRUE == hkl_geometry_is_valid(geom), __func__);
 
-	hkl_parameter_set_range(darray_item(geom->axes, 0),
+	hkl_parameter_min_max_set(darray_item(geom->axes, 0),
 				-100 * HKL_DEGTORAD, 100 * HKL_DEGTORAD);
 	ok(HKL_FALSE == hkl_geometry_is_valid(geom), __func__);
 
@@ -254,9 +254,9 @@ static void  list_multiply_from_range(void)
 	axisB = hkl_geometry_get_axis_by_name(g, "B");
 	axisC = hkl_geometry_get_axis_by_name(g, "C");
 
-	hkl_parameter_set_range_unit(axisA, -190, 190);
-	hkl_parameter_set_range_unit(axisB, -190, 190);
-	hkl_parameter_set_range_unit(axisC, -190, 190);
+	hkl_parameter_min_max_unit_set(axisA, -190, 190);
+	hkl_parameter_min_max_unit_set(axisB, -190, 190);
+	hkl_parameter_min_max_unit_set(axisC, -190, 190);
 
 	list = hkl_geometry_list_new();
 
@@ -286,9 +286,9 @@ static void  list_remove_invalid(void)
 	axisB = hkl_geometry_get_axis_by_name(g, "B");
 	axisC = hkl_geometry_get_axis_by_name(g, "C");
 
-	hkl_parameter_set_range_unit(axisA, -100, 180.);
-	hkl_parameter_set_range_unit(axisB, -100., 180.);
-	hkl_parameter_set_range_unit(axisC, -100., 180.);
+	hkl_parameter_min_max_unit_set(axisA, -100, 180.);
+	hkl_parameter_min_max_unit_set(axisB, -100., 180.);
+	hkl_parameter_min_max_unit_set(axisC, -100., 180.);
 
 	list = hkl_geometry_list_new();
 

@@ -25,7 +25,8 @@
 #include <hkl/hkl-macros.h>
 #include <hkl/hkl-vector.h>
 #include <hkl/hkl-quaternion.h>
-#include <hkl/hkl-parameter.h>
+
+#include "hkl-parameter-private.h"
 
 HKL_BEGIN_DECLS
 

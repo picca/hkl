@@ -44,61 +44,27 @@ typedef darray(HklParameter *) darray_parameter;
 /* HklParameter */
 /****************/
 
-struct _HklParameter {
-	const char *name;
-	HklInterval range;
-	double _value;
-	const HklUnit *unit;
-	const HklUnit *punit;
-	int fit;
-	int changed;
-	const HklParameterOperations *ops;
-};
+HKLAPI const char *hkl_parameter_name_get(const HklParameter *self) HKL_ARG_NONNULL(1);
 
-#define HKL_PARAMETER_DEFAULTS .name="dummy", .range={.min=0, .max=0}, ._value=0, .unit=NULL, .punit=NULL, .fit=HKL_TRUE, .changed=HKL_TRUE, .ops = &hkl_parameter_operations_defaults
+HKLAPI double hkl_parameter_get_value(const HklParameter *self) HKL_ARG_NONNULL(1);
 
-#define HKL_PARAMETER_DEFAULTS_ANGLE HKL_PARAMETER_DEFAULTS, .range={.min=-M_PI, .max=M_PI}, .unit = &hkl_unit_angle_rad, .punit = &hkl_unit_angle_deg
+HKLAPI bool hkl_parameter_set_value(HklParameter *self, double value,
+				    HklError **error) HKL_ARG_NONNULL(1);
 
-extern HklParameter *hkl_parameter_new(const char *name,
-				       double min, double value, double max,
-				       int fit, int changed,
-				       const HklUnit *unit,
-				       const HklUnit *punit);
+HKLAPI double hkl_parameter_get_value_unit(const HklParameter *self) HKL_ARG_NONNULL(1);
 
-extern HklParameter *hkl_parameter_new_copy(const HklParameter *self);
+HKLAPI bool hkl_parameter_set_value_unit(HklParameter *self, double value,
+					 HklError **error) HKL_ARG_NONNULL(1);
 
-extern void hkl_parameter_free(HklParameter *self);
+HKLAPI void hkl_parameter_min_max_get(const HklParameter *self, double *min, double *max) HKL_ARG_NONNULL(1, 2, 3);
 
-extern void hkl_parameter_init_copy(HklParameter *self, const HklParameter *src);
+HKLAPI void hkl_parameter_min_max_set(HklParameter *self, double min, double max) HKL_ARG_NONNULL(1);
 
-extern double hkl_parameter_get_value(const HklParameter *self);
+HKLAPI void hkl_parameter_min_max_unit_get(const HklParameter *self, double *min, double *max) HKL_ARG_NONNULL(1, 2, 3);
 
-extern double hkl_parameter_get_value_unit(const HklParameter *self);
+HKLAPI void hkl_parameter_min_max_unit_set(HklParameter *self, double min, double max) HKL_ARG_NONNULL(1);
 
-extern double hkl_parameter_get_value_closest(const HklParameter *self,
-					      const HklParameter *ref);
-
-extern bool hkl_parameter_set_value(HklParameter *self, double value,
-				    HklError **error);
-
-extern bool hkl_parameter_set_value_unit(HklParameter *self, double value,
-					 HklError **error);
-
-extern void hkl_parameter_set_value_smallest_in_range(HklParameter *self);
-
-extern double hkl_parameter_get_max(const HklParameter *self);
-
-extern void hkl_parameter_get_range_unit(const HklParameter *self, double *min, double *max);
-
-extern void hkl_parameter_set_range(HklParameter *self, double min, double max);
-
-extern void hkl_parameter_set_range_unit(HklParameter *self, double min, double max);
-
-extern void hkl_parameter_randomize(HklParameter *self);
-
-extern int hkl_parameter_is_valid(const HklParameter *self);
-
-extern void hkl_parameter_fprintf(FILE *f, HklParameter *self);
+HKLAPI void hkl_parameter_randomize(HklParameter *self) HKL_ARG_NONNULL(1);
 
 /********************/
 /* HklParameterList */

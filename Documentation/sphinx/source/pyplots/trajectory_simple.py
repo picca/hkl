@@ -20,7 +20,7 @@ detector.idx_set(1)
 
 factory = Hkl.factories()['K6C']
 geometry = factory.create_new_geometry()
-axes_names = [axis.name for axis in geometry.axes()]
+axes_names = [axis.name_get() for axis in geometry.axes()]
 
 # set the initial position
 geometry.set_axes_values_unit([0, 120, 0, -90, 0, 60])
@@ -40,7 +40,7 @@ l = numpy.linspace(1, 1, n + 1)
 
 # get the hkl engine
 hkl = engines.get_by_name("hkl")
-pseudo_axes_names = [parameter.name for parameter in hkl.pseudo_axes().parameters()]
+pseudo_axes_names = [parameter.name_get() for parameter in hkl.pseudo_axes().parameters()]
 
 # compute the trajectory
 motors_positions = []

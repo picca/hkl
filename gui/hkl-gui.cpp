@@ -639,7 +639,7 @@ void HKLWindow::updateAxes(void)
 		axis = row[_axeModelColumns.axis];
 		row[_axeModelColumns.read] = hkl_parameter_get_value_unit(axis);
 		row[_axeModelColumns.write] = hkl_parameter_get_value_unit(axis);
-		hkl_parameter_get_range_unit(axis, &min, &max);
+		hkl_parameter_min_max_unit_get(axis, &min, &max);
 		row[_axeModelColumns.min] = min;
 		row[_axeModelColumns.max] = max;
 		++iter;
@@ -666,7 +666,7 @@ void HKLWindow::updatePseudoAxes(void)
 		parameter = row[_pseudoAxeModelColumns.parameter];
 		row[_pseudoAxeModelColumns.read] = hkl_parameter_get_value_unit(parameter);
 		row[_pseudoAxeModelColumns.write] = hkl_parameter_get_value_unit(parameter);
-		hkl_parameter_get_range_unit(parameter, &min, &max);
+		hkl_parameter_min_max_unit_get(parameter, &min, &max);
 		row[_pseudoAxeModelColumns.min] = min;
 		row[_pseudoAxeModelColumns.max] = max;
 
@@ -730,37 +730,37 @@ void HKLWindow::updateLatticeParameters(void)
 
 
 		parameter = sample->lattice->a;
-		hkl_parameter_get_range_unit(parameter, &min, &max);
+		hkl_parameter_min_max_unit_get(parameter, &min, &max);
 		_spinbutton_a_min->set_value(min);
 		_spinbutton_a_max->set_value(max);
 		_checkbutton_a->set_active(parameter->fit);
 
 		parameter = sample->lattice->b;
-		hkl_parameter_get_range_unit(parameter, &min, &max);
+		hkl_parameter_min_max_unit_get(parameter, &min, &max);
 		_spinbutton_b_min->set_value(min);
 		_spinbutton_b_max->set_value(max);
 		_checkbutton_b->set_active(parameter->fit);
 
 		parameter = sample->lattice->c;
-		hkl_parameter_get_range_unit(parameter, &min, &max);
+		hkl_parameter_min_max_unit_get(parameter, &min, &max);
 		_spinbutton_c_min->set_value(min);
 		_spinbutton_c_max->set_value(max);
 		_checkbutton_c->set_active(parameter->fit);
 
 		parameter = sample->lattice->alpha;
-		hkl_parameter_get_range_unit(parameter, &min, &max);
+		hkl_parameter_min_max_unit_get(parameter, &min, &max);
 		_spinbutton_alpha_min->set_value(min);
 		_spinbutton_alpha_max->set_value(max);
 		_checkbutton_alpha->set_active(parameter->fit);
 
 		parameter = sample->lattice->beta;
-		hkl_parameter_get_range_unit(parameter, &min, &max);
+		hkl_parameter_min_max_unit_get(parameter, &min, &max);
 		_spinbutton_beta_min->set_value(min);
 		_spinbutton_beta_max->set_value(max);
 		_checkbutton_beta->set_active(parameter->fit);
 
 		parameter = sample->lattice->gamma;
-		hkl_parameter_get_range_unit(parameter, &min, &max);
+		hkl_parameter_min_max_unit_get(parameter, &min, &max);
 		_spinbutton_gamma_min->set_value(min);
 		_spinbutton_gamma_max->set_value(max);
 		_checkbutton_gamma->set_active(parameter->fit);

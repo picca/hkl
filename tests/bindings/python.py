@@ -70,7 +70,7 @@ class TestAPI(unittest.TestCase):
 
         # axes names are accessible
         self.assertTrue(
-            isinstance([axis.name for axis in geometry.axes()],
+            isinstance([axis.name_get() for axis in geometry.axes()],
                        list))
 
         # set the geometry axes values
@@ -82,6 +82,13 @@ class TestAPI(unittest.TestCase):
         # almost equals
         for r, w in zip(values_w, values_r):
             self.assertAlmostEqual(r, w)
+
+        # check that we can access the axes
+        axes = geometry.axes()
+        self.assertTrue(len([axis.name_get() for axis in axes]) != 0)
+        for axis in axes:
+            self.assertTrue(type(axis.name_get()) is str)
+            axis.min_max_unit_set(0, math.radians(180))
 
     def test_mode_api(self):
         """
