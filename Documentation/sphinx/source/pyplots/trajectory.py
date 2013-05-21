@@ -16,8 +16,8 @@ config = Hkl.geometry_factory_get_config_from_type(
     Hkl.GeometryType.KAPPA6C)
 geometry = Hkl.Geometry.factory_newv(config, [math.radians(50.)])
 delta = geometry.axes()[5]
-#delta.parameter.range.min = 0
-#values_w = [0., -60, 0., 90., 0., 60.]
+# delta.parameter.range.min = 0
+# values_w = [0., -60, 0., 90., 0., 60.]
 values_w = [0., 120, 0., -90., 0., 60.]
 geometry.set_axes_values_unit(values_w)
 axes_names = [axis.name for axis in geometry.axes()]
@@ -46,7 +46,8 @@ l = numpy.linspace(hkl0[2], hkl1[2], n + 1)
 # get the hkl engine
 hkl = engines.get_by_name("hkl")
 eulerians = engines.get_by_name("eulerians")
-pseudo_names = [pseudo_axis.parameter.name for pseudo_axis in eulerians.pseudo_axes()]
+pseudo_names = [
+    pseudo_axis.parameter.name for pseudo_axis in eulerians.pseudo_axes()]
 
 # set the hkl engine and get the results
 trajectories = []
@@ -54,7 +55,7 @@ trajectories = []
 for idx, h, k, l in zip(range(n), h, k, l):
     try:
         hkl.set_values_unit([h, k, l])
-        #print geometry.get_axes_values_unit()
+        # print geometry.get_axes_values_unit()
         if engines.geometries.len != 4:
             print idx, h, k, l
         for i, item in enumerate(engines.geometries().items()):

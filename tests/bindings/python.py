@@ -164,9 +164,11 @@ class TestAPI(unittest.TestCase):
 
     @unittest.skip("for testing figures")
     def test_doc_exemple(self):
-        #execfile("../../Documentation/sphinx/source/bindings/python.py")
-        execfile("../../Documentation/sphinx/source/pyplots/trajectory_simple.py")
-        execfile("../../Documentation/sphinx/source/pyplots/trajectory_full.py")
+        # execfile("../../Documentation/sphinx/source/bindings/python.py")
+        execfile(
+            "../../Documentation/sphinx/source/pyplots/trajectory_simple.py")
+        execfile(
+            "../../Documentation/sphinx/source/pyplots/trajectory_full.py")
 
         self.assertTrue(False)
 
@@ -179,7 +181,7 @@ class TestAPI(unittest.TestCase):
         sample = Hkl.Sample.new("toto", Hkl.SampleType.MONOCRYSTAL)
         self.assertTrue(sample.name == "toto")
 
-        #set the lattice parameters
+        # set the lattice parameters
         sample.set_lattice(1.54, 1.54, 1.54,
                            math.radians(90.),
                            math.radians(90.),
