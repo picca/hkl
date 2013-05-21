@@ -19,44 +19,15 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#ifndef __HKL_SAMPLE_H__
-#define __HKL_SAMPLE_H__
+#ifndef __HKL_SAMPLE_PRIVATE_H__
+#define __HKL_SAMPLE_PRIVATE_H__
 
-#include <hkl/ccan/darray/darray.h>
-#include <hkl/hkl-lattice.h>
-#include <hkl/hkl-geometry.h>
-#include <hkl/hkl-detector.h>
+#include "hkl-lattice.h"
+#include "hkl-geometry.h"
+#include "hkl-detector.h"
+#include "hkl-sample.h"
 
 HKL_BEGIN_DECLS
-
-typedef struct _HklSample HklSample;
-typedef struct _HklSampleReflection HklSampleReflection;
-
-typedef enum _HklSampleType
-{
-	HKL_SAMPLE_TYPE_MONOCRYSTAL
-} HklSampleType;
-
-struct _HklSample {
-	char *name;
-	HklSampleType type;
-	HklLattice *lattice;
-	HklMatrix U;
-	HklMatrix UB;
-	HklParameter *ux;
-	HklParameter *uy;
-	HklParameter *uz;
-	HklSampleReflection **reflections;
-	size_t reflections_len;
-};
-
-struct _HklSampleReflection {
-	HklGeometry *geometry;
-	HklDetector *detector;
-	HklVector hkl;
-	HklVector _hkl;
-	int flag;
-};
 
 /*************/
 /* HklSample */

@@ -78,7 +78,8 @@ hkl_private_h_sources = \
 	hkl-pseudoaxis-k6c-private.h \
 	hkl-pseudoaxis-zaxis-private.h \
 	hkl-pseudoaxis-soleil-sixs-med-private.h \
-	hkl-pseudoaxis-petra3-private.h
+	hkl-pseudoaxis-petra3-private.h \
+	hkl-sample-private.h
 
 lib_LTLIBRARIES = libhkl.la
 libhkl_la_SOURCES = $(hkl_c_sources) $(hkl_private_h_sources)

@@ -23,6 +23,8 @@
 #define __GHKL_H__
 
 #include <map>
+#include <string>
+
 #include <iostream>
 
 #include <gtkmm.h>
@@ -234,7 +236,8 @@ private:
 
 	HklGeometry *_geometry;
 	HklDetector *_detector;
-	HklSampleList *_samples;
+	HklSample *_sample;
+	std::map<std::string, HklSample *> _samples;	
 	HklLattice *_reciprocal;
 	HklEngineList *_engines;
 

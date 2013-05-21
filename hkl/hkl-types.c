@@ -23,6 +23,7 @@
 
 #include "hkl-detector-private.h"
 #include "hkl-pseudoaxis-private.h"
+#include "hkl-sample-private.h"
 
 GType hkl_error_get_type (void) {
         static volatile gsize hkl_error_type_id__volatile = 0;
@@ -236,18 +237,6 @@ GType hkl_sample_get_type (void) {
                 g_once_init_leave (&hkl_sample_type_id__volatile, hkl_sample_type_id);
         }
         return hkl_sample_type_id__volatile;
-}
-
-GType hkl_sample_list_get_type (void) {
-        static volatile gsize hkl_sample_list_type_id__volatile = 0;
-        if (g_once_init_enter (&hkl_sample_list_type_id__volatile)) {
-                GType hkl_sample_list_type_id;
-                hkl_sample_list_type_id = g_boxed_type_register_static ("HklSampleList",
-									(GBoxedCopyFunc) hkl_sample_list_new_copy,
-									(GBoxedFreeFunc) hkl_sample_list_free);
-                g_once_init_leave (&hkl_sample_list_type_id__volatile, hkl_sample_list_type_id);
-        }
-        return hkl_sample_list_type_id__volatile;
 }
 
 GType hkl_pseudo_axis_get_type (void) {

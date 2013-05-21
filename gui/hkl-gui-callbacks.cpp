@@ -48,8 +48,8 @@ void HKLWindow::on_treeViewCrystals_cursor_changed(void)
 	Gtk::ListStore::Row row = *(iter);
 
 	Glib::ustring name = row[_crystalModelColumns.name];
-	hkl_sample_list_select_current(_samples, name.c_str());
-	hkl_engine_list_init(_engines, _geometry, _detector, _samples->current);
+	_sample = _samples[name];
+	hkl_engine_list_init(_engines, _geometry, _detector, _sample);
 	_treeViewReflections->set_model(_mapReflectionModel[name]);
 	this->updateLattice();
 	this->updateLatticeParameters();
@@ -190,11 +190,8 @@ void HKLWindow::on_button2_clicked(void)
 {
 	LOG;
 
-	HklSample *sample;
-
-	sample = _samples->current;
-	if(sample){
-		hkl_sample_set_lattice(sample,
+	if(_sample){
+		hkl_sample_set_lattice(_sample,
 				       _spinbutton_a->get_value(),
 				       _spinbutton_b->get_value(),
 				       _spinbutton_c->get_value(),
@@ -202,32 +199,32 @@ void HKLWindow::on_button2_clicked(void)
 				       _spinbutton_beta->get_value() * HKL_DEGTORAD,
 				       _spinbutton_gamma->get_value() * HKL_DEGTORAD);
 
-		hkl_sample_set_U_from_euler(sample,
+		hkl_sample_set_U_from_euler(_sample,
 					    _spinbutton_ux->get_value() * HKL_DEGTORAD,
 					    _spinbutton_uy->get_value() * HKL_DEGTORAD,
 					    _spinbutton_uz->get_value() * HKL_DEGTORAD);
 
 		// set min/max
-		hkl_parameter_min_max_unit_set(sample->lattice->a,
+		hkl_parameter_min_max_unit_set(_sample->lattice->a,
 					       _spinbutton_a_min->get_value(),
 					       _spinbutton_a_max->get_value());
-		hkl_parameter_min_max_unit_set(sample->lattice->b,
+		hkl_parameter_min_max_unit_set(_sample->lattice->b,
 					       _spinbutton_b_min->get_value(),
 					       _spinbutton_b_max->get_value());
-		hkl_parameter_min_max_unit_set(sample->lattice->c,
+		hkl_parameter_min_max_unit_set(_sample->lattice->c,
 					       _spinbutton_c_min->get_value(),
 					       _spinbutton_c_max->get_value());
-		hkl_parameter_min_max_unit_set(sample->lattice->alpha,
+		hkl_parameter_min_max_unit_set(_sample->lattice->alpha,
 					       _spinbutton_alpha_min->get_value(),
 					       _spinbutton_alpha_max->get_value());
-		hkl_parameter_min_max_unit_set(sample->lattice->beta,
+		hkl_parameter_min_max_unit_set(_sample->lattice->beta,
 					       _spinbutton_beta_min->get_value(),
 					       _spinbutton_beta_max->get_value());
-		hkl_parameter_min_max_unit_set(sample->lattice->gamma,
+		hkl_parameter_min_max_unit_set(_sample->lattice->gamma,
 					       _spinbutton_gamma_min->get_value(),
 					       _spinbutton_gamma_max->get_value());
 
-		this->updateCrystalModel(sample);
+		this->updateCrystalModel(_sample);
 		this->updateReciprocalLattice();
 		this->updateUB();
 		this->updatePseudoAxes();
@@ -239,81 +236,72 @@ void HKLWindow::on_checkbutton_a_toggled(void)
 {
 	LOG;
 
-	HklSample *sample = _samples->current;
-	if(sample)
-		sample->lattice->a->fit = _checkbutton_a->get_active();
+	if(_sample)
+		_sample->lattice->a->fit = _checkbutton_a->get_active();
 }
 
 void HKLWindow::on_checkbutton_b_toggled(void)
 {
 	LOG;
 
-	HklSample *sample = _samples->current;
-	if(sample)
-		sample->lattice->b->fit = _checkbutton_b->get_active();
+	if(_sample)
+		_sample->lattice->b->fit = _checkbutton_b->get_active();
 }
 
 void HKLWindow::on_checkbutton_c_toggled(void)
 {
 	LOG;
 
-	HklSample *sample = _samples->current;
-	if(sample)
-		sample->lattice->c->fit = _checkbutton_c->get_active();
+	if(_sample)
+		_sample->lattice->c->fit = _checkbutton_c->get_active();
 }
 
 void HKLWindow::on_checkbutton_alpha_toggled(void)
 {
 	LOG;
 
-	HklSample *sample = _samples->current;
-	if(sample)
-		sample->lattice->alpha->fit = _checkbutton_alpha->get_active();
+	if(_sample)
+		_sample->lattice->alpha->fit = _checkbutton_alpha->get_active();
 }
 
 void HKLWindow::on_checkbutton_beta_toggled(void)
 {
 	LOG;
 
-	HklSample *sample = _samples->current;
-	if(sample)
-		sample->lattice->beta->fit = _checkbutton_beta->get_active();
+	if(_sample)
+		_sample->lattice->beta->fit = _checkbutton_beta->get_active();
 }
 
 void HKLWindow::on_checkbutton_gamma_toggled(void)
 {
 	LOG;
 
-	HklSample *sample = _samples->current;
-	if(sample)
-		sample->lattice->gamma->fit = _checkbutton_gamma->get_active();
+	if(_sample)
+		_sample->lattice->gamma->fit = _checkbutton_gamma->get_active();
 }
 
 void HKLWindow::on_checkbutton_Ux_toggled(void)
 {
 	LOG;
 
-	HklSample *sample = _samples->current;
-	if(sample)
-		sample->ux->fit = _checkbutton_Ux->get_active();
+	if(_sample)
+		_sample->ux->fit = _checkbutton_Ux->get_active();
 }
 
 void HKLWindow::on_checkbutton_Uy_toggled(void)
 {
 	LOG;
 
-	HklSample *sample = _samples->current;
-	if(sample)
-		sample->uy->fit = _checkbutton_Uy->get_active();
+	if(_sample)
+		_sample->uy->fit = _checkbutton_Uy->get_active();
 }
 
 void HKLWindow::on_checkbutton_Uz_toggled(void)
 {
 	LOG;
 
-	HklSample *sample = _samples->current;
-	if(sample)
-		sample->uz->fit = _checkbutton_Uz->get_active();
+	if(_sample)
+		_sample->uz->fit = _checkbutton_Uz->get_active();
 }
 
 void HKLWindow::on_cell_TreeView_axes_read_edited(Glib::ustring const & spath,
@@ -488,16 +476,18 @@ void HKLWindow::on_cell_TreeView_crystals_name_edited(Glib::ustring const & spat
 {
 	LOG;
 
-	HklSample *sample;
-
 	Gtk::TreePath path(spath);
 	Glib::RefPtr<Gtk::TreeModel> listStore = _treeViewCrystals->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
 	Glib::ustring name = row[_crystalModelColumns.name];
-	sample = hkl_sample_list_get_by_name(_samples, name.c_str());
-	if(sample){
+	std::map<std::string, HklSample *>::iterator it = _samples.find(name);
+	if (it != _samples.end()){
+		HklSample *sample = it->second;
+
 		hkl_sample_set_name(sample, newText.c_str());
+		_samples.erase(it);
+		_samples.insert(std::pair<std::string, HklSample *>(sample->name, sample));
 
 		this-> updateTreeViewCrystals();
 	}
@@ -508,15 +498,12 @@ void HKLWindow::on_cell_TreeView_reflections_h_edited(Glib::ustring const & spat
 {
 	LOG;
 
-	HklSample *sample;
-
 	Gtk::TreePath path(spath);
 	Glib::RefPtr<Gtk::TreeModel> listStore = _treeViewReflections->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
 
-	sample = _samples->current;
-	if(sample){
+	if(_sample){
 		int index;
 		double h;
 		double k;
@@ -524,7 +511,7 @@ void HKLWindow::on_cell_TreeView_reflections_h_edited(Glib::ustring const & spat
 		HklSampleReflection *reflection;
 
 		index = row[_reflectionModelColumns.index];
-		reflection = sample->reflections[index];
+		reflection = _sample->reflections[index];
 
 		sscanf(newText.c_str(), "%lf", &h);
 		k = reflection->hkl.data[1];
@@ -534,7 +521,7 @@ void HKLWindow::on_cell_TreeView_reflections_h_edited(Glib::ustring const & spat
 
 		row[_reflectionModelColumns.h] = h;
 		row[_reflectionModelColumns.flag] = reflection->flag;
-		this->updateCrystalModel(sample);
+		this->updateCrystalModel(_sample);
 	}
 }
 
@@ -543,15 +530,12 @@ void HKLWindow::on_cell_TreeView_reflections_k_edited(Glib::ustring const & spat
 {
 	LOG;
 
-	HklSample *sample;
-
 	Gtk::TreePath path(spath);
 	Glib::RefPtr<Gtk::TreeModel> listStore = _treeViewReflections->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
 
-	sample = _samples->current;
-	if(sample){
+	if(_sample){
 		int index;
 		double h;
 		double k;
@@ -560,7 +544,7 @@ void HKLWindow::on_cell_TreeView_reflections_k_edited(Glib::ustring const & spat
 
 
 		index = row[_reflectionModelColumns.index];
-		reflection = sample->reflections[index];
+		reflection = _sample->reflections[index];
 
 		h = reflection->hkl.data[0];
 		sscanf(newText.c_str(), "%lf", &k);
@@ -569,7 +553,7 @@ void HKLWindow::on_cell_TreeView_reflections_k_edited(Glib::ustring const & spat
 		hkl_sample_reflection_set_hkl(reflection, h, k, l);
 		row[_reflectionModelColumns.k] = k;
 		row[_reflectionModelColumns.flag] = reflection->flag;
-		this->updateCrystalModel(sample);
+		this->updateCrystalModel(_sample);
 	}
 }
 
@@ -578,15 +562,12 @@ void HKLWindow::on_cell_TreeView_reflections_l_edited(Glib::ustring const & spat
 {
 	LOG;
 
-	HklSample *sample;
-
 	Gtk::TreePath path(spath);
 	Glib::RefPtr<Gtk::TreeModel> listStore = _treeViewReflections->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
 
-	sample = _samples->current;
-	if(sample){
+	if(_sample){
 		int index;
 		double h;
 		double k;
@@ -594,7 +575,7 @@ void HKLWindow::on_cell_TreeView_reflections_l_edited(Glib::ustring const & spat
 		HklSampleReflection *reflection;
 
 		index = row[_reflectionModelColumns.index];
-		reflection = sample->reflections[index];
+		reflection = _sample->reflections[index];
 
 		h = reflection->hkl.data[0];
 		k = reflection->hkl.data[1];
@@ -602,7 +583,7 @@ void HKLWindow::on_cell_TreeView_reflections_l_edited(Glib::ustring const & spat
 		hkl_sample_reflection_set_hkl(reflection, h, k, l);
 		row[_reflectionModelColumns.l] = l;
 		row[_reflectionModelColumns.flag] = reflection->flag;
-		this->updateCrystalModel(sample);
+		this->updateCrystalModel(_sample);
 	}
 }
 
@@ -610,21 +591,18 @@ void HKLWindow::on_cell_TreeView_reflections_flag_toggled(Glib::ustring const & 
 {
 	LOG;
 
-	HklSample *sample;
-
 	Gtk::TreePath path(spath);
 	Glib::RefPtr<Gtk::TreeModel> listStore = _treeViewReflections->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
 
-	sample = _samples->current;
-	if(sample){
+	if(_sample){
 		int index;
 		int flag;
 		HklSampleReflection *reflection;
 
 		index = row[_reflectionModelColumns.index];
-		reflection = sample->reflections[index];
+		reflection = _sample->reflections[index];
 		flag = !reflection->flag;
 		hkl_sample_reflection_set_flag(reflection, flag);
 		row[_reflectionModelColumns.flag] = flag;
@@ -635,17 +613,14 @@ void HKLWindow::on_toolbutton_add_reflection_clicked(void)
 {
 	LOG;
 
-	HklSample *sample;
-
-	sample=_samples->current;
-	if(sample){
+	if(_sample){
 		double h;
 		double k;
 		double l;
 
-		hkl_sample_add_reflection(sample, _geometry, _detector, h, k, l);
+		hkl_sample_add_reflection(_sample, _geometry, _detector, h, k, l);
 
-		this->updateReflections(sample, _mapReflectionModel[sample->name]);
+		this->updateReflections(_sample, _mapReflectionModel[_sample->name]);
 	}
 }
 
@@ -653,21 +628,18 @@ void HKLWindow::on_toolbutton_goto_reflection_clicked(void)
 {
 	LOG;
 
-	HklSample *sample;
-
-	sample = _samples->current;
-	if(sample){
+	if(_sample){
 		Glib::RefPtr<Gtk::TreeSelection> selection = _treeViewReflections->get_selection();
 		unsigned int nb_rows = selection->count_selected_rows();
 		if (nb_rows == 1){
 			Gtk::TreeSelection::ListHandle_Path list_path = selection->get_selected_rows();
 			Gtk::TreePath path = *(list_path.begin());
-			Glib::RefPtr<Gtk::ListStore> liststore = _mapReflectionModel[sample->name];
+			Glib::RefPtr<Gtk::ListStore> liststore = _mapReflectionModel[_sample->name];
 			Gtk::ListStore::Row row = *(liststore->get_iter(path));
 			unsigned int index = row[_reflectionModelColumns.index];
 
 			hkl_geometry_set(this->_geometry,
-					 sample->reflections[index]->geometry);
+					 _sample->reflections[index]->geometry);
 
 			this->updateSource();
 			this->updateAxes();
@@ -691,17 +663,14 @@ void HKLWindow::on_toolbutton_del_reflection_clicked(void)
 {
 	LOG;
 
-	HklSample * sample;
-
-	sample = _samples->current;
-	if(sample){
+	if(_sample){
 		Glib::RefPtr<Gtk::TreeSelection> selection = _treeViewReflections->get_selection();
 		unsigned int nb_rows = selection->count_selected_rows();
 		if (nb_rows){
 			Gtk::TreeSelection::ListHandle_Path list = selection->get_selected_rows();
 			Gtk::TreeSelection::ListHandle_Path::iterator iter = list.begin();
 			Gtk::TreeSelection::ListHandle_Path::iterator last = list.end();
-			Glib::RefPtr<Gtk::ListStore> liststore = _mapReflectionModel[sample->name];
+			Glib::RefPtr<Gtk::ListStore> liststore = _mapReflectionModel[_sample->name];
 			// fill indexes with the reflections index
 			std::vector<unsigned int> indexes;
 			while(iter != last){
@@ -725,9 +694,9 @@ void HKLWindow::on_toolbutton_del_reflection_clicked(void)
 				for(unsigned int i=0;i<indexes.size();i++){
 					// compute the correct index of the reflection
 					unsigned int index = indexes[i] - i;
-					hkl_sample_del_reflection(sample, index);
+					hkl_sample_del_reflection(_sample, index);
 				}
-				this->updateReflections(sample, liststore);
+				this->updateReflections(_sample, liststore);
 				break;
 			}
 			delete _message;
@@ -739,8 +708,7 @@ void HKLWindow::on_toolbutton_setUB_clicked(void)
 {
 	LOG;
 
-	HklSample *sample = _samples->current;
-	if(sample){
+	if(_sample){
 		HklMatrix UB;
 
 		UB.data[0][0] = _spinbutton_U11->get_value();
@@ -753,13 +721,13 @@ void HKLWindow::on_toolbutton_setUB_clicked(void)
 		UB.data[2][1] = _spinbutton_U32->get_value();
 		UB.data[2][2] = _spinbutton_U33->get_value();
 
-		hkl_sample_set_UB(sample, &UB);
-		hkl_sample_fprintf(stdout, sample);
+		hkl_sample_set_UB(_sample, &UB);
+		hkl_sample_fprintf(stdout, _sample);
 
 		this->updateLattice();
 		this->updateLatticeParameters();
 		this->updateReciprocalLattice();
-		this->updateCrystalModel(_samples->current);
+		this->updateCrystalModel(_sample);
 		this->updateUB();
 		this->updateUxUyUz();
 		this->updatePseudoAxes();
@@ -771,9 +739,8 @@ void HKLWindow::on_toolbutton_computeUB_clicked(void)
 {
 	LOG;
 
-	HklSample *sample = _samples->current;
-	if(sample){
-		hkl_sample_compute_UB_busing_levy(sample, 0, 1);
+	if(_sample){
+		hkl_sample_compute_UB_busing_levy(_sample, 0, 1);
 		this->updateUB();
 		this->updateUxUyUz();
 		this->updatePseudoAxes();
@@ -785,10 +752,9 @@ void HKLWindow::on_toolbutton_add_crystal_clicked(void)
 {
 	LOG;
 
-	HklSample *sample = hkl_sample_new("new_sample", HKL_SAMPLE_TYPE_MONOCRYSTAL);
-	if(sample){
-		hkl_sample_list_append(_samples, sample);
-		hkl_sample_list_select_current(_samples, "new_sample");
+	_sample = hkl_sample_new("new_sample", HKL_SAMPLE_TYPE_MONOCRYSTAL);
+	if(_sample){
+		_samples.insert(std::pair<std::string, HklSample *>(_sample->name, _sample));
 		this->updateTreeViewCrystals();
 
 		// activate for edition the name of the new crystal
@@ -806,17 +772,17 @@ void HKLWindow::on_toolbutton_copy_crystal_clicked(void)
 
 	Glib::ustring name;
 	Glib::ustring newname;
-	HklSample *old_sample = _samples->current;
+	HklSample *old_sample = _sample;
 	HklSample *sample;
 	if(!old_sample){
 		_statusBar->push("Please select a crystal to copy.");
 		return;
 	}
 
-	sample = hkl_sample_new_copy(_samples->current);
+	sample = hkl_sample_new_copy(_sample);
 	hkl_sample_set_name(sample, "copy");
-	hkl_sample_list_append(_samples, sample);
-	hkl_sample_list_select_current(_samples, "copy");
+	_samples.insert(std::pair<std::string, HklSample *>(sample->name, sample));
+	_sample = sample;
 	this->updateTreeViewCrystals();
 
 	// activate for edition the name of the new crystal
@@ -831,10 +797,8 @@ void HKLWindow::on_toolbutton_del_crystal_clicked(void)
 {
 	LOG;
 
-	if(_samples->current){
-		hkl_sample_list_del(_samples, _samples->current);
-		this->updateTreeViewCrystals();
-	}
+	_samples.erase(_samples.find(_sample->name));
+	this->updateTreeViewCrystals();
 }
 
 void HKLWindow::on_toolbutton_affiner_clicked(void)
@@ -843,11 +807,10 @@ void HKLWindow::on_toolbutton_affiner_clicked(void)
 
 	Glib::ustring name;
 	Glib::ustring method;
-	HklSample *sample = _samples->current;
-	if(sample)
-		hkl_sample_affine(sample);
+	if(_sample)
+		hkl_sample_affine(_sample);
 
-	this->updateCrystalModel(_samples->current);
+	this->updateCrystalModel(_sample);
 	this->updateLattice();
 	this->updateReciprocalLattice();
 	this->updateUB();
@@ -955,7 +918,7 @@ void HKLWindow::on_combobox1_changed(void)
 	if(_engines)
 		hkl_engine_list_free(_engines);
 	_engines = hkl_factory_create_new_engine_list(factories[idx]);
-	hkl_engine_list_init(_engines, _geometry, _detector, _samples->current);
+	hkl_engine_list_init(_engines, _geometry, _detector, _sample);
 
 	this->set_up_pseudo_axes_frames();
 	this->set_up_TreeView_axes();

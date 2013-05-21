@@ -362,83 +362,9 @@ static void reflection_set_geometry(void)
 	hkl_geometry_free(geometry);
 }
 
-static void list_new(void)
-{
-	HklSampleList *samples;
-
-	samples = hkl_sample_list_new();
-
-	hkl_sample_list_free(samples);
-}
-
-static void list_append_sample(void)
-{
-	HklSampleList *samples;
-	HklSample *sample1;
-	HklSample *sample2;
-
-	samples = hkl_sample_list_new();
-	sample1 = hkl_sample_new("test1", HKL_SAMPLE_TYPE_MONOCRYSTAL);
-	sample2 = hkl_sample_new("test2", HKL_SAMPLE_TYPE_MONOCRYSTAL);
-
-	ok(sample1 == hkl_sample_list_append(samples, sample1), __func__);
-	is_int(0, hkl_sample_list_get_idx_from_name(samples, "test1"), __func__);
-
-	ok(sample2 == hkl_sample_list_append(samples, sample2), __func__);
-	is_int(0, hkl_sample_list_get_idx_from_name(samples, "test1"), __func__);
-	is_int(1, hkl_sample_list_get_idx_from_name(samples, "test2"), __func__);
-
-	/* can not have two samples with the same name. */
-	ok(NULL == hkl_sample_list_append(samples, sample1), __func__);
-
-	/* also relase sample1 and sample2 */
-	hkl_sample_list_free(samples);
-}
-
-static void list_select_current(void)
-{
-	HklSampleList *samples;
-	HklSample *sample;
-
-	samples = hkl_sample_list_new();
-	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
-
-	hkl_sample_list_append(samples, sample);
-
-	ok(HKL_TRUE == hkl_sample_list_select_current(samples, "test"), __func__);
-	ok(HKL_FALSE == hkl_sample_list_select_current(samples, "tests"), __func__);
-
-	/* also relase sample */
-	hkl_sample_list_free(samples);
-}
-
-static void list_clear(void)
-{
-	size_t i;
-	HklSampleList *samples;
-	HklSample *sample1;
-	HklSample *sample2;
-
-	samples = hkl_sample_list_new();
-	for(i=0; i<2; ++i){
-		/* two times to see if the clear has no side effect */
-		sample1 = hkl_sample_new("test1", HKL_SAMPLE_TYPE_MONOCRYSTAL);
-		sample2 = hkl_sample_new("test2", HKL_SAMPLE_TYPE_MONOCRYSTAL);
-
-		hkl_sample_list_append(samples, sample1);
-		hkl_sample_list_append(samples, sample2);
-		hkl_sample_list_clear(samples);
-
-		ok(0 == hkl_sample_list_len(samples), __func__);
-	}
-
-	/* also release sample1 and sample2 */
-	hkl_sample_list_free(samples);
-}
-
 int main(int argc, char** argv)
 {
-	plan(50);
+	plan(40);
 
 	new();
 	add_reflection();
@@ -450,11 +376,6 @@ int main(int argc, char** argv)
 	get_reflections_xxx_angle();
 
 	reflection_set_geometry();
-
-	list_new();
-	list_append_sample();
-	list_select_current();
-	list_clear();
 
 	return 0;
 }
