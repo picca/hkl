@@ -336,7 +336,7 @@ static void reflection_set_geometry(void)
 
 	/* correct the last reflection so the sample affinement must be ok. */
 	hkl_geometry_set_values_unit_v(geometry, 45., 45., 45., 60.);
-	hkl_sample_reflection_set_geometry(ref, geometry);
+	hkl_sample_reflection_geometry_set(ref, geometry);
 
 	hkl_sample_affine(sample);
 

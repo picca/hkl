@@ -896,14 +896,17 @@ void HKLWindow::updateReflections(const HklSample *sample,
 	listStore->clear();
 	Gtk::ListStore::Row row;
 	for(i=0; i<sample->reflections_len; ++i){
+		double h, k, l;
+
 		HklSampleReflection *reflection = sample->reflections[i];
+		hkl_sample_reflection_hkl_get(reflection, &h, &k, &l);
 
 		row = *(listStore->append());
 		row[_reflectionModelColumns.index] = i;
-		row[_reflectionModelColumns.h] = reflection->hkl.data[0];
-		row[_reflectionModelColumns.k] = reflection->hkl.data[1];
-		row[_reflectionModelColumns.l] = reflection->hkl.data[2];
-		row[_reflectionModelColumns.flag] = reflection->flag;
+		row[_reflectionModelColumns.h] = h;
+		row[_reflectionModelColumns.k] = k;
+		row[_reflectionModelColumns.l] = l;
+		row[_reflectionModelColumns.flag] = hkl_sample_reflection_flag_get(reflection);
 	}
 }
 

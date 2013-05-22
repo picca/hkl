@@ -22,6 +22,8 @@
 #ifndef __HKL_SAMPLE_H__
 #define __HKL_SAMPLE_H__
 
+#include <stdbool.h>
+
 #include <hkl/ccan/darray/darray.h>
 #include <hkl/hkl-lattice.h>
 #include <hkl/hkl-geometry.h>
@@ -48,14 +50,6 @@ struct _HklSample {
 	HklParameter *uz;
 	HklSampleReflection **reflections;
 	size_t reflections_len;
-};
-
-struct _HklSampleReflection {
-	HklGeometry *geometry;
-	HklDetector *detector;
-	HklVector hkl;
-	HklVector _hkl;
-	int flag;
 };
 
 /*************/
@@ -109,19 +103,28 @@ extern void hkl_sample_fprintf(FILE *f, const HklSample *self);
 /* hklSampleReflection */
 /***********************/
 
-extern HklSampleReflection *hkl_sample_reflection_new(HklGeometry *geometry,
-						      const HklDetector *detector,
-						      double h, double k, double l);
+/* extern HklSampleReflection *hkl_sample_reflection_new(HklGeometry *geometry, */
+/* 						      const HklDetector *detector, */
+/* 						      double h, double k, double l); */
 
-extern HklSampleReflection *hkl_sample_reflection_new_copy(const HklSampleReflection *self);
+/* extern HklSampleReflection *hkl_sample_reflection_new_copy(const HklSampleReflection *self); */
 
-extern void hkl_sample_reflection_free(HklSampleReflection *self);
+/* extern void hkl_sample_reflection_free(HklSampleReflection *self); */
 
-extern void hkl_sample_reflection_set_hkl(HklSampleReflection *self, double h, double k, double l);
+HKLAPI void hkl_sample_reflection_hkl_get(const HklSampleReflection *self,
+					  double *h, double *k, double *l) HKL_ARG_NONNULL(1, 2, 3, 4);
 
-extern void hkl_sample_reflection_set_flag(HklSampleReflection *self, int flag);
+HKLAPI void hkl_sample_reflection_hkl_set(HklSampleReflection *self,
+					  double h, double k, double l) HKL_ARG_NONNULL(1);
 
-extern void hkl_sample_reflection_set_geometry(HklSampleReflection *self, HklGeometry *geometry);
+HKLAPI bool hkl_sample_reflection_flag_get(const HklSampleReflection *self) HKL_ARG_NONNULL(1);
+
+HKLAPI void hkl_sample_reflection_flag_set(HklSampleReflection *self, bool flag) HKL_ARG_NONNULL(1);
+
+HKLAPI HklGeometry *hkl_sample_reflection_geometry_get(HklSampleReflection *self) HKL_ARG_NONNULL(1);
+
+HKLAPI void hkl_sample_reflection_geometry_set(HklSampleReflection *self,
+					       const HklGeometry *geometry) HKL_ARG_NONNULL(1, 2);
 
 HKL_END_DECLS
 

@@ -792,7 +792,24 @@ void hkl_sample_reflection_free(HklSampleReflection *self)
 }
 
 /**
- * hkl_sample_reflection_set_hkl: (skip)
+ * hkl_sample_reflection_hkl_get: (skip)
+ * @self:
+ * @h:
+ * @k:
+ * @l:
+ *
+ * get the hkl value of the reflection
+ **/
+void hkl_sample_reflection_hkl_get(const HklSampleReflection *self,
+				   double *h, double *k, double *l)
+{
+	*h = self->hkl.data[0];
+	*k = self->hkl.data[1];
+	*l = self->hkl.data[2];
+}
+
+/**
+ * hkl_sample_reflection_hkl_set: (skip)
  * @self:
  * @h:
  * @k:
@@ -800,10 +817,9 @@ void hkl_sample_reflection_free(HklSampleReflection *self)
  *
  * set the hkl value of the reflection
  **/
-void hkl_sample_reflection_set_hkl(HklSampleReflection *self, double h, double k, double l)
+void hkl_sample_reflection_hkl_set(HklSampleReflection *self, double h, double k, double l)
 {
-	if(!self
-	   || (fabs(h) + fabs(k) + fabs(l) < HKL_EPSILON))
+	if((fabs(h) + fabs(k) + fabs(l) < HKL_EPSILON))
 		return;
 
 	self->hkl.data[0] = h;
@@ -812,31 +828,49 @@ void hkl_sample_reflection_set_hkl(HklSampleReflection *self, double h, double k
 }
 
 /**
- * hkl_sample_reflection_set_flag: (skip)
+ * hkl_sample_reflection_flag_get: (skip)
+ * @self:
+ *
+ * get the flag of the reflection
+ **/
+bool hkl_sample_reflection_flag_get(const HklSampleReflection *self)
+{
+	return self->flag;
+}
+
+/**
+ * hkl_sample_reflection_flag_set: (skip)
  * @self:
  * @flag:
  *
  * set the flag of the reglection
  **/
-void hkl_sample_reflection_set_flag(HklSampleReflection *self, int flag)
+void hkl_sample_reflection_flag_set(HklSampleReflection *self, bool flag)
 {
-	if(!self)
-		return;
 	self->flag = flag;
 }
 
 /**
- * hkl_sample_reflection_set_geometry: (skip)
+ * hkl_sample_reflection_geometry_get: (skip)
+ * @self:
+ *
+ * set the geometry of the reflection
+ **/
+HklGeometry *hkl_sample_reflection_geometry_get(HklSampleReflection *self)
+{
+	return self->geometry;
+}
+
+/**
+ * hkl_sample_reflection_geometry_set: (skip)
  * @self:
  * @geometry:
  *
  * set the geometry of the reflection
  **/
-void hkl_sample_reflection_set_geometry(HklSampleReflection *self, HklGeometry *geometry)
+void hkl_sample_reflection_geometry_set(HklSampleReflection *self,
+					const HklGeometry *geometry)
 {
-	if(!self || !geometry)
-		return;
-
 	if(self->geometry){
 		if(self->geometry != geometry){
 			hkl_geometry_free(self->geometry);

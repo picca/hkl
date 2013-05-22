@@ -2721,65 +2721,12 @@ todo tests</doc>
             glib:type-name="HklSampleReflection"
             glib:get-type="hkl_sample_reflection_get_type"
             c:symbol-prefix="sample_reflection">
-      <field name="geometry" writable="1">
-        <type name="Geometry" c:type="HklGeometry*"/>
-      </field>
-      <field name="detector" writable="1">
-        <type name="Detector" c:type="HklDetector*"/>
-      </field>
-      <field name="hkl" writable="1">
-        <type name="Vector" c:type="HklVector"/>
-      </field>
-      <field name="_hkl" writable="1">
-        <type name="Vector" c:type="HklVector"/>
-      </field>
-      <field name="flag" writable="1">
-        <type name="gint" c:type="int"/>
-      </field>
-      <constructor name="new"
-                   c:identifier="hkl_sample_reflection_new"
-                   introspectable="0">
-        <doc xml:whitespace="preserve">constructeur</doc>
-        <return-value transfer-ownership="full">
-          <type name="SampleReflection" c:type="HklSampleReflection*"/>
-        </return-value>
-        <parameters>
-          <parameter name="geometry" transfer-ownership="none">
-            <type name="Geometry" c:type="HklGeometry*"/>
-          </parameter>
-          <parameter name="detector" transfer-ownership="none">
-            <type name="Detector" c:type="const HklDetector*"/>
-          </parameter>
-          <parameter name="h" transfer-ownership="none">
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-          <parameter name="k" transfer-ownership="none">
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-          <parameter name="l" transfer-ownership="none">
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-        </parameters>
-      </constructor>
-      <method name="free"
-              c:identifier="hkl_sample_reflection_free"
+      <method name="flag_get"
+              c:identifier="hkl_sample_reflection_flag_get"
               introspectable="0">
-        <doc xml:whitespace="preserve">destructor</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <type name="SampleReflection" c:type="HklSampleReflection*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
-      <method name="new_copy"
-              c:identifier="hkl_sample_reflection_new_copy"
-              introspectable="0">
-        <doc xml:whitespace="preserve">copy constructor</doc>
-        <return-value transfer-ownership="full">
-          <type name="SampleReflection" c:type="HklSampleReflection*"/>
+        <doc xml:whitespace="preserve">get the flag of the reflection</doc>
+        <return-value>
+          <type c:type="bool"/>
         </return-value>
         <parameters>
           <instance-parameter name="self" transfer-ownership="none">
@@ -2787,8 +2734,8 @@ todo tests</doc>
           </instance-parameter>
         </parameters>
       </method>
-      <method name="set_flag"
-              c:identifier="hkl_sample_reflection_set_flag"
+      <method name="flag_set"
+              c:identifier="hkl_sample_reflection_flag_set"
               introspectable="0">
         <doc xml:whitespace="preserve">set the flag of the reglection</doc>
         <return-value transfer-ownership="none">
@@ -2799,12 +2746,25 @@ todo tests</doc>
             <type name="SampleReflection" c:type="HklSampleReflection*"/>
           </instance-parameter>
           <parameter name="flag" transfer-ownership="none">
-            <type name="gint" c:type="int"/>
+            <type c:type="bool"/>
           </parameter>
         </parameters>
       </method>
-      <method name="set_geometry"
-              c:identifier="hkl_sample_reflection_set_geometry"
+      <method name="geometry_get"
+              c:identifier="hkl_sample_reflection_geometry_get"
+              introspectable="0">
+        <doc xml:whitespace="preserve">set the geometry of the reflection</doc>
+        <return-value transfer-ownership="full">
+          <type name="Geometry" c:type="HklGeometry*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="SampleReflection" c:type="HklSampleReflection*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="geometry_set"
+              c:identifier="hkl_sample_reflection_geometry_set"
               introspectable="0">
         <doc xml:whitespace="preserve">set the geometry of the reflection</doc>
         <return-value transfer-ownership="none">
@@ -2815,12 +2775,34 @@ todo tests</doc>
             <type name="SampleReflection" c:type="HklSampleReflection*"/>
           </instance-parameter>
           <parameter name="geometry" transfer-ownership="none">
-            <type name="Geometry" c:type="HklGeometry*"/>
+            <type name="Geometry" c:type="const HklGeometry*"/>
           </parameter>
         </parameters>
       </method>
-      <method name="set_hkl"
-              c:identifier="hkl_sample_reflection_set_hkl"
+      <method name="hkl_get"
+              c:identifier="hkl_sample_reflection_hkl_get"
+              introspectable="0">
+        <doc xml:whitespace="preserve">get the hkl value of the reflection</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="SampleReflection" c:type="const HklSampleReflection*"/>
+          </instance-parameter>
+          <parameter name="h" transfer-ownership="none">
+            <type name="gdouble" c:type="double*"/>
+          </parameter>
+          <parameter name="k" transfer-ownership="none">
+            <type name="gdouble" c:type="double*"/>
+          </parameter>
+          <parameter name="l" transfer-ownership="none">
+            <type name="gdouble" c:type="double*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="hkl_set"
+              c:identifier="hkl_sample_reflection_hkl_set"
               introspectable="0">
         <doc xml:whitespace="preserve">set the hkl value of the reflection</doc>
         <return-value transfer-ownership="none">

@@ -80,6 +80,14 @@ extern void hkl_sample_fprintf(FILE *f, const HklSample *self);
 /* hklSampleReflection */
 /***********************/
 
+struct _HklSampleReflection {
+	HklGeometry *geometry;
+	HklDetector *detector;
+	HklVector hkl;
+	HklVector _hkl;
+	int flag;
+};
+
 extern HklSampleReflection *hkl_sample_reflection_new(HklGeometry *geometry,
 						      const HklDetector *detector,
 						      double h, double k, double l);
@@ -87,12 +95,6 @@ extern HklSampleReflection *hkl_sample_reflection_new(HklGeometry *geometry,
 extern HklSampleReflection *hkl_sample_reflection_new_copy(const HklSampleReflection *self);
 
 extern void hkl_sample_reflection_free(HklSampleReflection *self);
-
-extern void hkl_sample_reflection_set_hkl(HklSampleReflection *self, double h, double k, double l);
-
-extern void hkl_sample_reflection_set_flag(HklSampleReflection *self, int flag);
-
-extern void hkl_sample_reflection_set_geometry(HklSampleReflection *self, HklGeometry *geometry);
 
 HKL_END_DECLS
 

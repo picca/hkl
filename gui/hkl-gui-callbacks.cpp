@@ -513,14 +513,13 @@ void HKLWindow::on_cell_TreeView_reflections_h_edited(Glib::ustring const & spat
 		index = row[_reflectionModelColumns.index];
 		reflection = _sample->reflections[index];
 
+		hkl_sample_reflection_hkl_get(reflection, &h, &k, &l);
 		sscanf(newText.c_str(), "%lf", &h);
-		k = reflection->hkl.data[1];
-		l = reflection->hkl.data[2];
-
-		hkl_sample_reflection_set_hkl(reflection, h, k, l);
-
+		hkl_sample_reflection_hkl_set(reflection, h, k, l);
 		row[_reflectionModelColumns.h] = h;
-		row[_reflectionModelColumns.flag] = reflection->flag;
+
+		row[_reflectionModelColumns.flag] = hkl_sample_reflection_flag_get(reflection);
+
 		this->updateCrystalModel(_sample);
 	}
 }
@@ -546,13 +545,12 @@ void HKLWindow::on_cell_TreeView_reflections_k_edited(Glib::ustring const & spat
 		index = row[_reflectionModelColumns.index];
 		reflection = _sample->reflections[index];
 
-		h = reflection->hkl.data[0];
+		hkl_sample_reflection_hkl_get(reflection, &h, &k, &l);
 		sscanf(newText.c_str(), "%lf", &k);
-		l = reflection->hkl.data[2];
-
-		hkl_sample_reflection_set_hkl(reflection, h, k, l);
+		hkl_sample_reflection_hkl_set(reflection, h, k, l);
 		row[_reflectionModelColumns.k] = k;
-		row[_reflectionModelColumns.flag] = reflection->flag;
+
+		row[_reflectionModelColumns.flag] = hkl_sample_reflection_flag_get(reflection);
 		this->updateCrystalModel(_sample);
 	}
 }
@@ -577,12 +575,13 @@ void HKLWindow::on_cell_TreeView_reflections_l_edited(Glib::ustring const & spat
 		index = row[_reflectionModelColumns.index];
 		reflection = _sample->reflections[index];
 
-		h = reflection->hkl.data[0];
-		k = reflection->hkl.data[1];
+		hkl_sample_reflection_hkl_get(reflection, &h, &k, &l);
 		sscanf(newText.c_str(), "%lf", &l);
-		hkl_sample_reflection_set_hkl(reflection, h, k, l);
+		hkl_sample_reflection_hkl_set(reflection, h, k, l);
 		row[_reflectionModelColumns.l] = l;
-		row[_reflectionModelColumns.flag] = reflection->flag;
+
+		row[_reflectionModelColumns.flag] = hkl_sample_reflection_flag_get(reflection);
+
 		this->updateCrystalModel(_sample);
 	}
 }
@@ -603,8 +602,8 @@ void HKLWindow::on_cell_TreeView_reflections_flag_toggled(Glib::ustring const & 
 
 		index = row[_reflectionModelColumns.index];
 		reflection = _sample->reflections[index];
-		flag = !reflection->flag;
-		hkl_sample_reflection_set_flag(reflection, flag);
+		flag = !hkl_sample_reflection_flag_get(reflection);
+		hkl_sample_reflection_flag_set(reflection, flag);
 		row[_reflectionModelColumns.flag] = flag;
 	}
 }
@@ -639,7 +638,7 @@ void HKLWindow::on_toolbutton_goto_reflection_clicked(void)
 			unsigned int index = row[_reflectionModelColumns.index];
 
 			hkl_geometry_set(this->_geometry,
-					 _sample->reflections[index]->geometry);
+					 hkl_sample_reflection_geometry_get(_sample->reflections[index]));
 
 			this->updateSource();
 			this->updateAxes();
