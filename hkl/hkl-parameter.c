@@ -271,6 +271,31 @@ void hkl_parameter_min_max_unit_set(HklParameter *self, double min, double max)
 }
 
 /**
+ * hkl_parameter_fit_get:
+ * @self: the this ptr
+ *
+ * Retuen value: the #HklParameter fit value, True is the parameter can be fitted, not otherwise
+ * @todo test
+ **/
+bool hkl_parameter_fit_get(const HklParameter *self)
+{
+	return self->fit;
+}
+
+/**
+ * hkl_parameter_fit_set:
+ * @self: the this ptr
+ * @fit: the fit value to set
+ *
+ * set the #HklParameter fit value, True is the parameter can be fitted, not otherwise
+ * @todo test
+ **/
+void hkl_parameter_fit_set(HklParameter *self, bool fit)
+{
+	self->fit = fit;
+}
+
+/**
  * hkl_parameter_randomize: (skip)
  * @self:
  *

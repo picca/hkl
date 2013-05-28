@@ -31,6 +31,7 @@
 
 #include "hkl-gui-pseudoaxes.h"
 #include "hkl-gui-modelcolumns.h"
+#include "hkl-lattice.h"
 
 #ifdef HKL3D
 # include "hkl-gui-3d.h"

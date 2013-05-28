@@ -24,33 +24,19 @@
 
 #include <stdbool.h>
 
-#include <hkl/ccan/darray/darray.h>
-#include <hkl/hkl-lattice.h>
-#include <hkl/hkl-geometry.h>
 #include <hkl/hkl-detector.h>
+#include <hkl/hkl-geometry.h>
+#include <hkl/hkl-lattice.h>
+#include <hkl/hkl-matrix.h>
 
 HKL_BEGIN_DECLS
 
 typedef struct _HklSample HklSample;
 typedef struct _HklSampleReflection HklSampleReflection;
-
 typedef enum _HklSampleType
 {
 	HKL_SAMPLE_TYPE_MONOCRYSTAL
 } HklSampleType;
-
-struct _HklSample {
-	char *name;
-	HklSampleType type;
-	HklLattice *lattice;
-	HklMatrix U;
-	HklMatrix UB;
-	HklParameter *ux;
-	HklParameter *uy;
-	HklParameter *uz;
-	HklSampleReflection **reflections;
-	size_t reflections_len;
-};
 
 /*************/
 /* HklSample */
@@ -62,11 +48,24 @@ extern HklSample *hkl_sample_new_copy(const HklSample *self);
 
 extern void hkl_sample_free(HklSample *self);
 
+HKLAPI const char *hkl_sample_name_get(const HklSample *self) HKL_ARG_NONNULL(1);
+
 extern void hkl_sample_set_name(HklSample *self, const char *name);
+
+HKLAPI HklLattice *hkl_sample_lattice_get(HklSample *self) HKL_ARG_NONNULL(1);
 
 extern int hkl_sample_set_lattice(HklSample *self,
 				  double a, double b, double c,
 				  double alpha, double beta, double gamma);
+
+HKLAPI HklParameter *hkl_sample_ux_get(const HklSample *self) HKL_ARG_NONNULL(1);
+HKLAPI HklParameter *hkl_sample_uy_get(const HklSample *self) HKL_ARG_NONNULL(1);
+HKLAPI HklParameter *hkl_sample_uz_get(const HklSample *self) HKL_ARG_NONNULL(1);
+HKLAPI void hkl_sample_ux_set(HklSample *self, const HklParameter *ux) HKL_ARG_NONNULL(1, 2);
+HKLAPI void hkl_sample_uy_set(HklSample *self, const HklParameter *uy) HKL_ARG_NONNULL(1, 2);
+HKLAPI void hkl_sample_uz_set(HklSample *self, const HklParameter *uz) HKL_ARG_NONNULL(1, 2);
+
+HKLAPI const HklMatrix *hkl_sample_U_get(const HklSample *) HKL_ARG_NONNULL(1);
 
 extern int hkl_sample_set_U_from_euler(HklSample *self,
 				       double x, double y, double z);
@@ -74,6 +73,8 @@ extern int hkl_sample_set_U_from_euler(HklSample *self,
 extern void hkl_sample_get_UB(HklSample *self, HklMatrix *UB);
 
 extern double hkl_sample_set_UB(HklSample *self, const HklMatrix *UB);
+
+extern int hkl_sample_reflections_len(const HklSample *self);
 
 extern HklSampleReflection *hkl_sample_add_reflection(HklSample *self,
 						      HklGeometry *geometry,
@@ -102,14 +103,6 @@ extern void hkl_sample_fprintf(FILE *f, const HklSample *self);
 /***********************/
 /* hklSampleReflection */
 /***********************/
-
-/* extern HklSampleReflection *hkl_sample_reflection_new(HklGeometry *geometry, */
-/* 						      const HklDetector *detector, */
-/* 						      double h, double k, double l); */
-
-/* extern HklSampleReflection *hkl_sample_reflection_new_copy(const HklSampleReflection *self); */
-
-/* extern void hkl_sample_reflection_free(HklSampleReflection *self); */
 
 HKLAPI void hkl_sample_reflection_hkl_get(const HklSampleReflection *self,
 					  double *h, double *k, double *l) HKL_ARG_NONNULL(1, 2, 3, 4);

@@ -191,6 +191,8 @@ void HKLWindow::on_button2_clicked(void)
 	LOG;
 
 	if(_sample){
+		HklLattice *lattice = hkl_sample_lattice_get(_sample);
+
 		hkl_sample_set_lattice(_sample,
 				       _spinbutton_a->get_value(),
 				       _spinbutton_b->get_value(),
@@ -205,22 +207,22 @@ void HKLWindow::on_button2_clicked(void)
 					    _spinbutton_uz->get_value() * HKL_DEGTORAD);
 
 		// set min/max
-		hkl_parameter_min_max_unit_set(_sample->lattice->a,
+		hkl_parameter_min_max_unit_set(lattice->a,
 					       _spinbutton_a_min->get_value(),
 					       _spinbutton_a_max->get_value());
-		hkl_parameter_min_max_unit_set(_sample->lattice->b,
+		hkl_parameter_min_max_unit_set(lattice->b,
 					       _spinbutton_b_min->get_value(),
 					       _spinbutton_b_max->get_value());
-		hkl_parameter_min_max_unit_set(_sample->lattice->c,
+		hkl_parameter_min_max_unit_set(lattice->c,
 					       _spinbutton_c_min->get_value(),
 					       _spinbutton_c_max->get_value());
-		hkl_parameter_min_max_unit_set(_sample->lattice->alpha,
+		hkl_parameter_min_max_unit_set(lattice->alpha,
 					       _spinbutton_alpha_min->get_value(),
 					       _spinbutton_alpha_max->get_value());
-		hkl_parameter_min_max_unit_set(_sample->lattice->beta,
+		hkl_parameter_min_max_unit_set(lattice->beta,
 					       _spinbutton_beta_min->get_value(),
 					       _spinbutton_beta_max->get_value());
-		hkl_parameter_min_max_unit_set(_sample->lattice->gamma,
+		hkl_parameter_min_max_unit_set(lattice->gamma,
 					       _spinbutton_gamma_min->get_value(),
 					       _spinbutton_gamma_max->get_value());
 
@@ -236,72 +238,90 @@ void HKLWindow::on_checkbutton_a_toggled(void)
 {
 	LOG;
 
-	if(_sample)
-		_sample->lattice->a->fit = _checkbutton_a->get_active();
+	if(_sample){
+		HklLattice *lattice = hkl_sample_lattice_get(_sample);
+		hkl_parameter_fit_set(lattice->a, _checkbutton_a->get_active());
+	}
 }
 
 void HKLWindow::on_checkbutton_b_toggled(void)
 {
 	LOG;
 
-	if(_sample)
-		_sample->lattice->b->fit = _checkbutton_b->get_active();
+	if(_sample){
+		HklLattice *lattice = hkl_sample_lattice_get(_sample);
+		hkl_parameter_fit_set(lattice->b, _checkbutton_b->get_active());
+	}
 }
 
 void HKLWindow::on_checkbutton_c_toggled(void)
 {
 	LOG;
 
-	if(_sample)
-		_sample->lattice->c->fit = _checkbutton_c->get_active();
+	if(_sample){
+		HklLattice *lattice = hkl_sample_lattice_get(_sample);
+		hkl_parameter_fit_set(lattice->c, _checkbutton_c->get_active());
+	}
 }
 
 void HKLWindow::on_checkbutton_alpha_toggled(void)
 {
 	LOG;
 
-	if(_sample)
-		_sample->lattice->alpha->fit = _checkbutton_alpha->get_active();
+	if(_sample){
+		HklLattice *lattice = hkl_sample_lattice_get(_sample);
+		hkl_parameter_fit_set(lattice->alpha, _checkbutton_alpha->get_active());
+	}
 }
 
 void HKLWindow::on_checkbutton_beta_toggled(void)
 {
 	LOG;
 
-	if(_sample)
-		_sample->lattice->beta->fit = _checkbutton_beta->get_active();
+	if(_sample){
+		HklLattice *lattice = hkl_sample_lattice_get(_sample);
+		hkl_parameter_fit_set(lattice->beta, _checkbutton_beta->get_active());
+	}
 }
 
 void HKLWindow::on_checkbutton_gamma_toggled(void)
 {
 	LOG;
 
-	if(_sample)
-		_sample->lattice->gamma->fit = _checkbutton_gamma->get_active();
+	if(_sample){
+		HklLattice *lattice = hkl_sample_lattice_get(_sample);
+		hkl_parameter_fit_set(lattice->gamma, _checkbutton_gamma->get_active());
+	}
 }
 
 void HKLWindow::on_checkbutton_Ux_toggled(void)
 {
 	LOG;
 
-	if(_sample)
-		_sample->ux->fit = _checkbutton_Ux->get_active();
+	if(_sample){
+		HklParameter *ux = hkl_sample_ux_get(_sample);
+		hkl_parameter_fit_set(ux, _checkbutton_Ux->get_active());
+	}
 }
 
 void HKLWindow::on_checkbutton_Uy_toggled(void)
 {
 	LOG;
 
-	if(_sample)
-		_sample->uy->fit = _checkbutton_Uy->get_active();
+	if(_sample){
+		HklParameter *uy = hkl_sample_uy_get(_sample);
+		hkl_parameter_fit_set(uy, _checkbutton_Uy->get_active());
+	}
 }
 
 void HKLWindow::on_checkbutton_Uz_toggled(void)
 {
 	LOG;
 
-	if(_sample)
-		_sample->uz->fit = _checkbutton_Uz->get_active();
+	if(_sample){
+		HklParameter *uz = hkl_sample_uz_get(_sample);
+		hkl_parameter_fit_set(uz, _checkbutton_Uz->get_active());
+	}
 }
 
 void HKLWindow::on_cell_TreeView_axes_read_edited(Glib::ustring const & spath,
@@ -487,7 +507,8 @@ void HKLWindow::on_cell_TreeView_crystals_name_edited(Glib::ustring const & spat
 
 		hkl_sample_set_name(sample, newText.c_str());
 		_samples.erase(it);
-		_samples.insert(std::pair<std::string, HklSample *>(sample->name, sample));
+		_samples.insert(std::pair<std::string, HklSample *>(hkl_sample_name_get(sample),
+								    sample));
 
 		this-> updateTreeViewCrystals();
 	}
@@ -511,7 +532,7 @@ void HKLWindow::on_cell_TreeView_reflections_h_edited(Glib::ustring const & spat
 		HklSampleReflection *reflection;
 
 		index = row[_reflectionModelColumns.index];
-		reflection = _sample->reflections[index];
+		reflection = hkl_sample_get_ith_reflection(_sample, index);
 
 		hkl_sample_reflection_hkl_get(reflection, &h, &k, &l);
 		sscanf(newText.c_str(), "%lf", &h);
@@ -543,7 +564,7 @@ void HKLWindow::on_cell_TreeView_reflections_k_edited(Glib::ustring const & spat
 
 
 		index = row[_reflectionModelColumns.index];
-		reflection = _sample->reflections[index];
+		reflection = hkl_sample_get_ith_reflection(_sample, index);
 
 		hkl_sample_reflection_hkl_get(reflection, &h, &k, &l);
 		sscanf(newText.c_str(), "%lf", &k);
@@ -573,7 +594,7 @@ void HKLWindow::on_cell_TreeView_reflections_l_edited(Glib::ustring const & spat
 		HklSampleReflection *reflection;
 
 		index = row[_reflectionModelColumns.index];
-		reflection = _sample->reflections[index];
+		reflection = hkl_sample_get_ith_reflection(_sample, index);
 
 		hkl_sample_reflection_hkl_get(reflection, &h, &k, &l);
 		sscanf(newText.c_str(), "%lf", &l);
@@ -601,7 +622,7 @@ void HKLWindow::on_cell_TreeView_reflections_flag_toggled(Glib::ustring const & 
 		HklSampleReflection *reflection;
 
 		index = row[_reflectionModelColumns.index];
-		reflection = _sample->reflections[index];
+		reflection = hkl_sample_get_ith_reflection(_sample, index);
 		flag = !hkl_sample_reflection_flag_get(reflection);
 		hkl_sample_reflection_flag_set(reflection, flag);
 		row[_reflectionModelColumns.flag] = flag;
@@ -619,7 +640,8 @@ void HKLWindow::on_toolbutton_add_reflection_clicked(void)
 
 		hkl_sample_add_reflection(_sample, _geometry, _detector, h, k, l);
 
-		this->updateReflections(_sample, _mapReflectionModel[_sample->name]);
+		this->updateReflections(_sample,
+					_mapReflectionModel[hkl_sample_name_get(_sample)]);
 	}
 }
 
@@ -633,12 +655,13 @@ void HKLWindow::on_toolbutton_goto_reflection_clicked(void)
 		if (nb_rows == 1){
 			Gtk::TreeSelection::ListHandle_Path list_path = selection->get_selected_rows();
 			Gtk::TreePath path = *(list_path.begin());
-			Glib::RefPtr<Gtk::ListStore> liststore = _mapReflectionModel[_sample->name];
+			Glib::RefPtr<Gtk::ListStore> liststore = _mapReflectionModel[hkl_sample_name_get(_sample)];
 			Gtk::ListStore::Row row = *(liststore->get_iter(path));
 			unsigned int index = row[_reflectionModelColumns.index];
 
 			hkl_geometry_set(this->_geometry,
-					 hkl_sample_reflection_geometry_get(_sample->reflections[index]));
+					 hkl_sample_reflection_geometry_get(
+						 hkl_sample_get_ith_reflection(_sample, index)));
 
 			this->updateSource();
 			this->updateAxes();
@@ -669,7 +692,7 @@ void HKLWindow::on_toolbutton_del_reflection_clicked(void)
 			Gtk::TreeSelection::ListHandle_Path list = selection->get_selected_rows();
 			Gtk::TreeSelection::ListHandle_Path::iterator iter = list.begin();
 			Gtk::TreeSelection::ListHandle_Path::iterator last = list.end();
-			Glib::RefPtr<Gtk::ListStore> liststore = _mapReflectionModel[_sample->name];
+			Glib::RefPtr<Gtk::ListStore> liststore = _mapReflectionModel[hkl_sample_name_get(_sample)];
 			// fill indexes with the reflections index
 			std::vector<unsigned int> indexes;
 			while(iter != last){
@@ -753,7 +776,8 @@ void HKLWindow::on_toolbutton_add_crystal_clicked(void)
 
 	_sample = hkl_sample_new("new_sample", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 	if(_sample){
-		_samples.insert(std::pair<std::string, HklSample *>(_sample->name, _sample));
+		_samples.insert(std::pair<std::string, HklSample *>(hkl_sample_name_get(_sample),
+								    _sample));
 		this->updateTreeViewCrystals();
 
 		// activate for edition the name of the new crystal
@@ -780,7 +804,8 @@ void HKLWindow::on_toolbutton_copy_crystal_clicked(void)
 
 	sample = hkl_sample_new_copy(_sample);
 	hkl_sample_set_name(sample, "copy");
-	_samples.insert(std::pair<std::string, HklSample *>(sample->name, sample));
+	_samples.insert(std::pair<std::string, HklSample *>(hkl_sample_name_get(sample),
+							    sample));
 	_sample = sample;
 	this->updateTreeViewCrystals();
 
@@ -796,7 +821,7 @@ void HKLWindow::on_toolbutton_del_crystal_clicked(void)
 {
 	LOG;
 
-	_samples.erase(_samples.find(_sample->name));
+	_samples.erase(_samples.find(hkl_sample_name_get(_sample)));
 	this->updateTreeViewCrystals();
 }
 

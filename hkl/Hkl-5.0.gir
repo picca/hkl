@@ -1837,6 +1837,40 @@ is |v1 ^ v2|</doc>
             glib:type-name="HklParameter"
             glib:get-type="hkl_parameter_get_type"
             c:symbol-prefix="parameter">
+      <method name="fit_get"
+              c:identifier="hkl_parameter_fit_get"
+              introspectable="0">
+        <doc xml:whitespace="preserve">Retuen value: the #HklParameter fit value, True is the parameter can be fitted, not otherwise
+@todo test</doc>
+        <return-value>
+          <type c:type="bool"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Parameter" c:type="const HklParameter*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="fit_set"
+              c:identifier="hkl_parameter_fit_set"
+              introspectable="0">
+        <doc xml:whitespace="preserve">set the #HklParameter fit value, True is the parameter can be fitted, not otherwise
+@todo test</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Parameter" c:type="HklParameter*"/>
+          </instance-parameter>
+          <parameter name="fit" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the fit value to set</doc>
+            <type c:type="bool"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="min_max_get"
               c:identifier="hkl_parameter_min_max_get"
               introspectable="0">
@@ -2391,36 +2425,6 @@ Todo: optimize</doc>
             glib:type-name="HklSample"
             glib:get-type="hkl_sample_get_type"
             c:symbol-prefix="sample">
-      <field name="name" writable="1">
-        <type name="utf8" c:type="char*"/>
-      </field>
-      <field name="type" writable="1">
-        <type name="SampleType" c:type="HklSampleType"/>
-      </field>
-      <field name="lattice" writable="1">
-        <type name="Lattice" c:type="HklLattice*"/>
-      </field>
-      <field name="U" writable="1">
-        <type name="Matrix" c:type="HklMatrix"/>
-      </field>
-      <field name="UB" writable="1">
-        <type name="Matrix" c:type="HklMatrix"/>
-      </field>
-      <field name="ux" writable="1">
-        <type name="Parameter" c:type="HklParameter*"/>
-      </field>
-      <field name="uy" writable="1">
-        <type name="Parameter" c:type="HklParameter*"/>
-      </field>
-      <field name="uz" writable="1">
-        <type name="Parameter" c:type="HklParameter*"/>
-      </field>
-      <field name="reflections" writable="1">
-        <type name="SampleReflection" c:type="HklSampleReflection**"/>
-      </field>
-      <field name="reflections_len" writable="1">
-        <type name="gulong" c:type="size_t"/>
-      </field>
       <constructor name="new" c:identifier="hkl_sample_new">
         <doc xml:whitespace="preserve">constructor</doc>
         <return-value transfer-ownership="full">
@@ -2435,6 +2439,17 @@ Todo: optimize</doc>
           </parameter>
         </parameters>
       </constructor>
+      <method name="U_get" c:identifier="hkl_sample_U_get" introspectable="0">
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">the U matrix of the sample</doc>
+          <type name="Matrix" c:type="const HklMatrix*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="arg0" transfer-ownership="none">
+            <type name="Sample" c:type="const HklSample*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
       <method name="add_reflection"
               c:identifier="hkl_sample_add_reflection"
               introspectable="0">
@@ -2597,12 +2612,48 @@ add ref</doc>
           </parameter>
         </parameters>
       </method>
+      <method name="lattice_get"
+              c:identifier="hkl_sample_lattice_get"
+              introspectable="0">
+        <return-value transfer-ownership="full">
+          <doc xml:whitespace="preserve">the lattice parameters of the sample.</doc>
+          <type name="Lattice" c:type="HklLattice*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Sample" c:type="HklSample*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="name_get" c:identifier="hkl_sample_name_get">
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">the name of the sample</doc>
+          <type name="utf8" c:type="const char*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Sample" c:type="const HklSample*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
       <method name="new_copy"
               c:identifier="hkl_sample_new_copy"
               introspectable="0">
         <doc xml:whitespace="preserve">copy constructor</doc>
         <return-value transfer-ownership="full">
           <type name="Sample" c:type="HklSample*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Sample" c:type="const HklSample*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="reflections_len" c:identifier="hkl_sample_reflections_len">
+        <return-value transfer-ownership="none">
+          <type name="gint" c:type="int"/>
         </return-value>
         <parameters>
           <instance-parameter name="self" transfer-ownership="none">
@@ -2696,6 +2747,102 @@ todo tests</doc>
           </instance-parameter>
           <parameter name="name" transfer-ownership="none">
             <type name="utf8" c:type="const char*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="ux_get"
+              c:identifier="hkl_sample_ux_get"
+              introspectable="0">
+        <return-value transfer-ownership="full">
+          <doc xml:whitespace="preserve">the ux part of the U matrix.</doc>
+          <type name="Parameter" c:type="HklParameter*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Sample" c:type="const HklSample*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="ux_set"
+              c:identifier="hkl_sample_ux_set"
+              introspectable="0">
+        <doc xml:whitespace="preserve">set the ux part of the U matrix.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Sample" c:type="HklSample*"/>
+          </instance-parameter>
+          <parameter name="ux" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the ux parameter to set</doc>
+            <type name="Parameter" c:type="const HklParameter*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="uy_get"
+              c:identifier="hkl_sample_uy_get"
+              introspectable="0">
+        <return-value transfer-ownership="full">
+          <doc xml:whitespace="preserve">the uy part of the U matrix.</doc>
+          <type name="Parameter" c:type="HklParameter*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Sample" c:type="const HklSample*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="uy_set"
+              c:identifier="hkl_sample_uy_set"
+              introspectable="0">
+        <doc xml:whitespace="preserve">set the uy part of the U matrix.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Sample" c:type="HklSample*"/>
+          </instance-parameter>
+          <parameter name="uy" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the uy parameter to set</doc>
+            <type name="Parameter" c:type="const HklParameter*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="uz_get"
+              c:identifier="hkl_sample_uz_get"
+              introspectable="0">
+        <return-value transfer-ownership="full">
+          <doc xml:whitespace="preserve">the uz part of the U matrix.</doc>
+          <type name="Parameter" c:type="HklParameter*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Sample" c:type="const HklSample*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="uz_set"
+              c:identifier="hkl_sample_uz_set"
+              introspectable="0">
+        <doc xml:whitespace="preserve">set the uz part of the U matrix.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Sample" c:type="HklSample*"/>
+          </instance-parameter>
+          <parameter name="uz" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the uz parameter to set</doc>
+            <type name="Parameter" c:type="const HklParameter*"/>
           </parameter>
         </parameters>
       </method>

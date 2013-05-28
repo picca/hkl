@@ -29,6 +29,7 @@
 #include "hkl-parameter-private.h"
 #include "hkl-pseudoaxis-auto-private.h"
 #include "hkl-pseudoaxis-common-hkl-private.h"
+#include "hkl-sample-private.h"
 
 /* #define DEBUG */
 

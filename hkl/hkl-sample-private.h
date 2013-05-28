@@ -33,6 +33,19 @@ HKL_BEGIN_DECLS
 /* HklSample */
 /*************/
 
+struct _HklSample {
+	char *name;
+	HklSampleType type;
+	HklLattice *lattice;
+	HklMatrix U;
+	HklMatrix UB;
+	HklParameter *ux;
+	HklParameter *uy;
+	HklParameter *uz;
+	HklSampleReflection **reflections;
+	size_t reflections_len;
+};
+
 extern HklSample *hkl_sample_new(const char *name, HklSampleType type);
 
 extern HklSample *hkl_sample_new_copy(const HklSample *self);

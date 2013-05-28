@@ -58,6 +58,10 @@ HKLAPI void hkl_parameter_min_max_unit_get(const HklParameter *self, double *min
 
 HKLAPI void hkl_parameter_min_max_unit_set(HklParameter *self, double min, double max) HKL_ARG_NONNULL(1);
 
+HKLAPI bool hkl_parameter_fit_get(const HklParameter *self) HKL_ARG_NONNULL(1);
+
+HKLAPI void hkl_parameter_fit_set(HklParameter *self, bool fit) HKL_ARG_NONNULL(1);
+
 HKLAPI void hkl_parameter_randomize(HklParameter *self) HKL_ARG_NONNULL(1);
 
 /********************/

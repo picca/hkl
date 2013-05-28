@@ -179,7 +179,7 @@ class TestAPI(unittest.TestCase):
 
         # create a sample
         sample = Hkl.Sample.new("toto", Hkl.SampleType.MONOCRYSTAL)
-        self.assertTrue(sample.name == "toto")
+        self.assertTrue(sample.name_get() == "toto")
 
         # set the lattice parameters
         sample.set_lattice(1.54, 1.54, 1.54,

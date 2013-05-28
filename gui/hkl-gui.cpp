@@ -39,7 +39,8 @@ HKLWindow::HKLWindow(void)
 
 	// add a default crystal
 	_sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
-	_samples.insert(std::pair<std::string, HklSample *>(_sample->name, _sample));
+	_samples.insert(std::pair<std::string, HklSample *>(hkl_sample_name_get(_sample),
+							    _sample));
 
 	// create the reciprocal lattice
 	_reciprocal = hkl_lattice_new_default();
@@ -701,12 +702,13 @@ void HKLWindow::updateLattice(void)
 	LOG;
 
 	if(_sample){
-		double a = hkl_parameter_value_unit_get(_sample->lattice->a);
-		double b = hkl_parameter_value_unit_get(_sample->lattice->b);
-		double c = hkl_parameter_value_unit_get(_sample->lattice->c);
-		double alpha = hkl_parameter_value_unit_get(_sample->lattice->alpha);
-		double beta = hkl_parameter_value_unit_get(_sample->lattice->beta);
-		double gamma = hkl_parameter_value_unit_get(_sample->lattice->gamma);
+		HklLattice *lattice = hkl_sample_lattice_get(_sample);
+		double a = hkl_parameter_value_unit_get(lattice->a);
+		double b = hkl_parameter_value_unit_get(lattice->b);
+		double c = hkl_parameter_value_unit_get(lattice->c);
+		double alpha = hkl_parameter_value_unit_get(lattice->alpha);
+		double beta = hkl_parameter_value_unit_get(lattice->beta);
+		double gamma = hkl_parameter_value_unit_get(lattice->gamma);
 
 		_spinbutton_a->set_value(a);
 		_spinbutton_b->set_value(b);
@@ -725,40 +727,41 @@ void HKLWindow::updateLatticeParameters(void)
 		double min;
 		double max;
 		bool to_fit;
+		HklLattice *lattice = hkl_sample_lattice_get(_sample);
 		HklParameter *parameter;
 
 
-		parameter = _sample->lattice->a;
+		parameter = lattice->a;
 		hkl_parameter_min_max_unit_get(parameter, &min, &max);
 		_spinbutton_a_min->set_value(min);
 		_spinbutton_a_max->set_value(max);
 		_checkbutton_a->set_active(parameter->fit);
 
-		parameter = _sample->lattice->b;
+		parameter = lattice->b;
 		hkl_parameter_min_max_unit_get(parameter, &min, &max);
 		_spinbutton_b_min->set_value(min);
 		_spinbutton_b_max->set_value(max);
 		_checkbutton_b->set_active(parameter->fit);
 
-		parameter = _sample->lattice->c;
+		parameter = lattice->c;
 		hkl_parameter_min_max_unit_get(parameter, &min, &max);
 		_spinbutton_c_min->set_value(min);
 		_spinbutton_c_max->set_value(max);
 		_checkbutton_c->set_active(parameter->fit);
 
-		parameter = _sample->lattice->alpha;
+		parameter = lattice->alpha;
 		hkl_parameter_min_max_unit_get(parameter, &min, &max);
 		_spinbutton_alpha_min->set_value(min);
 		_spinbutton_alpha_max->set_value(max);
 		_checkbutton_alpha->set_active(parameter->fit);
 
-		parameter = _sample->lattice->beta;
+		parameter = lattice->beta;
 		hkl_parameter_min_max_unit_get(parameter, &min, &max);
 		_spinbutton_beta_min->set_value(min);
 		_spinbutton_beta_max->set_value(max);
 		_checkbutton_beta->set_active(parameter->fit);
 
-		parameter = _sample->lattice->gamma;
+		parameter = lattice->gamma;
 		hkl_parameter_min_max_unit_get(parameter, &min, &max);
 		_spinbutton_gamma_min->set_value(min);
 		_spinbutton_gamma_max->set_value(max);
@@ -771,7 +774,8 @@ void HKLWindow::updateReciprocalLattice(void)
 	LOG;
 
 	if(_sample){
-		hkl_lattice_reciprocal(_sample->lattice, _reciprocal);
+		hkl_lattice_reciprocal(hkl_sample_lattice_get(_sample),
+				       _reciprocal);
 
 		_spinbutton_a_star->set_value(hkl_parameter_value_unit_get(_reciprocal->a));
 		_spinbutton_b_star->set_value(hkl_parameter_value_unit_get(_reciprocal->b));
@@ -818,12 +822,24 @@ void HKLWindow::updateUxUyUz(void)
 	LOG;
 
 	if(_sample){
-		_spinbutton_ux->set_value(hkl_parameter_value_unit_get(_sample->ux));
-		_spinbutton_uy->set_value(hkl_parameter_value_unit_get(_sample->uy));
-		_spinbutton_uz->set_value(hkl_parameter_value_unit_get(_sample->uz));
-		_checkbutton_Ux->set_active(_sample->ux->fit);
-		_checkbutton_Uy->set_active(_sample->uy->fit);
-		_checkbutton_Uz->set_active(_sample->uz->fit);
+		_spinbutton_ux->set_value(
+			hkl_parameter_value_unit_get(
+				hkl_sample_ux_get(_sample)));
+		_spinbutton_uy->set_value(
+			hkl_parameter_value_unit_get(
+				hkl_sample_uy_get(_sample)));
+		_spinbutton_uz->set_value(
+			hkl_parameter_value_unit_get(
+				hkl_sample_uz_get(_sample)));
+		_checkbutton_Ux->set_active(
+			hkl_parameter_fit_get(
+				hkl_sample_ux_get(_sample)));
+		_checkbutton_Uy->set_active(
+			hkl_parameter_fit_get(
+				hkl_sample_uy_get(_sample)));
+		_checkbutton_Uz->set_active(
+			hkl_parameter_fit_get(
+				hkl_sample_uz_get(_sample)));
 	}
 }
 
@@ -849,21 +865,23 @@ void HKLWindow::updateTreeViewCrystals(void)
 
 	if(_sample){
 		is_current_crystal_set = true;
-		current_crystal_name = _sample->name;
+		current_crystal_name = hkl_sample_name_get(_sample);
 	}
 
 	//Fill the models from the crystalList
 	std::map<std::string, HklSample *>::iterator it;
 	for(it=_samples.begin(); it!=_samples.end(); ++it){
 		HklLattice *lattice;
+		const char *name;
 
 		sample = it->second;
-		lattice = sample->lattice;
+		lattice = hkl_sample_lattice_get(sample);
+		name = hkl_sample_name_get(sample);
 		iter_row = *(_crystalModel->append());
-		if (is_current_crystal_set && current_crystal_name == sample->name)
+		if (is_current_crystal_set && current_crystal_name == name)
 			iter_current = iter_row;
 		row = *(iter_row);
-		row[_crystalModelColumns.name] = sample->name;
+		row[_crystalModelColumns.name] = name;
 		row[_crystalModelColumns.a] = hkl_parameter_value_unit_get(lattice->a);
 		row[_crystalModelColumns.b] = hkl_parameter_value_unit_get(lattice->b);
 		row[_crystalModelColumns.c] = hkl_parameter_value_unit_get(lattice->c);
@@ -872,7 +890,7 @@ void HKLWindow::updateTreeViewCrystals(void)
 		row[_crystalModelColumns.gamma] = hkl_parameter_value_unit_get(lattice->gamma);
 
 		Glib::RefPtr<Gtk::ListStore> listStore = Gtk::ListStore::create(_reflectionModelColumns);
-		_mapReflectionModel[sample->name] = listStore;
+		_mapReflectionModel[name] = listStore;
 		this->updateReflections(sample, listStore);
 	}
 
@@ -895,10 +913,10 @@ void HKLWindow::updateReflections(const HklSample *sample,
 
 	listStore->clear();
 	Gtk::ListStore::Row row;
-	for(i=0; i<sample->reflections_len; ++i){
+	for(i=0; i<hkl_sample_reflections_len(sample); ++i){
 		double h, k, l;
 
-		HklSampleReflection *reflection = sample->reflections[i];
+		HklSampleReflection *reflection = hkl_sample_get_ith_reflection(sample, i);
 		hkl_sample_reflection_hkl_get(reflection, &h, &k, &l);
 
 		row = *(listStore->append());
@@ -926,8 +944,8 @@ void HKLWindow::updateCrystalModel(HklSample * sample)
 	Gtk::TreeModel::Children::iterator end = children.end();
 	while (iter != end){
 		Gtk::TreeModel::Row const & row = *iter;
-		if (row[_crystalModelColumns.name] == sample->name){
-			HklLattice *lattice = sample->lattice;
+		if (row[_crystalModelColumns.name] == hkl_sample_name_get(sample)){
+			HklLattice *lattice = hkl_sample_lattice_get(sample);
 			row[_crystalModelColumns.a] = hkl_parameter_value_unit_get(lattice->a);
 			row[_crystalModelColumns.b] = hkl_parameter_value_unit_get(lattice->b);
 			row[_crystalModelColumns.c] = hkl_parameter_value_unit_get(lattice->c);

@@ -28,7 +28,7 @@
 #include "hkl-parameter-private.h"
 #include "hkl-pseudoaxis-auto-private.h"
 #include "hkl-pseudoaxis-common-psi-private.h"
-
+#include "hkl-sample-private.h"
 
 /***********************/
 /* numerical functions */

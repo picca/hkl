@@ -352,6 +352,17 @@ void hkl_sample_free(HklSample *self)
 }
 
 /**
+ * hkl_sample_name_get:
+ * @self: the this ptr
+ *
+ * Return value: the name of the sample
+ **/
+const char *hkl_sample_name_get(const HklSample *self)
+{
+	return self->name;
+}
+
+/**
  * hkl_sample_set_name: (skip)
  * @self:
  * @name:
@@ -366,6 +377,17 @@ void hkl_sample_set_name(HklSample *self, const char *name)
 	if(self->name)
 		free(self->name);
 	self->name = strdup(name);
+}
+
+/**
+ * hkl_sample_lattice_get: (skip)
+ * @self: the this ptr
+ *
+ * Return value: the lattice parameters of the sample.
+ **/
+HklLattice *hkl_sample_lattice_get(HklSample *self)
+{
+	return self->lattice;
 }
 
 /**
@@ -392,6 +414,111 @@ int hkl_sample_set_lattice(HklSample *self,
 	hkl_sample_compute_UB(self);
 
 	return HKL_TRUE;
+}
+
+/**
+ * hkl_sample_ux_get: (skip)
+ * @self: the this ptr
+ *
+ * Return value: the ux part of the U matrix.
+ **/
+HklParameter *hkl_sample_ux_get(const HklSample *self)
+{
+	return self->ux;
+}
+
+/**
+ * hkl_sample_uy_get: (skip)
+ * @self: the this ptr
+ *
+ * Return value: the uy part of the U matrix.
+ **/
+HklParameter *hkl_sample_uy_get(const HklSample *self)
+{
+	return self->uy;
+}
+
+/**
+ * hkl_sample_uz_get: (skip)
+ * @self: the this ptr
+ *
+ * Return value: the uz part of the U matrix.
+ **/
+HklParameter *hkl_sample_uz_get(const HklSample *self)
+{
+	return self->uz;
+}
+
+/**
+ * hkl_sample_ux_set: (skip)
+ * @self: the this ptr
+ * @ux: the ux parameter to set
+
+ * set the ux part of the U matrix.
+ **/
+void hkl_sample_ux_set(HklSample *self,
+		       const HklParameter *ux)
+{
+	hkl_parameter_value_set(self->ux,
+				hkl_parameter_value_get(ux),
+				NULL);
+	hkl_matrix_init_from_euler(&self->U,
+				   hkl_parameter_value_get(self->ux),
+				   hkl_parameter_value_get(self->uy),
+				   hkl_parameter_value_get(self->uz));
+	hkl_sample_compute_UB(self);
+}
+
+/**
+ * hkl_sample_uy_set: (skip)
+ * @self: the this ptr
+ * @uy: the uy parameter to set
+
+ * set the uy part of the U matrix.
+ **/
+void hkl_sample_uy_set(HklSample *self,
+		       const HklParameter *uy)
+{
+	hkl_parameter_value_set(self->uy,
+				hkl_parameter_value_get(uy),
+				NULL);
+	hkl_matrix_init_from_euler(&self->U,
+				   hkl_parameter_value_get(self->ux),
+				   hkl_parameter_value_get(self->uy),
+				   hkl_parameter_value_get(self->uz));
+	hkl_sample_compute_UB(self);
+}
+
+/**
+ * hkl_sample_uz_set: (skip)
+ * @self: the this ptr
+ * @uz: the uz parameter to set
+
+ * set the uz part of the U matrix.
+ **/
+void hkl_sample_uz_set(HklSample *self,
+		       const HklParameter *uz)
+{
+	hkl_parameter_value_set(self->uz,
+				hkl_parameter_value_get(uz),
+				NULL);
+	hkl_matrix_init_from_euler(&self->U,
+				   hkl_parameter_value_get(self->ux),
+				   hkl_parameter_value_get(self->uy),
+				   hkl_parameter_value_get(self->uz));
+	hkl_sample_compute_UB(self);
+}
+
+
+/**
+ * hkl_sample_U_get: (skip)
+ * @self: the this ptr
+ *
+ * Return value: the U matrix of the sample
+ **/
+const HklMatrix *hkl_sample_U_get(const HklSample *self)
+{
+	return &self->U;
 }
 
 /**
@@ -458,6 +585,11 @@ double hkl_sample_set_UB(HklSample *self, const HklMatrix *UB)
 	params.UB = UB;
 
 	return minimize(self, set_UB_fitness, &params);
+}
+
+int hkl_sample_reflections_len(const HklSample *self)
+{
+	return self->reflections_len;
 }
 
 /**
