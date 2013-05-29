@@ -35,7 +35,6 @@ HKL_BEGIN_DECLS
 
 struct _HklSample {
 	char *name;
-	HklSampleType type;
 	HklLattice *lattice;
 	HklMatrix U;
 	HklMatrix UB;
@@ -46,7 +45,7 @@ struct _HklSample {
 	size_t reflections_len;
 };
 
-extern HklSample *hkl_sample_new(const char *name, HklSampleType type);
+extern HklSample *hkl_sample_new(const char *name);
 
 extern HklSample *hkl_sample_new_copy(const HklSample *self);
 

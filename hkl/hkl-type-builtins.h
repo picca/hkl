@@ -12,10 +12,6 @@ G_BEGIN_DECLS
 GType hkl_detector_type_get_type (void) G_GNUC_CONST;
 #define HKL_TYPE_DETECTOR_TYPE (hkl_detector_type_get_type ())
 
-/* enumerations from "hkl-sample.h" */
-GType hkl_sample_type_get_type (void) G_GNUC_CONST;
-#define HKL_TYPE_SAMPLE_TYPE (hkl_sample_type_get_type ())
-
 /* enumerations from "hkl-unit.h" */
 GType hkl_unit_type_get_type (void) G_GNUC_CONST;
 #define HKL_TYPE_UNIT_TYPE (hkl_unit_type_get_type ())

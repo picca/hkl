@@ -51,7 +51,7 @@ static void qper_qpar(void)
 	factory = hkl_factory_get_by_name("SOLEIL SIXS MED2+3");
 	geom = hkl_factory_create_new_geometry(factory);
 
-	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
+	sample = hkl_sample_new("test");
         hkl_sample_set_U_from_euler(sample, -90.0 * HKL_DEGTORAD, 0., 0.);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);

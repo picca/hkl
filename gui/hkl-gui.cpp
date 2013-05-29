@@ -38,7 +38,7 @@ HKLWindow::HKLWindow(void)
 	hkl_detector_idx_set(_detector, 1);
 
 	// add a default crystal
-	_sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
+	_sample = hkl_sample_new("test");
 	_samples.insert(std::pair<std::string, HklSample *>(hkl_sample_name_get(_sample),
 							    _sample));
 

@@ -774,7 +774,7 @@ void HKLWindow::on_toolbutton_add_crystal_clicked(void)
 {
 	LOG;
 
-	_sample = hkl_sample_new("new_sample", HKL_SAMPLE_TYPE_MONOCRYSTAL);
+	_sample = hkl_sample_new("new_sample");
 	if(_sample){
 		_samples.insert(std::pair<std::string, HklSample *>(hkl_sample_name_get(_sample),
 								    _sample));

@@ -22,21 +22,6 @@ hkl_detector_type_get_type (void)
     return etype;
 }
 
-/* enumerations from "hkl-sample.h" */
-GType
-hkl_sample_type_get_type (void)
-{
-    static GType etype = 0;
-    if (G_UNLIKELY(etype == 0)) {
-        static const GEnumValue values[] = {
-            { HKL_SAMPLE_TYPE_MONOCRYSTAL, "HKL_SAMPLE_TYPE_MONOCRYSTAL", "monocrystal" },
-            { 0, NULL, NULL }
-        };
-        etype = g_enum_register_static (g_intern_static_string ("HklSampleType"), values);
-    }
-    return etype;
-}
-
 /* enumerations from "hkl-unit.h" */
 GType
 hkl_unit_type_get_type (void)

@@ -33,16 +33,12 @@ HKL_BEGIN_DECLS
 
 typedef struct _HklSample HklSample;
 typedef struct _HklSampleReflection HklSampleReflection;
-typedef enum _HklSampleType
-{
-	HKL_SAMPLE_TYPE_MONOCRYSTAL
-} HklSampleType;
 
 /*************/
 /* HklSample */
 /*************/
 
-extern HklSample *hkl_sample_new(const char *name, HklSampleType type);
+extern HklSample *hkl_sample_new(const char *name);
 
 extern HklSample *hkl_sample_new_copy(const HklSample *self);
 

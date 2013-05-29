@@ -249,7 +249,7 @@ static double minimize(HklSample *sample, double (* f) (const gsl_vector * x, vo
  *
  * Returns:
  **/
-HklSample* hkl_sample_new(const char *name, HklSampleType type)
+HklSample* hkl_sample_new(const char *name)
 {
 	HklSample *self = NULL;
 
@@ -260,7 +260,6 @@ HklSample* hkl_sample_new(const char *name, HklSampleType type)
 	self = HKL_MALLOC(HklSample);
 
 	self->name = strdup(name);
-	self->type = type;
 	self->lattice = hkl_lattice_new_default();
 	hkl_matrix_init(&self->U,1, 0, 0, 0, 1, 0, 0, 0, 1);
 	hkl_matrix_init(&self->UB,1, 0, 0, 0, 1, 0, 0, 0, 1);
@@ -306,7 +305,6 @@ HklSample *hkl_sample_new_copy(const HklSample *self)
 	dup = HKL_MALLOC(HklSample);
 
 	dup->name = strdup(self->name);
-	dup->type = self->type;
 	dup->lattice = hkl_lattice_new_copy(self->lattice);
 	dup->U = self->U;
 	dup->UB = self->UB;

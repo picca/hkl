@@ -69,7 +69,7 @@ static void getter(void)
 
 	factory = hkl_factory_get_by_name("E6C");
 	geometry = hkl_factory_create_new_geometry(factory);
-	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
+	sample = hkl_sample_new("test");
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	hkl_detector_idx_set(detector, 1);
@@ -125,7 +125,7 @@ static void degenerated(void)
 
 	factory = hkl_factory_get_by_name("E6C");
 	geometry = hkl_factory_create_new_geometry(factory);
-	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
+	sample = hkl_sample_new("test");
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	hkl_detector_idx_set(detector, 1);
@@ -191,7 +191,7 @@ static void q2(void)
 
 	factory = hkl_factory_get_by_name("E6C");
 	geometry = hkl_factory_create_new_geometry(factory);
-	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
+	sample = hkl_sample_new("test");
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	hkl_detector_idx_set(detector, 1);
@@ -265,7 +265,7 @@ static void petra3(void)
 	geometry = hkl_factory_create_new_geometry(factory);
 	hkl_geometry_wavelength_set(geometry, 2.033);
 
-	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
+	sample = hkl_sample_new("test");
 	hkl_sample_set_lattice(sample,
 			       7.813, 7.813, 7.813,
 			       90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD);
@@ -357,7 +357,7 @@ static void petra3_2(void)
 	geometry = hkl_factory_create_new_geometry(factory);
 	hkl_geometry_wavelength_set(geometry, 1.0332035);
 
-	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
+	sample = hkl_sample_new("test");
 	hkl_sample_set_lattice(sample,
 			       5.1, 5.1, 5.1,
 			       90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD);

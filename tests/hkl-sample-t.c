@@ -27,7 +27,7 @@ static void new(void)
 {
 	HklSample *sample;
 
-	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
+	sample = hkl_sample_new("test");
 
 	hkl_sample_free(sample);
 }
@@ -46,7 +46,7 @@ static void add_reflection(void)
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	hkl_detector_idx_set(detector, 1);
 
-	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
+	sample = hkl_sample_new("test");
 
 	ref = hkl_sample_add_reflection(sample, geometry, detector, 1, 0, 0);
 
@@ -70,7 +70,7 @@ static void get_reflection(void)
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	hkl_detector_idx_set(detector, 1);
 
-	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
+	sample = hkl_sample_new("test");
 
 	ref = hkl_sample_add_reflection(sample, geometry, detector, 1, 0, 0);
 	ref2 = hkl_sample_get_ith_reflection(sample, 0);
@@ -100,7 +100,7 @@ static void del_reflection(void)
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	hkl_detector_idx_set(detector, 1);
 
-	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
+	sample = hkl_sample_new("test");
 
 	ref = hkl_sample_add_reflection(sample, geometry, detector, 1, 0, 0);
 	hkl_sample_del_reflection(sample, 0);
@@ -121,7 +121,7 @@ static void  set_UB(void )
 			       {0., 0., 1.},
 			       {0.,-1., 0.}}};
 
-	sample = hkl_sample_new("test",  HKL_SAMPLE_TYPE_MONOCRYSTAL);
+	sample = hkl_sample_new("test");
 
 	hkl_sample_set_UB(sample, &UB);
 	ok(HKL_TRUE == hkl_matrix_cmp(&U,
@@ -155,7 +155,7 @@ static void compute_UB_busing_levy(void)
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	hkl_detector_idx_set(detector, 1);
 
-	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
+	sample = hkl_sample_new("test");
 
 	hkl_geometry_set_values_unit_v(geometry, 30., 0., 0., 60.);
 	ref = hkl_sample_add_reflection(sample, geometry, detector, 0, 0, 1);
@@ -205,7 +205,7 @@ static void affine(void)
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	hkl_detector_idx_set(detector, 1);
 
-	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
+	sample = hkl_sample_new("test");
 	lattice = hkl_sample_lattice_get(sample);
 
 	hkl_lattice_set(lattice,
@@ -267,7 +267,7 @@ static void get_reflections_xxx_angle(void)
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	hkl_detector_idx_set(detector, 1);
 
-	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
+	sample = hkl_sample_new("test");
 	hkl_sample_set_lattice(sample,
 			       1.54, 1.54, 1.54,
 			       90*HKL_DEGTORAD, 90*HKL_DEGTORAD,90*HKL_DEGTORAD);
@@ -325,7 +325,7 @@ static void reflection_set_geometry(void)
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	hkl_detector_idx_set(detector, 1);
 
-	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
+	sample = hkl_sample_new("test");
 	hkl_sample_set_lattice(sample,
 			       1.54, 1.54, 1.54,
 			       90*HKL_DEGTORAD, 90*HKL_DEGTORAD,90*HKL_DEGTORAD);

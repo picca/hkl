@@ -22,7 +22,7 @@ values_w = [0., 120, 0., -90., 0., 60.]
 geometry.set_axes_values_unit(values_w)
 axes_names = [axis.name for axis in geometry.axes()]
 
-sample = Hkl.Sample.new("toto", Hkl.SampleType.MONOCRYSTAL)
+sample = Hkl.Sample.new("toto")
 sample.set_lattice(1.54, 1.54, 1.54,
                    math.radians(90.0),
                    math.radians(90.0),

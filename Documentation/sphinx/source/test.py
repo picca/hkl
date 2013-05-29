@@ -129,7 +129,7 @@ def test_all():
     geometry.source.wave_length = 1.54
 
     # configure the sample
-    sample = Hkl.Sample.new("toto", Hkl.SampleType.MONOCRYSTAL)
+    sample = Hkl.Sample.new("toto")
     sample.set_lattice(1.54, 1.54, 1.54, 90., 90., 90.)
 
     # create the Engines

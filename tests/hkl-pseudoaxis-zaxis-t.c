@@ -42,7 +42,7 @@ static void solution(void)
 	hkl_geometry_wavelength_set(geometry, 0.842);
 
 	/* set up the sample */
-	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
+	sample = hkl_sample_new("test");
 	hkl_sample_set_lattice(sample,
 			       5.432, 5.432, 5.432,
 			       90 * HKL_DEGTORAD,

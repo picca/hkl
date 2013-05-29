@@ -122,7 +122,7 @@ class TestAPI(unittest.TestCase):
         values_w = [0., 30., 0., 0., 0., 60.]
         geometry.set_axes_values_unit(values_w)
 
-        sample = Hkl.Sample.new("toto", Hkl.SampleType.MONOCRYSTAL)
+        sample = Hkl.Sample.new("toto")
         sample.set_lattice(1.54, 1.54, 1.54,
                            math.radians(90.0),
                            math.radians(90.0),
@@ -178,7 +178,7 @@ class TestAPI(unittest.TestCase):
         """
 
         # create a sample
-        sample = Hkl.Sample.new("toto", Hkl.SampleType.MONOCRYSTAL)
+        sample = Hkl.Sample.new("toto")
         self.assertTrue(sample.name_get() == "toto")
 
         # set the lattice parameters

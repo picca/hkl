@@ -41,7 +41,7 @@ static void degenerated(void)
 
 	factory = hkl_factory_get_by_name("K4CV");
 	geometry = hkl_factory_create_new_geometry(factory);
-	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
+	sample = hkl_sample_new("test");
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	hkl_detector_idx_set(detector, 1);
@@ -105,7 +105,7 @@ static void eulerians(void)
 
 	factory = hkl_factory_get_by_name("K4CV");
 	geometry = hkl_factory_create_new_geometry(factory);
-	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
+	sample = hkl_sample_new("test");
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	hkl_detector_idx_set(detector, 1);
@@ -172,7 +172,7 @@ static void q(void)
 
 	factory = hkl_factory_get_by_name("K4CV");
 	geometry = hkl_factory_create_new_geometry(factory);
-	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
+	sample = hkl_sample_new("test");
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	hkl_detector_idx_set(detector, 1);

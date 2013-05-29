@@ -9,7 +9,7 @@ from gi.repository import Hkl
 
 import matplotlib.pyplot as plt
 
-sample = Hkl.Sample.new("toto", Hkl.SampleType.MONOCRYSTAL)
+sample = Hkl.Sample.new("toto")
 sample.set_lattice(1.54, 1.54, 1.54,
                    math.radians(90),
                    math.radians(90),
