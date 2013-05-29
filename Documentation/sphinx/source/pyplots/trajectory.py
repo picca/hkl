@@ -23,10 +23,12 @@ geometry.set_axes_values_unit(values_w)
 axes_names = [axis.name for axis in geometry.axes()]
 
 sample = Hkl.Sample.new("toto")
-sample.set_lattice(1.54, 1.54, 1.54,
-                   math.radians(90.0),
-                   math.radians(90.0),
-                   math.radians(90.))
+lattice = sample.lattice_get()
+lattice.set(1.54, 1.54, 1.54,
+            math.radians(90.0),
+            math.radians(90.0),
+            math.radians(90.))
+sample.lattice_set(lattice)
 
 # get all engines for a given configuration
 engines = Hkl.EngineList.factory(config)

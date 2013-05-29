@@ -123,10 +123,12 @@ class TestAPI(unittest.TestCase):
         geometry.set_axes_values_unit(values_w)
 
         sample = Hkl.Sample.new("toto")
-        sample.set_lattice(1.54, 1.54, 1.54,
-                           math.radians(90.0),
-                           math.radians(90.0),
-                           math.radians(90.0))
+        lattice = sample.lattice_get()
+        lattice.set(1.54, 1.54, 1.54,
+                    math.radians(90.0),
+                    math.radians(90.0),
+                    math.radians(90.0))
+        sample.lattice_set(lattice)
 
         # compute all the pseudo axes managed by all engines
         engines = factory.create_new_engine_list()
@@ -182,10 +184,12 @@ class TestAPI(unittest.TestCase):
         self.assertTrue(sample.name_get() == "toto")
 
         # set the lattice parameters
-        sample.set_lattice(1.54, 1.54, 1.54,
-                           math.radians(90.),
-                           math.radians(90.),
-                           math.radians(90.))
+        lattice = sample.lattice_get()
+        lattice.set(1.54, 1.54, 1.54,
+                    math.radians(90.),
+                    math.radians(90.),
+                    math.radians(90.))
+        sample.lattice_set(lattice)
 
 
 if __name__ == '__main__':

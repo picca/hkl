@@ -1135,6 +1135,19 @@ Returns:</doc>
           </parameter>
         </parameters>
       </method>
+      <method name="lattice_set"
+              c:identifier="hkl_lattice_lattice_set"
+              introspectable="0">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="lattice" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the lattice to set from.</doc>
+            <type name="Lattice" c:type="HklLattice*"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="new_copy"
               c:identifier="hkl_lattice_new_copy"
               introspectable="0">
@@ -1171,7 +1184,7 @@ Returns:</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="set" c:identifier="hkl_lattice_set" introspectable="0">
+      <method name="set" c:identifier="hkl_lattice_set">
         <doc xml:whitespace="preserve">set the lattice parameters
 
 Returns:</doc>
@@ -2095,13 +2108,22 @@ Returns:</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="lattice_get"
-              c:identifier="hkl_sample_lattice_get"
-              introspectable="0">
-        <return-value transfer-ownership="full">
+      <method name="lattice_get" c:identifier="hkl_sample_lattice_get">
+        <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">the lattice parameters of the sample.</doc>
           <type name="Lattice" c:type="HklLattice*"/>
         </return-value>
+      </method>
+      <method name="lattice_set" c:identifier="hkl_sample_lattice_set">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="lattice" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the lattice to set</doc>
+            <type name="Lattice" c:type="HklLattice*"/>
+          </parameter>
+        </parameters>
       </method>
       <method name="name_get" c:identifier="hkl_sample_name_get">
         <return-value transfer-ownership="none">
@@ -2172,34 +2194,6 @@ Returns:</doc>
             <type name="gdouble" c:type="double"/>
           </parameter>
           <parameter name="z" transfer-ownership="none">
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="set_lattice" c:identifier="hkl_sample_set_lattice">
-        <doc xml:whitespace="preserve">set the lattic eparameters of the sample
-
-Returns:</doc>
-        <return-value transfer-ownership="none">
-          <type name="gint" c:type="int"/>
-        </return-value>
-        <parameters>
-          <parameter name="a" transfer-ownership="none">
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-          <parameter name="b" transfer-ownership="none">
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-          <parameter name="c" transfer-ownership="none">
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-          <parameter name="alpha" transfer-ownership="none">
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-          <parameter name="beta" transfer-ownership="none">
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-          <parameter name="gamma" transfer-ownership="none">
             <type name="gdouble" c:type="double"/>
           </parameter>
         </parameters>

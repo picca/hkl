@@ -259,6 +259,7 @@ static void get_reflections_xxx_angle(void)
 	const HklFactory *factory;
 	HklGeometry *geometry;
 	HklSample *sample;
+	HklLattice *lattice;
 	HklSampleReflection *ref;
 
 	factory = hkl_factory_get_by_name("E4CV");
@@ -268,9 +269,11 @@ static void get_reflections_xxx_angle(void)
 	hkl_detector_idx_set(detector, 1);
 
 	sample = hkl_sample_new("test");
-	hkl_sample_set_lattice(sample,
-			       1.54, 1.54, 1.54,
-			       90*HKL_DEGTORAD, 90*HKL_DEGTORAD,90*HKL_DEGTORAD);
+	lattice = hkl_sample_lattice_get(sample);
+	hkl_lattice_set(lattice,
+			1.54, 1.54, 1.54,
+			90*HKL_DEGTORAD, 90*HKL_DEGTORAD,90*HKL_DEGTORAD);
+	hkl_sample_lattice_set(sample, lattice);
 
 	hkl_geometry_set_values_unit_v(geometry, 30., 0., 90., 60.);
 	ref = hkl_sample_add_reflection(sample, geometry, detector, 1, 0, 0);
@@ -326,9 +329,11 @@ static void reflection_set_geometry(void)
 	hkl_detector_idx_set(detector, 1);
 
 	sample = hkl_sample_new("test");
-	hkl_sample_set_lattice(sample,
-			       1.54, 1.54, 1.54,
-			       90*HKL_DEGTORAD, 90*HKL_DEGTORAD,90*HKL_DEGTORAD);
+	lattice = hkl_sample_lattice_get(sample);
+	hkl_lattice_set(lattice,
+			1.54, 1.54, 1.54,
+			90*HKL_DEGTORAD, 90*HKL_DEGTORAD,90*HKL_DEGTORAD);
+	hkl_sample_lattice_set(sample, lattice);
 
 	hkl_geometry_set_values_unit_v(geometry, 30., 0., 90., 60.);
 	ref = hkl_sample_add_reflection(sample, geometry, detector, 1, 0, 0);
@@ -351,7 +356,6 @@ static void reflection_set_geometry(void)
 
 	hkl_sample_affine(sample);
 
-	lattice = hkl_sample_lattice_get(sample);
 	a = hkl_parameter_value_get(lattice->a);
 	b = hkl_parameter_value_get(lattice->b);
 	c = hkl_parameter_value_get(lattice->c);

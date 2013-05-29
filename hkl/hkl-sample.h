@@ -50,9 +50,7 @@ HKLAPI void hkl_sample_name_set(HklSample *self, const char *name) HKL_ARG_NONNU
 
 HKLAPI HklLattice *hkl_sample_lattice_get(HklSample *self) HKL_ARG_NONNULL(1);
 
-extern int hkl_sample_set_lattice(HklSample *self,
-				  double a, double b, double c,
-				  double alpha, double beta, double gamma);
+HKLAPI void hkl_sample_lattice_set(HklSample *self, HklLattice *lattice) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI HklParameter *hkl_sample_ux_get(const HklSample *self) HKL_ARG_NONNULL(1);
 

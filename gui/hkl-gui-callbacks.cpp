@@ -193,20 +193,15 @@ void HKLWindow::on_button2_clicked(void)
 	if(_sample){
 		HklLattice *lattice = hkl_sample_lattice_get(_sample);
 
-		hkl_sample_set_lattice(_sample,
-				       _spinbutton_a->get_value(),
-				       _spinbutton_b->get_value(),
-				       _spinbutton_c->get_value(),
-				       _spinbutton_alpha->get_value() * HKL_DEGTORAD,
-				       _spinbutton_beta->get_value() * HKL_DEGTORAD,
-				       _spinbutton_gamma->get_value() * HKL_DEGTORAD);
+		hkl_lattice_set(lattice,
+				_spinbutton_a->get_value(),
+				_spinbutton_b->get_value(),
+				_spinbutton_c->get_value(),
+				_spinbutton_alpha->get_value() * HKL_DEGTORAD,
+				_spinbutton_beta->get_value() * HKL_DEGTORAD,
+				_spinbutton_gamma->get_value() * HKL_DEGTORAD);
 
-		hkl_sample_set_U_from_euler(_sample,
-					    _spinbutton_ux->get_value() * HKL_DEGTORAD,
-					    _spinbutton_uy->get_value() * HKL_DEGTORAD,
-					    _spinbutton_uz->get_value() * HKL_DEGTORAD);
-
-		// set min/max
+		// set min/max parameters of the lattice
 		hkl_parameter_min_max_unit_set(lattice->a,
 					       _spinbutton_a_min->get_value(),
 					       _spinbutton_a_max->get_value());
@@ -225,6 +220,14 @@ void HKLWindow::on_button2_clicked(void)
 		hkl_parameter_min_max_unit_set(lattice->gamma,
 					       _spinbutton_gamma_min->get_value(),
 					       _spinbutton_gamma_max->get_value());
+
+
+		hkl_sample_lattice_set(_sample, lattice);
+
+		hkl_sample_set_U_from_euler(_sample,
+					    _spinbutton_ux->get_value() * HKL_DEGTORAD,
+					    _spinbutton_uy->get_value() * HKL_DEGTORAD,
+					    _spinbutton_uz->get_value() * HKL_DEGTORAD);
 
 		this->updateCrystalModel(_sample);
 		this->updateReciprocalLattice();

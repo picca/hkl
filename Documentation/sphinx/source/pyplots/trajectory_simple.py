@@ -10,10 +10,12 @@ from gi.repository import Hkl
 import matplotlib.pyplot as plt
 
 sample = Hkl.Sample.new("toto")
-sample.set_lattice(1.54, 1.54, 1.54,
-                   math.radians(90),
-                   math.radians(90),
-                   math.radians(90))
+lattice = sample.lattice_get()
+lattice.set(1.54, 1.54, 1.54,
+            math.radians(90),
+            math.radians(90),
+            math.radians(90))
+sample.lattice_set(lattice)
 
 detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))
 detector.idx_set(1)

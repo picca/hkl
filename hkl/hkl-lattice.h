@@ -48,6 +48,8 @@ extern HklLattice *hkl_lattice_new_default(void);
 
 extern void hkl_lattice_free(HklLattice *self);
 
+extern void hkl_lattice_lattice_set(HklLattice *self, const HklLattice *lattice);
+
 extern int hkl_lattice_set(HklLattice *self,
 			   double a, double b, double c,
 			   double alpha, double beta, double gamma);

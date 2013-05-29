@@ -39,10 +39,12 @@ print config.name, "diffractometer has", geometry.len,\
 print values_w
 
 sample = Hkl.Sample.new("toto")
-sample.set_lattice(1.54, 1.54, 1.54,
-                   math.radians(90.0),
-                   math.radians(90.0),
-                   math.radians(90.))
+lattice = sample.lattice.get()
+lattice.set(1.54, 1.54, 1.54,
+            math.radians(90.0),
+            math.radians(90.0),
+            math.radians(90.))
+sample.lattice_set(lattice)
 
 # compute all the pseudo axes managed by all engines
 engines = factory.create_new_engine_list()

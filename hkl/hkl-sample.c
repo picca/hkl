@@ -369,19 +369,16 @@ const char *hkl_sample_name_get(const HklSample *self)
  **/
 void hkl_sample_name_set(HklSample *self, const char *name)
 {
-	if (!self)
-		return;
-
 	if(self->name)
 		free(self->name);
 	self->name = strdup(name);
 }
 
 /**
- * hkl_sample_lattice_get: (skip)
+ * hkl_sample_lattice_get:
  * @self: the this ptr
  *
- * Return value: the lattice parameters of the sample.
+ * Return value: (transfer none): the lattice parameters of the sample.
  **/
 HklLattice *hkl_sample_lattice_get(HklSample *self)
 {
@@ -389,29 +386,14 @@ HklLattice *hkl_sample_lattice_get(HklSample *self)
 }
 
 /**
- * hkl_sample_set_lattice:
- * @self:
- * @a:
- * @b:
- * @c:
- * @alpha:
- * @beta:
- * @gamma:
- *
- * set the lattic eparameters of the sample
- *
- * Returns:
+ * hkl_sample_lattice_set:
+ * @self: the this ptr
+ * @lattice: (transfer none): the lattice to set
  **/
-int hkl_sample_set_lattice(HklSample *self,
-			   double a, double b, double c,
-			   double alpha, double beta, double gamma)
+void hkl_sample_lattice_set(HklSample *self, HklLattice *lattice)
 {
-	if (!self || !hkl_lattice_set(self->lattice, a, b, c, alpha, beta, gamma))
-		return HKL_FALSE;
-
+	hkl_lattice_lattice_set(self->lattice, lattice);
 	hkl_sample_compute_UB(self);
-
-	return HKL_TRUE;
 }
 
 /**

@@ -33,6 +33,7 @@ static void solution(void)
 	const HklGeometryList *geometries;
 	HklDetector *detector;
 	HklSample *sample;
+	HklLattice *lattice;
 	static double hkl[] = {1, 1, 0};
 	HklParameterList *pseudo_axes;
 
@@ -43,11 +44,13 @@ static void solution(void)
 
 	/* set up the sample */
 	sample = hkl_sample_new("test");
-	hkl_sample_set_lattice(sample,
-			       5.432, 5.432, 5.432,
-			       90 * HKL_DEGTORAD,
-			       90 * HKL_DEGTORAD,
-			       90 * HKL_DEGTORAD);
+	lattice = hkl_sample_lattice_get(sample);
+	hkl_lattice_set(lattice,
+			5.432, 5.432, 5.432,
+			90 * HKL_DEGTORAD,
+			90 * HKL_DEGTORAD,
+			90 * HKL_DEGTORAD);
+	hkl_sample_lattice_set(sample, lattice);
 	hkl_sample_set_U_from_euler(sample, -90*HKL_DEGTORAD, 0, 0);
 
 	/* use a 0D detector */

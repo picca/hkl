@@ -146,7 +146,25 @@ void hkl_lattice_free(HklLattice *self)
 }
 
 /**
- * hkl_lattice_set: (skip)
+ * hkl_lattice_lattice_set: (skip)
+ * @self: the this ptr
+ * @lattice: the lattice to set from.
+ **/
+void hkl_lattice_lattice_set(HklLattice *self, const HklLattice *lattice)
+{
+	if (self == lattice)
+		return;
+
+	hkl_parameter_init_copy(self->a, lattice->a);
+	hkl_parameter_init_copy(self->b, lattice->b);
+	hkl_parameter_init_copy(self->c, lattice->c);
+	hkl_parameter_init_copy(self->alpha, lattice->alpha);
+	hkl_parameter_init_copy(self->beta, lattice->beta);
+	hkl_parameter_init_copy(self->gamma, lattice->gamma);
+}
+
+/**
+ * hkl_lattice_set:
  * @self:
  * @a:
  * @b:

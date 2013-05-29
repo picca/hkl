@@ -45,18 +45,6 @@ struct _HklSample {
 	size_t reflections_len;
 };
 
-extern HklSample *hkl_sample_new(const char *name);
-
-extern HklSample *hkl_sample_new_copy(const HklSample *self);
-
-extern void hkl_sample_free(HklSample *self);
-
-extern void hkl_sample_name_set(HklSample *self, const char *name);
-
-extern int hkl_sample_set_lattice(HklSample *self,
-				  double a, double b, double c,
-				  double alpha, double beta, double gamma);
-
 extern int hkl_sample_set_U_from_euler(HklSample *self,
 				       double x, double y, double z);
 
