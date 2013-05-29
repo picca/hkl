@@ -51,7 +51,7 @@ extern HklSample *hkl_sample_new_copy(const HklSample *self);
 
 extern void hkl_sample_free(HklSample *self);
 
-extern void hkl_sample_set_name(HklSample *self, const char *name);
+extern void hkl_sample_name_set(HklSample *self, const char *name);
 
 extern int hkl_sample_set_lattice(HklSample *self,
 				  double a, double b, double c,

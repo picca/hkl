@@ -505,7 +505,7 @@ void HKLWindow::on_cell_TreeView_crystals_name_edited(Glib::ustring const & spat
 	if (it != _samples.end()){
 		HklSample *sample = it->second;
 
-		hkl_sample_set_name(sample, newText.c_str());
+		hkl_sample_name_set(sample, newText.c_str());
 		_samples.erase(it);
 		_samples.insert(std::pair<std::string, HklSample *>(hkl_sample_name_get(sample),
 								    sample));
@@ -803,7 +803,7 @@ void HKLWindow::on_toolbutton_copy_crystal_clicked(void)
 	}
 
 	sample = hkl_sample_new_copy(_sample);
-	hkl_sample_set_name(sample, "copy");
+	hkl_sample_name_set(sample, "copy");
 	_samples.insert(std::pair<std::string, HklSample *>(hkl_sample_name_get(sample),
 							    sample));
 	_sample = sample;

@@ -38,15 +38,15 @@ typedef struct _HklSampleReflection HklSampleReflection;
 /* HklSample */
 /*************/
 
-extern HklSample *hkl_sample_new(const char *name);
+HKLAPI HklSample *hkl_sample_new(const char *name) HKL_ARG_NONNULL(1);
 
-extern HklSample *hkl_sample_new_copy(const HklSample *self);
+HKLAPI HklSample *hkl_sample_new_copy(const HklSample *self) HKL_ARG_NONNULL(1);
 
-extern void hkl_sample_free(HklSample *self);
+HKLAPI void hkl_sample_free(HklSample *self) HKL_ARG_NONNULL(1);
 
 HKLAPI const char *hkl_sample_name_get(const HklSample *self) HKL_ARG_NONNULL(1);
 
-extern void hkl_sample_set_name(HklSample *self, const char *name);
+HKLAPI void hkl_sample_name_set(HklSample *self, const char *name) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI HklLattice *hkl_sample_lattice_get(HklSample *self) HKL_ARG_NONNULL(1);
 
@@ -55,10 +55,15 @@ extern int hkl_sample_set_lattice(HklSample *self,
 				  double alpha, double beta, double gamma);
 
 HKLAPI HklParameter *hkl_sample_ux_get(const HklSample *self) HKL_ARG_NONNULL(1);
-HKLAPI HklParameter *hkl_sample_uy_get(const HklSample *self) HKL_ARG_NONNULL(1);
-HKLAPI HklParameter *hkl_sample_uz_get(const HklSample *self) HKL_ARG_NONNULL(1);
+
 HKLAPI void hkl_sample_ux_set(HklSample *self, const HklParameter *ux) HKL_ARG_NONNULL(1, 2);
+
+HKLAPI HklParameter *hkl_sample_uy_get(const HklSample *self) HKL_ARG_NONNULL(1);
+
 HKLAPI void hkl_sample_uy_set(HklSample *self, const HklParameter *uy) HKL_ARG_NONNULL(1, 2);
+
+HKLAPI HklParameter *hkl_sample_uz_get(const HklSample *self) HKL_ARG_NONNULL(1);
+
 HKLAPI void hkl_sample_uz_set(HklSample *self, const HklParameter *uz) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI const HklMatrix *hkl_sample_U_get(const HklSample *) HKL_ARG_NONNULL(1);

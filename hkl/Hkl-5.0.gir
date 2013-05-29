@@ -2109,6 +2109,19 @@ Returns:</doc>
           <type name="utf8" c:type="char*"/>
         </return-value>
       </method>
+      <method name="name_set"
+              c:identifier="hkl_sample_name_set"
+              introspectable="0">
+        <doc xml:whitespace="preserve">set the name of the sample</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="name" transfer-ownership="none">
+            <type name="utf8" c:type="char*"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="new_copy"
               c:identifier="hkl_sample_new_copy"
               introspectable="0">
@@ -2188,19 +2201,6 @@ Returns:</doc>
           </parameter>
           <parameter name="gamma" transfer-ownership="none">
             <type name="gdouble" c:type="double"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="set_name"
-              c:identifier="hkl_sample_set_name"
-              introspectable="0">
-        <doc xml:whitespace="preserve">set the name of the sample</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="name" transfer-ownership="none">
-            <type name="utf8" c:type="char*"/>
           </parameter>
         </parameters>
       </method>

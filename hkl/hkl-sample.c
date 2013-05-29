@@ -361,13 +361,13 @@ const char *hkl_sample_name_get(const HklSample *self)
 }
 
 /**
- * hkl_sample_set_name: (skip)
+ * hkl_sample_name_set: (skip)
  * @self:
  * @name:
  *
  * set the name of the sample
  **/
-void hkl_sample_set_name(HklSample *self, const char *name)
+void hkl_sample_name_set(HklSample *self, const char *name)
 {
 	if (!self)
 		return;
