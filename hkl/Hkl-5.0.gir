@@ -1363,6 +1363,20 @@ Todo: test</doc>
           <type name="gint" c:type="int"/>
         </return-value>
       </method>
+      <method name="matrix_set"
+              c:identifier="hkl_matrix_matrix_set"
+              introspectable="0">
+        <doc xml:whitespace="preserve">@todo test</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="m" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the matrix to set</doc>
+            <type name="Matrix" c:type="HklMatrix*"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="solve" c:identifier="hkl_matrix_solve">
         <doc xml:whitespace="preserve">solve the system self . X = b
 
@@ -1963,6 +1977,16 @@ Returns:</doc>
           <type name="Matrix" c:type="HklMatrix*"/>
         </return-value>
       </method>
+      <method name="U_set" c:identifier="hkl_sample_U_set">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="U" transfer-ownership="none">
+            <type name="Matrix" c:type="HklMatrix*"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="add_reflection"
               c:identifier="hkl_sample_add_reflection"
               introspectable="0">
@@ -2173,28 +2197,6 @@ U * B = UB -&gt; U = UB * B^-1</doc>
           <parameter name="UB" transfer-ownership="none">
             <doc xml:whitespace="preserve">the UB matrix to set</doc>
             <type name="Matrix" c:type="HklMatrix*"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="set_U_from_euler"
-              c:identifier="hkl_sample_set_U_from_euler"
-              introspectable="0">
-        <doc xml:whitespace="preserve">set the U matrix using the eulerians angles
-todo tests
-
-Returns:</doc>
-        <return-value transfer-ownership="none">
-          <type name="gint" c:type="int"/>
-        </return-value>
-        <parameters>
-          <parameter name="x" transfer-ownership="none">
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-          <parameter name="y" transfer-ownership="none">
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-          <parameter name="z" transfer-ownership="none">
-            <type name="gdouble" c:type="double"/>
           </parameter>
         </parameters>
       </method>

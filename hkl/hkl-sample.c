@@ -489,7 +489,6 @@ void hkl_sample_uz_set(HklSample *self,
 	hkl_sample_compute_UB(self);
 }
 
-
 /**
  * hkl_sample_U_get: (skip)
  * @self: the this ptr
@@ -501,31 +500,16 @@ const HklMatrix *hkl_sample_U_get(const HklSample *self)
 	return &self->U;
 }
 
-/**
- * hkl_sample_set_U_from_euler: (skip)
- * @self:
- * @x:
- * @y:
- * @z:
- *
- * set the U matrix using the eulerians angles
- * todo tests
- *
- * Returns:
- **/
-int hkl_sample_set_U_from_euler(HklSample *self,
-				double x, double y, double z)
+void hkl_sample_U_set(HklSample *self, const HklMatrix *U)
 {
-	if (!self)
-		return HKL_FALSE;
+	double x, y, z;
 
-	hkl_matrix_init_from_euler(&self->U, x, y, z);
+	hkl_matrix_matrix_set(&self->U, U);
 	hkl_sample_compute_UB(self);
+	hkl_matrix_to_euler(&self->U, &x, &y, &z);
 	hkl_parameter_value_set(self->ux, x, NULL);
 	hkl_parameter_value_set(self->uy, y, NULL);
 	hkl_parameter_value_set(self->uz, z, NULL);
-
-	return HKL_TRUE;
 }
 
 /**

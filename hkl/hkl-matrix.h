@@ -43,6 +43,8 @@ extern void hkl_matrix_init(HklMatrix *self,
 			    double m21, double m22, double m23,
 			    double m31, double m32, double m33);
 
+extern void hkl_matrix_matrix_set(HklMatrix *self, const HklMatrix *m) HKL_ARG_NONNULL(1, 2);
+
 extern void hkl_matrix_init_from_two_vector(HklMatrix *self,
 					    const HklVector *v1, const HklVector *v2);
 

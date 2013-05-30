@@ -45,9 +45,6 @@ struct _HklSample {
 	size_t reflections_len;
 };
 
-extern int hkl_sample_set_U_from_euler(HklSample *self,
-				       double x, double y, double z);
-
 extern void hkl_sample_get_UB(HklSample *self, HklMatrix *UB);
 
 extern double hkl_sample_set_UB(HklSample *self, const HklMatrix *UB);

@@ -64,10 +64,9 @@ HKLAPI HklParameter *hkl_sample_uz_get(const HklSample *self) HKL_ARG_NONNULL(1)
 
 HKLAPI void hkl_sample_uz_set(HklSample *self, const HklParameter *uz) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI const HklMatrix *hkl_sample_U_get(const HklSample *) HKL_ARG_NONNULL(1);
+HKLAPI const HklMatrix *hkl_sample_U_get(const HklSample *self) HKL_ARG_NONNULL(1);
 
-extern int hkl_sample_set_U_from_euler(HklSample *self,
-				       double x, double y, double z);
+HKLAPI void hkl_sample_U_set(HklSample *self, const HklMatrix *U) HKL_ARG_NONNULL(1);
 
 extern void hkl_sample_get_UB(HklSample *self, HklMatrix *UB);
 

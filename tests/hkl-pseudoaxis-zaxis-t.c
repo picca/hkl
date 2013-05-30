@@ -36,6 +36,7 @@ static void solution(void)
 	HklLattice *lattice;
 	static double hkl[] = {1, 1, 0};
 	HklParameterList *pseudo_axes;
+	HklMatrix U;
 
 	/* get the geometry and set the source */
 	factory = hkl_factory_get_by_name("ZAXIS");
@@ -51,7 +52,8 @@ static void solution(void)
 			90 * HKL_DEGTORAD,
 			90 * HKL_DEGTORAD);
 	hkl_sample_lattice_set(sample, lattice);
-	hkl_sample_set_U_from_euler(sample, -90*HKL_DEGTORAD, 0, 0);
+	hkl_matrix_init_from_euler(&U, -90*HKL_DEGTORAD, 0, 0);
+	hkl_sample_U_set(sample, &U);
 
 	/* use a 0D detector */
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);

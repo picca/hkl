@@ -191,6 +191,7 @@ void HKLWindow::on_button2_clicked(void)
 	LOG;
 
 	if(_sample){
+		HklMatrix U;
 		HklLattice *lattice = hkl_sample_lattice_get(_sample);
 
 		hkl_lattice_set(lattice,
@@ -224,10 +225,11 @@ void HKLWindow::on_button2_clicked(void)
 
 		hkl_sample_lattice_set(_sample, lattice);
 
-		hkl_sample_set_U_from_euler(_sample,
-					    _spinbutton_ux->get_value() * HKL_DEGTORAD,
-					    _spinbutton_uy->get_value() * HKL_DEGTORAD,
-					    _spinbutton_uz->get_value() * HKL_DEGTORAD);
+		hkl_matrix_init_from_euler(&U,
+					   _spinbutton_ux->get_value() * HKL_DEGTORAD,
+					   _spinbutton_uy->get_value() * HKL_DEGTORAD,
+					   _spinbutton_uz->get_value() * HKL_DEGTORAD);
+		hkl_sample_U_set(_sample, &U);
 
 		this->updateCrystalModel(_sample);
 		this->updateReciprocalLattice();

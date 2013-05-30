@@ -87,6 +87,21 @@ void hkl_matrix_init(HklMatrix *self,
 }
 
 /**
+ * hkl_matrix_matrix_set: (skip)
+ * @self: the this ptr
+ * @m: the matrix to set
+ *
+ * @todo test
+ **/
+void hkl_matrix_matrix_set(HklMatrix *self, const HklMatrix *m)
+{
+	if (self == m)
+		return;
+
+	memcpy(self->data, m->data, sizeof(double) * 9);
+}
+
+/**
  * hkl_matrix_fprintf:
  * @file: the FILE stream
  * @self: the #HklMatrix to print into the file stream

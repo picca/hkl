@@ -47,12 +47,14 @@ static void qper_qpar(void)
 	darray_parameter *pseudo_axes;
 	const HklGeometryList *geometries;
 	const darray_item *items;
+	HklMatrix U;
 
 	factory = hkl_factory_get_by_name("SOLEIL SIXS MED2+3");
 	geom = hkl_factory_create_new_geometry(factory);
 
 	sample = hkl_sample_new("test");
-        hkl_sample_set_U_from_euler(sample, -90.0 * HKL_DEGTORAD, 0., 0.);
+	hkl_matrix_init_from_euler(&U, -90.0 * HKL_DEGTORAD, 0., 0.);
+	hkl_sample_U_set(sample, &U);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	hkl_detector_idx_set(detector, 1);
