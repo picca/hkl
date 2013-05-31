@@ -123,7 +123,7 @@ static void  set_UB(void )
 
 	sample = hkl_sample_new("test");
 
-	hkl_sample_set_UB(sample, &UB);
+	hkl_sample_UB_set(sample, &UB);
 	ok(HKL_TRUE == hkl_matrix_cmp(&U,
 				      hkl_sample_U_get(sample)), __func__);
 	is_double(-90. * HKL_DEGTORAD,

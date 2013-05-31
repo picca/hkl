@@ -1100,7 +1100,7 @@ Returns:</doc>
       <method name="get_1_B"
               c:identifier="hkl_lattice_get_1_B"
               introspectable="0">
-        <doc xml:whitespace="preserve">Compute the invert of B (needed by the hkl_sample_set_UB method)
+        <doc xml:whitespace="preserve">Compute the invert of B (needed by the hkl_sample_UB_set method)
 should be optimized
 
 computation.</doc>
@@ -1971,6 +1971,31 @@ Returns:</doc>
           </parameter>
         </parameters>
       </constructor>
+      <method name="UB_get"
+              c:identifier="hkl_sample_UB_get"
+              introspectable="0">
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">get the UB matrix of the sample</doc>
+          <type name="Matrix" c:type="HklMatrix*"/>
+        </return-value>
+      </method>
+      <method name="UB_set"
+              c:identifier="hkl_sample_UB_set"
+              introspectable="0">
+        <doc xml:whitespace="preserve">Set the UB matrix using an external UB matrix. In fact you give
+the UB matrix but only the U matrix of the sample is affected by
+this operation. We keep the B matrix constant.
+U * B = UB -&gt; U = UB * B^-1</doc>
+        <return-value transfer-ownership="none">
+          <type name="gdouble" c:type="double"/>
+        </return-value>
+        <parameters>
+          <parameter name="UB" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the UB matrix to set</doc>
+            <type name="Matrix" c:type="HklMatrix*"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="U_get" c:identifier="hkl_sample_U_get" introspectable="0">
         <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">the U matrix of the sample</doc>
@@ -2063,23 +2088,6 @@ Returns:</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
-      </method>
-      <method name="get_UB"
-              c:identifier="hkl_sample_get_UB"
-              introspectable="0">
-        <doc xml:whitespace="preserve">get the UB matrix of the sample</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="UB"
-                     direction="inout"
-                     caller-allocates="0"
-                     transfer-ownership="full">
-            <doc xml:whitespace="preserve">where to store the UB matrix</doc>
-            <type name="Matrix" c:type="HklMatrix*"/>
-          </parameter>
-        </parameters>
       </method>
       <method name="get_ith_reflection"
               c:identifier="hkl_sample_get_ith_reflection"
@@ -2182,23 +2190,6 @@ Returns:</doc>
         <return-value transfer-ownership="none">
           <type name="gint" c:type="int"/>
         </return-value>
-      </method>
-      <method name="set_UB"
-              c:identifier="hkl_sample_set_UB"
-              introspectable="0">
-        <doc xml:whitespace="preserve">Set the UB matrix using an external UB matrix. In fact you give
-the UB matrix but only the U matrix of the sample is affected by
-this operation. We keep the B matrix constant.
-U * B = UB -&gt; U = UB * B^-1</doc>
-        <return-value transfer-ownership="none">
-          <type name="gdouble" c:type="double"/>
-        </return-value>
-        <parameters>
-          <parameter name="UB" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the UB matrix to set</doc>
-            <type name="Matrix" c:type="HklMatrix*"/>
-          </parameter>
-        </parameters>
       </method>
       <method name="ux_get"
               c:identifier="hkl_sample_ux_get"

@@ -513,23 +513,18 @@ void hkl_sample_U_set(HklSample *self, const HklMatrix *U)
 }
 
 /**
- * hkl_sample_get_UB: (skip)
+ * hkl_sample_UB_get: (skip)
  * @self:
- * @UB: (inout): where to store the UB matrix
  *
- * get the UB matrix of the sample
+ * Return value: get the UB matrix of the sample
  **/
-void hkl_sample_get_UB(HklSample *self, HklMatrix *UB)
+const HklMatrix *hkl_sample_UB_get(const HklSample *self)
 {
-	if (!self || !UB)
-		return;
-
-	hkl_sample_compute_UB(self);
-	*UB = self->UB;
+	return &self->UB;
 }
 
 /**
- * hkl_sample_set_UB: (skip)
+ * hkl_sample_UB_set: (skip)
  * @self: the sample to modify
  * @UB: (in): the UB matrix to set
  *
@@ -538,15 +533,12 @@ void hkl_sample_get_UB(HklSample *self, HklMatrix *UB)
  * this operation. We keep the B matrix constant.
  * U * B = UB -> U = UB * B^-1
  **/
-double hkl_sample_set_UB(HklSample *self, const HklMatrix *UB)
+double hkl_sample_UB_set(HklSample *self, const HklMatrix *UB)
 {
-	struct set_UB_t params;
-
-	if(!self || !UB)
-		return -1;
-
-	params.sample = self;
-	params.UB = UB;
+	struct set_UB_t params = {
+		.sample = self,
+		.UB = UB
+	};
 
 	return minimize(self, set_UB_fitness, &params);
 }

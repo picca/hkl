@@ -68,9 +68,9 @@ HKLAPI const HklMatrix *hkl_sample_U_get(const HklSample *self) HKL_ARG_NONNULL(
 
 HKLAPI void hkl_sample_U_set(HklSample *self, const HklMatrix *U) HKL_ARG_NONNULL(1);
 
-extern void hkl_sample_get_UB(HklSample *self, HklMatrix *UB);
+HKLAPI const HklMatrix *hkl_sample_UB_get(const HklSample *self) HKL_ARG_NONNULL(1);
 
-extern double hkl_sample_set_UB(HklSample *self, const HklMatrix *UB);
+HKLAPI double hkl_sample_UB_set(HklSample *self, const HklMatrix *UB) HKL_ARG_NONNULL(1, 2);
 
 extern int hkl_sample_reflections_len(const HklSample *self);
 

@@ -748,7 +748,7 @@ void HKLWindow::on_toolbutton_setUB_clicked(void)
 		UB.data[2][1] = _spinbutton_U32->get_value();
 		UB.data[2][2] = _spinbutton_U33->get_value();
 
-		hkl_sample_set_UB(_sample, &UB);
+		hkl_sample_UB_set(_sample, &UB);
 		hkl_sample_fprintf(stdout, _sample);
 
 		this->updateLattice();

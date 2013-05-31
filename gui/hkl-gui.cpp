@@ -795,7 +795,7 @@ void HKLWindow::updateUB(void)
 		char tmp[100];
 		HklMatrix UB;
 
-		hkl_sample_get_UB(_sample, &UB);
+		UB = *hkl_sample_UB_get(_sample);
 		sprintf(tmp, format, UB.data[0][0]);
 		_label_UB11->set_text(tmp);
 		sprintf(tmp, format, UB.data[0][1]);

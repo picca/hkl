@@ -250,7 +250,7 @@ int hkl_lattice_get_B(const HklLattice *self, HklMatrix *B)
  * @self: the @HklLattice
  * @B: (out): where to store the 1/B matrix
  *
- * Compute the invert of B (needed by the hkl_sample_set_UB method)
+ * Compute the invert of B (needed by the hkl_sample_UB_set method)
  * should be optimized
  *
  * Returns: HKL_TRUE or HKL_FALSE depending of the success of the

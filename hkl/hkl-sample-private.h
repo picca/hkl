@@ -45,10 +45,6 @@ struct _HklSample {
 	size_t reflections_len;
 };
 
-extern void hkl_sample_get_UB(HklSample *self, HklMatrix *UB);
-
-extern double hkl_sample_set_UB(HklSample *self, const HklMatrix *UB);
-
 extern HklSampleReflection *hkl_sample_add_reflection(HklSample *self,
 						      HklGeometry *geometry,
 						      const HklDetector *detector,
