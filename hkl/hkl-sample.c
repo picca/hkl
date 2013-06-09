@@ -647,9 +647,6 @@ int hkl_sample_compute_UB_busing_levy(HklSample *self,
  **/
 double hkl_sample_affine(HklSample *self)
 {
-	if(!self)
-		return GSL_NAN;
-
 	return minimize(self, mono_crystal_fitness, self);
 }
 

@@ -45,13 +45,6 @@ struct _HklSample {
 	struct list_head reflections;
 };
 
-extern HklSampleReflection *hkl_sample_add_reflection(HklSample *self,
-						      HklGeometry *geometry,
-						      const HklDetector *detector,
-						      double h, double k, double l);
-
-extern double hkl_sample_affine(HklSample *self);
-
 extern void hkl_sample_fprintf(FILE *f, const HklSample *self);
 
 
