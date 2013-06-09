@@ -138,6 +138,7 @@ static double mono_crystal_fitness(const gsl_vector *x, void *params)
 	double euler_y;
 	double euler_z;
 	HklSample *sample = params;
+	HklSampleReflection *reflection;
 
 	euler_x = gsl_vector_get(x, 0);
 	euler_y = gsl_vector_get(x, 1);
@@ -157,10 +158,7 @@ static double mono_crystal_fitness(const gsl_vector *x, void *params)
 		return GSL_NAN;
 
 	fitness = 0.;
-	for(i=0; i<sample->reflections_len; ++i) {
-		HklSampleReflection *reflection;
-
-		reflection = sample->reflections[i];
+	list_for_each(&sample->reflections, reflection, list){
 		if(reflection->flag){
 			HklVector UBh;
 
@@ -243,7 +241,6 @@ static double minimize(HklSample *sample, double (* f) (const gsl_vector * x, vo
 /**
  * hkl_sample_new:
  * @name:
- * @type:
  *
  * constructor
  *
@@ -278,8 +275,7 @@ HklSample* hkl_sample_new(const char *name)
 				     &hkl_unit_angle_deg);
 
 	hkl_sample_compute_UB(self);
-	self->reflections = NULL;
-	self->reflections_len = 0;
+	list_head_init(&self->reflections);
 
 	return self;
 }
@@ -295,8 +291,7 @@ HklSample* hkl_sample_new(const char *name)
 HklSample *hkl_sample_new_copy(const HklSample *self)
 {
 	HklSample *dup = NULL;
-	size_t len;
-	size_t i;
+	HklSampleReflection *reflection;
 
 	/* check parameters */
 	if(!self)
@@ -313,10 +308,11 @@ HklSample *hkl_sample_new_copy(const HklSample *self)
 	dup->uz = hkl_parameter_new_copy(self->uz);
 
 	/* copy the reflections */
-	dup->reflections = malloc(sizeof(*dup->reflections) * self->reflections_len);
-	dup->reflections_len = self->reflections_len;
-	for(i=0; i<dup->reflections_len; ++i)
-		self->reflections[i] = hkl_sample_reflection_new_copy(self->reflections[i]);
+	list_head_init(&dup->reflections);
+	list_for_each(&self->reflections, reflection, list){
+		list_add_tail(&dup->reflections,
+			      &hkl_sample_reflection_new_copy(reflection)->list);
+	}
 
 	return dup;
 }
@@ -329,7 +325,8 @@ HklSample *hkl_sample_new_copy(const HklSample *self)
  **/
 void hkl_sample_free(HklSample *self)
 {
-	size_t i;
+	HklSampleReflection *reflection;
+	HklSampleReflection *next;
 
 	if (!self)
 		return;
@@ -339,12 +336,9 @@ void hkl_sample_free(HklSample *self)
 	hkl_parameter_free(self->ux);
 	hkl_parameter_free(self->uy);
 	hkl_parameter_free(self->uz);
-	for(i=0; i<self->reflections_len;  ++i)
-		hkl_sample_reflection_free(self->reflections[i]);
-	if(self->reflections){
-		free(self->reflections);
-		self->reflections = NULL;
-		self->reflections_len = 0;
+	list_for_each_safe(&self->reflections, reflection, next, list){
+		list_del(&reflection->list);
+		hkl_sample_reflection_free(reflection);
 	}
 	free(self);
 }
@@ -543,9 +537,18 @@ double hkl_sample_UB_set(HklSample *self, const HklMatrix *UB)
 	return minimize(self, set_UB_fitness, &params);
 }
 
-int hkl_sample_reflections_len(const HklSample *self)
+HklSampleReflection *hkl_sample_first_reflection_get(const HklSample *self)
 {
-	return self->reflections_len;
+	return list_top(&self->reflections, HklSampleReflection, list);
+}
+
+HklSampleReflection *hkl_sample_next_reflection_get(const HklSample *self,
+						    const HklSampleReflection *reflection)
+{
+	if (&self->reflections.n == reflection->list.next)
+		return NULL;
+	else
+		return list_entry(reflection->list.next, HklSampleReflection, list);
 }
 
 /**
@@ -573,78 +576,40 @@ HklSampleReflection *hkl_sample_add_reflection(HklSample *self,
 
 	ref = hkl_sample_reflection_new(geometry, detector, h, k, l);
 
-	if(ref){
-		self->reflections = realloc(self->reflections, sizeof(*self->reflections) * (self->reflections_len + 1));
-		self->reflections[self->reflections_len++] = ref;
-	}
+	if(ref)
+		list_add_tail(&self->reflections, &ref->list);
 
 	return ref;
 }
 
 /**
- * hkl_sample_get_ith_reflection: (skip)
- * @self:
- * @idx:
- *
- * get the ith reflection
- *
- * Returns:
- **/
-HklSampleReflection* hkl_sample_get_ith_reflection(const HklSample *self, size_t idx)
-{
-	if (!self)
-		return NULL;
-
-	return self->reflections[idx];
-}
-
-/**
  * hkl_sample_del_reflection: (skip)
- * @self:
- * @idx:
+ * @reflection: the reflection to remove.
  *
- * delete the idx reflection
- *
- * Returns:
+ * remove an HklSampleRefelction from the relfections list.
  **/
-int hkl_sample_del_reflection(HklSample *self, size_t idx)
+void hkl_sample_del_reflection(HklSampleReflection *reflection)
 {
-	if (!self || (idx >= self->reflections_len))
-		return HKL_FALSE;
-
-	hkl_sample_reflection_free(self->reflections[idx]);
-	self->reflections_len--;
-	if(idx < self->reflections_len)
-		memmove(&self->reflections[idx], &self->reflections[idx + 1],
-			sizeof(*self->reflections) * (self->reflections_len - idx));
-
-	return HKL_TRUE;
+	list_del(&reflection->list);
+	hkl_sample_reflection_free(reflection);
 }
 
 /**
  * hkl_sample_compute_UB_busing_levy: (skip)
  * @self:
- * @idx1:
- * @idx2:
+ * @r1:
+ * @r2:
  *
  * compute the UB matrix using the Busing and Levy method
  * add ref
  *
  * Returns:
  **/
-int hkl_sample_compute_UB_busing_levy(HklSample *self, size_t idx1, size_t idx2)
+int hkl_sample_compute_UB_busing_levy(HklSample *self,
+				      const HklSampleReflection *r1,
+				      const HklSampleReflection *r2)
+
 {
-	HklSampleReflection *r1;
-	HklSampleReflection *r2;
-
-	if (!self
-	    || idx1 >= self->reflections_len
-	    || idx2 >= self->reflections_len)
-		return HKL_FALSE;
-
-	r1 = self->reflections[idx1];
-	r2 = self->reflections[idx2];
-
 	if (!hkl_vector_is_colinear(&r1->hkl, &r2->hkl)) {
 		HklVector h1c;
 		HklVector h2c;
@@ -690,49 +655,41 @@ double hkl_sample_affine(HklSample *self)
 
 /**
  * hkl_sample_get_reflection_mesured_angle: (skip)
- * @self:
- * @idx1:
- * @idx2:
+ * @self: the this ptr
+ * @r1: the first reflection
+ * @r2: the second reflection
  *
  * get the mesured angles between two reflections
  *
  * Returns:
  **/
 double hkl_sample_get_reflection_mesured_angle(const HklSample *self,
-					       size_t idx1, size_t idx2)
+					       const HklSampleReflection *r1,
+					       const HklSampleReflection *r2)
 {
-	if (!self
-	    || idx1 >= self->reflections_len
-	    || idx2 >= self->reflections_len)
-		return GSL_NAN;
-
-	return hkl_vector_angle(&self->reflections[idx1]->_hkl,
-				&self->reflections[idx2]->_hkl);
+	return hkl_vector_angle(&r1->_hkl,
+				&r2->_hkl);
 }
 
 /**
  * hkl_sample_get_reflection_theoretical_angle: (skip)
- * @self:
- * @idx1:
- * @idx2:
+ * @self: the this ptr
+ * @r1: the first reflection
+ * @r2: the second reflection
  *
  * get the theoretical angles between two reflections
  *
  * Returns:
  **/
 double hkl_sample_get_reflection_theoretical_angle(const HklSample *self,
-						   size_t idx1, size_t idx2)
+						   const HklSampleReflection *r1,
+						   const HklSampleReflection *r2)
 {
 	HklVector hkl1;
 	HklVector hkl2;
 
-	if (!self
-	    || idx1 >= self->reflections_len
-	    || idx2 >= self->reflections_len)
-		return GSL_NAN;
-
-	hkl1 = self->reflections[idx1]->hkl;
-	hkl2 = self->reflections[idx2]->hkl;
+	hkl1 = r1->hkl;
+	hkl2 = r2->hkl;
 	hkl_matrix_times_vector(&self->UB, &hkl1);
 	hkl_matrix_times_vector(&self->UB, &hkl2);
 
@@ -748,8 +705,6 @@ double hkl_sample_get_reflection_theoretical_angle(const HklSample *self,
  **/
 void hkl_sample_fprintf(FILE *f, const HklSample *self)
 {
-	size_t i, len;
-
 	if(!self)
 		return;
 
@@ -777,24 +732,24 @@ void hkl_sample_fprintf(FILE *f, const HklSample *self)
 	fprintf(f, "\nUB:\n");
 	hkl_matrix_fprintf(f, &self->UB);
 
-	len = self->reflections_len;
-	if (len){
+	if (!list_empty(&self->reflections)){
 		HklSampleReflection *reflection;
 		HklParameter **axis;
 
-		reflection  = hkl_sample_get_ith_reflection(self, 0);
+		reflection  = list_top(&self->reflections, HklSampleReflection, list);
 
 		fprintf(f, "Reflections:");
 		fprintf(f, "\n");
-		fprintf(f, "i %-10.6s %-10.6s %-10.6s", "h", "k", "l");
+		fprintf(f, "%-10.6s %-10.6s %-10.6s", "h", "k", "l");
 		darray_foreach(axis, reflection->geometry->axes){
 			fprintf(f, " %-10.6s", (*axis)->name);
 		}
 
-		for(i=0; i<len; ++i){
-			reflection  = hkl_sample_get_ith_reflection(self, i);
-			fprintf(f, "\n%d %-10.6f %-10.6f %-10.6f", i,
-				reflection->hkl.data[0], reflection->hkl.data[1], reflection->hkl.data[2]);
+		list_for_each(&self->reflections, reflection, list){
+			fprintf(f, "\n%-10.6f %-10.6f %-10.6f",
+				reflection->hkl.data[0],
+				reflection->hkl.data[1],
+				reflection->hkl.data[2]);
 			darray_foreach(axis, reflection->geometry->axes){
 				fprintf(f, " %-10.6f", hkl_parameter_value_unit_get(*axis));
 			}

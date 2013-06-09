@@ -24,9 +24,7 @@ and/or use gtk-doc annotations.  -->
             glib:get-type="hkl_detector_get_type"
             c:symbol-prefix="detector">
       <constructor name="factory_new" c:identifier="hkl_detector_factory_new">
-        <doc xml:whitespace="preserve">Detector factory
-
-Returns:</doc>
+        <doc xml:whitespace="preserve">Detector factory</doc>
         <return-value transfer-ownership="full">
           <type name="Detector" c:type="HklDetector*"/>
         </return-value>
@@ -41,6 +39,11 @@ Returns:</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Detector" c:type="HklDetector*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="idx_set" c:identifier="hkl_detector_idx_set">
         <doc xml:whitespace="preserve">Attach a detector to a given holder</doc>
@@ -48,6 +51,10 @@ Returns:</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Detector" c:type="HklDetector*"/>
+          </instance-parameter>
           <parameter name="idx" transfer-ownership="none">
             <doc xml:whitespace="preserve">the index of the holder</doc>
             <type name="gint" c:type="int"/>
@@ -66,7 +73,7 @@ Returns:</doc>
             <type name="gpointer" c:type="FILE*"/>
           </parameter>
           <parameter name="self" transfer-ownership="none">
-            <type name="Detector" c:type="HklDetector*"/>
+            <type name="Detector" c:type="const HklDetector*"/>
           </parameter>
         </parameters>
       </function>
@@ -78,7 +85,8 @@ Returns:</doc>
       <member name="0d"
               value="0"
               c:identifier="HKL_DETECTOR_TYPE_0D"
-              glib:nick="0d"/>
+              glib:nick="0d">
+      </member>
     </enumeration>
     <record name="Engine"
             c:type="HklEngine"
@@ -90,15 +98,23 @@ Returns:</doc>
           <doc xml:whitespace="preserve">the HklEngineList which contain this HklEngine</doc>
           <type name="EngineList" c:type="HklEngineList*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Engine" c:type="HklEngine*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="get" c:identifier="hkl_engine_get" introspectable="0">
-        <doc xml:whitespace="preserve">get the values of the pseudo-axes from the real-axes values
-
-Returns:</doc>
+        <doc xml:whitespace="preserve">get the values of the pseudo-axes from the real-axes values</doc>
         <return-value transfer-ownership="none">
           <type name="gint" c:type="int"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">The HklEngine</doc>
+            <type name="Engine" c:type="HklEngine*"/>
+          </instance-parameter>
           <parameter name="error" transfer-ownership="none" allow-none="1">
             <doc xml:whitespace="preserve">NULL or an HklError</doc>
             <type name="Error" c:type="HklError**"/>
@@ -108,13 +124,15 @@ Returns:</doc>
       <method name="initialize"
               c:identifier="hkl_engine_initialize"
               introspectable="0">
-        <doc xml:whitespace="preserve">initialize the HklEngine
-
-Returns:</doc>
+        <doc xml:whitespace="preserve">initialize the HklEngine</doc>
         <return-value transfer-ownership="none">
           <type name="gint" c:type="int"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the HklEngine</doc>
+            <type name="Engine" c:type="HklEngine*"/>
+          </instance-parameter>
           <parameter name="error" transfer-ownership="none" allow-none="1">
             <doc xml:whitespace="preserve">NULL or an HklError to check for error's during the initialization</doc>
             <type name="Error" c:type="HklError**"/>
@@ -126,12 +144,24 @@ Returns:</doc>
           <doc xml:whitespace="preserve">the len of the pseudo axes of the HklEngine</doc>
           <type name="guint" c:type="unsigned int"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Engine" c:type="const HklEngine*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="mode" c:identifier="hkl_engine_mode">
         <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">the current mode of the HklEngine</doc>
           <type name="Mode" c:type="HklMode*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Engine" c:type="HklEngine*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="modes"
               c:identifier="hkl_engine_modes"
@@ -141,29 +171,52 @@ Returns:</doc>
           <doc xml:whitespace="preserve">the current mode of the HklEngine</doc>
           <type c:type="darray_mode*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Engine" c:type="HklEngine*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="modes_as_gslist"
               c:identifier="hkl_engine_modes_as_gslist"
               shadows="modes">
-        <doc xml:whitespace="preserve">free the list with g_slist_free when done.</doc>
         <return-value transfer-ownership="container">
-          <doc xml:whitespace="preserve">list of mdoe,</doc>
+          <doc xml:whitespace="preserve">list of mdoe, free the list with g_slist_free when done.</doc>
           <type name="GLib.SList" c:type="GSList*">
             <type name="Mode"/>
           </type>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Engine" c:type="HklEngine*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="name" c:identifier="hkl_engine_name">
         <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">the name of the HklEngine</doc>
-          <type name="utf8" c:type="char*"/>
+          <type name="utf8" c:type="const char*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Engine" c:type="const HklEngine*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="pseudo_axes" c:identifier="hkl_engine_pseudo_axes">
         <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">the pseudo_axes managed by this HklEngine</doc>
           <type name="ParameterList" c:type="HklParameterList*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Engine" c:type="HklEngine*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="select_mode" c:identifier="hkl_engine_select_mode">
         <doc xml:whitespace="preserve">This method also populate the self-&gt;axes from the mode-&gt;axes_names.
@@ -172,6 +225,10 @@ this is to speed the computation of the numerical axes.</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the HklEngine</doc>
+            <type name="Engine" c:type="HklEngine*"/>
+          </instance-parameter>
           <parameter name="mode" transfer-ownership="none">
             <doc xml:whitespace="preserve">the #HklPseudoAxisMode to select</doc>
             <type name="Mode" c:type="HklMode*"/>
@@ -184,19 +241,24 @@ this is to speed the computation of the numerical axes.</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Engine" c:type="HklEngine*"/>
+          </instance-parameter>
           <parameter name="name" transfer-ownership="none">
-            <type name="utf8" c:type="char*"/>
+            <type name="utf8" c:type="const char*"/>
           </parameter>
         </parameters>
       </method>
       <method name="set" c:identifier="hkl_engine_set" introspectable="0">
-        <doc xml:whitespace="preserve">use the HklPseudoaxisEngine values to compute the real axes values.
-
-Returns:</doc>
+        <doc xml:whitespace="preserve">use the HklPseudoaxisEngine values to compute the real axes values.</doc>
         <return-value transfer-ownership="none">
           <type name="gint" c:type="int"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the HklEngine</doc>
+            <type name="Engine" c:type="HklEngine*"/>
+          </instance-parameter>
           <parameter name="error" transfer-ownership="none" allow-none="1">
             <doc xml:whitespace="preserve">NULL or an HklError</doc>
             <type name="Error" c:type="HklError**"/>
@@ -212,6 +274,10 @@ Returns:</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Engine" c:type="HklEngine*"/>
+          </instance-parameter>
           <parameter name="values" transfer-ownership="none">
             <doc xml:whitespace="preserve">the values to set</doc>
             <array length="1" zero-terminated="0" c:type="double">
@@ -238,7 +304,7 @@ Returns:</doc>
           </parameter>
           <parameter name="self" transfer-ownership="none">
             <doc xml:whitespace="preserve">the HklEngine</doc>
-            <type name="Engine" c:type="HklEngine*"/>
+            <type name="Engine" c:type="const HklEngine*"/>
           </parameter>
         </parameters>
       </function>
@@ -252,21 +318,32 @@ Returns:</doc>
               c:identifier="hkl_engine_list_engines"
               shadowed-by="engines_as_gslist"
               introspectable="0">
+        <doc xml:whitespace="preserve">Return: a pointer on the engine array</doc>
         <return-value>
-          <doc xml:whitespace="preserve">a pointer on the engine array</doc>
           <type c:type="darray_engine*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="EngineList" c:type="HklEngineList*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="engines_as_gslist"
               c:identifier="hkl_engine_list_engines_as_gslist"
               shadows="engines">
-        <doc xml:whitespace="preserve">free the list with g_slist_free when done.</doc>
         <return-value transfer-ownership="container">
-          <doc xml:whitespace="preserve">list of engines,</doc>
+          <doc xml:whitespace="preserve">list of engines, free the list with g_slist_free when done.</doc>
           <type name="GLib.SList" c:type="GSList*">
             <type name="Engine"/>
           </type>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="EngineList" c:type="HklEngineList*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="free"
               c:identifier="hkl_engine_list_free"
@@ -275,32 +352,51 @@ Returns:</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklEngineList to destroy</doc>
+            <type name="EngineList" c:type="HklEngineList*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="geometries" c:identifier="hkl_engine_list_geometries">
+        <doc xml:whitespace="preserve">Return: a pointer on the engine array</doc>
         <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">a pointer on the engine array</doc>
-          <type name="GeometryList" c:type="HklGeometryList*"/>
+          <type name="GeometryList" c:type="const HklGeometryList*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="EngineList" c:type="const HklEngineList*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="geometry_set" c:identifier="hkl_engine_list_geometry_set">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="EngineList" c:type="HklEngineList*"/>
+          </instance-parameter>
           <parameter name="geometry" transfer-ownership="none">
-            <type name="Geometry" c:type="HklGeometry*"/>
+            <type name="Geometry" c:type="const HklGeometry*"/>
           </parameter>
         </parameters>
       </method>
       <method name="get" c:identifier="hkl_engine_list_get">
         <doc xml:whitespace="preserve">apply the get method to all the #HklEngine of the list
-after this it is possible to retrive all the #HklPseudoAxis values.
-
-get method failed.</doc>
+after this it is possible to retrive all the #HklPseudoAxis values.</doc>
         <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">HKL_SUCCESS or HKL_FAIL if one of the #HklEngine</doc>
+          <doc xml:whitespace="preserve">HKL_SUCCESS or HKL_FAIL if one of the #HklEngine get method failed.</doc>
           <type name="gint" c:type="int"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the list of #HklEngine</doc>
+            <type name="EngineList" c:type="HklEngineList*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="get_by_name" c:identifier="hkl_engine_list_get_by_name">
         <doc xml:whitespace="preserve">get the #HklEngine by its name from the list.</doc>
@@ -309,19 +405,29 @@ get method failed.</doc>
           <type name="Engine" c:type="HklEngine*"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="EngineList" c:type="HklEngineList*"/>
+          </instance-parameter>
           <parameter name="name" transfer-ownership="none">
             <doc xml:whitespace="preserve">the name of the requested #HklPseudoAxisEngin</doc>
-            <type name="utf8" c:type="char*"/>
+            <type name="utf8" c:type="const char*"/>
           </parameter>
         </parameters>
       </method>
       <method name="get_geometry"
               c:identifier="hkl_engine_list_get_geometry"
               introspectable="0">
+        <doc xml:whitespace="preserve">Return: a pointer on the geometry member</doc>
         <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">a pointer on the geometry member</doc>
           <type name="Geometry" c:type="HklGeometry*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="EngineList" c:type="HklEngineList*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="get_pseudo_axis_by_name"
               c:identifier="hkl_engine_list_get_pseudo_axis_by_name">
@@ -331,9 +437,13 @@ get method failed.</doc>
           <type name="Parameter" c:type="HklParameter*"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the engine list</doc>
+            <type name="EngineList" c:type="const HklEngineList*"/>
+          </instance-parameter>
           <parameter name="name" transfer-ownership="none">
             <doc xml:whitespace="preserve">the name of the requested #HklPseudoAxis</doc>
-            <type name="utf8" c:type="char*"/>
+            <type name="utf8" c:type="const char*"/>
           </parameter>
         </parameters>
       </method>
@@ -344,6 +454,10 @@ Geometry, a detector and a sample.</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the engine list</doc>
+            <type name="EngineList" c:type="HklEngineList*"/>
+          </instance-parameter>
           <parameter name="geometry" transfer-ownership="none">
             <doc xml:whitespace="preserve">the associated #HklGeometry</doc>
             <type name="Geometry" c:type="HklGeometry*"/>
@@ -367,6 +481,10 @@ do nothing.</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="EngineList" c:type="HklEngineList*"/>
+          </instance-parameter>
           <parameter name="idx" transfer-ownership="none">
             <doc xml:whitespace="preserve">the index of the solution to select</doc>
             <type name="guint" c:type="unsigned int"/>
@@ -387,7 +505,7 @@ do nothing.</doc>
           </parameter>
           <parameter name="self" transfer-ownership="none">
             <doc xml:whitespace="preserve">the list</doc>
-            <type name="EngineList" c:type="HklEngineList*"/>
+            <type name="EngineList" c:type="const HklEngineList*"/>
           </parameter>
         </parameters>
       </function>
@@ -410,9 +528,9 @@ and a message formatted with @format.</doc>
         <parameters>
           <parameter name="format" transfer-ownership="none">
             <doc xml:whitespace="preserve">printf()-style format for error message</doc>
-            <type name="utf8" c:type="char*"/>
+            <type name="utf8" c:type="const char*"/>
           </parameter>
-          <parameter transfer-ownership="none">
+          <parameter name="arg1" transfer-ownership="none">
             <varargs>
             </varargs>
           </parameter>
@@ -432,7 +550,7 @@ printf() escape sequences.</doc>
         <parameters>
           <parameter name="message" transfer-ownership="none">
             <doc xml:whitespace="preserve">error message</doc>
-            <type name="utf8" c:type="char*"/>
+            <type name="utf8" c:type="const char*"/>
           </parameter>
         </parameters>
       </constructor>
@@ -449,7 +567,7 @@ formatted with @format.</doc>
         <parameters>
           <parameter name="format" transfer-ownership="none">
             <doc xml:whitespace="preserve">printf()-style format for error message</doc>
-            <type name="utf8" c:type="char*"/>
+            <type name="utf8" c:type="const char*"/>
           </parameter>
           <parameter name="args" transfer-ownership="none">
             <doc xml:whitespace="preserve">#va_list of parameters for the message format</doc>
@@ -462,6 +580,12 @@ formatted with @format.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="error" transfer-ownership="none">
+            <doc xml:whitespace="preserve">a #HklError</doc>
+            <type name="Error" c:type="HklError*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="new_copy"
               c:identifier="hkl_error_new_copy"
@@ -471,6 +595,12 @@ formatted with @format.</doc>
           <doc xml:whitespace="preserve">a new #HklError</doc>
           <type name="Error" c:type="HklError*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="error" transfer-ownership="none">
+            <doc xml:whitespace="preserve">a #HklError</doc>
+            <type name="Error" c:type="const HklError*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <function name="clear" c:identifier="hkl_error_clear" introspectable="0">
         <doc xml:whitespace="preserve">If @err is %NULL, does nothing. If @err is non-%NULL, calls
@@ -506,9 +636,9 @@ sense to take advantage of this feature is up to you.</doc>
           </parameter>
           <parameter name="format" transfer-ownership="none">
             <doc xml:whitespace="preserve">printf()-style format string</doc>
-            <type name="utf8" c:type="char*"/>
+            <type name="utf8" c:type="const char*"/>
           </parameter>
-          <parameter transfer-ownership="none">
+          <parameter name="arg2" transfer-ownership="none">
             <varargs>
             </varargs>
           </parameter>
@@ -554,9 +684,9 @@ hkl_prefix_error().</doc>
           </parameter>
           <parameter name="format" transfer-ownership="none">
             <doc xml:whitespace="preserve">printf()-style format string</doc>
-            <type name="utf8" c:type="char*"/>
+            <type name="utf8" c:type="const char*"/>
           </parameter>
-          <parameter transfer-ownership="none">
+          <parameter name="arg3" transfer-ownership="none">
             <varargs>
             </varargs>
           </parameter>
@@ -575,9 +705,9 @@ must be %NULL. A new #HklError is created and assigned to *@err.</doc>
           </parameter>
           <parameter name="format" transfer-ownership="none">
             <doc xml:whitespace="preserve">printf()-style format</doc>
-            <type name="utf8" c:type="char*"/>
+            <type name="utf8" c:type="const char*"/>
           </parameter>
-          <parameter transfer-ownership="none">
+          <parameter name="arg2" transfer-ownership="none">
             <varargs>
             </varargs>
           </parameter>
@@ -602,7 +732,7 @@ control over, that could include printf() escape sequences.</doc>
           </parameter>
           <parameter name="message" transfer-ownership="none">
             <doc xml:whitespace="preserve">error message</doc>
-            <type name="utf8" c:type="char*"/>
+            <type name="utf8" c:type="const char*"/>
           </parameter>
         </parameters>
       </function>
@@ -613,17 +743,32 @@ control over, that could include printf() escape sequences.</doc>
         <return-value transfer-ownership="full">
           <type name="EngineList" c:type="HklEngineList*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Factory" c:type="const HklFactory*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="create_new_geometry"
               c:identifier="hkl_factory_create_new_geometry">
         <return-value transfer-ownership="full">
           <type name="Geometry" c:type="HklGeometry*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Factory" c:type="const HklFactory*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="name" c:identifier="hkl_factory_name">
         <return-value transfer-ownership="none">
-          <type name="utf8" c:type="char*"/>
+          <type name="utf8" c:type="const char*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Factory" c:type="const HklFactory*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <function name="get_all"
                 c:identifier="hkl_factory_get_all"
@@ -645,7 +790,7 @@ control over, that could include printf() escape sequences.</doc>
         </return-value>
         <parameters>
           <parameter name="name" transfer-ownership="none">
-            <type name="utf8" c:type="char*"/>
+            <type name="utf8" c:type="const char*"/>
           </parameter>
         </parameters>
       </function>
@@ -656,28 +801,41 @@ control over, that could include printf() escape sequences.</doc>
             glib:get-type="hkl_geometry_get_type"
             c:symbol-prefix="geometry">
       <method name="axes" c:identifier="hkl_geometry_axes">
-        <doc xml:whitespace="preserve">free the list with g_slist_free when done.</doc>
         <return-value transfer-ownership="container">
-          <doc xml:whitespace="preserve">list of HklParameter,</doc>
+          <doc xml:whitespace="preserve">list of HklParameter, free the list with g_slist_free when done.</doc>
           <type name="GLib.SList" c:type="GSList*">
             <type name="Parameter"/>
           </type>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Geometry" c:type="HklGeometry*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="axes_get"
               c:identifier="hkl_geometry_axes_get"
               introspectable="0">
         <return-value transfer-ownership="none">
-          <type c:type="darray_parameter*"/>
+          <type c:type="const darray_parameter*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Geometry" c:type="const HklGeometry*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="axis_set" c:identifier="hkl_geometry_axis_set">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Geometry" c:type="HklGeometry*"/>
+          </instance-parameter>
           <parameter name="axis" transfer-ownership="none">
-            <type name="Parameter" c:type="HklParameter*"/>
+            <type name="Parameter" c:type="const HklParameter*"/>
           </parameter>
         </parameters>
       </method>
@@ -686,17 +844,25 @@ control over, that could include printf() escape sequences.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Geometry" c:type="HklGeometry*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="get_axes_values_unit"
               c:identifier="hkl_geometry_get_axes_values_unit">
-        <doc xml:whitespace="preserve">free the list with free when done.</doc>
         <return-value transfer-ownership="container">
-          <doc xml:whitespace="preserve">list of axes values,</doc>
+          <doc xml:whitespace="preserve">list of axes values, free the list with free when done.</doc>
           <array length="0" zero-terminated="0" c:type="double*">
             <type name="gdouble" c:type="double"/>
           </array>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Geometry" c:type="const HklGeometry*"/>
+          </instance-parameter>
           <parameter name="len"
                      direction="out"
                      caller-allocates="1"
@@ -708,8 +874,13 @@ control over, that could include printf() escape sequences.</doc>
       </method>
       <method name="name_get" c:identifier="hkl_geometry_name_get">
         <return-value transfer-ownership="none">
-          <type name="utf8" c:type="char*"/>
+          <type name="utf8" c:type="const char*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Geometry" c:type="const HklGeometry*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="randomize"
               c:identifier="hkl_geometry_randomize"
@@ -718,14 +889,22 @@ control over, that could include printf() escape sequences.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Geometry" c:type="HklGeometry*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="set" c:identifier="hkl_geometry_set">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="src" transfer-ownership="none">
+          <instance-parameter name="self" transfer-ownership="none">
             <type name="Geometry" c:type="HklGeometry*"/>
+          </instance-parameter>
+          <parameter name="src" transfer-ownership="none">
+            <type name="Geometry" c:type="const HklGeometry*"/>
           </parameter>
         </parameters>
       </method>
@@ -735,6 +914,10 @@ control over, that could include printf() escape sequences.</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Geometry" c:type="HklGeometry*"/>
+          </instance-parameter>
           <parameter name="values" transfer-ownership="none">
             <doc xml:whitespace="preserve">the values to set.</doc>
             <array length="1" zero-terminated="0" c:type="double*">
@@ -754,7 +937,10 @@ control over, that could include printf() escape sequences.</doc>
           <type name="gint" c:type="int"/>
         </return-value>
         <parameters>
-          <parameter transfer-ownership="none">
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Geometry" c:type="HklGeometry*"/>
+          </instance-parameter>
+          <parameter name="arg1" transfer-ownership="none">
             <varargs>
             </varargs>
           </parameter>
@@ -764,12 +950,20 @@ control over, that could include printf() escape sequences.</doc>
         <return-value transfer-ownership="none">
           <type name="gdouble" c:type="double"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Geometry" c:type="const HklGeometry*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="wavelength_set" c:identifier="hkl_geometry_wavelength_set">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Geometry" c:type="HklGeometry*"/>
+          </instance-parameter>
           <parameter name="wavelength" transfer-ownership="none">
             <type name="gdouble" c:type="double"/>
           </parameter>
@@ -787,7 +981,7 @@ control over, that could include printf() escape sequences.</doc>
             <type name="gpointer" c:type="FILE*"/>
           </parameter>
           <parameter name="self" transfer-ownership="none">
-            <type name="Geometry" c:type="HklGeometry*"/>
+            <type name="Geometry" c:type="const HklGeometry*"/>
           </parameter>
         </parameters>
       </function>
@@ -798,20 +992,30 @@ control over, that could include printf() escape sequences.</doc>
             glib:get-type="hkl_geometry_list_get_type"
             c:symbol-prefix="geometry_list">
       <method name="items" c:identifier="hkl_geometry_list_items">
-        <doc xml:whitespace="preserve">free the list with g_slist_free when done.</doc>
         <return-value transfer-ownership="container">
-          <doc xml:whitespace="preserve">list of items,</doc>
+          <doc xml:whitespace="preserve">list of items, free the list with g_slist_free when done.</doc>
           <type name="GLib.SList" c:type="GSList*">
             <type name="GeometryListItem"/>
           </type>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklGeometryList</doc>
+            <type name="GeometryList" c:type="HklGeometryList*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="items_get"
               c:identifier="hkl_geometry_list_items_get"
               introspectable="0">
         <return-value transfer-ownership="none">
-          <type c:type="darray_item*"/>
+          <type c:type="const darray_item*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="GeometryList" c:type="const HklGeometryList*"/>
+          </instance-parameter>
+        </parameters>
       </method>
     </record>
     <record name="GeometryListItem"
@@ -822,16 +1026,28 @@ control over, that could include printf() escape sequences.</doc>
       <method name="geometry" c:identifier="hkl_geometry_list_item_geometry">
         <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">The geometry contain inside the HklGeometryListItem</doc>
-          <type name="Geometry" c:type="HklGeometry*"/>
+          <type name="Geometry" c:type="const HklGeometry*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="GeometryListItem" c:type="const HklGeometryListItem*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="geometry_get"
               c:identifier="hkl_geometry_list_item_geometry_get"
               introspectable="0">
         <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">The geometry contain inside the HklGeometryListItem</doc>
-          <type name="Geometry" c:type="HklGeometry*"/>
+          <type name="Geometry" c:type="const HklGeometry*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="GeometryListItem" c:type="const HklGeometryListItem*"/>
+          </instance-parameter>
+        </parameters>
       </method>
     </record>
     <record name="Interval"
@@ -850,6 +1066,11 @@ control over, that could include printf() escape sequences.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Interval" c:type="HklInterval*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="angle_restrict_symm"
               c:identifier="hkl_interval_angle_restrict_symm"
@@ -858,47 +1079,71 @@ control over, that could include printf() escape sequences.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Interval" c:type="HklInterval*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="asin" c:identifier="hkl_interval_asin" introspectable="0">
         <doc xml:whitespace="preserve">compute the arc sinus of an #HklInterval</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Interval" c:type="HklInterval*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="atan" c:identifier="hkl_interval_atan" introspectable="0">
         <doc xml:whitespace="preserve">compute the arc tangente of an #HklInterval</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Interval" c:type="HklInterval*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="cmp" c:identifier="hkl_interval_cmp" introspectable="0">
-        <doc xml:whitespace="preserve">compare two intervals
-
-Returns:</doc>
+        <doc xml:whitespace="preserve">compare two intervals</doc>
         <return-value transfer-ownership="none">
           <type name="gint" c:type="int"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Interval" c:type="const HklInterval*"/>
+          </instance-parameter>
           <parameter name="interval" transfer-ownership="none">
-            <type name="Interval" c:type="HklInterval*"/>
+            <type name="Interval" c:type="const HklInterval*"/>
           </parameter>
         </parameters>
       </method>
       <method name="contain_zero"
               c:identifier="hkl_interval_contain_zero"
               introspectable="0">
-        <doc xml:whitespace="preserve">check if an #HklInterval contain zero
-
-Returns:</doc>
+        <doc xml:whitespace="preserve">check if an #HklInterval contain zero</doc>
         <return-value transfer-ownership="none">
           <type name="gint" c:type="int"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Interval" c:type="const HklInterval*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="cos" c:identifier="hkl_interval_cos" introspectable="0">
         <doc xml:whitespace="preserve">compute the cosinus of an #HklInterval</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Interval" c:type="HklInterval*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="divides_double"
               c:identifier="hkl_interval_divides_double"
@@ -908,34 +1153,48 @@ Returns:</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Interval" c:type="HklInterval*"/>
+          </instance-parameter>
           <parameter name="d" transfer-ownership="none">
             <type name="gdouble" c:type="double"/>
           </parameter>
         </parameters>
       </method>
       <method name="dup" c:identifier="hkl_interval_dup" introspectable="0">
-        <doc xml:whitespace="preserve">copy an #HklInterval
-
-Returns:</doc>
+        <doc xml:whitespace="preserve">copy an #HklInterval</doc>
         <return-value transfer-ownership="full">
           <type name="Interval" c:type="HklInterval*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Interval" c:type="const HklInterval*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="free" c:identifier="hkl_interval_free" introspectable="0">
         <doc xml:whitespace="preserve">delete an #HklInterval</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Interval" c:type="HklInterval*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="length"
               c:identifier="hkl_interval_length"
               introspectable="0">
-        <doc xml:whitespace="preserve">compute the length of an #HklInterval
-
-Returns:</doc>
+        <doc xml:whitespace="preserve">compute the length of an #HklInterval</doc>
         <return-value transfer-ownership="none">
           <type name="gdouble" c:type="double"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Interval" c:type="const HklInterval*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="minus_double"
               c:identifier="hkl_interval_minus_double"
@@ -945,6 +1204,9 @@ Returns:</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Interval" c:type="HklInterval*"/>
+          </instance-parameter>
           <parameter name="d" transfer-ownership="none">
             <type name="gdouble" c:type="double"/>
           </parameter>
@@ -958,8 +1220,11 @@ Returns:</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="interval" transfer-ownership="none">
+          <instance-parameter name="self" transfer-ownership="none">
             <type name="Interval" c:type="HklInterval*"/>
+          </instance-parameter>
+          <parameter name="interval" transfer-ownership="none">
+            <type name="Interval" c:type="const HklInterval*"/>
           </parameter>
         </parameters>
       </method>
@@ -971,6 +1236,9 @@ Returns:</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Interval" c:type="HklInterval*"/>
+          </instance-parameter>
           <parameter name="d" transfer-ownership="none">
             <type name="gdouble" c:type="double"/>
           </parameter>
@@ -984,8 +1252,11 @@ Returns:</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="interval" transfer-ownership="none">
+          <instance-parameter name="self" transfer-ownership="none">
             <type name="Interval" c:type="HklInterval*"/>
+          </instance-parameter>
+          <parameter name="interval" transfer-ownership="none">
+            <type name="Interval" c:type="const HklInterval*"/>
           </parameter>
         </parameters>
       </method>
@@ -994,12 +1265,22 @@ Returns:</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Interval" c:type="HklInterval*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="tan" c:identifier="hkl_interval_tan" introspectable="0">
         <doc xml:whitespace="preserve">compute the tangente of an #HklInterval</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Interval" c:type="HklInterval*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="times_double"
               c:identifier="hkl_interval_times_double"
@@ -1009,6 +1290,9 @@ Returns:</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Interval" c:type="HklInterval*"/>
+          </instance-parameter>
           <parameter name="d" transfer-ownership="none">
             <type name="gdouble" c:type="double"/>
           </parameter>
@@ -1022,8 +1306,11 @@ Returns:</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="interval" transfer-ownership="none">
+          <instance-parameter name="self" transfer-ownership="none">
             <type name="Interval" c:type="HklInterval*"/>
+          </instance-parameter>
+          <parameter name="interval" transfer-ownership="none">
+            <type name="Interval" c:type="const HklInterval*"/>
           </parameter>
         </parameters>
       </method>
@@ -1054,9 +1341,7 @@ Returns:</doc>
       <constructor name="new"
                    c:identifier="hkl_lattice_new"
                    introspectable="0">
-        <doc xml:whitespace="preserve">constructor
-
-Returns:</doc>
+        <doc xml:whitespace="preserve">constructor</doc>
         <return-value transfer-ownership="full">
           <type name="Lattice" c:type="HklLattice*"/>
         </return-value>
@@ -1084,9 +1369,7 @@ Returns:</doc>
       <constructor name="new_default"
                    c:identifier="hkl_lattice_new_default"
                    introspectable="0">
-        <doc xml:whitespace="preserve">default constructor
-
-Returns:</doc>
+        <doc xml:whitespace="preserve">default constructor</doc>
         <return-value transfer-ownership="full">
           <type name="Lattice" c:type="HklLattice*"/>
         </return-value>
@@ -1096,19 +1379,26 @@ Returns:</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Lattice" c:type="HklLattice*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="get_1_B"
               c:identifier="hkl_lattice_get_1_B"
               introspectable="0">
         <doc xml:whitespace="preserve">Compute the invert of B (needed by the hkl_sample_UB_set method)
-should be optimized
-
-computation.</doc>
+should be optimized</doc>
         <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">HKL_TRUE or HKL_FALSE depending of the success of the</doc>
+          <doc xml:whitespace="preserve">HKL_TRUE or HKL_FALSE depending of the success of the computation.</doc>
           <type name="gint" c:type="int"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the @HklLattice</doc>
+            <type name="Lattice" c:type="const HklLattice*"/>
+          </instance-parameter>
           <parameter name="B"
                      direction="out"
                      caller-allocates="1"
@@ -1119,13 +1409,14 @@ computation.</doc>
         </parameters>
       </method>
       <method name="get_B" c:identifier="hkl_lattice_get_B" introspectable="0">
-        <doc xml:whitespace="preserve">Get the B matrix from the lattice parameters
-
-Returns:</doc>
+        <doc xml:whitespace="preserve">Get the B matrix from the lattice parameters</doc>
         <return-value transfer-ownership="none">
           <type name="gint" c:type="int"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Lattice" c:type="const HklLattice*"/>
+          </instance-parameter>
           <parameter name="B"
                      direction="out"
                      caller-allocates="1"
@@ -1142,21 +1433,28 @@ Returns:</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Lattice" c:type="HklLattice*"/>
+          </instance-parameter>
           <parameter name="lattice" transfer-ownership="none">
             <doc xml:whitespace="preserve">the lattice to set from.</doc>
-            <type name="Lattice" c:type="HklLattice*"/>
+            <type name="Lattice" c:type="const HklLattice*"/>
           </parameter>
         </parameters>
       </method>
       <method name="new_copy"
               c:identifier="hkl_lattice_new_copy"
               introspectable="0">
-        <doc xml:whitespace="preserve">copy constructor
-
-Returns:</doc>
+        <doc xml:whitespace="preserve">copy constructor</doc>
         <return-value transfer-ownership="full">
           <type name="Lattice" c:type="HklLattice*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Lattice" c:type="const HklLattice*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="randomize"
               c:identifier="hkl_lattice_randomize"
@@ -1165,17 +1463,23 @@ Returns:</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Lattice" c:type="HklLattice*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="reciprocal"
               c:identifier="hkl_lattice_reciprocal"
               introspectable="0">
-        <doc xml:whitespace="preserve">compute the reciprocal lattice
-
-Returns:</doc>
+        <doc xml:whitespace="preserve">compute the reciprocal lattice</doc>
         <return-value transfer-ownership="none">
           <type name="gint" c:type="int"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Lattice" c:type="const HklLattice*"/>
+          </instance-parameter>
           <parameter name="reciprocal"
                      direction="inout"
                      caller-allocates="0"
@@ -1185,13 +1489,14 @@ Returns:</doc>
         </parameters>
       </method>
       <method name="set" c:identifier="hkl_lattice_set">
-        <doc xml:whitespace="preserve">set the lattice parameters
-
-Returns:</doc>
+        <doc xml:whitespace="preserve">set the lattice parameters</doc>
         <return-value transfer-ownership="none">
           <type name="gint" c:type="int"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Lattice" c:type="HklLattice*"/>
+          </instance-parameter>
           <parameter name="a" transfer-ownership="none">
             <type name="gdouble" c:type="double"/>
           </parameter>
@@ -1224,7 +1529,7 @@ Returns:</doc>
             <type name="gpointer" c:type="FILE*"/>
           </parameter>
           <parameter name="self" transfer-ownership="none">
-            <type name="Lattice" c:type="HklLattice*"/>
+            <type name="Lattice" c:type="const HklLattice*"/>
           </parameter>
         </parameters>
       </function>
@@ -1235,7 +1540,7 @@ Returns:</doc>
             glib:get-type="hkl_matrix_get_type"
             c:symbol-prefix="matrix">
       <field name="data" writable="1">
-        <array zero-terminated="0" c:type="gdouble" fixed-size="3">
+        <array zero-terminated="0" c:type="double" fixed-size="3">
           <type name="gdouble" c:type="double"/>
         </array>
       </field>
@@ -1246,37 +1551,58 @@ Returns:</doc>
           <type name="gint" c:type="int"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the first #HklMatrix</doc>
+            <type name="Matrix" c:type="const HklMatrix*"/>
+          </instance-parameter>
           <parameter name="m" transfer-ownership="none">
             <doc xml:whitespace="preserve">the #HklMatrix to compare with</doc>
-            <type name="Matrix" c:type="HklMatrix*"/>
+            <type name="Matrix" c:type="const HklMatrix*"/>
           </parameter>
         </parameters>
       </method>
       <method name="det" c:identifier="hkl_matrix_det">
-        <doc xml:whitespace="preserve">compute the determinant of an #HklMatrix
-
-Todo: test</doc>
+        <doc xml:whitespace="preserve">compute the determinant of an #HklMatrix</doc>
         <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">the determinant of the self #HklMatrix</doc>
+          <doc xml:whitespace="preserve">the determinant of the self #HklMatrix Todo: test</doc>
           <type name="gdouble" c:type="double"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklMatrix use to compute the determinant</doc>
+            <type name="Matrix" c:type="const HklMatrix*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="dup" c:identifier="hkl_matrix_dup" introspectable="0">
-        <doc xml:whitespace="preserve">Returns:</doc>
         <return-value transfer-ownership="full">
           <type name="Matrix" c:type="HklMatrix*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Matrix" c:type="const HklMatrix*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="free" c:identifier="hkl_matrix_free" introspectable="0">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Matrix" c:type="HklMatrix*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="init" c:identifier="hkl_matrix_init">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklMatrix to initialize</doc>
+            <type name="Matrix" c:type="HklMatrix*"/>
+          </instance-parameter>
           <parameter name="m11" transfer-ownership="none">
             <doc xml:whitespace="preserve">the matrix 11 value</doc>
             <type name="gdouble" c:type="double"/>
@@ -1321,6 +1647,10 @@ Todo: test</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklMatrix to initialize</doc>
+            <type name="Matrix" c:type="HklMatrix*"/>
+          </instance-parameter>
           <parameter name="euler_x" transfer-ownership="none">
             <doc xml:whitespace="preserve">the eulerian value along X</doc>
             <type name="gdouble" c:type="double"/>
@@ -1344,24 +1674,32 @@ is |v1 ^ v2|</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">The #HklMatrix to initialize</doc>
+            <type name="Matrix" c:type="HklMatrix*"/>
+          </instance-parameter>
           <parameter name="v1" transfer-ownership="none">
             <doc xml:whitespace="preserve">the first #HklVector</doc>
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
           <parameter name="v2" transfer-ownership="none">
             <doc xml:whitespace="preserve">the second #HklVector</doc>
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
         </parameters>
       </method>
       <method name="is_null" c:identifier="hkl_matrix_is_null">
-        <doc xml:whitespace="preserve">is all #hklMatrix elementes bellow #HKL_EPSILON
-
-Todo: test</doc>
+        <doc xml:whitespace="preserve">is all #hklMatrix elementes bellow #HKL_EPSILON</doc>
         <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">HKL_TRUE if the self #HklMatrix is null</doc>
+          <doc xml:whitespace="preserve">HKL_TRUE if the self #HklMatrix is null Todo: test</doc>
           <type name="gint" c:type="int"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklMatrix to test</doc>
+            <type name="Matrix" c:type="const HklMatrix*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="matrix_set"
               c:identifier="hkl_matrix_matrix_set"
@@ -1371,28 +1709,34 @@ Todo: test</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Matrix" c:type="HklMatrix*"/>
+          </instance-parameter>
           <parameter name="m" transfer-ownership="none">
             <doc xml:whitespace="preserve">the matrix to set</doc>
-            <type name="Matrix" c:type="HklMatrix*"/>
+            <type name="Matrix" c:type="const HklMatrix*"/>
           </parameter>
         </parameters>
       </method>
       <method name="solve" c:identifier="hkl_matrix_solve">
-        <doc xml:whitespace="preserve">solve the system self . X = b
-
-Todo: test</doc>
+        <doc xml:whitespace="preserve">solve the system self . X = b</doc>
         <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">-1 if the système has no solution, 0 otherwise.</doc>
+          <doc xml:whitespace="preserve">-1 if the système has no solution, 0 otherwise. Todo: test</doc>
           <type name="gint" c:type="int"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">The #HklMatrix of the system</doc>
+            <type name="Matrix" c:type="const HklMatrix*"/>
+          </instance-parameter>
           <parameter name="x" transfer-ownership="none">
             <doc xml:whitespace="preserve">the #HklVector to compute.</doc>
             <type name="Vector" c:type="HklVector*"/>
           </parameter>
           <parameter name="b" transfer-ownership="none">
             <doc xml:whitespace="preserve">the #hklVector of the system to solve.</doc>
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
         </parameters>
       </method>
@@ -1402,9 +1746,13 @@ Todo: test</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklMatrix to modify</doc>
+            <type name="Matrix" c:type="HklMatrix*"/>
+          </instance-parameter>
           <parameter name="m" transfer-ownership="none">
             <doc xml:whitespace="preserve">the #HklMatrix to multiply by</doc>
-            <type name="Matrix" c:type="HklMatrix*"/>
+            <type name="Matrix" c:type="const HklMatrix*"/>
           </parameter>
         </parameters>
       </method>
@@ -1414,6 +1762,10 @@ Todo: test</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklMatrix use to multiply the #HklVector</doc>
+            <type name="Matrix" c:type="const HklMatrix*"/>
+          </instance-parameter>
           <parameter name="v" transfer-ownership="none">
             <doc xml:whitespace="preserve">the #HklVector multiply by the #HklMatrix</doc>
             <type name="Vector" c:type="HklVector*"/>
@@ -1426,6 +1778,10 @@ Todo: test</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the rotation #HklMatrix use to compute the eulerians angles</doc>
+            <type name="Matrix" c:type="const HklMatrix*"/>
+          </instance-parameter>
           <parameter name="euler_x" transfer-ownership="none">
             <doc xml:whitespace="preserve">the eulerian value along X</doc>
             <type name="gdouble" c:type="double*"/>
@@ -1445,6 +1801,12 @@ Todo: test</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklMatrix to transpose</doc>
+            <type name="Matrix" c:type="HklMatrix*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <function name="fprintf" c:identifier="hkl_matrix_fprintf">
         <doc xml:whitespace="preserve">printf an #HklMatrix into a FILE stream.</doc>
@@ -1458,7 +1820,7 @@ Todo: test</doc>
           </parameter>
           <parameter name="self" transfer-ownership="none">
             <doc xml:whitespace="preserve">the #HklMatrix to print into the file stream</doc>
-            <type name="Matrix" c:type="HklMatrix*"/>
+            <type name="Matrix" c:type="const HklMatrix*"/>
           </parameter>
         </parameters>
       </function>
@@ -1467,14 +1829,26 @@ Todo: test</doc>
       <method name="name" c:identifier="hkl_mode_name">
         <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">the name of the HklMode</doc>
-          <type name="utf8" c:type="char*"/>
+          <type name="utf8" c:type="const char*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Mode" c:type="const HklMode*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="parameters" c:identifier="hkl_mode_parameters">
         <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">the parameters of the HklMode</doc>
           <type name="ParameterList" c:type="HklParameterList*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Mode" c:type="HklMode*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <function name="fprintf"
                 c:identifier="hkl_mode_fprintf"
@@ -1488,7 +1862,7 @@ Todo: test</doc>
             <type name="gpointer" c:type="FILE*"/>
           </parameter>
           <parameter name="self" transfer-ownership="none">
-            <type name="Mode" c:type="HklMode*"/>
+            <type name="Mode" c:type="const HklMode*"/>
           </parameter>
         </parameters>
       </function>
@@ -1506,6 +1880,12 @@ Todo: test</doc>
         <return-value>
           <type c:type="bool"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Parameter" c:type="const HklParameter*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="fit_set"
               c:identifier="hkl_parameter_fit_set"
@@ -1516,6 +1896,10 @@ Todo: test</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Parameter" c:type="HklParameter*"/>
+          </instance-parameter>
           <parameter name="fit" transfer-ownership="none">
             <doc xml:whitespace="preserve">the fit value to set</doc>
             <type c:type="bool"/>
@@ -1530,6 +1914,9 @@ Todo: test</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Parameter" c:type="const HklParameter*"/>
+          </instance-parameter>
           <parameter name="min" transfer-ownership="none">
             <type name="gdouble" c:type="double*"/>
           </parameter>
@@ -1547,6 +1934,9 @@ Todo: test</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Parameter" c:type="HklParameter*"/>
+          </instance-parameter>
           <parameter name="min" transfer-ownership="none">
             <type name="gdouble" c:type="double"/>
           </parameter>
@@ -1564,6 +1954,9 @@ Todo: test</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Parameter" c:type="const HklParameter*"/>
+          </instance-parameter>
           <parameter name="min" transfer-ownership="none">
             <type name="gdouble" c:type="double*"/>
           </parameter>
@@ -1580,6 +1973,10 @@ Todo: test</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Parameter" c:type="HklParameter*"/>
+          </instance-parameter>
           <parameter name="min" transfer-ownership="none">
             <doc xml:whitespace="preserve">the minimum value to set</doc>
             <type name="gdouble" c:type="double"/>
@@ -1592,8 +1989,13 @@ Todo: test</doc>
       </method>
       <method name="name_get" c:identifier="hkl_parameter_name_get">
         <return-value transfer-ownership="none">
-          <type name="utf8" c:type="char*"/>
+          <type name="utf8" c:type="const char*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Parameter" c:type="const HklParameter*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="randomize"
               c:identifier="hkl_parameter_randomize"
@@ -1602,12 +2004,23 @@ Todo: test</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Parameter" c:type="HklParameter*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="value_get" c:identifier="hkl_parameter_value_get">
         <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">the value of the #HklParameter</doc>
           <type name="gdouble" c:type="double"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Parameter" c:type="const HklParameter*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="value_set"
               c:identifier="hkl_parameter_value_set"
@@ -1618,6 +2031,10 @@ Todo: test</doc>
           <type c:type="bool"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">this ptr</doc>
+            <type name="Parameter" c:type="HklParameter*"/>
+          </instance-parameter>
           <parameter name="value" transfer-ownership="none">
             <doc xml:whitespace="preserve">the value to set</doc>
             <type name="gdouble" c:type="double"/>
@@ -1634,6 +2051,12 @@ Todo: test</doc>
           <doc xml:whitespace="preserve">the value of the #HklParameter expressed in the user unit</doc>
           <type name="gdouble" c:type="double"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Parameter" c:type="const HklParameter*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="value_unit_set"
               c:identifier="hkl_parameter_value_unit_set"
@@ -1645,6 +2068,10 @@ Todo: test</doc>
           <type c:type="bool"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Parameter" c:type="HklParameter*"/>
+          </instance-parameter>
           <parameter name="value" transfer-ownership="none">
             <doc xml:whitespace="preserve">the value to set</doc>
             <type name="gdouble" c:type="double"/>
@@ -1671,13 +2098,18 @@ Todo: test</doc>
         <type name="gulong" c:type="size_t"/>
       </field>
       <method name="parameters" c:identifier="hkl_parameter_list_parameters">
-        <doc xml:whitespace="preserve">free the list with g_slist_free when done.</doc>
         <return-value transfer-ownership="container">
-          <doc xml:whitespace="preserve">list of parameters</doc>
+          <doc xml:whitespace="preserve">list of parameters free the list with g_slist_free when done.</doc>
           <type name="GLib.SList" c:type="GSList*">
             <type name="Parameter"/>
           </type>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="ParameterList" c:type="HklParameterList*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="randomize"
               c:identifier="hkl_parameter_list_randomize"
@@ -1686,6 +2118,12 @@ Todo: test</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="ParameterList" c:type="HklParameterList*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="values_set" c:identifier="hkl_parameter_list_values_set">
         <doc xml:whitespace="preserve">set the parameter list with the given values</doc>
@@ -1694,6 +2132,10 @@ Todo: test</doc>
           <type name="guint" c:type="unsigned int"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="ParameterList" c:type="HklParameterList*"/>
+          </instance-parameter>
           <parameter name="values" transfer-ownership="none">
             <doc xml:whitespace="preserve">the values to set</doc>
             <array length="1" zero-terminated="0" c:type="double">
@@ -1712,14 +2154,17 @@ Todo: test</doc>
       </method>
       <method name="values_unit_get"
               c:identifier="hkl_parameter_list_values_unit_get">
-        <doc xml:whitespace="preserve">free the array with free when done</doc>
         <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">list of pseudo axes values with unit</doc>
+          <doc xml:whitespace="preserve">list of pseudo axes values with unit free the array with free when done</doc>
           <array length="0" zero-terminated="0" c:type="double*">
             <type name="gdouble" c:type="double"/>
           </array>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="ParameterList" c:type="const HklParameterList*"/>
+          </instance-parameter>
           <parameter name="len"
                      direction="out"
                      caller-allocates="1"
@@ -1738,6 +2183,10 @@ Todo: test</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="ParameterList" c:type="HklParameterList*"/>
+          </instance-parameter>
           <parameter name="values" transfer-ownership="none">
             <doc xml:whitespace="preserve">the values to set</doc>
             <array length="1" zero-terminated="0" c:type="double*">
@@ -1763,7 +2212,7 @@ Todo: test</doc>
             glib:get-type="hkl_quaternion_get_type"
             c:symbol-prefix="quaternion">
       <field name="data" writable="1">
-        <array zero-terminated="0" c:type="gdouble" fixed-size="4">
+        <array zero-terminated="0" c:type="double" fixed-size="4">
           <type name="gdouble" c:type="double"/>
         </array>
       </field>
@@ -1774,9 +2223,13 @@ Todo: test</doc>
           <type name="gint" c:type="int"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the first #HklQuaternion</doc>
+            <type name="Quaternion" c:type="const HklQuaternion*"/>
+          </instance-parameter>
           <parameter name="q" transfer-ownership="none">
             <doc xml:whitespace="preserve">the second #HklQuaternion</doc>
-            <type name="Quaternion" c:type="HklQuaternion*"/>
+            <type name="Quaternion" c:type="const HklQuaternion*"/>
           </parameter>
         </parameters>
       </method>
@@ -1785,12 +2238,22 @@ Todo: test</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklQuaternion to conjugate</doc>
+            <type name="Quaternion" c:type="HklQuaternion*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="dup" c:identifier="hkl_quaternion_dup" introspectable="0">
-        <doc xml:whitespace="preserve">Returns:</doc>
         <return-value transfer-ownership="full">
           <type name="Quaternion" c:type="HklQuaternion*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Quaternion" c:type="const HklQuaternion*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="free"
               c:identifier="hkl_quaternion_free"
@@ -1798,6 +2261,11 @@ Todo: test</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Quaternion" c:type="HklQuaternion*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="init" c:identifier="hkl_quaternion_init">
         <doc xml:whitespace="preserve">initialize the four elements of an #HklQuaternion</doc>
@@ -1805,6 +2273,10 @@ Todo: test</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklQuaternion to initialize</doc>
+            <type name="Quaternion" c:type="HklQuaternion*"/>
+          </instance-parameter>
           <parameter name="a" transfer-ownership="none">
             <doc xml:whitespace="preserve">the 1st element value</doc>
             <type name="gdouble" c:type="double"/>
@@ -1830,13 +2302,17 @@ Todo: test</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklQuaternion to set</doc>
+            <type name="Quaternion" c:type="HklQuaternion*"/>
+          </instance-parameter>
           <parameter name="angle" transfer-ownership="none">
             <doc xml:whitespace="preserve">the angles of the rotation</doc>
             <type name="gdouble" c:type="double"/>
           </parameter>
           <parameter name="v" transfer-ownership="none">
             <doc xml:whitespace="preserve">the axe of rotation</doc>
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
         </parameters>
       </method>
@@ -1847,9 +2323,13 @@ Todo: test</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklQuaternion to set</doc>
+            <type name="Quaternion" c:type="HklQuaternion*"/>
+          </instance-parameter>
           <parameter name="v" transfer-ownership="none">
             <doc xml:whitespace="preserve">the #HklVector used to set the self #HklQuaternion</doc>
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
         </parameters>
       </method>
@@ -1861,9 +2341,13 @@ Todo: test</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklQuaternion to modify.</doc>
+            <type name="Quaternion" c:type="HklQuaternion*"/>
+          </instance-parameter>
           <parameter name="q" transfer-ownership="none">
             <doc xml:whitespace="preserve">the #HklQuaternion to substract</doc>
-            <type name="Quaternion" c:type="HklQuaternion*"/>
+            <type name="Quaternion" c:type="const HklQuaternion*"/>
           </parameter>
         </parameters>
       </method>
@@ -1873,6 +2357,12 @@ Todo: test</doc>
           <doc xml:whitespace="preserve">the self #hklquaternion norm</doc>
           <type name="gdouble" c:type="double"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the quaternion use to compute the norm</doc>
+            <type name="Quaternion" c:type="const HklQuaternion*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="times_quaternion"
               c:identifier="hkl_quaternion_times_quaternion">
@@ -1881,9 +2371,13 @@ Todo: test</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklQuaternion to modify</doc>
+            <type name="Quaternion" c:type="HklQuaternion*"/>
+          </instance-parameter>
           <parameter name="q" transfer-ownership="none">
             <doc xml:whitespace="preserve">the #HklQuaternion to multiply by</doc>
-            <type name="Quaternion" c:type="HklQuaternion*"/>
+            <type name="Quaternion" c:type="const HklQuaternion*"/>
           </parameter>
         </parameters>
       </method>
@@ -1895,6 +2389,10 @@ if q is the (1, 0, 0, 0) quaternion return the (0,0,0) axe and a 0 angle</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">The #HklQuaternion use to compute the angle and the roation axis.</doc>
+            <type name="Quaternion" c:type="const HklQuaternion*"/>
+          </instance-parameter>
           <parameter name="angle" transfer-ownership="none">
             <doc xml:whitespace="preserve">the returned angle of the rotation.</doc>
             <type name="gdouble" c:type="double*"/>
@@ -1913,11 +2411,11 @@ compute the rotation matrix corresponding to the unitary quaternion.
 
 \f$
 \left(
-\begin{array}{ccc}
-a^2+b^2-c^2-d^2 &amp; 2bc-2ad         &amp; 2ac+2bd\\
-2ad+2bc         &amp; a^2-b^2+c^2-d^2 &amp; 2cd-2ab\\
-2bd-2ac         &amp; 2ab+2cd         &amp; a^2-b^2-c^2+d^2
-\end{array}
+ \begin{array}{ccc}
+   a^2+b^2-c^2-d^2 &amp; 2bc-2ad         &amp; 2ac+2bd\\
+   2ad+2bc         &amp; a^2-b^2+c^2-d^2 &amp; 2cd-2ab\\
+   2bd-2ac         &amp; 2ab+2cd         &amp; a^2-b^2-c^2+d^2
+ \end{array}
 \right)
 \f$
 Todo: optimize</doc>
@@ -1925,6 +2423,10 @@ Todo: optimize</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklQuaternion use to compute the #HklMatrix</doc>
+            <type name="Quaternion" c:type="const HklQuaternion*"/>
+          </instance-parameter>
           <parameter name="m" transfer-ownership="none">
             <doc xml:whitespace="preserve">the #HklMatrix return.</doc>
             <type name="Matrix" c:type="HklMatrix*"/>
@@ -1943,7 +2445,7 @@ Todo: optimize</doc>
           </parameter>
           <parameter name="self" transfer-ownership="none">
             <doc xml:whitespace="preserve">the #HklQuaternion to write into the file stream.</doc>
-            <type name="Quaternion" c:type="HklQuaternion*"/>
+            <type name="Quaternion" c:type="const HklQuaternion*"/>
           </parameter>
         </parameters>
       </function>
@@ -1959,15 +2461,13 @@ Todo: optimize</doc>
             glib:get-type="hkl_sample_get_type"
             c:symbol-prefix="sample">
       <constructor name="new" c:identifier="hkl_sample_new">
-        <doc xml:whitespace="preserve">constructor
-
-Returns:</doc>
+        <doc xml:whitespace="preserve">constructor</doc>
         <return-value transfer-ownership="full">
           <type name="Sample" c:type="HklSample*"/>
         </return-value>
         <parameters>
           <parameter name="name" transfer-ownership="none">
-            <type name="utf8" c:type="char*"/>
+            <type name="utf8" c:type="const char*"/>
           </parameter>
         </parameters>
       </constructor>
@@ -1976,8 +2476,13 @@ Returns:</doc>
               introspectable="0">
         <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">get the UB matrix of the sample</doc>
-          <type name="Matrix" c:type="HklMatrix*"/>
+          <type name="Matrix" c:type="const HklMatrix*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Sample" c:type="const HklSample*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="UB_set"
               c:identifier="hkl_sample_UB_set"
@@ -1990,43 +2495,57 @@ U * B = UB -&gt; U = UB * B^-1</doc>
           <type name="gdouble" c:type="double"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the sample to modify</doc>
+            <type name="Sample" c:type="HklSample*"/>
+          </instance-parameter>
           <parameter name="UB" transfer-ownership="none">
             <doc xml:whitespace="preserve">the UB matrix to set</doc>
-            <type name="Matrix" c:type="HklMatrix*"/>
+            <type name="Matrix" c:type="const HklMatrix*"/>
           </parameter>
         </parameters>
       </method>
       <method name="U_get" c:identifier="hkl_sample_U_get" introspectable="0">
         <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">the U matrix of the sample</doc>
-          <type name="Matrix" c:type="HklMatrix*"/>
+          <type name="Matrix" c:type="const HklMatrix*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Sample" c:type="const HklSample*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="U_set" c:identifier="hkl_sample_U_set">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Sample" c:type="HklSample*"/>
+          </instance-parameter>
           <parameter name="U" transfer-ownership="none">
-            <type name="Matrix" c:type="HklMatrix*"/>
+            <type name="Matrix" c:type="const HklMatrix*"/>
           </parameter>
         </parameters>
       </method>
       <method name="add_reflection"
               c:identifier="hkl_sample_add_reflection"
               introspectable="0">
-        <doc xml:whitespace="preserve">add a reflection to the sample
-
-Returns:</doc>
+        <doc xml:whitespace="preserve">add a reflection to the sample</doc>
         <return-value transfer-ownership="full">
           <type name="SampleReflection" c:type="HklSampleReflection*"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Sample" c:type="HklSample*"/>
+          </instance-parameter>
           <parameter name="geometry" transfer-ownership="none">
             <type name="Geometry" c:type="HklGeometry*"/>
           </parameter>
           <parameter name="detector" transfer-ownership="none">
-            <type name="Detector" c:type="HklDetector*"/>
+            <type name="Detector" c:type="const HklDetector*"/>
           </parameter>
           <parameter name="h" transfer-ownership="none">
             <type name="gdouble" c:type="double"/>
@@ -2042,45 +2561,45 @@ Returns:</doc>
       <method name="affine"
               c:identifier="hkl_sample_affine"
               introspectable="0">
-        <doc xml:whitespace="preserve">affine the sample
-
-Returns:</doc>
+        <doc xml:whitespace="preserve">affine the sample</doc>
         <return-value transfer-ownership="none">
           <type name="gdouble" c:type="double"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Sample" c:type="HklSample*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="compute_UB_busing_levy"
               c:identifier="hkl_sample_compute_UB_busing_levy"
               introspectable="0">
         <doc xml:whitespace="preserve">compute the UB matrix using the Busing and Levy method
-add ref
-
-Returns:</doc>
+add ref</doc>
         <return-value transfer-ownership="none">
           <type name="gint" c:type="int"/>
         </return-value>
         <parameters>
-          <parameter name="idx1" transfer-ownership="none">
-            <type name="gulong" c:type="size_t"/>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Sample" c:type="HklSample*"/>
+          </instance-parameter>
+          <parameter name="r1" transfer-ownership="none">
+            <type name="SampleReflection" c:type="const HklSampleReflection*"/>
           </parameter>
-          <parameter name="idx2" transfer-ownership="none">
-            <type name="gulong" c:type="size_t"/>
+          <parameter name="r2" transfer-ownership="none">
+            <type name="SampleReflection" c:type="const HklSampleReflection*"/>
           </parameter>
         </parameters>
       </method>
-      <method name="del_reflection"
-              c:identifier="hkl_sample_del_reflection"
-              introspectable="0">
-        <doc xml:whitespace="preserve">delete the idx reflection
-
-Returns:</doc>
-        <return-value transfer-ownership="none">
-          <type name="gint" c:type="int"/>
+      <method name="first_reflection_get"
+              c:identifier="hkl_sample_first_reflection_get">
+        <return-value transfer-ownership="full">
+          <type name="SampleReflection" c:type="HklSampleReflection*"/>
         </return-value>
         <parameters>
-          <parameter name="idx" transfer-ownership="none">
-            <type name="gulong" c:type="size_t"/>
-          </parameter>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Sample" c:type="const HklSample*"/>
+          </instance-parameter>
         </parameters>
       </method>
       <method name="free" c:identifier="hkl_sample_free" introspectable="0">
@@ -2088,55 +2607,53 @@ Returns:</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
-      </method>
-      <method name="get_ith_reflection"
-              c:identifier="hkl_sample_get_ith_reflection"
-              introspectable="0">
-        <doc xml:whitespace="preserve">get the ith reflection
-
-Returns:</doc>
-        <return-value transfer-ownership="full">
-          <type name="SampleReflection" c:type="HklSampleReflection*"/>
-        </return-value>
         <parameters>
-          <parameter name="idx" transfer-ownership="none">
-            <type name="gulong" c:type="size_t"/>
-          </parameter>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Sample" c:type="HklSample*"/>
+          </instance-parameter>
         </parameters>
       </method>
       <method name="get_reflection_mesured_angle"
               c:identifier="hkl_sample_get_reflection_mesured_angle"
               introspectable="0">
-        <doc xml:whitespace="preserve">get the mesured angles between two reflections
-
-Returns:</doc>
+        <doc xml:whitespace="preserve">get the mesured angles between two reflections</doc>
         <return-value transfer-ownership="none">
           <type name="gdouble" c:type="double"/>
         </return-value>
         <parameters>
-          <parameter name="idx1" transfer-ownership="none">
-            <type name="gulong" c:type="size_t"/>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Sample" c:type="const HklSample*"/>
+          </instance-parameter>
+          <parameter name="r1" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the first reflection</doc>
+            <type name="SampleReflection" c:type="const HklSampleReflection*"/>
           </parameter>
-          <parameter name="idx2" transfer-ownership="none">
-            <type name="gulong" c:type="size_t"/>
+          <parameter name="r2" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the second reflection</doc>
+            <type name="SampleReflection" c:type="const HklSampleReflection*"/>
           </parameter>
         </parameters>
       </method>
       <method name="get_reflection_theoretical_angle"
               c:identifier="hkl_sample_get_reflection_theoretical_angle"
               introspectable="0">
-        <doc xml:whitespace="preserve">get the theoretical angles between two reflections
-
-Returns:</doc>
+        <doc xml:whitespace="preserve">get the theoretical angles between two reflections</doc>
         <return-value transfer-ownership="none">
           <type name="gdouble" c:type="double"/>
         </return-value>
         <parameters>
-          <parameter name="idx1" transfer-ownership="none">
-            <type name="gulong" c:type="size_t"/>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Sample" c:type="const HklSample*"/>
+          </instance-parameter>
+          <parameter name="r1" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the first reflection</doc>
+            <type name="SampleReflection" c:type="const HklSampleReflection*"/>
           </parameter>
-          <parameter name="idx2" transfer-ownership="none">
-            <type name="gulong" c:type="size_t"/>
+          <parameter name="r2" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the second reflection</doc>
+            <type name="SampleReflection" c:type="const HklSampleReflection*"/>
           </parameter>
         </parameters>
       </method>
@@ -2145,12 +2662,22 @@ Returns:</doc>
           <doc xml:whitespace="preserve">the lattice parameters of the sample.</doc>
           <type name="Lattice" c:type="HklLattice*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Sample" c:type="HklSample*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="lattice_set" c:identifier="hkl_sample_lattice_set">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Sample" c:type="HklSample*"/>
+          </instance-parameter>
           <parameter name="lattice" transfer-ownership="none">
             <doc xml:whitespace="preserve">the lattice to set</doc>
             <type name="Lattice" c:type="HklLattice*"/>
@@ -2160,8 +2687,14 @@ Returns:</doc>
       <method name="name_get" c:identifier="hkl_sample_name_get">
         <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">the name of the sample</doc>
-          <type name="utf8" c:type="char*"/>
+          <type name="utf8" c:type="const char*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Sample" c:type="const HklSample*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="name_set"
               c:identifier="hkl_sample_name_set"
@@ -2171,25 +2704,40 @@ Returns:</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Sample" c:type="HklSample*"/>
+          </instance-parameter>
           <parameter name="name" transfer-ownership="none">
-            <type name="utf8" c:type="char*"/>
+            <type name="utf8" c:type="const char*"/>
           </parameter>
         </parameters>
       </method>
       <method name="new_copy"
               c:identifier="hkl_sample_new_copy"
               introspectable="0">
-        <doc xml:whitespace="preserve">copy constructor
-
-Returns:</doc>
+        <doc xml:whitespace="preserve">copy constructor</doc>
         <return-value transfer-ownership="full">
           <type name="Sample" c:type="HklSample*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Sample" c:type="const HklSample*"/>
+          </instance-parameter>
+        </parameters>
       </method>
-      <method name="reflections_len" c:identifier="hkl_sample_reflections_len">
-        <return-value transfer-ownership="none">
-          <type name="gint" c:type="int"/>
+      <method name="next_reflection_get"
+              c:identifier="hkl_sample_next_reflection_get">
+        <return-value transfer-ownership="full">
+          <type name="SampleReflection" c:type="HklSampleReflection*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Sample" c:type="const HklSample*"/>
+          </instance-parameter>
+          <parameter name="reflection" transfer-ownership="none">
+            <type name="SampleReflection" c:type="const HklSampleReflection*"/>
+          </parameter>
+        </parameters>
       </method>
       <method name="ux_get"
               c:identifier="hkl_sample_ux_get"
@@ -2198,17 +2746,28 @@ Returns:</doc>
           <doc xml:whitespace="preserve">the ux part of the U matrix.</doc>
           <type name="Parameter" c:type="HklParameter*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Sample" c:type="const HklSample*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="ux_set"
               c:identifier="hkl_sample_ux_set"
               introspectable="0">
+        <doc xml:whitespace="preserve">set the ux part of the U matrix.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Sample" c:type="HklSample*"/>
+          </instance-parameter>
           <parameter name="ux" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the ux parameter to set set the ux part of the U matrix.</doc>
-            <type name="Parameter" c:type="HklParameter*"/>
+            <doc xml:whitespace="preserve">the ux parameter to set</doc>
+            <type name="Parameter" c:type="const HklParameter*"/>
           </parameter>
         </parameters>
       </method>
@@ -2219,17 +2778,28 @@ Returns:</doc>
           <doc xml:whitespace="preserve">the uy part of the U matrix.</doc>
           <type name="Parameter" c:type="HklParameter*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Sample" c:type="const HklSample*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="uy_set"
               c:identifier="hkl_sample_uy_set"
               introspectable="0">
+        <doc xml:whitespace="preserve">set the uy part of the U matrix.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Sample" c:type="HklSample*"/>
+          </instance-parameter>
           <parameter name="uy" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the uy parameter to set set the uy part of the U matrix.</doc>
-            <type name="Parameter" c:type="HklParameter*"/>
+            <doc xml:whitespace="preserve">the uy parameter to set</doc>
+            <type name="Parameter" c:type="const HklParameter*"/>
           </parameter>
         </parameters>
       </method>
@@ -2240,20 +2810,45 @@ Returns:</doc>
           <doc xml:whitespace="preserve">the uz part of the U matrix.</doc>
           <type name="Parameter" c:type="HklParameter*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Sample" c:type="const HklSample*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="uz_set"
               c:identifier="hkl_sample_uz_set"
               introspectable="0">
+        <doc xml:whitespace="preserve">set the uz part of the U matrix.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Sample" c:type="HklSample*"/>
+          </instance-parameter>
           <parameter name="uz" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the uz parameter to set set the uz part of the U matrix.</doc>
-            <type name="Parameter" c:type="HklParameter*"/>
+            <doc xml:whitespace="preserve">the uz parameter to set</doc>
+            <type name="Parameter" c:type="const HklParameter*"/>
           </parameter>
         </parameters>
       </method>
+      <function name="del_reflection"
+                c:identifier="hkl_sample_del_reflection"
+                introspectable="0">
+        <doc xml:whitespace="preserve">remove an HklSampleRefelction from the relfections list.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="reflection" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the reflection to remove.</doc>
+            <type name="SampleReflection" c:type="HklSampleReflection*"/>
+          </parameter>
+        </parameters>
+      </function>
       <function name="fprintf"
                 c:identifier="hkl_sample_fprintf"
                 introspectable="0">
@@ -2266,7 +2861,7 @@ Returns:</doc>
             <type name="gpointer" c:type="FILE*"/>
           </parameter>
           <parameter name="self" transfer-ownership="none">
-            <type name="Sample" c:type="HklSample*"/>
+            <type name="Sample" c:type="const HklSample*"/>
           </parameter>
         </parameters>
       </function>
@@ -2283,6 +2878,11 @@ Returns:</doc>
         <return-value>
           <type c:type="bool"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="SampleReflection" c:type="const HklSampleReflection*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="flag_set"
               c:identifier="hkl_sample_reflection_flag_set"
@@ -2292,6 +2892,9 @@ Returns:</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="SampleReflection" c:type="HklSampleReflection*"/>
+          </instance-parameter>
           <parameter name="flag" transfer-ownership="none">
             <type c:type="bool"/>
           </parameter>
@@ -2304,6 +2907,11 @@ Returns:</doc>
         <return-value transfer-ownership="full">
           <type name="Geometry" c:type="HklGeometry*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="SampleReflection" c:type="HklSampleReflection*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="geometry_set"
               c:identifier="hkl_sample_reflection_geometry_set"
@@ -2313,8 +2921,11 @@ Returns:</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="SampleReflection" c:type="HklSampleReflection*"/>
+          </instance-parameter>
           <parameter name="geometry" transfer-ownership="none">
-            <type name="Geometry" c:type="HklGeometry*"/>
+            <type name="Geometry" c:type="const HklGeometry*"/>
           </parameter>
         </parameters>
       </method>
@@ -2326,6 +2937,9 @@ Returns:</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="SampleReflection" c:type="const HklSampleReflection*"/>
+          </instance-parameter>
           <parameter name="h" transfer-ownership="none">
             <type name="gdouble" c:type="double*"/>
           </parameter>
@@ -2345,6 +2959,9 @@ Returns:</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="SampleReflection" c:type="HklSampleReflection*"/>
+          </instance-parameter>
           <parameter name="h" transfer-ownership="none">
             <type name="gdouble" c:type="double"/>
           </parameter>
@@ -2369,13 +2986,15 @@ Returns:</doc>
         <type name="Vector" c:type="HklVector"/>
       </field>
       <method name="cmp" c:identifier="hkl_source_cmp" introspectable="0">
-        <doc xml:whitespace="preserve">compare two sources
-
-Returns:</doc>
+        <doc xml:whitespace="preserve">compare two sources</doc>
         <return-value transfer-ownership="none">
           <type name="gint" c:type="int"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">1st #Hklsource</doc>
+            <type name="Source" c:type="HklSource*"/>
+          </instance-parameter>
           <parameter name="s" transfer-ownership="none">
             <doc xml:whitespace="preserve">2nd #Hklsource</doc>
             <type name="Source" c:type="HklSource*"/>
@@ -2390,6 +3009,9 @@ Returns:</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Source" c:type="HklSource*"/>
+          </instance-parameter>
           <parameter name="ki"
                      direction="out"
                      caller-allocates="1"
@@ -2400,12 +3022,16 @@ Returns:</doc>
       </method>
       <method name="dup" c:identifier="hkl_source_dup">
         <doc xml:whitespace="preserve">copy constructor
-TODO test
-
-Returns:</doc>
+TODO test</doc>
         <return-value transfer-ownership="full">
           <type name="Source" c:type="HklSource*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #Hklsource to copy</doc>
+            <type name="Source" c:type="const HklSource*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="free" c:identifier="hkl_source_free">
         <doc xml:whitespace="preserve">destructor
@@ -2413,6 +3039,12 @@ TODO: test</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #Hklsource to delete</doc>
+            <type name="Source" c:type="HklSource*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="get_wavelength"
               c:identifier="hkl_source_get_wavelength"
@@ -2422,6 +3054,11 @@ TODO: test</doc>
           <doc xml:whitespace="preserve">the wave_length</doc>
           <type name="gdouble" c:type="double"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Source" c:type="HklSource*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="init" c:identifier="hkl_source_init">
         <doc xml:whitespace="preserve">initialize the #HklSource</doc>
@@ -2430,6 +3067,10 @@ TODO: test</doc>
           <type name="gint" c:type="int"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #Hklsource to initialize</doc>
+            <type name="Source" c:type="HklSource*"/>
+          </instance-parameter>
           <parameter name="wave_length" transfer-ownership="none">
             <doc xml:whitespace="preserve">the wave length to set</doc>
             <type name="gdouble" c:type="double"/>
@@ -2488,20 +3129,27 @@ TODO: test</doc>
           <type name="gint" c:type="int"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the first @HklUnit</doc>
+            <type name="Unit" c:type="const HklUnit*"/>
+          </instance-parameter>
           <parameter name="unit" transfer-ownership="none">
             <doc xml:whitespace="preserve">the second @HklUnit to check</doc>
-            <type name="Unit" c:type="HklUnit*"/>
+            <type name="Unit" c:type="const HklUnit*"/>
           </parameter>
         </parameters>
       </method>
       <method name="dup" c:identifier="hkl_unit_dup" introspectable="0">
-        <doc xml:whitespace="preserve">copy an #Hklunit
-
-hkl_unit_free)</doc>
+        <doc xml:whitespace="preserve">copy an #Hklunit</doc>
         <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">the copied #HklUnit (memory must be release with</doc>
+          <doc xml:whitespace="preserve">the copied #HklUnit (memory must be release with hkl_unit_free)</doc>
           <type name="Unit" c:type="HklUnit*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Unit" c:type="const HklUnit*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="factor" c:identifier="hkl_unit_factor">
         <doc xml:whitespace="preserve">compute the factor to convert from one @Hklunit to another one.
@@ -2511,8 +3159,11 @@ hkl_unit_free)</doc>
           <type name="gdouble" c:type="double"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Unit" c:type="const HklUnit*"/>
+          </instance-parameter>
           <parameter name="unit" transfer-ownership="none">
-            <type name="Unit" c:type="HklUnit*"/>
+            <type name="Unit" c:type="const HklUnit*"/>
           </parameter>
         </parameters>
       </method>
@@ -2521,6 +3172,11 @@ hkl_unit_free)</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Unit" c:type="HklUnit*"/>
+          </instance-parameter>
+        </parameters>
       </method>
     </record>
     <enumeration name="UnitType"
@@ -2530,23 +3186,27 @@ hkl_unit_free)</doc>
       <member name="angle_deg"
               value="0"
               c:identifier="HKL_UNIT_ANGLE_DEG"
-              glib:nick="angle-deg"/>
+              glib:nick="angle-deg">
+      </member>
       <member name="angle_rad"
               value="1"
               c:identifier="HKL_UNIT_ANGLE_RAD"
-              glib:nick="angle-rad"/>
+              glib:nick="angle-rad">
+      </member>
       <member name="length_nm"
               value="2"
               c:identifier="HKL_UNIT_LENGTH_NM"
-              glib:nick="length-nm"/>
+              glib:nick="length-nm">
+      </member>
     </enumeration>
     <record name="Vector"
             c:type="HklVector"
             glib:type-name="HklVector"
             glib:get-type="hkl_vector_get_type"
             c:symbol-prefix="vector">
+      <doc xml:whitespace="preserve">A struct containing a 3D space coordinates.</doc>
       <field name="data" writable="1">
-        <array zero-terminated="0" c:type="gdouble" fixed-size="3">
+        <array zero-terminated="0" c:type="double" fixed-size="3">
           <type name="gdouble" c:type="double"/>
         </array>
       </field>
@@ -2558,9 +3218,13 @@ hkl_unit_free)</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the modified #HklVector</doc>
+            <type name="Vector" c:type="HklVector*"/>
+          </instance-parameter>
           <parameter name="vector" transfer-ownership="none">
             <doc xml:whitespace="preserve">the #hklvector to add</doc>
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
         </parameters>
       </method>
@@ -2571,9 +3235,13 @@ hkl_unit_free)</doc>
           <type name="gdouble" c:type="double"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the fist #HklVector</doc>
+            <type name="Vector" c:type="const HklVector*"/>
+          </instance-parameter>
           <parameter name="vector" transfer-ownership="none">
             <doc xml:whitespace="preserve">the second #HklVector</doc>
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
         </parameters>
       </method>
@@ -2585,9 +3253,13 @@ to do the comparison.</doc>
           <type name="gint" c:type="int"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the first vector</doc>
+            <type name="Vector" c:type="const HklVector*"/>
+          </instance-parameter>
           <parameter name="vector" transfer-ownership="none">
             <doc xml:whitespace="preserve">th vector to compare with</doc>
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
         </parameters>
       </method>
@@ -2599,9 +3271,13 @@ to do the comparison.</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklVector to divide.</doc>
+            <type name="Vector" c:type="HklVector*"/>
+          </instance-parameter>
           <parameter name="d" transfer-ownership="none">
             <doc xml:whitespace="preserve">constant use to divide the #HklVector</doc>
-            <type name="gdouble" c:type="double"/>
+            <type name="gdouble" c:type="const double"/>
           </parameter>
         </parameters>
       </method>
@@ -2611,12 +3287,23 @@ to do the comparison.</doc>
           <doc xml:whitespace="preserve">A copy of self which need to be free using hkl_vector_free</doc>
           <type name="Vector" c:type="HklVector*"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the HklVector to copy</doc>
+            <type name="Vector" c:type="const HklVector*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="free" c:identifier="hkl_vector_free" introspectable="0">
         <doc xml:whitespace="preserve">delete an HklVector struct</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Vector" c:type="HklVector*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="init" c:identifier="hkl_vector_init">
         <doc xml:whitespace="preserve">initialize an #HklVector</doc>
@@ -2624,6 +3311,10 @@ to do the comparison.</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklVector to initialize.</doc>
+            <type name="Vector" c:type="HklVector*"/>
+          </instance-parameter>
           <parameter name="x" transfer-ownership="none">
             <doc xml:whitespace="preserve">the first coordinate value</doc>
             <type name="gdouble" c:type="double"/>
@@ -2647,23 +3338,30 @@ to do the comparison.</doc>
           <type name="gint" c:type="int"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the first #HklVector</doc>
+            <type name="Vector" c:type="const HklVector*"/>
+          </instance-parameter>
           <parameter name="vector" transfer-ownership="none">
             <doc xml:whitespace="preserve">the second #HklVector</doc>
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
         </parameters>
       </method>
       <method name="is_null"
               c:identifier="hkl_vector_is_null"
               introspectable="0">
-        <doc xml:whitespace="preserve">check if all the coordinates of an #HklVector are null.
-
-
-Todo: test</doc>
+        <doc xml:whitespace="preserve">check if all the coordinates of an #HklVector are null.</doc>
         <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">HKl_TRUE if all |elements| are below HKL_EPSILON, HKl_FALSE otherwise</doc>
+          <doc xml:whitespace="preserve">HKl_TRUE if all |elements| are below HKL_EPSILON, HKl_FALSE otherwise  Todo: test</doc>
           <type name="gint" c:type="int"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #hklvector to check</doc>
+            <type name="Vector" c:type="const HklVector*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="is_opposite"
               c:identifier="hkl_vector_is_opposite"
@@ -2674,8 +3372,11 @@ Todo: test</doc>
           <type name="gint" c:type="int"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Vector" c:type="const HklVector*"/>
+          </instance-parameter>
           <parameter name="vector" transfer-ownership="none">
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
         </parameters>
       </method>
@@ -2687,9 +3388,13 @@ Todo: test</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the modified #HklVector</doc>
+            <type name="Vector" c:type="HklVector*"/>
+          </instance-parameter>
           <parameter name="vector" transfer-ownership="none">
             <doc xml:whitespace="preserve">the #hklvector to substract</doc>
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
         </parameters>
       </method>
@@ -2699,6 +3404,12 @@ Todo: test</doc>
           <doc xml:whitespace="preserve">the sqrt(|v|)</doc>
           <type name="gdouble" c:type="double"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #hklvector use to compute the norm2</doc>
+            <type name="Vector" c:type="const HklVector*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="normalize"
               c:identifier="hkl_vector_normalize"
@@ -2708,6 +3419,12 @@ Todo: test</doc>
           <doc xml:whitespace="preserve">HKL_TRUE if the #HklVector can be normalized, HKL_FALSE otherwise</doc>
           <type name="gint" c:type="int"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklVector to normalize</doc>
+            <type name="Vector" c:type="HklVector*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="oriented_angle"
               c:identifier="hkl_vector_oriented_angle"
@@ -2721,13 +3438,17 @@ the (self, vector, ref) is a right oriented base.</doc>
           <type name="gdouble" c:type="double"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the first #HklVector</doc>
+            <type name="Vector" c:type="const HklVector*"/>
+          </instance-parameter>
           <parameter name="vector" transfer-ownership="none">
             <doc xml:whitespace="preserve">the second #HklVector</doc>
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
           <parameter name="ref" transfer-ownership="none">
             <doc xml:whitespace="preserve">the reference #HklVector</doc>
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
         </parameters>
       </method>
@@ -2743,17 +3464,21 @@ the (self, vector, ref) is a right oriented base.</doc>
           <type name="gdouble" c:type="double"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the first point</doc>
+            <type name="Vector" c:type="const HklVector*"/>
+          </instance-parameter>
           <parameter name="p2" transfer-ownership="none">
             <doc xml:whitespace="preserve">the second point</doc>
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
           <parameter name="p3" transfer-ownership="none">
             <doc xml:whitespace="preserve">the third point</doc>
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
           <parameter name="ref" transfer-ownership="none">
             <doc xml:whitespace="preserve">the reference #HklVector</doc>
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
         </parameters>
       </method>
@@ -2766,9 +3491,13 @@ the origin [0, 0, 0]</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the vector to project</doc>
+            <type name="Vector" c:type="HklVector*"/>
+          </instance-parameter>
           <parameter name="normal" transfer-ownership="none">
             <doc xml:whitespace="preserve">the normal of the plane.</doc>
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
         </parameters>
       </method>
@@ -2780,13 +3509,17 @@ the origin [0, 0, 0]</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the vector to project (modify)</doc>
+            <type name="Vector" c:type="HklVector*"/>
+          </instance-parameter>
           <parameter name="normal" transfer-ownership="none">
             <doc xml:whitespace="preserve">the normal of the plane.</doc>
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
           <parameter name="point" transfer-ownership="none">
             <doc xml:whitespace="preserve">a point of the plan.</doc>
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
         </parameters>
       </method>
@@ -2798,6 +3531,12 @@ coordinates range [-1, 1]</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklVector to randomize</doc>
+            <type name="Vector" c:type="HklVector*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="randomize_vector"
               c:identifier="hkl_vector_randomize_vector"
@@ -2808,9 +3547,13 @@ to the #HklVector vector.</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklVector to randomize</doc>
+            <type name="Vector" c:type="HklVector*"/>
+          </instance-parameter>
           <parameter name="vector" transfer-ownership="none">
             <doc xml:whitespace="preserve">the #HklVector result to avoid</doc>
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
         </parameters>
       </method>
@@ -2823,13 +3566,17 @@ to the #HklVector vector1 and vector2.</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklVector to randomize</doc>
+            <type name="Vector" c:type="HklVector*"/>
+          </instance-parameter>
           <parameter name="vector1" transfer-ownership="none">
             <doc xml:whitespace="preserve">the first #HklVector solution to avoid</doc>
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
           <parameter name="vector2" transfer-ownership="none">
             <doc xml:whitespace="preserve">the second #HklVector solution to avoid</doc>
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
         </parameters>
       </method>
@@ -2843,17 +3590,21 @@ this mean that c2 - c1 gives the direction of the rotation.</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the point to rotate around a line</doc>
+            <type name="Vector" c:type="HklVector*"/>
+          </instance-parameter>
           <parameter name="angle" transfer-ownership="none">
             <doc xml:whitespace="preserve">the angle of the rotation</doc>
             <type name="gdouble" c:type="double"/>
           </parameter>
           <parameter name="c1" transfer-ownership="none">
             <doc xml:whitespace="preserve">the fist point of the line</doc>
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
           <parameter name="c2" transfer-ownership="none">
             <doc xml:whitespace="preserve">the second point of the line</doc>
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
         </parameters>
       </method>
@@ -2865,9 +3616,13 @@ this mean that c2 - c1 gives the direction of the rotation.</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklVector to rotate</doc>
+            <type name="Vector" c:type="HklVector*"/>
+          </instance-parameter>
           <parameter name="axe" transfer-ownership="none">
             <doc xml:whitespace="preserve">the axe of rotation</doc>
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
           <parameter name="angle" transfer-ownership="none">
             <doc xml:whitespace="preserve">the angle of the rotation</doc>
@@ -2883,9 +3638,13 @@ this mean that c2 - c1 gives the direction of the rotation.</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklVector to rotate</doc>
+            <type name="Vector" c:type="HklVector*"/>
+          </instance-parameter>
           <parameter name="qr" transfer-ownership="none">
             <doc xml:whitespace="preserve">the #HklQuaternion use to rotate the vector</doc>
-            <type name="Quaternion" c:type="HklQuaternion*"/>
+            <type name="Quaternion" c:type="const HklQuaternion*"/>
           </parameter>
         </parameters>
       </method>
@@ -2898,9 +3657,13 @@ this mean that c2 - c1 gives the direction of the rotation.</doc>
           <type name="gdouble" c:type="double"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the first #HklVector</doc>
+            <type name="Vector" c:type="const HklVector*"/>
+          </instance-parameter>
           <parameter name="vector" transfer-ownership="none">
             <doc xml:whitespace="preserve">the second #HklVector</doc>
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
         </parameters>
       </method>
@@ -2910,6 +3673,12 @@ this mean that c2 - c1 gives the direction of the rotation.</doc>
           <doc xml:whitespace="preserve">the sum of all elements.</doc>
           <type name="gdouble" c:type="double"/>
         </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklVector to sum.</doc>
+            <type name="Vector" c:type="const HklVector*"/>
+          </instance-parameter>
+        </parameters>
       </method>
       <method name="times_double"
               c:identifier="hkl_vector_times_double"
@@ -2919,9 +3688,13 @@ this mean that c2 - c1 gives the direction of the rotation.</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklVector to modify</doc>
+            <type name="Vector" c:type="HklVector*"/>
+          </instance-parameter>
           <parameter name="d" transfer-ownership="none">
             <doc xml:whitespace="preserve">the multiply factor</doc>
-            <type name="gdouble" c:type="double"/>
+            <type name="gdouble" c:type="const double"/>
           </parameter>
         </parameters>
       </method>
@@ -2934,9 +3707,13 @@ compute v'= M . v</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklVector to multiply</doc>
+            <type name="Vector" c:type="HklVector*"/>
+          </instance-parameter>
           <parameter name="m" transfer-ownership="none">
             <doc xml:whitespace="preserve">the #HklMatrix use to multiply the #HklVector</doc>
-            <type name="Matrix" c:type="HklMatrix*"/>
+            <type name="Matrix" c:type="const HklMatrix*"/>
           </parameter>
         </parameters>
       </method>
@@ -2949,9 +3726,13 @@ coordinate by coordinate.</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the #HklVector to modify</doc>
+            <type name="Vector" c:type="HklVector*"/>
+          </instance-parameter>
           <parameter name="vector" transfer-ownership="none">
             <doc xml:whitespace="preserve">the #HklVector use to modify the first one</doc>
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
         </parameters>
       </method>
@@ -2963,9 +3744,13 @@ coordinate by coordinate.</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the first #HklVector (modify)</doc>
+            <type name="Vector" c:type="HklVector*"/>
+          </instance-parameter>
           <parameter name="vector" transfer-ownership="none">
             <doc xml:whitespace="preserve">the second #HklVector</doc>
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
         </parameters>
       </method>
@@ -2983,7 +3768,7 @@ coordinate by coordinate.</doc>
           </parameter>
           <parameter name="self" transfer-ownership="none">
             <doc xml:whitespace="preserve">the #HklVector to print.</doc>
-            <type name="Vector" c:type="HklVector*"/>
+            <type name="Vector" c:type="const HklVector*"/>
           </parameter>
         </parameters>
       </function>
@@ -3001,7 +3786,7 @@ coordinate by coordinate.</doc>
           <type name="gpointer" c:type="FILE*"/>
         </parameter>
         <parameter name="self" transfer-ownership="none">
-          <type name="Detector" c:type="HklDetector*"/>
+          <type name="Detector" c:type="const HklDetector*"/>
         </parameter>
       </parameters>
     </function>
@@ -3020,7 +3805,7 @@ coordinate by coordinate.</doc>
         </parameter>
         <parameter name="self" transfer-ownership="none">
           <doc xml:whitespace="preserve">the HklEngine</doc>
-          <type name="Engine" c:type="HklEngine*"/>
+          <type name="Engine" c:type="const HklEngine*"/>
         </parameter>
       </parameters>
     </function>
@@ -3039,7 +3824,7 @@ coordinate by coordinate.</doc>
         </parameter>
         <parameter name="self" transfer-ownership="none">
           <doc xml:whitespace="preserve">the list</doc>
-          <type name="EngineList" c:type="HklEngineList*"/>
+          <type name="EngineList" c:type="const HklEngineList*"/>
         </parameter>
       </parameters>
     </function>
@@ -3081,9 +3866,9 @@ sense to take advantage of this feature is up to you.</doc>
         </parameter>
         <parameter name="format" transfer-ownership="none">
           <doc xml:whitespace="preserve">printf()-style format string</doc>
-          <type name="utf8" c:type="char*"/>
+          <type name="utf8" c:type="const char*"/>
         </parameter>
-        <parameter transfer-ownership="none">
+        <parameter name="arg2" transfer-ownership="none">
           <varargs>
           </varargs>
         </parameter>
@@ -3131,9 +3916,9 @@ hkl_prefix_error().</doc>
         </parameter>
         <parameter name="format" transfer-ownership="none">
           <doc xml:whitespace="preserve">printf()-style format string</doc>
-          <type name="utf8" c:type="char*"/>
+          <type name="utf8" c:type="const char*"/>
         </parameter>
-        <parameter transfer-ownership="none">
+        <parameter name="arg3" transfer-ownership="none">
           <varargs>
           </varargs>
         </parameter>
@@ -3155,9 +3940,9 @@ must be %NULL. A new #HklError is created and assigned to *@err.</doc>
         </parameter>
         <parameter name="format" transfer-ownership="none">
           <doc xml:whitespace="preserve">printf()-style format</doc>
-          <type name="utf8" c:type="char*"/>
+          <type name="utf8" c:type="const char*"/>
         </parameter>
-        <parameter transfer-ownership="none">
+        <parameter name="arg2" transfer-ownership="none">
           <varargs>
           </varargs>
         </parameter>
@@ -3183,7 +3968,7 @@ control over, that could include printf() escape sequences.</doc>
         </parameter>
         <parameter name="message" transfer-ownership="none">
           <doc xml:whitespace="preserve">error message</doc>
-          <type name="utf8" c:type="char*"/>
+          <type name="utf8" c:type="const char*"/>
         </parameter>
       </parameters>
     </function>
@@ -3209,7 +3994,7 @@ control over, that could include printf() escape sequences.</doc>
           <type name="gpointer" c:type="FILE*"/>
         </parameter>
         <parameter name="self" transfer-ownership="none">
-          <type name="Geometry" c:type="HklGeometry*"/>
+          <type name="Geometry" c:type="const HklGeometry*"/>
         </parameter>
       </parameters>
     </function>
@@ -3226,7 +4011,7 @@ control over, that could include printf() escape sequences.</doc>
           <type name="gpointer" c:type="FILE*"/>
         </parameter>
         <parameter name="self" transfer-ownership="none">
-          <type name="Lattice" c:type="HklLattice*"/>
+          <type name="Lattice" c:type="const HklLattice*"/>
         </parameter>
       </parameters>
     </function>
@@ -3244,7 +4029,7 @@ control over, that could include printf() escape sequences.</doc>
         </parameter>
         <parameter name="self" transfer-ownership="none">
           <doc xml:whitespace="preserve">the #HklMatrix to print into the file stream</doc>
-          <type name="Matrix" c:type="HklMatrix*"/>
+          <type name="Matrix" c:type="const HklMatrix*"/>
         </parameter>
       </parameters>
     </function>
@@ -3261,7 +4046,7 @@ control over, that could include printf() escape sequences.</doc>
           <type name="gpointer" c:type="FILE*"/>
         </parameter>
         <parameter name="self" transfer-ownership="none">
-          <type name="Mode" c:type="HklMode*"/>
+          <type name="Mode" c:type="const HklMode*"/>
         </parameter>
       </parameters>
     </function>
@@ -3279,7 +4064,22 @@ control over, that could include printf() escape sequences.</doc>
         </parameter>
         <parameter name="self" transfer-ownership="none">
           <doc xml:whitespace="preserve">the #HklQuaternion to write into the file stream.</doc>
-          <type name="Quaternion" c:type="HklQuaternion*"/>
+          <type name="Quaternion" c:type="const HklQuaternion*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="sample_del_reflection"
+              c:identifier="hkl_sample_del_reflection"
+              moved-to="Sample.del_reflection"
+              introspectable="0">
+      <doc xml:whitespace="preserve">remove an HklSampleRefelction from the relfections list.</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="reflection" transfer-ownership="none">
+          <doc xml:whitespace="preserve">the reflection to remove.</doc>
+          <type name="SampleReflection" c:type="HklSampleReflection*"/>
         </parameter>
       </parameters>
     </function>
@@ -3296,7 +4096,7 @@ control over, that could include printf() escape sequences.</doc>
           <type name="gpointer" c:type="FILE*"/>
         </parameter>
         <parameter name="self" transfer-ownership="none">
-          <type name="Sample" c:type="HklSample*"/>
+          <type name="Sample" c:type="const HklSample*"/>
         </parameter>
       </parameters>
     </function>
@@ -3332,7 +4132,7 @@ control over, that could include printf() escape sequences.</doc>
         </parameter>
         <parameter name="self" transfer-ownership="none">
           <doc xml:whitespace="preserve">the #HklVector to print.</doc>
-          <type name="Vector" c:type="HklVector*"/>
+          <type name="Vector" c:type="const HklVector*"/>
         </parameter>
       </parameters>
     </function>

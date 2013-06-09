@@ -29,6 +29,7 @@ class ReflectionModelColumns : public Gtk::TreeModel::ColumnRecord
 {
 public:
 	Gtk::TreeModelColumn<unsigned int> index;
+	Gtk::TreeModelColumn<HklSampleReflection *> reflection;
 	Gtk::TreeModelColumn<double> h;
 	Gtk::TreeModelColumn<double> k;
 	Gtk::TreeModelColumn<double> l;
@@ -37,6 +38,7 @@ public:
 	ReflectionModelColumns()
 		{
 			this->add(index);
+			this->add(reflection);
 			this->add(h);
 			this->add(k);
 			this->add(l);

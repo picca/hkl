@@ -72,28 +72,33 @@ HKLAPI const HklMatrix *hkl_sample_UB_get(const HklSample *self) HKL_ARG_NONNULL
 
 HKLAPI double hkl_sample_UB_set(HklSample *self, const HklMatrix *UB) HKL_ARG_NONNULL(1, 2);
 
-extern int hkl_sample_reflections_len(const HklSample *self);
+HKLAPI HklSampleReflection *hkl_sample_first_reflection_get(const HklSample *self) HKL_ARG_NONNULL(1);
+
+HKLAPI HklSampleReflection *hkl_sample_next_reflection_get(const HklSample *self,
+							   const HklSampleReflection *reflection) HKL_ARG_NONNULL(1);
+
+HKLAPI void hkl_sample_del_reflection(HklSampleReflection *reflection) HKL_ARG_NONNULL(1);
 
 extern HklSampleReflection *hkl_sample_add_reflection(HklSample *self,
 						      HklGeometry *geometry,
 						      const HklDetector *detector,
 						      double h, double k, double l);
 
-extern HklSampleReflection *hkl_sample_get_ith_reflection(const HklSample *self,
-							  size_t idx);
+HKLAPI int hkl_sample_compute_UB_busing_levy(HklSample *self,
+					     const HklSampleReflection *r1,
+					     const HklSampleReflection *r2) HKL_ARG_NONNULL(1, 2, 3);
 
-extern int hkl_sample_del_reflection(HklSample *self, size_t idx);
+HKLAPI double hkl_sample_get_reflection_mesured_angle(const HklSample *self,
+						      const HklSampleReflection *r1,
+						      const HklSampleReflection *r2) HKL_ARG_NONNULL(1, 2, 3);
 
-extern int hkl_sample_compute_UB_busing_levy(HklSample *self,
-					     size_t idx1, size_t idx2);
+HKLAPI double hkl_sample_get_reflection_theoretical_angle(const HklSample *self,
+							  const HklSampleReflection *r1,
+							  const HklSampleReflection *r2) HKL_ARG_NONNULL(1, 2, 3);
+
+
 
 extern double hkl_sample_affine(HklSample *self);
-
-extern double hkl_sample_get_reflection_mesured_angle(const HklSample *self,
-						      size_t idx1, size_t idx2);
-
-extern double hkl_sample_get_reflection_theoretical_angle(const HklSample *self,
-							  size_t idx1, size_t idx2);
 
 extern void hkl_sample_fprintf(FILE *f, const HklSample *self);
 

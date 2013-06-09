@@ -530,14 +530,12 @@ void HKLWindow::on_cell_TreeView_reflections_h_edited(Glib::ustring const & spat
 	Gtk::ListStore::Row row = *(iter);
 
 	if(_sample){
-		int index;
 		double h;
 		double k;
 		double l;
 		HklSampleReflection *reflection;
 
-		index = row[_reflectionModelColumns.index];
-		reflection = hkl_sample_get_ith_reflection(_sample, index);
+		reflection = row[_reflectionModelColumns.reflection];
 
 		hkl_sample_reflection_hkl_get(reflection, &h, &k, &l);
 		sscanf(newText.c_str(), "%lf", &h);
@@ -561,15 +559,13 @@ void HKLWindow::on_cell_TreeView_reflections_k_edited(Glib::ustring const & spat
 	Gtk::ListStore::Row row = *(iter);
 
 	if(_sample){
-		int index;
 		double h;
 		double k;
 		double l;
 		HklSampleReflection *reflection;
 
 
-		index = row[_reflectionModelColumns.index];
-		reflection = hkl_sample_get_ith_reflection(_sample, index);
+		reflection = row[_reflectionModelColumns.reflection];
 
 		hkl_sample_reflection_hkl_get(reflection, &h, &k, &l);
 		sscanf(newText.c_str(), "%lf", &k);
@@ -592,14 +588,12 @@ void HKLWindow::on_cell_TreeView_reflections_l_edited(Glib::ustring const & spat
 	Gtk::ListStore::Row row = *(iter);
 
 	if(_sample){
-		int index;
 		double h;
 		double k;
 		double l;
 		HklSampleReflection *reflection;
 
-		index = row[_reflectionModelColumns.index];
-		reflection = hkl_sample_get_ith_reflection(_sample, index);
+		reflection = row[_reflectionModelColumns.reflection];
 
 		hkl_sample_reflection_hkl_get(reflection, &h, &k, &l);
 		sscanf(newText.c_str(), "%lf", &l);
@@ -622,12 +616,10 @@ void HKLWindow::on_cell_TreeView_reflections_flag_toggled(Glib::ustring const & 
 	Gtk::ListStore::Row row = *(iter);
 
 	if(_sample){
-		int index;
 		int flag;
 		HklSampleReflection *reflection;
 
-		index = row[_reflectionModelColumns.index];
-		reflection = hkl_sample_get_ith_reflection(_sample, index);
+		reflection = row[_reflectionModelColumns.reflection];
 		flag = !hkl_sample_reflection_flag_get(reflection);
 		hkl_sample_reflection_flag_set(reflection, flag);
 		row[_reflectionModelColumns.flag] = flag;
@@ -662,11 +654,10 @@ void HKLWindow::on_toolbutton_goto_reflection_clicked(void)
 			Gtk::TreePath path = *(list_path.begin());
 			Glib::RefPtr<Gtk::ListStore> liststore = _mapReflectionModel[hkl_sample_name_get(_sample)];
 			Gtk::ListStore::Row row = *(liststore->get_iter(path));
-			unsigned int index = row[_reflectionModelColumns.index];
+			HklSampleReflection *reflection = row[_reflectionModelColumns.reflection];
 
 			hkl_geometry_set(this->_geometry,
-					 hkl_sample_reflection_geometry_get(
-						 hkl_sample_get_ith_reflection(_sample, index)));
+					 hkl_sample_reflection_geometry_get(reflection));
 
 			this->updateSource();
 			this->updateAxes();
@@ -699,16 +690,23 @@ void HKLWindow::on_toolbutton_del_reflection_clicked(void)
 			Gtk::TreeSelection::ListHandle_Path::iterator last = list.end();
 			Glib::RefPtr<Gtk::ListStore> liststore = _mapReflectionModel[hkl_sample_name_get(_sample)];
 			// fill indexes with the reflections index
-			std::vector<unsigned int> indexes;
+			std::vector<HklSampleReflection *> to_delete;
 			while(iter != last){
 				Gtk::ListStore::Row row = *(liststore->get_iter(*iter));
-				indexes.push_back(row[_reflectionModelColumns.index]);
+				to_delete.push_back(row[_reflectionModelColumns.reflection]);
 				++iter;
 			}
 			std::ostringstream os;
 			os << "Are you sure you want to delete reflections :";
-			for(unsigned int i=0; i< indexes.size();i++)
-				os << " " << indexes[i];
+			for(unsigned int i=0; i< to_delete.size();i++){
+				double h, k, l;
+
+				hkl_sample_reflection_hkl_get(to_delete[i], &h, &k, &l);
+				os << " "
+				   << " h: " << h
+				   << " k: " << k
+				   << " l: " << l;
+			}
 
 			_message = new Gtk::MessageDialog("", false,
 							  Gtk::MESSAGE_WARNING,
@@ -718,10 +716,8 @@ void HKLWindow::on_toolbutton_del_reflection_clicked(void)
 			int respons = _message->run();
 			switch (respons){
 			case Gtk::RESPONSE_YES:
-				for(unsigned int i=0;i<indexes.size();i++){
-					// compute the correct index of the reflection
-					unsigned int index = indexes[i] - i;
-					hkl_sample_del_reflection(_sample, index);
+				for(unsigned int i=0;i<to_delete.size();i++){
+					hkl_sample_del_reflection(to_delete[i]);
 				}
 				this->updateReflections(_sample, liststore);
 				break;
@@ -767,7 +763,10 @@ void HKLWindow::on_toolbutton_computeUB_clicked(void)
 	LOG;
 
 	if(_sample){
-		hkl_sample_compute_UB_busing_levy(_sample, 0, 1);
+		const HklSampleReflection *r1 = hkl_sample_first_reflection_get(_sample);
+		const HklSampleReflection *r2 = hkl_sample_next_reflection_get(_sample, r1);
+
+		hkl_sample_compute_UB_busing_levy(_sample, r1, r2);
 		this->updateUB();
 		this->updateUxUyUz();
 		this->updatePseudoAxes();
