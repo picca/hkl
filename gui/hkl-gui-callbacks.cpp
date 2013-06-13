@@ -631,11 +631,13 @@ void HKLWindow::on_toolbutton_add_reflection_clicked(void)
 	LOG;
 
 	if(_sample){
-		double h;
-		double k;
-		double l;
+		HklSampleReflection *reflection;
+		double h = 0;
+		double k = 0;
+		double l = 0;
 
-		hkl_sample_add_reflection(_sample, _geometry, _detector, h, k, l);
+		reflection = hkl_sample_reflection_new(_geometry, _detector, h, k, l);
+		hkl_sample_add_reflection(_sample, reflection);
 
 		this->updateReflections(_sample,
 					_mapReflectionModel[hkl_sample_name_get(_sample)]);
@@ -745,7 +747,6 @@ void HKLWindow::on_toolbutton_setUB_clicked(void)
 		UB.data[2][2] = _spinbutton_U33->get_value();
 
 		hkl_sample_UB_set(_sample, &UB);
-		hkl_sample_fprintf(stdout, _sample);
 
 		this->updateLattice();
 		this->updateLatticeParameters();

@@ -79,10 +79,8 @@ HKLAPI HklSampleReflection *hkl_sample_next_reflection_get(const HklSample *self
 
 HKLAPI void hkl_sample_del_reflection(HklSampleReflection *reflection) HKL_ARG_NONNULL(1);
 
-extern HklSampleReflection *hkl_sample_add_reflection(HklSample *self,
-						      HklGeometry *geometry,
-						      const HklDetector *detector,
-						      double h, double k, double l);
+HKLAPI void hkl_sample_add_reflection(HklSample *self,
+				      HklSampleReflection *reflection) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI int hkl_sample_compute_UB_busing_levy(HklSample *self,
 					     const HklSampleReflection *r1,
@@ -101,6 +99,10 @@ HKLAPI double hkl_sample_affine(HklSample *self) HKL_ARG_NONNULL(1);
 /***********************/
 /* hklSampleReflection */
 /***********************/
+
+HKLAPI HklSampleReflection *hkl_sample_reflection_new(HklGeometry *geometry,
+						      const HklDetector *detector,
+						      double h, double k, double l) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI void hkl_sample_reflection_hkl_get(const HklSampleReflection *self,
 					  double *h, double *k, double *l) HKL_ARG_NONNULL(1, 2, 3, 4);

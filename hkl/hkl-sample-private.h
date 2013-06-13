@@ -61,10 +61,6 @@ struct _HklSampleReflection {
 	struct list_node list;
 };
 
-extern HklSampleReflection *hkl_sample_reflection_new(HklGeometry *geometry,
-						      const HklDetector *detector,
-						      double h, double k, double l);
-
 extern HklSampleReflection *hkl_sample_reflection_new_copy(const HklSampleReflection *self);
 
 extern void hkl_sample_reflection_free(HklSampleReflection *self);

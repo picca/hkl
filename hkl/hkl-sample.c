@@ -554,32 +554,16 @@ HklSampleReflection *hkl_sample_next_reflection_get(const HklSample *self,
 /**
  * hkl_sample_add_reflection: (skip)
  * @self:
- * @geometry:
- * @detector:
- * @h:
- * @k:
- * @l:
+ * @reflection:
  *
  * add a reflection to the sample
  *
- * Returns:
+ * Returns: the added HklSampleReflection
  **/
-HklSampleReflection *hkl_sample_add_reflection(HklSample *self,
-					       HklGeometry *geometry,
-					       const HklDetector *detector,
-					       double h, double k, double l)
+void hkl_sample_add_reflection(HklSample *self,
+					       HklSampleReflection *reflection)
 {
-	HklSampleReflection *ref = NULL;
-
-	if(!self || !geometry || !detector)
-		return NULL;
-
-	ref = hkl_sample_reflection_new(geometry, detector, h, k, l);
-
-	if(ref)
-		list_add_tail(&self->reflections, &ref->list);
-
-	return ref;
+	list_add_tail(&self->reflections, &reflection->list);
 }
 
 /**
