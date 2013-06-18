@@ -245,12 +245,12 @@ static void affine(void)
 
 	hkl_sample_affine(sample);
 
-	a = hkl_parameter_value_get(lattice->a);
-	b = hkl_parameter_value_get(lattice->b);
-	c = hkl_parameter_value_get(lattice->c);
-	alpha = hkl_parameter_value_get(lattice->alpha);
-	beta = hkl_parameter_value_get(lattice->beta);
-	gamma = hkl_parameter_value_get(lattice->gamma);
+	a = hkl_parameter_value_get(hkl_lattice_a_get(lattice));
+	b = hkl_parameter_value_get(hkl_lattice_b_get(lattice));
+	c = hkl_parameter_value_get(hkl_lattice_c_get(lattice));
+	alpha = hkl_parameter_value_get(hkl_lattice_alpha_get(lattice));
+	beta = hkl_parameter_value_get(hkl_lattice_beta_get(lattice));
+	gamma = hkl_parameter_value_get(hkl_lattice_gamma_get(lattice));
 	ok(HKL_TRUE == hkl_matrix_cmp(&m_ref, hkl_sample_U_get(sample)), __func__);
 	is_double(1.54, a, HKL_EPSILON, __func__);
 	is_double(1.54, b, HKL_EPSILON, __func__);
@@ -380,12 +380,12 @@ static void reflection_set_geometry(void)
 
 	hkl_sample_affine(sample);
 
-	a = hkl_parameter_value_get(lattice->a);
-	b = hkl_parameter_value_get(lattice->b);
-	c = hkl_parameter_value_get(lattice->c);
-	alpha = hkl_parameter_value_get(lattice->alpha);
-	beta = hkl_parameter_value_get(lattice->beta);
-	gamma = hkl_parameter_value_get(lattice->gamma);
+	a = hkl_parameter_value_get(hkl_lattice_a_get(lattice));
+	b = hkl_parameter_value_get(hkl_lattice_b_get(lattice));
+	c = hkl_parameter_value_get(hkl_lattice_c_get(lattice));
+	alpha = hkl_parameter_value_get(hkl_lattice_alpha_get(lattice));
+	beta = hkl_parameter_value_get(hkl_lattice_beta_get(lattice));
+	gamma = hkl_parameter_value_get(hkl_lattice_gamma_get(lattice));
 	ok(HKL_TRUE == hkl_matrix_cmp(&m_ref, hkl_sample_U_get(sample)), __func__);
 	is_double(1.54, a, HKL_EPSILON, __func__);
 	is_double(1.54, b, HKL_EPSILON, __func__);

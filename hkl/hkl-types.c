@@ -24,6 +24,7 @@
 #include "hkl-detector-private.h"
 #include "hkl-pseudoaxis-private.h"
 #include "hkl-sample-private.h"
+#include "hkl-lattice-private.h"
 
 GType hkl_error_get_type (void) {
         static volatile gsize hkl_error_type_id__volatile = 0;

@@ -22,7 +22,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "hkl/hkl-lattice.h"
+#include "hkl/hkl-lattice-private.h"
 #include "hkl/hkl-parameter-private.h"
 #include "hkl/hkl-unit.h"
 
@@ -143,6 +143,120 @@ void hkl_lattice_free(HklLattice *self)
 	hkl_parameter_free(self->beta);
 	hkl_parameter_free(self->gamma);
 	free(self);
+}
+
+/**
+ * hkl_lattice_a_get: (skip)
+ * @self: the this ptr
+ **/
+const HklParameter *hkl_lattice_a_get(const HklLattice *self)
+{
+	return self->a;
+}
+
+/**
+ * hkl_lattice_a_set: (skip)
+ * @self: the this ptr
+ * @parameter: the parameter to set
+ **/
+void hkl_lattice_a_set(HklLattice *self, const HklParameter *parameter)
+{
+	hkl_parameter_init_copy(self->a, parameter);
+}
+
+/**
+ * hkl_lattice_b_get: (skip)
+ * @self: the this ptr
+ **/
+const HklParameter *hkl_lattice_b_get(const HklLattice *self)
+{
+	return self->b;
+}
+
+/**
+ * hkl_lattice_b_set: (skip)
+ * @self: the this ptr
+ * @parameter: the parameter to set
+ **/
+void hkl_lattice_b_set(HklLattice *self, const HklParameter *parameter)
+{
+	hkl_parameter_init_copy(self->b, parameter);
+}
+
+/**
+ * hkl_lattice_c_get: (skip)
+ * @self: the this ptr
+ **/
+const HklParameter *hkl_lattice_c_get(const HklLattice *self)
+{
+	return self->c;
+}
+
+/**
+ * hkl_lattice_c_set: (skip)
+ * @self: the this ptr
+ * @parameter: the parameter to set
+ **/
+void hkl_lattice_c_set(HklLattice *self, const HklParameter *parameter)
+{
+	hkl_parameter_init_copy(self->c, parameter);
+}
+
+/**
+ * hkl_lattice_alpha_get: (skip)
+ * @self: the this ptr
+ **/
+const HklParameter *hkl_lattice_alpha_get(const HklLattice *self)
+{
+	return self->alpha;
+}
+
+/**
+ * hkl_lattice_alpha_set: (skip)
+ * @self: the this ptr
+ * @parameter: the parameter to set
+ **/
+void hkl_lattice_alpha_set(HklLattice *self, const HklParameter *parameter)
+{
+	hkl_parameter_init_copy(self->alpha, parameter);
+}
+
+/**
+ * hkl_lattice_beta_get: (skip)
+ * @self: the this ptr
+ **/
+const HklParameter *hkl_lattice_beta_get(const HklLattice *self)
+{
+	return self->beta;
+}
+
+/**
+ * hkl_lattice_beta_set: (skip)
+ * @self: the this ptr
+ * @parameter: the parameter to set
+ **/
+void hkl_lattice_beta_set(HklLattice *self, const HklParameter *parameter)
+{
+	hkl_parameter_init_copy(self->beta, parameter);
+}
+
+/**
+ * hkl_lattice_gamma_get: (skip)
+ * @self: the this ptr
+ **/
+const HklParameter *hkl_lattice_gamma_get(const HklLattice *self)
+{
+	return self->gamma;
+}
+
+/**
+ * hkl_lattice_gamma_set: (skip)
+ * @self: the this ptr
+ * @parameter: the parameter to set
+ **/
+void hkl_lattice_gamma_set(HklLattice *self, const HklParameter *parameter)
+{
+	hkl_parameter_init_copy(self->gamma, parameter);
 }
 
 /**

@@ -1033,24 +1033,6 @@ Returns:</doc>
             glib:type-name="HklLattice"
             glib:get-type="hkl_lattice_get_type"
             c:symbol-prefix="lattice">
-      <field name="a" writable="1">
-        <type name="Parameter" c:type="HklParameter*"/>
-      </field>
-      <field name="b" writable="1">
-        <type name="Parameter" c:type="HklParameter*"/>
-      </field>
-      <field name="c" writable="1">
-        <type name="Parameter" c:type="HklParameter*"/>
-      </field>
-      <field name="alpha" writable="1">
-        <type name="Parameter" c:type="HklParameter*"/>
-      </field>
-      <field name="beta" writable="1">
-        <type name="Parameter" c:type="HklParameter*"/>
-      </field>
-      <field name="gamma" writable="1">
-        <type name="Parameter" c:type="HklParameter*"/>
-      </field>
       <constructor name="new"
                    c:identifier="hkl_lattice_new"
                    introspectable="0">
@@ -1091,11 +1073,119 @@ Returns:</doc>
           <type name="Lattice" c:type="HklLattice*"/>
         </return-value>
       </constructor>
+      <method name="a_get" c:identifier="hkl_lattice_a_get" introspectable="0">
+        <return-value transfer-ownership="none">
+          <type name="Parameter" c:type="HklParameter*"/>
+        </return-value>
+      </method>
+      <method name="a_set" c:identifier="hkl_lattice_a_set" introspectable="0">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="parameter" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the parameter to set</doc>
+            <type name="Parameter" c:type="HklParameter*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="alpha_get"
+              c:identifier="hkl_lattice_alpha_get"
+              introspectable="0">
+        <return-value transfer-ownership="none">
+          <type name="Parameter" c:type="HklParameter*"/>
+        </return-value>
+      </method>
+      <method name="alpha_set"
+              c:identifier="hkl_lattice_alpha_set"
+              introspectable="0">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="parameter" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the parameter to set</doc>
+            <type name="Parameter" c:type="HklParameter*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="b_get" c:identifier="hkl_lattice_b_get" introspectable="0">
+        <return-value transfer-ownership="none">
+          <type name="Parameter" c:type="HklParameter*"/>
+        </return-value>
+      </method>
+      <method name="b_set" c:identifier="hkl_lattice_b_set" introspectable="0">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="parameter" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the parameter to set</doc>
+            <type name="Parameter" c:type="HklParameter*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="beta_get"
+              c:identifier="hkl_lattice_beta_get"
+              introspectable="0">
+        <return-value transfer-ownership="none">
+          <type name="Parameter" c:type="HklParameter*"/>
+        </return-value>
+      </method>
+      <method name="beta_set"
+              c:identifier="hkl_lattice_beta_set"
+              introspectable="0">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="parameter" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the parameter to set</doc>
+            <type name="Parameter" c:type="HklParameter*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="c_get" c:identifier="hkl_lattice_c_get" introspectable="0">
+        <return-value transfer-ownership="none">
+          <type name="Parameter" c:type="HklParameter*"/>
+        </return-value>
+      </method>
+      <method name="c_set" c:identifier="hkl_lattice_c_set" introspectable="0">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="parameter" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the parameter to set</doc>
+            <type name="Parameter" c:type="HklParameter*"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="free" c:identifier="hkl_lattice_free" introspectable="0">
         <doc xml:whitespace="preserve">destructor</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
+      </method>
+      <method name="gamma_get"
+              c:identifier="hkl_lattice_gamma_get"
+              introspectable="0">
+        <return-value transfer-ownership="none">
+          <type name="Parameter" c:type="HklParameter*"/>
+        </return-value>
+      </method>
+      <method name="gamma_set"
+              c:identifier="hkl_lattice_gamma_set"
+              introspectable="0">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="parameter" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the parameter to set</doc>
+            <type name="Parameter" c:type="HklParameter*"/>
+          </parameter>
+        </parameters>
       </method>
       <method name="get_1_B"
               c:identifier="hkl_lattice_get_1_B"
@@ -1135,19 +1225,6 @@ Returns:</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="lattice_set"
-              c:identifier="hkl_lattice_lattice_set"
-              introspectable="0">
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="lattice" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the lattice to set from.</doc>
-            <type name="Lattice" c:type="HklLattice*"/>
-          </parameter>
-        </parameters>
-      </method>
       <method name="new_copy"
               c:identifier="hkl_lattice_new_copy"
               introspectable="0">
@@ -1156,14 +1233,6 @@ Returns:</doc>
 Returns:</doc>
         <return-value transfer-ownership="full">
           <type name="Lattice" c:type="HklLattice*"/>
-        </return-value>
-      </method>
-      <method name="randomize"
-              c:identifier="hkl_lattice_randomize"
-              introspectable="0">
-        <doc xml:whitespace="preserve">randomize the lattice</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
         </return-value>
       </method>
       <method name="reciprocal"
@@ -1212,22 +1281,6 @@ Returns:</doc>
           </parameter>
         </parameters>
       </method>
-      <function name="fprintf"
-                c:identifier="hkl_lattice_fprintf"
-                introspectable="0">
-        <doc xml:whitespace="preserve">print into a file the lattice.</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="f" transfer-ownership="none">
-            <type name="gpointer" c:type="FILE*"/>
-          </parameter>
-          <parameter name="self" transfer-ownership="none">
-            <type name="Lattice" c:type="HklLattice*"/>
-          </parameter>
-        </parameters>
-      </function>
     </record>
     <record name="Matrix"
             c:type="HklMatrix"
@@ -3208,23 +3261,6 @@ control over, that could include printf() escape sequences.</doc>
         </parameter>
         <parameter name="self" transfer-ownership="none">
           <type name="Geometry" c:type="HklGeometry*"/>
-        </parameter>
-      </parameters>
-    </function>
-    <function name="lattice_fprintf"
-              c:identifier="hkl_lattice_fprintf"
-              moved-to="Lattice.fprintf"
-              introspectable="0">
-      <doc xml:whitespace="preserve">print into a file the lattice.</doc>
-      <return-value transfer-ownership="none">
-        <type name="none" c:type="void"/>
-      </return-value>
-      <parameters>
-        <parameter name="f" transfer-ownership="none">
-          <type name="gpointer" c:type="FILE*"/>
-        </parameter>
-        <parameter name="self" transfer-ownership="none">
-          <type name="Lattice" c:type="HklLattice*"/>
         </parameter>
       </parameters>
     </function>

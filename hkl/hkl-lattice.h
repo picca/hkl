@@ -22,6 +22,7 @@
 #ifndef __HKL_LATTICE_H__
 #define __HKL_LATTICE_H__
 
+#include <hkl/hkl-macros.h>
 #include <hkl/hkl-parameter.h>
 #include <hkl/hkl-matrix.h>
 
@@ -29,40 +30,43 @@ HKL_BEGIN_DECLS
 
 typedef struct _HklLattice HklLattice;
 
-struct _HklLattice
-{
-	HklParameter *a;
-	HklParameter *b;
-	HklParameter *c;
-	HklParameter *alpha;
-	HklParameter *beta;
-	HklParameter *gamma;
-};
-
-extern HklLattice *hkl_lattice_new(double a, double b, double c,
+HKLAPI HklLattice *hkl_lattice_new(double a, double b, double c,
 				   double alpha, double beta, double gamma);
 
-extern HklLattice *hkl_lattice_new_copy(const HklLattice *self);
+HKLAPI HklLattice *hkl_lattice_new_copy(const HklLattice *self) HKL_ARG_NONNULL(1);
 
-extern HklLattice *hkl_lattice_new_default(void);
+HKLAPI HklLattice *hkl_lattice_new_default(void);
 
-extern void hkl_lattice_free(HklLattice *self);
+HKLAPI void hkl_lattice_free(HklLattice *self) HKL_ARG_NONNULL(1);
 
-extern void hkl_lattice_lattice_set(HklLattice *self, const HklLattice *lattice);
+HKLAPI const HklParameter *hkl_lattice_a_get(const HklLattice *self) HKL_ARG_NONNULL(1);
+HKLAPI void hkl_lattice_a_set(HklLattice *self, const HklParameter *parameter) HKL_ARG_NONNULL(1, 2);
 
-extern int hkl_lattice_set(HklLattice *self,
+HKLAPI const HklParameter *hkl_lattice_b_get(const HklLattice *self) HKL_ARG_NONNULL(1);
+HKLAPI void hkl_lattice_b_set(HklLattice *self, const HklParameter *parameter) HKL_ARG_NONNULL(1, 2);
+
+HKLAPI const HklParameter *hkl_lattice_c_get(const HklLattice *self) HKL_ARG_NONNULL(1);
+HKLAPI void hkl_lattice_c_set(HklLattice *self, const HklParameter *parameter) HKL_ARG_NONNULL(1, 2);
+
+HKLAPI const HklParameter *hkl_lattice_alpha_get(const HklLattice *self) HKL_ARG_NONNULL(1);
+HKLAPI void hkl_lattice_alpha_set(HklLattice *self, const HklParameter *parameter) HKL_ARG_NONNULL(1, 2);
+
+HKLAPI const HklParameter *hkl_lattice_beta_get(const HklLattice *self) HKL_ARG_NONNULL(1);
+HKLAPI void hkl_lattice_beta_set(HklLattice *self, const HklParameter *parameter) HKL_ARG_NONNULL(1, 2);
+
+HKLAPI const HklParameter *hkl_lattice_gamma_get(const HklLattice *self) HKL_ARG_NONNULL(1);
+HKLAPI void hkl_lattice_gamma_set(HklLattice *self, const HklParameter *parameter) HKL_ARG_NONNULL(1, 2);
+
+
+HKLAPI int hkl_lattice_set(HklLattice *self,
 			   double a, double b, double c,
-			   double alpha, double beta, double gamma);
+			   double alpha, double beta, double gamma) HKL_ARG_NONNULL(1);
 
-extern int hkl_lattice_get_B(const HklLattice *self, HklMatrix *B);
+HKLAPI int hkl_lattice_get_B(const HklLattice *self, HklMatrix *B) HKL_ARG_NONNULL(1, 2);
 
-extern int hkl_lattice_get_1_B(const HklLattice *self, HklMatrix *B);
+HKLAPI int hkl_lattice_get_1_B(const HklLattice *self, HklMatrix *B) HKL_ARG_NONNULL(1, 2);
 
-extern int hkl_lattice_reciprocal(const HklLattice *self, HklLattice *reciprocal);
-
-extern void hkl_lattice_randomize(HklLattice *self);
-
-extern void hkl_lattice_fprintf(FILE *f, const HklLattice *self);
+HKLAPI int hkl_lattice_reciprocal(const HklLattice *self, HklLattice *reciprocal) HKL_ARG_NONNULL(1, 2);
 
 HKL_END_DECLS
 

@@ -193,6 +193,7 @@ void HKLWindow::on_button2_clicked(void)
 	if(_sample){
 		HklMatrix U;
 		HklLattice *lattice = hkl_sample_lattice_get(_sample);
+		HklParameter *parameter;
 
 		hkl_lattice_set(lattice,
 				_spinbutton_a->get_value(),
@@ -202,25 +203,50 @@ void HKLWindow::on_button2_clicked(void)
 				_spinbutton_beta->get_value() * HKL_DEGTORAD,
 				_spinbutton_gamma->get_value() * HKL_DEGTORAD);
 
-		// set min/max parameters of the lattice
-		hkl_parameter_min_max_unit_set(lattice->a,
+
+		/* set min/max a */
+		parameter = hkl_parameter_new_copy(hkl_lattice_a_get(lattice));
+		hkl_parameter_min_max_unit_set(parameter,
 					       _spinbutton_a_min->get_value(),
 					       _spinbutton_a_max->get_value());
-		hkl_parameter_min_max_unit_set(lattice->b,
+		hkl_lattice_a_set(lattice, parameter);
+		hkl_parameter_free(parameter);
+
+		/* set min/max b */
+		parameter = hkl_parameter_new_copy(hkl_lattice_b_get(lattice));
+		hkl_parameter_min_max_unit_set(parameter,
 					       _spinbutton_b_min->get_value(),
 					       _spinbutton_b_max->get_value());
-		hkl_parameter_min_max_unit_set(lattice->c,
+		hkl_lattice_b_set(lattice, parameter);
+		hkl_parameter_free(parameter);
+
+		parameter = hkl_parameter_new_copy(hkl_lattice_c_get(lattice));
+		hkl_parameter_min_max_unit_set(parameter,
 					       _spinbutton_c_min->get_value(),
 					       _spinbutton_c_max->get_value());
-		hkl_parameter_min_max_unit_set(lattice->alpha,
+		hkl_lattice_c_set(lattice, parameter);
+		hkl_parameter_free(parameter);
+
+		parameter = hkl_parameter_new_copy(hkl_lattice_alpha_get(lattice));
+		hkl_parameter_min_max_unit_set(parameter,
 					       _spinbutton_alpha_min->get_value(),
 					       _spinbutton_alpha_max->get_value());
-		hkl_parameter_min_max_unit_set(lattice->beta,
+		hkl_lattice_alpha_set(lattice, parameter);
+		hkl_parameter_free(parameter);
+
+		parameter = hkl_parameter_new_copy(hkl_lattice_beta_get(lattice));
+		hkl_parameter_min_max_unit_set(parameter,
 					       _spinbutton_beta_min->get_value(),
 					       _spinbutton_beta_max->get_value());
-		hkl_parameter_min_max_unit_set(lattice->gamma,
+		hkl_lattice_beta_set(lattice, parameter);
+		hkl_parameter_free(parameter);
+
+		parameter = hkl_parameter_new_copy(hkl_lattice_gamma_get(lattice));
+		hkl_parameter_min_max_unit_set(parameter,
 					       _spinbutton_gamma_min->get_value(),
 					       _spinbutton_gamma_max->get_value());
+		hkl_lattice_gamma_set(lattice, parameter);
+		hkl_parameter_free(parameter);
 
 
 		hkl_sample_lattice_set(_sample, lattice);
@@ -245,7 +271,10 @@ void HKLWindow::on_checkbutton_a_toggled(void)
 
 	if(_sample){
 		HklLattice *lattice = hkl_sample_lattice_get(_sample);
-		hkl_parameter_fit_set(lattice->a, _checkbutton_a->get_active());
+		HklParameter *parameter = hkl_parameter_new_copy(hkl_lattice_a_get(lattice));
+		hkl_parameter_fit_set(parameter, _checkbutton_a->get_active());
+		hkl_lattice_a_set(lattice, parameter);
+		hkl_parameter_free(parameter);
 	}
 }
 
@@ -255,7 +284,10 @@ void HKLWindow::on_checkbutton_b_toggled(void)
 
 	if(_sample){
 		HklLattice *lattice = hkl_sample_lattice_get(_sample);
-		hkl_parameter_fit_set(lattice->b, _checkbutton_b->get_active());
+		HklParameter *parameter = hkl_parameter_new_copy(hkl_lattice_b_get(lattice));
+		hkl_parameter_fit_set(parameter, _checkbutton_b->get_active());
+		hkl_lattice_b_set(lattice, parameter);
+		hkl_parameter_free(parameter);
 	}
 }
 
@@ -265,7 +297,10 @@ void HKLWindow::on_checkbutton_c_toggled(void)
 
 	if(_sample){
 		HklLattice *lattice = hkl_sample_lattice_get(_sample);
-		hkl_parameter_fit_set(lattice->c, _checkbutton_c->get_active());
+		HklParameter *parameter = hkl_parameter_new_copy(hkl_lattice_c_get(lattice));
+		hkl_parameter_fit_set(parameter, _checkbutton_c->get_active());
+		hkl_lattice_c_set(lattice, parameter);
+		hkl_parameter_free(parameter);
 	}
 }
 
@@ -275,7 +310,10 @@ void HKLWindow::on_checkbutton_alpha_toggled(void)
 
 	if(_sample){
 		HklLattice *lattice = hkl_sample_lattice_get(_sample);
-		hkl_parameter_fit_set(lattice->alpha, _checkbutton_alpha->get_active());
+		HklParameter *parameter = hkl_parameter_new_copy(hkl_lattice_alpha_get(lattice));
+		hkl_parameter_fit_set(parameter, _checkbutton_alpha->get_active());
+		hkl_lattice_alpha_set(lattice, parameter);
+		hkl_parameter_free(parameter);
 	}
 }
 
@@ -285,7 +323,10 @@ void HKLWindow::on_checkbutton_beta_toggled(void)
 
 	if(_sample){
 		HklLattice *lattice = hkl_sample_lattice_get(_sample);
-		hkl_parameter_fit_set(lattice->beta, _checkbutton_beta->get_active());
+		HklParameter *parameter = hkl_parameter_new_copy(hkl_lattice_beta_get(lattice));
+		hkl_parameter_fit_set(parameter, _checkbutton_beta->get_active());
+		hkl_lattice_beta_set(lattice, parameter);
+		hkl_parameter_free(parameter);
 	}
 }
 
@@ -295,7 +336,10 @@ void HKLWindow::on_checkbutton_gamma_toggled(void)
 
 	if(_sample){
 		HklLattice *lattice = hkl_sample_lattice_get(_sample);
-		hkl_parameter_fit_set(lattice->gamma, _checkbutton_gamma->get_active());
+		HklParameter *parameter = hkl_parameter_new_copy(hkl_lattice_gamma_get(lattice));
+		hkl_parameter_fit_set(parameter, _checkbutton_gamma->get_active());
+		hkl_lattice_gamma_set(lattice, parameter);
+		hkl_parameter_free(parameter);
 	}
 }
 

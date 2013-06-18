@@ -30,6 +30,7 @@
 
 #include "hkl-axis-private.h"
 #include "hkl-detector-private.h"
+#include "hkl-lattice-private.h"
 #include "hkl-parameter-private.h"
 #include "hkl-geometry-private.h"
 #include "hkl-sample-private.h"

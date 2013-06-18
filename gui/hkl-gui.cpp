@@ -703,12 +703,12 @@ void HKLWindow::updateLattice(void)
 
 	if(_sample){
 		HklLattice *lattice = hkl_sample_lattice_get(_sample);
-		double a = hkl_parameter_value_unit_get(lattice->a);
-		double b = hkl_parameter_value_unit_get(lattice->b);
-		double c = hkl_parameter_value_unit_get(lattice->c);
-		double alpha = hkl_parameter_value_unit_get(lattice->alpha);
-		double beta = hkl_parameter_value_unit_get(lattice->beta);
-		double gamma = hkl_parameter_value_unit_get(lattice->gamma);
+		double a = hkl_parameter_value_unit_get(hkl_lattice_a_get(lattice));
+		double b = hkl_parameter_value_unit_get(hkl_lattice_b_get(lattice));
+		double c = hkl_parameter_value_unit_get(hkl_lattice_c_get(lattice));
+		double alpha = hkl_parameter_value_unit_get(hkl_lattice_alpha_get(lattice));
+		double beta = hkl_parameter_value_unit_get(hkl_lattice_beta_get(lattice));
+		double gamma = hkl_parameter_value_unit_get(hkl_lattice_gamma_get(lattice));
 
 		_spinbutton_a->set_value(a);
 		_spinbutton_b->set_value(b);
@@ -728,40 +728,40 @@ void HKLWindow::updateLatticeParameters(void)
 		double max;
 		bool to_fit;
 		HklLattice *lattice = hkl_sample_lattice_get(_sample);
-		HklParameter *parameter;
+		const HklParameter *parameter;
 
 
-		parameter = lattice->a;
+		parameter = hkl_lattice_a_get(lattice);
 		hkl_parameter_min_max_unit_get(parameter, &min, &max);
 		_spinbutton_a_min->set_value(min);
 		_spinbutton_a_max->set_value(max);
 		_checkbutton_a->set_active(parameter->fit);
 
-		parameter = lattice->b;
+		parameter = hkl_lattice_b_get(lattice);
 		hkl_parameter_min_max_unit_get(parameter, &min, &max);
 		_spinbutton_b_min->set_value(min);
 		_spinbutton_b_max->set_value(max);
 		_checkbutton_b->set_active(parameter->fit);
 
-		parameter = lattice->c;
+		parameter = hkl_lattice_c_get(lattice);
 		hkl_parameter_min_max_unit_get(parameter, &min, &max);
 		_spinbutton_c_min->set_value(min);
 		_spinbutton_c_max->set_value(max);
 		_checkbutton_c->set_active(parameter->fit);
 
-		parameter = lattice->alpha;
+		parameter = hkl_lattice_alpha_get(lattice);
 		hkl_parameter_min_max_unit_get(parameter, &min, &max);
 		_spinbutton_alpha_min->set_value(min);
 		_spinbutton_alpha_max->set_value(max);
 		_checkbutton_alpha->set_active(parameter->fit);
 
-		parameter = lattice->beta;
+		parameter = hkl_lattice_beta_get(lattice);
 		hkl_parameter_min_max_unit_get(parameter, &min, &max);
 		_spinbutton_beta_min->set_value(min);
 		_spinbutton_beta_max->set_value(max);
 		_checkbutton_beta->set_active(parameter->fit);
 
-		parameter = lattice->gamma;
+		parameter = hkl_lattice_gamma_get(lattice);
 		hkl_parameter_min_max_unit_get(parameter, &min, &max);
 		_spinbutton_gamma_min->set_value(min);
 		_spinbutton_gamma_max->set_value(max);
@@ -777,12 +777,24 @@ void HKLWindow::updateReciprocalLattice(void)
 		hkl_lattice_reciprocal(hkl_sample_lattice_get(_sample),
 				       _reciprocal);
 
-		_spinbutton_a_star->set_value(hkl_parameter_value_unit_get(_reciprocal->a));
-		_spinbutton_b_star->set_value(hkl_parameter_value_unit_get(_reciprocal->b));
-		_spinbutton_c_star->set_value(hkl_parameter_value_unit_get(_reciprocal->c));
-		_spinbutton_alpha_star->set_value(hkl_parameter_value_unit_get(_reciprocal->alpha));
-		_spinbutton_beta_star->set_value(hkl_parameter_value_unit_get(_reciprocal->beta));
-		_spinbutton_gamma_star->set_value(hkl_parameter_value_unit_get(_reciprocal->gamma));
+		_spinbutton_a_star->set_value(
+			hkl_parameter_value_unit_get(
+				hkl_lattice_a_get(_reciprocal)));
+		_spinbutton_b_star->set_value(
+			hkl_parameter_value_unit_get(
+				hkl_lattice_b_get(_reciprocal)));
+		_spinbutton_c_star->set_value(
+			hkl_parameter_value_unit_get(
+				hkl_lattice_c_get(_reciprocal)));
+		_spinbutton_alpha_star->set_value(
+			hkl_parameter_value_unit_get(
+				hkl_lattice_alpha_get(_reciprocal)));
+		_spinbutton_beta_star->set_value(
+			hkl_parameter_value_unit_get(
+				hkl_lattice_beta_get(_reciprocal)));
+		_spinbutton_gamma_star->set_value(
+			hkl_parameter_value_unit_get(
+				hkl_lattice_gamma_get(_reciprocal)));
 	}
 }
 
@@ -882,12 +894,12 @@ void HKLWindow::updateTreeViewCrystals(void)
 			iter_current = iter_row;
 		row = *(iter_row);
 		row[_crystalModelColumns.name] = name;
-		row[_crystalModelColumns.a] = hkl_parameter_value_unit_get(lattice->a);
-		row[_crystalModelColumns.b] = hkl_parameter_value_unit_get(lattice->b);
-		row[_crystalModelColumns.c] = hkl_parameter_value_unit_get(lattice->c);
-		row[_crystalModelColumns.alpha] = hkl_parameter_value_unit_get(lattice->alpha);
-		row[_crystalModelColumns.beta] = hkl_parameter_value_unit_get(lattice->beta);
-		row[_crystalModelColumns.gamma] = hkl_parameter_value_unit_get(lattice->gamma);
+		row[_crystalModelColumns.a] = hkl_parameter_value_unit_get(hkl_lattice_a_get(lattice));
+		row[_crystalModelColumns.b] = hkl_parameter_value_unit_get(hkl_lattice_b_get(lattice));
+		row[_crystalModelColumns.c] = hkl_parameter_value_unit_get(hkl_lattice_c_get(lattice));
+		row[_crystalModelColumns.alpha] = hkl_parameter_value_unit_get(hkl_lattice_alpha_get(lattice));
+		row[_crystalModelColumns.beta] = hkl_parameter_value_unit_get(hkl_lattice_beta_get(lattice));
+		row[_crystalModelColumns.gamma] = hkl_parameter_value_unit_get(hkl_lattice_gamma_get(lattice));
 
 		Glib::RefPtr<Gtk::ListStore> listStore = Gtk::ListStore::create(_reflectionModelColumns);
 		_mapReflectionModel[name] = listStore;
@@ -947,12 +959,18 @@ void HKLWindow::updateCrystalModel(HklSample * sample)
 		Gtk::TreeModel::Row const & row = *iter;
 		if (row[_crystalModelColumns.name] == hkl_sample_name_get(sample)){
 			HklLattice *lattice = hkl_sample_lattice_get(sample);
-			row[_crystalModelColumns.a] = hkl_parameter_value_unit_get(lattice->a);
-			row[_crystalModelColumns.b] = hkl_parameter_value_unit_get(lattice->b);
-			row[_crystalModelColumns.c] = hkl_parameter_value_unit_get(lattice->c);
-			row[_crystalModelColumns.alpha] = hkl_parameter_value_unit_get(lattice->alpha);
-			row[_crystalModelColumns.beta] = hkl_parameter_value_unit_get(lattice->beta);
-			row[_crystalModelColumns.gamma] = hkl_parameter_value_unit_get(lattice->gamma);
+			row[_crystalModelColumns.a] = hkl_parameter_value_unit_get(
+				hkl_lattice_a_get(lattice));
+			row[_crystalModelColumns.b] = hkl_parameter_value_unit_get(
+				hkl_lattice_b_get(lattice));
+			row[_crystalModelColumns.c] = hkl_parameter_value_unit_get(
+				hkl_lattice_c_get(lattice));
+			row[_crystalModelColumns.alpha] = hkl_parameter_value_unit_get(
+				hkl_lattice_alpha_get(lattice));
+			row[_crystalModelColumns.beta] = hkl_parameter_value_unit_get(
+				hkl_lattice_beta_get(lattice));
+			row[_crystalModelColumns.gamma] = hkl_parameter_value_unit_get(
+				hkl_lattice_gamma_get(lattice));
 			iter = end;
 		}
 		else

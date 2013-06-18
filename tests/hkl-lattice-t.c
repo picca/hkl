@@ -37,12 +37,12 @@ static void new(void)
 				  90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD);
 	ok(0 == !lattice, __func__);
 
-	is_double(1.54, hkl_parameter_value_get(lattice->a), HKL_EPSILON, __func__);
-	is_double(1.54, hkl_parameter_value_get(lattice->b), HKL_EPSILON, __func__);
-	is_double(1.54, hkl_parameter_value_get(lattice->c), HKL_EPSILON, __func__);
-	is_double(90*HKL_DEGTORAD, hkl_parameter_value_get(lattice->alpha), HKL_EPSILON, __func__);
-	is_double(90*HKL_DEGTORAD, hkl_parameter_value_get(lattice->beta), HKL_EPSILON, __func__);
-	is_double(90*HKL_DEGTORAD, hkl_parameter_value_get(lattice->gamma), HKL_EPSILON, __func__);
+	is_double(1.54, hkl_parameter_value_get(hkl_lattice_a_get(lattice)), HKL_EPSILON, __func__);
+	is_double(1.54, hkl_parameter_value_get(hkl_lattice_b_get(lattice)), HKL_EPSILON, __func__);
+	is_double(1.54, hkl_parameter_value_get(hkl_lattice_c_get(lattice)), HKL_EPSILON, __func__);
+	is_double(90*HKL_DEGTORAD, hkl_parameter_value_get(hkl_lattice_alpha_get(lattice)), HKL_EPSILON, __func__);
+	is_double(90*HKL_DEGTORAD, hkl_parameter_value_get(hkl_lattice_beta_get(lattice)), HKL_EPSILON, __func__);
+	is_double(90*HKL_DEGTORAD, hkl_parameter_value_get(hkl_lattice_gamma_get(lattice)), HKL_EPSILON, __func__);
 	hkl_lattice_free(lattice);
 }
 
@@ -57,12 +57,12 @@ static void  new_copy(void )
 	/* copy constructor */
 	copy = hkl_lattice_new_copy(lattice);
 
-	is_double(1.54, hkl_parameter_value_get(copy->a), HKL_EPSILON, __func__);
-	is_double(1.54, hkl_parameter_value_get(copy->b), HKL_EPSILON, __func__);
-	is_double(1.54, hkl_parameter_value_get(copy->c), HKL_EPSILON, __func__);
-	is_double(90. * HKL_DEGTORAD, hkl_parameter_value_get(copy->alpha), HKL_EPSILON, __func__);
-	is_double(90. * HKL_DEGTORAD, hkl_parameter_value_get(copy->beta), HKL_EPSILON, __func__);
-	is_double(90. * HKL_DEGTORAD, hkl_parameter_value_get(copy->gamma), HKL_EPSILON, __func__);
+	is_double(1.54, hkl_parameter_value_get(hkl_lattice_a_get(copy)), HKL_EPSILON, __func__);
+	is_double(1.54, hkl_parameter_value_get(hkl_lattice_b_get(copy)), HKL_EPSILON, __func__);
+	is_double(1.54, hkl_parameter_value_get(hkl_lattice_c_get(copy)), HKL_EPSILON, __func__);
+	is_double(90. * HKL_DEGTORAD, hkl_parameter_value_get(hkl_lattice_alpha_get(copy)), HKL_EPSILON, __func__);
+	is_double(90. * HKL_DEGTORAD, hkl_parameter_value_get(hkl_lattice_beta_get(copy)), HKL_EPSILON, __func__);
+	is_double(90. * HKL_DEGTORAD, hkl_parameter_value_get(hkl_lattice_gamma_get(copy)), HKL_EPSILON, __func__);
 
 	hkl_lattice_free(lattice);
 	hkl_lattice_free(copy);
@@ -79,12 +79,12 @@ static void set(void)
 	hkl_lattice_set(lattice, 1.54, 1.54, 1.54,
 			90*HKL_DEGTORAD, 91*HKL_DEGTORAD, 92*HKL_DEGTORAD);
 
-	is_double(1.54, hkl_parameter_value_get(lattice->a), HKL_EPSILON, __func__);
-	is_double(1.54, hkl_parameter_value_get(lattice->b), HKL_EPSILON, __func__);
-	is_double(1.54, hkl_parameter_value_get(lattice->c), HKL_EPSILON, __func__);
-	is_double(90*HKL_DEGTORAD, hkl_parameter_value_get(lattice->alpha), HKL_EPSILON, __func__);
-	is_double(91*HKL_DEGTORAD, hkl_parameter_value_get(lattice->beta), HKL_EPSILON, __func__);
-	is_double(92*HKL_DEGTORAD, hkl_parameter_value_get(lattice->gamma), HKL_EPSILON, __func__);
+	is_double(1.54, hkl_parameter_value_get(hkl_lattice_a_get(lattice)), HKL_EPSILON, __func__);
+	is_double(1.54, hkl_parameter_value_get(hkl_lattice_b_get(lattice)), HKL_EPSILON, __func__);
+	is_double(1.54, hkl_parameter_value_get(hkl_lattice_c_get(lattice)), HKL_EPSILON, __func__);
+	is_double(90*HKL_DEGTORAD, hkl_parameter_value_get(hkl_lattice_alpha_get(lattice)), HKL_EPSILON, __func__);
+	is_double(91*HKL_DEGTORAD, hkl_parameter_value_get(hkl_lattice_beta_get(lattice)), HKL_EPSILON, __func__);
+	is_double(92*HKL_DEGTORAD, hkl_parameter_value_get(hkl_lattice_gamma_get(lattice)), HKL_EPSILON, __func__);
 	hkl_lattice_free(lattice);
 }
 
@@ -102,67 +102,67 @@ static void  reciprocal(void )
 
 	ok(HKL_TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
 
-	is_double(HKL_TAU / 1.54, hkl_parameter_value_get(reciprocal->a), HKL_EPSILON, __func__);
-	is_double(HKL_TAU / 1.54, hkl_parameter_value_get(reciprocal->b), HKL_EPSILON, __func__);
-	is_double(HKL_TAU / 1.54, hkl_parameter_value_get(reciprocal->c), HKL_EPSILON, __func__);
-	is_double(90. * HKL_DEGTORAD, hkl_parameter_value_get(reciprocal->alpha), HKL_EPSILON, __func__);
-	is_double(90. * HKL_DEGTORAD, hkl_parameter_value_get(reciprocal->beta), HKL_EPSILON, __func__);
-	is_double(90. * HKL_DEGTORAD, hkl_parameter_value_get(reciprocal->gamma), HKL_EPSILON, __func__);
+	is_double(HKL_TAU / 1.54, hkl_parameter_value_get(hkl_lattice_a_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(HKL_TAU / 1.54, hkl_parameter_value_get(hkl_lattice_b_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(HKL_TAU / 1.54, hkl_parameter_value_get(hkl_lattice_c_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(90. * HKL_DEGTORAD, hkl_parameter_value_get(hkl_lattice_alpha_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(90. * HKL_DEGTORAD, hkl_parameter_value_get(hkl_lattice_beta_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(90. * HKL_DEGTORAD, hkl_parameter_value_get(hkl_lattice_gamma_get(reciprocal)), HKL_EPSILON, __func__);
 
 	/* orthorombic */
 	hkl_lattice_set(lattice, 1., 3., 4., 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD);
 	ok(HKL_TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
 
-	is_double(HKL_TAU / 1., hkl_parameter_value_get(reciprocal->a), HKL_EPSILON, __func__);
-	is_double(HKL_TAU / 3., hkl_parameter_value_get(reciprocal->b), HKL_EPSILON, __func__);
-	is_double(HKL_TAU / 4., hkl_parameter_value_get(reciprocal->c), HKL_EPSILON, __func__);
-	is_double(90. * HKL_DEGTORAD, hkl_parameter_value_get(reciprocal->alpha), HKL_EPSILON, __func__);
-	is_double(90. * HKL_DEGTORAD, hkl_parameter_value_get(reciprocal->beta), HKL_EPSILON, __func__);
-	is_double(90. * HKL_DEGTORAD, hkl_parameter_value_get(reciprocal->gamma), HKL_EPSILON, __func__);
+	is_double(HKL_TAU / 1., hkl_parameter_value_get(hkl_lattice_a_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(HKL_TAU / 3., hkl_parameter_value_get(hkl_lattice_b_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(HKL_TAU / 4., hkl_parameter_value_get(hkl_lattice_c_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(90. * HKL_DEGTORAD, hkl_parameter_value_get(hkl_lattice_alpha_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(90. * HKL_DEGTORAD, hkl_parameter_value_get(hkl_lattice_beta_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(90. * HKL_DEGTORAD, hkl_parameter_value_get(hkl_lattice_gamma_get(reciprocal)), HKL_EPSILON, __func__);
 
 	/* hexagonal1 */
 	hkl_lattice_set(lattice, 1., 2., 1., 90 * HKL_DEGTORAD, 120 * HKL_DEGTORAD, 90 * HKL_DEGTORAD);
 	ok(HKL_TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
 
-	is_double(HKL_TAU * 2. / sqrt(3.), hkl_parameter_value_get(reciprocal->a), HKL_EPSILON, __func__);
-	is_double(HKL_TAU / 2., hkl_parameter_value_get(reciprocal->b), HKL_EPSILON, __func__);
-	is_double(HKL_TAU * 2. / sqrt(3.), hkl_parameter_value_get(reciprocal->c), HKL_EPSILON, __func__);
-	is_double(90. * HKL_DEGTORAD, hkl_parameter_value_get(reciprocal->alpha), HKL_EPSILON, __func__);
-	is_double(60. * HKL_DEGTORAD, hkl_parameter_value_get(reciprocal->beta), HKL_EPSILON, __func__);
-	is_double(90. * HKL_DEGTORAD, hkl_parameter_value_get(reciprocal->gamma), HKL_EPSILON, __func__);
+	is_double(HKL_TAU * 2. / sqrt(3.), hkl_parameter_value_get(hkl_lattice_a_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(HKL_TAU / 2., hkl_parameter_value_get(hkl_lattice_b_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(HKL_TAU * 2. / sqrt(3.), hkl_parameter_value_get(hkl_lattice_c_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(90. * HKL_DEGTORAD, hkl_parameter_value_get(hkl_lattice_alpha_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(60. * HKL_DEGTORAD, hkl_parameter_value_get(hkl_lattice_beta_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(90. * HKL_DEGTORAD, hkl_parameter_value_get(hkl_lattice_gamma_get(reciprocal)), HKL_EPSILON, __func__);
 
 	/* hexagonal2 */
 	hkl_lattice_set(lattice, 2., 1., 1., 120 * HKL_DEGTORAD, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD);
 	ok(HKL_TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
 
-	is_double(HKL_TAU / 2., hkl_parameter_value_get(reciprocal->a), HKL_EPSILON, __func__);
-	is_double(HKL_TAU * 2. / sqrt(3.), hkl_parameter_value_get(reciprocal->b), HKL_EPSILON, __func__);
-	is_double(HKL_TAU * 2. / sqrt(3.), hkl_parameter_value_get(reciprocal->c), HKL_EPSILON, __func__);
-	is_double(60. * HKL_DEGTORAD, hkl_parameter_value_get(reciprocal->alpha), HKL_EPSILON, __func__);
-	is_double(90. * HKL_DEGTORAD, hkl_parameter_value_get(reciprocal->beta), HKL_EPSILON, __func__);
-	is_double(90. * HKL_DEGTORAD, hkl_parameter_value_get(reciprocal->gamma), HKL_EPSILON, __func__);
+	is_double(HKL_TAU / 2., hkl_parameter_value_get(hkl_lattice_a_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(HKL_TAU * 2. / sqrt(3.), hkl_parameter_value_get(hkl_lattice_b_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(HKL_TAU * 2. / sqrt(3.), hkl_parameter_value_get(hkl_lattice_c_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(60. * HKL_DEGTORAD, hkl_parameter_value_get(hkl_lattice_alpha_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(90. * HKL_DEGTORAD, hkl_parameter_value_get(hkl_lattice_beta_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(90. * HKL_DEGTORAD, hkl_parameter_value_get(hkl_lattice_gamma_get(reciprocal)), HKL_EPSILON, __func__);
 
 	/* triclinic1 */
 	hkl_lattice_set(lattice, 9.32, 8.24, 13.78, 91.23 * HKL_DEGTORAD, 93.64 * HKL_DEGTORAD, 122.21 * HKL_DEGTORAD);
 	ok(HKL_TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
 
-	is_double(HKL_TAU * 0.1273130168, hkl_parameter_value_get(reciprocal->a), HKL_EPSILON, __func__);
-	is_double(HKL_TAU * 0.1437422974, hkl_parameter_value_get(reciprocal->b), HKL_EPSILON, __func__);
-	is_double(HKL_TAU * 0.0728721120, hkl_parameter_value_get(reciprocal->c), HKL_EPSILON, __func__);
-	is_double(1.5052513337, hkl_parameter_value_get(reciprocal->alpha), HKL_EPSILON, __func__);
-	is_double(1.482101482, hkl_parameter_value_get(reciprocal->beta), HKL_EPSILON, __func__);
-	is_double(1.0055896011, hkl_parameter_value_get(reciprocal->gamma), HKL_EPSILON, __func__);
+	is_double(HKL_TAU * 0.1273130168, hkl_parameter_value_get(hkl_lattice_a_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(HKL_TAU * 0.1437422974, hkl_parameter_value_get(hkl_lattice_b_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(HKL_TAU * 0.0728721120, hkl_parameter_value_get(hkl_lattice_c_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(1.5052513337, hkl_parameter_value_get(hkl_lattice_alpha_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(1.482101482, hkl_parameter_value_get(hkl_lattice_beta_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(1.0055896011, hkl_parameter_value_get(hkl_lattice_gamma_get(reciprocal)), HKL_EPSILON, __func__);
 
 	/* triclinic2 */
 	hkl_lattice_set(lattice, 18.423, 18.417, 18.457, 89.99 * HKL_DEGTORAD, 89.963 * HKL_DEGTORAD, 119.99 * HKL_DEGTORAD);
 	ok(HKL_TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
 
-	is_double(HKL_TAU * 0.0626708259, hkl_parameter_value_get(reciprocal->a), HKL_EPSILON, __func__);
-	is_double(HKL_TAU * 0.0626912310, hkl_parameter_value_get(reciprocal->b), HKL_EPSILON, __func__);
-	is_double(HKL_TAU * 0.0541800061, hkl_parameter_value_get(reciprocal->c), HKL_EPSILON, __func__);
-	is_double(1.5713705262, hkl_parameter_value_get(reciprocal->alpha), HKL_EPSILON, __func__);
-	is_double(1.5716426508, hkl_parameter_value_get(reciprocal->beta), HKL_EPSILON, __func__);
-	is_double(1.0473718249, hkl_parameter_value_get(reciprocal->gamma), HKL_EPSILON, __func__);
+	is_double(HKL_TAU * 0.0626708259, hkl_parameter_value_get(hkl_lattice_a_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(HKL_TAU * 0.0626912310, hkl_parameter_value_get(hkl_lattice_b_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(HKL_TAU * 0.0541800061, hkl_parameter_value_get(hkl_lattice_c_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(1.5713705262, hkl_parameter_value_get(hkl_lattice_alpha_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(1.5716426508, hkl_parameter_value_get(hkl_lattice_beta_get(reciprocal)), HKL_EPSILON, __func__);
+	is_double(1.0473718249, hkl_parameter_value_get(hkl_lattice_gamma_get(reciprocal)), HKL_EPSILON, __func__);
 
 	hkl_lattice_free(lattice);
 	hkl_lattice_free(reciprocal);
