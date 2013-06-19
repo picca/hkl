@@ -170,42 +170,47 @@ static void  reciprocal(void )
 
 static void  get_B(void )
 {
-	static HklMatrix B_ref = {{{HKL_TAU / 1.54,              0,              0},
-				   {             0, HKL_TAU / 1.54,              0},
-				   {             0,              0, HKL_TAU / 1.54}}};
+	HklMatrix *B_ref = hkl_matrix_new_full(HKL_TAU / 1.54, 0, 0,
+					       0, HKL_TAU / 1.54, 0,
+					       0, 0, HKL_TAU / 1.54);
 	HklLattice *lattice;
-	HklMatrix B;
+	HklMatrix *B = hkl_matrix_new();
 
 	/* cubic */
 	lattice = hkl_lattice_new(1.54, 1.54, 1.54, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD);
 
-	hkl_lattice_get_B(lattice, &B);
-	ok(HKL_TRUE == hkl_matrix_cmp(&B_ref, &B), __func__);
+	hkl_lattice_get_B(lattice, B);
+	ok(HKL_TRUE == hkl_matrix_cmp(B_ref, B), __func__);
 
 	hkl_lattice_free(lattice);
+	hkl_matrix_free(B);
+	hkl_matrix_free(B_ref);
 }
 
 static void  get_1_B(void )
 {
-	static HklMatrix I_ref = {{{1, 0, 0},
-				   {0, 1, 0},
-				   {0, 0, 1}}};
+	HklMatrix *I_ref = hkl_matrix_new_full(1, 0, 0,
+					       0, 1, 0,
+					       0, 0, 1);
 	HklLattice *lattice;
-	HklMatrix I;
-	HklMatrix B_1;
+	HklMatrix *I = hkl_matrix_new();
+	HklMatrix *B_1 = hkl_matrix_new();
 
 	/* cubic */
 	lattice = hkl_lattice_new(1.54, 1.54, 1.54,
 				  90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD);
 
-	hkl_lattice_get_B(lattice, &I);
-	hkl_lattice_get_1_B(lattice, &B_1);
+	hkl_lattice_get_B(lattice, I);
+	hkl_lattice_get_1_B(lattice, B_1);
 
 	/* B times B^-1 = Identity */
-	hkl_matrix_times_matrix(&I, &B_1);
-	ok(HKL_TRUE == hkl_matrix_cmp(&I_ref, &I), __func__);
+	hkl_matrix_times_matrix(I, B_1);
+	ok(HKL_TRUE == hkl_matrix_cmp(I_ref, I), __func__);
 
 	hkl_lattice_free(lattice);
+	hkl_matrix_free(B_1);
+	hkl_matrix_free(I);
+	hkl_matrix_free(I_ref);
 }
 
 int main(int argc, char** argv)

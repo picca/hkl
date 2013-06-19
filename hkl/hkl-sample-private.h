@@ -27,6 +27,7 @@
 #include "hkl-geometry.h"
 #include "hkl-detector.h"
 #include "hkl-sample.h"
+#include "hkl-matrix-private.h"
 
 HKL_BEGIN_DECLS
 

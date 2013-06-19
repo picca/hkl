@@ -23,6 +23,8 @@
 #include <tap/basic.h>
 #include <tap/float.h>
 
+#include "hkl-matrix-private.h" /* we will check also the private API */
+
 static void init(void)
 {
 	HklMatrix m;

@@ -191,7 +191,7 @@ void HKLWindow::on_button2_clicked(void)
 	LOG;
 
 	if(_sample){
-		HklMatrix U;
+		HklMatrix *U;
 		HklLattice *lattice = hkl_sample_lattice_get(_sample);
 		HklParameter *parameter;
 
@@ -250,12 +250,11 @@ void HKLWindow::on_button2_clicked(void)
 
 
 		hkl_sample_lattice_set(_sample, lattice);
-
-		hkl_matrix_init_from_euler(&U,
-					   _spinbutton_ux->get_value() * HKL_DEGTORAD,
-					   _spinbutton_uy->get_value() * HKL_DEGTORAD,
-					   _spinbutton_uz->get_value() * HKL_DEGTORAD);
-		hkl_sample_U_set(_sample, &U);
+		U = hkl_matrix_new_euler(_spinbutton_ux->get_value() * HKL_DEGTORAD,
+					 _spinbutton_uy->get_value() * HKL_DEGTORAD,
+					 _spinbutton_uz->get_value() * HKL_DEGTORAD);
+		hkl_sample_U_set(_sample, U);
+		hkl_matrix_free(U);
 
 		this->updateCrystalModel(_sample);
 		this->updateReciprocalLattice();
@@ -778,19 +777,19 @@ void HKLWindow::on_toolbutton_setUB_clicked(void)
 	LOG;
 
 	if(_sample){
-		HklMatrix UB;
+		HklMatrix *UB = hkl_matrix_new_full(
+			_spinbutton_U11->get_value(),
+			_spinbutton_U12->get_value(),
+			_spinbutton_U13->get_value(),
+			_spinbutton_U21->get_value(),
+			_spinbutton_U22->get_value(),
+			_spinbutton_U23->get_value(),
+			_spinbutton_U31->get_value(),
+			_spinbutton_U32->get_value(),
+			_spinbutton_U33->get_value());
 
-		UB.data[0][0] = _spinbutton_U11->get_value();
-		UB.data[0][1] = _spinbutton_U12->get_value();
-		UB.data[0][2] = _spinbutton_U13->get_value();
-		UB.data[1][0] = _spinbutton_U21->get_value();
-		UB.data[1][1] = _spinbutton_U22->get_value();
-		UB.data[1][2] = _spinbutton_U23->get_value();
-		UB.data[2][0] = _spinbutton_U31->get_value();
-		UB.data[2][1] = _spinbutton_U32->get_value();
-		UB.data[2][2] = _spinbutton_U33->get_value();
-
-		hkl_sample_UB_set(_sample, &UB);
+		hkl_sample_UB_set(_sample, UB);
+		hkl_matrix_free(UB);
 
 		this->updateLattice();
 		this->updateLatticeParameters();

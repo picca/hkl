@@ -102,13 +102,16 @@ static void conjugate(void)
 static void to_matrix(void)
 {
 	HklQuaternion q_ref = {{1./sqrt(2), 0, 0, 1./sqrt(2)}};
-	HklMatrix m_ref = {{{0,-1, 0},
-			    {1, 0, 0},
-			    {0, 0, 1}}};
-	HklMatrix m;
+	HklMatrix *m_ref = hkl_matrix_new_full(0,-1, 0,
+					       1, 0, 0,
+					       0, 0, 1);
+	HklMatrix *m = hkl_matrix_new();
 
-	hkl_quaternion_to_matrix(&q_ref, &m);
-	ok(HKL_TRUE == hkl_matrix_cmp(&m_ref, &m), __func__);
+	hkl_quaternion_to_matrix(&q_ref, m);
+	ok(HKL_TRUE == hkl_matrix_cmp(m_ref, m), __func__);
+
+	hkl_matrix_free(m_ref);
+	hkl_matrix_free(m);
 }
 
 static void to_angle_and_axe(void)

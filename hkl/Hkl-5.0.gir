@@ -1287,11 +1287,78 @@ Returns:</doc>
             glib:type-name="HklMatrix"
             glib:get-type="hkl_matrix_get_type"
             c:symbol-prefix="matrix">
-      <field name="data" writable="1">
-        <array zero-terminated="0" c:type="gdouble" fixed-size="3">
-          <type name="gdouble" c:type="double"/>
-        </array>
-      </field>
+      <constructor name="new" c:identifier="hkl_matrix_new" introspectable="0">
+        <return-value transfer-ownership="full">
+          <type name="Matrix" c:type="HklMatrix*"/>
+        </return-value>
+      </constructor>
+      <constructor name="new_euler" c:identifier="hkl_matrix_new_euler">
+        <return-value transfer-ownership="full">
+          <doc xml:whitespace="preserve">Create a rotation #HklMatrix from three eulerians angles.</doc>
+          <type name="Matrix" c:type="HklMatrix*"/>
+        </return-value>
+        <parameters>
+          <parameter name="euler_x" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the eulerian value along X</doc>
+            <type name="gdouble" c:type="double"/>
+          </parameter>
+          <parameter name="euler_y" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the eulerian value along Y</doc>
+            <type name="gdouble" c:type="double"/>
+          </parameter>
+          <parameter name="euler_z" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the eulerian value along Z</doc>
+            <type name="gdouble" c:type="double"/>
+          </parameter>
+        </parameters>
+      </constructor>
+      <constructor name="new_full"
+                   c:identifier="hkl_matrix_new_full"
+                   introspectable="0">
+        <doc xml:whitespace="preserve">@todo test</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:whitespace="preserve">a new HklMAtrix</doc>
+          <type name="Matrix" c:type="HklMatrix*"/>
+        </return-value>
+        <parameters>
+          <parameter name="m11" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the matrix 11 value</doc>
+            <type name="gdouble" c:type="double"/>
+          </parameter>
+          <parameter name="m12" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the matrix 12 value</doc>
+            <type name="gdouble" c:type="double"/>
+          </parameter>
+          <parameter name="m13" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the matrix 13 value</doc>
+            <type name="gdouble" c:type="double"/>
+          </parameter>
+          <parameter name="m21" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the matrix 21 value</doc>
+            <type name="gdouble" c:type="double"/>
+          </parameter>
+          <parameter name="m22" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the matrix 22 value</doc>
+            <type name="gdouble" c:type="double"/>
+          </parameter>
+          <parameter name="m23" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the matrix 23 value</doc>
+            <type name="gdouble" c:type="double"/>
+          </parameter>
+          <parameter name="m31" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the matrix 31 value</doc>
+            <type name="gdouble" c:type="double"/>
+          </parameter>
+          <parameter name="m32" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the matrix 32 value</doc>
+            <type name="gdouble" c:type="double"/>
+          </parameter>
+          <parameter name="m33" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the matrix 33 value</doc>
+            <type name="gdouble" c:type="double"/>
+          </parameter>
+        </parameters>
+      </constructor>
       <method name="cmp" c:identifier="hkl_matrix_cmp">
         <doc xml:whitespace="preserve">compare two #HklMatrix.</doc>
         <return-value transfer-ownership="none">
@@ -1305,25 +1372,26 @@ Returns:</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="det" c:identifier="hkl_matrix_det">
-        <doc xml:whitespace="preserve">compute the determinant of an #HklMatrix
-
-Todo: test</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">the determinant of the self #HklMatrix</doc>
-          <type name="gdouble" c:type="double"/>
-        </return-value>
-      </method>
-      <method name="dup" c:identifier="hkl_matrix_dup" introspectable="0">
-        <doc xml:whitespace="preserve">Returns:</doc>
-        <return-value transfer-ownership="full">
-          <type name="Matrix" c:type="HklMatrix*"/>
-        </return-value>
-      </method>
       <method name="free" c:identifier="hkl_matrix_free" introspectable="0">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
+      </method>
+      <method name="get" c:identifier="hkl_matrix_get" introspectable="0">
+        <doc xml:whitespace="preserve">@todo test</doc>
+        <return-value transfer-ownership="none">
+          <type name="gdouble" c:type="double"/>
+        </return-value>
+        <parameters>
+          <parameter name="i" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the i coordinate</doc>
+            <type name="guint" c:type="unsigned int"/>
+          </parameter>
+          <parameter name="j" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the j coordinate</doc>
+            <type name="guint" c:type="unsigned int"/>
+          </parameter>
+        </parameters>
       </method>
       <method name="init" c:identifier="hkl_matrix_init">
         <return-value transfer-ownership="none">
@@ -1368,87 +1436,6 @@ Todo: test</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="init_from_euler" c:identifier="hkl_matrix_init_from_euler">
-        <doc xml:whitespace="preserve">Create a rotation #HklMatrix from three eulerians angles.</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="euler_x" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the eulerian value along X</doc>
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-          <parameter name="euler_y" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the eulerian value along Y</doc>
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-          <parameter name="euler_z" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the eulerian value along Z</doc>
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="init_from_two_vector"
-              c:identifier="hkl_matrix_init_from_two_vector">
-        <doc xml:whitespace="preserve">Create an #HklMatrix which represent a direct oriented base of the space
-the first row correspond to the |v1|, the second row |v2| and the last one
-is |v1 ^ v2|</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="v1" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the first #HklVector</doc>
-            <type name="Vector" c:type="HklVector*"/>
-          </parameter>
-          <parameter name="v2" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the second #HklVector</doc>
-            <type name="Vector" c:type="HklVector*"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="is_null" c:identifier="hkl_matrix_is_null">
-        <doc xml:whitespace="preserve">is all #hklMatrix elementes bellow #HKL_EPSILON
-
-Todo: test</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">HKL_TRUE if the self #HklMatrix is null</doc>
-          <type name="gint" c:type="int"/>
-        </return-value>
-      </method>
-      <method name="matrix_set"
-              c:identifier="hkl_matrix_matrix_set"
-              introspectable="0">
-        <doc xml:whitespace="preserve">@todo test</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="m" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the matrix to set</doc>
-            <type name="Matrix" c:type="HklMatrix*"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="solve" c:identifier="hkl_matrix_solve">
-        <doc xml:whitespace="preserve">solve the system self . X = b
-
-Todo: test</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">-1 if the système has no solution, 0 otherwise.</doc>
-          <type name="gint" c:type="int"/>
-        </return-value>
-        <parameters>
-          <parameter name="x" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the #HklVector to compute.</doc>
-            <type name="Vector" c:type="HklVector*"/>
-          </parameter>
-          <parameter name="b" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the #hklVector of the system to solve.</doc>
-            <type name="Vector" c:type="HklVector*"/>
-          </parameter>
-        </parameters>
-      </method>
       <method name="times_matrix" c:identifier="hkl_matrix_times_matrix">
         <doc xml:whitespace="preserve">compute the matrix multiplication self = self * m</doc>
         <return-value transfer-ownership="none">
@@ -1461,60 +1448,6 @@ Todo: test</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="times_vector" c:identifier="hkl_matrix_times_vector">
-        <doc xml:whitespace="preserve">multiply an #HklVector by an #HklMatrix</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="v" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the #HklVector multiply by the #HklMatrix</doc>
-            <type name="Vector" c:type="HklVector*"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="to_euler" c:identifier="hkl_matrix_to_euler">
-        <doc xml:whitespace="preserve">compute the three eulerians values for a given rotation #HklMatrix</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="euler_x" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the eulerian value along X</doc>
-            <type name="gdouble" c:type="double*"/>
-          </parameter>
-          <parameter name="euler_y" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the eulerian value along Y</doc>
-            <type name="gdouble" c:type="double*"/>
-          </parameter>
-          <parameter name="euler_z" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the eulerian value along Z</doc>
-            <type name="gdouble" c:type="double*"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="transpose" c:identifier="hkl_matrix_transpose">
-        <doc xml:whitespace="preserve">transpose an #HklMatrix</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-      </method>
-      <function name="fprintf" c:identifier="hkl_matrix_fprintf">
-        <doc xml:whitespace="preserve">printf an #HklMatrix into a FILE stream.</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="file" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the FILE stream</doc>
-            <type name="gpointer" c:type="FILE*"/>
-          </parameter>
-          <parameter name="self" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the #HklMatrix to print into the file stream</doc>
-            <type name="Matrix" c:type="HklMatrix*"/>
-          </parameter>
-        </parameters>
-      </function>
     </record>
     <record name="Mode" c:type="HklMode" disguised="1">
       <method name="name" c:identifier="hkl_mode_name">
@@ -3261,24 +3194,6 @@ control over, that could include printf() escape sequences.</doc>
         </parameter>
         <parameter name="self" transfer-ownership="none">
           <type name="Geometry" c:type="HklGeometry*"/>
-        </parameter>
-      </parameters>
-    </function>
-    <function name="matrix_fprintf"
-              c:identifier="hkl_matrix_fprintf"
-              moved-to="Matrix.fprintf">
-      <doc xml:whitespace="preserve">printf an #HklMatrix into a FILE stream.</doc>
-      <return-value transfer-ownership="none">
-        <type name="none" c:type="void"/>
-      </return-value>
-      <parameters>
-        <parameter name="file" transfer-ownership="none">
-          <doc xml:whitespace="preserve">the FILE stream</doc>
-          <type name="gpointer" c:type="FILE*"/>
-        </parameter>
-        <parameter name="self" transfer-ownership="none">
-          <doc xml:whitespace="preserve">the #HklMatrix to print into the file stream</doc>
-          <type name="Matrix" c:type="HklMatrix*"/>
         </parameter>
       </parameters>
     </function>

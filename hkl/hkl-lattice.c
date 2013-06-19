@@ -22,9 +22,10 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "hkl/hkl-lattice-private.h"
-#include "hkl/hkl-parameter-private.h"
-#include "hkl/hkl-unit.h"
+#include "hkl-lattice-private.h"
+#include "hkl-parameter-private.h"
+#include "hkl-matrix-private.h"
+#include "hkl-unit.h"
 
 /* private */
 

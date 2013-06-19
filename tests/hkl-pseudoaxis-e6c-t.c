@@ -261,7 +261,7 @@ static void petra3(void)
 	HklDetector *detector;
 	HklSample *sample;
 	HklLattice *lattice;
-	HklMatrix U;
+	HklMatrix *U;
 
 	factory = hkl_factory_get_by_name("E6C");
 	geometry = hkl_factory_create_new_geometry(factory);
@@ -274,11 +274,11 @@ static void petra3(void)
 			90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD);
 	hkl_sample_lattice_set(sample, lattice);
 
-	hkl_matrix_init_from_euler(&U,
-				  -112.5 * HKL_DEGTORAD,
-				  -87.84 * HKL_DEGTORAD,
-				  157.48 * HKL_DEGTORAD);
-	hkl_sample_U_set(sample, &U);
+	U = hkl_matrix_new_euler(-112.5 * HKL_DEGTORAD,
+				 -87.84 * HKL_DEGTORAD,
+				 157.48 * HKL_DEGTORAD);
+	hkl_sample_U_set(sample, U);
+	hkl_matrix_free(U);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	hkl_detector_idx_set(detector, 1);
@@ -347,7 +347,7 @@ static void petra3_2(void)
 	HklDetector *detector;
 	HklSample *sample;
 	HklLattice *lattice;
-	HklMatrix U;
+	HklMatrix *U;
 	double PSI;
 	double parameters[4];
 	darray_parameter *pseudo_axes;
@@ -371,11 +371,11 @@ static void petra3_2(void)
 			5.1, 5.1, 5.1,
 			90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD);
 	hkl_sample_lattice_set(sample, lattice);
-	hkl_matrix_init_from_euler(&U,
-				    -90.0 * HKL_DEGTORAD,
-				    0.0 * HKL_DEGTORAD,
-				    -90.0 * HKL_DEGTORAD);
-	hkl_sample_U_set(sample, &U);
+	U = hkl_matrix_new_euler(-90.0 * HKL_DEGTORAD,
+				 0.0 * HKL_DEGTORAD,
+				 -90.0 * HKL_DEGTORAD);
+	hkl_sample_U_set(sample, U);
+	hkl_matrix_free(U);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	hkl_detector_idx_set(detector, 1);

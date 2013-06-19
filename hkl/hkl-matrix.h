@@ -23,53 +23,35 @@
 #define __HKL_MATRIX_H__
 
 #include <stdio.h>
+
 #include <hkl/hkl-macros.h>
 #include <hkl/hkl-vector.h>
 
-
 HKL_BEGIN_DECLS
 
-struct _HklMatrix
-{
-	double data[3][3];
-};
+HKLAPI HklMatrix *hkl_matrix_new(void);
 
-extern HklMatrix *hkl_matrix_dup(const HklMatrix* self);
+HKLAPI HklMatrix *hkl_matrix_new_full(double m11, double m12, double m13,
+				      double m21, double m22, double m23,
+				      double m31, double m32, double m33);
 
-extern void hkl_matrix_free(HklMatrix *self);
+HKLAPI HklMatrix *hkl_matrix_new_euler(double euler_x, double euler_y, double euler_z);
 
-extern void hkl_matrix_init(HklMatrix *self,
+HKLAPI double hkl_matrix_get(const HklMatrix *self, unsigned int i, unsigned int j) HKL_ARG_NONNULL(1);
+
+HKLAPI void hkl_matrix_free(HklMatrix *self) HKL_ARG_NONNULL(1);
+
+HKLAPI void hkl_matrix_init(HklMatrix *self,
 			    double m11, double m12, double m13,
 			    double m21, double m22, double m23,
-			    double m31, double m32, double m33);
+			    double m31, double m32, double m33) HKL_ARG_NONNULL(1);
 
-extern void hkl_matrix_matrix_set(HklMatrix *self, const HklMatrix *m) HKL_ARG_NONNULL(1, 2);
+/* HKLAPI void hkl_matrix_init_from_euler(HklMatrix *self, */
+/* 				       double euler_x, double euler_y, double euler_z) HKL_ARG_NONNULL(1); */
 
-extern void hkl_matrix_init_from_two_vector(HklMatrix *self,
-					    const HklVector *v1, const HklVector *v2);
+HKLAPI int hkl_matrix_cmp(const HklMatrix *self, const HklMatrix *m) HKL_ARG_NONNULL(1, 2);
 
-extern void hkl_matrix_init_from_euler(HklMatrix *self,
-				       double euler_x, double euler_y, double euler_z);
-
-extern void hkl_matrix_fprintf(FILE *file, const HklMatrix *self);
-
-extern void hkl_matrix_to_euler(const HklMatrix *self,
-				double *euler_x, double *euler_y, double *euler_z);
-
-extern int hkl_matrix_cmp(const HklMatrix *self, const HklMatrix *m);
-
-extern void hkl_matrix_times_matrix(HklMatrix *self, const HklMatrix *m);
-
-extern void hkl_matrix_times_vector(const HklMatrix *self, HklVector *v);
-
-extern void hkl_matrix_transpose(HklMatrix *self);
-
-extern double hkl_matrix_det(const HklMatrix *self);
-
-extern int hkl_matrix_solve(const HklMatrix *self,
-			    HklVector *x, const HklVector *b);
-
-extern int hkl_matrix_is_null(const HklMatrix *self);
+HKLAPI void hkl_matrix_times_matrix(HklMatrix *self, const HklMatrix *m) HKL_ARG_NONNULL(1, 2);
 
 HKL_END_DECLS
 

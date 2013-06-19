@@ -23,9 +23,61 @@
 #include <math.h>
 #include <string.h>
 
-#include <hkl/hkl-macros.h>
-#include <hkl/hkl-matrix.h>
-#include <hkl/hkl-vector.h>
+#include "hkl-matrix-private.h"
+#include "hkl-vector.h"
+
+/**
+ * hkl_matrix_new: (skip)
+ * Returns:
+ */
+HklMatrix *hkl_matrix_new()
+{
+	return HKL_MALLOC(HklMatrix);
+}
+
+/**
+ * hkl_matrix_new_full: (skip)
+ * @m11: the matrix 11 value
+ * @m12: the matrix 12 value
+ * @m13: the matrix 13 value
+ * @m21: the matrix 21 value
+ * @m22: the matrix 22 value
+ * @m23: the matrix 23 value
+ * @m31: the matrix 31 value
+ * @m32: the matrix 32 value
+ * @m33: the matrix 33 value
+ *
+ * @todo test
+ * Returns: a new HklMAtrix
+ **/
+HklMatrix *hkl_matrix_new_full(double m11, double m12, double m13,
+			       double m21, double m22, double m23,
+			       double m31, double m32, double m33)
+{
+	HklMatrix *self = hkl_matrix_new();
+	hkl_matrix_init(self,
+			m11, m12, m13,
+			m21, m22, m23,
+			m31, m32, m33);
+
+	return self;
+}
+
+/**
+ * hkl_matrix_new_euler:
+ * @euler_x: the eulerian value along X
+ * @euler_y: the eulerian value along Y
+ * @euler_z: the eulerian value along Z
+ *
+ * Returns: Create a rotation #HklMatrix from three eulerians angles.
+ **/
+HklMatrix *hkl_matrix_new_euler(double euler_x, double euler_y, double euler_z)
+{
+	HklMatrix *self = hkl_matrix_new();
+	hkl_matrix_init_from_euler(self, euler_x, euler_y, euler_z);
+
+	return self;
+}
 
 /**
  * hkl_matrix_dup: (skip)
@@ -53,9 +105,6 @@ HklMatrix *hkl_matrix_dup(const HklMatrix* self)
  **/
 void hkl_matrix_free(HklMatrix *self)
 {
-	if(!self)
-		return;
-
 	free(self);
 }
 
@@ -99,6 +148,19 @@ void hkl_matrix_matrix_set(HklMatrix *self, const HklMatrix *m)
 		return;
 
 	memcpy(self->data, m->data, sizeof(double) * 9);
+}
+
+/**
+ * hkl_matrix_get: (skip)
+ * @self: the this ptr
+ * @i: the i coordinate
+ * @j: the j coordinate
+ *
+ * @todo test
+ **/
+double hkl_matrix_get(const HklMatrix *self, unsigned int i, unsigned int j)
+{
+	return self->data[i][j];
 }
 
 /**

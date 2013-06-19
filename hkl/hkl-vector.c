@@ -24,9 +24,9 @@
 
 #include <gsl/gsl_math.h>
 
-#include <hkl/hkl-vector.h>
-#include <hkl/hkl-matrix.h>
-#include <hkl/hkl-quaternion.h>
+#include "hkl-vector.h"
+#include "hkl-matrix-private.h"
+#include "hkl-quaternion.h"
 
 /**
  * hkl_vector_dup: (skip)

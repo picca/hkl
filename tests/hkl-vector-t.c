@@ -186,15 +186,15 @@ static void rotated_around_line(void)
 
 static void times_matrix(void)
 {
-	HklMatrix m = {{{ 1.0, 3.0,-2.0},
-			{10.0, 5.0, 5.0},
-			{-3.0, 2.0, 0.0}}
-	};
+	HklMatrix *m = hkl_matrix_new_full(1.0, 3.0,-2.0,
+					   10.0, 5.0, 5.0,
+					   -3.0, 2.0, 0.0);
 	HklVector v = {{1.0, 2.0, 3.0}};
 	HklVector v_ref = {{12., 19., 8.}};
 
-	hkl_vector_times_matrix(&v, &m);
+	hkl_vector_times_matrix(&v, m);
 	ok(0 == hkl_vector_cmp(&v_ref, &v), __func__);
+	hkl_matrix_free(m);
 }
 
 static void project_on_plan(void)

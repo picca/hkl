@@ -23,10 +23,10 @@
 #include <math.h>
 #include <string.h>
 
-#include <hkl/hkl-macros.h>
-#include <hkl/hkl-vector.h>
-#include <hkl/hkl-matrix.h>
-#include <hkl/hkl-quaternion.h>
+#include "hkl-macros.h"
+#include "hkl-vector.h"
+#include "hkl-matrix-private.h"
+#include "hkl-quaternion.h"
 
 /* public */
 /**

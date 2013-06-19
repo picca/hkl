@@ -66,6 +66,7 @@ hkl_private_h_sources = \
 	hkl-factory-private.h \
 	hkl-geometry-private.h \
 	hkl-lattice-private.h \
+	hkl-matrix-private.h \
 	hkl-parameter-private.h \
 	hkl-pseudoaxis-private.h \
 	hkl-pseudoaxis-auto-private.h \
