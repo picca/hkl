@@ -22,6 +22,8 @@
 #ifndef __HKL_LATTICE_PRIVATE_H__
 #define __HKL_LATTICE_PRIVATE_H__
 
+#include <stdio.h>
+
 #include "hkl-lattice.h"
 #include "hkl-parameter.h"
 #include "hkl-matrix.h"

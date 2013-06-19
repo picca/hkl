@@ -22,12 +22,11 @@
 #ifndef __HKL_MATRIX_H__
 #define __HKL_MATRIX_H__
 
-#include <stdio.h>
-
 #include <hkl/hkl-macros.h>
-#include <hkl/hkl-vector.h>
 
 HKL_BEGIN_DECLS
+
+typedef struct _HklMatrix HklMatrix;
 
 HKLAPI HklMatrix *hkl_matrix_new(void);
 
@@ -45,9 +44,6 @@ HKLAPI void hkl_matrix_init(HklMatrix *self,
 			    double m11, double m12, double m13,
 			    double m21, double m22, double m23,
 			    double m31, double m32, double m33) HKL_ARG_NONNULL(1);
-
-/* HKLAPI void hkl_matrix_init_from_euler(HklMatrix *self, */
-/* 				       double euler_x, double euler_y, double euler_z) HKL_ARG_NONNULL(1); */
 
 HKLAPI int hkl_matrix_cmp(const HklMatrix *self, const HklMatrix *m) HKL_ARG_NONNULL(1, 2);
 

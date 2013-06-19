@@ -23,6 +23,8 @@
 #include <tap/basic.h>
 #include <tap/float.h>
 
+#include "hkl-vector.h" /* use to test also the private API */
+
 static void init(void)
 {
 	HklVector v;
