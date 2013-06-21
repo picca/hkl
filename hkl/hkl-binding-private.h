@@ -32,46 +32,46 @@ HKL_BEGIN_DECLS
 /* HklFactory */
 /**************/
 
-extern GHashTable *hkl_factories(void);
+HKLAPI GHashTable *hkl_factories(void);
 
 /********************/
 /* HklParameterList */
 /********************/
 
-extern GSList* hkl_parameter_list_parameters(HklParameterList *self);
+HKLAPI GSList* hkl_parameter_list_parameters(HklParameterList *self);
 
-extern gboolean hkl_parameter_list_values_unit_set_binding(HklParameterList *self,
+HKLAPI gboolean hkl_parameter_list_values_unit_set_binding(HklParameterList *self,
 							   double *values, uint len,
 							   GError **error);
 /***************/
 /* HklGeometry */
 /***************/
 
-extern GSList* hkl_geometry_axes(HklGeometry *self);
+HKLAPI GSList* hkl_geometry_axes(HklGeometry *self);
 
-extern double* hkl_geometry_get_axes_values_unit(const HklGeometry *self, unsigned int *len);
+HKLAPI double* hkl_geometry_get_axes_values_unit(const HklGeometry *self, unsigned int *len);
 
-extern void hkl_geometry_set_axes_values_unit(HklGeometry *self, double *values, unsigned int len);
+HKLAPI void hkl_geometry_set_axes_values_unit(HklGeometry *self, double *values, unsigned int len);
 
 /*******************/
 /* HklGeometryList */
 /*******************/
 
-extern GSList* hkl_geometry_list_items(HklGeometryList *self);
+HKLAPI GSList* hkl_geometry_list_items(HklGeometryList *self);
 
 /***********************/
 /* HklGeometryListItem */
 /***********************/
 
-extern const HklGeometry *hkl_geometry_list_item_geometry(const HklGeometryListItem *self);
+HKLAPI const HklGeometry *hkl_geometry_list_item_geometry(const HklGeometryListItem *self);
 
 /***********************/
 /* HklEngine */
 /***********************/
 
-extern GSList* hkl_engine_modes_as_gslist(HklEngine *self);
+HKLAPI GSList* hkl_engine_modes_as_gslist(HklEngine *self);
 
-extern gboolean hkl_engine_set_values_unit(
+HKLAPI gboolean hkl_engine_set_values_unit(
 	HklEngine *self,
 	double values[], unsigned int len,
 	GError **error);
@@ -80,7 +80,7 @@ extern gboolean hkl_engine_set_values_unit(
 /* HklPSeudoAxisEngineList */
 /***************************/
 
-extern GSList* hkl_engine_list_engines_as_gslist(HklEngineList *self);
+HKLAPI GSList* hkl_engine_list_engines_as_gslist(HklEngineList *self);
 
 HKL_END_DECLS
 

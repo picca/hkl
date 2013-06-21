@@ -1,7 +1,7 @@
 if CONDITIONAL_BUILD_MULTITHREADED
 noinst_LTLIBRARIES = libbulletmath.la libbulletcollision.la libbulletdynamics.la libbulletmultithreaded.la
 
-libbulletmultithreaded_la_CXXFLAGS = ${CXXFLAGS} -I./BulletMultiThreaded/vectormath/scalar/cpp
+libbulletmultithreaded_la_CXXFLAGS = -I./BulletMultiThreaded/vectormath/scalar/cpp
 libbulletmultithreaded_la_SOURCES =\
 		BulletMultiThreaded/GpuSoftBodySolvers/CPU/btSoftBodySolverData.h \
 		BulletMultiThreaded/GpuSoftBodySolvers/CPU/btSoftBodySolver_CPU.cpp \

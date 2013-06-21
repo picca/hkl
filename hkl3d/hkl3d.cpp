@@ -56,6 +56,21 @@ static float identity[] = {1, 0, 0, 0,
 			   0, 0, 1 ,0,
 			   0, 0, 0, 1};
 
+static void *_hkl3d_malloc(int size, const char *error)
+{
+	void *tmp;
+
+	tmp = calloc(1, size);
+	if(!tmp){
+		fprintf(stderr, "%s", error);
+		exit(128);
+	}
+
+	return tmp;
+}
+/* malloc method */
+#define HKL3D_MALLOC(type) (type *)_hkl3d_malloc(sizeof(type), "Can not allocate memory for a " #type)
+
 /***************/
 /* Hkl3DObject */
 /***************/
@@ -137,7 +152,7 @@ static Hkl3DObject *hkl3d_object_new(Hkl3DModel *model, G3DObject *object, int i
 	G3DMaterial* material;
 	Hkl3DObject *self = NULL;
 
-	self = HKL_MALLOC(Hkl3DObject);
+	self = HKL3D_MALLOC(Hkl3DObject);
 
 	/* extract the color from the first face */
 	/* this is usefull for the bullet GL draw method */
@@ -268,7 +283,7 @@ static Hkl3DModel *hkl3d_model_new(void)
 {
 	Hkl3DModel *self = NULL;
 
-	self = HKL_MALLOC(Hkl3DModel);
+	self = HKL3D_MALLOC(Hkl3DModel);
 
 	self->filename = NULL;
 	self->objects = NULL;
@@ -446,7 +461,7 @@ static Hkl3DAxis *hkl3d_axis_new(void)
 {
 	Hkl3DAxis *self = NULL;
 
-	self = HKL_MALLOC(Hkl3DAxis);
+	self = HKL3D_MALLOC(Hkl3DAxis);
 
 	self->objects = NULL; /* do not own the objects */
 	self->len = 0;
@@ -513,7 +528,7 @@ static Hkl3DGeometry *hkl3d_geometry_new(HklGeometry *geometry)
 	int i;
 	Hkl3DGeometry *self = NULL;
 
-	self = HKL_MALLOC(Hkl3DGeometry);
+	self = HKL3D_MALLOC(Hkl3DGeometry);
 
 	self->geometry = geometry;
 	self->axes = (Hkl3DAxis **)malloc(darray_size(geometry->axes) * sizeof(*self->axes));
@@ -586,6 +601,18 @@ static void hkl3d_geometry_fprintf(FILE *f, const Hkl3DGeometry *self)
 		hkl3d_axis_fprintf(f, self->axes[i]);
 }
 
+static Hkl3DAxis *hkl3d_geometry_axis_get(Hkl3DGeometry *self, const char *name)
+{
+	uint i;
+
+	for(i=0; i<darray_size(self->geometry->axes); ++i){
+		if (!strcmp(hkl_parameter_name_get(darray_item(self->geometry->axes, i)),
+			    name))
+			return self->axes[i];
+	}
+	return NULL;
+}
+
 /*********/
 /* HKL3D */
 /*********/
@@ -627,7 +654,7 @@ Hkl3D *hkl3d_new(const char *filename, HklGeometry *geometry)
 {
 	Hkl3D *self = NULL;
 
-	self = HKL_MALLOC(Hkl3D);
+	self = HKL3D_MALLOC(Hkl3D);
 
 	self->geometry = hkl3d_geometry_new(geometry);
 	self->config = hkl3d_config_new();
@@ -735,17 +762,17 @@ Hkl3DModel *hkl3d_add_model_from_file(Hkl3D *self,
 /* fill movingCollisionObject and movingG3DObjects vectors for transformations */
 void hkl3d_connect_object_to_axis(Hkl3D *self, Hkl3DObject *object, const char *name)
 {
-	int idx = hkl_geometry_get_axis_idx_by_name(self->geometry->geometry, name);
+	Hkl3DAxis *axis3d = hkl3d_geometry_axis_get(self->geometry, name);
 	if (!object->movable){
-		if(idx >= 0){ /* static -> movable */
+		if(axis3d){ /* static -> movable */
 			self->_btWorld->removeCollisionObject(object->btObject);
 			hkl3d_object_set_movable(object, true);
 			self->_btWorld->addCollisionObject(object->btObject);
 			object->added = true;
-			hkl3d_axis_attach_object(self->geometry->axes[idx], object);
+			hkl3d_axis_attach_object(axis3d, object);
 		}
 	}else{
-		if(idx < 0){ /* movable -> static */
+		if(!axis3d){ /* movable -> static */
 			self->_btWorld->removeCollisionObject(object->btObject);
 			hkl3d_object_set_movable(object, false);
 			self->_btWorld->addCollisionObject(object->btObject);
@@ -753,7 +780,7 @@ void hkl3d_connect_object_to_axis(Hkl3D *self, Hkl3DObject *object, const char *
 		}else{ /* movable -> movable */
 			if(strcmp(object->axis_name, name)){ /* not the same axis */
 				hkl3d_axis_detach_object(object->axis, object);
-				hkl3d_axis_attach_object(self->geometry->axes[idx], object);
+				hkl3d_axis_attach_object(axis3d, object);
 			}
 		}
 	}

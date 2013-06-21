@@ -626,6 +626,24 @@ do nothing.</doc>
           </instance-parameter>
         </parameters>
       </method>
+      <method name="axis_get"
+              c:identifier="hkl_geometry_axis_get"
+              introspectable="0">
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">the parameter corresponding to the axis name.</doc>
+          <type name="Parameter" c:type="const HklParameter*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
+            <type name="Geometry" c:type="const HklGeometry*"/>
+          </instance-parameter>
+          <parameter name="name" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the name of the axis your are requesting</doc>
+            <type name="utf8" c:type="const char*"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="axis_set" c:identifier="hkl_geometry_axis_set">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>

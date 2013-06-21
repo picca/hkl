@@ -36,6 +36,8 @@ LDADD = $(top_builddir)/hkl/libhkl.la \
 	$(top_builddir)/tests/tap/libtap.a \
 	$(GSL_LIBS)
 
+AM_LDFLAGS=-static
+
 if HKL3D
 
 check_PROGRAMS += hkl3d-test-t

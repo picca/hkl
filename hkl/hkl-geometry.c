@@ -290,6 +290,25 @@ const darray_parameter *hkl_geometry_axes_get(const HklGeometry *self)
 	return &self->axes;
 }
 
+/**
+ * hkl_geometry_axis_get: (skip)
+ * @self: the this ptr
+ * @name: the name of the axis your are requesting
+ *
+ * Return value: (allow-none): the parameter corresponding to the axis name.
+ **/
+const HklParameter *hkl_geometry_axis_get(const HklGeometry *self,
+					  const char *name)
+{
+	HklParameter **axis;
+
+	darray_foreach(axis, self->axes){
+		if (!strcmp((*axis)->name, name))
+			return *axis;
+	}
+	return NULL;
+}
+
 void hkl_geometry_axis_set(HklGeometry *self, const HklParameter *axis)
 {
 	HklParameter **_axis;

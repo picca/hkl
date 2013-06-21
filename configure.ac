@@ -168,11 +168,11 @@ dnl *** add an option for hkl3d ***
 dnl *******************************
 
 AC_ARG_ENABLE([hkl3d],
-	AS_HELP_STRING([--disable-hkl3d],
-		[do not compile the hkl3d library]),
+	AS_HELP_STRING([--enable-hkl3d],
+		[compile the hkl3d library]),
 	[],
-	[enable_hkl3d=yes])
-AM_CONDITIONAL([HKL3D], [test x$enable_hkl3d = xyes])
+	[enable_hkl3d=no])
+AM_CONDITIONAL([HKL3D], [test x$enable_hkl3d != xno])
 AM_COND_IF([HKL3D],
 	   [PKG_CHECK_MODULES([G3D], [libg3d >= 0.0.8])
 	   dnl check for yaml
