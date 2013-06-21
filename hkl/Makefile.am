@@ -48,7 +48,6 @@ hkl_public_h_sources = \
 	hkl-error.h \
 	hkl-factory.h \
 	hkl-geometry.h \
-	hkl-interval.h \
 	hkl-parameter.h \
 	hkl-lattice.h \
 	hkl-macros.h \
@@ -64,6 +63,7 @@ hkl_private_h_sources = \
 	hkl-detector-private.h \
 	hkl-factory-private.h \
 	hkl-geometry-private.h \
+	hkl-interval-private.h \
 	hkl-lattice-private.h \
 	hkl-matrix-private.h \
 	hkl-parameter-private.h \
@@ -118,7 +118,6 @@ introspection_files = \
 	hkl-matrix.h \
 	hkl-quaternion.h \
 	hkl-unit.h \
-	hkl-interval.h \
 	hkl-parameter.h \
 	hkl-geometry.h \
 	hkl-detector.h \
@@ -134,7 +133,6 @@ introspection_files = \
 	hkl-matrix.c \
 	hkl-quaternion.c \
 	hkl-unit.c \
-	hkl-interval.c \
 	hkl-parameter.c \
 	hkl-axis.c \
 	hkl-geometry.c \

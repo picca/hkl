@@ -19,10 +19,10 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#ifndef _HKL_INTERVAL_H
-#define _HKL_INTERVAL_H
+#ifndef _HKL_INTERVAL_PRIVATE_H
+#define _HKL_INTERVAL_PRIVATE_H
 
-#include <hkl/hkl-macros.h>
+#include "hkl-macros.h"
 
 HKL_BEGIN_DECLS
 

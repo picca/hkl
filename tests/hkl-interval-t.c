@@ -25,7 +25,7 @@
 #include <tap/basic.h>
 #include <tap/float.h>
 
-#include "hkl-interval.h"
+#include "hkl-interval-private.h"
 
 static void cmp(void)
 {

@@ -86,18 +86,6 @@ GType hkl_unit_get_type (void) {
         return hkl_unit_type_id__volatile;
 }
 
-GType hkl_interval_get_type (void) {
-        static volatile gsize hkl_interval_type_id__volatile = 0;
-        if (g_once_init_enter (&hkl_interval_type_id__volatile)) {
-                GType hkl_interval_type_id;
-                hkl_interval_type_id = g_boxed_type_register_static ("HklInterval",
-								     (GBoxedCopyFunc) hkl_interval_dup,
-								     (GBoxedFreeFunc) hkl_interval_free);
-                g_once_init_leave (&hkl_interval_type_id__volatile, hkl_interval_type_id);
-        }
-        return hkl_interval_type_id__volatile;
-}
-
 GType hkl_parameter_get_type (void) {
         static volatile gsize hkl_parameter_type_id__volatile = 0;
         if (g_once_init_enter (&hkl_parameter_type_id__volatile)) {

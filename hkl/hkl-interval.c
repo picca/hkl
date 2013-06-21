@@ -23,7 +23,7 @@
 #include <math.h>
 #include <gsl/gsl_sf_trig.h>
 
-#include "hkl/hkl-interval.h"
+#include "hkl-interval-private.h"
 
 /**
  * hkl_interval_dup: (skip)
