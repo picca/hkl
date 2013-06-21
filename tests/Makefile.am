@@ -3,7 +3,7 @@ if HAVE_INTROSPECTION
 SUBDIRS += bindings
 endif
 
-check_PROGRAMS = \
+all_tests = \
 	hkl-unit-t \
 	hkl-bench-t \
 	hkl-axis-t \
@@ -40,7 +40,7 @@ AM_LDFLAGS=-static
 
 if HKL3D
 
-check_PROGRAMS += hkl3d-test-t
+all_tests += hkl3d-test-t
 
 AM_CPPFLAGS += -I$(top_srcdir)/hkl3d \
 	$(G3D_CFLAGS)
@@ -49,10 +49,12 @@ LDADD += $(top_builddir)/hkl3d/libhkl3d.la
 
 endif
 
+check_PROGRAMS = runtests $(all_tests)
+
 ## tap tests
 
-check-local: $(check_PROGRAMS) runtests
-	./runtests -s $(abs_top_srcdir) $(check_PROGRAMS)
+check-local: $(check_PROGRAMS)
+	./runtests -s $(abs_top_srcdir) $(all_tests)
 
 # Support for GNU Flymake, in Emacs.
 check-syntax: AM_CFLAGS += -fsyntax-only -pipe
