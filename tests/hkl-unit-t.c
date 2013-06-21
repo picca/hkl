@@ -23,7 +23,7 @@
 #include <tap/basic.h>
 #include <tap/float.h>
 
-#include "hkl-unit.h"
+#include "hkl-unit-private.h"
 
 static void compatible(void)
 {

@@ -2461,99 +2461,11 @@ add ref</doc>
         </parameters>
       </method>
     </record>
-    <record name="Unit"
-            c:type="HklUnit"
-            glib:type-name="HklUnit"
-            glib:get-type="hkl_unit_get_type"
-            c:symbol-prefix="unit">
-      <field name="type" writable="1">
-        <type name="UnitType" c:type="HklUnitType"/>
-      </field>
-      <field name="name" writable="1">
-        <type name="utf8" c:type="char*"/>
-      </field>
-      <field name="repr" writable="1">
-        <type name="utf8" c:type="char*"/>
-      </field>
-      <method name="compatible"
-              c:identifier="hkl_unit_compatible"
-              introspectable="0">
-        <doc xml:whitespace="preserve">check if two units are compatible.</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">HKL_TRUE or HKL_FALSE</doc>
-          <type name="gint" c:type="int"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the first @HklUnit</doc>
-            <type name="Unit" c:type="const HklUnit*"/>
-          </instance-parameter>
-          <parameter name="unit" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the second @HklUnit to check</doc>
-            <type name="Unit" c:type="const HklUnit*"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="dup" c:identifier="hkl_unit_dup" introspectable="0">
-        <doc xml:whitespace="preserve">copy an #Hklunit</doc>
-        <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">the copied #HklUnit (memory must be release with hkl_unit_free)</doc>
-          <type name="Unit" c:type="HklUnit*"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <type name="Unit" c:type="const HklUnit*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
-      <method name="factor" c:identifier="hkl_unit_factor">
-        <doc xml:whitespace="preserve">compute the factor to convert from one @Hklunit to another one.
-@self * factor =  @unit</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">the factor of the conversion.</doc>
-          <type name="gdouble" c:type="double"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <type name="Unit" c:type="const HklUnit*"/>
-          </instance-parameter>
-          <parameter name="unit" transfer-ownership="none">
-            <type name="Unit" c:type="const HklUnit*"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="free" c:identifier="hkl_unit_free" introspectable="0">
-        <doc xml:whitespace="preserve">release the memory of an #HklUnit</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <type name="Unit" c:type="HklUnit*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
-    </record>
-    <enumeration name="UnitType"
-                 glib:type-name="HklUnitType"
-                 glib:get-type="hkl_unit_type_get_type"
-                 c:type="HklUnitType">
-      <member name="angle_deg"
-              value="0"
-              c:identifier="HKL_UNIT_ANGLE_DEG"
-              glib:nick="angle-deg">
-      </member>
-      <member name="angle_rad"
-              value="1"
-              c:identifier="HKL_UNIT_ANGLE_RAD"
-              glib:nick="angle-rad">
-      </member>
-      <member name="length_nm"
-              value="2"
-              c:identifier="HKL_UNIT_LENGTH_NM"
-              glib:nick="length-nm">
-      </member>
-    </enumeration>
+    <glib:boxed glib:name="Unit"
+                c:symbol-prefix="unit"
+                glib:type-name="HklUnit"
+                glib:get-type="hkl_unit_get_type">
+    </glib:boxed>
     <record name="Vector"
             c:type="HklVector"
             glib:type-name="HklVector"

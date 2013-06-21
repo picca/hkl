@@ -19,8 +19,8 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#ifndef __HKL_UNIT_H__
-#define __HKL_UNIT_H__
+#ifndef __HKL_UNIT_PRIVATE_H__
+#define __HKL_UNIT_PRIVATE_H__
 
 #include <hkl/hkl-macros.h>
 
@@ -55,4 +55,4 @@ extern double hkl_unit_factor(const HklUnit *self, const HklUnit *unit);
 
 HKL_END_DECLS
 
-#endif /* __HKL_UNIT_H__ */
+#endif /* __HKL_UNIT_PRIVATE_H__ */

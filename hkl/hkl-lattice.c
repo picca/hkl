@@ -25,7 +25,7 @@
 #include "hkl-lattice-private.h"
 #include "hkl-parameter-private.h"
 #include "hkl-matrix-private.h"
-#include "hkl-unit.h"
+#include "hkl-unit-private.h"
 
 /* private */
 
