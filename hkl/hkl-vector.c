@@ -26,7 +26,7 @@
 
 #include "hkl-vector.h"
 #include "hkl-matrix-private.h"
-#include "hkl-quaternion.h"
+#include "hkl-quaternion-private.h"
 
 /**
  * hkl_vector_dup: (skip)

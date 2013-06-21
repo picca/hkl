@@ -23,7 +23,7 @@
 #include <tap/basic.h>
 #include <tap/float.h>
 
-#include "hkl-quaternion.h"
+#include "hkl-quaternion-private.h"
 
 static void assignment(void)
 {

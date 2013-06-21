@@ -26,7 +26,7 @@
 #include "hkl-macros.h"
 #include "hkl-vector.h"
 #include "hkl-matrix-private.h"
-#include "hkl-quaternion.h"
+#include "hkl-quaternion-private.h"
 
 /* public */
 /**

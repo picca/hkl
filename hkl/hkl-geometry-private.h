@@ -23,10 +23,9 @@
 #define __HKL_GEOMETRY_PRIVATE_H__
 
 #include "hkl-source-private.h"
-#include "hkl-quaternion.h"
+#include "hkl-quaternion-private.h"
 #include "hkl-geometry.h"
 #include "hkl-factory.h"
-
 #include "hkl-parameter-private.h"
 
 HKL_BEGIN_DECLS

@@ -53,7 +53,6 @@ hkl_public_h_sources = \
 	hkl-macros.h \
 	hkl-matrix.h \
 	hkl-pseudoaxis.h \
-	hkl-quaternion.h \
 	hkl-sample.h \
 	hkl-unit.h \
 	hkl-vector.h
@@ -80,6 +79,7 @@ hkl_private_h_sources = \
 	hkl-pseudoaxis-zaxis-private.h \
 	hkl-pseudoaxis-soleil-sixs-med-private.h \
 	hkl-pseudoaxis-petra3-private.h \
+	hkl-quaternion-private.h \
 	hkl-sample-private.h \
 	hkl-source-private.h
 
@@ -116,7 +116,6 @@ introspection_files = \
 	hkl-error.h \
 	hkl-vector.h \
 	hkl-matrix.h \
-	hkl-quaternion.h \
 	hkl-unit.h \
 	hkl-parameter.h \
 	hkl-geometry.h \
@@ -131,7 +130,6 @@ introspection_files = \
 	hkl-error.c \
 	hkl-vector.c \
 	hkl-matrix.c \
-	hkl-quaternion.c \
 	hkl-unit.c \
 	hkl-parameter.c \
 	hkl-axis.c \

@@ -62,18 +62,6 @@ GType hkl_matrix_get_type (void) {
         return hkl_matrix_type_id__volatile;
 }
 
-GType hkl_quaternion_get_type (void) {
-        static volatile gsize hkl_quaternion_type_id__volatile = 0;
-        if (g_once_init_enter (&hkl_quaternion_type_id__volatile)) {
-                GType hkl_quaternion_type_id;
-                hkl_quaternion_type_id = g_boxed_type_register_static ("HklQuaternion",
-								       (GBoxedCopyFunc) hkl_quaternion_dup,
-								       (GBoxedFreeFunc) hkl_quaternion_free);
-                g_once_init_leave (&hkl_quaternion_type_id__volatile, hkl_quaternion_type_id);
-        }
-        return hkl_quaternion_type_id__volatile;
-}
-
 GType hkl_unit_get_type (void) {
         static volatile gsize hkl_unit_type_id__volatile = 0;
         if (g_once_init_enter (&hkl_unit_type_id__volatile)) {
