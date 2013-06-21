@@ -6,7 +6,7 @@
 #include <glib-object.h>
 #include "hkl.h"
 #include "hkl-type-builtins.h"
-/* enumerations from "hkl-detector-factory.h" */
+/* enumerations from "../hkl.h" */
 GType
 hkl_detector_type_get_type (void)
 {

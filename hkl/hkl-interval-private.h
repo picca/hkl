@@ -22,7 +22,7 @@
 #ifndef _HKL_INTERVAL_PRIVATE_H
 #define _HKL_INTERVAL_PRIVATE_H
 
-#include "hkl-macros.h"
+#include "hkl.h"
 
 HKL_BEGIN_DECLS
 

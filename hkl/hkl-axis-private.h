@@ -22,7 +22,7 @@
 #ifndef __HKL_AXIS_PRIVATE_H__
 #define __HKL_AXIS_PRIVATE_H__
 
-#include "hkl-macros.h"
+#include "hkl.h"
 #include "hkl-vector-private.h"
 #include "hkl-quaternion-private.h"
 #include "hkl-parameter-private.h"

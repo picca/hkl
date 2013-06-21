@@ -1,6 +1,6 @@
 AM_CFLAGS = \
-	-I$(abs_top_srcdir)/tests \
-	-I$(top_srcdir)
+	-I$(top_srcdir) \
+	-I$(abs_top_srcdir)/tests
 
 check_LIBRARIES = libtap.a
 libtap_a_SOURCES = \
@@ -9,8 +9,8 @@ libtap_a_SOURCES = \
 	float.h \
 	float.c \
 	macros.h \
-	hkl.h \
-	hkl.c
+	hkl-tap.h \
+	hkl-tap.c
 
 # Support for GNU Flymake, in Emacs.
 check-syntax: AM_CFLAGS += -fsyntax-only -pipe

@@ -19,36 +19,20 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#ifndef __HKL_MATRIX_H__
-#define __HKL_MATRIX_H__
+#ifndef __HKL_TAP_H__
+#define __HKL_TAP_H__
 
-#include <hkl/hkl-macros.h>
+#include "hkl.h"
 
 HKL_BEGIN_DECLS
 
-typedef struct _HklMatrix HklMatrix;
+extern int check_pseudoaxes_v(HklEngine *engine, ...);
 
-HKLAPI HklMatrix *hkl_matrix_new(void);
+extern int check_pseudoaxes(HklEngine *engine,
+			    double expected[], uint len);
 
-HKLAPI HklMatrix *hkl_matrix_new_full(double m11, double m12, double m13,
-				      double m21, double m22, double m23,
-				      double m31, double m32, double m33);
-
-HKLAPI HklMatrix *hkl_matrix_new_euler(double euler_x, double euler_y, double euler_z);
-
-HKLAPI double hkl_matrix_get(const HklMatrix *self, unsigned int i, unsigned int j) HKL_ARG_NONNULL(1);
-
-HKLAPI void hkl_matrix_free(HklMatrix *self) HKL_ARG_NONNULL(1);
-
-HKLAPI void hkl_matrix_init(HklMatrix *self,
-			    double m11, double m12, double m13,
-			    double m21, double m22, double m23,
-			    double m31, double m32, double m33) HKL_ARG_NONNULL(1);
-
-HKLAPI int hkl_matrix_cmp(const HklMatrix *self, const HklMatrix *m) HKL_ARG_NONNULL(1, 2);
-
-HKLAPI void hkl_matrix_times_matrix(HklMatrix *self, const HklMatrix *m) HKL_ARG_NONNULL(1, 2);
+extern void hkl_engine_set_values_v(HklEngine *self, ...);
 
 HKL_END_DECLS
 
-#endif
+#endif /* __HKL_TAP_H__ */

@@ -24,12 +24,12 @@
 
 #include <stdio.h>
 #include <math.h>
-#include <hkl/hkl-macros.h>
+
+#include "hkl.h"
 
 HKL_BEGIN_DECLS
 
 /* forward declaration begin */
-typedef struct _HklMatrix HklMatrix;
 typedef struct _HklQuaternion HklQuaternion;
 /* forward declaration end */
 

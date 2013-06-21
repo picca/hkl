@@ -22,8 +22,8 @@
 #ifndef __HKL_FACTORY_PRIVATE_H__
 #define __HKL_FACTORY_PRIVATE_H__
 
-#include <hkl/ccan/autodata/autodata.h>
-#include <hkl/hkl-factory.h>
+#include "hkl.h"
+#include "hkl/ccan/autodata/autodata.h"
 
 HKL_BEGIN_DECLS
 

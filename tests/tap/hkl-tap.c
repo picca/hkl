@@ -19,7 +19,9 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <tap/hkl.h>
+#include <stdarg.h>
+
+#include "hkl-tap.h"
 
 int check_pseudoaxes_v(HklEngine *engine, ...)
 {

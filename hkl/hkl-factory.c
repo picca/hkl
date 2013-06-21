@@ -22,9 +22,10 @@
 
 #include <stdarg.h>
 #include <gsl/gsl_sf.h>
-#include <hkl/hkl-factory-private.h>
 
+#include "hkl.h"
 #include "hkl-axis-private.h"
+#include "hkl-factory-private.h"
 #include "hkl-pseudoaxis-private.h"
 #include "hkl-pseudoaxis-common-eulerians-private.h"
 #include "hkl-pseudoaxis-common-q-private.h"

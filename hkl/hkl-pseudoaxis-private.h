@@ -25,10 +25,10 @@
 #include <string.h>
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_sf_trig.h>
-#include <hkl/hkl-pseudoaxis.h>
 
+#include "hkl.h"
+#include "hkl-geometry-private.h"
 #include "hkl-parameter-private.h"
-#include "hkl/hkl-geometry-private.h"
 
 HKL_BEGIN_DECLS
 

@@ -23,8 +23,7 @@
 #include <glib.h>
 #include <string.h>
 
-#include <hkl/ccan/array_size/array_size.h>
-
+#include "hkl/ccan/array_size/array_size.h"
 #include "hkl-axis-private.h"
 #include "hkl-binding-private.h"
 #include "hkl-error-private.h"

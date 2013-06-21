@@ -22,7 +22,7 @@
 #ifndef __HKL_UNIT_PRIVATE_H__
 #define __HKL_UNIT_PRIVATE_H__
 
-#include <hkl/hkl-macros.h>
+#include "hkl.h"
 
 HKL_BEGIN_DECLS
 

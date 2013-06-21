@@ -21,7 +21,7 @@
  */
 #include <hkl.h>
 #include <tap/basic.h>
-#include <tap/hkl.h>
+#include <tap/hkl-tap.h>
 
 #include "hkl-axis-private.h" /* temporary */
 

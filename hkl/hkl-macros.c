@@ -20,7 +20,8 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 #include <stdio.h>
-#include <hkl/hkl-macros.h>
+
+#include "hkl.h"
 
 #ifndef _MSC_VER
 void hkl_printbt(void)

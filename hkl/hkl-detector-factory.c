@@ -20,8 +20,7 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 
-#include <hkl/hkl-detector-factory.h>
-
+#include "hkl.h"
 #include "hkl-detector-private.h"
 
 /**

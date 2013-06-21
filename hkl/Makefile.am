@@ -42,18 +42,7 @@ hkl_c_sources = \
 	hkl-unit.c \
 	hkl-vector.c
 
-hkl_public_h_sources = \
-	hkl-detector.h \
-	hkl-detector-factory.h \
-	hkl-error.h \
-	hkl-factory.h \
-	hkl-geometry.h \
-	hkl-parameter.h \
-	hkl-lattice.h \
-	hkl-macros.h \
-	hkl-matrix.h \
-	hkl-pseudoaxis.h \
-	hkl-sample.h
+hkl_public_h_sources = ../hkl.h
 
 hkl_private_h_sources = \
 	hkl-axis-private.h \
@@ -114,16 +103,7 @@ libhkl_la_SOURCES += \
 hklinclude_HEADERS += hkl-types.h
 
 introspection_files = \
-	hkl-error.h \
-	hkl-matrix.h \
-	hkl-parameter.h \
-	hkl-geometry.h \
-	hkl-detector.h \
-	hkl-detector-factory.h \
-	hkl-lattice.h \
-	hkl-sample.h \
-	hkl-pseudoaxis.h \
-	hkl-factory.h \
+	../hkl.h \
 	hkl-binding-private.h \
 	hkl-types.h \
 	hkl-error.c \

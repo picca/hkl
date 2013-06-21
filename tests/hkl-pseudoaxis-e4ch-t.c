@@ -22,7 +22,7 @@
  */
 #include <hkl.h>
 #include <tap/basic.h>
-#include <tap/hkl.h>
+#include <tap/hkl-tap.h>
 
 static void getter(void)
 {

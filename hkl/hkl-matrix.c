@@ -28,7 +28,8 @@
 
 /**
  * hkl_matrix_new: (skip)
- * Returns:
+ * 
+ * Returns: a new uninitialized HklMatrix
  */
 HklMatrix *hkl_matrix_new()
 {

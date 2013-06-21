@@ -24,7 +24,7 @@
 
 #include <glib.h>
 
-#include "hkl-pseudoaxis.h"
+#include "hkl.h"
 
 HKL_BEGIN_DECLS
 

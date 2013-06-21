@@ -22,7 +22,7 @@
 #ifndef __HKL_PSEUDOAXIS_COMMON_Q_PRIVATE_H__
 #define __HKL_PSEUDOAXIS_COMMON_Q_PRIVATE_H__
 
-#include <hkl/hkl-pseudoaxis.h>
+#include "hkl.h"
 
 HKL_BEGIN_DECLS
 

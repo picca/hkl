@@ -23,10 +23,9 @@
 /* for strdup */
 #define _XOPEN_SOURCE 500
 #include <string.h>
-
 #include <gsl/gsl_multimin.h>
 
-#include <hkl/hkl-matrix.h>
+#include "hkl.h"
 
 #include "hkl-axis-private.h"
 #include "hkl-detector-private.h"

@@ -24,9 +24,7 @@
 
 #include <stdio.h>
 
-#include "hkl-lattice.h"
-#include "hkl-parameter.h"
-#include "hkl-matrix.h"
+#include "hkl.h"
 
 HKL_BEGIN_DECLS
 

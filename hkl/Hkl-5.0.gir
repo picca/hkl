@@ -18,6 +18,9 @@ and/or use gtk-doc annotations.  -->
                 glib:type-name="HklAxis"
                 glib:get-type="hkl_axis_get_type">
     </glib:boxed>
+    <constant name="DEGTORAD" value="0" c:type="HKL_DEGTORAD">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <record name="Detector"
             c:type="HklDetector"
             glib:type-name="HklDetector"
@@ -88,6 +91,14 @@ and/or use gtk-doc annotations.  -->
               glib:nick="0d">
       </member>
     </enumeration>
+    <constant name="EPSILON" value="0.000001" c:type="HKL_EPSILON">
+      <type name="gdouble" c:type="gdouble"/>
+    </constant>
+    <constant name="EULERIAN_KAPPA_SOLUTION"
+              value="1"
+              c:type="HKL_EULERIAN_KAPPA_SOLUTION">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <record name="Engine"
             c:type="HklEngine"
             glib:type-name="HklEngine"
@@ -528,6 +539,9 @@ do nothing.</doc>
         </parameters>
       </method>
     </record>
+    <constant name="FALSE" value="0" c:type="HKL_FALSE">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <record name="Factory" c:type="HklFactory" disguised="1">
       <method name="create_new_engine_list"
               c:identifier="hkl_factory_create_new_engine_list">
@@ -1164,6 +1178,12 @@ should be optimized</doc>
         </parameters>
       </method>
     </record>
+    <constant name="MAJOR" value="2" c:type="HKL_MAJOR">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="MINOR" value="3" c:type="HKL_MINOR">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <record name="Matrix"
             c:type="HklMatrix"
             glib:type-name="HklMatrix"
@@ -1171,6 +1191,7 @@ should be optimized</doc>
             c:symbol-prefix="matrix">
       <constructor name="new" c:identifier="hkl_matrix_new" introspectable="0">
         <return-value transfer-ownership="full">
+          <doc xml:whitespace="preserve">a new uninitialized HklMatrix</doc>
           <type name="Matrix" c:type="HklMatrix*"/>
         </return-value>
       </constructor>
@@ -1394,6 +1415,9 @@ should be optimized</doc>
         </parameters>
       </function>
     </record>
+    <constant name="PATCH" value="0" c:type="HKL_PATCH">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <record name="Parameter"
             c:type="HklParameter"
             glib:type-name="HklParameter"
@@ -1431,6 +1455,17 @@ should be optimized</doc>
             <doc xml:whitespace="preserve">the fit value to set</doc>
             <type c:type="bool"/>
           </parameter>
+        </parameters>
+      </method>
+      <method name="free" c:identifier="hkl_parameter_free" introspectable="0">
+        <doc xml:whitespace="preserve">delete an #HklParameter</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Parameter" c:type="HklParameter*"/>
+          </instance-parameter>
         </parameters>
       </method>
       <method name="min_max_get"
@@ -1517,6 +1552,19 @@ should be optimized</doc>
       <method name="name_get" c:identifier="hkl_parameter_name_get">
         <return-value transfer-ownership="none">
           <type name="utf8" c:type="const char*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Parameter" c:type="const HklParameter*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="new_copy"
+              c:identifier="hkl_parameter_new_copy"
+              introspectable="0">
+        <doc xml:whitespace="preserve">copy an #HklParameter</doc>
+        <return-value transfer-ownership="full">
+          <type name="Parameter" c:type="HklParameter*"/>
         </return-value>
         <parameters>
           <instance-parameter name="self" transfer-ownership="none">
@@ -1733,6 +1781,9 @@ should be optimized</doc>
             glib:get-type="hkl_pseudo_axis_get_type"
             c:symbol-prefix="pseudo_axis">
     </record>
+    <constant name="RADTODEG" value="0" c:type="HKL_RADTODEG">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <record name="Sample"
             c:type="HklSample"
             glib:type-name="HklSample"
@@ -2250,11 +2301,23 @@ add ref</doc>
         </parameters>
       </method>
     </record>
+    <constant name="TAU" value="0" c:type="HKL_TAU">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="TINY" value="0.000000" c:type="HKL_TINY">
+      <type name="gdouble" c:type="gdouble"/>
+    </constant>
+    <constant name="TRUE" value="1" c:type="HKL_TRUE">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <glib:boxed glib:name="Unit"
                 c:symbol-prefix="unit"
                 glib:type-name="HklUnit"
                 glib:get-type="hkl_unit_get_type">
     </glib:boxed>
+    <constant name="VERSION" value="0" c:type="HKL_VERSION">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <glib:boxed glib:name="Vector"
                 c:symbol-prefix="vector"
                 glib:type-name="HklVector"
@@ -2357,6 +2420,11 @@ add ref</doc>
           <type name="Mode" c:type="const HklMode*"/>
         </parameter>
       </parameters>
+    </function>
+    <function name="printbt" c:identifier="hkl_printbt">
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
     </function>
     <function name="sample_del_reflection"
               c:identifier="hkl_sample_del_reflection"

@@ -23,10 +23,7 @@
 #define __HKL_SAMPLE_PRIVATE_H__
 
 #include "ccan/list/list.h"
-#include "hkl-lattice.h"
-#include "hkl-geometry.h"
-#include "hkl-detector.h"
-#include "hkl-sample.h"
+#include "hkl.h"
 #include "hkl-matrix-private.h"
 
 HKL_BEGIN_DECLS

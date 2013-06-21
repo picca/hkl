@@ -21,9 +21,6 @@
  */
 
 #include "hkl-gui.h"
-#include "hkl-factory.h"
-
-#include "hkl-axis-private.h" /* temporary */
 
 HKLWindow::HKLWindow(void)
 {
@@ -401,7 +398,7 @@ void HKLWindow::set_up_TreeView_axes(void)
 	darray_foreach(axis, *axes){
 		Gtk::ListStore::Row row = *(_axeModel->append());
 		row[_axeModelColumns.axis] = *axis;
-		row[_axeModelColumns.name] = (*axis)->name;
+		row[_axeModelColumns.name] = hkl_parameter_name_get(*axis);
 	}
 
 	//Set the model for the TreeView
@@ -449,7 +446,7 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 			Gtk::ListStore::Row row = *(_pseudoAxeModel->append());
 			row[_pseudoAxeModelColumns.engine] = *engine;
 			row[_pseudoAxeModelColumns.parameter] = *pseudo_axis;
-			row[_pseudoAxeModelColumns.name] = (*pseudo_axis)->name;
+			row[_pseudoAxeModelColumns.name] = hkl_parameter_name_get(*pseudo_axis);
 
 			if(darray_size(*parameters)){
 				Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(_parameterModelColumns);
@@ -459,7 +456,7 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 					Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(_parameterModelColumns);
 					row = *(model->append());
 					row[_parameterModelColumns.parameter] = *parameter;
-					row[_parameterModelColumns.name] = (*parameter)->name;
+					row[_parameterModelColumns.name] = hkl_parameter_name_get(*parameter);
 					row[_parameterModelColumns.value] = hkl_parameter_value_unit_get(*parameter);
 				}
 				_mapPseudoAxeParameterModel.insert(std::pair<HklParameter *, Glib::RefPtr<Gtk::ListStore> >(*pseudo_axis, model));
@@ -512,7 +509,7 @@ void HKLWindow::set_up_TreeView_treeview1(void)
 	_treeview1->remove_all_columns();
 	axes = hkl_geometry_axes_get(this->_geometry);
 	darray_foreach(axis, *axes)
-		_treeview1->append_column_numeric((*axis)->name,
+		_treeview1->append_column_numeric(hkl_parameter_name_get(*axis),
 						  _solutionModelColumns->axes[i++],
 						  "%lf");
 
@@ -689,7 +686,7 @@ void HKLWindow::update_pseudoAxes_parameters(void)
 		while(iter_row != end_row){
 			Gtk::TreeRow row = *iter_row;
 			HklParameter *parameter = row[_parameterModelColumns.parameter];
-			row[_parameterModelColumns.name] = parameter->name;
+			row[_parameterModelColumns.name] = hkl_parameter_name_get(parameter);
 			row[_parameterModelColumns.value] = hkl_parameter_value_unit_get(parameter);
 			++iter_row;
 		}
@@ -733,39 +730,45 @@ void HKLWindow::updateLatticeParameters(void)
 
 		parameter = hkl_lattice_a_get(lattice);
 		hkl_parameter_min_max_unit_get(parameter, &min, &max);
+		to_fit = hkl_parameter_fit_get(parameter);
 		_spinbutton_a_min->set_value(min);
 		_spinbutton_a_max->set_value(max);
-		_checkbutton_a->set_active(parameter->fit);
+		_checkbutton_a->set_active(to_fit);
 
 		parameter = hkl_lattice_b_get(lattice);
 		hkl_parameter_min_max_unit_get(parameter, &min, &max);
+		to_fit = hkl_parameter_fit_get(parameter);
 		_spinbutton_b_min->set_value(min);
 		_spinbutton_b_max->set_value(max);
-		_checkbutton_b->set_active(parameter->fit);
+		_checkbutton_b->set_active(to_fit);
 
 		parameter = hkl_lattice_c_get(lattice);
 		hkl_parameter_min_max_unit_get(parameter, &min, &max);
+		to_fit = hkl_parameter_fit_get(parameter);
 		_spinbutton_c_min->set_value(min);
 		_spinbutton_c_max->set_value(max);
-		_checkbutton_c->set_active(parameter->fit);
+		_checkbutton_c->set_active(to_fit);
 
 		parameter = hkl_lattice_alpha_get(lattice);
 		hkl_parameter_min_max_unit_get(parameter, &min, &max);
+		to_fit = hkl_parameter_fit_get(parameter);
 		_spinbutton_alpha_min->set_value(min);
 		_spinbutton_alpha_max->set_value(max);
-		_checkbutton_alpha->set_active(parameter->fit);
+		_checkbutton_alpha->set_active(to_fit);
 
 		parameter = hkl_lattice_beta_get(lattice);
 		hkl_parameter_min_max_unit_get(parameter, &min, &max);
+		to_fit = hkl_parameter_fit_get(parameter);
 		_spinbutton_beta_min->set_value(min);
 		_spinbutton_beta_max->set_value(max);
-		_checkbutton_beta->set_active(parameter->fit);
+		_checkbutton_beta->set_active(to_fit);
 
 		parameter = hkl_lattice_gamma_get(lattice);
 		hkl_parameter_min_max_unit_get(parameter, &min, &max);
+		to_fit = hkl_parameter_fit_get(parameter);
 		_spinbutton_gamma_min->set_value(min);
 		_spinbutton_gamma_max->set_value(max);
-		_checkbutton_gamma->set_active(parameter->fit);
+		_checkbutton_gamma->set_active(to_fit);
 	}
 }
 

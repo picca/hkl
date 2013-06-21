@@ -23,7 +23,7 @@
 #define GTKMM_MODEL_COLUMNS_H
 
 #include <gtkmm/treemodelcolumn.h>
-#include "hkl/hkl-geometry.h"
+#include "hkl.h"
 
 class ReflectionModelColumns : public Gtk::TreeModel::ColumnRecord
 {

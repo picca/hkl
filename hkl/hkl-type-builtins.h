@@ -8,7 +8,7 @@
 
 G_BEGIN_DECLS
 
-/* enumerations from "hkl-detector-factory.h" */
+/* enumerations from "../hkl.h" */
 GType hkl_detector_type_get_type (void) G_GNUC_CONST;
 #define HKL_TYPE_DETECTOR_TYPE (hkl_detector_type_get_type ())
 G_END_DECLS

@@ -25,7 +25,7 @@
 
 #include <stdio.h>
 
-#include "hkl-parameter.h"
+#include "hkl.h"
 #include "hkl-interval-private.h"
 #include "hkl-unit-private.h"
 
@@ -180,10 +180,6 @@ extern HklParameter *hkl_parameter_new(const char *name,
 				       int fit, int changed,
 				       const HklUnit *unit,
 				       const HklUnit *punit);
-
-extern HklParameter *hkl_parameter_new_copy(const HklParameter *self);
-
-extern void hkl_parameter_free(HklParameter *self);
 
 extern void hkl_parameter_init_copy(HklParameter *self, const HklParameter *src);
 

@@ -27,8 +27,7 @@
 
 #include <stdarg.h>
 
-#include "hkl-macros.h"
-#include "hkl-error.h"
+#include "hkl.h"
 
 HKL_BEGIN_DECLS
 
