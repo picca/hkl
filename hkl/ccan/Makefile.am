@@ -17,6 +17,6 @@ libccan_la_SOURCES = \
 	darray/darray.h \
 	build_assert/build_assert.h
 
-ccanincludedir=$(includedir)/hkl/ccan
+ccanincludedir=$(includedir)/hkl-@VMAJ@/hkl/ccan
 nobase_ccaninclude_HEADERS= \
 	darray/darray.h

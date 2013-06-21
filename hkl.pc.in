@@ -10,4 +10,4 @@ URL: http://repo.or.cz/w/hkl.git
 Requires: gsl
 Libs: -L${libdir} -lhkl
 Libs.private: -lm
-Cflags: -I${includedir}
+Cflags: -I${includedir}/hkl-@VMAJ@

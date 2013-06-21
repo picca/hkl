@@ -14,10 +14,15 @@ SUBDIRS += tests Documentation
 
 EXTRA_DIST = hkl.pc.in hkl3d.pc.in
 
-include_HEADERS = hkl.h
+installed_mainheaderdir = $(includedir)/hkl-@VMAJ@
+dist_installed_mainheader_DATA = hkl.h
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = hkl.pc hkl3d.pc
+pkgconfig_DATA = hkl.pc
+
+if HKL3D
+pkgconfig_DATA += hkl3d.pc
+endif
 
 ## lcov part
 .PHONY: lcov genlcov lcov-clean
@@ -93,7 +98,7 @@ ccan-update:
 			cd $(CCAN_TMP_DEST)/ccan && find . -maxdepth 2 -name '*.[ch]'\
 				| sed -e 's,^./,\t,;$$!s,$$, \\,'; echo;\
 		);\
-		echo "ccanincludedir=\$$(includedir)/hkl/ccan";\
+		echo "ccanincludedir=\$$(includedir)/hkl-@""VMAJ@/hkl/ccan";\
 		echo "nobase_ccaninclude_HEADERS= \\";\
 		(\
 			cd $(CCAN_LOCAL_EXTRACT)/ccan && find . -maxdepth 2 -name '*.[h]'\

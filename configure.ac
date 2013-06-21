@@ -1,8 +1,24 @@
-#                                               -*- Autoconf -*-
-# Process this file with autoconf to produce a configure script.
+##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##
+##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##
+m4_define([v_maj], [5])
+m4_define([v_min], [0])
+m4_define([v_mic], [0])
+m4_define([v_rev], m4_esyscmd([(git rev-list --count HEAD 2>/dev/null || echo 0) | tr -d '\n']))dnl
+##--   When released, remove the dnl on the below line
+dnl m4_undefine([v_rev])
+##--   When doing snapshots - change soname. remove dnl on below line
+dnl m4_define([relname], [ver-pre-svn-07])
+dnl m4_define([v_rel], [-release relname])
+##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##
+m4_ifdef([v_rev], [m4_define([v_ver], [v_maj.v_min.v_mic.v_rev])], [m4_define([v_ver], [v_maj.v_min.v_mic])])
+m4_define([lt_cur], m4_eval(v_maj + v_min))
+m4_define([lt_rev], v_mic)
+m4_define([lt_age], v_min)
+##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##
+##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##
 
 AC_PREREQ([2.69])
-AC_INIT([hkl],[5.0.0-alpha],[picca@synchrotron-soleil.fr])
+AC_INIT([hkl],[v_ver],[picca@synchrotron-soleil.fr])
 AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
@@ -20,6 +36,23 @@ AC_PROG_LN_S
 AC_PROG_MAKE_SET
 LT_INIT
 AM_SILENT_RULES
+
+##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##
+##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##
+m4_ifdef([v_rev], , [m4_define([v_rev], [0])])
+m4_ifdef([v_rel], , [m4_define([v_rel], [])])
+AC_DEFINE_UNQUOTED(VMAJ, [v_maj], [Major version])
+AC_DEFINE_UNQUOTED(VMIN, [v_min], [Minor version])
+AC_DEFINE_UNQUOTED(VMIC, [v_mic], [Micro version])
+AC_DEFINE_UNQUOTED(VREV, [v_rev], [Revison])
+version_info="lt_cur:lt_rev:lt_age"
+release_info="v_rel"
+AC_SUBST(version_info)
+AC_SUBST(release_info)
+##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##
+##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##
+VMAJ=v_maj
+AC_SUBST(VMAJ)
 
 # Checks for libraries.
 AX_PATH_GSL

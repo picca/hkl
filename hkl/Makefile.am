@@ -78,8 +78,6 @@ lib_LTLIBRARIES = libhkl.la
 libhkl_la_SOURCES = $(hkl_c_sources) $(hkl_private_h_sources)
 libhkl_la_LIBADD = ccan/libccan.la
 libhkl_la_CFLAGS = $(AM_CFLAGS) -fvisibility=hidden
-hklincludedir=$(includedir)/hkl
-hklinclude_HEADERS = $(hkl_public_h_sources)
 
 # introspection
 
@@ -97,12 +95,11 @@ if HAVE_INTROSPECTION
 
 libhkl_la_SOURCES += \
 	hkl-types.c \
+	hkl-types.h \
 	hkl-type-builtins.c \
 	hkl-type-builtins.h \
 	hkl-binding.c \
 	hkl-binding-private.h
-
-hklinclude_HEADERS += hkl-types.h
 
 introspection_files = \
 	../hkl.h \
@@ -141,18 +138,18 @@ hkl-type-builtins.c: $(hkl_public_h_sources) $(srcdir)/hkl-type-builtins.c.templ
 	&& cp xgen-gtbc hkl-type-builtins.c  \
 	&& rm -f xgen-gtbc
 
-Hkl-5.0.gir: $(INTROSPECTION_SCANNER) libhkl.la Makefile
+Hkl-@VMAJ@.0.gir: $(INTROSPECTION_SCANNER) libhkl.la Makefile
 
-Hkl_5_0_gir_NAMESPACE = Hkl
-Hkl_5_0_gir_VERSION = 5.0
-Hkl_5_0_gir_LIBS = libhkl.la
-Hkl_5_0_gir_FILES =  $(introspection_files)
-Hkl_5_0_gir_PACKAGES = gobject-2.0
-Hkl_5_0_gir_CFLAGS = $(INCLUDES) $(AM_CPPFLAGS) $(AM_CFLAGS)
-Hkl_5_0_gir_EXPORT_PACKAGES = hkl-5.0
-Hkl_5_0_gir_SCANNERFLAGS = --warn-all --c-include='hkl.h'
+Hkl_@VMAJ@_0_gir_NAMESPACE = Hkl
+Hkl_@VMAJ@_0_gir_VERSION = @VMAJ@.0
+Hkl_@VMAJ@_0_gir_LIBS = libhkl.la
+Hkl_@VMAJ@_0_gir_FILES =  $(introspection_files)
+Hkl_@VMAJ@_0_gir_PACKAGES = gobject-2.0
+Hkl_@VMAJ@_0_gir_CFLAGS = $(INCLUDES) $(AM_CPPFLAGS) $(AM_CFLAGS)
+Hkl_@VMAJ@_0_gir_EXPORT_PACKAGES = hkl-@VMAJ@.0
+Hkl_@VMAJ@_0_gir_SCANNERFLAGS = --warn-all --c-include='hkl.h'
 
-INTROSPECTION_GIRS += Hkl-5.0.gir
+INTROSPECTION_GIRS += Hkl-@VMAJ@.0.gir
 
 girdir = $(datadir)/gir-1.0
 gir_DATA = $(INTROSPECTION_GIRS)
