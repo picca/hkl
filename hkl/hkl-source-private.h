@@ -19,10 +19,10 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#ifndef __HKL_SOURCE_H__
-#define __HKL_SOURCE_H__
+#ifndef __HKL_SOURCE_PRIVATE_H__
+#define __HKL_SOURCE_PRIVATE_H__
 
-#include <hkl/hkl-vector.h>
+#include "hkl-vector.h"
 
 HKL_BEGIN_DECLS
 
@@ -53,4 +53,4 @@ extern void hkl_source_fprintf(FILE *f, HklSource const *self);
 
 HKL_END_DECLS
 
-#endif /* __HKL_SOURCE_H__ */
+#endif /* __HKL_SOURCE_PRIVATE_H__ */

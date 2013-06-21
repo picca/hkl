@@ -22,10 +22,10 @@
 #ifndef __HKL_GEOMETRY_PRIVATE_H__
 #define __HKL_GEOMETRY_PRIVATE_H__
 
-#include <hkl/hkl-source.h>
-#include <hkl/hkl-quaternion.h>
-#include <hkl/hkl-geometry.h>
-#include <hkl/hkl-factory.h>
+#include "hkl-source-private.h"
+#include "hkl-quaternion.h"
+#include "hkl-geometry.h"
+#include "hkl-factory.h"
 
 #include "hkl-parameter-private.h"
 

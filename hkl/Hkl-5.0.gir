@@ -2451,11 +2451,6 @@ Todo: optimize</doc>
         </parameters>
       </function>
     </record>
-    <constant name="SOURCE_DEFAULT_WAVE_LENGTH"
-              value="1.540000"
-              c:type="HKL_SOURCE_DEFAULT_WAVE_LENGTH">
-      <type name="gdouble" c:type="gdouble"/>
-    </constant>
     <record name="Sample"
             c:type="HklSample"
             glib:type-name="HklSample"
@@ -2973,138 +2968,11 @@ add ref</doc>
         </parameters>
       </method>
     </record>
-    <record name="Source"
-            c:type="HklSource"
-            glib:type-name="HklSource"
-            glib:get-type="hkl_source_get_type"
-            c:symbol-prefix="source">
-      <field name="wave_length" writable="1">
-        <type name="gdouble" c:type="double"/>
-      </field>
-      <field name="direction" writable="1">
-        <type name="Vector" c:type="HklVector"/>
-      </field>
-      <method name="cmp" c:identifier="hkl_source_cmp" introspectable="0">
-        <doc xml:whitespace="preserve">compare two sources</doc>
-        <return-value transfer-ownership="none">
-          <type name="gint" c:type="int"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:whitespace="preserve">1st #Hklsource</doc>
-            <type name="Source" c:type="HklSource*"/>
-          </instance-parameter>
-          <parameter name="s" transfer-ownership="none">
-            <doc xml:whitespace="preserve">2nd #Hklsource</doc>
-            <type name="Source" c:type="HklSource*"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="compute_ki"
-              c:identifier="hkl_source_compute_ki"
-              introspectable="0">
-        <doc xml:whitespace="preserve">compute the ki hkl_vector</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <type name="Source" c:type="HklSource*"/>
-          </instance-parameter>
-          <parameter name="ki"
-                     direction="out"
-                     caller-allocates="1"
-                     transfer-ownership="none">
-            <type name="Vector" c:type="HklVector*"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="dup" c:identifier="hkl_source_dup">
-        <doc xml:whitespace="preserve">copy constructor
-TODO test</doc>
-        <return-value transfer-ownership="full">
-          <type name="Source" c:type="HklSource*"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the #Hklsource to copy</doc>
-            <type name="Source" c:type="const HklSource*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
-      <method name="free" c:identifier="hkl_source_free">
-        <doc xml:whitespace="preserve">destructor
-TODO: test</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the #Hklsource to delete</doc>
-            <type name="Source" c:type="HklSource*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
-      <method name="get_wavelength"
-              c:identifier="hkl_source_get_wavelength"
-              introspectable="0">
-        <doc xml:whitespace="preserve">get the wave_length</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">the wave_length</doc>
-          <type name="gdouble" c:type="double"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <type name="Source" c:type="HklSource*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
-      <method name="init" c:identifier="hkl_source_init">
-        <doc xml:whitespace="preserve">initialize the #HklSource</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">HKL_SUCCESS if everythongs goes fine, HKL_FAIL otherwise</doc>
-          <type name="gint" c:type="int"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the #Hklsource to initialize</doc>
-            <type name="Source" c:type="HklSource*"/>
-          </instance-parameter>
-          <parameter name="wave_length" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the wave length to set</doc>
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-          <parameter name="x" transfer-ownership="none">
-            <doc xml:whitespace="preserve">x coordinates of the ki vector</doc>
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-          <parameter name="y" transfer-ownership="none">
-            <doc xml:whitespace="preserve">y coordinates of the ki vector</doc>
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-          <parameter name="z" transfer-ownership="none">
-            <doc xml:whitespace="preserve">z coordinates of the ki vector</doc>
-            <type name="gdouble" c:type="double"/>
-          </parameter>
-        </parameters>
-      </method>
-      <function name="fprintf"
-                c:identifier="hkl_source_fprintf"
-                introspectable="0">
-        <doc xml:whitespace="preserve">printf the source</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="f" transfer-ownership="none">
-            <type name="gpointer" c:type="FILE*"/>
-          </parameter>
-          <parameter name="self" transfer-ownership="none">
-            <type name="Source" c:type="HklSource*"/>
-          </parameter>
-        </parameters>
-      </function>
-    </record>
+    <glib:boxed glib:name="Source"
+                c:symbol-prefix="source"
+                glib:type-name="HklSource"
+                glib:get-type="hkl_source_get_type">
+    </glib:boxed>
     <record name="Unit"
             c:type="HklUnit"
             glib:type-name="HklUnit"
@@ -4044,23 +3912,6 @@ control over, that could include printf() escape sequences.</doc>
         <parameter name="reflection" transfer-ownership="none">
           <doc xml:whitespace="preserve">the reflection to remove.</doc>
           <type name="SampleReflection" c:type="HklSampleReflection*"/>
-        </parameter>
-      </parameters>
-    </function>
-    <function name="source_fprintf"
-              c:identifier="hkl_source_fprintf"
-              moved-to="Source.fprintf"
-              introspectable="0">
-      <doc xml:whitespace="preserve">printf the source</doc>
-      <return-value transfer-ownership="none">
-        <type name="none" c:type="void"/>
-      </return-value>
-      <parameters>
-        <parameter name="f" transfer-ownership="none">
-          <type name="gpointer" c:type="FILE*"/>
-        </parameter>
-        <parameter name="self" transfer-ownership="none">
-          <type name="Source" c:type="HklSource*"/>
         </parameter>
       </parameters>
     </function>

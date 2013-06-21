@@ -56,9 +56,6 @@ GType hkl_parameter_list_get_type (void) G_GNUC_CONST;
 #define TYPE_HKL_AXIS (hkl_axis_get_type ())
 GType hkl_axis_get_type (void) G_GNUC_CONST;
 
-#define TYPE_HKL_SOURCE (hkl_source_get_type ())
-GType hkl_source_get_type (void) G_GNUC_CONST;
-
 #define TYPE_HKL_GEOMETRY (hkl_geometry_get_type ())
 GType hkl_geometry_get_type (void) G_GNUC_CONST;
 

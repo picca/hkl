@@ -144,18 +144,6 @@ GType hkl_axis_get_type (void) {
         return hkl_axis_type_id__volatile;
 }
 
-GType hkl_source_get_type (void) {
-        static volatile gsize hkl_source_type_id__volatile = 0;
-        if (g_once_init_enter (&hkl_source_type_id__volatile)) {
-                GType hkl_source_type_id;
-                hkl_source_type_id = g_boxed_type_register_static ("HklSource",
-								   (GBoxedCopyFunc) hkl_source_dup,
-								   (GBoxedFreeFunc) hkl_source_free);
-                g_once_init_leave (&hkl_source_type_id__volatile, hkl_source_type_id);
-        }
-        return hkl_source_type_id__volatile;
-}
-
 GType hkl_geometry_get_type (void) {
         static volatile gsize hkl_geometry_type_id__volatile = 0;
         if (g_once_init_enter (&hkl_geometry_type_id__volatile)) {
