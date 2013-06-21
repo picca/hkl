@@ -22,6 +22,7 @@
 #ifndef __HKL_GEOMETRY_H__
 #define __HKL_GEOMETRY_H__
 
+#include <stdio.h>
 #include <hkl/ccan/darray/darray.h>
 
 #include <hkl/hkl-parameter.h>
