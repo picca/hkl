@@ -52,6 +52,7 @@ hkl_private_h_sources = \
 	hkl-geometry-private.h \
 	hkl-interval-private.h \
 	hkl-lattice-private.h \
+	hkl-macros-private.h \
 	hkl-matrix-private.h \
 	hkl-parameter-private.h \
 	hkl-pseudoaxis-private.h \

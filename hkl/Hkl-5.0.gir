@@ -94,11 +94,6 @@ and/or use gtk-doc annotations.  -->
     <constant name="EPSILON" value="0.000001" c:type="HKL_EPSILON">
       <type name="gdouble" c:type="gdouble"/>
     </constant>
-    <constant name="EULERIAN_KAPPA_SOLUTION"
-              value="1"
-              c:type="HKL_EULERIAN_KAPPA_SOLUTION">
-      <type name="gint" c:type="gint"/>
-    </constant>
     <record name="Engine"
             c:type="HklEngine"
             glib:type-name="HklEngine"
@@ -2420,11 +2415,6 @@ add ref</doc>
           <type name="Mode" c:type="const HklMode*"/>
         </parameter>
       </parameters>
-    </function>
-    <function name="printbt" c:identifier="hkl_printbt">
-      <return-value transfer-ownership="none">
-        <type name="none" c:type="void"/>
-      </return-value>
     </function>
     <function name="sample_del_reflection"
               c:identifier="hkl_sample_del_reflection"

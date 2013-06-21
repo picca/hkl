@@ -27,6 +27,7 @@
 
 #include "hkl.h"
 #include "hkl-interval-private.h"
+#include "hkl-macros-private.h"
 #include "hkl-unit-private.h"
 
 HKL_BEGIN_DECLS

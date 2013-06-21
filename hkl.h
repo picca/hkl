@@ -74,69 +74,6 @@
 #define HKL_TAU (2. * M_PI)
 /* #define HKL_TAU 1 */
 
-/* specific part for the eulerian -> kappa conversion */
-#define HKL_EULERIAN_KAPPA_SOLUTION 1
-
-/* the assert method */
-#if !defined(NDEBUG) && !_MSC_VER
-# include <execinfo.h>
-# include <assert.h>
-# define hkl_assert(x) do{ if (!(x)) {hkl_printbt(); assert(x); } } while(0)
-#else
-# define hkl_assert(x)
-#endif
-
-/* use for the printf format methods took from glib */
-#define G_GNUC_PRINTF( format_idx, arg_idx )				\
-	__attribute__((__format__ (__printf__, format_idx, arg_idx)))
-
-/* use for the hkl_list */
-#define alloc_nr(x) (((x)+16)*3/2)
-
-/*
- * Realloc the buffer pointed at by variable 'x' so that it can hold
- * at least 'nr' entries; the number of entries currently allocated
- * is 'alloc', using the standard growing factor alloc_nr() macro.
- *
- * DO NOT USE any expression with side-effect for 'x' or 'alloc'.
- */
-#define ALLOC_GROW(x, nr, alloc)				\
-	do {							\
-		if ((nr) > alloc) {				\
-			if (alloc_nr(alloc) < (nr))		\
-				alloc = (nr);			\
-			else					\
-				alloc = alloc_nr(alloc);	\
-			x = realloc((x), alloc * sizeof(*(x))); \
-		}						\
-	} while(0)
-
-#ifndef NORETURN
-# ifdef __GNUC__
-#  define NORETURN __attribute__((__noreturn__))
-# else
-#  define NORETURN
-#  ifndef __attribute__
-#   define __attribute__(x)
-#  endif
-# endif
-#endif
-
-#define hkl_return_val_if_fail(expr, val) if (expr) { } else return val
-
-#define _darray(type) type *item; size_t size; size_t alloc
-
-HKL_BEGIN_DECLS
-
-extern void hkl_printbt(void);
-
-void *_hkl_malloc(int size, const char *error);
-
-HKL_END_DECLS
-
-/* malloc method */
-#define HKL_MALLOC(type) (type *)_hkl_malloc(sizeof(type), "Can not allocate memory for a " #type)
-
 #ifdef HKLAPI
 # undef HKLEAPI
 #endif
@@ -160,6 +97,8 @@ HKL_END_DECLS
 #else
 # define HKL_ARG_NONNULL(...)
 #endif
+
+#define _darray(type) type *item; size_t size; size_t alloc
 
 HKL_BEGIN_DECLS
 

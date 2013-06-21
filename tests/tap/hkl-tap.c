@@ -22,6 +22,7 @@
 #include <stdarg.h>
 
 #include "hkl-tap.h"
+#include "hkl/hkl-macros-private.h"
 
 int check_pseudoaxes_v(HklEngine *engine, ...)
 {

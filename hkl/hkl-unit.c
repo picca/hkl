@@ -23,6 +23,7 @@
 #include <gsl/gsl_nan.h>
 #include <gsl/gsl_sys.h> /* gsl_nan()! */
 
+#include "hkl-macros-private.h"
 #include "hkl-unit-private.h"
 
 /**

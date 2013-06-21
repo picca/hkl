@@ -28,6 +28,7 @@
 #include <stdarg.h>
 
 #include "hkl.h"
+#include "hkl-macros-private.h"
 
 HKL_BEGIN_DECLS
 

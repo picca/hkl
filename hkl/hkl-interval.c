@@ -24,6 +24,7 @@
 #include <gsl/gsl_sf_trig.h>
 
 #include "hkl-interval-private.h"
+#include "hkl-macros-private.h"
 
 /**
  * hkl_interval_dup: (skip)

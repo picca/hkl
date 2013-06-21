@@ -22,6 +22,7 @@
 #include <stdio.h>
 
 #include "hkl.h"
+#include "hkl-macros-private.h"
 
 #ifndef _MSC_VER
 void hkl_printbt(void)
