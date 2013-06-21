@@ -22,6 +22,7 @@
 #include <hkl/hkl-types.h>
 
 #include "hkl-detector-private.h"
+#include "hkl-error-private.h"
 #include "hkl-pseudoaxis-private.h"
 #include "hkl-sample-private.h"
 #include "hkl-lattice-private.h"

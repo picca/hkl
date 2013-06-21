@@ -27,6 +27,7 @@
 #include <gsl/gsl_multiroots.h>
 
 #include "hkl-pseudoaxis-auto-private.h"
+#include "hkl-error-private.h"
 
 /* #define DEBUG */
 

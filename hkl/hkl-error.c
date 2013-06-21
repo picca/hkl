@@ -29,7 +29,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <hkl/hkl-error.h>
+#include "hkl-error-private.h"
 
 /**
  * hkl_error_new_valist: (skip)
@@ -318,4 +318,15 @@ void hkl_error_propagate_prefixed (HklError **dest, HklError *src, const char *f
 		hkl_error_add_prefix (&(*dest)->message, format, ap);
 		va_end (ap);
 	}
+}
+
+/**
+ * hkl_error_message_get:
+ * @self: the this ptr
+ *
+ * Returns: the message of the HklError
+ **/
+const char *hkl_error_message_get(const HklError *self)
+{
+	return self->message;
 }

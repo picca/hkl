@@ -27,6 +27,7 @@
 
 #include "hkl-axis-private.h"
 #include "hkl-binding-private.h"
+#include "hkl-error-private.h"
 #include "hkl-factory-private.h"
 #include "hkl-pseudoaxis-private.h"
 

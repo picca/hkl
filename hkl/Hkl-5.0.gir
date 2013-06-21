@@ -515,227 +515,18 @@ do nothing.</doc>
             glib:type-name="HklError"
             glib:get-type="hkl_error_get_type"
             c:symbol-prefix="error">
-      <field name="message" writable="1">
-        <type name="utf8" c:type="char*"/>
-      </field>
-      <constructor name="new" c:identifier="hkl_error_new" introspectable="0">
-        <doc xml:whitespace="preserve">Creates a new #HklError with the given,
-and a message formatted with @format.</doc>
-        <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">a new #HklError</doc>
-          <type name="Error" c:type="HklError*"/>
-        </return-value>
-        <parameters>
-          <parameter name="format" transfer-ownership="none">
-            <doc xml:whitespace="preserve">printf()-style format for error message</doc>
-            <type name="utf8" c:type="const char*"/>
-          </parameter>
-          <parameter name="arg1" transfer-ownership="none">
-            <varargs>
-            </varargs>
-          </parameter>
-        </parameters>
-      </constructor>
-      <constructor name="new_literal"
-                   c:identifier="hkl_error_new_literal"
-                   introspectable="0">
-        <doc xml:whitespace="preserve">Creates a new #HklError; unlike hkl_error_new(), @message is not a
-printf()-style format string. Use this function if @message
-contains text you don't have control over, that could include
-printf() escape sequences.</doc>
-        <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">a new #HklError</doc>
-          <type name="Error" c:type="HklError*"/>
-        </return-value>
-        <parameters>
-          <parameter name="message" transfer-ownership="none">
-            <doc xml:whitespace="preserve">error message</doc>
-            <type name="utf8" c:type="const char*"/>
-          </parameter>
-        </parameters>
-      </constructor>
-      <constructor name="new_valist"
-                   c:identifier="hkl_error_new_valist"
-                   version="2.22"
-                   introspectable="0">
-        <doc xml:whitespace="preserve">Creates a new #HklError with the given message
-formatted with @format.</doc>
-        <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">a new #HklError</doc>
-          <type name="Error" c:type="HklError*"/>
-        </return-value>
-        <parameters>
-          <parameter name="format" transfer-ownership="none">
-            <doc xml:whitespace="preserve">printf()-style format for error message</doc>
-            <type name="utf8" c:type="const char*"/>
-          </parameter>
-          <parameter name="args" transfer-ownership="none">
-            <doc xml:whitespace="preserve">#va_list of parameters for the message format</doc>
-            <type name="va_list" c:type="va_list"/>
-          </parameter>
-        </parameters>
-      </constructor>
-      <method name="free" c:identifier="hkl_error_free" introspectable="0">
-        <doc xml:whitespace="preserve">Frees a #HklError and associated resources.</doc>
+      <method name="message_get" c:identifier="hkl_error_message_get">
         <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
+          <doc xml:whitespace="preserve">the message of the HklError</doc>
+          <type name="utf8" c:type="const char*"/>
         </return-value>
         <parameters>
-          <instance-parameter name="error" transfer-ownership="none">
-            <doc xml:whitespace="preserve">a #HklError</doc>
-            <type name="Error" c:type="HklError*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
-      <method name="new_copy"
-              c:identifier="hkl_error_new_copy"
-              introspectable="0">
-        <doc xml:whitespace="preserve">Makes a copy of @error.</doc>
-        <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">a new #HklError</doc>
-          <type name="Error" c:type="HklError*"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="error" transfer-ownership="none">
-            <doc xml:whitespace="preserve">a #HklError</doc>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the this ptr</doc>
             <type name="Error" c:type="const HklError*"/>
           </instance-parameter>
         </parameters>
       </method>
-      <function name="clear" c:identifier="hkl_error_clear" introspectable="0">
-        <doc xml:whitespace="preserve">If @err is %NULL, does nothing. If @err is non-%NULL, calls
-hkl_error_free() on *@err and sets *@err to %NULL.</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="err" transfer-ownership="none">
-            <doc xml:whitespace="preserve">a #HklError return location</doc>
-            <type name="Error" c:type="HklError**"/>
-          </parameter>
-        </parameters>
-      </function>
-      <function name="prefix"
-                c:identifier="hkl_error_prefix"
-                version="2.16"
-                introspectable="0">
-        <doc xml:whitespace="preserve">Formats a string according to @format and prefix it to an existing
-error message.  If @err is %NULL (ie: no error variable) then do
-nothing.
-
-If *@err is %NULL (ie: an error variable is present but there is no
-error condition) then also do nothing.  Whether or not it makes
-sense to take advantage of this feature is up to you.</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="err" transfer-ownership="none">
-            <doc xml:whitespace="preserve">a return location for a #HklError, or %NULL</doc>
-            <type name="Error" c:type="HklError**"/>
-          </parameter>
-          <parameter name="format" transfer-ownership="none">
-            <doc xml:whitespace="preserve">printf()-style format string</doc>
-            <type name="utf8" c:type="const char*"/>
-          </parameter>
-          <parameter name="arg2" transfer-ownership="none">
-            <varargs>
-            </varargs>
-          </parameter>
-        </parameters>
-      </function>
-      <function name="propagate"
-                c:identifier="hkl_error_propagate"
-                introspectable="0">
-        <doc xml:whitespace="preserve">If @dest is %NULL, free @src; otherwise, moves @src into *@dest.
-The error variable @dest points to must be %NULL.</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="dest" transfer-ownership="none">
-            <doc xml:whitespace="preserve">error return location</doc>
-            <type name="Error" c:type="HklError**"/>
-          </parameter>
-          <parameter name="src" transfer-ownership="none">
-            <doc xml:whitespace="preserve">error to move into the return location</doc>
-            <type name="Error" c:type="HklError*"/>
-          </parameter>
-        </parameters>
-      </function>
-      <function name="propagate_prefixed"
-                c:identifier="hkl_error_propagate_prefixed"
-                version="2.16"
-                introspectable="0">
-        <doc xml:whitespace="preserve">If @dest is %NULL, free @src; otherwise, moves @src into
-*@dest. *@dest must be %NULL.  After the move, add a prefix as with
-hkl_prefix_error().</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="dest" transfer-ownership="none">
-            <doc xml:whitespace="preserve">error return location</doc>
-            <type name="Error" c:type="HklError**"/>
-          </parameter>
-          <parameter name="src" transfer-ownership="none">
-            <doc xml:whitespace="preserve">error to move into the return location</doc>
-            <type name="Error" c:type="HklError*"/>
-          </parameter>
-          <parameter name="format" transfer-ownership="none">
-            <doc xml:whitespace="preserve">printf()-style format string</doc>
-            <type name="utf8" c:type="const char*"/>
-          </parameter>
-          <parameter name="arg3" transfer-ownership="none">
-            <varargs>
-            </varargs>
-          </parameter>
-        </parameters>
-      </function>
-      <function name="set" c:identifier="hkl_error_set" introspectable="0">
-        <doc xml:whitespace="preserve">Does nothing if @err is %NULL; if @err is non-%NULL, then *@err
-must be %NULL. A new #HklError is created and assigned to *@err.</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="err" transfer-ownership="none">
-            <doc xml:whitespace="preserve">a return location for a #HklError, or %NULL</doc>
-            <type name="Error" c:type="HklError**"/>
-          </parameter>
-          <parameter name="format" transfer-ownership="none">
-            <doc xml:whitespace="preserve">printf()-style format</doc>
-            <type name="utf8" c:type="const char*"/>
-          </parameter>
-          <parameter name="arg2" transfer-ownership="none">
-            <varargs>
-            </varargs>
-          </parameter>
-        </parameters>
-      </function>
-      <function name="set_literal"
-                c:identifier="hkl_error_set_literal"
-                version="2.18"
-                introspectable="0">
-        <doc xml:whitespace="preserve">Does nothing if @err is %NULL; if @err is non-%NULL, then *@err
-must be %NULL. A new #HklError is created and assigned to *@err.
-Unlike hkl_set_error(), @message is not a printf()-style format
-string.  Use this function if @message contains text you don't have
-control over, that could include printf() escape sequences.</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="err" transfer-ownership="none">
-            <doc xml:whitespace="preserve">a return location for a #HklError, or %NULL</doc>
-            <type name="Error" c:type="HklError**"/>
-          </parameter>
-          <parameter name="message" transfer-ownership="none">
-            <doc xml:whitespace="preserve">error message</doc>
-            <type name="utf8" c:type="const char*"/>
-          </parameter>
-        </parameters>
-      </function>
     </record>
     <record name="Factory" c:type="HklFactory" disguised="1">
       <method name="create_new_engine_list"
@@ -969,6 +760,22 @@ control over, that could include printf() escape sequences.</doc>
           </parameter>
         </parameters>
       </method>
+      <function name="fprintf"
+                c:identifier="hkl_geometry_fprintf"
+                introspectable="0">
+        <doc xml:whitespace="preserve">print into a file the #HklGeometry</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="file" transfer-ownership="none">
+            <type name="gpointer" c:type="FILE*"/>
+          </parameter>
+          <parameter name="self" transfer-ownership="none">
+            <type name="Geometry" c:type="const HklGeometry*"/>
+          </parameter>
+        </parameters>
+      </function>
     </record>
     <record name="GeometryList"
             c:type="HklGeometryList"
@@ -2508,150 +2315,6 @@ add ref</doc>
         </parameter>
       </parameters>
     </function>
-    <function name="error_clear"
-              c:identifier="hkl_error_clear"
-              moved-to="Error.clear"
-              introspectable="0">
-      <doc xml:whitespace="preserve">If @err is %NULL, does nothing. If @err is non-%NULL, calls
-hkl_error_free() on *@err and sets *@err to %NULL.</doc>
-      <return-value transfer-ownership="none">
-        <type name="none" c:type="void"/>
-      </return-value>
-      <parameters>
-        <parameter name="err" transfer-ownership="none">
-          <doc xml:whitespace="preserve">a #HklError return location</doc>
-          <type name="Error" c:type="HklError**"/>
-        </parameter>
-      </parameters>
-    </function>
-    <function name="error_prefix"
-              c:identifier="hkl_error_prefix"
-              moved-to="Error.prefix"
-              version="2.16"
-              introspectable="0">
-      <doc xml:whitespace="preserve">Formats a string according to @format and prefix it to an existing
-error message.  If @err is %NULL (ie: no error variable) then do
-nothing.
-
-If *@err is %NULL (ie: an error variable is present but there is no
-error condition) then also do nothing.  Whether or not it makes
-sense to take advantage of this feature is up to you.</doc>
-      <return-value transfer-ownership="none">
-        <type name="none" c:type="void"/>
-      </return-value>
-      <parameters>
-        <parameter name="err" transfer-ownership="none">
-          <doc xml:whitespace="preserve">a return location for a #HklError, or %NULL</doc>
-          <type name="Error" c:type="HklError**"/>
-        </parameter>
-        <parameter name="format" transfer-ownership="none">
-          <doc xml:whitespace="preserve">printf()-style format string</doc>
-          <type name="utf8" c:type="const char*"/>
-        </parameter>
-        <parameter name="arg2" transfer-ownership="none">
-          <varargs>
-          </varargs>
-        </parameter>
-      </parameters>
-    </function>
-    <function name="error_propagate"
-              c:identifier="hkl_error_propagate"
-              moved-to="Error.propagate"
-              introspectable="0">
-      <doc xml:whitespace="preserve">If @dest is %NULL, free @src; otherwise, moves @src into *@dest.
-The error variable @dest points to must be %NULL.</doc>
-      <return-value transfer-ownership="none">
-        <type name="none" c:type="void"/>
-      </return-value>
-      <parameters>
-        <parameter name="dest" transfer-ownership="none">
-          <doc xml:whitespace="preserve">error return location</doc>
-          <type name="Error" c:type="HklError**"/>
-        </parameter>
-        <parameter name="src" transfer-ownership="none">
-          <doc xml:whitespace="preserve">error to move into the return location</doc>
-          <type name="Error" c:type="HklError*"/>
-        </parameter>
-      </parameters>
-    </function>
-    <function name="error_propagate_prefixed"
-              c:identifier="hkl_error_propagate_prefixed"
-              moved-to="Error.propagate_prefixed"
-              version="2.16"
-              introspectable="0">
-      <doc xml:whitespace="preserve">If @dest is %NULL, free @src; otherwise, moves @src into
-*@dest. *@dest must be %NULL.  After the move, add a prefix as with
-hkl_prefix_error().</doc>
-      <return-value transfer-ownership="none">
-        <type name="none" c:type="void"/>
-      </return-value>
-      <parameters>
-        <parameter name="dest" transfer-ownership="none">
-          <doc xml:whitespace="preserve">error return location</doc>
-          <type name="Error" c:type="HklError**"/>
-        </parameter>
-        <parameter name="src" transfer-ownership="none">
-          <doc xml:whitespace="preserve">error to move into the return location</doc>
-          <type name="Error" c:type="HklError*"/>
-        </parameter>
-        <parameter name="format" transfer-ownership="none">
-          <doc xml:whitespace="preserve">printf()-style format string</doc>
-          <type name="utf8" c:type="const char*"/>
-        </parameter>
-        <parameter name="arg3" transfer-ownership="none">
-          <varargs>
-          </varargs>
-        </parameter>
-      </parameters>
-    </function>
-    <function name="error_set"
-              c:identifier="hkl_error_set"
-              moved-to="Error.set"
-              introspectable="0">
-      <doc xml:whitespace="preserve">Does nothing if @err is %NULL; if @err is non-%NULL, then *@err
-must be %NULL. A new #HklError is created and assigned to *@err.</doc>
-      <return-value transfer-ownership="none">
-        <type name="none" c:type="void"/>
-      </return-value>
-      <parameters>
-        <parameter name="err" transfer-ownership="none">
-          <doc xml:whitespace="preserve">a return location for a #HklError, or %NULL</doc>
-          <type name="Error" c:type="HklError**"/>
-        </parameter>
-        <parameter name="format" transfer-ownership="none">
-          <doc xml:whitespace="preserve">printf()-style format</doc>
-          <type name="utf8" c:type="const char*"/>
-        </parameter>
-        <parameter name="arg2" transfer-ownership="none">
-          <varargs>
-          </varargs>
-        </parameter>
-      </parameters>
-    </function>
-    <function name="error_set_literal"
-              c:identifier="hkl_error_set_literal"
-              moved-to="Error.set_literal"
-              version="2.18"
-              introspectable="0">
-      <doc xml:whitespace="preserve">Does nothing if @err is %NULL; if @err is non-%NULL, then *@err
-must be %NULL. A new #HklError is created and assigned to *@err.
-Unlike hkl_set_error(), @message is not a printf()-style format
-string.  Use this function if @message contains text you don't have
-control over, that could include printf() escape sequences.</doc>
-      <return-value transfer-ownership="none">
-        <type name="none" c:type="void"/>
-      </return-value>
-      <parameters>
-        <parameter name="err" transfer-ownership="none">
-          <doc xml:whitespace="preserve">a return location for a #HklError, or %NULL</doc>
-          <type name="Error" c:type="HklError**"/>
-        </parameter>
-        <parameter name="message" transfer-ownership="none">
-          <doc xml:whitespace="preserve">error message</doc>
-          <type name="utf8" c:type="const char*"/>
-        </parameter>
-      </parameters>
-    </function>
     <function name="factories" c:identifier="hkl_factories">
       <doc xml:whitespace="preserve">return all the Hkl factories objects as a dictionnary</doc>
       <return-value transfer-ownership="container">
@@ -2660,6 +2323,23 @@ control over, that could include printf() escape sequences.</doc>
           <type name="Factory"/>
         </type>
       </return-value>
+    </function>
+    <function name="geometry_fprintf"
+              c:identifier="hkl_geometry_fprintf"
+              moved-to="Geometry.fprintf"
+              introspectable="0">
+      <doc xml:whitespace="preserve">print into a file the #HklGeometry</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="file" transfer-ownership="none">
+          <type name="gpointer" c:type="FILE*"/>
+        </parameter>
+        <parameter name="self" transfer-ownership="none">
+          <type name="Geometry" c:type="const HklGeometry*"/>
+        </parameter>
+      </parameters>
     </function>
     <function name="mode_fprintf"
               c:identifier="hkl_mode_fprintf"

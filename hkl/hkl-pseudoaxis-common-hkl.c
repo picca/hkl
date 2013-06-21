@@ -26,6 +26,7 @@
 #include <hkl/ccan/array_size/array_size.h>
 
 #include "hkl-axis-private.h"
+#include "hkl-error-private.h"
 #include "hkl-parameter-private.h"
 #include "hkl-pseudoaxis-auto-private.h"
 #include "hkl-pseudoaxis-common-hkl-private.h"

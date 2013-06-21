@@ -25,47 +25,13 @@
 #ifndef __HKL_ERROR_H__
 #define __HKL_ERROR_H__
 
-#include <stdarg.h>
 #include <hkl/hkl-macros.h>
 
 HKL_BEGIN_DECLS
 
 typedef struct _HklError HklError;
 
-struct _HklError /*<skip>*/
-{
-	char *message;
-};
-
-HklError* hkl_error_new (const char *format, ...) G_GNUC_PRINTF (1, 2);
-
-HklError* hkl_error_new_literal (const char *message);
-HklError* hkl_error_new_valist (const char *format, va_list args);
-
-void hkl_error_free (HklError *error);
-
-HklError* hkl_error_new_copy (const HklError *error);
-
-/* if (err) *err = hkl_error_new(domain, code, format, ...), also has
- * some sanity checks.
- */
-void hkl_error_set (HklError **err, const char *format, ...) G_GNUC_PRINTF (2, 3);
-
-void hkl_error_set_literal (HklError **err, const char *message);
-
-/* if (dest) *dest = src; also has some sanity checks.
- */
-void hkl_error_propagate (HklError **dest, HklError *src);
-
-/* if (err && *err) { hkl_error_free(*err); *err = NULL; } */
-void hkl_error_clear (HklError **err);
-
-/* if (err) prefix the formatted string to the ->message */
-void hkl_error_prefix (HklError **err, const char *format, ...) G_GNUC_PRINTF (2, 3);
-
-/* hkl_propagate_error then hkl_error_prefix on dest */
-void hkl_error_propagate_prefixed (HklError **dest, HklError *src,
-				   const char *format, ...) G_GNUC_PRINTF (3, 4);
+HKLAPI const char *hkl_error_message_get(const HklError *self) HKL_ARG_NONNULL(1);
 
 HKL_END_DECLS
 

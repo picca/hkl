@@ -26,6 +26,7 @@
 
 #include "hkl/ccan/container_of/container_of.h"
 #include "hkl-detector-private.h"
+#include "hkl-error-private.h"
 #include "hkl-pseudoaxis-private.h"
 
 HKL_BEGIN_DECLS

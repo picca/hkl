@@ -945,7 +945,7 @@ void HKLWindow::updateStatusBar(const HklError *error)
 {
 	LOG;
 
-	_statusBar->push(error->message);
+	_statusBar->push(hkl_error_message_get(error));
 }
 
 void HKLWindow::updateCrystalModel(HklSample * sample)

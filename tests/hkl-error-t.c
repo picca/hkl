@@ -22,6 +22,8 @@
 #include <hkl.h>
 #include <tap/basic.h>
 
+#include "hkl-error-private.h"
+
 static void new(void)
 {
 	HklError *error;
