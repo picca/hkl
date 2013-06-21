@@ -19,8 +19,8 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#ifndef __HKL_VECTOR_H__
-#define __HKL_VECTOR_H__
+#ifndef __HKL_VECTOR_PRIVATE_H__
+#define __HKL_VECTOR_PRIVATE_H__
 
 #include <stdio.h>
 #include <math.h>

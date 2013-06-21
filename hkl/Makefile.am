@@ -53,8 +53,7 @@ hkl_public_h_sources = \
 	hkl-macros.h \
 	hkl-matrix.h \
 	hkl-pseudoaxis.h \
-	hkl-sample.h \
-	hkl-vector.h
+	hkl-sample.h
 
 hkl_private_h_sources = \
 	hkl-axis-private.h \
@@ -81,7 +80,8 @@ hkl_private_h_sources = \
 	hkl-quaternion-private.h \
 	hkl-sample-private.h \
 	hkl-source-private.h \
-	hkl-unit-private.h
+	hkl-unit-private.h \
+	hkl-vector-private.h
 
 lib_LTLIBRARIES = libhkl.la
 libhkl_la_SOURCES = $(hkl_c_sources) $(hkl_private_h_sources)
@@ -114,7 +114,6 @@ hklinclude_HEADERS += hkl-types.h
 
 introspection_files = \
 	hkl-error.h \
-	hkl-vector.h \
 	hkl-matrix.h \
 	hkl-parameter.h \
 	hkl-geometry.h \
@@ -127,7 +126,6 @@ introspection_files = \
 	hkl-binding-private.h \
 	hkl-types.h \
 	hkl-error.c \
-	hkl-vector.c \
 	hkl-matrix.c \
 	hkl-parameter.c \
 	hkl-axis.c \

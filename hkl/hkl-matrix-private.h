@@ -25,7 +25,7 @@
 #include <stdio.h>
 
 #include "hkl-matrix.h"
-#include "hkl-vector.h"
+#include "hkl-vector-private.h"
 
 HKL_BEGIN_DECLS
 

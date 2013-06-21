@@ -19,14 +19,15 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#ifndef __HKL_QUATERNION_H__
-#define __HKL_QUATERNION_H__
+#ifndef __HKL_QUATERNION_PRIVATE_H__
+#define __HKL_QUATERNION_PRIVATE_H__
 
 #include <stdio.h>
 #include <math.h>
-#include <hkl/hkl-macros.h>
-#include <hkl/hkl-vector.h>
-#include <hkl/hkl-matrix.h>
+
+#include "hkl-macros.h"
+#include "hkl-vector-private.h"
+#include "hkl-matrix.h"
 
 HKL_BEGIN_DECLS
 

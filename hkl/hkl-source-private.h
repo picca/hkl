@@ -22,7 +22,7 @@
 #ifndef __HKL_SOURCE_PRIVATE_H__
 #define __HKL_SOURCE_PRIVATE_H__
 
-#include "hkl-vector.h"
+#include "hkl-vector-private.h"
 
 HKL_BEGIN_DECLS
 

@@ -24,7 +24,7 @@
 #include <string.h>
 
 #include "hkl-macros.h"
-#include "hkl-vector.h"
+#include "hkl-vector-private.h"
 #include "hkl-matrix-private.h"
 #include "hkl-quaternion-private.h"
 

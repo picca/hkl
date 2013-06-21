@@ -24,7 +24,7 @@
 #include <string.h>
 
 #include "hkl-matrix-private.h"
-#include "hkl-vector.h"
+#include "hkl-vector-private.h"
 
 /**
  * hkl_matrix_new: (skip)

@@ -24,7 +24,7 @@
 
 #include <gsl/gsl_math.h>
 
-#include "hkl-vector.h"
+#include "hkl-vector-private.h"
 #include "hkl-matrix-private.h"
 #include "hkl-quaternion-private.h"
 
