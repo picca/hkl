@@ -22,7 +22,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <hkl/hkl-parameter-private.h>
+#include "hkl-parameter-private.h"
 
 /****************/
 /* HklParameter */

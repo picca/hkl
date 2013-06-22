@@ -22,7 +22,8 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include <hkl/hkl-source.h>
+#include "hkl-macros-private.h"
+#include "hkl-source-private.h"
 
 /**
  * hkl_source_dup:

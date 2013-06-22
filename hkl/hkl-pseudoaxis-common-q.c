@@ -23,7 +23,7 @@
 #include <gsl/gsl_sf_trig.h>
 
 #include <string.h>
-#include <hkl/ccan/array_size/array_size.h>
+#include "hkl/ccan/array_size/array_size.h"
 #include <gsl/gsl_sf_trig.h>
 
 #include "hkl-parameter-private.h"

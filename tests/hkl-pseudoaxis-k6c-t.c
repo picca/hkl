@@ -19,7 +19,7 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <hkl.h>
+#include "hkl.h"
 #include <tap/basic.h>
 #include <tap/hkl-tap.h>
 

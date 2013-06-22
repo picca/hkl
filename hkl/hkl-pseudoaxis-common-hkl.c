@@ -23,7 +23,7 @@
 #include <string.h>
 #include <gsl/gsl_sf_trig.h>
 #include <gsl/gsl_multiroots.h>
-#include <hkl/ccan/array_size/array_size.h>
+#include "hkl/ccan/array_size/array_size.h"
 
 #include "hkl-axis-private.h"
 #include "hkl-error-private.h"

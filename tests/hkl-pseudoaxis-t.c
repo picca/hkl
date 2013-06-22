@@ -21,7 +21,7 @@
  */
 #include <alloca.h>
 #include <string.h>
-#include <hkl.h>
+#include "hkl.h"
 #include <tap/basic.h>
 
 #define with_log 1

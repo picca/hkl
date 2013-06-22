@@ -24,7 +24,7 @@
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_vector.h>
 
-#include <hkl/ccan/array_size/array_size.h>
+#include "hkl/ccan/array_size/array_size.h"
 
 #include "hkl-parameter-private.h"
 #include "hkl-pseudoaxis-auto-private.h"

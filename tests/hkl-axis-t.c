@@ -19,11 +19,11 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <hkl.h>
+#include "hkl.h"
 #include <tap/basic.h>
 #include <tap/float.h>
 
-#include <hkl/ccan/container_of/container_of.h>
+#include "hkl/ccan/container_of/container_of.h"
 #include "hkl-axis-private.h"
 
 static void new(void)

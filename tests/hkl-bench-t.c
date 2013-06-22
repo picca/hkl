@@ -22,7 +22,7 @@
 #include <stdio.h>
 #include <sys/time.h>
 #include <tap/basic.h>
-#include <hkl.h>
+#include "hkl.h"
 
 static void hkl_test_bench_run_real(HklEngine *engine, HklGeometry *geometry, size_t n)
 {
