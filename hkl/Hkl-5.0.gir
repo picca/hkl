@@ -1191,12 +1191,6 @@ should be optimized</doc>
         </parameters>
       </method>
     </record>
-    <constant name="MAJOR" value="2" c:type="HKL_MAJOR">
-      <type name="gint" c:type="gint"/>
-    </constant>
-    <constant name="MINOR" value="3" c:type="HKL_MINOR">
-      <type name="gint" c:type="gint"/>
-    </constant>
     <record name="Matrix"
             c:type="HklMatrix"
             glib:type-name="HklMatrix"
@@ -1428,21 +1422,16 @@ should be optimized</doc>
         </parameters>
       </function>
     </record>
-    <constant name="PATCH" value="0" c:type="HKL_PATCH">
-      <type name="gint" c:type="gint"/>
-    </constant>
     <record name="Parameter"
             c:type="HklParameter"
             glib:type-name="HklParameter"
             glib:get-type="hkl_parameter_get_type"
             c:symbol-prefix="parameter">
-      <method name="fit_get"
-              c:identifier="hkl_parameter_fit_get"
-              introspectable="0">
+      <method name="fit_get" c:identifier="hkl_parameter_fit_get">
         <doc xml:whitespace="preserve">Retuen value: the #HklParameter fit value, True is the parameter can be fitted, not otherwise
 @todo test</doc>
-        <return-value>
-          <type c:type="bool"/>
+        <return-value transfer-ownership="none">
+          <type name="gint" c:type="int"/>
         </return-value>
         <parameters>
           <instance-parameter name="self" transfer-ownership="none">
@@ -1451,9 +1440,7 @@ should be optimized</doc>
           </instance-parameter>
         </parameters>
       </method>
-      <method name="fit_set"
-              c:identifier="hkl_parameter_fit_set"
-              introspectable="0">
+      <method name="fit_set" c:identifier="hkl_parameter_fit_set">
         <doc xml:whitespace="preserve">set the #HklParameter fit value, True is the parameter can be fitted, not otherwise
 @todo test</doc>
         <return-value transfer-ownership="none">
@@ -1466,7 +1453,7 @@ should be optimized</doc>
           </instance-parameter>
           <parameter name="fit" transfer-ownership="none">
             <doc xml:whitespace="preserve">the fit value to set</doc>
-            <type c:type="bool"/>
+            <type name="gint" c:type="int"/>
           </parameter>
         </parameters>
       </method>
@@ -1614,9 +1601,9 @@ should be optimized</doc>
               c:identifier="hkl_parameter_value_set"
               introspectable="0">
         <doc xml:whitespace="preserve">set the value of an #HklParameter</doc>
-        <return-value>
+        <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">true if succeed or false otherwise</doc>
-          <type c:type="bool"/>
+          <type name="gint" c:type="int"/>
         </return-value>
         <parameters>
           <instance-parameter name="self" transfer-ownership="none">
@@ -1651,9 +1638,9 @@ should be optimized</doc>
               introspectable="0">
         <doc xml:whitespace="preserve">set the value of the parameter express in the punit #HklUnit
 @todo test</doc>
-        <return-value>
+        <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">true if succeed or false otherwise</doc>
-          <type c:type="bool"/>
+          <type name="gint" c:type="int"/>
         </return-value>
         <parameters>
           <instance-parameter name="self" transfer-ownership="none">
@@ -2215,8 +2202,8 @@ add ref</doc>
               c:identifier="hkl_sample_reflection_flag_get"
               introspectable="0">
         <doc xml:whitespace="preserve">get the flag of the reflection</doc>
-        <return-value>
-          <type c:type="bool"/>
+        <return-value transfer-ownership="none">
+          <type name="gint" c:type="int"/>
         </return-value>
         <parameters>
           <instance-parameter name="self" transfer-ownership="none">
@@ -2236,7 +2223,7 @@ add ref</doc>
             <type name="SampleReflection" c:type="HklSampleReflection*"/>
           </instance-parameter>
           <parameter name="flag" transfer-ownership="none">
-            <type c:type="bool"/>
+            <type name="gint" c:type="int"/>
           </parameter>
         </parameters>
       </method>
@@ -2328,9 +2315,6 @@ add ref</doc>
                 glib:type-name="HklUnit"
                 glib:get-type="hkl_unit_get_type">
     </glib:boxed>
-    <constant name="VERSION" value="0" c:type="HKL_VERSION">
-      <type name="gint" c:type="gint"/>
-    </constant>
     <glib:boxed glib:name="Vector"
                 c:symbol-prefix="vector"
                 glib:type-name="HklVector"

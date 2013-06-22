@@ -177,7 +177,7 @@ inline double hkl_parameter_value_get_closest(const HklParameter *self,
  *
  * Return value: true if succeed or false otherwise
  **/
-inline bool hkl_parameter_value_set(HklParameter *self, double value,
+inline int hkl_parameter_value_set(HklParameter *self, double value,
 				    HklError **error)
 {
 	return self->ops->set_value(self, value, error);
@@ -194,7 +194,7 @@ inline bool hkl_parameter_value_set(HklParameter *self, double value,
  *
  * Return value: true if succeed or false otherwise
  **/
-inline bool hkl_parameter_value_unit_set(HklParameter *self, double value,
+inline int hkl_parameter_value_unit_set(HklParameter *self, double value,
 					 HklError **error)
 {
 	return self->ops->set_value_unit(self, value, error);
@@ -277,7 +277,7 @@ void hkl_parameter_min_max_unit_set(HklParameter *self, double min, double max)
  * Retuen value: the #HklParameter fit value, True is the parameter can be fitted, not otherwise
  * @todo test
  **/
-bool hkl_parameter_fit_get(const HklParameter *self)
+int hkl_parameter_fit_get(const HklParameter *self)
 {
 	return self->fit;
 }
@@ -290,7 +290,7 @@ bool hkl_parameter_fit_get(const HklParameter *self)
  * set the #HklParameter fit value, True is the parameter can be fitted, not otherwise
  * @todo test
  **/
-void hkl_parameter_fit_set(HklParameter *self, bool fit)
+void hkl_parameter_fit_set(HklParameter *self, int fit)
 {
 	self->fit = fit;
 }

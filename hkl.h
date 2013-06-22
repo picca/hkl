@@ -24,7 +24,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <gsl/gsl_math.h>
 
 #include <hkl/ccan/darray/darray.h>
@@ -148,13 +147,13 @@ HKLAPI const char *hkl_parameter_name_get(const HklParameter *self) HKL_ARG_NONN
 
 HKLAPI double hkl_parameter_value_get(const HklParameter *self) HKL_ARG_NONNULL(1);
 
-HKLAPI bool hkl_parameter_value_set(HklParameter *self, double value,
-				    HklError **error) HKL_ARG_NONNULL(1);
+HKLAPI int hkl_parameter_value_set(HklParameter *self, double value,
+				   HklError **error) HKL_ARG_NONNULL(1);
 
 HKLAPI double hkl_parameter_value_unit_get(const HklParameter *self) HKL_ARG_NONNULL(1);
 
-HKLAPI bool hkl_parameter_value_unit_set(HklParameter *self, double value,
-					 HklError **error) HKL_ARG_NONNULL(1);
+HKLAPI int hkl_parameter_value_unit_set(HklParameter *self, double value,
+					HklError **error) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_parameter_min_max_get(const HklParameter *self, double *min, double *max) HKL_ARG_NONNULL(1, 2, 3);
 
@@ -164,9 +163,9 @@ HKLAPI void hkl_parameter_min_max_unit_get(const HklParameter *self, double *min
 
 HKLAPI void hkl_parameter_min_max_unit_set(HklParameter *self, double min, double max) HKL_ARG_NONNULL(1);
 
-HKLAPI bool hkl_parameter_fit_get(const HklParameter *self) HKL_ARG_NONNULL(1);
+HKLAPI int hkl_parameter_fit_get(const HklParameter *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_parameter_fit_set(HklParameter *self, bool fit) HKL_ARG_NONNULL(1);
+HKLAPI void hkl_parameter_fit_set(HklParameter *self, int fit) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_parameter_randomize(HklParameter *self) HKL_ARG_NONNULL(1);
 
@@ -366,9 +365,9 @@ HKLAPI void hkl_sample_reflection_hkl_get(const HklSampleReflection *self,
 HKLAPI void hkl_sample_reflection_hkl_set(HklSampleReflection *self,
 					  double h, double k, double l) HKL_ARG_NONNULL(1);
 
-HKLAPI bool hkl_sample_reflection_flag_get(const HklSampleReflection *self) HKL_ARG_NONNULL(1);
+HKLAPI int hkl_sample_reflection_flag_get(const HklSampleReflection *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_sample_reflection_flag_set(HklSampleReflection *self, bool flag) HKL_ARG_NONNULL(1);
+HKLAPI void hkl_sample_reflection_flag_set(HklSampleReflection *self, int flag) HKL_ARG_NONNULL(1);
 
 HKLAPI HklGeometry *hkl_sample_reflection_geometry_get(HklSampleReflection *self) HKL_ARG_NONNULL(1);
 

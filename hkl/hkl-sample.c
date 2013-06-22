@@ -857,7 +857,7 @@ void hkl_sample_reflection_hkl_set(HklSampleReflection *self, double h, double k
  *
  * get the flag of the reflection
  **/
-bool hkl_sample_reflection_flag_get(const HklSampleReflection *self)
+int hkl_sample_reflection_flag_get(const HklSampleReflection *self)
 {
 	return self->flag;
 }
@@ -869,7 +869,7 @@ bool hkl_sample_reflection_flag_get(const HklSampleReflection *self)
  *
  * set the flag of the reglection
  **/
-void hkl_sample_reflection_flag_set(HklSampleReflection *self, bool flag)
+void hkl_sample_reflection_flag_set(HklSampleReflection *self, int flag)
 {
 	self->flag = flag;
 }
