@@ -55,13 +55,6 @@
 # define HKL_DEPRECATED_FOR(f) HKL_DEPRECATED
 #endif
 
-/* common part */
-#define HKL_MAJOR 2
-#define HKL_MINOR 3
-#define HKL_PATCH 0
-
-#define HKL_VERSION (HKL_MAJOR * 10000 + HKL_MINOR * 100 + HKL_PATCH)
-
 #define HKL_TRUE 1
 #define HKL_FALSE 0
 
