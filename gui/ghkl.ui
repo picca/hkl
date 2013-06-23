@@ -1672,7 +1672,7 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkCheckButton" id="checkbutton_Ux">
+                                  <object class="GtkCheckButton" id="checkbutton_ux">
                                     <property name="label" translatable="yes">Ux</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -1688,7 +1688,7 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkCheckButton" id="checkbutton_Uy">
+                                  <object class="GtkCheckButton" id="checkbutton_uy">
                                     <property name="label" translatable="yes">Uy</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -1704,7 +1704,7 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkCheckButton" id="checkbutton_Uz">
+                                  <object class="GtkCheckButton" id="checkbutton_uz">
                                     <property name="label" translatable="yes">Uz</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>

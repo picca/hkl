@@ -313,15 +313,15 @@ HKLAPI const HklLattice *hkl_sample_lattice_get(HklSample *self) HKL_ARG_NONNULL
 
 HKLAPI void hkl_sample_lattice_set(HklSample *self, const HklLattice *lattice) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI HklParameter *hkl_sample_ux_get(const HklSample *self) HKL_ARG_NONNULL(1);
+HKLAPI const HklParameter *hkl_sample_ux_get(const HklSample *self) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_sample_ux_set(HklSample *self, const HklParameter *ux) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI HklParameter *hkl_sample_uy_get(const HklSample *self) HKL_ARG_NONNULL(1);
+HKLAPI const HklParameter *hkl_sample_uy_get(const HklSample *self) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_sample_uy_set(HklSample *self, const HklParameter *uy) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI HklParameter *hkl_sample_uz_get(const HklSample *self) HKL_ARG_NONNULL(1);
+HKLAPI const HklParameter *hkl_sample_uz_get(const HklSample *self) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_sample_uz_set(HklSample *self, const HklParameter *uz) HKL_ARG_NONNULL(1, 2);
 

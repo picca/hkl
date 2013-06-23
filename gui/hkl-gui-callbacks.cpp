@@ -283,35 +283,21 @@ ON_CHECKBUTTON_LATTICE_PARAMETER_TOGGLE(alpha, _sample);
 ON_CHECKBUTTON_LATTICE_PARAMETER_TOGGLE(beta, _sample);
 ON_CHECKBUTTON_LATTICE_PARAMETER_TOGGLE(gamma, _sample);
 
-void HKLWindow::on_checkbutton_Ux_toggled(void)
-{
-	LOG;
-
-	if(_sample){
-		HklParameter *ux = hkl_sample_ux_get(_sample);
-		hkl_parameter_fit_set(ux, _checkbutton_Ux->get_active());
+#define ON_CHECKBUTTON_UXUYUZ_TOGGLED(p, sample)			\
+	void HKLWindow::on_checkbutton_##p##_toggled(void)			\
+	{								\
+		LOG;							\
+		if(_sample){						\
+			HklParameter *parameter = hkl_parameter_new_copy(hkl_sample_##p##_get((sample))); \
+			hkl_parameter_fit_set(parameter, _checkbutton_##p->get_active()); \
+			hkl_sample_##p##_set(sample, parameter);	\
+			hkl_parameter_free(parameter);			\
+		}							\
 	}
-}
 
-void HKLWindow::on_checkbutton_Uy_toggled(void)
-{
-	LOG;
-
-	if(_sample){
-		HklParameter *uy = hkl_sample_uy_get(_sample);
-		hkl_parameter_fit_set(uy, _checkbutton_Uy->get_active());
-	}
-}
-
-void HKLWindow::on_checkbutton_Uz_toggled(void)
-{
-	LOG;
-
-	if(_sample){
-		HklParameter *uz = hkl_sample_uz_get(_sample);
-		hkl_parameter_fit_set(uz, _checkbutton_Uz->get_active());
-	}
-}
+ON_CHECKBUTTON_UXUYUZ_TOGGLED(ux, _sample)
+ON_CHECKBUTTON_UXUYUZ_TOGGLED(uy, _sample)
+ON_CHECKBUTTON_UXUYUZ_TOGGLED(uz, _sample)
 
 void HKLWindow::on_cell_TreeView_axes_read_edited(Glib::ustring const & spath,
 						  Glib::ustring const & newText)

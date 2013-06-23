@@ -2113,9 +2113,9 @@ add ref</doc>
       <method name="ux_get"
               c:identifier="hkl_sample_ux_get"
               introspectable="0">
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">the ux part of the U matrix.</doc>
-          <type name="Parameter" c:type="HklParameter*"/>
+          <type name="Parameter" c:type="const HklParameter*"/>
         </return-value>
         <parameters>
           <instance-parameter name="self" transfer-ownership="none">
@@ -2145,9 +2145,9 @@ add ref</doc>
       <method name="uy_get"
               c:identifier="hkl_sample_uy_get"
               introspectable="0">
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">the uy part of the U matrix.</doc>
-          <type name="Parameter" c:type="HklParameter*"/>
+          <type name="Parameter" c:type="const HklParameter*"/>
         </return-value>
         <parameters>
           <instance-parameter name="self" transfer-ownership="none">
@@ -2177,9 +2177,9 @@ add ref</doc>
       <method name="uz_get"
               c:identifier="hkl_sample_uz_get"
               introspectable="0">
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">the uz part of the U matrix.</doc>
-          <type name="Parameter" c:type="HklParameter*"/>
+          <type name="Parameter" c:type="const HklParameter*"/>
         </return-value>
         <parameters>
           <instance-parameter name="self" transfer-ownership="none">

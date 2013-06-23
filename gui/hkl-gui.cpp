@@ -162,9 +162,9 @@ void HKLWindow::get_widgets_and_objects_from_ui(void)
 	_refGlade->get_widget("checkbutton_alpha", _checkbutton_alpha);
 	_refGlade->get_widget("checkbutton_beta", _checkbutton_beta);
 	_refGlade->get_widget("checkbutton_gamma", _checkbutton_gamma);
-	_refGlade->get_widget("checkbutton_Ux", _checkbutton_Ux);
-	_refGlade->get_widget("checkbutton_Uy", _checkbutton_Uy);
-	_refGlade->get_widget("checkbutton_Uz", _checkbutton_Uz);
+	_refGlade->get_widget("checkbutton_ux", _checkbutton_ux);
+	_refGlade->get_widget("checkbutton_uy", _checkbutton_uy);
+	_refGlade->get_widget("checkbutton_uz", _checkbutton_uz);
 	_refGlade->get_widget("treeview_reflections", _treeViewReflections);
 	_refGlade->get_widget("treeview_crystals", _treeViewCrystals);
 	_refGlade->get_widget("treeview_axes", _TreeView_axes);
@@ -255,12 +255,12 @@ void HKLWindow::connect_all_signals(void)
 		mem_fun(*this, &HKLWindow::on_checkbutton_beta_toggled));
 	_checkbutton_gamma->signal_toggled().connect(
 		mem_fun(*this, &HKLWindow::on_checkbutton_gamma_toggled));
-	_checkbutton_Ux->signal_toggled().connect(
-		mem_fun(*this, &HKLWindow::on_checkbutton_Ux_toggled));
-	_checkbutton_Uy->signal_toggled().connect(
-		mem_fun(*this, &HKLWindow::on_checkbutton_Uy_toggled));
-	_checkbutton_Uz->signal_toggled().connect(
-		mem_fun(*this, &HKLWindow::on_checkbutton_Uz_toggled));
+	_checkbutton_ux->signal_toggled().connect(
+		mem_fun(*this, &HKLWindow::on_checkbutton_ux_toggled));
+	_checkbutton_uy->signal_toggled().connect(
+		mem_fun(*this, &HKLWindow::on_checkbutton_uy_toggled));
+	_checkbutton_uz->signal_toggled().connect(
+		mem_fun(*this, &HKLWindow::on_checkbutton_uz_toggled));
 
 	_treeViewReflections->signal_key_press_event().connect(
 		mem_fun(*this, &HKLWindow::on_treeViewReflections_key_press_event));
@@ -845,13 +845,13 @@ void HKLWindow::updateUxUyUz(void)
 		_spinbutton_uz->set_value(
 			hkl_parameter_value_unit_get(
 				hkl_sample_uz_get(_sample)));
-		_checkbutton_Ux->set_active(
+		_checkbutton_ux->set_active(
 			hkl_parameter_fit_get(
 				hkl_sample_ux_get(_sample)));
-		_checkbutton_Uy->set_active(
+		_checkbutton_uy->set_active(
 			hkl_parameter_fit_get(
 				hkl_sample_uy_get(_sample)));
-		_checkbutton_Uz->set_active(
+		_checkbutton_uz->set_active(
 			hkl_parameter_fit_get(
 				hkl_sample_uz_get(_sample)));
 	}
