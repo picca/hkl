@@ -45,15 +45,14 @@ static void solution(void)
 
 	/* set up the sample */
 	sample = hkl_sample_new("test");
-	lattice = hkl_sample_lattice_get(sample);
-	hkl_lattice_set(lattice,
-			5.432, 5.432, 5.432,
-			90 * HKL_DEGTORAD,
-			90 * HKL_DEGTORAD,
-			90 * HKL_DEGTORAD);
+	lattice = hkl_lattice_new(5.432, 5.432, 5.432,
+				  90 * HKL_DEGTORAD,
+				  90 * HKL_DEGTORAD,
+				  90 * HKL_DEGTORAD);
 	hkl_sample_lattice_set(sample, lattice);
 	U = hkl_matrix_new_euler(-90*HKL_DEGTORAD, 0, 0);
 	hkl_sample_U_set(sample, U);
+	hkl_lattice_free(lattice);
 	hkl_matrix_free(U);
 
 	/* use a 0D detector */

@@ -184,12 +184,27 @@ class TestAPI(unittest.TestCase):
         self.assertTrue(sample.name_get() == "toto")
 
         # set the lattice parameters
-        lattice = sample.lattice_get()
-        lattice.set(1.54, 1.54, 1.54,
-                    math.radians(90.),
-                    math.radians(90.),
-                    math.radians(90.))
+        lattice = Hkl.Lattice.new(1.54, 1.54, 1.54,
+                                  math.radians(90.),
+                                  math.radians(90.),
+                                  math.radians(90.))
         sample.lattice_set(lattice)
+
+        # change the lattice parameter by expanding the tuple from
+        # the get method. the lattice should not change.
+        lattice.set(*lattice.get())
+
+        # this new lattice is identical to the one from the sample
+        self.assertTrue(lattice.get() == sample.lattice_get().get())
+
+        # now change the lattice parameter
+        lattice.set(1, 2, 3,
+                    math.radians(90),
+                    math.radians(90),
+                    math.radians(90))
+
+        # this new lattice is different from the one in the sample
+        self.assertTrue(lattice.get() != sample.lattice_get().get())
 
 
 if __name__ == '__main__':

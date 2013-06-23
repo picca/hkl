@@ -699,7 +699,7 @@ void HKLWindow::updateLattice(void)
 	LOG;
 
 	if(_sample){
-		HklLattice *lattice = hkl_sample_lattice_get(_sample);
+		const HklLattice *lattice = hkl_sample_lattice_get(_sample);
 		double a = hkl_parameter_value_unit_get(hkl_lattice_a_get(lattice));
 		double b = hkl_parameter_value_unit_get(hkl_lattice_b_get(lattice));
 		double c = hkl_parameter_value_unit_get(hkl_lattice_c_get(lattice));
@@ -724,9 +724,8 @@ void HKLWindow::updateLatticeParameters(void)
 		double min;
 		double max;
 		bool to_fit;
-		HklLattice *lattice = hkl_sample_lattice_get(_sample);
+		const HklLattice *lattice = hkl_sample_lattice_get(_sample);
 		const HklParameter *parameter;
-
 
 		parameter = hkl_lattice_a_get(lattice);
 		hkl_parameter_min_max_unit_get(parameter, &min, &max);
@@ -886,7 +885,7 @@ void HKLWindow::updateTreeViewCrystals(void)
 	//Fill the models from the crystalList
 	std::map<std::string, HklSample *>::iterator it;
 	for(it=_samples.begin(); it!=_samples.end(); ++it){
-		HklLattice *lattice;
+		const HklLattice *lattice;
 		const char *name;
 
 		sample = it->second;
@@ -961,7 +960,7 @@ void HKLWindow::updateCrystalModel(HklSample * sample)
 	while (iter != end){
 		Gtk::TreeModel::Row const & row = *iter;
 		if (row[_crystalModelColumns.name] == hkl_sample_name_get(sample)){
-			HklLattice *lattice = hkl_sample_lattice_get(sample);
+			const HklLattice *lattice = hkl_sample_lattice_get(sample);
 			row[_crystalModelColumns.a] = hkl_parameter_value_unit_get(
 				hkl_lattice_a_get(lattice));
 			row[_crystalModelColumns.b] = hkl_parameter_value_unit_get(

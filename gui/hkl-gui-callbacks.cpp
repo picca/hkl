@@ -190,17 +190,15 @@ void HKLWindow::on_button2_clicked(void)
 
 	if(_sample){
 		HklMatrix *U;
-		HklLattice *lattice = hkl_sample_lattice_get(_sample);
 		HklParameter *parameter;
+		HklLattice *lattice;
 
-		hkl_lattice_set(lattice,
-				_spinbutton_a->get_value(),
-				_spinbutton_b->get_value(),
-				_spinbutton_c->get_value(),
-				_spinbutton_alpha->get_value() * HKL_DEGTORAD,
-				_spinbutton_beta->get_value() * HKL_DEGTORAD,
-				_spinbutton_gamma->get_value() * HKL_DEGTORAD);
-
+		lattice = hkl_lattice_new(_spinbutton_a->get_value(),
+					  _spinbutton_b->get_value(),
+					  _spinbutton_c->get_value(),
+					  _spinbutton_alpha->get_value() * HKL_DEGTORAD,
+					  _spinbutton_beta->get_value() * HKL_DEGTORAD,
+					  _spinbutton_gamma->get_value() * HKL_DEGTORAD);
 
 		/* set min/max a */
 		parameter = hkl_parameter_new_copy(hkl_lattice_a_get(lattice));
@@ -253,6 +251,7 @@ void HKLWindow::on_button2_clicked(void)
 					 _spinbutton_uz->get_value() * HKL_DEGTORAD);
 		hkl_sample_U_set(_sample, U);
 		hkl_matrix_free(U);
+		hkl_lattice_free(lattice);
 
 		this->updateCrystalModel(_sample);
 		this->updateReciprocalLattice();
@@ -262,83 +261,27 @@ void HKLWindow::on_button2_clicked(void)
 	}
 }
 
-void HKLWindow::on_checkbutton_a_toggled(void)
-{
-	LOG;
-
-	if(_sample){
-		HklLattice *lattice = hkl_sample_lattice_get(_sample);
-		HklParameter *parameter = hkl_parameter_new_copy(hkl_lattice_a_get(lattice));
-		hkl_parameter_fit_set(parameter, _checkbutton_a->get_active());
-		hkl_lattice_a_set(lattice, parameter);
-		hkl_parameter_free(parameter);
+#define ON_CHECKBUTTON_LATTICE_PARAMETER_TOGGLE(p, sample)		\
+	void HKLWindow::on_checkbutton_##p##_toggled(void)		\
+	{								\
+		LOG;							\
+		if(_sample){						\
+			HklLattice *lattice = hkl_lattice_new_copy(hkl_sample_lattice_get((sample))); \
+			HklParameter *parameter = hkl_parameter_new_copy(hkl_lattice_##p##_get(lattice)); \
+			hkl_parameter_fit_set(parameter, _checkbutton_##p->get_active()); \
+			hkl_lattice_##p##_set(lattice, parameter);	\
+			hkl_sample_lattice_set((sample), lattice);	\
+			hkl_parameter_free(parameter);			\
+			hkl_lattice_free(lattice);			\
+		}							\
 	}
-}
 
-void HKLWindow::on_checkbutton_b_toggled(void)
-{
-	LOG;
-
-	if(_sample){
-		HklLattice *lattice = hkl_sample_lattice_get(_sample);
-		HklParameter *parameter = hkl_parameter_new_copy(hkl_lattice_b_get(lattice));
-		hkl_parameter_fit_set(parameter, _checkbutton_b->get_active());
-		hkl_lattice_b_set(lattice, parameter);
-		hkl_parameter_free(parameter);
-	}
-}
-
-void HKLWindow::on_checkbutton_c_toggled(void)
-{
-	LOG;
-
-	if(_sample){
-		HklLattice *lattice = hkl_sample_lattice_get(_sample);
-		HklParameter *parameter = hkl_parameter_new_copy(hkl_lattice_c_get(lattice));
-		hkl_parameter_fit_set(parameter, _checkbutton_c->get_active());
-		hkl_lattice_c_set(lattice, parameter);
-		hkl_parameter_free(parameter);
-	}
-}
-
-void HKLWindow::on_checkbutton_alpha_toggled(void)
-{
-	LOG;
-
-	if(_sample){
-		HklLattice *lattice = hkl_sample_lattice_get(_sample);
-		HklParameter *parameter = hkl_parameter_new_copy(hkl_lattice_alpha_get(lattice));
-		hkl_parameter_fit_set(parameter, _checkbutton_alpha->get_active());
-		hkl_lattice_alpha_set(lattice, parameter);
-		hkl_parameter_free(parameter);
-	}
-}
-
-void HKLWindow::on_checkbutton_beta_toggled(void)
-{
-	LOG;
-
-	if(_sample){
-		HklLattice *lattice = hkl_sample_lattice_get(_sample);
-		HklParameter *parameter = hkl_parameter_new_copy(hkl_lattice_beta_get(lattice));
-		hkl_parameter_fit_set(parameter, _checkbutton_beta->get_active());
-		hkl_lattice_beta_set(lattice, parameter);
-		hkl_parameter_free(parameter);
-	}
-}
-
-void HKLWindow::on_checkbutton_gamma_toggled(void)
-{
-	LOG;
-
-	if(_sample){
-		HklLattice *lattice = hkl_sample_lattice_get(_sample);
-		HklParameter *parameter = hkl_parameter_new_copy(hkl_lattice_gamma_get(lattice));
-		hkl_parameter_fit_set(parameter, _checkbutton_gamma->get_active());
-		hkl_lattice_gamma_set(lattice, parameter);
-		hkl_parameter_free(parameter);
-	}
-}
+ON_CHECKBUTTON_LATTICE_PARAMETER_TOGGLE(a, _sample);
+ON_CHECKBUTTON_LATTICE_PARAMETER_TOGGLE(b, _sample);
+ON_CHECKBUTTON_LATTICE_PARAMETER_TOGGLE(c, _sample);
+ON_CHECKBUTTON_LATTICE_PARAMETER_TOGGLE(alpha, _sample);
+ON_CHECKBUTTON_LATTICE_PARAMETER_TOGGLE(beta, _sample);
+ON_CHECKBUTTON_LATTICE_PARAMETER_TOGGLE(gamma, _sample);
 
 void HKLWindow::on_checkbutton_Ux_toggled(void)
 {

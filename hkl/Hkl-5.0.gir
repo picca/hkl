@@ -873,30 +873,35 @@ do nothing.</doc>
             glib:type-name="HklLattice"
             glib:get-type="hkl_lattice_get_type"
             c:symbol-prefix="lattice">
-      <constructor name="new"
-                   c:identifier="hkl_lattice_new"
-                   introspectable="0">
+      <constructor name="new" c:identifier="hkl_lattice_new">
         <doc xml:whitespace="preserve">constructor</doc>
         <return-value transfer-ownership="full">
+          <doc xml:whitespace="preserve">a new HklLattice</doc>
           <type name="Lattice" c:type="HklLattice*"/>
         </return-value>
         <parameters>
           <parameter name="a" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the length of the a parameter</doc>
             <type name="gdouble" c:type="double"/>
           </parameter>
           <parameter name="b" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the length of the b parameter</doc>
             <type name="gdouble" c:type="double"/>
           </parameter>
           <parameter name="c" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the length of the c parameter</doc>
             <type name="gdouble" c:type="double"/>
           </parameter>
           <parameter name="alpha" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the angle between b and c (radian)</doc>
             <type name="gdouble" c:type="double"/>
           </parameter>
           <parameter name="beta" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the angle between a and c (radian)</doc>
             <type name="gdouble" c:type="double"/>
           </parameter>
           <parameter name="gamma" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the angle between a and b (radian)</doc>
             <type name="gdouble" c:type="double"/>
           </parameter>
         </parameters>
@@ -1085,6 +1090,54 @@ do nothing.</doc>
           <parameter name="parameter" transfer-ownership="none">
             <doc xml:whitespace="preserve">the parameter to set</doc>
             <type name="Parameter" c:type="const HklParameter*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="get" c:identifier="hkl_lattice_get">
+        <doc xml:whitespace="preserve">get the lattice parameters</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">all the parameters</doc>
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <type name="Lattice" c:type="const HklLattice*"/>
+          </instance-parameter>
+          <parameter name="a"
+                     direction="out"
+                     caller-allocates="1"
+                     transfer-ownership="none">
+            <type name="gdouble" c:type="double*"/>
+          </parameter>
+          <parameter name="b"
+                     direction="out"
+                     caller-allocates="1"
+                     transfer-ownership="none">
+            <type name="gdouble" c:type="double*"/>
+          </parameter>
+          <parameter name="c"
+                     direction="out"
+                     caller-allocates="1"
+                     transfer-ownership="none">
+            <type name="gdouble" c:type="double*"/>
+          </parameter>
+          <parameter name="alpha"
+                     direction="out"
+                     caller-allocates="1"
+                     transfer-ownership="none">
+            <type name="gdouble" c:type="double*"/>
+          </parameter>
+          <parameter name="beta"
+                     direction="out"
+                     caller-allocates="1"
+                     transfer-ownership="none">
+            <type name="gdouble" c:type="double*"/>
+          </parameter>
+          <parameter name="gamma"
+                     direction="out"
+                     caller-allocates="1"
+                     transfer-ownership="none">
+            <type name="gdouble" c:type="double*"/>
           </parameter>
         </parameters>
       </method>
@@ -1978,7 +2031,7 @@ add ref</doc>
       <method name="lattice_get" c:identifier="hkl_sample_lattice_get">
         <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">the lattice parameters of the sample.</doc>
-          <type name="Lattice" c:type="HklLattice*"/>
+          <type name="Lattice" c:type="const HklLattice*"/>
         </return-value>
         <parameters>
           <instance-parameter name="self" transfer-ownership="none">
@@ -1998,7 +2051,7 @@ add ref</doc>
           </instance-parameter>
           <parameter name="lattice" transfer-ownership="none">
             <doc xml:whitespace="preserve">the lattice to set</doc>
-            <type name="Lattice" c:type="HklLattice*"/>
+            <type name="Lattice" c:type="const HklLattice*"/>
           </parameter>
         </parameters>
       </method>

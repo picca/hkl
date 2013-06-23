@@ -287,6 +287,10 @@ HKLAPI int hkl_lattice_set(HklLattice *self,
 			   double a, double b, double c,
 			   double alpha, double beta, double gamma) HKL_ARG_NONNULL(1);
 
+HKLAPI void hkl_lattice_get(const HklLattice *self,
+			    double *a, double *b, double *c,
+			    double *alpha, double *beta, double *gamma) HKL_ARG_NONNULL(1, 2, 3, 4, 5, 6, 7);
+
 HKLAPI int hkl_lattice_get_B(const HklLattice *self, HklMatrix *B) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI int hkl_lattice_get_1_B(const HklLattice *self, HklMatrix *B) HKL_ARG_NONNULL(1, 2);
@@ -305,9 +309,9 @@ HKLAPI const char *hkl_sample_name_get(const HklSample *self) HKL_ARG_NONNULL(1)
 
 HKLAPI void hkl_sample_name_set(HklSample *self, const char *name) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI HklLattice *hkl_sample_lattice_get(HklSample *self) HKL_ARG_NONNULL(1);
+HKLAPI const HklLattice *hkl_sample_lattice_get(HklSample *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_sample_lattice_set(HklSample *self, HklLattice *lattice) HKL_ARG_NONNULL(1, 2);
+HKLAPI void hkl_sample_lattice_set(HklSample *self, const HklLattice *lattice) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI HklParameter *hkl_sample_ux_get(const HklSample *self) HKL_ARG_NONNULL(1);
 

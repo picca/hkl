@@ -44,17 +44,17 @@ static int check_lattice_param(double a, double b, double c,
 /* public */
 
 /**
- * hkl_lattice_new: (skip)
- * @a:
- * @b:
- * @c:
- * @alpha:
- * @beta:
- * @gamma:
+ * hkl_lattice_new:
+ * @a: the length of the a parameter
+ * @b: the length of the b parameter
+ * @c: the length of the c parameter
+ * @alpha: the angle between b and c (radian)
+ * @beta: the angle between a and c (radian)
+ * @gamma: the angle between a and b (radian)
  *
  * constructor
  *
- * Returns:
+ * Returns: a new HklLattice
  **/
 HklLattice *hkl_lattice_new(double a, double b, double c,
 			    double alpha, double beta, double gamma)
@@ -307,6 +307,31 @@ int hkl_lattice_set(HklLattice *self,
 	hkl_parameter_value_set(self->gamma, gamma, NULL);
 
 	return HKL_TRUE;
+}
+
+/**
+ * hkl_lattice_get:
+ * @self:
+ * @a: (out caller-allocates):
+ * @b: (out caller-allocates):
+ * @c: (out caller-allocates):
+ * @alpha: (out caller-allocates):
+ * @beta: (out caller-allocates):
+ * @gamma: (out caller-allocates):
+ *
+ * get the lattice parameters
+ * Return value: all the parameters
+ **/
+void hkl_lattice_get(const HklLattice *self,
+		     double *a, double *b, double *c,
+		     double *alpha, double *beta, double *gamma)
+{
+	*a = hkl_parameter_value_get(self->a);
+	*b = hkl_parameter_value_get(self->b);
+	*c = hkl_parameter_value_get(self->c);
+	*alpha = hkl_parameter_value_get(self->alpha);
+	*beta = hkl_parameter_value_get(self->beta);
+	*gamma = hkl_parameter_value_get(self->gamma);
 }
 
 /**

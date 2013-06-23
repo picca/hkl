@@ -372,9 +372,9 @@ void hkl_sample_name_set(HklSample *self, const char *name)
  * hkl_sample_lattice_get:
  * @self: the this ptr
  *
- * Return value: (transfer none): the lattice parameters of the sample.
+ * Return value: the lattice parameters of the sample.
  **/
-HklLattice *hkl_sample_lattice_get(HklSample *self)
+const HklLattice *hkl_sample_lattice_get(HklSample *self)
 {
 	return self->lattice;
 }
@@ -384,7 +384,7 @@ HklLattice *hkl_sample_lattice_get(HklSample *self)
  * @self: the this ptr
  * @lattice: (transfer none): the lattice to set
  **/
-void hkl_sample_lattice_set(HklSample *self, HklLattice *lattice)
+void hkl_sample_lattice_set(HklSample *self, const HklLattice *lattice)
 {
 	hkl_lattice_lattice_set(self->lattice, lattice);
 	hkl_sample_compute_UB(self);

@@ -38,7 +38,7 @@ static int hkl_geometry_list_check_geometry_unit(const HklGeometryList *self,
 {
 	const darray_item *items = hkl_geometry_list_items_get(self);
 	HklGeometryListItem **item;
-	int res;
+	int res = HKL_TRUE;
 
 	darray_foreach(item, *items){
 		const darray_parameter *axes = hkl_geometry_axes_get(hkl_geometry_list_item_geometry_get(*item));
@@ -268,11 +268,10 @@ static void petra3(void)
 	hkl_geometry_wavelength_set(geometry, 2.033);
 
 	sample = hkl_sample_new("test");
-	lattice = hkl_sample_lattice_get(sample);
-	hkl_lattice_set(lattice,
-			7.813, 7.813, 7.813,
-			90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD);
+	lattice = hkl_lattice_new(7.813, 7.813, 7.813,
+				  90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD);
 	hkl_sample_lattice_set(sample, lattice);
+	hkl_lattice_free(lattice);
 
 	U = hkl_matrix_new_euler(-112.5 * HKL_DEGTORAD,
 				 -87.84 * HKL_DEGTORAD,
@@ -366,11 +365,10 @@ static void petra3_2(void)
 	hkl_geometry_wavelength_set(geometry, 1.0332035);
 
 	sample = hkl_sample_new("test");
-	lattice = hkl_sample_lattice_get(sample);
-	hkl_lattice_set(lattice,
-			5.1, 5.1, 5.1,
-			90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD);
+	lattice = hkl_lattice_new(5.1, 5.1, 5.1,
+				  90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD);
 	hkl_sample_lattice_set(sample, lattice);
+	hkl_lattice_free(lattice);
 	U = hkl_matrix_new_euler(-90.0 * HKL_DEGTORAD,
 				 0.0 * HKL_DEGTORAD,
 				 -90.0 * HKL_DEGTORAD);
