@@ -265,23 +265,28 @@ HKLAPI HklLattice *hkl_lattice_new_default(void);
 HKLAPI void hkl_lattice_free(HklLattice *self) HKL_ARG_NONNULL(1);
 
 HKLAPI const HklParameter *hkl_lattice_a_get(const HklLattice *self) HKL_ARG_NONNULL(1);
+
 HKLAPI void hkl_lattice_a_set(HklLattice *self, const HklParameter *parameter) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI const HklParameter *hkl_lattice_b_get(const HklLattice *self) HKL_ARG_NONNULL(1);
+
 HKLAPI void hkl_lattice_b_set(HklLattice *self, const HklParameter *parameter) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI const HklParameter *hkl_lattice_c_get(const HklLattice *self) HKL_ARG_NONNULL(1);
+
 HKLAPI void hkl_lattice_c_set(HklLattice *self, const HklParameter *parameter) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI const HklParameter *hkl_lattice_alpha_get(const HklLattice *self) HKL_ARG_NONNULL(1);
+
 HKLAPI void hkl_lattice_alpha_set(HklLattice *self, const HklParameter *parameter) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI const HklParameter *hkl_lattice_beta_get(const HklLattice *self) HKL_ARG_NONNULL(1);
+
 HKLAPI void hkl_lattice_beta_set(HklLattice *self, const HklParameter *parameter) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI const HklParameter *hkl_lattice_gamma_get(const HklLattice *self) HKL_ARG_NONNULL(1);
-HKLAPI void hkl_lattice_gamma_set(HklLattice *self, const HklParameter *parameter) HKL_ARG_NONNULL(1, 2);
 
+HKLAPI void hkl_lattice_gamma_set(HklLattice *self, const HklParameter *parameter) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI int hkl_lattice_set(HklLattice *self,
 			   double a, double b, double c,
