@@ -137,12 +137,13 @@ public:
 
 	SolutionModelColumns(HklGeometry *geometry)
 		{
-			darray_parameter *axes;
+			const darray_parameter *axes;
 			HklParameter **axis;
 
 			this->add(this->index);
 			this->add(this->item);
 
+			axes = hkl_geometry_axes_get(geometry);
 			darray_foreach(axis, *axes){
 				this->axes.push_back(Gtk::TreeModelColumn<gdouble>());
 				this->add(this->axes.back());

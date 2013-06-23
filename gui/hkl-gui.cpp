@@ -928,7 +928,7 @@ void HKLWindow::updateReflections(const HklSample *sample,
 	listStore->clear();
 	Gtk::ListStore::Row row;
 	HklSampleReflection *reflection = hkl_sample_first_reflection_get(sample);
-	do {
+	while(reflection){
 		double h, k, l;
 
 		hkl_sample_reflection_hkl_get(reflection, &h, &k, &l);
@@ -940,7 +940,8 @@ void HKLWindow::updateReflections(const HklSample *sample,
 		row[_reflectionModelColumns.k] = k;
 		row[_reflectionModelColumns.l] = l;
 		row[_reflectionModelColumns.flag] = hkl_sample_reflection_flag_get(reflection);
-	} while(reflection = hkl_sample_next_reflection_get(sample, reflection));
+		reflection = hkl_sample_next_reflection_get(sample, reflection);
+	}
 }
 
 void HKLWindow::updateStatusBar(const HklError *error)
