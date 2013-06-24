@@ -874,7 +874,7 @@ void hkl_sample_reflection_flag_set(HklSampleReflection *self, int flag)
  *
  * set the geometry of the reflection
  **/
-HklGeometry *hkl_sample_reflection_geometry_get(HklSampleReflection *self)
+const HklGeometry *hkl_sample_reflection_geometry_get(HklSampleReflection *self)
 {
 	return self->geometry;
 }

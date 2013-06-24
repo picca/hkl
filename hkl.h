@@ -378,7 +378,7 @@ HKLAPI int hkl_sample_reflection_flag_get(const HklSampleReflection *self) HKL_A
 
 HKLAPI void hkl_sample_reflection_flag_set(HklSampleReflection *self, int flag) HKL_ARG_NONNULL(1);
 
-HKLAPI HklGeometry *hkl_sample_reflection_geometry_get(HklSampleReflection *self) HKL_ARG_NONNULL(1);
+HKLAPI const HklGeometry *hkl_sample_reflection_geometry_get(HklSampleReflection *self) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_sample_reflection_geometry_set(HklSampleReflection *self,
 					       const HklGeometry *geometry) HKL_ARG_NONNULL(1, 2);
