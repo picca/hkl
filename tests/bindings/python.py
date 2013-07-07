@@ -206,6 +206,39 @@ class TestAPI(unittest.TestCase):
         # this new lattice is different from the one in the sample
         self.assertTrue(lattice.get() != sample.lattice_get().get())
 
+        # gives access to the ux, uy, uz part
+        ux = sample.ux_get()
+        uy = sample.uy_get()
+        uz = sample.uz_get()
+        sample.ux_set(ux)
+        sample.uy_set(uy)
+        sample.uz_set(uz)
+
+        # read and write the U matrix
+        U = sample.U_get()
+        UB = sample.UB_get()
+        sample.UB_set(UB)
+
+    def test_reflection_api(self):
+
+        detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))
+        detector.idx_set(1)
+
+        factory = Hkl.factories()['K6C']
+        geometry = factory.create_new_geometry()
+        values_w = [0., 30., 0., 0., 0., 60.]
+        geometry.set_axes_values_unit(values_w)
+
+        sample = Hkl.Sample.new("toto")
+
+        reflection = Hkl.SampleReflection.new(geometry, detector, 1, 1, 1)
+        sample.add_reflection(reflection)
+        sample.add_reflection(reflection)
+
+        reflections = sample.reflections_get()
+        print sample.reflections_get()
+        reflections.append(Hkl.SampleReflection.new(geometry, detector, 1, 1, 1))
+        print sample.reflections_get()
 
 if __name__ == '__main__':
     unittest.main()

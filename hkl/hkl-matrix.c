@@ -153,12 +153,13 @@ void hkl_matrix_matrix_set(HklMatrix *self, const HklMatrix *m)
 }
 
 /**
- * hkl_matrix_get: (skip)
+ * hkl_matrix_get:
  * @self: the this ptr
  * @i: the i coordinate
  * @j: the j coordinate
  *
  * @todo test
+ * Return value: the Mij value
  **/
 double hkl_matrix_get(const HklMatrix *self, unsigned int i, unsigned int j)
 {

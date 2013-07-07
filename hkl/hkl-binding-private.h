@@ -82,6 +82,12 @@ HKLAPI gboolean hkl_engine_set_values_unit(
 
 HKLAPI GSList* hkl_engine_list_engines_as_gslist(HklEngineList *self);
 
+/*************/
+/* HklSample */
+/*************/
+
+HKLAPI const GSList *hkl_sample_reflections_get(const HklSample *self);
+
 HKL_END_DECLS
 
 #endif /* __HKL_BINDING_PRIVATE_H__ */

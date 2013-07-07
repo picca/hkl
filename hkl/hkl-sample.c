@@ -355,9 +355,9 @@ const char *hkl_sample_name_get(const HklSample *self)
 }
 
 /**
- * hkl_sample_name_set: (skip)
- * @self:
- * @name:
+ * hkl_sample_name_set:
+ * @self: the this ptr
+ * @name: the new name to set
  *
  * set the name of the sample
  **/
@@ -382,7 +382,7 @@ const HklLattice *hkl_sample_lattice_get(HklSample *self)
 /**
  * hkl_sample_lattice_set:
  * @self: the this ptr
- * @lattice: (transfer none): the lattice to set
+ * @lattice: the lattice to set
  **/
 void hkl_sample_lattice_set(HklSample *self, const HklLattice *lattice)
 {
@@ -391,7 +391,7 @@ void hkl_sample_lattice_set(HklSample *self, const HklLattice *lattice)
 }
 
 /**
- * hkl_sample_ux_get: (skip)
+ * hkl_sample_ux_get:
  * @self: the this ptr
  *
  * Return value: the ux part of the U matrix.
@@ -402,7 +402,7 @@ const HklParameter *hkl_sample_ux_get(const HklSample *self)
 }
 
 /**
- * hkl_sample_uy_get: (skip)
+ * hkl_sample_uy_get:
  * @self: the this ptr
  *
  * Return value: the uy part of the U matrix.
@@ -413,7 +413,7 @@ const HklParameter *hkl_sample_uy_get(const HklSample *self)
 }
 
 /**
- * hkl_sample_uz_get: (skip)
+ * hkl_sample_uz_get:
  * @self: the this ptr
  *
  * Return value: the uz part of the U matrix.
@@ -424,7 +424,7 @@ const HklParameter *hkl_sample_uz_get(const HklSample *self)
 }
 
 /**
- * hkl_sample_ux_set: (skip)
+ * hkl_sample_ux_set:
  * @self: the this ptr
  * @ux: the ux parameter to set
 
@@ -442,7 +442,7 @@ void hkl_sample_ux_set(HklSample *self,
 }
 
 /**
- * hkl_sample_uy_set: (skip)
+ * hkl_sample_uy_set:
  * @self: the this ptr
  * @uy: the uy parameter to set
 
@@ -460,7 +460,7 @@ void hkl_sample_uy_set(HklSample *self,
 }
 
 /**
- * hkl_sample_uz_set: (skip)
+ * hkl_sample_uz_set:
  * @self: the this ptr
  * @uz: the uz parameter to set
 
@@ -478,7 +478,7 @@ void hkl_sample_uz_set(HklSample *self,
 }
 
 /**
- * hkl_sample_U_get: (skip)
+ * hkl_sample_U_get:
  * @self: the this ptr
  *
  * Return value: the U matrix of the sample
@@ -501,8 +501,8 @@ void hkl_sample_U_set(HklSample *self, const HklMatrix *U)
 }
 
 /**
- * hkl_sample_UB_get: (skip)
- * @self:
+ * hkl_sample_UB_get:
+ * @self: the this ptr.
  *
  * Return value: get the UB matrix of the sample
  **/
@@ -512,9 +512,9 @@ const HklMatrix *hkl_sample_UB_get(const HklSample *self)
 }
 
 /**
- * hkl_sample_UB_set: (skip)
+ * hkl_sample_UB_set:
  * @self: the sample to modify
- * @UB: (in): the UB matrix to set
+ * @UB: the UB matrix to set
  *
  * Set the UB matrix using an external UB matrix. In fact you give
  * the UB matrix but only the U matrix of the sample is affected by
@@ -531,11 +531,24 @@ double hkl_sample_UB_set(HklSample *self, const HklMatrix *UB)
 	return minimize(self, set_UB_fitness, &params);
 }
 
+/**
+ * hkl_sample_first_reflection_get: (skip)
+ * @self: the this ptr
+ *
+ * Return value: the first HklSampleReflection of the sample.
+ **/ 
 HklSampleReflection *hkl_sample_first_reflection_get(const HklSample *self)
 {
 	return list_top(&self->reflections, HklSampleReflection, list);
 }
 
+/**
+ * hkl_sample_next_reflection_get: (skip)
+ * @self: the this ptr
+ * @reflection: the current reflection
+ *
+ * Return value: (allow-none): the next reflection or NULL if no more reflection
+ **/
 HklSampleReflection *hkl_sample_next_reflection_get(const HklSample *self,
 						    const HklSampleReflection *reflection)
 {
@@ -546,23 +559,21 @@ HklSampleReflection *hkl_sample_next_reflection_get(const HklSample *self,
 }
 
 /**
- * hkl_sample_add_reflection: (skip)
- * @self:
- * @reflection:
+ * hkl_sample_add_reflection:
+ * @self: the this ptr
+ * @reflection: (transfer full): The reflection to add
  *
  * add a reflection to the sample
- *
- * Returns: the added HklSampleReflection
  **/
 void hkl_sample_add_reflection(HklSample *self,
-					       HklSampleReflection *reflection)
+			       HklSampleReflection *reflection)
 {
 	list_add_tail(&self->reflections, &reflection->list);
 }
 
 /**
- * hkl_sample_del_reflection: (skip)
- * @reflection: the reflection to remove.
+ * hkl_sample_del_reflection:
+ * @reflection: (transfer full): the reflection to remove.
  *
  * remove an HklSampleRefelction from the relfections list.
  **/
@@ -737,7 +748,7 @@ void hkl_sample_fprintf(FILE *f, const HklSample *self)
 /***********************/
 
 /**
- * hkl_sample_reflection_new: (skip)
+ * hkl_sample_reflection_new:
  * @geometry:
  * @detector:
  * @h:

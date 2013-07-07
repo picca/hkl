@@ -29,6 +29,7 @@
 #include "hkl-error-private.h"
 #include "hkl-factory-private.h"
 #include "hkl-pseudoaxis-private.h"
+#include "hkl-sample-private.h"
 
 
 /**************/
@@ -351,6 +352,29 @@ GSList* hkl_engine_list_engines_as_gslist(HklEngineList *self)
 
 	darray_foreach(engine, *self){
 		list = g_slist_append(list, *engine);
+	}
+
+	return list;
+}
+
+/*************/
+/* HklSample */
+/*************/
+
+/**
+ * hkl_sample_reflections_get:
+ * @self: the this ptr
+ *
+ * Return value: (element-type HklSampleReflection) (transfer container): list of reflecions,
+ *               free the list with g_slist_free when done.
+ */
+const GSList *hkl_sample_reflections_get(const HklSample *self)
+{
+	GSList *list = NULL;
+	HklSampleReflection *reflection;
+
+	list_for_each(&self->reflections, reflection, list){
+		list = g_slist_append(list, reflection);
 	}
 
 	return list;

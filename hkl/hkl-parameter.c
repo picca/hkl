@@ -184,10 +184,10 @@ inline int hkl_parameter_value_set(HklParameter *self, double value,
 }
 
 /**
- * hkl_parameter_value_unit_set: (skip)
+ * hkl_parameter_value_unit_set:
  * @self: the this ptr
  * @value: the value to set
- * @error: the error set if something goes wrong
+ * @error: (allow-none): the error set if something goes wrong
  *
  * set the value of the parameter express in the punit #HklUnit
  * @todo test
