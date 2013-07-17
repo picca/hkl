@@ -829,13 +829,13 @@ void hkl_sample_reflection_free(HklSampleReflection *self)
 }
 
 /**
- * hkl_sample_reflection_hkl_get: (skip)
- * @self:
- * @h:
- * @k:
- * @l:
+ * hkl_sample_reflection_hkl_get:
+ * @self: the this ptr
+ * @h: (out caller-allocates): the h-coordinate of the #HklSampleReflection
+ * @k: (out caller-allocates): the k-coordinate of the #HklSampleReflection
+ * @l: (out caller-allocates): the l-coordinate of the #HklSampleReflection
  *
- * get the hkl value of the reflection
+ * get the hkl coordinates of the #HklSampleReflection
  **/
 void hkl_sample_reflection_hkl_get(const HklSampleReflection *self,
 				   double *h, double *k, double *l)
@@ -846,13 +846,13 @@ void hkl_sample_reflection_hkl_get(const HklSampleReflection *self,
 }
 
 /**
- * hkl_sample_reflection_hkl_set: (skip)
- * @self:
- * @h:
- * @k:
- * @l:
+ * hkl_sample_reflection_hkl_set:
+ * @self: the this ptr
+ * @h: the h-coordinate of the #HklSampleReflection
+ * @k: the k-coordinate of the #HklSampleReflection
+ * @l: the l-coordinate of the #HklSampleReflection
  *
- * set the hkl value of the reflection
+ * set the hkl coordinates of the #HklSampleReflection
  **/
 void hkl_sample_reflection_hkl_set(HklSampleReflection *self, double h, double k, double l)
 {

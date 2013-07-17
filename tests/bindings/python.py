@@ -232,11 +232,19 @@ class TestAPI(unittest.TestCase):
 
         sample = Hkl.Sample.new("toto")
 
+        # add reflection
+        sample.add_reflection(geometry, detector, 1, 1, 1)
         reflection = sample.add_reflection(geometry, detector, 1, 1, 1)
 
-        reflections = sample.reflections_get()
+        # get the hkl part
+        self.assertTrue(reflection.hkl_get() == (1.0, 1.0, 1.0))
+        reflection.hkl_set(1, 0, 1)
+        self.assertTrue(reflection.hkl_get() == (1.0, 0.0, 1.0))
 
-        sample.del_reflection(reflection)
+        # remove all the reflections
+        reflections = sample.reflections_get()
+        for reflection in reflections:
+            sample.del_reflection(reflection)
 
 if __name__ == '__main__':
     unittest.main()
