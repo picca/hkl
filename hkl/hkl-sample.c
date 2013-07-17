@@ -594,15 +594,15 @@ void hkl_sample_del_reflection(HklSample *self,
 }
 
 /**
- * hkl_sample_compute_UB_busing_levy: (skip)
- * @self:
- * @r1:
- * @r2:
+ * hkl_sample_compute_UB_busing_levy:
+ * @self: the this ptr
+ * @r1: the first #HklsampleReflection
+ * @r2: the second #HklSampleReflection
  *
  * compute the UB matrix using the Busing and Levy method
- * add ref
+ * #todo: add ref
  *
- * Returns:
+ * Returns: 0 or 1 if it succeed
  **/
 int hkl_sample_compute_UB_busing_levy(HklSample *self,
 				      const HklSampleReflection *r1,
@@ -637,12 +637,12 @@ int hkl_sample_compute_UB_busing_levy(HklSample *self,
 }
 
 /**
- * hkl_sample_affine: (skip)
- * @self:
+ * hkl_sample_affine:
+ * @self: the this ptr
  *
  * affine the sample
  *
- * Returns:
+ * Returns: the fitness of the affined #HklSample
  **/
 double hkl_sample_affine(HklSample *self)
 {
@@ -650,14 +650,14 @@ double hkl_sample_affine(HklSample *self)
 }
 
 /**
- * hkl_sample_get_reflection_mesured_angle: (skip)
+ * hkl_sample_get_reflection_mesured_angle:
  * @self: the this ptr
- * @r1: the first reflection
- * @r2: the second reflection
+ * @r1: the first #HklSampleReflection
+ * @r2: the second #HklSampleReflection
  *
- * get the mesured angles between two reflections
+ * get the mesured angles between two #HklSampleReflection
  *
- * Returns:
+ * Returns: the mesured angle beetween them
  **/
 double hkl_sample_get_reflection_mesured_angle(const HklSample *self,
 					       const HklSampleReflection *r1,
@@ -668,14 +668,14 @@ double hkl_sample_get_reflection_mesured_angle(const HklSample *self,
 }
 
 /**
- * hkl_sample_get_reflection_theoretical_angle: (skip)
+ * hkl_sample_get_reflection_theoretical_angle:
  * @self: the this ptr
- * @r1: the first reflection
- * @r2: the second reflection
+ * @r1: the first #HklSampleReflection
+ * @r2: the second #HklSampleReflection
  *
- * get the theoretical angles between two reflections
+ * get the theoretical angles between two #HklSampleReflection
  *
- * Returns:
+ * Returns: the theoretical angle beetween them
  **/
 double hkl_sample_get_reflection_theoretical_angle(const HklSample *self,
 						   const HklSampleReflection *r1,

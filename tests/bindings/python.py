@@ -240,13 +240,17 @@ class TestAPI(unittest.TestCase):
         sample = Hkl.Sample.new("toto")
 
         # add reflection
-        sample.add_reflection(geometry, detector, 1, 1, 1)
-        reflection = sample.add_reflection(geometry, detector, 1, 1, 1)
+        r1 = sample.add_reflection(geometry, detector, 1, 1, 1)
+        r2 = sample.add_reflection(geometry, detector, 1, 1, 1)
 
         # get the hkl part
-        self.assertTrue(reflection.hkl_get() == (1.0, 1.0, 1.0))
-        reflection.hkl_set(1, 0, 1)
-        self.assertTrue(reflection.hkl_get() == (1.0, 0.0, 1.0))
+        self.assertTrue(r2.hkl_get() == (1.0, 1.0, 1.0))
+        r2.hkl_set(1, 0, 1)
+        self.assertTrue(r2.hkl_get() == (1.0, 0.0, 1.0))
+
+        # compute the angles
+        print sample.get_reflection_mesured_angle(r1, r2)
+        print sample.get_reflection_theoretical_angle(r1, r2)
 
         # remove all the reflections
         reflections = sample.reflections_get()
