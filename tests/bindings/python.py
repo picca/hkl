@@ -184,6 +184,13 @@ class TestAPI(unittest.TestCase):
         sample = Hkl.Sample.new("toto")
         self.assertTrue(sample.name_get() == "toto")
 
+        # check that the copy constructor is working
+        copy = sample.copy()
+        self.assertTrue(copy.name_get() == sample.name_get())
+        # we can change the name of the copy without affecting the original
+        copy.name_set("titi")
+        self.assertTrue(copy.name_get() != sample.name_get())
+
         # set the lattice parameters
         lattice = Hkl.Lattice.new(1.54, 1.54, 1.54,
                                   math.radians(90.),
