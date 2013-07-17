@@ -689,7 +689,8 @@ void HKLWindow::on_toolbutton_del_reflection_clicked(void)
 			switch (respons){
 			case Gtk::RESPONSE_YES:
 				for(unsigned int i=0;i<to_delete.size();i++){
-					hkl_sample_del_reflection(to_delete[i]);
+					hkl_sample_del_reflection(_sample,
+								  to_delete[i]);
 				}
 				this->updateReflections(_sample, liststore);
 				break;

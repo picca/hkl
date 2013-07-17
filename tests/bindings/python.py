@@ -22,6 +22,7 @@ Copyright (C) 2012-2013 Synchrotron SOLEIL
 Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
 """
 
+import sys
 import math
 import unittest
 from gi.repository import GLib
@@ -231,14 +232,11 @@ class TestAPI(unittest.TestCase):
 
         sample = Hkl.Sample.new("toto")
 
-        reflection = Hkl.SampleReflection.new(geometry, detector, 1, 1, 1)
-        sample.add_reflection(reflection)
-        sample.add_reflection(reflection)
+        reflection = sample.add_reflection(geometry, detector, 1, 1, 1)
 
         reflections = sample.reflections_get()
-        print sample.reflections_get()
-        reflections.append(Hkl.SampleReflection.new(geometry, detector, 1, 1, 1))
-        print sample.reflections_get()
+
+        sample.del_reflection(reflection)
 
 if __name__ == '__main__':
     unittest.main()

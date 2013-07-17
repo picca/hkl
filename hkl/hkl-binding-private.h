@@ -88,6 +88,11 @@ HKLAPI GSList* hkl_engine_list_engines_as_gslist(HklEngineList *self);
 
 HKLAPI const GSList *hkl_sample_reflections_get(const HklSample *self);
 
+HKLAPI HklSampleReflection *hkl_sample_add_reflection_binding(HklSample *self,
+							      const HklGeometry *geometry,
+							      const HklDetector *detector,
+							      double h, double k, double l);
+
 HKL_END_DECLS
 
 #endif /* __HKL_BINDING_PRIVATE_H__ */

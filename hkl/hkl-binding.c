@@ -379,3 +379,31 @@ const GSList *hkl_sample_reflections_get(const HklSample *self)
 
 	return list;
 }
+
+/**
+ * hkl_sample_add_reflection_binding:
+ * @self: the this ptr
+ * @geometry: the geometry of the HklSampleReflection
+ * @detector: the detector of the HklSampleReflection
+ * @h: the h coordinate
+ * @k: the k coordinate
+ * @l: the l coordinate
+ *
+ * Return value: (element-type HklEngine) (transfer container): list of engines,
+ *               free the list with g_slist_free when done.
+ *
+ * Rename to: hkl_sample_add_reflection
+ **/
+HklSampleReflection *hkl_sample_add_reflection_binding(HklSample *self,
+						       const HklGeometry *geometry,
+						       const HklDetector *detector,
+						       double h, double k, double l)
+{
+	HklSampleReflection *reflection;
+
+	reflection = hkl_sample_reflection_new(geometry, detector, h, k, l);
+	hkl_sample_add_reflection(self, reflection);
+
+	return reflection;
+}
+

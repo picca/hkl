@@ -559,25 +559,35 @@ HklSampleReflection *hkl_sample_next_reflection_get(const HklSample *self,
 }
 
 /**
- * hkl_sample_add_reflection:
+ * hkl_sample_add_reflection: (skip)
  * @self: the this ptr
- * @reflection: (transfer full): The reflection to add
+ * @reflection: The reflection to add
  *
- * add a reflection to the sample
+ * add a reflection to the sample, if the reflection is already part
+ * of the sample reflection list, this method does nothing.
  **/
 void hkl_sample_add_reflection(HklSample *self,
 			       HklSampleReflection *reflection)
 {
+	HklSampleReflection *ref;
+
+	list_for_each(&self->reflections, ref, list){
+		if (ref == reflection)
+			return;
+	}
+
 	list_add_tail(&self->reflections, &reflection->list);
 }
 
 /**
  * hkl_sample_del_reflection:
- * @reflection: (transfer full): the reflection to remove.
+ * @self: the this ptr
+ * @reflection: the reflection to remove.
  *
- * remove an HklSampleRefelction from the relfections list.
+ * remove an HklSampleRefelction from the reflections list.
  **/
-void hkl_sample_del_reflection(HklSampleReflection *reflection)
+void hkl_sample_del_reflection(HklSample *self,
+			       HklSampleReflection *reflection)
 {
 	list_del(&reflection->list);
 	hkl_sample_reflection_free(reflection);
@@ -759,7 +769,7 @@ void hkl_sample_fprintf(FILE *f, const HklSample *self)
  *
  * Returns:
  **/
-HklSampleReflection *hkl_sample_reflection_new(HklGeometry *geometry,
+HklSampleReflection *hkl_sample_reflection_new(const HklGeometry *geometry,
 					       const HklDetector *detector,
 					       double h, double k, double l)
 {
@@ -769,8 +779,6 @@ HklSampleReflection *hkl_sample_reflection_new(HklGeometry *geometry,
 		return NULL;
 
 	self = HKL_MALLOC(HklSampleReflection);
-
-	hkl_geometry_update(geometry);
 
 	self->geometry = hkl_geometry_new_copy(geometry);
 	self->detector = hkl_detector_new_copy(detector);
