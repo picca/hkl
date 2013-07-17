@@ -443,13 +443,14 @@ int hkl_lattice_get_1_B(const HklLattice *self, HklMatrix *B)
 }
 
 /**
- * hkl_lattice_reciprocal: (skip)
- * @self:
- * @reciprocal: (inout):
+ * hkl_lattice_reciprocal:
+ * @self: the this ptr
+ * @reciprocal: the lattice where the result will be computed
  *
- * compute the reciprocal lattice
+ * compute the reciprocal #HklLattice and put the result id the
+ * provided @reciprocal parameter
  *
- * Returns:
+ * Returns: 0 or 1 if it succeed.
  **/
 int hkl_lattice_reciprocal(const HklLattice *self, HklLattice *reciprocal)
 {

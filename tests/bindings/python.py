@@ -227,6 +227,10 @@ class TestAPI(unittest.TestCase):
         UB = sample.UB_get()
         sample.UB_set(UB)
 
+        # get the reciprocal lattice
+        reciprocal = lattice.copy()
+        lattice.reciprocal(reciprocal)
+
     def test_reflection_api(self):
 
         detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))
