@@ -132,7 +132,7 @@ stamp-hkl-type-builtins.h: $(hkl_public_h_sources) $(srcdir)/hkl-type-builtins.h
 	&& (cmp -s xgen-gtbh hkl-type-builtins.h || cp xgen-gtbh hkl-type-builtins.h ) \
 	&& rm -f xgen-gtbh \
 	&& echo timestamp > $(@F)
-hkl-type-builtins.c: $(hkl_public_h_sources) $(srcdir)/hkl-type-builtins.c.template
+hkl-type-builtins.c: $(hkl_public_h_sources) $(srcdir)/hkl-type-builtins.c.template hkl-type-builtins.h
 	( cd $(srcdir) && $(GLIB_MKENUMS) --template hkl-type-builtins.c.template \
 		$(hkl_public_h_sources) ) > xgen-gtbc \
 	&& cp xgen-gtbc hkl-type-builtins.c  \
