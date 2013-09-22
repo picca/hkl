@@ -20,16 +20,19 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <string.h>
-#ifndef _MSC_VER
-# include <alloca.h>
-#endif
-#include <gsl/gsl_sf_trig.h>
-
-#include "hkl/ccan/container_of/container_of.h"
-#include "hkl-detector-private.h"
-#include "hkl-pseudoaxis-private.h"
-#include "hkl-error-private.h"
+#include <stdio.h>                      // for fprintf, FILE
+#include <stdlib.h>                     // for free
+#include <string.h>                     // for NULL, strcmp
+#include <sys/types.h>                  // for uint
+#include "hkl-detector-private.h"       // for hkl_detector_new_copy
+#include "hkl-error-private.h"          // for hkl_error_set
+#include "hkl-geometry-private.h"       // for _HklGeometryList, etc
+#include "hkl-macros-private.h"         // for hkl_assert, HKL_MALLOC, etc
+#include "hkl-parameter-private.h"      // for hkl_parameter_list_fprintf, etc
+#include "hkl-pseudoaxis-private.h"     // for _HklEngine, _HklEngineList, etc
+#include "hkl.h"                        // for HklEngine, HklEngineList, etc
+#include "hkl/ccan/container_of/container_of.h"  // for container_of
+#include "hkl/ccan/darray/darray.h"     // for darray_foreach, darray_init, etc
 
 /*****************/
 /* HklPseudoAxis */

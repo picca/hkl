@@ -19,13 +19,14 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <stdlib.h>
-#include <math.h>
-#include <string.h>
-
-#include "hkl-macros-private.h"
-#include "hkl-matrix-private.h"
-#include "hkl-vector-private.h"
+#include <math.h>                       // for cos, fabs, atan2, sin, asin
+#include <stdio.h>                      // for fprintf, FILE
+#include <stdlib.h>                     // for free
+#include <string.h>                     // for memcpy
+#include "hkl-macros-private.h"         // for HKL_MALLOC
+#include "hkl-matrix-private.h"         // for _HklMatrix
+#include "hkl-vector-private.h"         // for HklVector, etc
+#include "hkl.h"                        // for HklMatrix, HKL_EPSILON, etc
 
 /**
  * hkl_matrix_new: (skip)

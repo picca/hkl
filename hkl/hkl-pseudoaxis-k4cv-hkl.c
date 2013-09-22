@@ -21,14 +21,17 @@
  *          Maria-Teresa Nunez-Pardo-de-Verra <tnunez@mail.desy.de>
  *          Jens Krüger <Jens.Krueger@frm2.tum.de>
  */
-#include <gsl/gsl_math.h>
-#include <gsl/gsl_vector.h>
-
-#include "hkl/ccan/array_size/array_size.h"
-
+#include <gsl/gsl_errno.h>              // for ::GSL_SUCCESS
+#include <gsl/gsl_sys.h>                // for gsl_isnan
+#include <gsl/gsl_vector_double.h>      // for gsl_vector
+#include <math.h>                       // for atan, cos, tan, fmod, sin, etc
+#include <sys/types.h>                  // for uint
 #include "hkl-parameter-private.h"
-#include "hkl-pseudoaxis-auto-private.h"
-#include "hkl-pseudoaxis-common-hkl-private.h"
+#include "hkl-pseudoaxis-auto-private.h"  // for HklFunction, etc
+#include "hkl-pseudoaxis-common-hkl-private.h"  // for RUBh_minus_Q, etc
+#include "hkl-pseudoaxis-private.h"     // for hkl_engine_add_mode, etc
+#include "hkl/ccan/array_size/array_size.h"  // for ARRAY_SIZE
+#include "hkl.h"                        // for HklEngine, HklMode, etc
 
 /***********************/
 /* numerical functions */

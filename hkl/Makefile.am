@@ -171,4 +171,11 @@ check-syntax: AM_CFLAGS += -fsyntax-only -pipe
 check-syntax:
 	test -z "$(CHK_SOURCES)" || $(COMPILE) $(CHK_SOURCES)
 
-.PHONY: check-syntax
+# check for includes with iwyu
+iwyu:
+	@list='$(libhkl_la_SOURCES)';\
+	for p in $$list; do\
+		iwyu $(AM_CFLAGS) $$p; \
+	done;
+
+.PHONY: check-syntax iwyu

@@ -22,10 +22,9 @@
 #ifndef __HKL_GLIB_H__
 #define __HKL_GLIB_H__
 
-#include <glib.h>
-#include <glib-object.h>
-
-#include "hkl.h"
+#include <glib.h>                       // for G_GNUC_CONST, G_BEGIN_DECLS, etc
+#include <glib-object.h>               // for GType
+#include "hkl.h"                        // for HKLAPI
 
 G_BEGIN_DECLS
 

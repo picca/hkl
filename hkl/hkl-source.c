@@ -19,11 +19,13 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <stdlib.h>
-#include <math.h>
-
-#include "hkl-macros-private.h"
-#include "hkl-source-private.h"
+#include <math.h>                       // for fabs, sqrt
+#include <stdio.h>                      // for fprintf, FILE
+#include <stdlib.h>                     // for free
+#include "hkl-macros-private.h"         // for HKL_MALLOC
+#include "hkl-source-private.h"         // for HklSource
+#include "hkl-vector-private.h"         // for hkl_vector_div_double, etc
+#include "hkl.h"                        // for HKL_EPSILON, HKL_FALSE, etc
 
 /**
  * hkl_source_dup:

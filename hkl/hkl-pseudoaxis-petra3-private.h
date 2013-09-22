@@ -22,7 +22,7 @@
 #ifndef __HKL_PSEUDOAXIS_PETRA3_H__
 #define __HKL_PSEUDOAXIS_PETRA3_H__
 
-#include "hkl-pseudoaxis-auto-private.h"
+#include "hkl.h"                        // for HklEngine, HKL_BEGIN_DECLS, etc
 
 HKL_BEGIN_DECLS
 

@@ -21,15 +21,23 @@
  *          Maria-Teresa Nunez-Pardo-de-Verra <tnunez@mail.desy.de>
  *          Jens Krüger <Jens.Krueger@frm2.tum.de>
  */
-#include <gsl/gsl_math.h>
-#include <gsl/gsl_vector.h>
-#include <gsl/gsl_sf.h>
-
-#include "hkl/ccan/array_size/array_size.h"
-
-#include "hkl-parameter-private.h"
-#include "hkl-pseudoaxis-auto-private.h"
-#include "hkl-pseudoaxis-common-hkl-private.h"
+#include <gsl/gsl_errno.h>              // for ::GSL_SUCCESS
+#include <gsl/gsl_sys.h>                // for gsl_isnan
+#include <gsl/gsl_vector_double.h>      // for gsl_vector
+#include <math.h>                       // for fmod, atan, cos, tan, etc
+#include <sys/types.h>                  // for uint
+#include "hkl-geometry-private.h"       // for _HklGeometry, HklHolder
+#include "hkl-parameter-private.h"      // for _HklParameter, etc
+#include "hkl-pseudoaxis-auto-private.h"  // for HklFunction, etc
+#include "hkl-pseudoaxis-common-hkl-private.h"  // for RUBh_minus_Q, etc
+#include "hkl-pseudoaxis-private.h"     // for hkl_engine_add_mode, etc
+#include "hkl-quaternion-private.h"     // for hkl_quaternion_conjugate, etc
+#include "hkl-source-private.h"         // for hkl_source_compute_ki
+#include "hkl-vector-private.h"         // for HklVector, hkl_vector_angle, etc
+#include "hkl.h"                        // for HklMode, HklParameter, etc
+#include "hkl/ccan/array_size/array_size.h"  // for ARRAY_SIZE
+#include "hkl/ccan/container_of/container_of.h"  // for container_of
+#include "hkl/ccan/darray/darray.h"     // for darray_item
 
 /***********************/
 /* numerical functions */

@@ -20,17 +20,33 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  *          Maria-Teresa Nunez-Pardo-de-Verra <tnunez@mail.desy.de>
  */
-#include <string.h>
-#include <gsl/gsl_sf_trig.h>
+#include <gsl/gsl_errno.h>              // for ::GSL_SUCCESS, etc
 #include <gsl/gsl_multiroots.h>
-#include "hkl/ccan/array_size/array_size.h"
-
-#include "hkl-axis-private.h"
-#include "hkl-error-private.h"
-#include "hkl-parameter-private.h"
-#include "hkl-pseudoaxis-auto-private.h"
-#include "hkl-pseudoaxis-common-hkl-private.h"
-#include "hkl-sample-private.h"
+#include <gsl/gsl_sf_trig.h>            // for gsl_sf_angle_restrict_pos
+#include <gsl/gsl_vector_double.h>      // for gsl_vector, etc
+#include <math.h>                       // for fabs, M_PI
+#include <stddef.h>                     // for size_t
+#include <stdlib.h>                     // for free, malloc, rand, etc
+#include <string.h>                     // for NULL
+#include <sys/types.h>                  // for uint
+#include "hkl-axis-private.h"           // for HklAxis
+#include "hkl-detector-private.h"       // for hkl_detector_compute_kf
+#include "hkl-error-private.h"          // for hkl_error_set
+#include "hkl-geometry-private.h"       // for HklHolder, _HklGeometry, etc
+#include "hkl-macros-private.h"         // for hkl_assert, HKL_MALLOC, etc
+#include "hkl-matrix-private.h"         // for hkl_matrix_times_vector, etc
+#include "hkl-parameter-private.h"      // for _HklParameter, etc
+#include "hkl-pseudoaxis-auto-private.h"  // for CHECK_NAN, etc
+#include "hkl-pseudoaxis-common-hkl-private.h"  // for HklEngineHkl
+#include "hkl-pseudoaxis-private.h"     // for _HklEngine, _HklMode, etc
+#include "hkl-quaternion-private.h"     // for hkl_quaternion_init, etc
+#include "hkl-sample-private.h"         // for _HklSample
+#include "hkl-source-private.h"         // for hkl_source_compute_ki
+#include "hkl-vector-private.h"         // for HklVector, etc
+#include "hkl.h"                        // for HklEngine, HklGeometry, etc
+#include "hkl/ccan/array_size/array_size.h"  // for ARRAY_SIZE
+#include "hkl/ccan/container_of/container_of.h"  // for container_of
+#include "hkl/ccan/darray/darray.h"     // for darray_item, darray_size
 
 /* #define DEBUG */
 

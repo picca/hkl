@@ -20,17 +20,20 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 
-#include <glib.h>
-#include <string.h>
-
-#include "hkl/ccan/array_size/array_size.h"
-#include "hkl-axis-private.h"
-#include "hkl-binding-private.h"
-#include "hkl-error-private.h"
-#include "hkl-factory-private.h"
-#include "hkl-pseudoaxis-private.h"
-#include "hkl-sample-private.h"
-
+#include <stdlib.h>                     // for malloc
+#include <string.h>                     // for NULL, strdup
+#include <sys/types.h>                  // for uint
+#include <glib.h>                       // for g_set_error, GError etc
+#include "hkl-error-private.h"          // for hkl_error_clear, _HklError
+#include "hkl-factory-private.h"        // for __start_xautodata_factories, etc
+#include "hkl-geometry-private.h"       // for _HklGeometry, etc
+#include "hkl-parameter-private.h"
+#include "hkl-pseudoaxis-private.h"     // for _HklEngine, HklEngineInfo
+#include "hkl-sample-private.h"         // for _HklSampleReflection, etc
+#include "hkl.h"                        // for HklGeometry, HklEngine, etc
+#include "hkl/ccan/autodata/autodata.h"  // for autodata_get
+#include "hkl/ccan/darray/darray.h"     // for darray_foreach, darray_size
+#include "hkl/ccan/list/list.h"             // for list_for_each, list_head
 
 /**************/
 /* HklFactory */

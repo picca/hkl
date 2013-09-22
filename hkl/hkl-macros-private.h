@@ -22,7 +22,8 @@
 #ifndef __HKL_MACROS_PRIVATE_H__
 #define __HKL_MACROS_PRIVATE_H__
 
-#include "hkl.h"
+#include <assert.h>                     // for assert
+#include "hkl.h"                        // for HKL_BEGIN_DECLS, etc
 
 /* specific part for the eulerian -> kappa conversion */
 #define HKL_EULERIAN_KAPPA_SOLUTION 1

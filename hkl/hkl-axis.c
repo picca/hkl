@@ -19,15 +19,20 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <stdlib.h>
-#include <math.h>
-
-#include <gsl/gsl_math.h>
-#include <gsl/gsl_sf_trig.h>
-
-#include "hkl/ccan/container_of/container_of.h"
-#include "hkl-axis-private.h"
-#include "hkl-parameter-private.h"
+#include <gsl/gsl_nan.h>                // for GSL_NAN
+#include <gsl/gsl_sf_trig.h>            // for gsl_sf_angle_restrict_symm
+#include <gsl/gsl_sys.h>                // for gsl_isnan
+#include <math.h>                       // for M_PI, ceil, fabs, floor
+#include <stdio.h>                      // for FILE
+#include <stdlib.h>                     // for NULL, free
+#include "hkl-axis-private.h"           // for HklAxis
+#include "hkl-interval-private.h"       // for HklInterval, etc
+#include "hkl-macros-private.h"         // for HKL_MALLOC
+#include "hkl-parameter-private.h"      // for _HklParameter, etc
+#include "hkl-quaternion-private.h"     // for hkl_quaternion_fprintf, etc
+#include "hkl-vector-private.h"         // for hkl_vector_fprintf, etc
+#include "hkl.h"                        // for HklParameter, HKL_TRUE, etc
+#include "hkl/ccan/container_of/container_of.h"  // for container_of
 
 /***********/
 /* HklAxis */

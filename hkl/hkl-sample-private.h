@@ -22,9 +22,11 @@
 #ifndef __HKL_SAMPLE_PRIVATE_H__
 #define __HKL_SAMPLE_PRIVATE_H__
 
-#include "ccan/list/list.h"
-#include "hkl.h"
-#include "hkl-matrix-private.h"
+#include <stdio.h>                      // for FILE
+#include "ccan/list/list.h"             // for list_head, list_node
+#include "hkl-matrix-private.h"         // for _HklMatrix
+#include "hkl-vector-private.h"         // for HklVector
+#include "hkl.h"                        // for HklParameter, etc
 
 HKL_BEGIN_DECLS
 

@@ -22,12 +22,16 @@
 #ifndef __HKL_PSEUDOAXIS_AUTO_H__
 #define __HKL_PSEUDOAXIS_AUTO_H__
 
-#include <gsl/gsl_vector.h>
-
-#include "hkl/ccan/container_of/container_of.h"
-#include "hkl-detector-private.h"
-#include "hkl-error-private.h"
-#include "hkl-pseudoaxis-private.h"
+#include <gsl/gsl_vector_double.h>      // for gsl_vector
+#include <stddef.h>                     // for NULL
+#include <sys/types.h>                  // for uint
+#include "hkl-detector-private.h"       // for hkl_detector_new_copy
+#include "hkl-error-private.h"          // for hkl_error_set
+#include "hkl-geometry-private.h"       // for hkl_geometry_new_copy
+#include "hkl-macros-private.h"         // for hkl_assert, etc
+#include "hkl-pseudoaxis-private.h"     // for HklModeOperations, etc
+#include "hkl.h"                        // for HklMode, hkl_detector_free, etc
+#include "hkl/ccan/container_of/container_of.h"  // for container_of
 
 HKL_BEGIN_DECLS
 

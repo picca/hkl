@@ -19,15 +19,15 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <stdlib.h>
-#include <math.h>
-#include <string.h>
-
-#include "hkl.h"
-#include "hkl-vector-private.h"
-#include "hkl-macros-private.h"
-#include "hkl-matrix-private.h"
-#include "hkl-quaternion-private.h"
+#include <math.h>                       // for fabs, sin, M_PI, acos, cos, etc
+#include <stdio.h>                      // for fprintf, FILE
+#include <stdlib.h>                     // for free
+#include <string.h>                     // for memcpy, memset
+#include "hkl-macros-private.h"         // for hkl_assert, HKL_MALLOC
+#include "hkl-matrix-private.h"         // for _HklMatrix
+#include "hkl-quaternion-private.h"     // for _HklQuaternion
+#include "hkl-vector-private.h"         // for HklQuaternion, HklVector, etc
+#include "hkl.h"                        // for HklMatrix, HKL_EPSILON, etc
 
 /* public */
 /**

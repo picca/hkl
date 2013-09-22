@@ -22,11 +22,11 @@
 #ifndef __HKL_PSEUDOAXIS_COMMON_PSI_PRIVATE_H__
 #define __HKL_PSEUDOAXIS_COMMON_PSI_PRIVATE_H__
 
-#include <gsl/gsl_math.h>
-#include <gsl/gsl_vector.h>
-#include <gsl/gsl_sf_trig.h>
-
-#include "hkl-pseudoaxis-auto-private.h"
+#include <gsl/gsl_vector_double.h>      // for gsl_vector
+#include "hkl-pseudoaxis-auto-private.h"  // for HklFunction, etc
+#include "hkl-pseudoaxis-private.h"     // for _HklEngine, _HklMode
+#include "hkl-vector-private.h"         // for HklVector
+#include "hkl.h"                        // for HklEngine, HklMode, etc
 
 HKL_BEGIN_DECLS
 

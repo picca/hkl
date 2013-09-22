@@ -22,10 +22,8 @@
 #ifndef __HKL_VECTOR_PRIVATE_H__
 #define __HKL_VECTOR_PRIVATE_H__
 
-#include <stdio.h>
-#include <math.h>
-
-#include "hkl.h"
+#include <stdio.h>                      // for FILE
+#include "hkl.h"                        // for HKL_BEGIN_DECLS, etc
 
 HKL_BEGIN_DECLS
 

@@ -22,11 +22,10 @@
 #ifndef __HKL_H__
 #define __HKL_H__
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <gsl/gsl_math.h>
-
-#include <hkl/ccan/darray/darray.h>
+#include <math.h>                       // for M_PI
+#include <stddef.h>                     // for size_t
+#include <stdio.h>                      // for FILE
+#include <hkl/ccan/darray/darray.h>     // for darray
 
 /* Guard C code in headers, while including them from C++ */
 #ifdef __cplusplus

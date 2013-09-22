@@ -22,7 +22,7 @@
 #ifndef __HKL_PSEUDOAXIS_ZAXIS_H__
 #define __HKL_PSEUDOAXIS_ZAXIS_H__
 
-#include "hkl-pseudoaxis-auto-private.h"
+#include "hkl.h"                        // for HKL_BEGIN_DECLS, etc
 
 HKL_BEGIN_DECLS
 

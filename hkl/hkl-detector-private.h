@@ -22,7 +22,10 @@
 #ifndef __HKL_DETECTOR_PRIVATE_H__
 #define __HKL_DETECTOR_PRIVATE_H__
 
-#include "hkl-geometry-private.h"
+#include <stddef.h>                     // for size_t
+#include "hkl-geometry-private.h"       // for HklHolder
+#include "hkl-vector-private.h"         // for HklVector
+#include "hkl.h"                        // for HklDetector, etc
 
 HKL_BEGIN_DECLS
 

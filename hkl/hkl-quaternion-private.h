@@ -22,11 +22,9 @@
 #ifndef __HKL_QUATERNION_PRIVATE_H__
 #define __HKL_QUATERNION_PRIVATE_H__
 
-#include <stdio.h>
-#include <math.h>
-
-#include "hkl.h"
-#include "hkl-vector-private.h"
+#include <stdio.h>                      // for FILE
+#include "hkl-vector-private.h"         // for HklQuaternion, HklVector
+#include "hkl.h"                        // for HKL_BEGIN_DECLS, etc
 
 HKL_BEGIN_DECLS
 

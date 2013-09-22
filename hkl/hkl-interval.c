@@ -20,11 +20,12 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 #define _GNU_SOURCE
-#include <math.h>
 #include <gsl/gsl_sf_trig.h>
-
-#include "hkl-interval-private.h"
-#include "hkl-macros-private.h"
+#include <math.h>                       // for floor, M_PI_2, acos, asin, etc
+#include <stdlib.h>                     // for free, NULL
+#include "hkl-interval-private.h"       // for HklInterval
+#include "hkl-macros-private.h"         // for HKL_MALLOC
+#include "hkl.h"                        // for HKL_FALSE, HKL_TRUE
 
 /**
  * hkl_interval_dup: (skip)

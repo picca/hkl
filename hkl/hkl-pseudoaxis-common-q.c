@@ -20,15 +20,25 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  *          Jens Krüger <Jens.Krueger@frm2.tum.de>
  */
-#include <gsl/gsl_sf_trig.h>
-
-#include <string.h>
-#include "hkl/ccan/array_size/array_size.h"
-#include <gsl/gsl_sf_trig.h>
-
-#include "hkl-parameter-private.h"
-#include "hkl-pseudoaxis-auto-private.h"
-#include "hkl-pseudoaxis-common-q-private.h"
+#include <gsl/gsl_errno.h>              // for ::GSL_SUCCESS
+#include <gsl/gsl_sf_trig.h>            // for gsl_sf_angle_restrict_symm
+#include <gsl/gsl_sys.h>                // for gsl_isnan
+#include <gsl/gsl_vector_double.h>      // for gsl_vector
+#include <math.h>                       // for sin, atan2, signbit
+#include <stdlib.h>                     // for free
+#include "hkl-detector-private.h"       // for hkl_detector_compute_kf
+#include "hkl-geometry-private.h"       // for _HklGeometry, HklHolder
+#include "hkl-macros-private.h"         // for HKL_MALLOC
+#include "hkl-parameter-private.h"      // for _HklParameter, etc
+#include "hkl-pseudoaxis-auto-private.h"  // for HklFunction, etc
+#include "hkl-pseudoaxis-common-q-private.h"  // for HklEngineQ2, etc
+#include "hkl-pseudoaxis-private.h"     // for _HklEngine, etc
+#include "hkl-source-private.h"         // for hkl_source_compute_ki, etc
+#include "hkl-vector-private.h"         // for HklVector, hkl_vector_angle, etc
+#include "hkl.h"                        // for HklEngine, HklParameter, etc
+#include "hkl/ccan/array_size/array_size.h"  // for ARRAY_SIZE
+#include "hkl/ccan/container_of/container_of.h"  // for container_of
+#include "hkl/ccan/darray/darray.h"     // for darray_item
 
 /*****/
 /* q */

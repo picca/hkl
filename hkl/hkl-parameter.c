@@ -19,10 +19,15 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <stdlib.h>
-#include <string.h>
-
-#include "hkl-parameter-private.h"
+#include <stdio.h>                      // for fprintf, FILE
+#include <stdlib.h>                     // for free, malloc, NULL
+#include <string.h>                     // for strcmp
+#include "hkl-interval-private.h"       // for HklInterval
+#include "hkl-macros-private.h"         // for HKL_MALLOC
+#include "hkl-parameter-private.h"      // for _HklParameter, etc
+#include "hkl-unit-private.h"           // for hkl_unit_factor, HklUnit, etc
+#include "hkl.h"                        // for HklParameter, etc
+#include "hkl/ccan/darray/darray.h"     // for darray_size, darray_item, etc
 
 /****************/
 /* HklParameter */

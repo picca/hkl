@@ -19,17 +19,29 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <gsl/gsl_math.h>
-#include <gsl/gsl_vector.h>
-#include <gsl/gsl_sf_trig.h>
-
-#include "hkl/ccan/array_size/array_size.h"
-
-#include "hkl-error-private.h"
+#include <gsl/gsl_errno.h>              // for ::GSL_SUCCESS
+#include <gsl/gsl_vector_double.h>      // for gsl_vector
+#include <gsl/gsl_sys.h>                // for gsl_isnan
+#include <stdio.h>                      // for fprintf, stderr
+#include <stdlib.h>                     // for NULL, exit, free
+#include <sys/types.h>                  // for uint
+#include "hkl-detector-private.h"       // for hkl_detector_compute_kf
+#include "hkl-error-private.h"          // for hkl_error_set
+#include "hkl-geometry-private.h"       // for HklHolder, _HklGeometry, etc
+#include "hkl-macros-private.h"         // for HKL_MALLOC, hkl_assert, etc
+#include "hkl-matrix-private.h"         // for hkl_matrix_solve, etc
 #include "hkl-parameter-private.h"
-#include "hkl-pseudoaxis-auto-private.h"
-#include "hkl-pseudoaxis-common-psi-private.h"
-#include "hkl-sample-private.h"
+#include "hkl-pseudoaxis-auto-private.h"  // for HklModeAutoInfo, etc
+#include "hkl-pseudoaxis-common-psi-private.h"  // for HklEnginePsi, etc
+#include "hkl-pseudoaxis-private.h"     // for _HklEngine, HklEngineInfo, etc
+#include "hkl-quaternion-private.h"     // for hkl_quaternion_to_matrix
+#include "hkl-sample-private.h"         // for _HklSample
+#include "hkl-source-private.h"         // for hkl_source_compute_ki
+#include "hkl-vector-private.h"         // for HklVector, etc
+#include "hkl.h"                        // for HklEngine, HklGeometry, etc
+#include "hkl/ccan/array_size/array_size.h"  // for ARRAY_SIZE
+#include "hkl/ccan/container_of/container_of.h"  // for container_of
+#include "hkl/ccan/darray/darray.h"     // for darray_item
 
 /***********************/
 /* numerical functions */

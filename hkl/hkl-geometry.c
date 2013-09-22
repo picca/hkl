@@ -19,19 +19,28 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <math.h>
-#include <string.h>
-#include <stdarg.h>
-#ifndef _MSC_VER
-# include <alloca.h>
-#endif
-
-#include <gsl/gsl_math.h>
-#include <gsl/gsl_sf_trig.h>
-
-#include "hkl/ccan/container_of/container_of.h"
-#include "hkl-axis-private.h"
-#include "hkl-geometry-private.h"
+#include <alloca.h>                     // for alloca
+#include <gsl/gsl_sf_trig.h>            // for gsl_sf_angle_restrict_symm
+#include <gsl/gsl_sys.h>                // for gsl_isnan
+#include <math.h>                       // for fabs, M_PI
+#include <stdarg.h>                     // for va_arg, va_end, va_list, etc
+#include <stddef.h>                     // for size_t
+#include <stdio.h>                      // for fprintf, FILE, stderr
+#include <stdlib.h>                     // for free, exit, realloc
+#include <string.h>                     // for NULL, strcmp, memcpy
+#include <sys/types.h>                  // for uint
+#include "hkl-axis-private.h"           // for HklAxis, etc
+#include "hkl-geometry-private.h"       // for _HklGeometry, etc
+#include "hkl-interval-private.h"       // for HklInterval
+#include "hkl-macros-private.h"         // for HKL_MALLOC
+#include "hkl-parameter-private.h"      // for _HklParameter, etc
+#include "hkl-quaternion-private.h"     // for _HklQuaternion, etc
+#include "hkl-source-private.h"         // for HklSource, hkl_source_init
+#include "hkl-unit-private.h"           // for HklUnit, hkl_unit_factor
+#include "hkl-vector-private.h"         // for HklVector, HklQuaternion, etc
+#include "hkl.h"                        // for HklGeometry, etc
+#include "hkl/ccan/container_of/container_of.h"  // for container_of
+#include "hkl/ccan/darray/darray.h"     // for darray_foreach, darray_item, etc
 
 /*
  * Try to add a axis to the axes list,

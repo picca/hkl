@@ -22,10 +22,13 @@
 #ifndef __HKL_GEOMETRY_PRIVATE_H__
 #define __HKL_GEOMETRY_PRIVATE_H__
 
-#include "hkl.h"
-#include "hkl-parameter-private.h"
-#include "hkl-quaternion-private.h"
-#include "hkl-source-private.h"
+#include <stddef.h>                     // for size_t
+#include <stdio.h>                      // for FILE
+#include "hkl-quaternion-private.h"     // for _HklQuaternion
+#include "hkl-source-private.h"         // for HklSource
+#include "hkl-vector-private.h"         // for HklQuaternion
+#include "hkl.h"                        // for HklGeometry, etc
+#include "hkl/ccan/darray/darray.h"     // for darray
 
 HKL_BEGIN_DECLS
 

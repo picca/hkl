@@ -19,24 +19,24 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-
-#include <stdarg.h>
-#include <gsl/gsl_sf.h>
-
-#include "hkl.h"
-#include "hkl-axis-private.h"
-#include "hkl-factory-private.h"
-#include "hkl-pseudoaxis-private.h"
+#include <gsl/gsl_sf_trig.h>            // for gsl_sf_angle_restrict_symm
+#include <math.h>                       // for cos, sin, M_PI_2, atan, tan
+#include <string.h>                     // for NULL, strcmp
+#include "hkl-factory-private.h"        // for autodata_factories_, etc
+#include "hkl-geometry-private.h"
 #include "hkl-pseudoaxis-common-eulerians-private.h"
-#include "hkl-pseudoaxis-common-q-private.h"
-#include "hkl-pseudoaxis-e4c-private.h"
-#include "hkl-pseudoaxis-k4cv-private.h"
-#include "hkl-pseudoaxis-e6c-private.h"
-#include "hkl-pseudoaxis-k6c-private.h"
-#include "hkl-pseudoaxis-zaxis-private.h"
-#include "hkl-pseudoaxis-soleil-sixs-med-private.h"
+#include "hkl-pseudoaxis-common-q-private.h"  // for hkl_engine_q2_new, etc
+#include "hkl-pseudoaxis-e4c-private.h"  // for hkl_engine_e4c_hkl_new, etc
+#include "hkl-pseudoaxis-e6c-private.h"  // for hkl_engine_e6c_hkl_new, etc
+#include "hkl-pseudoaxis-k4cv-private.h"  // for hkl_engine_k4cv_hkl_new, etc
+#include "hkl-pseudoaxis-k6c-private.h"  // for hkl_engine_k6c_hkl_new, etc
 #include "hkl-pseudoaxis-petra3-private.h"
-
+#include "hkl-pseudoaxis-private.h"     // for hkl_engine_list_add, etc
+#include "hkl-pseudoaxis-soleil-sixs-med-private.h"
+#include "hkl-pseudoaxis-zaxis-private.h"  // for hkl_engine_zaxis_hkl_new
+#include "hkl.h"                        // for HklFactory, HklGeometry, etc
+#include "hkl/ccan/autodata/autodata.h"  // for AUTODATA, autodata_get
+#include "hkl/ccan/darray/darray.h"     // for darray_item
 
 typedef HklGeometry* (* HklFactoryGeometryFunction) (const HklFactory *factory);
 typedef HklEngineList* (* HklFactoryEngineListFunction) (const HklFactory *factory);

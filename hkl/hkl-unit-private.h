@@ -22,7 +22,7 @@
 #ifndef __HKL_UNIT_PRIVATE_H__
 #define __HKL_UNIT_PRIVATE_H__
 
-#include "hkl.h"
+#include "hkl.h"                        // for HKL_BEGIN_DECLS, etc
 
 HKL_BEGIN_DECLS
 

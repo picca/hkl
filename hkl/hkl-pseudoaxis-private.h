@@ -22,13 +22,16 @@
 #ifndef __HKL_PSEUDOAXIS_PRIVATE_H__
 #define __HKL_PSEUDOAXIS_PRIVATE_H__
 
-#include <string.h>
-#include <gsl/gsl_vector.h>
-#include <gsl/gsl_sf_trig.h>
-
-#include "hkl.h"
-#include "hkl-geometry-private.h"
-#include "hkl-parameter-private.h"
+#include <gsl/gsl_sf_trig.h>            // for gsl_sf_angle_restrict_symm
+#include <stddef.h>                     // for size_t
+#include <stdlib.h>                     // for free
+#include <string.h>                     // for NULL
+#include <sys/types.h>                  // for uint
+#include "hkl-geometry-private.h"       // for hkl_geometry_update, etc
+#include "hkl-macros-private.h"         // for HKL_MALLOC
+#include "hkl-parameter-private.h"      // for hkl_parameter_list_free, etc
+#include "hkl.h"                        // for HklEngine, HklMode, etc
+#include "hkl/ccan/darray/darray.h"     // for darray_foreach, etc
 
 HKL_BEGIN_DECLS
 

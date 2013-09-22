@@ -19,9 +19,15 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <math.h>
-
-#include "hkl-detector-private.h"
+#include <stdio.h>                      // for fprintf, NULL, FILE
+#include <stdlib.h>                     // for free
+#include "hkl-detector-private.h"       // for _HklDetector
+#include "hkl-geometry-private.h"       // for HklHolder, _HklGeometry, etc
+#include "hkl-macros-private.h"         // for HKL_MALLOC
+#include "hkl-source-private.h"         // for HklSource
+#include "hkl-vector-private.h"         // for hkl_vector_init, etc
+#include "hkl.h"                        // for HklDetector, HklGeometry, etc
+#include "hkl/ccan/darray/darray.h"     // for darray_item
 
 /**
  * hkl_detector_new: (skip)

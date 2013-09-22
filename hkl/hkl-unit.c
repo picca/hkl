@@ -19,12 +19,12 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <math.h>
-#include <gsl/gsl_nan.h>
-#include <gsl/gsl_sys.h> /* gsl_nan()! */
-
-#include "hkl-macros-private.h"
-#include "hkl-unit-private.h"
+#include <gsl/gsl_nan.h>                // for GSL_NAN
+#include <gsl/gsl_sys.h>                // for gsl_isnan
+#include <stdlib.h>                     // for free, NULL
+#include "hkl-macros-private.h"         // for HKL_MALLOC
+#include "hkl-unit-private.h"           // for HklUnit, etc
+#include "hkl.h"                        // for HKL_FALSE, HKL_DEGTORAD, etc
 
 /**
  * hkl_unit_dup: (skip)

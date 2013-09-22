@@ -19,13 +19,24 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include "hkl/ccan/array_size/array_size.h"
+#include <gsl/gsl_errno.h>              // for ::GSL_CONTINUE, etc
 #include <gsl/gsl_multiroots.h>
-#include <gsl/gsl_sf_trig.h>
-
-#include "hkl-axis-private.h"
-#include "hkl-pseudoaxis-auto-private.h"
-#include "hkl-pseudoaxis-common-hkl-private.h"
+#include <gsl/gsl_sf_trig.h>            // for gsl_sf_angle_restrict_pos_e
+#include <gsl/gsl_vector_double.h>      // for gsl_vector, gsl_vector_ptr, etc
+#include <math.h>                       // for M_PI
+#include <stddef.h>                     // for size_t, NULL
+#include <stdlib.h>                     // for rand, RAND_MAX
+#include "hkl-axis-private.h"           // for HklAxis
+#include "hkl-geometry-private.h"       // for HklHolder, HklHolderConfig, etc
+#include "hkl-parameter-private.h"      // for _HklParameter
+#include "hkl-pseudoaxis-auto-private.h"  // for HklFunction, etc
+#include "hkl-pseudoaxis-common-hkl-private.h"  // for hkl_engine_hkl_new, etc
+#include "hkl-pseudoaxis-private.h"     // for hkl_engine_add_mode
+#include "hkl-vector-private.h"
+#include "hkl.h"                        // for HklGeometry, HklEngine, etc
+#include "hkl/ccan/array_size/array_size.h"  // for ARRAY_SIZE
+#include "hkl/ccan/container_of/container_of.h"  // for container_of
+#include "hkl/ccan/darray/darray.h"     // for darray_item
 
 /***********************/
 /* numerical functions */

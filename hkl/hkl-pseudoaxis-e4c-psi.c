@@ -19,12 +19,12 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include "hkl/ccan/array_size/array_size.h"
-
-#include "hkl-parameter-private.h"
-#include "hkl-pseudoaxis-auto-private.h"
-#include "hkl-pseudoaxis-e4c-private.h"
-#include "hkl-pseudoaxis-common-psi-private.h"
+#include "hkl-parameter-private.h"      // for HKL_PARAMETER_DEFAULTS, etc
+#include "hkl-pseudoaxis-auto-private.h"  // for HklFunction, etc
+#include "hkl-pseudoaxis-common-psi-private.h"  // for hkl_engine_psi_new, etc
+#include "hkl-pseudoaxis-private.h"     // for hkl_engine_add_mode
+#include "hkl/ccan/array_size/array_size.h"  // for ARRAY_SIZE
+#include "hkl.h"                        // for HklEngine, HklMode, etc
 
 static HklMode *psi(void)
 {

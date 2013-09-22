@@ -20,8 +20,10 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  *          Maria-Teresa Nunez-Pardo-de-Verra <tnunez@mail.desy.de>
  */
-#include <gsl/gsl_vector.h>
+#include <gsl/gsl_vector_double.h>      // for gsl_vector
 #include "hkl-pseudoaxis-auto-private.h"
+#include "hkl-pseudoaxis-private.h"     // for HklModeOperations, etc
+#include "hkl.h"                        // for HklEngine, HklDetector, etc
 
 typedef struct _HklEngineHkl HklEngineHkl;
 struct _HklEngineHkl {

@@ -20,13 +20,20 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  *          Jens Krüger <Jens.Krueger@frm2.tum.de>
  */
-#include <gsl/gsl_sf_trig.h>
-#include "hkl/ccan/array_size/array_size.h"
-
-#include "hkl-error-private.h"
-#include "hkl-parameter-private.h"
-#include "hkl-pseudoaxis-auto-private.h"
+#include <gsl/gsl_sf_trig.h>            // for gsl_sf_angle_restrict_symm
+#include <math.h>                       // for sin, asin, M_PI_2, tan, etc
+#include <stdlib.h>                     // for free
+#include <sys/types.h>                  // for uint
+#include "hkl-error-private.h"          // for hkl_error_set
+#include "hkl-geometry-private.h"
+#include "hkl-macros-private.h"         // for HKL_MALLOC
+#include "hkl-parameter-private.h"      // for _HklParameter, etc
 #include "hkl-pseudoaxis-common-eulerians-private.h"
+#include "hkl-pseudoaxis-private.h"     // for _HklPseudoAxis, etc
+#include "hkl.h"                        // for HklParameter, HklPseudoAxis, etc
+#include "hkl/ccan/array_size/array_size.h"  // for ARRAY_SIZE
+#include "hkl/ccan/container_of/container_of.h"  // for container_of
+#include "hkl/ccan/darray/darray.h"     // for darray_item
 
 static int kappa_to_eulerian(const double angles[],
 			     double *omega, double *chi, double *phi,

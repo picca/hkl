@@ -22,7 +22,8 @@
 #ifndef __HKL_PSEUDOAXIS_COMMON_EULERIANS_H__
 #define __HKL_PSEUDOAXIS_COMMON_EULERIANS_H__
 
-#include "hkl.h"
+#include "hkl.h"                        // for HklParameter, etc
+#include "hkl-pseudoaxis-auto-private.h"// for HklEngine
 
 HKL_BEGIN_DECLS
 

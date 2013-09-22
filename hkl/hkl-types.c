@@ -19,12 +19,18 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include "hkl-detector-private.h"
-#include "hkl-error-private.h"
-#include "hkl-lattice-private.h"
-#include "hkl-pseudoaxis-private.h"
-#include "hkl-sample-private.h"
 #include "hkl-types.h"
+#include "glib/gthread.h"               // for g_once_init_enter, etc
+#include "glibconfig.h"                 // for gsize
+#include "gobject/gboxed.h"
+#include "hkl-detector-private.h"       // for hkl_detector_new_copy
+#include "hkl-error-private.h"          // for hkl_error_free, etc
+#include "hkl-geometry-private.h"       // for hkl_geometry_list_free, etc
+#include "hkl-matrix-private.h"         // for hkl_matrix_dup
+#include "hkl-pseudoaxis-private.h"     // for hkl_engine_list_new_copy
+#include "hkl-sample-private.h"         // for hkl_sample_reflection_free, etc
+#include "hkl-unit-private.h"           // for hkl_unit_dup, hkl_unit_free
+#include "hkl-vector-private.h"         // for hkl_vector_dup, etc
 
 GType hkl_error_get_type (void) {
         static volatile gsize hkl_error_type_id__volatile = 0;

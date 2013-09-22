@@ -23,12 +23,13 @@
 #ifndef __HKL_PARAMETER_PRIVATE_H__
 #define __HKL_PARAMETER_PRIVATE_H__
 
-#include <stdio.h>
-
-#include "hkl.h"
-#include "hkl-interval-private.h"
-#include "hkl-macros-private.h"
-#include "hkl-unit-private.h"
+#include <math.h>                       // for M_PI
+#include <stdio.h>                      // for FILE, fprintf, NULL
+#include <stdlib.h>                     // for free, rand, RAND_MAX
+#include "hkl-interval-private.h"       // for HklInterval
+#include "hkl-macros-private.h"         // for HKL_MALLOC
+#include "hkl-unit-private.h"           // for HklUnit, hkl_unit_factor
+#include "hkl.h"                        // for HklParameter, HKL_TRUE, etc
 
 HKL_BEGIN_DECLS
 

@@ -22,9 +22,9 @@
 #ifndef __HKL_BINDING_PRIVATE_H__
 #define __HKL_BINDING_PRIVATE_H__
 
-#include <glib.h>
-
-#include "hkl.h"
+#include <glib.h>                       // for GError, GHashTable, etc
+#include <sys/types.h>                  // for uint
+#include "hkl.h"                        // for HKLAPI, HklGeometry, etc
 
 HKL_BEGIN_DECLS
 

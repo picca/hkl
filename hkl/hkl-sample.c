@@ -22,17 +22,29 @@
 
 /* for strdup */
 #define _XOPEN_SOURCE 500
-#include <string.h>
-#include <gsl/gsl_multimin.h>
-
-#include "hkl.h"
-
-#include "hkl-axis-private.h"
-#include "hkl-detector-private.h"
-#include "hkl-lattice-private.h"
-#include "hkl-parameter-private.h"
-#include "hkl-geometry-private.h"
-#include "hkl-sample-private.h"
+#include <gsl/gsl_errno.h>              // for gsl_set_error_handler, etc
+#include <gsl/gsl_multimin.h>           // for gsl_multimin_function, etc
+#include <gsl/gsl_nan.h>                // for GSL_NAN
+#include <gsl/gsl_vector_double.h>      // for gsl_vector_get, etc
+#include <math.h>                       // for M_PI, fabs
+#include <stddef.h>                     // for size_t
+#include <stdio.h>                      // for fprintf, FILE
+#include <stdlib.h>                     // for free
+#include <string.h>                     // for NULL, strdup
+#include "hkl-detector-private.h"       // for hkl_detector_new_copy, etc
+#include "hkl-geometry-private.h"       // for _HklGeometry, etc
+#include "hkl-lattice-private.h"        // for _HklLattice, etc
+#include "hkl-macros-private.h"         // for HKL_MALLOC
+#include "hkl-matrix-private.h"         // for hkl_matrix_init_from_euler, etc
+#include "hkl-parameter-private.h"      // for hkl_parameter_fprintf, etc
+#include "hkl-quaternion-private.h"     // for hkl_quaternion_conjugate, etc
+#include "hkl-sample-private.h"         // for _HklSample, etc
+#include "hkl-source-private.h"         // for hkl_source_compute_ki
+#include "hkl-unit-private.h"           // for hkl_unit_angle_deg, etc
+#include "hkl-vector-private.h"         // for HklVector, hkl_vector_angle, etc
+#include "hkl.h"                        // for HklSample, etc
+#include "hkl/ccan/darray/darray.h"     // for darray_foreach, darray_item
+#include "hkl/ccan/list/list.h"         // for list_head, list_add_tail, etc
 
 /* private */
 

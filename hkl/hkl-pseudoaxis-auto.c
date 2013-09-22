@@ -19,15 +19,26 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <string.h>
-#ifndef _MSC_VER
-# include <alloca.h>
-#endif
-#include <gsl/gsl_sf_trig.h>
-#include <gsl/gsl_multiroots.h>
-
-#include "hkl-pseudoaxis-auto-private.h"
-#include "hkl-error-private.h"
+#include <alloca.h>                     // for alloca
+#include <gsl/gsl_errno.h>              // for ::GSL_CONTINUE
+#include <gsl/gsl_machine.h>            // for GSL_SQRT_DBL_EPSILON
+#include <gsl/gsl_matrix_double.h>      // for gsl_matrix_alloc, etc
+#include <gsl/gsl_multiroots.h>         // for gsl_multiroot_function, etc
+#include <gsl/gsl_vector_double.h>      // for gsl_vector, etc
+#include <math.h>                       // for fabs, M_PI
+#include <stddef.h>                     // for size_t
+#include <stdlib.h>                     // for rand, RAND_MAX
+#include <string.h>                     // for NULL, memset, memcpy
+#include <sys/types.h>                  // for uint
+#include "hkl-error-private.h"          // for hkl_error_set
+#include "hkl-geometry-private.h"       // for hkl_geometry_update
+#include "hkl-macros-private.h"         // for HKL_MALLOC, hkl_assert, etc
+#include "hkl-parameter-private.h"      // for _HklParameter
+#include "hkl-pseudoaxis-auto-private.h"  // for HklModeAutoInfo, etc
+#include "hkl-pseudoaxis-private.h"     // for _HklEngine, HklModeInfo, etc
+#include "hkl.h"                        // for HklEngine, HklMode, etc
+#include "hkl/ccan/container_of/container_of.h"  // for container_of
+#include "hkl/ccan/darray/darray.h"     // for darray_foreach
 
 /* #define DEBUG */
 

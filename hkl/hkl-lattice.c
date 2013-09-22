@@ -19,13 +19,16 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <stdlib.h>
-#include <math.h>
-
-#include "hkl-lattice-private.h"
-#include "hkl-parameter-private.h"
-#include "hkl-matrix-private.h"
-#include "hkl-unit-private.h"
+#include <math.h>                       // for cos, sin, M_PI, atan2, sqrt
+#include <stdio.h>                      // for fprintf, FILE
+#include <stdlib.h>                     // for NULL, free
+#include "hkl-lattice-private.h"        // for _HklLattice
+#include "hkl-macros-private.h"         // for HKL_MALLOC
+#include "hkl-matrix-private.h"         // for _HklMatrix
+#include "hkl-parameter-private.h"      // for hkl_parameter_init_copy, etc
+#include "hkl-unit-private.h"           // for hkl_unit_length_nm, etc
+#include "hkl-vector-private.h"         // for hkl_vector_angle, etc
+#include "hkl.h"                        // for HklLattice, etc
 
 /* private */
 

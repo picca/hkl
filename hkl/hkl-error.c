@@ -25,11 +25,14 @@
  */
 
 #define _GNU_SOURCE /* need for vasprintf */
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "hkl-error-private.h"
+#include <stdarg.h>                     // for va_list, va_end, va_start
+#include <stddef.h>                     // for size_t
+#include <stdio.h>                      // for NULL, fprintf, vasprintf, etc
+#include <stdlib.h>                     // for free, malloc
+#include <string.h>                     // for strdup, strlen, strncat, etc
+#include "hkl-error-private.h"          // for _HklError
+#include "hkl-macros-private.h"         // for HKL_MALLOC
+#include "hkl.h"                        // for HklError
 
 /**
  * hkl_error_new_valist: (skip)
