@@ -549,7 +549,7 @@ double hkl_sample_UB_set(HklSample *self, const HklMatrix *UB)
  *
  * Return value: the first HklSampleReflection of the sample.
  **/ 
-HklSampleReflection *hkl_sample_first_reflection_get(const HklSample *self)
+HklSampleReflection *hkl_sample_first_reflection_get(HklSample *self)
 {
 	return list_top(&self->reflections, HklSampleReflection, list);
 }
@@ -561,13 +561,10 @@ HklSampleReflection *hkl_sample_first_reflection_get(const HklSample *self)
  *
  * Return value: (allow-none): the next reflection or NULL if no more reflection
  **/
-HklSampleReflection *hkl_sample_next_reflection_get(const HklSample *self,
-						    const HklSampleReflection *reflection)
+HklSampleReflection *hkl_sample_next_reflection_get(HklSample *self,
+						    HklSampleReflection *reflection)
 {
-	if (&self->reflections.n == reflection->list.next)
-		return NULL;
-	else
-		return list_entry(reflection->list.next, HklSampleReflection, list);
+	return list_next(&self->reflections, reflection, list);
 }
 
 /**
