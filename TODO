@@ -25,3 +25,27 @@ Roadmap
 	* use the liboil to speed calculation (in HklVector, HklMatrix and HklQuaternion)
 	* add a .spec file for rpm generation
 	* investigate the prigo diffractometer.
+
+SIRIUS
+
+Il va falloir ajouter deux géométries différentes suivant les différents montages possibles.
+
+Sample :
+
+1) montage kappa
+"mu" 0, 0, -1
+"komega" 0, -1, 0
+"kappa" ???? à vérifier +<-- -->- CW vu de l'échantillon.
+"kphi" 0, -1, 0
+
+2) montage tourelle
+"thetah" 0, 0, -1
+"alphay" 0, 1, 0
+"alphax" 1, 0, 0
+
+Detector1 :
+"delta" 0, 0, -1
+"gamma" 0, -1, 0
+
+Detector2 :
+"delta0" 0, 0, -1 
