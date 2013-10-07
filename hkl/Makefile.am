@@ -37,9 +37,10 @@ libhkl_la_SOURCES = \
 	hkl-pseudoaxis-k4cv-psi.c \
 	hkl-pseudoaxis-k6c-hkl.c \
 	hkl-pseudoaxis-k6c-psi.c \
-	hkl-pseudoaxis-zaxis-hkl.c \
-	hkl-pseudoaxis-soleil-sixs-med.c \
 	hkl-pseudoaxis-petra3-hkl.c \
+	hkl-pseudoaxis-soleil-sirius-turret.c \
+	hkl-pseudoaxis-soleil-sixs-med.c \
+	hkl-pseudoaxis-zaxis-hkl.c \
 	hkl-quaternion.c \
 	hkl-sample.c \
 	hkl-source.c \
@@ -72,9 +73,10 @@ hklinclude_HEADERS = \
 	hkl-pseudoaxis-factory.h  \
 	hkl-pseudoaxis-k4cv.h \
 	hkl-pseudoaxis-k6c.h \
-	hkl-pseudoaxis-zaxis.h \
+	hkl-pseudoaxis-soleil-sirius-turret.h \
 	hkl-pseudoaxis-soleil-sixs-med.h \
 	hkl-pseudoaxis-petra3.h \
+	hkl-pseudoaxis-zaxis.h \
 	hkl-quaternion.h \
 	hkl-sample.h \
 	hkl-source.h \

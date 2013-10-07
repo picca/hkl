@@ -160,6 +160,11 @@ HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_factory(const HklGeometryCo
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_q2_new());
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_qper_qpar_new());
 		break;
+	case HKL_GEOMETRY_TYPE_SOLEIL_SIRIUS_TURRET:
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_soleil_sirius_turret_hkl_new());
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_q2_new());
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_qper_qpar_new());
+		break;
 	}
 	return self;
 }
