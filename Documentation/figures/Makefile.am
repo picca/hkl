@@ -1,8 +1,8 @@
 .asy.png:
-	@ASY@ -config "" -render=4 -f png -o $@ $<
+	-@ASY@ -config "" -render=4 -f png -o $@ $<
 
 .asy.pdf:
-	@ASY@ -config "" -render=0 -f pdf -noprc -o $@ $<
+	-@ASY@ -config "" -render=0 -f pdf -noprc -o $@ $<
 
 dist_noinst_DATA = \
 	3S+1D.png \
@@ -17,6 +17,7 @@ dist_noinst_DATA = \
 	4S+2D_reciprocal4.png \
 	k4cv.png \
 	k6c.png \
+	med2_3_slits.png \
 	zaxis.png \
 	e2k_1.png \
 	e2k_2.png \
@@ -39,6 +40,7 @@ EXTRA_DIST = \
 	4S+2D_reciprocal4.asy \
 	k4cv.asy \
 	k6c.asy \
+	med2_3_slits.asy \
 	diffractometer.asy \
 	zaxis.asy \
 	eulerians.asy \

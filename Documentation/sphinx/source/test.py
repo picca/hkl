@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
 
-Copyright (C)      2011 Synchrotron SOLEIL
+Copyright (C) 2011-2013 Synchrotron SOLEIL
                         L'Orme des Merisiers Saint-Aubin
                         BP 48 91192 GIF-sur-YVETTE CEDEX
 Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
@@ -231,6 +231,15 @@ test_all()
 
 	/* test all SOLEIL SIXS MED 2+3 engines */
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_3);
+	geometry = hkl_geometry_factory_new(config);
+	engines = hkl_pseudo_axis_engine_list_factory(config);
+	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
+	test_engines(test, engines);
+	hkl_geometry_free(geometry);
+	hkl_pseudo_axis_engine_list_free(engines);
+
+	/* test all SOLEIL SIRIUS TURRET engines */
+	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_SOLEIL_SIRIUS_TURRET);
 	geometry = hkl_geometry_factory_new(config);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);

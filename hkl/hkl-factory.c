@@ -33,6 +33,7 @@
 #include "hkl-pseudoaxis-petra3-private.h"
 #include "hkl-pseudoaxis-private.h"     // for hkl_engine_list_add, etc
 #include "hkl-pseudoaxis-soleil-sixs-med-private.h"
+#include "hkl-pseudoaxis-soleil-sirius-turret-private.h"
 #include "hkl-pseudoaxis-zaxis-private.h"  // for hkl_engine_zaxis_hkl_new
 #include "hkl.h"                        // for HklFactory, HklGeometry, etc
 #include "hkl/ccan/autodata/autodata.h"  // for AUTODATA, autodata_get
@@ -735,3 +736,50 @@ static HklEngineList *hkl_engine_list_new_eulerian4C_horizontal(const HklFactory
 }
 
 REGISTER_DIFFRACTOMETER(eulerian4C_horizontal, "E4CH", HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL_DESCRIPTION);
+
+/************************/
+/* SOLEIL SIRIUS TURRET */
+/************************/
+
+#define HKL_GEOMETRY_TYPE_SOLEIL_SIRIUS_TURRET_DESCRIPTION		\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 3 axes for the sample\n"					\
+	"\n"								\
+	"  + **thetah** : rotation around the :math:`-\\vec{z}` direction (0, 0, -1)\n" \
+	"  + **alphay** : rotation around the :math:`\\vec{y}` direction (0, 1, 0)\n" \
+	"  + **alphax** : rotating around the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"\n"								\
+	"+ 2 axis for the detector\n"					\
+	"\n"								\
+	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, 0, -1)\n" \
+	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, -1, 0)\n"
+
+static HklGeometry *hkl_geometry_new_soleil_sirius_turret(const HklFactory *factory)
+{
+	HklGeometry *self = hkl_geometry_new(factory);
+	HklHolder *h;
+
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "thetah", 0, 0, -1);
+	hkl_holder_add_rotation_axis(h, "alphay", 0, 1, 0);
+	hkl_holder_add_rotation_axis(h, "alphax", 1, 0, 0);
+
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "delta", 0, 0, -1);
+	hkl_holder_add_rotation_axis(h, "gamma", 0, -1, 0);
+
+	return self;
+}
+
+static HklEngineList *hkl_engine_list_new_soleil_sirius_turret(const HklFactory *factory)
+{
+	HklEngineList *self = hkl_engine_list_new();
+
+	hkl_engine_list_add(self, hkl_engine_soleil_sirius_turret_hkl_new());
+	hkl_engine_list_add(self, hkl_engine_q2_new());
+	hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
+
+	return self;
+}
+
+REGISTER_DIFFRACTOMETER(soleil_sirius_turret, "SOLEIL SIRIUS TURRET", HKL_GEOMETRY_TYPE_SOLEIL_SIRIUS_TURRET_DESCRIPTION);

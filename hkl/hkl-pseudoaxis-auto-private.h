@@ -32,6 +32,7 @@
 #include "hkl-pseudoaxis-private.h"     // for HklModeOperations, etc
 #include "hkl.h"                        // for HklMode, hkl_detector_free, etc
 #include "hkl/ccan/container_of/container_of.h"  // for container_of
+#include "hkl/ccan/array_size/array_size.h"  // ARRAY_SIZE
 
 HKL_BEGIN_DECLS
 
