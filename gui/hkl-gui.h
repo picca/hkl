@@ -238,7 +238,7 @@ private:
 	HklGeometry *_geometry;
 	HklDetector *_detector;
 	HklSample *_sample;
-	std::map<std::string, HklSample *> _samples;	
+	std::map<std::string, HklSample *> _samples;
 	HklLattice *_reciprocal;
 	HklEngineList *_engines;
 

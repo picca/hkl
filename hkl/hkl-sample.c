@@ -548,7 +548,7 @@ double hkl_sample_UB_set(HklSample *self, const HklMatrix *UB)
  * @self: the this ptr
  *
  * Return value: the first HklSampleReflection of the sample.
- **/ 
+ **/
 HklSampleReflection *hkl_sample_first_reflection_get(HklSample *self)
 {
 	return list_top(&self->reflections, HklSampleReflection, list);

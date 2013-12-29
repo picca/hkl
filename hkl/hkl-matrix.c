@@ -30,7 +30,7 @@
 
 /**
  * hkl_matrix_new: (skip)
- * 
+ *
  * Returns: a new uninitialized HklMatrix
  */
 HklMatrix *hkl_matrix_new()

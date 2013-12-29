@@ -409,4 +409,3 @@ HklSampleReflection *hkl_sample_add_reflection_binding(HklSample *self,
 
 	return reflection;
 }
-

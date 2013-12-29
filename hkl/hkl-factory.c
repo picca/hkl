@@ -203,12 +203,12 @@ REGISTER_DIFFRACTOMETER(twoC, "TwoC", HKL_GEOMETRY_TWOC_DESCRIPTION);
 /********/
 /* E4CV */
 /********/
-#define HKL_GEOMETRY_EULERIAN4C_VERTICAL_DESCRIPTION					\
+#define HKL_GEOMETRY_EULERIAN4C_VERTICAL_DESCRIPTION			\
 	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
 	"+ 3 axes for the sample\n"					\
 	"\n"								\
 	"  + **omega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"  + **chi** : rotating around the :math:`\\vec{x}` direction (1, 0, 0)\n"	\
+	"  + **chi** : rotating around the :math:`\\vec{x}` direction (1, 0, 0)\n" \
 	"  + **phi** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
 	"\n"								\
 	"+ 1 axis for the detector\n"					\
@@ -256,7 +256,7 @@ REGISTER_DIFFRACTOMETER(eulerian4C_vertical, "E4CV", HKL_GEOMETRY_EULERIAN4C_VER
 	"+ 3 axes for the sample\n"					\
 	"\n"								\
 	"  + **komega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"  + **kappa** : rotating around the :math:`\\vec{x}` direction (0, :math:`-\\cos\\alpha`, :math:`-\\sin\\alpha`)\n"	\
+	"  + **kappa** : rotating around the :math:`\\vec{x}` direction (0, :math:`-\\cos\\alpha`, :math:`-\\sin\\alpha`)\n" \
 	"  + **kphi** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
 	"\n"								\
 	"+ 1 axis for the detector\n"					\

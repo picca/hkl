@@ -60,11 +60,11 @@ struct _HklParameterOperations {
 	void           (*free)(HklParameter *self);
 	void           (*init_copy)(HklParameter *self, const HklParameter *src);
 	double         (*get_value_closest)(const HklParameter *self,
-				    const HklParameter *other);
+					    const HklParameter *other);
 	unsigned int   (*set_value)(HklParameter *self, double value,
-				  HklError **error);
+				    HklError **error);
 	unsigned int   (*set_value_unit)(HklParameter *self, double value,
-				       HklError **error);
+					 HklError **error);
 	void           (*set_value_smallest_in_range)(HklParameter *self);
 	void           (*randomize)(HklParameter *self);
 	int            (*is_valid)(const HklParameter *self);
