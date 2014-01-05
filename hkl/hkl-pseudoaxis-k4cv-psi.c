@@ -13,28 +13,53 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2013 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <hkl/hkl-pseudoaxis-k4cv.h>
-#include <hkl/hkl-pseudoaxis-common-psi.h>
+#include "hkl-parameter-private.h"      // for HKL_PARAMETER_DEFAULTS, etc
+#include "hkl-pseudoaxis-auto-private.h"  // for HklFunction, etc
+#include "hkl-pseudoaxis-common-psi-private.h"  // for hkl_engine_psi_new, etc
+#include "hkl-pseudoaxis-private.h"     // for hkl_engine_add_mode
+#include "hkl/ccan/array_size/array_size.h"  // for ARRAY_SIZE
+#include "hkl.h"                        // for HklEngine, HklMode, etc
 
-HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_psi_new(void)
+/********/
+/* mode */
+/********/
+
+static HklMode *psi()
 {
-	HklPseudoAxisEngine *self;
-	HklPseudoAxisEngineModePsi *mode;
-	char const *axes_names_psi[] = {"komega", "kappa", "kphi", "tth"};
+	static const char *axes[] = {"komega", "kappa", "kphi", "tth"};
+	static const HklFunction *functions[] = {&psi_func};
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS, .name = "h1", .range = {.min=-1, .max=1}, ._value=1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "k1", .range = {.min=-1, .max=1}, ._value=1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "l1", .range = {.min=-1, .max=1}, ._value=1,},
+	};
+	static const HklModeAutoInfo info = {
+		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
+	};
 
-	self = hkl_pseudo_axis_engine_psi_new();
+	return hkl_mode_psi_new(&info);
+}
 
-	/* psi get/set */
-	mode = hkl_pseudo_axis_engine_mode_psi_new("psi", 4, axes_names_psi);
-	hkl_pseudo_axis_engine_add_mode(self, (HklPseudoAxisEngineMode *)mode);
+/**********************/
+/* pseudo axis engine */
+/**********************/
 
-	hkl_pseudo_axis_engine_select_mode(self, 0);
+HklEngine *hkl_engine_k4cv_psi_new(void)
+{
+	HklEngine *self;
+	HklMode *default_mode;
+
+	self = hkl_engine_psi_new();
+
+	default_mode = psi();
+	hkl_engine_add_mode(self, default_mode);
+	hkl_engine_select_mode(self, default_mode);
 
 	return self;
 }

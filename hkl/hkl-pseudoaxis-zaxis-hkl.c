@@ -13,68 +13,89 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2013 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <gsl/gsl_math.h>
-#include <gsl/gsl_vector.h>
+#include <gsl/gsl_errno.h>              // for ::GSL_SUCCESS
+#include <gsl/gsl_sys.h>                // for gsl_isnan
+#include <gsl/gsl_vector_double.h>      // for gsl_vector
+#include "hkl-pseudoaxis-auto-private.h"  // for HklFunction, etc
+#include "hkl-pseudoaxis-common-hkl-private.h"  // for RUBh_minus_Q, etc
+#include "hkl-pseudoaxis-private.h"     // for hkl_engine_add_mode
+#include "hkl/ccan/array_size/array_size.h"  // for ARRAY_SIZE
+#include "hkl.h"                        // for HklMode, HklEngine, etc
 
-#include <hkl/hkl-pseudoaxis-zaxis.h>
-#include <hkl/hkl-pseudoaxis-common-hkl.h>
+/* #define DEBUG */
 
-static int reflectivity(const gsl_vector *x, void *params, gsl_vector *f)
+/***********************/
+/* numerical functions */
+/***********************/
+
+static int _reflectivity_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double mu, gamma;
-	double const *x_data = gsl_vector_const_ptr(x, 0);
-	double *f_data = gsl_vector_ptr(f, 0);
+	const double mu = x->data[0];
+	const double gamma = x->data[3];
 
-	RUBh_minus_Q(x_data, params, f_data);
+	CHECK_NAN(x->data, x->size);
 
-	mu = x_data[0];
-	gamma = x_data[3];
-
-	f_data[3] = mu - gamma;
+	RUBh_minus_Q(x->data, params, f->data);
+	f->data[3] = mu - gamma;
 
 	return  GSL_SUCCESS;
 }
 
-/*************************/
-/* ZAXIS PseudoAxeEngine */
-/*************************/
+static const HklFunction reflectivity_func = {
+	.function = _reflectivity_func,
+	.size = 4,
+};
 
-HklPseudoAxisEngine *hkl_pseudo_axis_engine_zaxis_hkl_new(void)
+/********/
+/* mode */
+/********/
+
+static HklMode* zaxis()
 {
-	HklPseudoAxisEngine *self;
-	HklPseudoAxisEngineMode *mode;
+	static const char* axes[] = {"omega", "delta", "gamma"};
+	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
+	static const HklModeAutoInfo info = {
+		INFO_AUTO(__func__, axes, functions),
+	};
 
-	self = hkl_pseudo_axis_engine_hkl_new();
+	return hkl_mode_auto_new(&info,
+				 &hkl_full_mode_operations);
+}
 
-	/* zaxis */
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"zaxis",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
-		1, RUBh_minus_Q_func,
-		(size_t)0,
-		(size_t)3, "omega", "delta", "gamma");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
+static HklMode* reflectivity()
+{
+	static const char* axes[] = {"mu", "omega", "delta", "gamma"};
+	static const HklFunction *functions[] = {&reflectivity_func};
+	static const HklModeAutoInfo info = {
+		INFO_AUTO(__func__, axes, functions),
+	};
 
-	/* reflectivity */
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"reflectivity",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
-		1, reflectivity,
-		(size_t)0,
-		(size_t)4, "mu", "omega", "delta", "gamma");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
+	return hkl_mode_auto_new(&info,
+				 &hkl_full_mode_operations);
+}
 
-	hkl_pseudo_axis_engine_select_mode(self, 0);
+/**********************/
+/* pseudo axis engine */
+/**********************/
+
+HklEngine *hkl_engine_zaxis_hkl_new(void)
+{
+	HklEngine *self;
+	HklMode *default_mode;
+
+	self = hkl_engine_hkl_new();
+
+	default_mode = zaxis();
+	hkl_engine_add_mode(self, default_mode);
+	hkl_engine_select_mode(self, default_mode);
+
+	hkl_engine_add_mode(self, reflectivity());
 
 	return self;
 }

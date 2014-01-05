@@ -4,8 +4,8 @@
 
   This software is provided 'as-is', without any express or implied warranty.
   In no event will the authors be held liable for any damages arising from the use of this software.
-  Permission is granted to anyone to use this software for any purpose, 
-  including commercial applications, and to alter it and redistribute it freely, 
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it freely,
   subject to the following restrictions:
 
   1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
@@ -30,7 +30,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2010      Synchrotron SOLEIL
+ * Copyright (C) 2010-2013 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -70,7 +70,7 @@ using namespace std;
 struct TRIMESH_KEY
 {
 	btCollisionShape* m_shape;
-	GLuint m_dlist;//OpenGL display list	
+	GLuint m_dlist;//OpenGL display list
 };
 
 typedef map<unsigned long,TRIMESH_KEY> TRIMESH_KEY_MAP;
@@ -85,7 +85,7 @@ public:
 
 	virtual void processTriangle(btVector3* triangle,int partId, int triangleIndex)
 		{
-		
+
 			btVector3 diff1 = triangle[1] - triangle[0];
 			btVector3 diff2 = triangle[2] - triangle[0];
 			btVector3 normal = diff1.cross(diff2);
@@ -127,7 +127,7 @@ void OGL_displaylist_clean(void)
 	map_iter = g_display_lists.begin();
 
 	while(map_iter!=map_itend){
-		glDeleteLists(map_iter->second.m_dlist,1);		
+		glDeleteLists(map_iter->second.m_dlist,1);
 		map_iter++;
 	}
 
@@ -154,7 +154,7 @@ void OGL_displaylist_register_shape(btCollisionShape *shape)
 	glCullFace(GL_BACK);
 
 	if (shape->isConcave()){
-		btConcaveShape* concaveMesh = (btConcaveShape*) shape;			
+		btConcaveShape* concaveMesh = (btConcaveShape*) shape;
 		concaveMesh->processAllTriangles(&drawCallback,aabbMin,aabbMax);
 	}
 
@@ -208,7 +208,7 @@ public:
 				glEnd();
 			}else{
 				glBegin(GL_TRIANGLES);
-			
+
 				glVertex3d(triangle[0].getX(), triangle[0].getY(), triangle[0].getZ());
 				glVertex3d(triangle[1].getX(), triangle[1].getY(), triangle[1].getZ());
 				glVertex3d(triangle[2].getX(), triangle[2].getY(), triangle[2].getZ());
@@ -244,7 +244,7 @@ public:
 };
 
 
-void GL_ShapeDrawer::drawSphere(btScalar radius, int lats, int longs) 
+void GL_ShapeDrawer::drawSphere(btScalar radius, int lats, int longs)
 {
 	int i, j;
 	for(i=0;i<=lats;i++){
@@ -278,7 +278,7 @@ GL_ShapeDrawer::ShapeCache* GL_ShapeDrawer::cache(btConvexShape *shape)
 		sc->m_shapehull.buildHull(shape->getMargin());
 		m_shapecaches.push_back(sc);
 		shape->setUserPointer(sc);
-		/* Build edges	*/ 
+		/* Build edges	*/
 		const int ni = sc->m_shapehull.numIndices();
 		const int nv = sc->m_shapehull.numVertices();
 		const unsigned int *pi = sc->m_shapehull.getIndexPointer();
@@ -324,7 +324,7 @@ void GL_ShapeDrawer::drawOpenGL(btScalar *m, const btCollisionShape *shape,
 				const btVector3 & color,int debugMode,
 				const btVector3 & worldBoundsMin, const btVector3 & worldBoundsMax)
 {
-	
+
 	if (shape->getShapeType() == CUSTOM_CONVEX_SHAPE_TYPE){
 		btVector3 org(m[12], m[13], m[14]);
 		btVector3 dx(m[0], m[1], m[2]);
@@ -377,7 +377,7 @@ void GL_ShapeDrawer::drawOpenGL(btScalar *m, const btCollisionShape *shape,
 		return;
 	}
 
-	glPushMatrix(); 
+	glPushMatrix();
 	btglMultMatrix(m);
 
 	if (shape->getShapeType() == UNIFORM_SCALING_SHAPE_PROXYTYPE){
@@ -414,7 +414,7 @@ void GL_ShapeDrawer::drawOpenGL(btScalar *m, const btCollisionShape *shape,
 				GLubyte *pi = image+y*256*3;
 				for(int x=0;x<256;++x){
 					const int s = x>>4;
-					const GLubyte b = 180;					
+					const GLubyte b = 180;
 					GLubyte c = b+((s+t&1)&1)*(255-b);
 					pi[0] = pi[1] = pi[2] = c;
 					pi += 3;
@@ -430,8 +430,8 @@ void GL_ShapeDrawer::drawOpenGL(btScalar *m, const btCollisionShape *shape,
 			glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
 			gluBuild2DMipmaps(GL_TEXTURE_2D,3,256,256,GL_RGB,GL_UNSIGNED_BYTE,image);
 			delete[] image;
-	
-			
+
+
 		}
 
 		glMatrixMode(GL_TEXTURE);
@@ -459,7 +459,7 @@ void GL_ShapeDrawer::drawOpenGL(btScalar *m, const btCollisionShape *shape,
 			glDisable(GL_TEXTURE_2D);
 		}
 
-		glColor3f(color.x(),color.y(), color.z());		
+		glColor3f(color.x(),color.y(), color.z());
 
 		bool useWireframeFallback = true;
 
@@ -484,7 +484,7 @@ void GL_ShapeDrawer::drawOpenGL(btScalar *m, const btCollisionShape *shape,
 			{
 				const btBoxShape* boxShape = static_cast<const btBoxShape*>(shape);
 				btVector3 halfExtent = boxShape->getHalfExtentsWithMargin();
-					
+
 				static int indices[36] = {
 					0,1,2,
 					3,2,1,
@@ -499,14 +499,14 @@ void GL_ShapeDrawer::drawOpenGL(btScalar *m, const btCollisionShape *shape,
 					7,2,3,
 					7,6,2};
 
-				btVector3 vertices[8]={	
+				btVector3 vertices[8]={
 					btVector3(halfExtent[0],halfExtent[1],halfExtent[2]),
 					btVector3(-halfExtent[0],halfExtent[1],halfExtent[2]),
-					btVector3(halfExtent[0],-halfExtent[1],halfExtent[2]),	
-					btVector3(-halfExtent[0],-halfExtent[1],halfExtent[2]),	
+					btVector3(halfExtent[0],-halfExtent[1],halfExtent[2]),
+					btVector3(-halfExtent[0],-halfExtent[1],halfExtent[2]),
 					btVector3(halfExtent[0],halfExtent[1],-halfExtent[2]),
-					btVector3(-halfExtent[0],halfExtent[1],-halfExtent[2]),	
-					btVector3(halfExtent[0],-halfExtent[1],-halfExtent[2]),	
+					btVector3(-halfExtent[0],halfExtent[1],-halfExtent[2]),
+					btVector3(halfExtent[0],-halfExtent[1],-halfExtent[2]),
 					btVector3(-halfExtent[0],-halfExtent[1],-halfExtent[2])};
 #if 1
 				glBegin (GL_TRIANGLES);
@@ -521,7 +521,7 @@ void GL_ShapeDrawer::drawOpenGL(btScalar *m, const btCollisionShape *shape,
 					glVertex3f (v1.x(), v1.y(), v1.z());
 					glVertex3f (v2.x(), v2.y(), v2.z());
 					glVertex3f (v3.x(), v3.y(), v3.z());
-						
+
 				}
 				glEnd();
 #endif
@@ -533,7 +533,7 @@ void GL_ShapeDrawer::drawOpenGL(btScalar *m, const btCollisionShape *shape,
 
 
 #if 0
-			
+
 			case CONE_SHAPE_PROXYTYPE:
 			{
 				const btConeShape* coneShape = static_cast<const btConeShape*>(shape);
@@ -595,7 +595,7 @@ void GL_ShapeDrawer::drawOpenGL(btScalar *m, const btCollisionShape *shape,
 				btTransform childTransform;
 				childTransform.setIdentity();
 
-				
+
 				for (int i = multiSphereShape->getSphereCount()-1; i>=0;i--){
 					btSphereShape sc(multiSphereShape->getSphereRadius(i));
 					childTransform.setOrigin(multiSphereShape->getSpherePosition(i));
@@ -704,7 +704,7 @@ void GL_ShapeDrawer::drawOpenGL(btScalar *m, const btCollisionShape *shape,
 			if (dlist){
 				glCallList(dlist);
 			}else{
-#else		
+#else
 				if (shape->isConcave() && !shape->isInfinite()){
 					btConcaveShape* concaveMesh = (btConcaveShape*) shape;
 
@@ -727,7 +727,7 @@ void GL_ShapeDrawer::drawOpenGL(btScalar *m, const btCollisionShape *shape,
 void GL_ShapeDrawer::drawShadow(btScalar *m, const btVector3 & extrusion, const btCollisionShape *shape,
 				const btVector3 & worldBoundsMin, const btVector3 & worldBoundsMax)
 {
-	glPushMatrix(); 
+	glPushMatrix();
 	btglMultMatrix(m);
 	if(shape->getShapeType() == UNIFORM_SCALING_SHAPE_PROXYTYPE){
 		const btUniformScalingShape *scalingShape = static_cast<const btUniformScalingShape*>(shape);
@@ -755,7 +755,7 @@ void GL_ShapeDrawer::drawShadow(btScalar *m, const btVector3 & extrusion, const 
 			ShapeCache *sc = cache((btConvexShape*)shape);
 			btShapeHull *hull = &sc->m_shapehull;
 			glBegin(GL_QUADS);
-			for(int i=0;i<sc->m_edges.size();++i){			
+			for(int i=0;i<sc->m_edges.size();++i){
 				const btScalar d = btDot(sc->m_edges[i].n[0],extrusion);
 				if((d*btDot(sc->m_edges[i].n[1],extrusion))<0){
 					const int q = d<0?1:0;

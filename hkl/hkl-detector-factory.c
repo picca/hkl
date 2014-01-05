@@ -13,24 +13,32 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2013 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
+#include <stddef.h>                     // for NULL
+#include "hkl-detector-private.h"       // for hkl_detector_new
+#include "hkl.h"                        // for HklDetector, etc
 
-#include <hkl/hkl-detector-factory.h>
-
-
+/**
+ * hkl_detector_factory_new:
+ * @type:
+ *
+ * Detector factory
+ *
+ * Returns:
+ **/
 HklDetector *hkl_detector_factory_new(HklDetectorType type)
 {
 	HklDetector *detector = NULL;
 
 	switch(type) {
-		case HKL_DETECTOR_TYPE_0D:
-			detector = hkl_detector_new();
-			break;
+	case HKL_DETECTOR_TYPE_0D:
+		detector = hkl_detector_new();
+		break;
 	}
 
 	return detector;

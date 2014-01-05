@@ -18,8 +18,8 @@ subject to the following restrictions:
 
 #ifdef USE_WIN32_THREADING  //platform specific defines are defined in PlatformDefinitions.h
 
-#ifndef WIN32_THREAD_SUPPORT_H
-#define WIN32_THREAD_SUPPORT_H
+#ifndef BT_WIN32_THREAD_SUPPORT_H
+#define BT_WIN32_THREAD_SUPPORT_H
 
 #include "LinearMath/btAlignedObjectArray.h"
 
@@ -28,10 +28,6 @@ subject to the following restrictions:
 
 typedef void (*Win32ThreadFunc)(void* userPtr,void* lsMemory);
 typedef void* (*Win32lsMemorySetupFunc)();
-
-
-
-
 
 
 ///Win32ThreadSupport helps to initialize/shutdown libspe2, start/stop SPU tasks and communication
@@ -109,6 +105,8 @@ public:
 ///check for messages from SPUs
 	virtual	void waitForResponse(unsigned int *puiArgument0, unsigned int *puiArgument1);
 
+	virtual bool isTaskCompleted(unsigned int *puiArgument0, unsigned int *puiArgument1, int timeOutInMilliseconds);
+
 ///start the spus (can be called at the beginning of each frame, to make sure that the right SPU program is loaded)
 	virtual	void startSPU();
 
@@ -125,8 +123,16 @@ public:
 		return m_maxNumTasks;
 	}
 
+	virtual void*	getThreadLocalMemory(int taskId)
+	{
+		return m_activeSpuStatus[taskId].m_lsMemory;
+	}
+	virtual btBarrier*	createBarrier();
+
+	virtual btCriticalSection* createCriticalSection();
+
 };
 
-#endif //WIN32_THREAD_SUPPORT_H
+#endif //BT_WIN32_THREAD_SUPPORT_H
 
 #endif //USE_WIN32_THREADING

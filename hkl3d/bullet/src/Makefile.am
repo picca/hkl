@@ -1,8 +1,12 @@
 if CONDITIONAL_BUILD_MULTITHREADED
-noinst_LTLIBRARIES	= libbulletmath.la libbulletcollision.la libbulletdynamics.la libbulletmultithreaded.la
+noinst_LTLIBRARIES = libbulletmath.la libbulletcollision.la libbulletdynamics.la libbulletmultithreaded.la
 
-libbulletmultithreaded_la_CXXFLAGS = ${CXXFLAGS} -I./BulletMultiThreaded/vectormath/scalar/cpp
+libbulletmultithreaded_la_CXXFLAGS = -I./BulletMultiThreaded/vectormath/scalar/cpp
 libbulletmultithreaded_la_SOURCES =\
+		BulletMultiThreaded/GpuSoftBodySolvers/CPU/btSoftBodySolverData.h \
+		BulletMultiThreaded/GpuSoftBodySolvers/CPU/btSoftBodySolver_CPU.cpp \
+		BulletMultiThreaded/GpuSoftBodySolvers/CPU/btSoftBodySolver_CPU.h \
+		BulletMultiThreaded/HeapManager.h \
 		BulletMultiThreaded/SpuCollisionObjectWrapper.cpp \
 		BulletMultiThreaded/SpuSampleTask/SpuSampleTask.cpp \
 		BulletMultiThreaded/SpuLibspe2Support.cpp \
@@ -37,6 +41,8 @@ libbulletmultithreaded_la_SOURCES =\
 		BulletMultiThreaded/SpuGatheringCollisionDispatcher.h \
 		BulletMultiThreaded/SpuFakeDma.h \
 		BulletMultiThreaded/SpuSync.h \
+		BulletMultiThreaded/TrbDynBody.h \
+		BulletMultiThreaded/TrbStateVec.h \
 		BulletMultiThreaded/SpuCollisionObjectWrapper.h \
 		BulletMultiThreaded/SpuDoubleBuffer.h \
 		BulletMultiThreaded/SpuCollisionTaskProcess.h \
@@ -59,6 +65,8 @@ libbulletmath_la_SOURCES	= \
 		LinearMath/btConvexHull.cpp \
 		LinearMath/btHashMap.h \
 		LinearMath/btConvexHull.h \
+		LinearMath/btConvexHullComputer.cpp \
+		LinearMath/btConvexHullComputer.h \
 		LinearMath/btAabbUtil2.h \
 		LinearMath/btGeometryUtil.h \
 		LinearMath/btQuadWord.h \
@@ -137,6 +145,8 @@ libbulletcollision_la_SOURCES = \
 		BulletCollision/CollisionShapes/btConvex2dShape.cpp \
 		BulletCollision/CollisionShapes/btConvexInternalShape.cpp \
 		BulletCollision/CollisionShapes/btConvexHullShape.cpp \
+		BulletCollision/CollisionShapes/btConvexPolyhedron.cpp \
+		BulletCollision/CollisionShapes/btConvexPolyhedron.h \
 		BulletCollision/CollisionShapes/btTriangleCallback.cpp \
 		BulletCollision/CollisionShapes/btCapsuleShape.cpp \
 		BulletCollision/CollisionShapes/btConvexTriangleMeshShape.cpp \
@@ -169,6 +179,8 @@ libbulletcollision_la_SOURCES = \
 		BulletCollision/NarrowPhaseCollision/btGjkPairDetector.h \
 		BulletCollision/NarrowPhaseCollision/btMinkowskiPenetrationDepthSolver.h \
 		BulletCollision/NarrowPhaseCollision/btPointCollector.h \
+		BulletCollision/NarrowPhaseCollision/btPolyhedralContactClipping.cpp \
+		BulletCollision/NarrowPhaseCollision/btPolyhedralContactClipping.h \
 		BulletCollision/NarrowPhaseCollision/btConvexPenetrationDepthSolver.h \
 		BulletCollision/NarrowPhaseCollision/btSimplexSolverInterface.h \
 		BulletCollision/NarrowPhaseCollision/btRaycastCallback.h \

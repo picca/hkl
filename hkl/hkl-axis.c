@@ -13,28 +13,114 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2013 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <stdlib.h>
-#include <math.h>
-
-#include <gsl/gsl_math.h>
-#include <gsl/gsl_sf_trig.h>
-
-#include <hkl/hkl-axis.h>
-#include <hkl/hkl-quaternion.h>
+#include <gsl/gsl_nan.h>                // for GSL_NAN
+#include <gsl/gsl_sf_trig.h>            // for gsl_sf_angle_restrict_symm
+#include <gsl/gsl_sys.h>                // for gsl_isnan
+#include <math.h>                       // for M_PI, ceil, fabs, floor
+#include <stdio.h>                      // for FILE
+#include <stdlib.h>                     // for NULL, free
+#include "hkl-axis-private.h"           // for HklAxis
+#include "hkl-interval-private.h"       // for HklInterval, etc
+#include "hkl-macros-private.h"         // for HKL_MALLOC
+#include "hkl-parameter-private.h"      // for _HklParameter, etc
+#include "hkl-quaternion-private.h"     // for hkl_quaternion_fprintf, etc
+#include "hkl-vector-private.h"         // for hkl_vector_fprintf, etc
+#include "hkl.h"                        // for HklParameter, HKL_TRUE, etc
+#include "hkl/ccan/container_of/container_of.h"  // for container_of
 
 /***********/
 /* HklAxis */
 /***********/
-static void hkl_axis_update(HklAxis *self)
+
+static inline HklParameter *hkl_axis_copy_real(const HklParameter *base)
+{
+	HklAxis *self = container_of(base, HklAxis, parameter);
+	HklAxis *dup;
+
+	dup = HKL_MALLOC(HklAxis);
+
+	*dup = *self;
+
+	return &dup->parameter;
+}
+
+
+static inline void hkl_axis_free_real(HklParameter *self)
+{
+	free(container_of(self, HklAxis, parameter));
+}
+
+static inline void hkl_axis_update(HklAxis *self)
 {
 	hkl_quaternion_init_from_angle_and_axe(&self->q,
-					       ((HklParameter *)self)->value, &self->axis_v);
+					       self->parameter._value,
+					       &self->axis_v);
+}
+
+static inline void hkl_axis_init_copy_real(HklParameter *self, const HklParameter *src)
+{
+	HklAxis *axis_self = container_of(self, HklAxis, parameter);
+	HklAxis *axis_src = container_of(src, HklAxis, parameter);
+
+	*axis_self = *axis_src;
+	self->changed = HKL_TRUE;
+}
+
+static inline unsigned int hkl_axis_set_value_real(
+	HklParameter *self, double value,
+	HklError **error)
+{
+	HklAxis *axis = container_of(self, HklAxis, parameter);
+
+	if(!hkl_parameter_value_set_real(self, value, error))
+		return HKL_FALSE;
+
+	hkl_axis_update(axis);
+
+	return HKL_TRUE;
+}
+
+static inline unsigned int hkl_axis_set_value_unit_real(
+	HklParameter *self, double value,
+	HklError **error)
+{
+	HklAxis *axis = container_of(self, HklAxis, parameter);
+
+	if(!hkl_parameter_value_unit_set_real(self, value, error))
+		return HKL_FALSE;
+
+	hkl_axis_update(axis);
+
+	return HKL_TRUE;
+}
+
+static inline void hkl_axis_set_value_smallest_in_range_real(HklParameter *self)
+{
+	double value, min;
+
+	value = self->_value;
+	min = self->range.min;
+
+	if(value < min)
+		hkl_axis_set_value_real(self,
+					value + 2*M_PI*ceil((min - value)/(2*M_PI)),
+					NULL);
+	else
+		hkl_axis_set_value_real(self,
+					value - 2*M_PI*floor((value - min)/(2*M_PI)),
+					NULL);
+}
+
+static inline void hkl_axis_randomize_real(HklParameter *self)
+{
+	hkl_parameter_randomize_real(self);
+	hkl_axis_update(container_of(self, HklAxis, parameter));
 }
 
 /*
@@ -58,18 +144,48 @@ static void find_angle(double current, double *angle, double *distance,
 	}
 }
 
+static inline double hkl_axis_get_value_closest_real(const HklParameter *self,
+						     const HklParameter *ref)
+{
+	double angle = self->_value;
+
+	if(hkl_parameter_is_valid(self)){
+		if(hkl_interval_length(&self->range) >= 2*M_PI){
+			int k;
+			double current = ref->_value;
+			double distance = fabs(current - angle);
+			double delta = 2. * M_PI;
+			double min = self->range.min;
+			double max = self->range.max;
+
+			/* three cases */
+			if (angle > max) {
+				k = (int)(floor((max - angle) / delta));
+				angle += k * delta;
+				find_angle(current, &angle, &distance, min, max, -delta);
+			} else if (angle < min) {
+				k = (int) (ceil((min - angle) / delta));
+				angle += k * delta;
+				find_angle(current, &angle, &distance, min, max, delta);
+			} else {
+				find_angle(current, &angle, &distance, min, max, -delta);
+				find_angle(current, &angle, &distance, min, max, delta);
+			}
+		}
+
+	}else
+		angle = GSL_NAN;
+	return angle;
+}
 
 /*
  * check if the angle or its equivalent is in between [min, max]
  */
-int hkl_axis_is_value_compatible_with_range(HklAxis const *self)
+static inline int hkl_axis_is_valid_real(const HklParameter *self)
 {
-	double value;
+	double value = self->_value;
 	int res = HKL_FALSE;
-	HklInterval range;
-
-	value = ((HklParameter *)self)->value;
-	range = ((HklParameter *)self)->range;
+	HklInterval range = self->range;
 
 	if(hkl_interval_length(&range) > 2*M_PI)
 		res = HKL_TRUE;
@@ -88,165 +204,46 @@ int hkl_axis_is_value_compatible_with_range(HklAxis const *self)
 	return res;
 }
 
-HklAxis *hkl_axis_new(char const *name, HklVector const *axis_v)
+static inline void hkl_axis_fprintf_real(FILE *f, const HklParameter *self)
+{
+	HklAxis *axis = container_of(self, HklAxis, parameter);
+
+	hkl_parameter_fprintf_real(f, self);
+	hkl_vector_fprintf(f, &axis->axis_v);
+	hkl_quaternion_fprintf(f, &axis->q);
+}
+
+static HklParameterOperations hkl_parameter_operations_axis = {
+	HKL_PARAMETER_OPERATIONS_DEFAULTS,
+	.copy = hkl_axis_copy_real,
+	.free = hkl_axis_free_real,
+	.init_copy = hkl_axis_init_copy_real,
+	.get_value_closest = hkl_axis_get_value_closest_real,
+	.set_value = hkl_axis_set_value_real,
+	.set_value_unit = hkl_axis_set_value_unit_real,
+	.set_value_smallest_in_range = hkl_axis_set_value_smallest_in_range_real,
+	.randomize = hkl_axis_randomize_real,
+	.is_valid = hkl_axis_is_valid_real,
+	.fprintf = hkl_axis_fprintf_real
+};
+
+HklParameter *hkl_parameter_new_axis(char const *name, HklVector const *axis_v)
 {
 	HklAxis *self = NULL;
+	static HklAxis axis0 = {
+		.parameter = {
+			HKL_PARAMETER_DEFAULTS_ANGLE,
+			.ops = &hkl_parameter_operations_axis,
+		},
+		.q = {{1, 0, 0, 0}},
+	};
 
 	self = HKL_MALLOC(HklAxis);
 
-	hkl_axis_init(self, name, axis_v);
 
-	return self;
-}
-
-void hkl_axis_free(HklAxis *self)
-{
-	if(self)
-		free(self);
-}
-
-void hkl_axis_init(HklAxis *self, char const * name, HklVector const *axis_v)
-{
-	static HklQuaternion q0 = {{1, 0, 0, 0}};
-
-	/* base initializer */
-	hkl_parameter_init((HklParameter *)self, name, -M_PI, 0, M_PI,
-			   HKL_TRUE, HKL_TRUE,
-			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
-
+	*self = axis0;
+	self->parameter.name = name;
 	self->axis_v = *axis_v;
-	self->q = q0;
-}
 
-char const *hkl_axis_get_name(HklAxis const *self)
-{
-	return ((HklParameter *)self)->name;
-}
-
-int hkl_axis_get_changed(HklAxis const *self)
-{
-	return ((HklParameter *)self)->changed;
-}
-
-void hkl_axis_set_changed(HklAxis *self, int changed)
-{
-	((HklParameter *)self)->changed = changed;
-}
-
-double hkl_axis_get_value(HklAxis const *self)
-{
-	return ((HklParameter *)self)->value;
-}
-
-double hkl_axis_get_value_unit(HklAxis const *self)
-{
-	return hkl_parameter_get_value_unit((HklParameter *)self);
-}
-
-double hkl_axis_get_value_closest(HklAxis const *self, HklAxis const *axis)
-{
-	double angle = ((HklParameter *)self)->value;
-
-	if(hkl_axis_is_value_compatible_with_range(self)){
-		if(hkl_interval_length(&((HklParameter *)self)->range) >= 2*M_PI){
-			int k;
-			double current = ((HklParameter *)axis)->value;
-			double distance = fabs(current - angle);
-			double delta = 2. * M_PI;
-			double min = ((HklParameter *)self)->range.min;
-			double max = ((HklParameter *)self)->range.max;
-
-			/* three cases */
-			if (angle > max) {
-				k = (int)(floor((max - angle) / delta));
-				angle += k * delta;
-				find_angle(current, &angle, &distance, min, max, -delta);
-			} else if (angle < min) {
-				k = (int) (ceil((min - angle) / delta));
-				angle += k * delta;
-				find_angle(current, &angle, &distance, min, max, delta);
-			} else {
-				find_angle(current, &angle, &distance, min, max, -delta);
-				find_angle(current, &angle, &distance, min, max, delta);
-			}
-		}
-		
-	}else
-		angle = GSL_NAN;
-	return angle;
-}
-
-double hkl_axis_get_value_closest_unit(HklAxis const *self, HklAxis const *axis)
-{
-	double factor = hkl_unit_factor(((HklParameter *)self)->unit, ((HklParameter *)self)->punit);
-	return factor * hkl_axis_get_value_closest(self, axis);
-}
-
-double hkl_axis_get_max(HklAxis const *self)
-{
-	return hkl_parameter_get_max((HklParameter *)self);
-}
-
-void hkl_axis_get_range_unit(HklAxis const *self, double *min, double *max)
-{
-	hkl_parameter_get_range_unit((HklParameter *)self, min, max);
-}
-
-void hkl_axis_set_value(HklAxis *self, double value)
-{
-	hkl_parameter_set_value((HklParameter *)self, value);
-	hkl_axis_update(self);
-}
-
-void hkl_axis_set_value_smallest_in_range(HklAxis *self)
-{
-	double value, min;
-
-	value = ((HklParameter *)self)->value;
-	min = ((HklParameter *)self)->range.min;
-
-	if(value < min)
-		hkl_axis_set_value(self, value + 2*M_PI*ceil((min - value)/(2*M_PI)));
-	else
-		hkl_axis_set_value(self, value - 2*M_PI*floor((value - min)/(2*M_PI)));
-}
-
-void hkl_axis_set_value_unit(HklAxis *self, double value)
-{
-	hkl_parameter_set_value_unit((HklParameter *)self, value);
-	hkl_axis_update(self);
-}
-
-void hkl_axis_set_range(HklAxis *self, double min, double max)
-{
-	hkl_parameter_set_range((HklParameter *)self, min, max);
-}
-
-void hkl_axis_set_range_unit(HklAxis *self, double min, double max)
-{
-	hkl_parameter_set_range_unit((HklParameter *)self, min, max);
-}
-
-void hkl_axis_randomize(HklAxis *self)
-{
-	hkl_parameter_randomize((HklParameter *)self);
-	hkl_axis_update(self);
-}
-
-void hkl_axis_get_quaternion(HklAxis const *self, HklQuaternion *q)
-{
-	hkl_quaternion_init_from_angle_and_axe(q,
-					       ((HklParameter *)self)->value, &self->axis_v);
-}
-
-int hkl_axis_is_valid(const HklAxis *self)
-{
-	return hkl_parameter_is_valid((HklParameter *)self);
-}
-
-void hkl_axis_fprintf(FILE *f, HklAxis *self)
-{
-	hkl_parameter_fprintf(f, (HklParameter *)self);
-	hkl_vector_fprintf(f, &self->axis_v);
-	hkl_quaternion_fprintf(f, &self->q);
+	return &self->parameter;
 }

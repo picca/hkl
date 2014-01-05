@@ -33,4 +33,12 @@ stamp-vti
 DiffabsDemo
 ghkl
 ghkl3d
-
+*-t
+/Documentation/figures/*.png
+/Documentation/sphinx/source/conf.py
+/hkl/Hkl-5.0.typelib
+/hkl/stamp-hkl-type-builtins.h
+/test/runtests
+/test/tap/libtap.a
+/Documentation/hkl.html
+*_flymake.h

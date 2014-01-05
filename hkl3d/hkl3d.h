@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2010      Synchrotron SOLEIL
+ * Copyright (C) 2010-2013 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -24,8 +24,8 @@
 #ifndef __HKL3D_H__
 #define __HKL3D_H__
 
-#include <hkl.h>
 #include <g3d/types.h>
+#include "hkl.h"
 
 // forward declaration due to bullet static linking
 struct btCollisionObject;
@@ -43,8 +43,8 @@ extern "C" {
 
 	typedef struct _Hkl3DStats Hkl3DStats;
 	typedef struct _Hkl3DObject Hkl3DObject;
+	typedef struct _Hkl3DModel Hkl3DModel;
 	typedef struct _Hkl3DConfig Hkl3DConfig;
-	typedef struct _Hkl3DConfigs Hkl3DConfigs;
 	typedef struct _Hkl3DAxis Hkl3DAxis;
 	typedef struct _Hkl3DGeometry Hkl3DGeometry;
 	typedef struct _Hkl3D Hkl3D;
@@ -68,10 +68,11 @@ extern "C" {
 
 	struct _Hkl3DObject
 	{
-		const char* filename; 
+		Hkl3DModel *model; /* weak reference */
 		int id;
+		Hkl3DAxis *axis; /* weak reference */
+		G3DObject *g3d; /* weak reference */
 		struct btCollisionObject *btObject;
-		G3DObject *g3dObject;
 		struct btCollisionShape *btShape;
 		struct btTriangleMesh *meshes;
 		struct btVector3 *color;
@@ -86,33 +87,34 @@ extern "C" {
 
 	extern void hkl3d_object_fprintf(FILE *f, const Hkl3DObject *self);
 
+	/**************/
+	/* Hkl3DModel */
+	/**************/
+
+	struct _Hkl3DModel
+	{
+		char *filename;
+		G3DModel *g3d;
+		Hkl3DObject **objects;
+		int len;
+	};
+
+	extern void hkl3d_model_fprintf(FILE *f, const Hkl3DModel *self);
+
 	/***************/
-	/* HKL3DConfig */
+	/* Hkl3DConfig */
 	/***************/
 
 	struct _Hkl3DConfig
 	{
-		char *filename;	
-		Hkl3DObject **objects;
+		Hkl3DModel **models;
 		int len;
 	};
 
 	extern void hkl3d_config_fprintf(FILE *f, const Hkl3DConfig *self);
 
-	/****************/
-	/* HKL3DConfigs */
-	/****************/
-
-	struct _Hkl3DConfigs
-	{
-		Hkl3DConfig **configs;
-		int len;
-	};
-
-	extern void hkl3d_configs_fprintf(FILE *f, const Hkl3DConfigs *self);
-
 	/*************/
-	/* HKL3DAxis */
+	/* Hkl3DAxis */
 	/*************/
 
 	struct _Hkl3DAxis
@@ -127,8 +129,8 @@ extern "C" {
 
 	struct _Hkl3DGeometry
 	{
+		HklGeometry *geometry; /* weak reference */
 		Hkl3DAxis **axes;
-		int len;
 	};
 
 	/*********/
@@ -138,14 +140,11 @@ extern "C" {
 	struct _Hkl3D
 	{
 		char const *filename; /* config filename */
-		HklGeometry *geometry; /* do not own this object */
+		Hkl3DGeometry *geometry;
 		G3DModel *model;
 		Hkl3DStats stats;
-		Hkl3DConfigs *configs;
-		Hkl3DGeometry *movingObjects;
+		Hkl3DConfig *config;
 
-		size_t _len;
-		G3DContext *_context;
 		struct btCollisionConfiguration *_btCollisionConfiguration;
 		struct btBroadphaseInterface *_btBroadphase;
 		struct btCollisionWorld *_btWorld;
@@ -155,14 +154,14 @@ extern "C" {
 #endif
 	};
 
-	extern Hkl3D *hkl3d_new(const char *filename, HklGeometry *geometry);
+	extern Hkl3D* hkl3d_new(const char *filename, HklGeometry *geometry);
 	extern void hkl3d_free(Hkl3D *self);
 
 	extern int hkl3d_is_colliding(Hkl3D *self);
 	extern void hkl3d_load_config(Hkl3D *self, const char *filename);
 	extern void hkl3d_save_config(Hkl3D *self, const char *filename);
-	extern Hkl3DConfig *hkl3d_add_model_from_file(Hkl3D *self,
-						      const char *filename, const char *directory);
+	extern Hkl3DModel *hkl3d_add_model_from_file(Hkl3D *self,
+						     const char *filename, const char *directory);
 
 	extern void hkl3d_connect_all_axes(Hkl3D *self);
 	extern void hkl3d_hide_object(Hkl3D *self, Hkl3DObject *object, int hide);
@@ -185,4 +184,3 @@ extern "C" {
 #endif
 
 #endif
-

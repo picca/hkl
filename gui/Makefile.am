@@ -9,26 +9,27 @@ AM_CFLAGS = \
 	-I$(top_srcdir)/hkl \
 	-DPKGDATA=\""$(pkgdatadir)"\" \
 	$(GSL_CFLAGS) \
-	$(GTK_CFLAGS) \
-	$(GEE_CFLAGS)
+	$(GLIB_CFLAGS) \
+	$(GTK_CFLAGS)
 
 AM_LDFLAGS = \
 	-Wl,--export-dynamic \
 	$(top_builddir)/hkl/libhkl.la \
 	$(GSL_LIBS) \
-	$(GTK_LIBS) \
-	$(GEE_LIBS)
+	$(GLIB_LIBS) \
+	$(GTK_LIBS)
 
-AM_VALAFLAGS = --pkg gtk+-2.0 --pkg gee-1.0 --pkg posix -D HKL3D -D PKGDATA=\""$(pkgdatadir)"\" -g
+AM_VALAFLAGS = --pkg gtk+-2.0 --pkg gee-1.0 --pkg posix -D HKL3D -D PKGDATA=\""$(pkgdatadir)"\" --girdir=$(top_builddir)/hkl
 
+hkl.vapi: $(top_builddir)/hkl/Hkl-@VMAJ@.0.gir
+	vapigen --library hkl $<
 
 ghkl_LDADD = \
 	$(top_builddir)/hkl/libhkl.la
 
 ghkl_SOURCES = \
-	hkl-gui-pseudoaxes.vala \
-	hkl-gui.vala \
-	hkl.vapi
+	hkl-gui-pseudoaxes.c \
+	hkl-gui.c
 
 if HKL3D
 AM_CFLAGS += \

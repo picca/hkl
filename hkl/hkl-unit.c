@@ -13,26 +13,61 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2013 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <math.h>
-#include <gsl/gsl_nan.h>
-#include <gsl/gsl_sys.h> /* gsl_nan()! */
-#include <hkl/hkl-unit.h>
-
+#include <gsl/gsl_nan.h>                // for GSL_NAN
+#include <gsl/gsl_sys.h>                // for gsl_isnan
+#include <stdlib.h>                     // for free, NULL
+#include "hkl-macros-private.h"         // for HKL_MALLOC
+#include "hkl-unit-private.h"           // for HklUnit, etc
+#include "hkl.h"                        // for HKL_FALSE, HKL_DEGTORAD, etc
 
 /**
- * hkl_unit_compatible: check if two units are compatible.
+ * hkl_unit_dup: (skip)
+ * @self:
+ *
+ * copy an #Hklunit
+ *
+ * Returns: the copied #HklUnit (memory must be release with
+ * hkl_unit_free)
+ **/
+HklUnit* hkl_unit_dup(const HklUnit *self)
+{
+	if (!self)
+		return NULL;
+
+	HklUnit *dup = HKL_MALLOC(HklUnit);
+	*dup = *self;
+
+	return dup;
+}
+
+/**
+ * hkl_unit_free: (skip)
+ * @self:
+ *
+ * release the memory of an #HklUnit
+ **/
+void hkl_unit_free(HklUnit *self)
+{
+	if (self)
+		free(self);
+}
+
+/**
+ * hkl_unit_compatible: (skip)
  * @self: the first @HklUnit
  * @unit: the second @HklUnit to check
  *
+ * check if two units are compatible.
+ *
  * Returns: HKL_TRUE or HKL_FALSE
  **/
-int hkl_unit_compatible(HklUnit const *self, HklUnit const * unit)
+int hkl_unit_compatible(const HklUnit *self, const HklUnit *unit)
 {
 	int res = HKL_TRUE;
 	if (self && unit){
@@ -72,15 +107,15 @@ int hkl_unit_compatible(HklUnit const *self, HklUnit const * unit)
 
 /**
  * hkl_unit_factor:
- * @self: 
- * @unit: 
+ * @self:
+ * @unit:
  *
  * compute the factor to convert from one @Hklunit to another one.
  * @self * factor =  @unit
  *
  * Returns: the factor of the conversion.
  **/
-double hkl_unit_factor(HklUnit const *self, HklUnit const *unit)
+double hkl_unit_factor(const HklUnit *self, const HklUnit *unit)
 {
 	double factor = 1.;
 

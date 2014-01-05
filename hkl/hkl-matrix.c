@@ -13,18 +13,103 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2013 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <stdlib.h>
-#include <math.h>
+#include <math.h>                       // for cos, fabs, atan2, sin, asin
+#include <stdio.h>                      // for fprintf, FILE
+#include <stdlib.h>                     // for free
+#include <string.h>                     // for memcpy
+#include "hkl-macros-private.h"         // for HKL_MALLOC
+#include "hkl-matrix-private.h"         // for _HklMatrix
+#include "hkl-vector-private.h"         // for HklVector, etc
+#include "hkl.h"                        // for HklMatrix, HKL_EPSILON, etc
 
-#include <hkl/hkl-macros.h>
-#include <hkl/hkl-matrix.h>
-#include <hkl/hkl-vector.h>
+/**
+ * hkl_matrix_new: (skip)
+ *
+ * Returns: a new uninitialized HklMatrix
+ */
+HklMatrix *hkl_matrix_new()
+{
+	return HKL_MALLOC(HklMatrix);
+}
+
+/**
+ * hkl_matrix_new_full: (skip)
+ * @m11: the matrix 11 value
+ * @m12: the matrix 12 value
+ * @m13: the matrix 13 value
+ * @m21: the matrix 21 value
+ * @m22: the matrix 22 value
+ * @m23: the matrix 23 value
+ * @m31: the matrix 31 value
+ * @m32: the matrix 32 value
+ * @m33: the matrix 33 value
+ *
+ * @todo test
+ * Returns: a new HklMAtrix
+ **/
+HklMatrix *hkl_matrix_new_full(double m11, double m12, double m13,
+			       double m21, double m22, double m23,
+			       double m31, double m32, double m33)
+{
+	HklMatrix *self = hkl_matrix_new();
+	hkl_matrix_init(self,
+			m11, m12, m13,
+			m21, m22, m23,
+			m31, m32, m33);
+
+	return self;
+}
+
+/**
+ * hkl_matrix_new_euler:
+ * @euler_x: the eulerian value along X
+ * @euler_y: the eulerian value along Y
+ * @euler_z: the eulerian value along Z
+ *
+ * Returns: Create a rotation #HklMatrix from three eulerians angles.
+ **/
+HklMatrix *hkl_matrix_new_euler(double euler_x, double euler_y, double euler_z)
+{
+	HklMatrix *self = hkl_matrix_new();
+	hkl_matrix_init_from_euler(self, euler_x, euler_y, euler_z);
+
+	return self;
+}
+
+/**
+ * hkl_matrix_dup: (skip)
+ * @self:
+ *
+ *
+ *
+ * Returns:
+ **/
+HklMatrix *hkl_matrix_dup(const HklMatrix* self)
+{
+	HklMatrix *dup;
+
+	dup = HKL_MALLOC(HklMatrix);
+	memcpy(dup, self, sizeof(*self));
+
+	return dup;
+}
+
+/**
+ * hkl_matrix_free: (skip)
+ * @self:
+ *
+ *
+ **/
+void hkl_matrix_free(HklMatrix *self)
+{
+	free(self);
+}
 
 /**
  * hkl_matrix_init:
@@ -39,7 +124,7 @@
  * @m32: the matrix 32 value
  * @m33: the matrix 33 value
  *
- * 
+ *
  **/
 void hkl_matrix_init(HklMatrix *self,
 		     double m11, double m12, double m13,
@@ -51,6 +136,35 @@ void hkl_matrix_init(HklMatrix *self,
 	M[0][0] = m11, M[0][1] = m12, M[0][2] = m13;
 	M[1][0] = m21, M[1][1] = m22, M[1][2] = m23;
 	M[2][0] = m31, M[2][1] = m32, M[2][2] = m33;
+}
+
+/**
+ * hkl_matrix_matrix_set: (skip)
+ * @self: the this ptr
+ * @m: the matrix to set
+ *
+ * @todo test
+ **/
+void hkl_matrix_matrix_set(HklMatrix *self, const HklMatrix *m)
+{
+	if (self == m)
+		return;
+
+	memcpy(self->data, m->data, sizeof(double) * 9);
+}
+
+/**
+ * hkl_matrix_get:
+ * @self: the this ptr
+ * @i: the i coordinate
+ * @j: the j coordinate
+ *
+ * @todo test
+ * Return value: the Mij value
+ **/
+double hkl_matrix_get(const HklMatrix *self, unsigned int i, unsigned int j)
+{
+	return self->data[i][j];
 }
 
 /**
@@ -136,7 +250,7 @@ void hkl_matrix_init_from_euler(HklMatrix *self,
 
 /**
  * hkl_matrix_to_euler:
- * @self: the rotation #HklMatrix use to compute the eulerians angles 
+ * @self: the rotation #HklMatrix use to compute the eulerians angles
  * @euler_x: the eulerian value along X
  * @euler_y: the eulerian value along Y
  * @euler_z: the eulerian value along Z

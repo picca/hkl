@@ -1,0 +1,6 @@
+#!/bin/bash
+find .. -name "*flymake*" -exec rm -f {} \;
+./cleanfile ../hkl/*.[ch] ../test/*.[ch] ../test/tap/*.[ch] ../gui/*.cpp ../gui/*.h
+./indent ../hkl/*.[ch] ../test/*.[ch]../test/tap/*.[ch]
+./indent-c++ ../gui/*.cpp ../gui/*.h
+find .. -name "*flymake*" -exec rm -f {} \;

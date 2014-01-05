@@ -179,9 +179,9 @@ public class Hkl.Gui.Window : GLib.Object
 
 	Hkl.Geometry geometry;
 	Hkl.Detector detector;
-	Hkl.SampleList samples;
+	Gee.List<Hkl.Sample> samples;
 	Hkl.Lattice reciprocal;
-	Hkl.PseudoAxisEngineList engines;
+	Hkl.EngineList engines;
 
 	Gtk.ListStore store_diffractometer;
 	Gtk.ListStore store_axis;
@@ -296,11 +296,12 @@ public class Hkl.Gui.Window : GLib.Object
 
 	void set_up_diffractometer_model()
 	{
-		foreach(unowned Hkl.GeometryConfig config in Hkl.geometry_factory_configs){
+		foreach(unowned Hkl.Factory factory in Hkl.factories()){
 			Gtk.TreeIter iter;
 			this.store_diffractometer.append(out iter);
 			this.store_diffractometer.set(iter,
-						      DiffractometerCol.NAME, config.name);
+										  DiffractometerCol.NAME,
+										  factory.name);
 		}
 	}
 
@@ -416,7 +417,7 @@ public class Hkl.Gui.Window : GLib.Object
 		}
 		this.pseudoAxesFrames = null;
 
-		foreach(Hkl.PseudoAxisEngine engine in this.engines.engines){
+		foreach(Hkl.Engine engine in this.engines.engines){
 			var pseudo = new Hkl.Gui.PseudoAxesFrame(engine);
 			this.pseudoAxesFrames += pseudo;
 
@@ -576,7 +577,7 @@ public class Hkl.Gui.Window : GLib.Object
 
 		/* FIXME remove in the destructor */
 		this.hash_store_pseudo_axis_parameter = new Gee.HashMap<Hkl.PseudoAxis *, Gtk.ListStore>();
-		foreach(Hkl.PseudoAxisEngine engine in this.engines.engines){
+		foreach(Hkl.Engine engine in this.engines.engines){
 			foreach(Hkl.PseudoAxis pseudo_axis in engine.pseudoAxes){
 				Gtk.TreeIter iter;
 
@@ -2038,16 +2039,16 @@ public class Hkl.Gui.Window : GLib.Object
 	}
 
 	[CCode (instance_pos = -1)]
-		public void on_combobox1_changed()
+	public void on_combobox1_changed()
 	{
 		size_t idx;
-		Hkl.GeometryConfig config;
+		Hkl.Factory factory;
 
-		idx = this._combobox1.get_active();
-		config = Hkl.geometry_factory_configs[idx];
+		idx = this._combobox1.get_active_text();
+		factory = Hkl.factories()[idx];
 
-		this.geometry = Hkl.geometry_factory_new(config, 50 * Hkl.DEGTORAD);
-		this.engines = Hkl.pseudo_axis_engine_list_factory(config);
+		this.geometry = factory.create_new_geometry();
+		this.engines = Hkl.create_new_engine_list();
 		this.engines.init(this.geometry, this.detector, this.samples.current);
 
 		this.set_up_pseudo_axes_frames();

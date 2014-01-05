@@ -13,15 +13,29 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2013 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <math.h>
-#include <hkl/hkl-detector.h>
+#include <stdio.h>                      // for fprintf, NULL, FILE
+#include <stdlib.h>                     // for free
+#include "hkl-detector-private.h"       // for _HklDetector
+#include "hkl-geometry-private.h"       // for HklHolder, _HklGeometry, etc
+#include "hkl-macros-private.h"         // for HKL_MALLOC
+#include "hkl-source-private.h"         // for HklSource
+#include "hkl-vector-private.h"         // for hkl_vector_init, etc
+#include "hkl.h"                        // for HklDetector, HklGeometry, etc
+#include "hkl/ccan/darray/darray.h"     // for darray_item
 
+/**
+ * hkl_detector_new: (skip)
+ *
+ * Create a new default #HklDetector
+ *
+ * Returns:
+ **/
 HklDetector *hkl_detector_new(void)
 {
 	HklDetector *self = NULL;
@@ -34,32 +48,70 @@ HklDetector *hkl_detector_new(void)
 	return self;
 }
 
-HklDetector *hkl_detector_new_copy(HklDetector const *src)
+/**
+ * hkl_detector_new_copy: (skip)
+ * @src: the detector to copy
+ *
+ * the copy constructor
+ *
+ * Returns:
+ **/
+HklDetector *hkl_detector_new_copy(const HklDetector *src)
 {
 	HklDetector *self;
 
 	self = HKL_MALLOC(HklDetector);
 
-	self->idx = src->idx;
-	self->holder = src->holder;
+	*self = *src;
 
 	return self;
 }
 
+/**
+ * hkl_detector_free: (skip)
+ * @self:
+ *
+ * destructor
+ **/
 void hkl_detector_free(HklDetector *self)
 {
-	if(self)
-		free(self);
+	free(self);
 }
 
+/**
+ * hkl_detector_idx_set:
+ * @self: the this ptr
+ * @idx: the index of the holder
+ *
+ * Attach a detector to a given holder
+ **/
+void hkl_detector_idx_set(HklDetector *self, int idx)
+{
+	self->idx = idx;
+}
+
+/**
+ * hkl_detector_attach_to_holder: (skip)
+ * @self:
+ * @holder:
+ *
+ * attach the #HklDetector to an #HklHolder
+ **/
 void hkl_detector_attach_to_holder(HklDetector *self, HklHolder const *holder)
 {
-	if(!self || !holder)
-		return;
-
 	self->holder = holder;
 }
 
+/**
+ * hkl_detector_compute_kf: (skip)
+ * @self:
+ * @g: (in): the diffractometer #HklGeometry use to compute kf.
+ * @kf: (out caller-allocates): the #HklVector fill with the kf coordinates.
+ *
+ * Compute the kf vector of the #HklDetector
+ *
+ * Returns: HKL_SUCCESS if everythongs goes fine. HKL_FAIL otherwise.
+ **/
 int hkl_detector_compute_kf(HklDetector const *self, HklGeometry *g,
 			    HklVector *kf)
 {
@@ -67,11 +119,24 @@ int hkl_detector_compute_kf(HklDetector const *self, HklGeometry *g,
 
 	hkl_geometry_update(g);
 
-	holder = &g->holders[self->idx];
+	holder = darray_item(g->holders, self->idx);
 	if (holder) {
 		hkl_vector_init(kf, HKL_TAU / g->source.wave_length, 0, 0);
 		hkl_vector_rotated_quaternion(kf, &holder->q);
-		return HKL_SUCCESS;
+		return HKL_TRUE;
 	} else
-		return HKL_FAIL;
+		return HKL_FALSE;
+}
+
+/**
+ * hkl_detector_fprintf: (skip)
+ * @f:
+ * @self:
+ *
+ * print to a FILE the detector members
+ **/
+void hkl_detector_fprintf(FILE *f, const HklDetector *self)
+{
+	fprintf(f, "detector->idx: %d\n", self->idx);
+	fprintf(f, "detector->holder: %p\n", self->holder);
 }

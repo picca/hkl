@@ -1,5 +1,3 @@
-SUBDIRS=api figures
-
-info_TEXINFOS = hkl.texi
+SUBDIRS=api figures sphinx
 
 dist_man_MANS = ghkl.1

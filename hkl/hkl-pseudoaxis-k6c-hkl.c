@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2013 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -21,482 +21,585 @@
  *          Maria-Teresa Nunez-Pardo-de-Verra <tnunez@mail.desy.de>
  *          Jens Krüger <Jens.Krueger@frm2.tum.de>
  */
-#include <gsl/gsl_math.h>
-#include <gsl/gsl_vector.h>
-#include <gsl/gsl_sf.h>
-
-#include <hkl/hkl-pseudoaxis-k6c.h>
-#include <hkl/hkl-pseudoaxis-common-hkl.h>
+#include <gsl/gsl_errno.h>              // for ::GSL_SUCCESS
+#include <gsl/gsl_sys.h>                // for gsl_isnan
+#include <gsl/gsl_vector_double.h>      // for gsl_vector
+#include <math.h>                       // for fmod, atan, cos, tan, etc
+#include <sys/types.h>                  // for uint
+#include "hkl-geometry-private.h"       // for _HklGeometry, HklHolder
+#include "hkl-parameter-private.h"      // for _HklParameter, etc
+#include "hkl-pseudoaxis-auto-private.h"  // for HklFunction, etc
+#include "hkl-pseudoaxis-common-hkl-private.h"  // for RUBh_minus_Q, etc
+#include "hkl-pseudoaxis-private.h"     // for hkl_engine_add_mode, etc
+#include "hkl-quaternion-private.h"     // for hkl_quaternion_conjugate, etc
+#include "hkl-source-private.h"         // for hkl_source_compute_ki
+#include "hkl-vector-private.h"         // for HklVector, hkl_vector_angle, etc
+#include "hkl.h"                        // for HklMode, HklParameter, etc
+#include "hkl/ccan/array_size/array_size.h"  // for ARRAY_SIZE
+#include "hkl/ccan/container_of/container_of.h"  // for container_of
+#include "hkl/ccan/darray/darray.h"     // for darray_item
 
 /***********************/
 /* numerical functions */
 /***********************/
 
-static int bissector_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
+static int _bissector_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double gamma, mu, komega, kappa, omega;
-	size_t i;
-	double const *x_data = x->data;
-	double *f_data = f->data;
+	const double mu = x->data[0];
+	const double komega = x->data[1];
+	const double kappa = x->data[2];
+	const double gamma = x->data[4];
+	double omega;
 
-	for(i=0; i<x->size;++i)
-		if (gsl_isnan(x_data[i]))
-			return GSL_ENOMEM;
-
-	RUBh_minus_Q(x_data, params, f_data);
-
-	mu = x_data[0];
-	komega = x_data[1];
-	kappa = x_data[2];
-	gamma = x_data[4];
+	CHECK_NAN(x->data, x->size);
 
 	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) - M_PI_2;
 
-	f_data[3] = fmod(omega, M_PI);
-	f_data[4] = fmod(gamma - 2 * fmod(mu, M_PI), 2*M_PI);
+	RUBh_minus_Q(x->data, params, f->data);
+	f->data[3] = fmod(omega, M_PI);
+	f->data[4] = fmod(gamma - 2 * fmod(mu, M_PI), 2*M_PI);
 
 	return  GSL_SUCCESS;
 }
 
-static int bissector_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction bissector_h_f1 = {
+	.function = _bissector_h_f1,
+	.size = 5,
+};
+
+static int _bissector_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double gamma, mu, komega, kappa, omega;
-	size_t i;
-	double const *x_data = x->data;
-	double *f_data = f->data;
+	const double mu = x->data[0];
+	const double komega = x->data[1];
+	const double kappa = x->data[2];
+	const double gamma = x->data[4];
+	double omega;
 
-	for(i=0; i<x->size;++i)
-		if (gsl_isnan(x_data[i]))
-			return GSL_ENOMEM;
-
-	RUBh_minus_Q(x_data, params, f_data);
-
-	mu = x_data[0];
-	komega = x_data[1];
-	kappa = x_data[2];
-	gamma = x_data[4];
+	CHECK_NAN(x->data, x->size);
 
 	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) + M_PI_2;
 
-	f_data[3] = fmod(omega, M_PI);
-	f_data[4] = fmod(gamma - 2 * fmod(mu, M_PI), 2*M_PI);
+	RUBh_minus_Q(x->data, params, f->data);
+	f->data[3] = fmod(omega, M_PI);
+	f->data[4] = fmod(gamma - 2 * fmod(mu, M_PI), 2*M_PI);
 
 
 	return  GSL_SUCCESS;
 }
 
-static int constant_kphi_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction bissector_h_f2 = {
+	.function = _bissector_h_f2,
+	.size = 5,
+};
+
+static int _constant_kphi_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double komega, kappa, omega;
-	size_t i;
-	double const *x_data = x->data;
-	double *f_data = f->data;
+	const double komega = x->data[1];
+	const double kappa = x->data[2];
+	double omega;
 
-	for(i=0; i<x->size;++i)
-		if (gsl_isnan(x_data[i]))
-			return GSL_ENOMEM;
-
-	RUBh_minus_Q(x_data, params, f_data);
-
-	komega = x_data[1];
-	kappa = x_data[2];
+	CHECK_NAN(x->data, x->size);
 
 	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) - M_PI_2;
 
-	f_data[3] = fmod(omega, M_PI);
+	RUBh_minus_Q(x->data, params, f->data);
+	f->data[3] = fmod(omega, M_PI);
 
 	return  GSL_SUCCESS;
 }
 
-static int constant_kphi_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction constant_kphi_h_f1 = {
+	.function = _constant_kphi_h_f1,
+	.size = 4,
+};
+
+static int _constant_kphi_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double komega, kappa, omega;
-	size_t i;
-	double const *x_data = x->data;
-	double *f_data = f->data;
+	const double komega = x->data[1];
+	const double kappa = x->data[2];
+	double omega;
 
-	for(i=0; i<x->size;++i)
-		if (gsl_isnan(x_data[i]))
-			return GSL_ENOMEM;
-
-	RUBh_minus_Q(x_data, params, f_data);
-
-	komega = x_data[1];
-	kappa = x_data[2];
+	CHECK_NAN(x->data, x->size);
 
 	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) + M_PI_2;
 
-	f_data[3] = fmod(omega, M_PI);
+	RUBh_minus_Q(x->data, params, f->data);
+	f->data[3] = fmod(omega, M_PI);
 
 	return  GSL_SUCCESS;
 }
 
-static int constant_phi_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction constant_kphi_h_f2 = {
+	.function = _constant_kphi_h_f2,
+	.size = 4,
+};
+
+static int _constant_phi_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double komega, kappa, kphi;
+	const double komega = x->data[1];
+	const double kappa = x->data[2];
+	const double kphi = x->data[3];
 	double omega, phi, p;
-	size_t i;
-	double const *x_data = x->data;
-	double *f_data = f->data;
 
-	for(i=0; i<x->size;++i)
-		if (gsl_isnan(x_data[i]))
-			return GSL_ENOMEM;
-
-	RUBh_minus_Q(x_data, params, f_data);
-
-	komega = x_data[1];
-	kappa = x_data[2];
-	kphi = x_data[3];
+	CHECK_NAN(x->data, x->size);
 
 	p = atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD));
-
 	omega = komega + p - M_PI_2;
 	phi = kphi + p + M_PI_2;
 
-	f_data[3] = fmod(omega, M_PI);
-	f_data[4] = phi;
+	RUBh_minus_Q(x->data, params, f->data);
+	f->data[3] = fmod(omega, M_PI);
+	f->data[4] = phi;
 
 	return  GSL_SUCCESS;
 }
 
-static int constant_phi_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction constant_phi_h_f1 = {
+	.function = _constant_phi_h_f1,
+	.size = 5,
+};
+
+static int _constant_phi_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double komega, kappa, kphi;
+	const double komega = x->data[1];
+	const double kappa = x->data[2];
+	const double kphi = x->data[3];
 	double omega, phi, p;
-	size_t i;
-	double const *x_data = x->data;
-	double *f_data = f->data;
 
-	for(i=0; i<x->size;++i)
-		if (gsl_isnan(x_data[i]))
-			return GSL_ENOMEM;
-
-	RUBh_minus_Q(x_data, params, f_data);
-
-	komega = x_data[1];
-	kappa = x_data[2];
-	kphi = x_data[3];
+	CHECK_NAN(x->data, x->size);
 
 	p = atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD));
-
 	omega = komega + p + M_PI_2;
 	phi = kphi + p - M_PI_2;
 
-	f_data[3] = fmod(omega, M_PI);
-	f_data[4] = phi;
+	RUBh_minus_Q(x->data, params, f->data);
+	f->data[3] = fmod(omega, M_PI);
+	f->data[4] = phi;
 
 	return  GSL_SUCCESS;
 }
 
-static int bissector_v(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction constant_phi_h_f2 = {
+	.function = _constant_phi_h_f2,
+	.size = 5,
+};
+
+static int _bissector_v(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double komega, kappa, delta, omega;
-	size_t i;
-	double const *x_data = x->data;
-	double *f_data = f->data;
+	const double komega = x->data[0];
+	const double kappa = x->data[1];
+	const double delta = x->data[3];
+	double omega;
 
-	for(i=0; i<x->size;++i)
-		if (gsl_isnan(x_data[i]))
-			return GSL_ENOMEM;
-
-	RUBh_minus_Q(x_data, params, f_data);
-
-	komega = x_data[0];
-	kappa = x_data[1];
-	delta = x_data[3];
+	CHECK_NAN(x->data, x->size);
 
 	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) - M_PI_2;
 
-	f_data[3] = fmod(delta - 2 * fmod(omega, M_PI), 2*M_PI);
+	RUBh_minus_Q(x->data, params, f->data);
+	f->data[3] = fmod(delta - 2 * fmod(omega, M_PI), 2*M_PI);
 
 	return  GSL_SUCCESS;
 }
 
-static int constant_omega_v(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction bissector_v = {
+	.function = _bissector_v,
+	.size = 4,
+};
+
+static int _constant_omega_v(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double komega, kappa, omega;
-	size_t i;
-	HklPseudoAxisEngine *engine = params;
-	double p0 = engine->mode->parameters[0].value;
-	double const *x_data = x->data;
-	double *f_data = f->data;
+	const double komega = x->data[0];
+	const double kappa = x->data[1];
+	double omega;
+	HklEngine *engine = params;
+	double omega0;
+	uint shit;
 
-	for(i=0; i<x->size;++i)
-		if (gsl_isnan(x_data[i]))
-			return GSL_ENOMEM;
+	hkl_parameter_list_values_get(&engine->mode->parameters, &omega0, &shit);
 
-	RUBh_minus_Q(x_data, params, f_data);
-
-	komega = x_data[0];
-	kappa = x_data[1];
+	CHECK_NAN(x->data, x->size);
 
 	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) - M_PI_2;
 
-	f_data[3] = p0 - omega;
+	RUBh_minus_Q(x->data, params, f->data);
+	f->data[3] = omega0 - omega;
 
 	return  GSL_SUCCESS;
 }
 
-static int constant_chi_v(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction constant_omega_v = {
+	.function = _constant_omega_v,
+	.size = 4,
+};
+
+static int _constant_chi_v(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double kappa, chi;
-	size_t i;
-	HklPseudoAxisEngine *engine = params;
-	double p0 = engine->mode->parameters[0].value;
-	double const *x_data = x->data;
-	double *f_data = f->data;
+	const double kappa = x->data[1];
+	double chi;
+	HklEngine *engine = params;
+	double chi0;
+	uint shit;
 
-	for(i=0; i<x->size;++i)
-		if (gsl_isnan(x_data[i]))
-			return GSL_ENOMEM;
+	hkl_parameter_list_values_get(&engine->mode->parameters, &chi0, &shit);
 
-	RUBh_minus_Q(x_data, params, f_data);
-
-	kappa = x_data[1];
+	CHECK_NAN(x->data, x->size);
 
 	chi = 2 * asin(sin(kappa/2.) * sin(50 * HKL_DEGTORAD));
 
-	f_data[3] = p0 - chi;
+	RUBh_minus_Q(x->data, params, f->data);
+	f->data[3] = chi0 - chi;
 
 	return  GSL_SUCCESS;
 }
 
-static int constant_phi_v(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction constant_chi_v = {
+	.function = _constant_chi_v,
+	.size = 4,
+};
+
+static int _constant_phi_v(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double kappa, kphi, phi;
-	size_t i;
-	HklPseudoAxisEngine *engine = params;
-	double p0 = engine->mode->parameters[0].value;
-	double const *x_data = x->data;
-	double *f_data = f->data;
+	const double kappa = x->data[1];
+	const double kphi = x->data[2];
+	double phi;
+	HklEngine *engine = params;
+	double phi0;
+	uint shit;
 
-	for(i=0; i<x->size;++i)
-		if (gsl_isnan(x_data[i]))
-			return GSL_ENOMEM;
+	hkl_parameter_list_values_get(&engine->mode->parameters, &phi0, &shit);
 
-	RUBh_minus_Q(x_data, params, f_data);
-
-	kappa = x_data[1];
-	kphi = x_data[2];
+	CHECK_NAN(x->data, x->size);
 
 	phi = kphi + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) + M_PI_2;
 
-	f_data[3] = p0 - phi;
+	RUBh_minus_Q(x->data, params, f->data);
+	f->data[3] = phi0 - phi;
 
 	return  GSL_SUCCESS;
 }
 
-static int double_diffraction_h(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction constant_phi_v = {
+	.function = _constant_phi_v,
+	.size = 4,
+};
+
+static int _double_diffraction_h(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double komega, kappa, omega;
-	size_t i;
-	double const *x_data = x->data;
-	double *f_data = f->data;
+	const double komega = x->data[1];
+	const double kappa = x->data[2];
+	double omega;
 
-	for(i=0; i<x->size;++i)
-		if (gsl_isnan(x_data[i]))
-			return GSL_ENOMEM;
-
-	double_diffraction(x_data, params, f_data);
-
-	komega = x_data[1];
-	kappa = x_data[2];
+	CHECK_NAN(x->data, x->size);
 
 	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) - M_PI_2;
 
-	f_data[4] = fmod(omega, M_PI);
+	_double_diffraction(x->data, params, f->data);
+	f->data[4] = fmod(omega, M_PI);
 
 	return  GSL_SUCCESS;
 }
 
-/************************/
-/* K6CV PseudoAxeEngine */
-/************************/
+static const HklFunction double_diffraction_h = {
+	.function = _double_diffraction_h,
+	.size = 5,
+};
 
-HklPseudoAxisEngine *hkl_pseudo_axis_engine_k6c_hkl_new(void)
+static int _constant_incidence_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	HklPseudoAxisEngine *self;
-	HklPseudoAxisEngineMode *mode;
-	HklParameter parameter;
-	HklParameter h2;
-	HklParameter k2;
-	HklParameter l2;
-	HklParameter psi;
+	static const HklVector Y = {
+		.data = {0, 1, 0},
+	};
+	double incidence;
+	double azimuth;
+	HklEngine *engine = params;
+	HklModeAutoWithInit *mode = container_of(engine->mode, HklModeAutoWithInit, mode);
+	double parameters[5];
+	uint shit;
+	HklVector n;
+	double incidence0;
+	double azimuth0;
+	HklVector ki;
 
-	self = hkl_pseudo_axis_engine_hkl_new();
+	CHECK_NAN(x->data, x->size);
 
-	/* bissector_vertical */
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"bissector_vertical",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
-		1, bissector_v,
-		(size_t)0,
-		(size_t)4, "komega", "kappa", "kphi", "delta");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
+	RUBh_minus_Q(x->data, params, f->data);
 
-	/* constant_omega_vertical */
-	hkl_parameter_init(&parameter, "omega", -M_PI, 0., M_PI,
-			   HKL_TRUE, HKL_TRUE,
-			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
+	/* get the mode parameters */
+	hkl_parameter_list_values_get(&engine->mode->parameters,
+				      parameters, &shit);
+	n.data[0] = parameters[0];
+	n.data[1] = parameters[1];
+	n.data[2] = parameters[2];
+	incidence0 = parameters[3];
+	azimuth0 = parameters[4];
 
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"constant_omega_vertical",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
-		1, constant_omega_v,
-		(size_t)1, parameter,
-		(size_t)4, "komega", "kappa", "kphi", "delta");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-	/* constant_chi_vertical */
-	hkl_parameter_init(&parameter, "chi", -M_PI, 30. * HKL_DEGTORAD, M_PI,
-			   HKL_TRUE, HKL_TRUE,
-			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
-
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"constant_chi_vertical",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
-		1, constant_chi_v,
-		(size_t)1, parameter,
-		(size_t)4, "komega", "kappa", "kphi", "delta");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-	/* constant_phi_vertical */
-	hkl_parameter_init(&parameter, "phi", -M_PI, 0., M_PI,
-			   HKL_TRUE, HKL_TRUE,
-			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
-
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"constant_phi_vertical",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
-		1, constant_phi_v,
-		(size_t)1, parameter,
-		(size_t)4, "komega", "kappa", "kphi", "delta");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-	/* lifting_detector_kphi */
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"lifting_detector_kphi",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
-		1, RUBh_minus_Q_func,
-		(size_t)0,
-		(size_t)3, "kphi", "gamma", "delta");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-	/* lifting_detector_komega */
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"lifting_detector_komega",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
-		1, RUBh_minus_Q_func,
-		(size_t)0,
-		(size_t)3, "komega", "gamma", "delta");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-	/* lifting_detector_mu */
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"lifting_detector_mu",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
-		1, RUBh_minus_Q_func,
-		(size_t)0,
-		(size_t)3, "mu", "gamma", "delta");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-	/* double_diffraction vertical*/
-	hkl_parameter_init(&h2, "h2", -1., 1., 1., HKL_TRUE, HKL_TRUE, NULL, NULL);
-	hkl_parameter_init(&k2, "k2", -1., 1., 1., HKL_TRUE, HKL_TRUE, NULL, NULL);
-	hkl_parameter_init(&l2, "l2", -1., 1., 1., HKL_TRUE, HKL_TRUE, NULL, NULL);
-
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"double_diffraction_vertical",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
-		1, double_diffraction_func,
-		(size_t)3, h2, k2, l2,
-		(size_t)4, "komega", "kappa", "kphi", "delta");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-	/* bissector_horizontal */
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"bissector_horizontal",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
-		2, bissector_h_f1, bissector_h_f2,
-		(size_t)0,
-		(size_t)5, "mu", "komega", "kappa", "kphi", "gamma");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-	/* constant_phi_horizontal */
-	hkl_parameter_init(&parameter, "phi", -M_PI, 0., M_PI,
-			   HKL_TRUE, HKL_TRUE,
-			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
-
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"constant_phi_horizontal",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
-		2, constant_phi_h_f1,constant_phi_h_f2,
-		(size_t)1, parameter,
-		(size_t)5, "mu", "komega", "kappa", "kphi", "gamma");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-	/* horizontal kphi constant */
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"constant_kphi_horizontal",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
-		2, constant_kphi_h_f1, constant_kphi_h_f2,
-		(size_t)0,
-		(size_t)4, "mu", "komega", "kappa", "gamma");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-	/* double_diffraction_horizontal */
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"double_diffraction_horizontal",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
-		1, double_diffraction_h,
-		(size_t)3, h2, k2, l2,
-		(size_t)5, "mu", "komega", "kappa", "kphi", "gamma");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-	/* psi_constant_vertical */
-	hkl_parameter_init(&h2, "h2", -1, 1, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
-	hkl_parameter_init(&k2, "k2", -1, 0, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
-	hkl_parameter_init(&l2, "l2", -1, 0, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
-	hkl_parameter_init(&psi, "psi", -M_PI, 0, M_PI, HKL_TRUE, HKL_TRUE,
-			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
-
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"psi_constant_vertical",
-		hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
-		1, psi_constant_vertical_func,
-		(size_t)4, h2, k2, l2, psi, 
-		(size_t)4, "komega", "kappa", "kphi", "delta");
-	hkl_pseudo_axis_engine_add_mode(self, mode);	
+	/* compute the two angles */
 
 
-	hkl_pseudo_axis_engine_select_mode(self, 0);
+	/* first check that the mode was already initialized if not
+	 * the surface is oriented along the nx, ny, nz axis for all
+	 * diffractometer angles equal to zero */
+	if(mode->geometry){
+		HklQuaternion q0 = darray_item(mode->geometry->holders, 0)->q;
+
+		hkl_quaternion_conjugate(&q0);
+		hkl_vector_rotated_quaternion(&n, &q0);
+	}
+
+	hkl_vector_rotated_quaternion(&n, &darray_item(engine->geometry->holders, 0)->q);
+
+	hkl_source_compute_ki(&engine->geometry->source, &ki);
+	incidence = M_PI_2 - hkl_vector_angle(&n, &ki);
+
+	hkl_vector_project_on_plan(&n, &ki);
+	azimuth = hkl_vector_angle(&n, &Y);
+
+	f->data[3] = incidence0 - incidence;
+	f->data[4] = azimuth0 - azimuth;
+
+	return  GSL_SUCCESS;
+}
+
+static const HklFunction constant_incidence_func = {
+	.function = _constant_incidence_func,
+	.size = 5,
+};
+
+/********/
+/* mode */
+/********/
+
+static HklMode *bissector_vertical(void)
+{
+	static const char* axes[] = {"komega", "kappa", "kphi", "delta"};
+	static const HklFunction *functions[] = {&bissector_v};
+	static const HklModeAutoInfo info = {
+		INFO_AUTO(__func__, axes, functions),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_mode_operations);
+}
+
+static HklMode *constant_omega_vertical(void)
+{
+	static const char* axes[] = {"komega", "kappa", "kphi", "delta"};
+	static const HklFunction *functions[] = {&constant_omega_v};
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "omega"},
+	};
+	static const HklModeAutoInfo info = {
+		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_mode_operations);
+}
+
+static HklMode *constant_chi_vertical(void)
+{
+	static const char* axes[] = {"komega", "kappa", "kphi", "delta"};
+	static const HklFunction *functions[] = {&constant_chi_v};
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "chi"},
+	};
+	static const HklModeAutoInfo info = {
+		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_mode_operations);
+}
+
+static HklMode *constant_phi_vertical(void)
+{
+	static const char* axes[] = {"komega", "kappa", "kphi", "delta"};
+	static const HklFunction *functions[] = {&constant_phi_v};
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "phi"},
+	};
+	static const HklModeAutoInfo info = {
+		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_mode_operations);
+}
+
+static HklMode *lifting_detector_kphi(void)
+{
+	static const char* axes[] = {"kphi", "gamma", "delta"};
+	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
+	static const HklModeAutoInfo info = {
+		INFO_AUTO(__func__, axes, functions),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_mode_operations);
+}
+
+static HklMode *lifting_detector_komega(void)
+{
+	static const char* axes[] = {"komega", "gamma", "delta"};
+	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
+	static const HklModeAutoInfo info = {
+		INFO_AUTO(__func__, axes, functions),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_mode_operations);
+}
+
+static HklMode *lifting_detector_mu(void)
+{
+	static const char* axes[] = {"mu", "gamma", "delta"};
+	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
+	static const HklModeAutoInfo info = {
+		INFO_AUTO(__func__, axes, functions),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_mode_operations);
+}
+
+static HklMode *double_diffraction_vertical(void)
+{
+	static const char* axes[] = {"komega", "kappa", "kphi", "delta"};
+	static const HklFunction *functions[] = {&double_diffraction_func};
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, ._value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, ._value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, ._value = 1,},
+	};
+	static const HklModeAutoInfo info = {
+		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_mode_operations);
+}
+
+static HklMode *bissector_horizontal(void)
+{
+	static const char* axes[] = {"mu", "komega", "kappa", "kphi", "gamma"};
+	static const HklFunction *functions[] = {&bissector_h_f1, &bissector_h_f2};
+	static const HklModeAutoInfo info = {
+		INFO_AUTO(__func__, axes, functions),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_mode_operations);
+}
+
+static HklMode *constant_phi_horizontal(void)
+{
+	static const char* axes[] = {"mu", "komega", "kappa", "kphi", "gamma"};
+	static const HklFunction *functions[] = {&constant_phi_h_f1, &constant_phi_h_f2};
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "phi",},
+	};
+	static const HklModeAutoInfo info = {
+		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_mode_operations);
+}
+
+static HklMode *constant_kphi_horizontal(void)
+{
+	static const char* axes[] = {"mu", "komega", "kappa", "gamma"};
+	static const HklFunction *functions[] = {&constant_kphi_h_f1, &constant_kphi_h_f2};
+	static const HklModeAutoInfo info = {
+		INFO_AUTO(__func__, axes, functions),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_mode_operations);
+}
+
+static HklMode *double_diffraction_horizontal(void)
+{
+	static const char* axes[] = {"mu", "komega", "kappa", "kphi", "gamma"};
+	static const HklFunction *functions[] = {&double_diffraction_h};
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, ._value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, ._value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, ._value = 1,},
+	};
+	static const HklModeAutoInfo info = {
+		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_mode_operations);
+}
+
+static HklMode *psi_constant_vertical(void)
+{
+	static const char* axes[] = {"komega", "kappa", "kphi", "delta"};
+	static const HklFunction *functions[] = {&psi_constant_vertical_func};
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, ._value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, ._value = 0,},
+		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, ._value = 0,},
+		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "psi"},
+	};
+	static const HklModeAutoInfo info = {
+		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &psi_constant_vertical_mode_operations);
+}
+
+static HklMode *constant_incidence(void)
+{
+	static const char* axes[] = {"komega", "kappa", "kphi", "gamma", "delta"};
+	static const HklFunction *functions[] = {&constant_incidence_func};
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS, .name = "x", .range = {.min=-1, .max=1}, ._value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "y", .range = {.min=-1, .max=1}, ._value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "z", .range = {.min=-1, .max=1}, ._value = 1,},
+		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "incidence"},
+		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "aximuth", ._value = M_PI_2,},
+	};
+	static const HklModeAutoInfo info = {
+		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
+	};
+
+	return hkl_mode_auto_with_init_new(&info,
+					   &constant_incidence_mode_operations);
+}
+
+/**********************/
+/* pseudo axis engine */
+/**********************/
+
+HklEngine *hkl_engine_k6c_hkl_new(void)
+{
+	HklEngine *self;
+	HklMode *default_mode;
+
+	self = hkl_engine_hkl_new();
+
+	default_mode = bissector_vertical();
+	hkl_engine_add_mode(self, default_mode);
+	hkl_engine_select_mode(self, default_mode);
+
+	hkl_engine_add_mode(self, constant_omega_vertical());
+	hkl_engine_add_mode(self, constant_chi_vertical());
+	hkl_engine_add_mode(self, constant_phi_vertical());
+	hkl_engine_add_mode(self, lifting_detector_kphi());
+	hkl_engine_add_mode(self, lifting_detector_komega());
+	hkl_engine_add_mode(self, lifting_detector_mu());
+	hkl_engine_add_mode(self, double_diffraction_vertical());
+	hkl_engine_add_mode(self, bissector_horizontal());
+	hkl_engine_add_mode(self, constant_phi_horizontal());
+	hkl_engine_add_mode(self, constant_kphi_horizontal());
+	hkl_engine_add_mode(self, double_diffraction_horizontal());
+	hkl_engine_add_mode(self, psi_constant_vertical());
+	hkl_engine_add_mode(self, constant_incidence());
 
 	return self;
 }

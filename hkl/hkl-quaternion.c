@@ -13,22 +13,54 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2013 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <stdlib.h>
-#include <math.h>
-#include <string.h>
-
-#include <hkl/hkl-macros.h>
-#include <hkl/hkl-vector.h>
-#include <hkl/hkl-matrix.h>
-#include <hkl/hkl-quaternion.h>
+#include <math.h>                       // for fabs, sin, M_PI, acos, cos, etc
+#include <stdio.h>                      // for fprintf, FILE
+#include <stdlib.h>                     // for free
+#include <string.h>                     // for memcpy, memset
+#include "hkl-macros-private.h"         // for hkl_assert, HKL_MALLOC
+#include "hkl-matrix-private.h"         // for _HklMatrix
+#include "hkl-quaternion-private.h"     // for _HklQuaternion
+#include "hkl-vector-private.h"         // for HklQuaternion, HklVector, etc
+#include "hkl.h"                        // for HklMatrix, HKL_EPSILON, etc
 
 /* public */
+/**
+ * hkl_quaternion_dup: (skip)
+ * @self:
+ *
+ *
+ *
+ * Returns:
+ **/
+HklQuaternion *hkl_quaternion_dup(const HklQuaternion* self)
+{
+	HklQuaternion *dup;
+
+	dup = HKL_MALLOC(HklQuaternion);
+	memcpy(dup, self, sizeof(*self));
+
+	return dup;
+}
+
+/**
+ * hkl_quaternion_free: (skip)
+ * @self:
+ *
+ *
+ **/
+void hkl_quaternion_free(HklQuaternion *self)
+{
+	if(!self)
+		return;
+
+	free(self);
+}
 
 /**
  * hkl_quaternion_init:
@@ -111,7 +143,7 @@ void hkl_quaternion_init_from_angle_and_axe(HklQuaternion *self,
  *
  * compare two #HklQuaternion.
  *
- * Returns: #HKL_TRUE if both are equal, #HKL_FAIL otherwise.
+ * Returns: #HKL_TRUE if both are equal, #HKL_FALSE otherwise.
  **/
 int hkl_quaternion_cmp(HklQuaternion const *self, HklQuaternion const *q)
 {
@@ -224,7 +256,7 @@ void hkl_quaternion_to_matrix(const HklQuaternion *self, HklMatrix *m)
 
 	/* check that parameters are ok. */
 	hkl_assert(fabs(hkl_quaternion_norm2(self) - 1) < HKL_EPSILON);
-	
+
 	Q = self->data;
 
 	m->data[0][0] = Q[0]*Q[0] + Q[1]*Q[1] - Q[2]*Q[2] - Q[3]*Q[3];

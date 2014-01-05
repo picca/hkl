@@ -406,7 +406,7 @@ class btAlignedObjectArray
 	int	findBinarySearch(const T& key) const
 	{
 		int first = 0;
-		int last = size();
+		int last = size()-1;
 
 		//assume sorted array
 		while (first <= last) {
@@ -457,6 +457,13 @@ class btAlignedObjectArray
 		m_data = (T*)buffer;
 		m_size = size;
 		m_capacity = capacity;
+	}
+
+	void copyFromArray(const btAlignedObjectArray& otherArray)
+	{
+		int otherSize = otherArray.size();
+		resize (otherSize);
+		otherArray.copy(0, otherSize, m_data);
 	}
 
 };

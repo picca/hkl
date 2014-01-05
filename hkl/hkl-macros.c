@@ -13,16 +13,17 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2013 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
+#include <execinfo.h>                   // for backtrace, etc
+#include <stdio.h>                      // for fprintf, printf, stderr
+#include <stdlib.h>                     // for calloc, exit, free
 
-#include <stdio.h>
-#include <hkl/hkl-macros.h>
-
+#ifndef _MSC_VER
 void hkl_printbt(void)
 {
 	void *array[20];
@@ -39,8 +40,22 @@ void hkl_printbt(void)
 
 	free(strings);
 }
+#else
+int vasprintf(char **strp, const char *fmt, va_list ap)
+{
+	int len;
+	char *buffer;
 
-__inline__ void *_hkl_malloc(int size, const char *error)
+	len = vsnprintf(*strp, 0, fmt, ap);
+	buffer = malloc(len);
+	vsnprintf(buffer, len-1, fmt, ap);
+	*strp = buffer;
+
+	return len;
+}
+#endif
+
+void *_hkl_malloc(int size, const char *error)
 {
 	void *tmp;
 
@@ -50,5 +65,5 @@ __inline__ void *_hkl_malloc(int size, const char *error)
 		exit(128);
 	}
 
-	return tmp; 
+	return tmp;
 }

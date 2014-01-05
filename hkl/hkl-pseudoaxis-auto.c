@@ -13,16 +13,32 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2013 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <string.h>
-#include <alloca.h>
-#include <gsl/gsl_sf_trig.h>
-#include <hkl/hkl-pseudoaxis-auto.h>
+#include <alloca.h>                     // for alloca
+#include <gsl/gsl_errno.h>              // for ::GSL_CONTINUE
+#include <gsl/gsl_machine.h>            // for GSL_SQRT_DBL_EPSILON
+#include <gsl/gsl_matrix_double.h>      // for gsl_matrix_alloc, etc
+#include <gsl/gsl_multiroots.h>         // for gsl_multiroot_function, etc
+#include <gsl/gsl_vector_double.h>      // for gsl_vector, etc
+#include <math.h>                       // for fabs, M_PI
+#include <stddef.h>                     // for size_t
+#include <stdlib.h>                     // for rand, RAND_MAX
+#include <string.h>                     // for NULL, memset, memcpy
+#include <sys/types.h>                  // for uint
+#include "hkl-error-private.h"          // for hkl_error_set
+#include "hkl-geometry-private.h"       // for hkl_geometry_update
+#include "hkl-macros-private.h"         // for HKL_MALLOC, hkl_assert, etc
+#include "hkl-parameter-private.h"      // for _HklParameter
+#include "hkl-pseudoaxis-auto-private.h"  // for HklModeAutoInfo, etc
+#include "hkl-pseudoaxis-private.h"     // for _HklEngine, HklModeInfo, etc
+#include "hkl.h"                        // for HklEngine, HklMode, etc
+#include "hkl/ccan/container_of/container_of.h"  // for container_of
+#include "hkl/ccan/darray/darray.h"     // for darray_foreach
 
 /* #define DEBUG */
 
@@ -30,9 +46,9 @@
 /* methods use to solve numerical pseudoAxes */
 /*********************************************/
 
-/** 
+/**
  * @brief This private method find the degenerated axes.
- * 
+ *
  * @param func the gsl_multiroopt_function to test
  * @param x the starting point
  * @param f the result of the function evaluation.
@@ -43,7 +59,7 @@
  * Once we know this the axis is mark as degenerated and we do not need to
  * change is sector.
  */
-static void find_degenerated_axes(HklPseudoAxisEngine *self,
+static void find_degenerated_axes(HklEngine *self,
 				  gsl_multiroot_function *func,
 				  gsl_vector const *x, gsl_vector const *f,
 				  int degenerated[])
@@ -77,38 +93,41 @@ static void find_degenerated_axes(HklPseudoAxisEngine *self,
 	gsl_matrix_free(J);
 }
 
-/** 
+/**
  * @brief this private method try to find the first solution
- * 
+ *
  * @param self the current HklPseudoAxeEngine.
  * @param f The function to use for the computation.
- * 
+ *
  * If a solution was found it also check for degenerated axes.
  * A degenerated axes is an Axes with no effect on the function.
  * @see find_degenerated
- * @return HKL_SUCCESS (0) or HKL_FAIL (-1). 
+ * @return HKL_TRUE or HKL_FALSE.
  */
-static int find_first_geometry(HklPseudoAxisEngine *self,
+static int find_first_geometry(HklEngine *self,
 			       gsl_multiroot_function *f,
 			       int degenerated[])
 {
 	gsl_multiroot_fsolver_type const *T;
 	gsl_multiroot_fsolver *s;
 	gsl_vector *x;
-	size_t len = self->axes_len;
+	size_t len = self->mode->info->n_axes;
 	double *x_data;
 	double *x_data0 = alloca(len * sizeof(*x_data0));
 	size_t iter = 0;
 	int status;
-	int res = HKL_FAIL;
+	int res = HKL_FALSE;
 	size_t i;
+	HklParameter **axis;
 
 	/* get the starting point from the geometry */
 	/* must be put in the auto_set method */
 	x = gsl_vector_alloc(len);
 	x_data = (double *)x->data;
-	for(i=0; i<len; ++i)
-		x_data[i] = hkl_axis_get_value(self->axes[i]);
+	i = 0;
+	darray_foreach(axis, self->axes){
+		x_data[i++] = (*axis)->_value;
+	}
 
 	/* keep a copy of the first axes positions to deal with degenerated axes */
 	memcpy(x_data0, x_data, len * sizeof(double));
@@ -122,7 +141,7 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 	do {
 		++iter;
 		status = gsl_multiroot_fsolver_iterate(s);
-		if (status || iter % 1000 == 0) {
+		if (status || iter % 300 == 0) {
 			/* Restart from another point. */
 			for(i=0; i<len; ++i)
 				x_data[i] = (double)rand() / RAND_MAX * 180. / M_PI;
@@ -130,7 +149,7 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 			gsl_multiroot_fsolver_iterate(s);
 		}
 		status = gsl_multiroot_test_residual (s->f, HKL_EPSILON);
-	} while (status == GSL_CONTINUE && iter < 1000);
+	} while (status == GSL_CONTINUE && iter < 2000);
 
 #ifdef DEBUG
 	fprintf(stdout, "\nstatus : %d iter : %d", status, iter);
@@ -139,29 +158,32 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 	fprintf(stdout, "\n");
 #endif
 
-	if (status != GSL_CONTINUE) {		
+	if (status != GSL_CONTINUE) {
 		find_degenerated_axes(self, f, s->x, s->f, degenerated);
-		
+
 #ifdef DEBUG
 		/* print the test header */
 		fprintf(stdout, "\n");
 		for(i=0; i<len; ++i)
 			fprintf(stdout, "\t f(%d)", i);
-		for(i=0; i<len; ++i)
-			fprintf(stdout, "\t \"%s\"", ((HklParameter *)self->axes[i])->name);
+		darray_foreach(axis, self->axes){
+			fprintf(stdout, "\t \"%s\"", (*axis)->name);
+		}
 #endif
 		/* set the geometry from the gsl_vector */
 		/* in a futur version the geometry must contain a gsl_vector */
 		/* to avoid this. */
 		x_data = (double *)s->x->data;
-		for(i=0; i<len; ++i)
-			if (degenerated[i])
-				hkl_axis_set_value(self->axes[i], x_data0[i]);
-			else
-				hkl_axis_set_value(self->axes[i], x_data[i]);
+		i = 0;
+		darray_foreach(axis, self->axes){
+			hkl_parameter_value_set(*axis,
+						degenerated[i] ? x_data0[i] : x_data[i],
+						NULL);
+			++i;
+		}
 
 		hkl_geometry_update(self->geometry);
-		res = HKL_SUCCESS;
+		res = HKL_TRUE;
 	}
 
 	/* release memory */
@@ -171,9 +193,9 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 	return res;
 }
 
-/** 
+/**
  * @brief This private method change the sector of angles.
- * 
+ *
  * @param x The vector of changed angles.
  * @param x0 The vector of angles to change.
  * @param sector the sector vector operation.
@@ -207,9 +229,9 @@ static void change_sector(double x[], double const x0[],
 	}
 }
 
-/** 
+/**
  * @brief Test if an angle combination is compatible with q function.
- * 
+ *
  * @param x The vector of angles to test.
  * @param function The gsl_multiroot_function used for the test.
  * @param f a gsl_vector use to compute the result (optimization)
@@ -218,7 +240,7 @@ static int test_sector(gsl_vector const *x,
 		       gsl_multiroot_function *function,
 		       gsl_vector *f)
 {
-	int res = HKL_SUCCESS;
+	int res = HKL_TRUE;
 	size_t i;
 	double *f_data = f->data;
 
@@ -226,7 +248,7 @@ static int test_sector(gsl_vector const *x,
 
 	for(i=0; i<f->size; ++i)
 		if (fabs(f_data[i]) > HKL_EPSILON){
-			res = HKL_FAIL;
+			res = HKL_FALSE;
 			break;
 		}
 
@@ -240,7 +262,7 @@ static int test_sector(gsl_vector const *x,
 	for(i=0; i<f->size; ++i)
 		fprintf(stdout, "\t%f", gsl_sf_angle_restrict_symm(x->data[i]) * HKL_RADTODEG);
 
-	if(res == HKL_FAIL)
+	if(res == HKL_FALSE)
 		fprintf(stdout, "\t FAIL");
 	else
 		fprintf(stdout, "\t SUCCESS");
@@ -249,9 +271,9 @@ static int test_sector(gsl_vector const *x,
 	return res;
 }
 
-/** 
+/**
  * @brief compute the permutation and test its validity.
- * 
+ *
  * @param axes_len number of axes
  * @param op_len number of operation per axes. (4 for now)
  * @param p The vector containing the current permutation.
@@ -259,74 +281,73 @@ static int test_sector(gsl_vector const *x,
  * @param op the current operation to set.
  * @param f The function for the validity test.
  * @param x0 The starting point of all geometry permutations.
- * @param _x a gsl_vector use to compute the sectors (optimization) 
- * @param _f a gsl_vector use during the sector test (optimization) 
+ * @param _x a gsl_vector use to compute the sectors (optimization)
+ * @param _f a gsl_vector use during the sector test (optimization)
  */
-static void perm_r(size_t axes_len, int op_len[], int p[], int axes_idx,
+static void perm_r(size_t axes_len, size_t op_len[], int p[], size_t axes_idx,
 		   int op, gsl_multiroot_function *f, double x0[],
 		   gsl_vector *_x, gsl_vector *_f)
 {
-	int i;
+	size_t i;
 
 	p[axes_idx++] = op;
 	if (axes_idx == axes_len) {
 		double *x_data = _x->data;
 		change_sector(x_data, x0, p, axes_len);
-		if (HKL_SUCCESS == test_sector(_x, f, _f))
-			hkl_pseudo_axis_engine_add_geometry(f->params, x_data);
+		if (test_sector(_x, f, _f))
+			hkl_engine_add_geometry(f->params, x_data);
 	} else
 		for (i=0; i<op_len[axes_idx]; ++i)
 			perm_r(axes_len, op_len, p, axes_idx, i, f, x0, _x, _f);
 }
 
-/** 
+/**
  * @brief Find all numerical solutions of a mode.
- * 
- * @param self the current HklPseudoAxisEngine
+ *
+ * @param self the current HklEngine
  * @param function The mode function
- * 
- * @return HKL_SUCCESS (0) or HKL_FAIL (-1)
+ *
+ * @return HKL_TRUE or HKL_FALSE
  *
  * This method find a first solution with a numerical method from the
  * GSL library (the multi root solver hybrid). Then it multiplicates the
  * solutions from this starting point using cosinus/sinus properties.
  * It addes all valid solutions to the self->geometries.
  */
-static int solve_function(HklPseudoAxisEngine *self,
-			  HklFunction function)
+static int solve_function(HklEngine *self,
+			  const HklFunction *function)
 {
 
 	size_t i;
-	size_t len = self->axes_len;
-	int *p = alloca(len * sizeof(*p));
-	double *x0 = alloca(len * sizeof(*x0));
-	int *degenerated = alloca(len * sizeof(*degenerated));
-	int *op_len = alloca(len * sizeof(*op_len));
+	int p[function->size];
+	double x0[function->size];
+	int degenerated[function->size];
+	size_t op_len[function->size];
 	int res;
-	gsl_vector *_x; /* use to compute sectors in perm_r (avoid copy) */ 
-	gsl_vector *_f; /* use to test sectors in perm_r (avoid copy) */ 
+	gsl_vector *_x; /* use to compute sectors in perm_r (avoid copy) */
+	gsl_vector *_f; /* use to test sectors in perm_r (avoid copy) */
 	gsl_multiroot_function f;
+	HklParameter **axis;
 
-	_x = gsl_vector_alloc(len);
-	_f = gsl_vector_alloc(len);
-	
-	f.f = function;
-	f.n = len;
+	_x = gsl_vector_alloc(function->size);
+	_f = gsl_vector_alloc(function->size);
+
+	f.f = function->function;
+	f.n = function->size;
 	f.params = self;
 
 	res = find_first_geometry(self, &f, degenerated);
-	if (!res) {
+	if (res) {
 		memset(p, 0, sizeof(p));
 		/* use first solution as starting point for permutations */
-		for(i=0; i<len; ++i){
-			x0[i] = hkl_axis_get_value(self->axes[i]);
-			if (degenerated[i])
-				op_len[i] = 1;
-			else
-				op_len[i] = 4;
+		i = 0;
+		darray_foreach(axis, self->axes){
+			x0[i] = (*axis)->_value;
+			op_len[i] = degenerated[i] ? 1 : 4;
+			++i;
 		}
 		for (i=0; i<op_len[0]; ++i)
-			perm_r(len, op_len, p, 0, i, &f, x0, _x, _f);
+			perm_r(function->size, op_len, p, 0, i, &f, x0, _x, _f);
 	}
 
 	gsl_vector_free(_f);
@@ -334,25 +355,74 @@ static int solve_function(HklPseudoAxisEngine *self,
 	return res;
 }
 
-int hkl_pseudo_axis_engine_mode_set_real(HklPseudoAxisEngineMode *self,
-					 HklPseudoAxisEngine *engine,
-					 HklGeometry *geometry,
-					 HklDetector *detector,
-					 HklSample *sample,
-					 HklError **error)
+/* check that the number of axis of the mode is the right number of variables expected by mode functions */
+static inline void check_validity(const HklModeAutoInfo *info)
+{
+	for(uint i=0; i<info->n_functions; ++i)
+		hkl_assert(info->functions[i]->size == info->mode.n_axes);
+}
+
+HklMode *hkl_mode_auto_new(const HklModeAutoInfo *info,
+			   const HklModeOperations *ops)
+{
+	check_validity(info);
+
+	return hkl_mode_new(&info->mode, ops);
+
+}
+
+void hkl_mode_auto_init(HklMode *self,
+			const HklModeAutoInfo *info,
+			const HklModeOperations *ops)
+{
+	check_validity(info);
+
+	hkl_mode_init(self, &info->mode, ops);
+
+}
+
+int hkl_mode_auto_set_real(HklMode *self,
+			   HklEngine *engine,
+			   HklGeometry *geometry,
+			   HklDetector *detector,
+			   HklSample *sample,
+			   HklError **error)
 {
 	size_t i;
-	int res = HKL_FAIL;
+	int ok = HKL_FALSE;
+	HklModeAutoInfo *info = container_of(self->info, HklModeAutoInfo, mode);
 
-	if(!self || !engine || !geometry || !detector || !sample)
-		return res;
+	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
-	for(i=0;i<self->functions_len;++i)
-		res &= solve_function(engine, self->functions[i]);
+	if(!self || !engine || !geometry || !detector || !sample){
+		hkl_error_set(error, "Internal error");
+		return HKL_FALSE;
+	}
+
+	for(i=0;i<info->n_functions;++i)
+		ok |= solve_function(engine, info->functions[i]);
+
+	if(!ok){
+		hkl_error_set(error, "none of the functions were solved !!!");
+		return HKL_FALSE;
+	}
 
 #ifdef DEBUG
-	hkl_pseudo_axis_engine_fprintf(stdout, engine);
+	hkl_engine_fprintf(stdout, engine);
 #endif
 
-	return res;
+	return HKL_TRUE;
+}
+
+HklMode *hkl_mode_auto_with_init_new(const HklModeAutoInfo *info,
+				     const HklModeOperations *ops)
+{
+	HklModeAutoWithInit *self = HKL_MALLOC(HklModeAutoWithInit);
+
+	hkl_mode_auto_init(&self->mode, info, ops);
+	self->geometry = NULL;
+	self->detector = NULL;
+	self->sample = NULL;
+
+	return &self->mode;
 }

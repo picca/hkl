@@ -13,21 +13,34 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2013 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <math.h>
-#include <string.h>
-#include <stdarg.h>
-#include <alloca.h>
-
-#include <gsl/gsl_math.h>
-#include <gsl/gsl_sf_trig.h>
-
-#include <hkl/hkl-geometry.h>
+#include <alloca.h>                     // for alloca
+#include <gsl/gsl_sf_trig.h>            // for gsl_sf_angle_restrict_symm
+#include <gsl/gsl_sys.h>                // for gsl_isnan
+#include <math.h>                       // for fabs, M_PI
+#include <stdarg.h>                     // for va_arg, va_end, va_list, etc
+#include <stddef.h>                     // for size_t
+#include <stdio.h>                      // for fprintf, FILE, stderr
+#include <stdlib.h>                     // for free, exit, realloc
+#include <string.h>                     // for NULL, strcmp, memcpy
+#include <sys/types.h>                  // for uint
+#include "hkl-axis-private.h"           // for HklAxis, etc
+#include "hkl-geometry-private.h"       // for _HklGeometry, etc
+#include "hkl-interval-private.h"       // for HklInterval
+#include "hkl-macros-private.h"         // for HKL_MALLOC
+#include "hkl-parameter-private.h"      // for _HklParameter, etc
+#include "hkl-quaternion-private.h"     // for _HklQuaternion, etc
+#include "hkl-source-private.h"         // for HklSource, hkl_source_init
+#include "hkl-unit-private.h"           // for HklUnit, hkl_unit_factor
+#include "hkl-vector-private.h"         // for HklVector, HklQuaternion, etc
+#include "hkl.h"                        // for HklGeometry, etc
+#include "hkl/ccan/container_of/container_of.h"  // for container_of
+#include "hkl/ccan/darray/darray.h"     // for darray_foreach, darray_item, etc
 
 /*
  * Try to add a axis to the axes list,
@@ -36,34 +49,33 @@
  * die if try to add an axis with the same name but a different axis_v
  */
 static size_t hkl_geometry_add_rotation(HklGeometry *self,
-					char const *name, HklVector const *axis_v)
+					const char *name, const HklVector *axis_v)
 {
-	size_t i, len;
-	HklAxis axis;
+	uint i = 0;
+	HklParameter **parameter;
 
 	/* check if an axis with the same name is on the axis list */
-	for(i=0; i<self->len; ++i){
-		HklAxis *axis;
-
-		axis = &self->axes[i];
-		if(!strcmp(hkl_axis_get_name(axis), name)){
-			if (hkl_vector_cmp(&axis->axis_v, axis_v)){
+	darray_foreach(parameter, self->axes){
+		HklAxis *axis = container_of(*parameter, HklAxis, parameter);
+		if(!strcmp((*parameter)->name, name)){
+			if (hkl_vector_cmp(&axis->axis_v,
+					   axis_v)){
 				fprintf(stderr, "can not add two axis with the same name \"%s\" but different axes <%f, %f, %f> != <%f, %f, %f> into an HklAxes.",
-				    name,
-				    axis->axis_v.data[0], axis->axis_v.data[1], axis->axis_v.data[2],
-				    axis_v->data[0], axis_v->data[1], axis_v->data[2]);
+					name,
+					axis->axis_v.data[0], axis->axis_v.data[1], axis->axis_v.data[2],
+					axis_v->data[0], axis_v->data[1], axis_v->data[2]);
 				exit(128);
 			}else{
 				return i;
 			}
 		}
+		++i;
 	}
 
 	/* no so create and add it to the list */
-	self->axes = realloc(self->axes, sizeof(*self->axes) * (self->len + 1));
-	hkl_axis_init(&self->axes[self->len], name, axis_v);
+	darray_append(self->axes, hkl_parameter_new_axis(name, axis_v));
 
-	return self->len++;
+	return darray_size(self->axes) - 1;
 }
 
 /*******************/
@@ -109,51 +121,52 @@ static void hkl_holder_config_unref(struct HklHolderConfig *self)
 /* HklHolder */
 /*************/
 
-static void hkl_holder_init(HklHolder *self, HklGeometry *geometry)
+static HklHolder *hkl_holder_new(HklGeometry *geometry)
 {
-	static HklQuaternion q0 = {{0, 0, 0, 0}};
+	static HklQuaternion q0 = {{1, 0, 0, 0}};
+	HklHolder *self = HKL_MALLOC(HklHolder);
+
 	self->config = hkl_holder_config_new();
 	self->geometry = geometry;
 	self->q = q0;
+
+	return self;
 }
 
-static int hkl_holder_init_copy(HklHolder *self, HklGeometry *geometry,
-				HklHolder const *holder)
+static HklHolder *hkl_holder_new_copy(HklHolder *src, HklGeometry *geometry)
 {
-	/* check axes compatibility */
-	if (geometry->len != holder->geometry->len)
-		return HKL_FAIL;
+	HklHolder *self = HKL_MALLOC(HklHolder);
 
-	self->config = hkl_holder_config_ref(holder->config);
+	self->config = hkl_holder_config_ref(src->config);
 	self->geometry = geometry;
-	self->q = holder->q;
+	self->q = src->q;
 
-	return HKL_SUCCESS;
+	return self;
 }
 
-static void hkl_holder_release_memory(HklHolder *self)
+static void hkl_holder_free(HklHolder *self)
 {
 	hkl_holder_config_unref(self->config);
+	free(self);
 }
 
 static void hkl_holder_update(HklHolder *self)
 {
 	static HklQuaternion q0 = {{1, 0, 0, 0}};
 	size_t i;
-	HklAxis *axes;
-	size_t *idx;
 
 	self->q = q0;
-	axes = self->geometry->axes;
-	idx = self->config->idx;
 	for(i=0; i<self->config->len; ++i)
-		hkl_quaternion_times_quaternion(&self->q, &axes[idx[i]].q);
+		hkl_quaternion_times_quaternion(&self->q,
+						&container_of(darray_item(self->geometry->axes,
+									  self->config->idx[i]),
+							      HklAxis, parameter)->q);
 }
 
-HklAxis *hkl_holder_add_rotation_axis(HklHolder * self,
-				      char const * name, double x, double y, double z)
+HklParameter *hkl_holder_add_rotation_axis(HklHolder *self,
+					   const char *name, double x, double y, double z)
 {
-	HklAxis *axis = NULL;
+	HklParameter *axis = NULL;
 	size_t i, idx;
 	HklVector axis_v;
 
@@ -168,7 +181,7 @@ HklAxis *hkl_holder_add_rotation_axis(HklHolder * self,
 		if (idx == self->config->idx[i])
 			return NULL;
 
-	axis = &self->geometry->axes[idx];
+	axis = darray_item(self->geometry->axes, idx);
 	self->config->idx = realloc(self->config->idx, sizeof(*self->config->idx) * (self->config->len + 1));
 	self->config->idx[self->config->len++] = idx;
 
@@ -179,205 +192,379 @@ HklAxis *hkl_holder_add_rotation_axis(HklHolder * self,
 /* HklGeometry */
 /***************/
 
-HklGeometry *hkl_geometry_new(void)
+/**
+ * hkl_geometry_new: (skip)
+ *
+ * constructor
+ *
+ * Returns:
+ **/
+HklGeometry *hkl_geometry_new(const HklFactory *factory)
 {
 	HklGeometry *g = NULL;
 
 	g = HKL_MALLOC(HklGeometry);
 
-	g->config = NULL;
+	g->factory = factory;
 	hkl_source_init(&g->source, 1.54, 1, 0, 0);
-	g->axes = NULL;
-	g->len = 0;
-	g->holders = NULL;
-	g->holders_len = 0;
+	darray_init(g->axes);
+	darray_init(g->holders);
 
 	return g;
 }
 
-HklGeometry *hkl_geometry_new_copy(HklGeometry const *src)
+/**
+ * hkl_geometry_new_copy: (skip)
+ * @self:
+ *
+ * copy constructor
+ *
+ * Returns:
+ **/
+HklGeometry *hkl_geometry_new_copy(const HklGeometry *src)
 {
 	HklGeometry *self = NULL;
-	unsigned int i;
-	size_t len;
+	HklParameter **axis;
+	HklHolder **holder;
+
+	if(!src)
+		return self;
 
 	self = HKL_MALLOC(HklGeometry);
 
-	self->config = src->config;
+	self->factory = src->factory;
 	self->source = src->source;
-	self->len = src->len;
-	self->holders_len = src->holders_len;
 
 	/* copy the axes */
-	self->axes = malloc(sizeof(*self->axes) * self->len);
-	memcpy(self->axes, src->axes, sizeof(*self->axes) * self->len);
+	darray_init(self->axes);
+	darray_foreach(axis, src->axes){
+		darray_append(self->axes, hkl_parameter_new_copy(*axis));
+	}
 
 	/* copy the holders */
-	self->holders = malloc(sizeof(*self->holders) * self->holders_len);
-	for(i=0; i<self->holders_len; ++i)
-		hkl_holder_init_copy(&self->holders[i], self,
-				     &src->holders[i]);
+	darray_init(self->holders);
+	darray_foreach(holder, src->holders){
+		darray_append(self->holders,
+			      hkl_holder_new_copy(*holder, self));
+	}
 
 	return self;
 }
 
+/**
+ * hkl_geometry_free: (skip)
+ * @self:
+ *
+ * destructor
+ **/
 void hkl_geometry_free(HklGeometry *self)
 {
-	size_t i;
+	HklParameter **axis;
+	HklHolder **holder;
 
-	free(self->axes);
-	self->len = 0;
-
-	if(self->holders_len) {
-		for(i=0; i<self->holders_len; ++i)
-			hkl_holder_release_memory(&self->holders[i]);
-		free(self->holders);
+	darray_foreach(axis, self->axes){
+		hkl_parameter_free(*axis);
 	}
+	darray_free(self->axes);
+
+	darray_foreach(holder, self->holders){
+		hkl_holder_free(*holder);
+	}
+	darray_free(self->holders);
 
 	free(self);
 }
 
-void hkl_geometry_init_geometry(HklGeometry *self, HklGeometry const *src)
+void hkl_geometry_set(HklGeometry *self, const HklGeometry *src)
 {
 	size_t i;
 
-	if(!self || !src
-	   || self->config->type != src->config->type)
+	if(self->factory != src->factory)
 		return;
 
+	self->factory = src->factory;
 	self->source = src->source;
 
 	/* copy the axes configuration and mark it as dirty */
-	memcpy(self->axes, src->axes, sizeof(*self->axes) * self->len);
-	for(i=0; i<src->holders_len; ++i)
-		self->holders[i].q = src->holders[i].q;
+	for(i=0; i<darray_size(self->axes); ++i)
+		hkl_parameter_init_copy(darray_item(self->axes, i),
+					darray_item(src->axes, i));
+
+	for(i=0; i<darray_size(src->holders); ++i)
+		darray_item(self->holders, i)->q = darray_item(src->holders, i)->q;
 }
 
-HklHolder *hkl_geometry_add_holder(HklGeometry *self)
+const darray_parameter *hkl_geometry_axes_get(const HklGeometry *self)
 {
-	self->holders = realloc(self->holders, sizeof(*self->holders) * (self->holders_len + 1));
-	hkl_holder_init(&self->holders[self->holders_len], self);
-
-	return &self->holders[self->holders_len++];
-}
-
-void hkl_geometry_update(HklGeometry *self)
-{
-	size_t i;
-	int ko = 0;
-
-	for(i=0; i<self->len; ++i)
-		if (hkl_axis_get_changed(&self->axes[i]) == HKL_TRUE) {
-			ko = 1;
-			break;
-		}
-
-	if (ko) {
-		for(i=0; i<self->holders_len; i++)
-			hkl_holder_update(&self->holders[i]);
-
-		for(i=0; i<self->len; i++)
-			hkl_axis_set_changed(&self->axes[i], HKL_FALSE);
-	}
+	return &self->axes;
 }
 
 /**
- * hkl_geometry_get_axis_idx_by_name:
- * @self: 
- * @name: 
+ * hkl_geometry_axis_get: (skip)
+ * @self: the this ptr
+ * @name: the name of the axis your are requesting
+ *
+ * Return value: (allow-none): the parameter corresponding to the axis name.
+ **/
+const HklParameter *hkl_geometry_axis_get(const HklGeometry *self,
+					  const char *name)
+{
+	HklParameter **axis;
+
+	darray_foreach(axis, self->axes){
+		if (!strcmp((*axis)->name, name))
+			return *axis;
+	}
+	return NULL;
+}
+
+void hkl_geometry_axis_set(HklGeometry *self, const HklParameter *axis)
+{
+	HklParameter **_axis;
+
+	darray_foreach(_axis, self->axes){
+		if (*_axis == axis)
+			break;
+		if (!strcmp(axis->name, (*_axis)->name))
+			hkl_parameter_init_copy(*_axis, axis);
+	}
+	hkl_geometry_update(self);
+}
+
+double hkl_geometry_wavelength_get(const HklGeometry *self)
+{
+	return self->source.wave_length;
+}
+
+void hkl_geometry_wavelength_set(HklGeometry *self, double wavelength)
+{
+	self->source.wave_length = wavelength;
+}
+
+/**
+ * hkl_geometry_init_geometry: (skip)
+ * @self:
+ * @src:
+ *
+ * initilize an HklGeometry
+ **/
+void hkl_geometry_init_geometry(HklGeometry *self, const HklGeometry *src)
+{
+	hkl_geometry_set(self, src);
+}
+
+/**
+ * hkl_geometry_add_holder: (skip)
+ * @self:
+ *
+ * add an Holder to the #HklGeometry
+ *
+ * Returns:
+ **/
+HklHolder *hkl_geometry_add_holder(HklGeometry *self)
+{
+	HklHolder *holder = hkl_holder_new(self);
+	darray_append(self->holders, holder);
+
+	return holder;
+}
+
+/**
+ * hkl_geometry_update: (skip)
+ * @self:
+ *
+ * update the geometry internal once an Axis values changed
+ **/
+void hkl_geometry_update(HklGeometry *self)
+{
+	HklParameter **axis;
+	size_t i;
+	int ko = 0;
+
+	darray_foreach(axis, self->axes){
+		if ((*axis)->changed) {
+			ko = 1;
+			break;
+		}
+	}
+
+	if (ko) {
+		HklHolder **holder;
+
+		darray_foreach(holder, self->holders){
+			hkl_holder_update(*holder);
+		}
+
+		darray_foreach(axis, self->axes){
+			(*axis)->changed = HKL_FALSE;
+		}
+	}
+}
+
+const char *hkl_geometry_name_get(const HklGeometry *self)
+{
+	return hkl_factory_name(self->factory);
+}
+
+/**
+ * hkl_geometry_get_axis_idx_by_name: (skip)
+ * @self:
+ * @name:
  *
  * get the index of the axes named @name in the geometry
  *
  * Returns: -1 if the axis was not found
  **/
-int hkl_geometry_get_axis_idx_by_name(HklGeometry *self, const char *name)
+int hkl_geometry_get_axis_idx_by_name(const HklGeometry *self, const char *name)
 {
-	int i;
-	HklAxis *axis;
+	uint i = 0;
+	HklParameter **axis;
 
 	if (!self || !name)
 		return -1;
 
-	for(i=0; i<self->len; ++i){
-		axis = &self->axes[i];
-		if (!strcmp(hkl_axis_get_name(axis), name))
+	darray_foreach(axis, self->axes){
+		if (!strcmp((*axis)->name, name))
 			return i;
+		++i;
 	}
 
 	return -1;
 }
 
-HklAxis *hkl_geometry_get_axis_by_name(HklGeometry *self, char const *name)
+/**
+ * hkl_geometry_get_axis_by_name:
+ * @self:
+ * @name:
+ *
+ * get an #HklAxis using its name
+ *
+ * Returns: (transfer none):
+ **/
+HklParameter *hkl_geometry_get_axis_by_name(HklGeometry *self, const char *name)
 {
-	size_t i;
-	HklAxis *axis;
-	for(i=0; i<self->len; ++i) {
-		axis = &self->axes[i];
-		if (!strcmp(hkl_axis_get_name(axis), name))
-			return axis;
+	HklParameter **axis;
+
+	darray_foreach(axis, self->axes){
+		if (!strcmp((*axis)->name, name))
+			return (*axis);
 	}
 	return NULL;
 }
 
+/**
+ * hkl_geometry_randomize: (skip)
+ * @self:
+ *
+ * randomize the #HklGeometry
+ **/
 void hkl_geometry_randomize(HklGeometry *self)
 {
-	size_t i;
+	HklParameter **axis;
 
-	for(i=0; i<self->len; ++i)
-		hkl_axis_randomize(&self->axes[i]);
+	darray_foreach(axis, self->axes){
+		hkl_parameter_randomize(*axis);
+	}
 	hkl_geometry_update(self);
 }
 
+/**
+ * hkl_geometry_set_values_v: (skip)
+ * @self:
+ * @len:
+ * "...:
+ *
+ * set the axes values
+ *
+ * Returns:
+ **/
 int hkl_geometry_set_values_v(HklGeometry *self, size_t len, ...)
 {
 	va_list ap;
-	size_t i;
+	HklParameter **axis;
 
-	if (!self || len != self->len)
-		return HKL_FAIL;
+	if (!self || darray_size(self->axes) != len)
+		return HKL_FALSE;
 
 	va_start(ap, len);
-	for(i=0; i<len; ++i)
-		hkl_axis_set_value(&self->axes[i], va_arg(ap, double));
-
+	darray_foreach(axis, self->axes){
+		hkl_parameter_value_set(*axis,
+					va_arg(ap, double), NULL);
+	}
 	va_end(ap);
+
 	hkl_geometry_update(self);
 
-	return HKL_SUCCESS;
+	return HKL_TRUE;
 }
 
-double hkl_geometry_distance(HklGeometry *self, HklGeometry *geom)
+int hkl_geometry_set_values_unit_v(HklGeometry *self, ...)
+{
+	va_list ap;
+	HklParameter **axis;
+
+	va_start(ap, self);
+	darray_foreach(axis, self->axes){
+		hkl_parameter_value_unit_set(*axis,
+					     va_arg(ap, double), NULL);
+	}
+	va_end(ap);
+
+	hkl_geometry_update(self);
+
+	return HKL_TRUE;
+}
+
+/**
+ * hkl_geometry_distance:
+ * @self: the this ptr
+ * @ref: the #HklGeometry to compare with
+ *
+ * compute the distance between two #HklGeometries
+ *
+ * Returns: the distance between the two geometries
+ **/
+double hkl_geometry_distance(const HklGeometry *self,
+			     const HklGeometry *ref)
 {
 	size_t i;
 	double value1, value2;
 	double distance = 0.;
 
-	if (!self || !geom)
+	if (!self || !ref)
 		return 0.;
 
-	for(i=0; i<self->len; ++i){
-		value1 = hkl_axis_get_value(&self->axes[i]);
-		value2 = hkl_axis_get_value(&geom->axes[i]);
+	for(i=0; i<darray_size(self->axes); ++i){
+		value1 = darray_item(self->axes, i)->_value;
+		value2 = darray_item(ref->axes, i)->_value;
 		distance += fabs(value2 - value1);
 	}
 
 	return distance;
 }
 
-double hkl_geometry_distance_orthodromic(HklGeometry *self, HklGeometry *geom)
+/**
+ * hkl_geometry_distance_orthodromic: (skip)
+ * @self: the this ptr
+ * @ref: the reference #HklGeometry to compare with.
+ *
+ * Returns: the orthodromique distance
+ **/
+double hkl_geometry_distance_orthodromic(const HklGeometry *self,
+					 const HklGeometry *ref)
 {
 	size_t i;
 	double value1, value2;
 	double distance = 0.;
 
-	if (!self || !geom)
+	if (!self || !ref)
 		return 0.;
 
-	for(i=0; i<self->len; ++i){
+	for(i=0; i<darray_size(self->axes); ++i){
 		double d;
 
-		value1 = hkl_axis_get_value(&self->axes[i]);
-		value2 = hkl_axis_get_value(&geom->axes[i]);
+		value1 = darray_item(self->axes, i)->_value;
+		value2 = darray_item(ref->axes, i)->_value;
 		d = fabs(gsl_sf_angle_restrict_symm(value2) - gsl_sf_angle_restrict_symm(value1));
 		/* as M_PI and -M_PI are included in the GSL restriction */
 		if (d > M_PI)
@@ -388,46 +575,76 @@ double hkl_geometry_distance_orthodromic(HklGeometry *self, HklGeometry *geom)
 	return distance;
 }
 
+/**
+ * hkl_geometry_is_valid: (skip)
+ * @self:
+ *
+ * check if all axes of the #HklGeometry are valid.
+ *
+ * Returns:
+ **/
 int hkl_geometry_is_valid(const HklGeometry *self)
 {
-	size_t i;
+	HklParameter **axis;
 
-	for(i=0; i<self->len; ++i)
-		if(hkl_axis_is_valid(&self->axes[i]) == HKL_FALSE)
+	darray_foreach(axis, self->axes){
+		if(!hkl_parameter_is_valid(*axis))
 			return HKL_FALSE;
+	}
 
 	return HKL_TRUE;
 }
 
-int hkl_geometry_closest_from_geometry_with_range(HklGeometry *self, HklGeometry *ref)
+/**
+ * hkl_geometry_closest_from_geometry_with_range: (skip)
+ * @self:
+ * @ref:
+ *
+ * get the closest axes values in the HklInterval compatible with the
+ * current axes values
+ *
+ * Returns:
+ **/
+int hkl_geometry_closest_from_geometry_with_range(HklGeometry *self,
+						  const HklGeometry *ref)
 {
 	size_t i;
-	double *values = alloca(self->len * sizeof(*values));
+	uint len = darray_size(self->axes);
+	double *values = alloca(len * sizeof(*values));
 	int ko = HKL_FALSE;
 
-	for(i=0;i<self->len;++i){
-		values[i] = hkl_axis_get_value_closest(&self->axes[i], &ref->axes[i]);
+	for(i=0;i<len;++i){
+		values[i] = hkl_parameter_value_get_closest(darray_item(self->axes, i),
+							    darray_item(ref->axes, i));
 		if(gsl_isnan(values[i])){
 			ko = HKL_TRUE;
 			break;
 		}
 	}
 	if(!ko){
-		for(i=0;i<self->len;++i)
-			hkl_axis_set_value(&self->axes[i], values[i]);
+		for(i=0;i<len;++i)
+			hkl_parameter_value_set(darray_item(self->axes, i),
+						values[i], NULL);
 		hkl_geometry_update(self);
 	}
 	return ko;
 }
 
-void hkl_geometry_fprintf(FILE *file, HklGeometry const *self)
+/**
+ * hkl_geometry_fprintf: (skip)
+ * @file:
+ * @self:
+ *
+ * print into a file the #HklGeometry
+ **/
+void hkl_geometry_fprintf(FILE *file, const HklGeometry *self)
 {
-	size_t i;
+	uint i;
 
-	for(i=0; i<self->len; ++i){
+	for(i=0; i<darray_size(self->axes); ++i){
 		if(i)
 			fprintf(file, "\n");
-		hkl_parameter_fprintf(file, (HklParameter *)(&self->axes[i]));
+		hkl_parameter_fprintf(file, darray_item(self->axes, i));
 	}
 }
 
@@ -435,151 +652,204 @@ void hkl_geometry_fprintf(FILE *file, HklGeometry const *self)
 /* HklGeometryList */
 /*******************/
 
-static void hkl_geometry_list_item_init(HklGeometryListItem *item, HklGeometry *geometry)
-{
-	if(!geometry)
-		return;
-
-	item->geometry = hkl_geometry_new_copy(geometry);
-}
-
-
-static void hkl_geometry_list_item_release(HklGeometryListItem *item)
-{
-	if(!item)
-		return;
-
-	hkl_geometry_free(item->geometry);
-}
-
+/**
+ * hkl_geometry_list_new: (skip)
+ *
+ * constructor
+ *
+ * Returns:
+ **/
 HklGeometryList *hkl_geometry_list_new(void)
 {
 	HklGeometryList *self;
 
 	self = HKL_MALLOC(HklGeometryList);
 
-	self->items = NULL;
-	self->len = 0;
-	self->alloc = 0;
+	darray_init(self->items);
 	self->multiply = NULL;
 
 	return self;
 }
 
+/**
+ * hkl_geometry_list_new_copy: (skip)
+ * @self:
+ *
+ * copy constructor
+ *
+ * Returns:
+ **/
+HklGeometryList *hkl_geometry_list_new_copy(const HklGeometryList *self)
+{
+	HklGeometryList *dup;
+	HklGeometryListItem **item;
+
+	if (!self)
+		return NULL;
+
+	dup = HKL_MALLOC(HklGeometryList);
+
+	darray_init(dup->items);
+	/* now copy the item arrays */
+	darray_foreach(item , self->items){
+		darray_append(dup->items, hkl_geometry_list_item_new_copy(*item));
+	}
+	dup->multiply = self->multiply;
+
+	return dup;
+}
+
+/**
+ * hkl_geometry_list_free: (skip)
+ * @self:
+ *
+ * destructor
+ **/
 void hkl_geometry_list_free(HklGeometryList *self)
 {
 	hkl_geometry_list_reset(self);
-	free(self->items);
 	free(self);
 }
 
 /**
- * @brief this method Add a geometry to the geometries
+ * hkl_geometry_list_add: (skip)
+ * @self: The current #HklGeometryList
+ * @geometry: the #HklGeometry to add
  *
- * @param self The current PseudoAxeEngine
- * @param x A vector of double with the axes values to put in the geometry.
+ * this method Add a geometry to the geometries
  *
- * This method try to be clever by allocating memory only if the current
- * length of the geometries is not large enought. Then it just set the
- * geometry axes and copy it to the right geometries. We do not gives the
- * x len as it is equal to the self->axes_len.
- */
+ * This method try to be clever by allocating memory only if the
+ * current length of the geometries is not large enought. Then it just
+ * set the geometry axes and copy it to the right geometries. We do
+ * not gives the x len as it is equal to the self->axes_len.
+ **/
 void hkl_geometry_list_add(HklGeometryList *self, HklGeometry *geometry)
 {
-	size_t i;
-	int ko;
+	HklGeometryListItem **item;
 
 	/* now check if the geometry is already in the geometry list */
-	ko = HKL_FALSE;
-	for(i=0; i<self->len; ++i)
+	darray_foreach(item, self->items){
 		if (hkl_geometry_distance_orthodromic(geometry,
-						      self->items[i].geometry) < HKL_EPSILON)
-			ko = HKL_TRUE;
-
-	if(ko == HKL_FALSE){
-		ALLOC_GROW(self->items, self->len + 1, self->alloc);
-		hkl_geometry_list_item_init(&self->items[self->len++], geometry);
+						      (*item)->geometry) < HKL_EPSILON)
+			return;
 	}
+
+	darray_append(self->items, hkl_geometry_list_item_new(geometry));
 }
 
+const darray_item *hkl_geometry_list_items_get(const HklGeometryList *self)
+{
+	return &self->items;
+}
+
+/**
+ * hkl_geometry_list_reset: (skip)
+ * @self:
+ *
+ * reset the HklGeometry, in fact it is a sort of clean method remove
+ * all the items of the list.
+ **/
 void hkl_geometry_list_reset(HklGeometryList *self)
 {
-	size_t i;
+	HklGeometryListItem **item;
 
-	for(i=0; i<self->len; ++i)
-		hkl_geometry_list_item_release(&self->items[i]);
-	self->len = 0;
+	darray_foreach(item, self->items)
+		hkl_geometry_list_item_free(*item);
+
+	darray_free(self->items);
+	darray_init(self->items);
 }
 
+/**
+ * hkl_geometry_list_sort: (skip)
+ * @self:
+ * @ref:
+ *
+ * sort the #HklGeometryList compare to the distance of the given
+ * #HklGeometry
+ **/
 void hkl_geometry_list_sort(HklGeometryList *self, HklGeometry *ref)
 {
-	double *distances = alloca(self->len * sizeof(*distances));
-	size_t *idx = alloca(self->len * sizeof(*idx));
-	size_t i, x;
+	double *distances = alloca(darray_size(self->items) * sizeof(*distances));
+	size_t *idx = alloca(darray_size(self->items) * sizeof(*idx));
+	HklGeometryListItem **items = alloca(darray_size(self->items) * sizeof(*items));
+	HklGeometryListItem **item;
+	int i = 0;
+	size_t x;
 	int j, p;
-	HklGeometryListItem *items;
+
+	memcpy(items, &darray_item(self->items, 0), darray_size(self->items) * sizeof(*items));
 
 	/* compute the distances once for all */
-	for(i=0; i<self->len; ++i){
-		distances[i] = hkl_geometry_distance(ref, self->items[i].geometry);
+	darray_foreach(item, self->items){
+		distances[i] = hkl_geometry_distance(ref, (*item)->geometry);
 		idx[i] = i;
+		i++;
 	}
 
 	/* insertion sorting */
-	for(i=1; i<self->len; ++i){
+	for(i=1; i<darray_size(self->items); ++i){
 		x = idx[i];
 		/* find the smallest idx p lower than i with distance[idx[p]] >= distance[x] */
 		for(p = 0; distances[idx[p]] < distances[x] && fabs(distances[idx[p]] - distances[x]) > HKL_EPSILON; p++);
- 
-		/* move evythings in between p and i */
+
+		/* move everythings in between p and i */
 		for(j=i-1; j>=p; j--)
 			idx[j+1] = idx[j];
 
 		idx[p] = x; /* insert the saved idx */
 	}
 
-	/* reorder the geometries. */
-	items = self->items;
-	self->items = malloc(sizeof(*self->items) * self->alloc);
-	for(i=0; i<self->len; ++i)
-		self->items[i] = items[idx[i]];
-	free(items);
+	for(i=0; i<darray_size(self->items); ++i){
+		darray_item(self->items, i) = items[idx[i]];
+	}
 }
 
-void hkl_geometry_list_fprintf(FILE *f, HklGeometryList const *self)
+/**
+ * hkl_geometry_list_fprintf: (skip)
+ * @f:
+ * @self:
+ *
+ * print to a file the #HklGeometryList
+ **/
+void hkl_geometry_list_fprintf(FILE *f, const HklGeometryList *self)
 {
-	HklParameter *parameter;
 	HklGeometry *g;
+	uint i = 0;
 	double value;
-	size_t axes_len;
-	size_t i, j;
+
+	if(!self)
+		return;
 
 	fprintf(f, "multiply method: %p \n", self->multiply);
-	if(self->len){
-		g = self->items[0].geometry;
-		axes_len = g->len;
+	if(darray_size(self->items)){
+		HklGeometryListItem **item;
+		HklParameter **axis;
+
 		fprintf(f, "    ");
-		for(i=0; i<axes_len; ++i)
-			fprintf(f, "%19s", hkl_axis_get_name(&g->axes[i]));
+		darray_foreach(axis, darray_item(self->items, 0)->geometry->axes){
+			fprintf(f, "%19s", (*axis)->name);
+		}
 
 		/* geometries */
-		for(i=0; i<self->len; ++i) {
-			fprintf(f, "\n%d :", i);
-			for(j=0; j<axes_len; ++j) {
-				parameter = (HklParameter *)(&self->items[i].geometry->axes[j]);
-				value = hkl_parameter_get_value_unit(parameter);
-				if (parameter->punit)
-					fprintf(f, " % 18.15f %s", value, parameter->punit->repr);
+		darray_foreach(item, self->items){
+			fprintf(f, "\n%d :", i++);
+			darray_foreach(axis, (*item)->geometry->axes){
+				value = hkl_parameter_value_unit_get(*axis);
+				if ((*axis)->punit)
+					fprintf(f, " % 18.15f %s", value, (*axis)->punit->repr);
 				else
 					fprintf(f, " % 18.15f", value);
 
 			}
 			fprintf(f, "\n   ");
-			for(j=0; j<axes_len; ++j) {
-				parameter = (HklParameter *)(&self->items[i].geometry->axes[j]);
-				value = gsl_sf_angle_restrict_symm(parameter->value) * hkl_unit_factor(parameter->unit, parameter->punit);
-				if (parameter->punit)
-					fprintf(f, " % 18.15f %s", value, parameter->punit->repr);
+			darray_foreach(axis, (*item)->geometry->axes){
+				value = hkl_parameter_value_get(*axis);
+				value = gsl_sf_angle_restrict_symm(value);
+				value *= hkl_unit_factor((*axis)->unit,
+							 (*axis)->punit);
+				if ((*axis)->punit)
+					fprintf(f, " % 18.15f %s", value, (*axis)->punit->repr);
 				else
 					fprintf(f, " % 18.15f", value);
 			}
@@ -588,10 +858,16 @@ void hkl_geometry_list_fprintf(FILE *f, HklGeometryList const *self)
 	}
 }
 
+/**
+ * hkl_geometry_list_multiply: (skip)
+ * @self:
+ *
+ * apply the multiply lenthod to the #HklGeometry
+ **/
 void hkl_geometry_list_multiply(HklGeometryList *self)
 {
-	size_t i;
-	size_t len;
+	uint i;
+	uint len = darray_size(self->items);
 
 	if(!self || !self->multiply)
 		return;
@@ -600,47 +876,53 @@ void hkl_geometry_list_multiply(HklGeometryList *self)
 	 * warning this method change the self->len so we need to save it
 	 * before using the recursive perm_r calls
 	 */
-	len = self->len;
 	for(i=0; i<len; ++i)
-		self->multiply(self, i);
+		self->multiply(self, darray_item(self->items, i));
 }
 
-static void perm_r(HklGeometryList *self, HklGeometry *ref, HklGeometry *geometry,
-		   int perm[], size_t axis_idx)
+static void perm_r(HklGeometryList *self, const HklGeometry *ref,
+		   const HklGeometry *geometry, const int perm[],
+		   const unsigned int axis_idx)
 {
-	if (axis_idx == geometry->len){
-		if(hkl_geometry_distance(ref, geometry) > HKL_EPSILON){
-			ALLOC_GROW(self->items, self->len + 1, self->alloc);
-			hkl_geometry_list_item_init(&self->items[self->len++], geometry);
-		}
+	if (axis_idx == darray_size(geometry->axes)){
+		if(hkl_geometry_distance(geometry, ref) > HKL_EPSILON)
+			darray_append(self->items, hkl_geometry_list_item_new(geometry));
 	}else{
-		if(perm[axis_idx] == HKL_TRUE){
-			HklAxis *axis;
-			double max;
+		if(perm[axis_idx]){
+			HklParameter *axis = darray_item(geometry->axes, axis_idx);
+			const double max = axis->range.max;;
+			const double value0 = axis->_value;
 			double value;
-			double value0;
 
-			axis = &geometry->axes[axis_idx];
-			max = hkl_axis_get_max(axis);
-			value = hkl_axis_get_value(axis);
-			value0 = value;
+			value = value0;
 			do{
 				/* fprintf(stdout, "\n%d %s, %f", axis_idx, hkl_axis_get_name(axis), value * HKL_RADTODEG); */
 				perm_r(self, ref, geometry, perm, axis_idx + 1);
 				value +=  2*M_PI;
-				if(value <= (max + HKL_EPSILON))
-					hkl_axis_set_value(axis, value);
+				if(value <= (max + HKL_EPSILON)){
+					/* optimisation here: */
+					/* instead of using set_value
+					 * we directly write the
+					 * HklParameter value, BEWARE
+					 * that it require that
+					 * HklParameter is a rotation
+					 * (for now it is always
+					 * true */
+					axis->_value = value;
+				}
 			}while(value <= (max + HKL_EPSILON));
-			hkl_axis_set_value(axis, value0);
+			/* restore the initial value */
+			axis->_value = value0;
 		} else
 			perm_r(self, ref, geometry, perm, axis_idx + 1);
-	}	
+	}
 }
 
 void hkl_geometry_list_multiply_from_range(HklGeometryList *self)
 {
-	size_t i, j;
-	size_t len;
+	uint i = 0;
+	uint len = darray_size(self->items);
+	size_t j = 0;
 
 	if(!self)
 		return;
@@ -649,23 +931,22 @@ void hkl_geometry_list_multiply_from_range(HklGeometryList *self)
 	 * warning this method change the self->len so we need to save it
 	 * before using the recursive perm_r calls
 	 */
-	len = self->len;
 	for(i=0; i<len; ++i){
 		HklGeometry *geometry;
-		HklGeometry *ref;
+		HklParameter **axis;
+		const HklGeometry *ref = darray_item(self->items, i)->geometry;
 		int *perm;
 
-		ref = self->items[i].geometry;
 		geometry = hkl_geometry_new_copy(ref);
-		perm = alloca(geometry->len * sizeof(*perm));
+		perm = alloca(darray_size(geometry->axes) * sizeof(*perm));
 
 		/* find axes to permute and the first solution of thoses axes */
-		for(j=0; j<geometry->len; ++j){
-			HklAxis *axis = &geometry->axes[j];
-			perm[j] = hkl_axis_is_value_compatible_with_range(axis);
+		darray_foreach(axis, geometry->axes){
+			perm[j] = hkl_parameter_is_valid(*axis);
 			/* fprintf(stdout, "%d %d\n", j, perm[j]); */
-			if (perm[j] == HKL_TRUE)
-				hkl_axis_set_value_smallest_in_range(axis);
+			if (perm[j])
+				hkl_parameter_value_set_smallest_in_range(*axis);
+			++j;
 		}
 		/*
 		 * fprintf(stdout, "FIRST SOLUTION\n");
@@ -677,31 +958,101 @@ void hkl_geometry_list_multiply_from_range(HklGeometryList *self)
 	}
 }
 
+/**
+ * hkl_geometry_list_remove_invalid: (skip)
+ * @self:
+ *
+ * remove all invalid #HklGeometry from the #HklGeometryList
+ **/
 void hkl_geometry_list_remove_invalid(HklGeometryList *self)
 {
-	size_t i;
+	uint len = darray_size(self->items);
+	HklGeometryListItem **items = alloca(len * sizeof(*items));
+	uint i = 0;
 
 	if(!self)
 		return;
-	
-	for(i=0; i<self->len; ++i)
-		if(!hkl_geometry_is_valid(self->items[i].geometry)){
-			hkl_geometry_list_item_release(&self->items[i]);
-			self->len--;
-			if(i < self->len)
-				memmove(&self->items[i], &self->items[i] + 1, sizeof(*self->items) * (self->len - i));
-			--i;
-		}
+
+	memcpy(items, &darray_item(self->items, 0), len * sizeof(*items));
+	darray_size(self->items) = 0;
+	for(i=0; i<len; ++i){
+		if(!hkl_geometry_is_valid(items[i]->geometry))
+			hkl_geometry_list_item_free(items[i]);
+		else
+			darray_append(self->items, items[i]);
+	}
 }
 
-/* TODO remove */
-int hkl_geometry_list_len(HklGeometryList *self)
+/***********************/
+/* HklGeometryListItem */
+/***********************/
+
+/**
+ * hkl_geometry_list_item_new: (skip)
+ * @geometry:
+ *
+ * constructor
+ *
+ * Returns:
+ **/
+HklGeometryListItem *hkl_geometry_list_item_new(const HklGeometry *geometry)
 {
-	return self->len;
+	HklGeometryListItem *self;
+
+	if(!geometry)
+		return NULL;
+
+	self = HKL_MALLOC(HklGeometryListItem);
+
+	self->geometry = hkl_geometry_new_copy(geometry);
+
+	return self;
 }
 
-/* TODO remove */
-int hkl_geometry_list_is_empty(HklGeometryList *self)
+/**
+ * hkl_geometry_list_item_new_copy: (skip)
+ * @self:
+ *
+ * copy constructor
+ *
+ * Returns:
+ **/
+HklGeometryListItem *hkl_geometry_list_item_new_copy(const HklGeometryListItem *self)
 {
-	return self->len == 0;
+	HklGeometryListItem *dup;
+
+	if(!self)
+		return NULL;
+
+	dup = HKL_MALLOC(HklGeometryListItem);
+
+	dup->geometry = hkl_geometry_new_copy(self->geometry);
+
+	return dup;
+}
+
+/**
+ * hkl_geometry_list_item_free: (skip)
+ * @self:
+ *
+ * destructor
+ **/
+void hkl_geometry_list_item_free(HklGeometryListItem *self)
+{
+	if(!self)
+		return;
+
+	hkl_geometry_free(self->geometry);
+	free(self);
+}
+
+/**
+ * hkl_geometry_list_item_geometry_get: (skip)
+ * @self: the this ptr
+ *
+ * Return value: The geometry contain inside the HklGeometryListItem
+ **/
+const HklGeometry *hkl_geometry_list_item_geometry_get(const HklGeometryListItem *self)
+{
+	return self->geometry;
 }
