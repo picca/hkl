@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <!-- interface-requires gtk+ 3.0 -->
+  <object class="GtkImage" id="image1">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-goto-bottom</property>
+  </object>
   <object class="GtkListStore" id="liststore1">
     <columns>
       <!-- column-name name -->
       <column type="gchararray"/>
       <!-- column-name mode -->
+      <column type="gpointer"/>
+    </columns>
+  </object>
+  <object class="GtkListStore" id="liststore2">
+    <columns>
+      <!-- column-name name -->
+      <column type="gchararray"/>
+      <!-- column-name value -->
+      <column type="gdouble"/>
+      <!-- column-name pseudo -->
+      <column type="gpointer"/>
+    </columns>
+  </object>
+  <object class="GtkListStore" id="liststore3">
+    <columns>
+      <!-- column-name name -->
+      <column type="gchararray"/>
+      <!-- column-name value -->
+      <column type="gdouble"/>
+      <!-- column-name parameter -->
       <column type="gpointer"/>
     </columns>
   </object>
@@ -118,11 +143,12 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="button2">
-                    <property name="label">gtk-justify-center</property>
+                    <property name="label">Initialize</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <property name="use_stock">True</property>
+                    <property name="image">image1</property>
+                    <property name="image_position">right</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -207,25 +233,5 @@
         </attributes>
       </object>
     </child>
-  </object>
-  <object class="GtkListStore" id="liststore2">
-    <columns>
-      <!-- column-name name -->
-      <column type="gchararray"/>
-      <!-- column-name value -->
-      <column type="gdouble"/>
-      <!-- column-name pseudo -->
-      <column type="gpointer"/>
-    </columns>
-  </object>
-  <object class="GtkListStore" id="liststore3">
-    <columns>
-      <!-- column-name name -->
-      <column type="gchararray"/>
-      <!-- column-name value -->
-      <column type="gdouble"/>
-      <!-- column-name parameter -->
-      <column type="gpointer"/>
-    </columns>
   </object>
 </interface>

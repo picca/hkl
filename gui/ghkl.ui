@@ -571,6 +571,7 @@
                                 <child>
                                   <object class="GtkCellRendererText" id="cellrendererspin1">
                                     <property name="editable">True</property>
+                                    <signal name="edited" handler="hkl_gui_window_cellrendererspin1_edited_cb" swapped="no"/>
                                   </object>
                                   <attributes>
                                     <attribute name="text">2</attribute>
@@ -593,7 +594,10 @@
                               <object class="GtkTreeViewColumn" id="treeviewcolumn6">
                                 <property name="title" translatable="yes">min</property>
                                 <child>
-                                  <object class="GtkCellRendererSpin" id="cellrendererspin3"/>
+                                  <object class="GtkCellRendererText" id="cellrendererspin3">
+                                    <property name="editable">True</property>
+                                    <signal name="edited" handler="hkl_gui_window_cellrendererspin3_edited_cb" swapped="no"/>
+                                  </object>
                                   <attributes>
                                     <attribute name="text">4</attribute>
                                   </attributes>
@@ -604,7 +608,10 @@
                               <object class="GtkTreeViewColumn" id="treeviewcolumn4">
                                 <property name="title" translatable="yes">max</property>
                                 <child>
-                                  <object class="GtkCellRendererSpin" id="cellrendererspin4"/>
+                                  <object class="GtkCellRendererText" id="cellrendererspin4">
+                                    <property name="editable">True</property>
+                                    <signal name="edited" handler="hkl_gui_window_cellrendererspin4_edited_cb" swapped="no"/>
+                                  </object>
                                   <attributes>
                                     <attribute name="text">5</attribute>
                                   </attributes>
@@ -1237,6 +1244,12 @@
                                     <property name="x_options"/>
                                     <property name="y_options"/>
                                   </packing>
+                                </child>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                                <child>
+                                  <placeholder/>
                                 </child>
                                 <child>
                                   <placeholder/>
@@ -2082,6 +2095,12 @@
                                     <property name="x_options">GTK_FILL</property>
                                     <property name="y_options"/>
                                   </packing>
+                                </child>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                                <child>
+                                  <placeholder/>
                                 </child>
                                 <child>
                                   <placeholder/>

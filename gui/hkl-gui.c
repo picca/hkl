@@ -239,157 +239,71 @@ SPINBUTTON_VALUE_CHANGED_CB_DECL(spinbutton_gamma_min);
 SPINBUTTON_VALUE_CHANGED_CB_DECL(spinbutton_gamma_max);
 SPINBUTTON_VALUE_CHANGED_CB_DECL(spinbutton_gamma_star);
 
-void combobox1_changed_cb(GtkComboBox *combobox, gpointer *user_data);
-
 static void hkl_gui_window_get_widgets_and_objects_from_ui (HklGuiWindow* self);
 static void hkl_gui_window_set_up_diffractometer_model (HklGuiWindow* self);
 static void hkl_gui_window_connect_all_signals (HklGuiWindow* self);
-static void hkl_gui_window_on_spinbutton_a_value_changed (HklGuiWindow* self);
-static void _hkl_gui_window_on_spinbutton_a_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self);
-static void hkl_gui_window_on_spinbutton_b_value_changed (HklGuiWindow* self);
-static void _hkl_gui_window_on_spinbutton_b_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self);
-static void hkl_gui_window_on_spinbutton_c_value_changed (HklGuiWindow* self);
-static void _hkl_gui_window_on_spinbutton_c_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self);
-static void hkl_gui_window_on_spinbutton_alpha_value_changed (HklGuiWindow* self);
-static void _hkl_gui_window_on_spinbutton_alpha_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self);
-static void hkl_gui_window_on_spinbutton_beta_value_changed (HklGuiWindow* self);
-static void _hkl_gui_window_on_spinbutton_beta_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self);
-static void hkl_gui_window_on_spinbutton_gamma_value_changed (HklGuiWindow* self);
-static void _hkl_gui_window_on_spinbutton_gamma_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self);
-static void hkl_gui_window_on_spinbutton_a_min_value_changed (HklGuiWindow* self);
-static void _hkl_gui_window_on_spinbutton_a_min_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self);
-static void hkl_gui_window_on_spinbutton_b_min_value_changed (HklGuiWindow* self);
-static void _hkl_gui_window_on_spinbutton_b_min_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self);
-static void hkl_gui_window_on_spinbutton_c_min_value_changed (HklGuiWindow* self);
-static void _hkl_gui_window_on_spinbutton_c_min_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self);
-static void hkl_gui_window_on_spinbutton_alpha_min_value_changed (HklGuiWindow* self);
-static void _hkl_gui_window_on_spinbutton_alpha_min_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self);
-static void hkl_gui_window_on_spinbutton_beta_min_value_changed (HklGuiWindow* self);
-static void _hkl_gui_window_on_spinbutton_beta_min_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self);
-static void hkl_gui_window_on_spinbutton_gamma_min_value_changed (HklGuiWindow* self);
-static void _hkl_gui_window_on_spinbutton_gamma_min_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self);
-static void hkl_gui_window_on_spinbutton_a_max_value_changed (HklGuiWindow* self);
-static void _hkl_gui_window_on_spinbutton_a_max_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self);
-static void hkl_gui_window_on_spinbutton_b_max_value_changed (HklGuiWindow* self);
-static void _hkl_gui_window_on_spinbutton_b_max_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self);
-static void hkl_gui_window_on_spinbutton_c_max_value_changed (HklGuiWindow* self);
-static void _hkl_gui_window_on_spinbutton_c_max_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self);
-static void hkl_gui_window_on_spinbutton_alpha_max_value_changed (HklGuiWindow* self);
-static void _hkl_gui_window_on_spinbutton_alpha_max_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self);
-static void hkl_gui_window_on_spinbutton_beta_max_value_changed (HklGuiWindow* self);
-static void _hkl_gui_window_on_spinbutton_beta_max_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self);
-static void hkl_gui_window_on_spinbutton_gamma_max_value_changed (HklGuiWindow* self);
-static void _hkl_gui_window_on_spinbutton_gamma_max_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self);
-static void hkl_gui_window_on_spinbutton_lambda_value_changed (HklGuiWindow* self);
-static void _hkl_gui_window_on_spinbutton_lambda_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self);
-static void hkl_gui_window_on_spinbutton_uxuyuz_value_changed (HklGuiWindow* self);
-static void _hkl_gui_window_on_spinbutton_uxuyuz_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self);
-static void hkl_gui_window_on_button2_clicked (HklGuiWindow* self);
-static void _hkl_gui_window_on_button2_clicked_gtk_button_clicked (GtkButton* _sender, gpointer self);
-static void hkl_gui_window_on_checkbutton_a_toggled (HklGuiWindow* self);
-static void _hkl_gui_window_on_checkbutton_a_toggled_gtk_toggle_button_toggled (GtkToggleButton* _sender, gpointer self);
-static void hkl_gui_window_on_checkbutton_b_toggled (HklGuiWindow* self);
-static void _hkl_gui_window_on_checkbutton_b_toggled_gtk_toggle_button_toggled (GtkToggleButton* _sender, gpointer self);
-static void hkl_gui_window_on_checkbutton_c_toggled (HklGuiWindow* self);
-static void _hkl_gui_window_on_checkbutton_c_toggled_gtk_toggle_button_toggled (GtkToggleButton* _sender, gpointer self);
-static void hkl_gui_window_on_checkbutton_alpha_toggled (HklGuiWindow* self);
-static void _hkl_gui_window_on_checkbutton_alpha_toggled_gtk_toggle_button_toggled (GtkToggleButton* _sender, gpointer self);
-static void hkl_gui_window_on_checkbutton_beta_toggled (HklGuiWindow* self);
-static void _hkl_gui_window_on_checkbutton_beta_toggled_gtk_toggle_button_toggled (GtkToggleButton* _sender, gpointer self);
-static void hkl_gui_window_on_checkbutton_gamma_toggled (HklGuiWindow* self);
-static void _hkl_gui_window_on_checkbutton_gamma_toggled_gtk_toggle_button_toggled (GtkToggleButton* _sender, gpointer self);
-static void hkl_gui_window_on_checkbutton_Ux_toggled (HklGuiWindow* self);
-static void _hkl_gui_window_on_checkbutton_Ux_toggled_gtk_toggle_button_toggled (GtkToggleButton* _sender, gpointer self);
-static void hkl_gui_window_on_checkbutton_Uy_toggled (HklGuiWindow* self);
-static void _hkl_gui_window_on_checkbutton_Uy_toggled_gtk_toggle_button_toggled (GtkToggleButton* _sender, gpointer self);
-static void hkl_gui_window_on_checkbutton_Uz_toggled (HklGuiWindow* self);
-static void _hkl_gui_window_on_checkbutton_Uz_toggled_gtk_toggle_button_toggled (GtkToggleButton* _sender, gpointer self);
-static gboolean hkl_gui_window_on_tree_view_reflections_key_press_event (GdkEventKey* event, HklGuiWindow* self);
-static gboolean _hkl_gui_window_on_tree_view_reflections_key_press_event_gtk_widget_key_press_event (GtkWidget* _sender, GdkEventKey* event, gpointer self);
-static void hkl_gui_window_on_tree_view_pseudo_axes_cursor_changed (HklGuiWindow* self);
-static void _hkl_gui_window_on_tree_view_pseudo_axes_cursor_changed_gtk_tree_view_cursor_changed (GtkTreeView* _sender, gpointer self);
-static void hkl_gui_window_on_tree_view_crystals_cursor_changed (HklGuiWindow* self);
-static void _hkl_gui_window_on_tree_view_crystals_cursor_changed_gtk_tree_view_cursor_changed (GtkTreeView* _sender, gpointer self);
-static gboolean hkl_gui_window_on_tree_view_crystals_key_press_event (GdkEventKey* event, HklGuiWindow* self);
-static gboolean _hkl_gui_window_on_tree_view_crystals_key_press_event_gtk_widget_key_press_event (GtkWidget* _sender, GdkEventKey* event, gpointer self);
-static void hkl_gui_window_on_toolbutton_add_reflection_clicked (HklGuiWindow* self);
-static void _hkl_gui_window_on_toolbutton_add_reflection_clicked_gtk_tool_button_clicked (GtkToolButton* _sender, gpointer self);
-static void hkl_gui_window_on_toolbutton_goto_reflection_clicked (HklGuiWindow* self);
-static void _hkl_gui_window_on_toolbutton_goto_reflection_clicked_gtk_tool_button_clicked (GtkToolButton* _sender, gpointer self);
-static void hkl_gui_window_on_toolbutton_del_reflection_clicked (HklGuiWindow* self);
-static void _hkl_gui_window_on_toolbutton_del_reflection_clicked_gtk_tool_button_clicked (GtkToolButton* _sender, gpointer self);
-static void hkl_gui_window_on_toolbutton_setUB_clicked (HklGuiWindow* self);
-static void _hkl_gui_window_on_toolbutton_setUB_clicked_gtk_tool_button_clicked (GtkToolButton* _sender, gpointer self);
-static void hkl_gui_window_on_toolbutton_computeUB_clicked (HklGuiWindow* self);
-static void _hkl_gui_window_on_toolbutton_computeUB_clicked_gtk_tool_button_clicked (GtkToolButton* _sender, gpointer self);
-static void hkl_gui_window_on_toolbutton_add_crystal_clicked (HklGuiWindow* self);
-static void _hkl_gui_window_on_toolbutton_add_crystal_clicked_gtk_tool_button_clicked (GtkToolButton* _sender, gpointer self);
-static void hkl_gui_window_on_toolbutton_copy_crystal_clicked (HklGuiWindow* self);
-static void _hkl_gui_window_on_toolbutton_copy_crystal_clicked_gtk_tool_button_clicked (GtkToolButton* _sender, gpointer self);
-static void hkl_gui_window_on_toolbutton_del_crystal_clicked (HklGuiWindow* self);
-static void _hkl_gui_window_on_toolbutton_del_crystal_clicked_gtk_tool_button_clicked (GtkToolButton* _sender, gpointer self);
-static void hkl_gui_window_on_toolbutton_affiner_clicked (HklGuiWindow* self);
-static void _hkl_gui_window_on_toolbutton_affiner_clicked_gtk_tool_button_clicked (GtkToolButton* _sender, gpointer self);
-static void hkl_gui_window_on_menuitem5_activate (HklGuiWindow* self);
-static void _hkl_gui_window_on_menuitem5_activate_gtk_menu_item_activate (GtkMenuItem* _sender, gpointer self);
-void hkl_gui_window_on_button1_clicked (HklGuiWindow* self);
-static void _hkl_gui_window_on_button1_clicked_gtk_button_clicked (GtkButton* _sender, gpointer self);
-void hkl_gui_window_on_combobox1_changed (HklGuiWindow* self);
-static void _hkl_gui_window_on_combobox1_changed_gtk_combo_box_changed (GtkComboBox* _sender, gpointer self);
-HklGuiWindow* hkl_gui_window_new (void);
+
+
 HklGuiWindow* hkl_gui_window_construct (GType object_type);
+
 static void hkl_gui_window_set_up_tree_view_reflections (HklGuiWindow* self);
+
 static void hkl_gui_window_set_up_tree_view_crystals (HklGuiWindow* self);
+
 static void hkl_gui_window_update_tree_view_crystals (HklGuiWindow* self);
+
 static void hkl_gui_window_update_source (HklGuiWindow* self);
+
 static void hkl_gui_window_update_lattice (HklGuiWindow* self);
+
 static void hkl_gui_window_update_lattice_parameters (HklGuiWindow* self);
+
 static void hkl_gui_window_update_reciprocal_lattice (HklGuiWindow* self);
+
 static void hkl_gui_window_update_UxUyUz (HklGuiWindow* self);
+
 static void hkl_gui_window_update_UB (HklGuiWindow* self);
+
 static void hkl_gui_window_set_up_pseudo_axes_frames (HklGuiWindow* self);
-static void hkl_gui_window_on_pseudo_axes_frame_changed (HklGuiWindow* self);
+
 static void hkl_gui_window_set_up_tree_view_axes (HklGuiWindow* self);
-static void hkl_gui_window_on_cell_tree_view_axes_read_edited (const gchar* path, const gchar* new_text, HklGuiWindow* self);
-static void _hkl_gui_window_on_cell_tree_view_axes_read_edited_gtk_cell_renderer_text_edited (GtkCellRendererText* _sender, const gchar* path, const gchar* new_text, gpointer self);
-static void hkl_gui_window_on_cell_tree_view_axes_write_edited (const gchar* path, const gchar* new_text, HklGuiWindow* self);
-static void _hkl_gui_window_on_cell_tree_view_axes_write_edited_gtk_cell_renderer_text_edited (GtkCellRendererText* _sender, const gchar* path, const gchar* new_text, gpointer self);
-static void hkl_gui_window_on_cell_tree_view_axes_min_edited (const gchar* path, const gchar* new_text, HklGuiWindow* self);
-static void _hkl_gui_window_on_cell_tree_view_axes_min_edited_gtk_cell_renderer_text_edited (GtkCellRendererText* _sender, const gchar* path, const gchar* new_text, gpointer self);
-static void hkl_gui_window_on_cell_tree_view_axes_max_edited (const gchar* path, const gchar* new_text, HklGuiWindow* self);
-static void _hkl_gui_window_on_cell_tree_view_axes_max_edited_gtk_cell_renderer_text_edited (GtkCellRendererText* _sender, const gchar* path, const gchar* new_text, gpointer self);
+
 static void hkl_gui_window_update_axes (HklGuiWindow* self);
+
 static void hkl_gui_window_set_up_tree_view_pseudo_axes (HklGuiWindow* self);
-static void hkl_gui_window_on_cell_tree_view_pseudo_axes_write_edited (const gchar* path, const gchar* new_text, HklGuiWindow* self);
-static void _hkl_gui_window_on_cell_tree_view_pseudo_axes_write_edited_gtk_cell_renderer_text_edited (GtkCellRendererText* _sender, const gchar* path, const gchar* new_text, gpointer self);
-static void hkl_gui_window_on_cell_tree_view_pseudo_axes_is_initialized_toggled (const gchar* path, HklGuiWindow* self);
-static void _hkl_gui_window_on_cell_tree_view_pseudo_axes_is_initialized_toggled_gtk_cell_renderer_toggle_toggled (GtkCellRendererToggle* _sender, const gchar* path, gpointer self);
+
 static void hkl_gui_window_update_pseudo_axes (HklGuiWindow* self);
+
 static void hkl_gui_window_set_up_tree_view_pseudo_axes_parameters (HklGuiWindow* self);
-static void hkl_gui_window_on_cell_tree_view_pseudo_axes_parameters_value_edited (const gchar* path, const gchar* new_text, HklGuiWindow* self);
-static void _hkl_gui_window_on_cell_tree_view_pseudo_axes_parameters_value_edited_gtk_cell_renderer_text_edited (GtkCellRendererText* _sender, const gchar* path, const gchar* new_text, gpointer self);
+
 static void hkl_gui_window_set_up_tree_view_treeview1 (HklGuiWindow* self);
-static void hkl_gui_window_on_tree_view1_cursor_changed (HklGuiWindow* self);
-static void _hkl_gui_window_on_tree_view1_cursor_changed_gtk_tree_view_cursor_changed (GtkTreeView* _sender, gpointer self);
+
 static void hkl_gui_window_update_solutions (HklGuiWindow* self);
-static void hkl_gui_window_on_cell_tree_view_reflections_h_edited (const gchar* path, const gchar* new_text, HklGuiWindow* self);
-static void _hkl_gui_window_on_cell_tree_view_reflections_h_edited_gtk_cell_renderer_text_edited (GtkCellRendererText* _sender, const gchar* path, const gchar* new_text, gpointer self);
-static void hkl_gui_window_on_cell_tree_view_reflections_k_edited (const gchar* path, const gchar* new_text, HklGuiWindow* self);
-static void _hkl_gui_window_on_cell_tree_view_reflections_k_edited_gtk_cell_renderer_text_edited (GtkCellRendererText* _sender, const gchar* path, const gchar* new_text, gpointer self);
-static void hkl_gui_window_on_cell_tree_view_reflections_l_edited (const gchar* path, const gchar* new_text, HklGuiWindow* self);
-static void _hkl_gui_window_on_cell_tree_view_reflections_l_edited_gtk_cell_renderer_text_edited (GtkCellRendererText* _sender, const gchar* path, const gchar* new_text, gpointer self);
-static void hkl_gui_window_on_cell_tree_view_reflections_flag_toggled (const gchar* path, HklGuiWindow* self);
-static void _hkl_gui_window_on_cell_tree_view_reflections_flag_toggled_gtk_cell_renderer_toggle_toggled (GtkCellRendererToggle* _sender, const gchar* path, gpointer self);
-static void hkl_gui_window_on_cell_tree_view_crystals_name_edited (const gchar* path, const gchar* new_text, HklGuiWindow* self);
-static void _hkl_gui_window_on_cell_tree_view_crystals_name_edited_gtk_cell_renderer_text_edited (GtkCellRendererText* _sender, const gchar* path, const gchar* new_text, gpointer self);
+
 static void hkl_gui_window_set_up_3D (HklGuiWindow* self);
+
 static void hkl_gui_window_update_pseudo_axes_parameters (HklGuiWindow* self);
+
 static void _hkl_gui_window_update_reflections (HklSample* sample, GtkListStore* model);
+
 static void hkl_gui_window_update_reflections (HklGuiWindow* self, HklSample* sample);
+
 static void hkl_gui_window_update_crystal_model (HklGuiWindow* self, HklSample* sample);
+
 static void hkl_gui_window_update_pseudo_axes_frames (HklGuiWindow* self);
+
 void hkl_gui_window_main (gchar** args, int args_length1);
+
 static void hkl_gui_window_finalize (GObject* obj);
+
+/* callbacks */
+
+void combobox1_changed_cb(GtkComboBox *combobox, gpointer *user_data);
+
+void hkl_gui_window_cellrendererspin1_edited_cb(GtkCellRendererText *renderer,
+						gchar *path,
+						gchar *new_text,
+						gpointer user_data);
 
 
 static struct diffractometer_t *create_diffractometer(HklFactory *factory)
@@ -689,12 +603,283 @@ void hkl_gui_window_combobox1_changed_cb(GtkComboBox *combobox, gpointer *user_d
 #endif
 }
 
+/* axis read cb */
+void hkl_gui_window_cellrendererspin1_edited_cb(GtkCellRendererText *renderer,
+						gchar *path,
+						gchar *new_text,
+						gpointer user_data)
+{
+	HklGuiWindow *self;
+	HklGuiWindowPrivate *priv;
+	GtkTreeIter iter = {0};
+	gdouble value = 0.0;
+	HklParameter* parameter = NULL;
+
+	g_return_if_fail (renderer != NULL);
+	g_return_if_fail (path != NULL);
+	g_return_if_fail (new_text != NULL);
+	g_return_if_fail (user_data != NULL);
+
+	self = user_data;
+	priv = self->priv;
+
+	gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(priv->_liststore_axis),
+					     &iter,
+					     path);
+	gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_axis), &iter,
+					   AXIS_COL_AXIS, &parameter,
+					   -1);
+
+	value = atof(new_text); /* TODO need to check for the right conversion */
+	hkl_parameter_value_unit_set (parameter, value, NULL);
+	hkl_geometry_axis_set(priv->diffractometer->geometry,
+			      parameter);
+
+	hkl_engine_list_get(priv->diffractometer->engines);
+
+	/* ok so set the model with the new value */
+	gtk_list_store_set (priv->_liststore_axis, &iter,
+			    AXIS_COL_READ, value,
+			    AXIS_COL_WRITE, value,
+			    -1);
+
+	//hkl_gui_window_update_pseudo_axes (self);
+	//hkl_gui_window_update_pseudo_axes_frames (self);
+}
+
+/* axis min cb */
+void hkl_gui_window_cellrendererspin3_edited_cb(GtkCellRendererText *renderer,
+						gchar *path,
+						gchar *new_text,
+						gpointer user_data)
+{
+	HklGuiWindow *self;
+	HklGuiWindowPrivate *priv;
+	GtkTreeIter iter = {0};
+	gdouble value = 0.0;
+	HklParameter* parameter = NULL;
+	gdouble shit, max;
+
+	g_return_if_fail (renderer != NULL);
+	g_return_if_fail (path != NULL);
+	g_return_if_fail (new_text != NULL);
+	g_return_if_fail (user_data != NULL);
+
+	self = user_data;
+	priv = self->priv;
+
+	gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(priv->_liststore_axis),
+					     &iter,
+					     path);
+	gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_axis), &iter,
+					   AXIS_COL_AXIS, &parameter,
+					   -1);
+
+	value = atof(new_text); /* TODO need to check for the right conversion */
+	hkl_parameter_min_max_unit_get (parameter, &shit, &max);
+	hkl_parameter_min_max_unit_set (parameter, value, max);
+
+	gtk_list_store_set (priv->_liststore_axis, &iter,
+			    AXIS_COL_MIN, value,
+			    -1);
+
+	//hkl_gui_window_update_pseudo_axes (self);
+}
+
+/* axis max cb */
+void hkl_gui_window_cellrendererspin4_edited_cb(GtkCellRendererText *renderer,
+						gchar *path,
+						gchar *new_text,
+						gpointer user_data)
+{
+	HklGuiWindow *self;
+	HklGuiWindowPrivate *priv;
+	GtkTreeIter iter = {0};
+	gdouble value = 0.0;
+	HklParameter* parameter = NULL;
+	gdouble shit, min;
+
+	g_return_if_fail (renderer != NULL);
+	g_return_if_fail (path != NULL);
+	g_return_if_fail (new_text != NULL);
+	g_return_if_fail (user_data != NULL);
+
+	self = user_data;
+	priv = self->priv;
+
+	gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(priv->_liststore_axis),
+					     &iter,
+					     path);
+	gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_axis), &iter,
+					   AXIS_COL_AXIS, &parameter,
+					   -1);
+
+	value = atof(new_text); /* TODO need to check for the right conversion */
+	hkl_parameter_min_max_unit_get (parameter, &min, &shit);
+	hkl_parameter_min_max_unit_set (parameter, min, value);
+
+	gtk_list_store_set (priv->_liststore_axis, &iter,
+			    AXIS_COL_MIN, value,
+			    -1);
+
+	//hkl_gui_window_update_pseudo_axes (self);
+}
+
+/*
+static void hkl_gui_window_on_cell_tree_view_pseudo_axes_write_edited (const gchar* path, const gchar* new_text, HklGuiWindow* self) {
+	GtkListStore* model = NULL;
+	GtkTreeIter iter = {0};
+	gdouble value = 0.0;
+	HklPseudoAxis* pseudoAxis = NULL;
+	HklError* _error_ = NULL;
+	GtkTreeView* _tmp0_;
+	GtkTreeModel* _tmp1_ = NULL;
+	GtkListStore* _tmp2_;
+	GtkListStore* _tmp3_;
+	const gchar* _tmp4_;
+	GtkTreeIter _tmp5_ = {0};
+	GtkListStore* _tmp6_;
+	GtkTreeIter _tmp7_;
+	const gchar* _tmp8_;
+	gdouble _tmp9_ = 0.0;
+	HklPseudoAxis* _tmp10_;
+	gdouble _tmp11_;
+	HklPseudoAxis* _tmp12_;
+	HklPseudoAxisEngine* _tmp13_;
+	gboolean _tmp14_ = FALSE;
+
+	g_return_if_fail (self != NULL);
+
+	g_return_if_fail (path != NULL);
+
+	g_return_if_fail (new_text != NULL);
+
+	_tmp0_ = priv->_treeview_pseudo_axes;
+
+	_tmp1_ = gtk_tree_view_get_model (_tmp0_);
+
+	_tmp2_ = _g_object_ref0 (G_TYPE_CHECK_INSTANCE_TYPE (_tmp1_, GTK_TYPE_LIST_STORE) ? ((GtkListStore*) _tmp1_) : NULL);
+
+	_g_object_unref0 (model);
+
+	model = _tmp2_;
+
+	_tmp3_ = model;
+
+	_tmp4_ = path;
+
+	gtk_tree_model_get_iter_from_string ((GtkTreeModel*) _tmp3_, &_tmp5_, _tmp4_);
+
+	iter = _tmp5_;
+
+	_tmp6_ = model;
+
+	_tmp7_ = iter;
+
+	gtk_tree_model_get ((GtkTreeModel*) _tmp6_, &_tmp7_, PSEUDO_AXIS_COL_PSEUDOAXIS, &pseudoAxis, -1);
+
+	_tmp8_ = new_text;
+
+	_tmp9_ = double_parse (_tmp8_);
+
+	value = _tmp9_;
+
+	_tmp10_ = pseudoAxis;
+
+	_tmp11_ = value;
+
+	hkl_parameter_set_value_unit (&_tmp10_->parent, _tmp11_);
+
+	_tmp12_ = pseudoAxis;
+
+	_tmp13_ = _tmp12_->engine;
+
+	_tmp14_ = hkl_pseudo_axis_engine_set (_tmp13_, &_error_);
+
+	if (_tmp14_ == FALSE) {
+
+		HklGeometry* _tmp15_;
+		HklPseudoAxisEngineList* _tmp16_;
+		HklGeometryList* _tmp17_;
+		HklGeometryListItem* _tmp18_;
+		gint _tmp18__length1;
+		HklGeometryListItem _tmp19_;
+		HklGeometry* _tmp20_;
+		HklPseudoAxisEngineList* _tmp21_;
+		GtkListStore* _tmp22_;
+		GtkTreeIter _tmp23_;
+		gdouble _tmp24_;
+
+		_tmp15_ = priv->geometry;
+
+		_tmp16_ = priv->engines;
+
+		_tmp17_ = _tmp16_->geometries;
+
+		_tmp18_ = _tmp17_->items;
+
+		_tmp18__length1 = _tmp17_->len;
+
+		_tmp19_ = _tmp18_[0];
+
+		_tmp20_ = _tmp19_.geometry;
+
+		hkl_geometry_init_geometry (_tmp15_, _tmp20_);
+
+		_tmp21_ = priv->engines;
+
+		hkl_pseudo_axis_engine_list_get (_tmp21_);
+
+		_tmp22_ = model;
+
+		_tmp23_ = iter;
+
+		_tmp24_ = value;
+
+		gtk_list_store_set (_tmp22_, &_tmp23_, PSEUDO_AXIS_COL_WRITE, _tmp24_, -1);
+
+		hkl_gui_window_update_axes (self);
+
+		hkl_gui_window_update_pseudo_axes (self);
+
+		hkl_gui_window_update_pseudo_axes_frames (self);
+
+		hkl_gui_window_update_solutions (self);
+
+	}
+
+	_hkl_error_free0 (_error_);
+
+	_g_object_unref0 (model);
+
+}
+*/
 static void _destroy_pseudo_frame_cb(GtkWidget *widget, gpointer data)
 {
 	g_return_if_fail (widget != NULL);
 	g_return_if_fail (data != NULL);
 
 	gtk_widget_destroy(widget);
+}
+
+static void _update_pseudo_frame_cb(GtkWidget *widget, gpointer data)
+{
+	g_return_if_fail (widget != NULL);
+	g_return_if_fail (data != NULL);
+
+	hkl_gui_engine_update(data);
+}
+
+static void hkl_gui_window_update_pseudo_axes_frames (HklGuiWindow* self)
+{
+	HklGuiWindowPrivate *priv;
+
+	g_return_if_fail (self != NULL);
+
+	priv = self->priv;
+
+	gtk_container_foreach (GTK_CONTAINER(priv->_vbox2),
+			       _update_pseudo_frame_cb, self);
 }
 
 static void
@@ -730,6 +915,46 @@ hkl_gui_window_set_up_pseudo_axes_frames (HklGuiWindow* self)
 	gtk_widget_show_all (GTK_WIDGET (priv->_vbox2));
 }
 
+
+gboolean _update_axis (GtkTreeModel *model,
+		       GtkTreePath *path,
+		       GtkTreeIter *iter,
+		       gpointer data)
+{
+	HklParameter *parameter;
+	gdouble value, min, max;
+
+	gtk_tree_model_get (model, iter,
+			    AXIS_COL_AXIS, &parameter,
+			    -1);
+
+	hkl_parameter_min_max_unit_get(parameter, &min, &max);
+	value = hkl_parameter_value_unit_get(parameter);
+
+	gtk_list_store_set(GTK_LIST_STORE(model), iter,
+			   AXIS_COL_READ, value,
+			   AXIS_COL_WRITE, value,
+			   AXIS_COL_MIN, min,
+			   AXIS_COL_MAX, max,
+			   -1);
+	return FALSE;
+}
+
+static void hkl_gui_window_update_axes (HklGuiWindow* self)
+{
+	HklGuiWindowPrivate *priv;
+	gboolean valid = FALSE;
+	GtkTreeIter iter = {0};
+
+	g_return_if_fail (self != NULL);
+
+	priv = self->priv;
+
+	gtk_tree_model_foreach(GTK_TREE_MODEL(priv->_liststore_axis),
+			       _update_axis,
+			       self);
+}
+
 static void
 hkl_gui_window_set_up_tree_view_axes (HklGuiWindow* self)
 {
@@ -756,180 +981,8 @@ hkl_gui_window_set_up_tree_view_axes (HklGuiWindow* self)
 				    AXIS_COL_NAME, hkl_parameter_name_get(*parameter),
 				    -1);
 	}
-	/*
-	renderer = gtk_cell_renderer_text_new ();
-	column = gtk_tree_view_column_new_with_attributes ("name",
-							   renderer,
-							   "text",
-							   AXIS_COL_NAME, NULL);
-	gtk_tree_view_append_column (priv->_treeview_axes, column);
-
-	_tmp23_ = (GtkCellRendererText*) gtk_cell_renderer_text_new ();
-
-	g_object_ref_sink (_tmp23_);
-
-	_g_object_unref0 (renderer);
-
-	renderer = _tmp23_;
-
-	_tmp24_ = renderer;
-
-	_tmp25_ = gtk_tree_view_column_new_with_attributes ("name", (GtkCellRenderer*) _tmp24_, "text", AXIS_COL_NAME, NULL);
-
-	g_object_ref_sink (_tmp25_);
-
-	_g_object_unref0 (column);
-
-	column = _tmp25_;
-
-	_tmp26_ = priv->_treeview_axes;
-
-	_tmp27_ = column;
-
-	gtk_tree_view_append_column (_tmp26_, _tmp27_);
-
-	_tmp28_ = (GtkCellRendererText*) gtk_cell_renderer_text_new ();
-
-	g_object_ref_sink (_tmp28_);
-
-	_g_object_unref0 (renderer);
-
-	renderer = _tmp28_;
-
-	_tmp29_ = renderer;
-
-	g_signal_connect_object (_tmp29_, "edited", (GCallback) _hkl_gui_window_on_cell_tree_view_axes_read_edited_gtk_cell_renderer_text_edited, self, 0);
-
-	_tmp30_ = renderer;
-
-	g_object_set (_tmp30_, "editable", TRUE, NULL);
-
-	_tmp31_ = renderer;
-
-	_tmp32_ = gtk_tree_view_column_new_with_attributes ("read", (GtkCellRenderer*) _tmp31_, "text", AXIS_COL_READ, NULL);
-
-	g_object_ref_sink (_tmp32_);
-
-	_g_object_unref0 (column);
-
-	column = _tmp32_;
-
-	_tmp33_ = priv->_treeview_axes;
-
-	_tmp34_ = column;
-
-	gtk_tree_view_append_column (_tmp33_, _tmp34_);
-
-	_tmp35_ = (GtkCellRendererText*) gtk_cell_renderer_text_new ();
-
-	g_object_ref_sink (_tmp35_);
-
-	_g_object_unref0 (renderer);
-
-	renderer = _tmp35_;
-
-	_tmp36_ = renderer;
-
-	g_signal_connect_object (_tmp36_, "edited", (GCallback) _hkl_gui_window_on_cell_tree_view_axes_write_edited_gtk_cell_renderer_text_edited, self, 0);
-
-	_tmp37_ = renderer;
-
-	g_object_set (_tmp37_, "editable", TRUE, NULL);
-
-	_tmp38_ = renderer;
-
-	_tmp39_ = gtk_tree_view_column_new_with_attributes ("write", (GtkCellRenderer*) _tmp38_, "text", AXIS_COL_WRITE, NULL);
-
-	g_object_ref_sink (_tmp39_);
-
-	_g_object_unref0 (column);
-
-	column = _tmp39_;
-
-	_tmp40_ = priv->_treeview_axes;
-
-	_tmp41_ = column;
-
-	gtk_tree_view_append_column (_tmp40_, _tmp41_);
-
-	_tmp42_ = (GtkCellRendererText*) gtk_cell_renderer_text_new ();
-
-	g_object_ref_sink (_tmp42_);
-
-	_g_object_unref0 (renderer);
-
-	renderer = _tmp42_;
-
-	_tmp43_ = renderer;
-
-	g_signal_connect_object (_tmp43_, "edited", (GCallback) _hkl_gui_window_on_cell_tree_view_axes_min_edited_gtk_cell_renderer_text_edited, self, 0);
-
-	_tmp44_ = renderer;
-
-	g_object_set (_tmp44_, "editable", TRUE, NULL);
-
-	_tmp45_ = renderer;
-
-	_tmp46_ = gtk_tree_view_column_new_with_attributes ("min", (GtkCellRenderer*) _tmp45_, "text", AXIS_COL_MIN, NULL);
-
-	g_object_ref_sink (_tmp46_);
-
-	_g_object_unref0 (column);
-
-	column = _tmp46_;
-
-	_tmp47_ = priv->_treeview_axes;
-
-	_tmp48_ = column;
-
-	gtk_tree_view_append_column (_tmp47_, _tmp48_);
-
-	_tmp49_ = (GtkCellRendererText*) gtk_cell_renderer_text_new ();
-
-	g_object_ref_sink (_tmp49_);
-
-	_g_object_unref0 (renderer);
-
-	renderer = _tmp49_;
-
-	_tmp50_ = renderer;
-
-	g_signal_connect_object (_tmp50_, "edited", (GCallback) _hkl_gui_window_on_cell_tree_view_axes_max_edited_gtk_cell_renderer_text_edited, self, 0);
-
-	_tmp51_ = renderer;
-
-	g_object_set (_tmp51_, "editable", TRUE, NULL);
-
-	_tmp52_ = renderer;
-
-	_tmp53_ = gtk_tree_view_column_new_with_attributes ("max", (GtkCellRenderer*) _tmp52_, "text", AXIS_COL_MAX, NULL);
-
-	g_object_ref_sink (_tmp53_);
-
-	_g_object_unref0 (column);
-
-	column = _tmp53_;
-
-	_tmp54_ = priv->_treeview_axes;
-
-	_tmp55_ = column;
-
-	gtk_tree_view_append_column (_tmp54_, _tmp55_);
-
-	_tmp56_ = priv->_treeview_axes;
-
-	_tmp57_ = priv->store_axis;
-
-	gtk_tree_view_set_model (_tmp56_, (GtkTreeModel*) _tmp57_);
 
 	hkl_gui_window_update_axes (self);
-
-	_g_list_free0 (columns);
-
-	_g_object_unref0 (column);
-
-	_g_object_unref0 (renderer);
-	*/
 }
 
 /*
@@ -3058,102 +3111,6 @@ static void hkl_gui_window_update_source (HklGuiWindow* self) {
 }
 
 
-static void hkl_gui_window_update_axes (HklGuiWindow* self) {
-	gboolean valid = FALSE;
-	GtkTreeIter iter = {0};
-	GtkListStore* _tmp0_;
-	GtkTreeIter _tmp1_ = {0};
-	gboolean _tmp2_ = FALSE;
-
-	g_return_if_fail (self != NULL);
-
-	_tmp0_ = priv->store_axis;
-
-	_tmp2_ = gtk_tree_model_get_iter_first ((GtkTreeModel*) _tmp0_, &_tmp1_);
-
-	iter = _tmp1_;
-
-	valid = _tmp2_;
-
-	while (TRUE) {
-
-		gboolean _tmp3_;
-		gdouble min = 0.0;
-		gdouble max = 0.0;
-		HklAxis* axis = NULL;
-		GtkListStore* _tmp4_;
-		GtkTreeIter _tmp5_;
-		HklAxis* _tmp6_;
-		HklAxis _tmp7_;
-		gdouble _tmp8_ = 0.0;
-		gdouble _tmp9_ = 0.0;
-		GtkListStore* _tmp10_;
-		GtkTreeIter _tmp11_;
-		HklAxis* _tmp12_;
-		HklAxis _tmp13_;
-		gdouble _tmp14_ = 0.0;
-		HklAxis* _tmp15_;
-		HklAxis _tmp16_;
-		gdouble _tmp17_ = 0.0;
-		gdouble _tmp18_;
-		gdouble _tmp19_;
-		GtkListStore* _tmp20_;
-		gboolean _tmp21_ = FALSE;
-
-		_tmp3_ = valid;
-
-		if (!_tmp3_) {
-
-			break;
-
-		}
-
-		_tmp4_ = priv->store_axis;
-
-		_tmp5_ = iter;
-
-		gtk_tree_model_get ((GtkTreeModel*) _tmp4_, &_tmp5_, AXIS_COL_AXIS, &axis, -1);
-
-		_tmp6_ = axis;
-
-		_tmp7_ = *_tmp6_;
-
-		hkl_axis_get_range_unit (&_tmp7_, &_tmp8_, &_tmp9_);
-
-		min = _tmp8_;
-
-		max = _tmp9_;
-
-		_tmp10_ = priv->store_axis;
-
-		_tmp11_ = iter;
-
-		_tmp12_ = axis;
-
-		_tmp13_ = *_tmp12_;
-
-		_tmp14_ = hkl_axis_get_value_unit (&_tmp13_);
-
-		_tmp15_ = axis;
-
-		_tmp16_ = *_tmp15_;
-
-		_tmp17_ = hkl_axis_get_value_unit (&_tmp16_);
-
-		_tmp18_ = min;
-
-		_tmp19_ = max;
-
-		gtk_list_store_set (_tmp10_, &_tmp11_, AXIS_COL_READ, _tmp14_, AXIS_COL_WRITE, _tmp17_, AXIS_COL_MIN, _tmp18_, AXIS_COL_MAX, _tmp19_, -1);
-
-		_tmp20_ = priv->store_axis;
-
-		_tmp21_ = gtk_tree_model_iter_next ((GtkTreeModel*) _tmp20_, &iter);
-
-		valid = _tmp21_;
-
-	}
-}
 
 
 static void hkl_gui_window_update_pseudo_axes (HklGuiWindow* self) {
@@ -5055,48 +5012,6 @@ static void hkl_gui_window_update_crystal_model (HklGuiWindow* self, HklSample* 
 }
 
 
-static void hkl_gui_window_update_pseudo_axes_frames (HklGuiWindow* self) {
-	HklGuiPseudoAxesFrame** _tmp0_;
-	gint _tmp0__length1;
-
-	g_return_if_fail (self != NULL);
-
-	_tmp0_ = priv->pseudoAxesFrames;
-
-	_tmp0__length1 = priv->pseudoAxesFrames_length1;
-
-	{
-		HklGuiPseudoAxesFrame** frame_collection = NULL;
-		gint frame_collection_length1 = 0;
-		gint _frame_collection_size_ = 0;
-		gint frame_it = 0;
-
-		frame_collection = _tmp0_;
-
-		frame_collection_length1 = _tmp0__length1;
-
-		for (frame_it = 0; frame_it < _tmp0__length1; frame_it = frame_it + 1) {
-
-			HklGuiPseudoAxesFrame* _tmp1_;
-			HklGuiPseudoAxesFrame* frame = NULL;
-
-			_tmp1_ = _g_object_ref0 (frame_collection[frame_it]);
-
-			frame = _tmp1_;
-
-			{
-				HklGuiPseudoAxesFrame* _tmp2_;
-
-				_tmp2_ = frame;
-
-				hkl_gui_pseudo_axes_frame_update (_tmp2_);
-
-				_g_object_unref0 (frame);
-
-			}
-		}
-	}
-}
 
 
 static void hkl_gui_window_update_solutions (HklGuiWindow* self) {
@@ -6211,67 +6126,6 @@ static gdouble double_parse (const gchar* str) {
 }
 
 
-static void hkl_gui_window_on_cell_tree_view_axes_read_edited (const gchar* path, const gchar* new_text, HklGuiWindow* self) {
-	GtkTreeIter iter = {0};
-	gdouble value = 0.0;
-	HklAxis* axis = NULL;
-	GtkListStore* _tmp0_;
-	const gchar* _tmp1_;
-	GtkTreeIter _tmp2_ = {0};
-	GtkListStore* _tmp3_;
-	GtkTreeIter _tmp4_;
-	const gchar* _tmp5_;
-	gdouble _tmp6_ = 0.0;
-	HklAxis _tmp7_;
-	HklGeometry* _tmp8_;
-	GtkListStore* _tmp9_;
-	GtkTreeIter _tmp10_;
-
-	g_return_if_fail (self != NULL);
-
-	g_return_if_fail (path != NULL);
-
-	g_return_if_fail (new_text != NULL);
-
-	_tmp0_ = priv->store_axis;
-
-	_tmp1_ = path;
-
-	gtk_tree_model_get_iter_from_string ((GtkTreeModel*) _tmp0_, &_tmp2_, _tmp1_);
-
-	iter = _tmp2_;
-
-	_tmp3_ = priv->store_axis;
-
-	_tmp4_ = iter;
-
-	gtk_tree_model_get ((GtkTreeModel*) _tmp3_, &_tmp4_, AXIS_COL_AXIS, &axis, -1);
-
-	_tmp5_ = new_text;
-
-	_tmp6_ = double_parse (_tmp5_);
-
-	value = _tmp6_;
-
-	_tmp7_ = *axis;
-
-	hkl_axis_set_value_unit (&_tmp7_, value);
-
-	_tmp8_ = priv->geometry;
-
-	hkl_geometry_update (_tmp8_);
-
-	_tmp9_ = priv->store_axis;
-
-	_tmp10_ = iter;
-
-	gtk_list_store_set (_tmp9_, &_tmp10_, AXIS_COL_READ, value, -1);
-
-	hkl_gui_window_update_pseudo_axes (self);
-
-	hkl_gui_window_update_pseudo_axes_frames (self);
-
-}
 
 
 static void hkl_gui_window_on_cell_tree_view_axes_write_edited (const gchar* path, const gchar* new_text, HklGuiWindow* self) {
@@ -6321,7 +6175,6 @@ static void hkl_gui_window_on_cell_tree_view_axes_write_edited (const gchar* pat
 	hkl_axis_set_value_unit (&_tmp7_, value);
 
 	_tmp8_ = priv->geometry;
-
 	hkl_geometry_update (_tmp8_);
 
 	_tmp9_ = priv->store_axis;
@@ -6337,271 +6190,6 @@ static void hkl_gui_window_on_cell_tree_view_axes_write_edited (const gchar* pat
 }
 
 
-static void hkl_gui_window_on_cell_tree_view_axes_min_edited (const gchar* path, const gchar* new_text, HklGuiWindow* self) {
-	GtkTreeIter iter = {0};
-	gdouble value = 0.0;
-	HklAxis* axis = NULL;
-	gdouble shit = 0.0;
-	gdouble max = 0.0;
-	GtkListStore* _tmp0_;
-	const gchar* _tmp1_;
-	GtkTreeIter _tmp2_ = {0};
-	GtkListStore* _tmp3_;
-	GtkTreeIter _tmp4_;
-	const gchar* _tmp5_;
-	gdouble _tmp6_ = 0.0;
-	HklAxis _tmp7_;
-	gdouble _tmp8_ = 0.0;
-	gdouble _tmp9_ = 0.0;
-	HklAxis _tmp10_;
-	GtkListStore* _tmp11_;
-	GtkTreeIter _tmp12_;
-
-	g_return_if_fail (self != NULL);
-
-	g_return_if_fail (path != NULL);
-
-	g_return_if_fail (new_text != NULL);
-
-	_tmp0_ = priv->store_axis;
-
-	_tmp1_ = path;
-
-	gtk_tree_model_get_iter_from_string ((GtkTreeModel*) _tmp0_, &_tmp2_, _tmp1_);
-
-	iter = _tmp2_;
-
-	_tmp3_ = priv->store_axis;
-
-	_tmp4_ = iter;
-
-	gtk_tree_model_get ((GtkTreeModel*) _tmp3_, &_tmp4_, AXIS_COL_AXIS, &axis, -1);
-
-	_tmp5_ = new_text;
-
-	_tmp6_ = double_parse (_tmp5_);
-
-	value = _tmp6_;
-
-	_tmp7_ = *axis;
-
-	hkl_axis_get_range_unit (&_tmp7_, &_tmp8_, &_tmp9_);
-
-	shit = _tmp8_;
-
-	max = _tmp9_;
-
-	_tmp10_ = *axis;
-
-	hkl_axis_set_range_unit (&_tmp10_, value, max);
-
-	_tmp11_ = priv->store_axis;
-
-	_tmp12_ = iter;
-
-	gtk_list_store_set (_tmp11_, &_tmp12_, AXIS_COL_MIN, value, -1);
-
-	hkl_gui_window_update_pseudo_axes (self);
-
-}
-
-
-static void hkl_gui_window_on_cell_tree_view_axes_max_edited (const gchar* path, const gchar* new_text, HklGuiWindow* self) {
-	GtkTreeIter iter = {0};
-	gdouble value = 0.0;
-	HklAxis* axis = NULL;
-	gdouble shit = 0.0;
-	gdouble min = 0.0;
-	GtkListStore* _tmp0_;
-	const gchar* _tmp1_;
-	GtkTreeIter _tmp2_ = {0};
-	GtkListStore* _tmp3_;
-	GtkTreeIter _tmp4_;
-	const gchar* _tmp5_;
-	gdouble _tmp6_ = 0.0;
-	HklAxis _tmp7_;
-	gdouble _tmp8_ = 0.0;
-	gdouble _tmp9_ = 0.0;
-	HklAxis _tmp10_;
-	GtkListStore* _tmp11_;
-	GtkTreeIter _tmp12_;
-
-	g_return_if_fail (self != NULL);
-
-	g_return_if_fail (path != NULL);
-
-	g_return_if_fail (new_text != NULL);
-
-	_tmp0_ = priv->store_axis;
-
-	_tmp1_ = path;
-
-	gtk_tree_model_get_iter_from_string ((GtkTreeModel*) _tmp0_, &_tmp2_, _tmp1_);
-
-	iter = _tmp2_;
-
-	_tmp3_ = priv->store_axis;
-
-	_tmp4_ = iter;
-
-	gtk_tree_model_get ((GtkTreeModel*) _tmp3_, &_tmp4_, AXIS_COL_AXIS, &axis, -1);
-
-	_tmp5_ = new_text;
-
-	_tmp6_ = double_parse (_tmp5_);
-
-	value = _tmp6_;
-
-	_tmp7_ = *axis;
-
-	hkl_axis_get_range_unit (&_tmp7_, &_tmp8_, &_tmp9_);
-
-	min = _tmp8_;
-
-	shit = _tmp9_;
-
-	_tmp10_ = *axis;
-
-	hkl_axis_set_range_unit (&_tmp10_, min, value);
-
-	_tmp11_ = priv->store_axis;
-
-	_tmp12_ = iter;
-
-	gtk_list_store_set (_tmp11_, &_tmp12_, AXIS_COL_MAX, value, -1);
-
-	hkl_gui_window_update_pseudo_axes (self);
-
-}
-
-
-static void hkl_gui_window_on_cell_tree_view_pseudo_axes_write_edited (const gchar* path, const gchar* new_text, HklGuiWindow* self) {
-	GtkListStore* model = NULL;
-	GtkTreeIter iter = {0};
-	gdouble value = 0.0;
-	HklPseudoAxis* pseudoAxis = NULL;
-	HklError* _error_ = NULL;
-	GtkTreeView* _tmp0_;
-	GtkTreeModel* _tmp1_ = NULL;
-	GtkListStore* _tmp2_;
-	GtkListStore* _tmp3_;
-	const gchar* _tmp4_;
-	GtkTreeIter _tmp5_ = {0};
-	GtkListStore* _tmp6_;
-	GtkTreeIter _tmp7_;
-	const gchar* _tmp8_;
-	gdouble _tmp9_ = 0.0;
-	HklPseudoAxis* _tmp10_;
-	gdouble _tmp11_;
-	HklPseudoAxis* _tmp12_;
-	HklPseudoAxisEngine* _tmp13_;
-	gboolean _tmp14_ = FALSE;
-
-	g_return_if_fail (self != NULL);
-
-	g_return_if_fail (path != NULL);
-
-	g_return_if_fail (new_text != NULL);
-
-	_tmp0_ = priv->_treeview_pseudo_axes;
-
-	_tmp1_ = gtk_tree_view_get_model (_tmp0_);
-
-	_tmp2_ = _g_object_ref0 (G_TYPE_CHECK_INSTANCE_TYPE (_tmp1_, GTK_TYPE_LIST_STORE) ? ((GtkListStore*) _tmp1_) : NULL);
-
-	_g_object_unref0 (model);
-
-	model = _tmp2_;
-
-	_tmp3_ = model;
-
-	_tmp4_ = path;
-
-	gtk_tree_model_get_iter_from_string ((GtkTreeModel*) _tmp3_, &_tmp5_, _tmp4_);
-
-	iter = _tmp5_;
-
-	_tmp6_ = model;
-
-	_tmp7_ = iter;
-
-	gtk_tree_model_get ((GtkTreeModel*) _tmp6_, &_tmp7_, PSEUDO_AXIS_COL_PSEUDOAXIS, &pseudoAxis, -1);
-
-	_tmp8_ = new_text;
-
-	_tmp9_ = double_parse (_tmp8_);
-
-	value = _tmp9_;
-
-	_tmp10_ = pseudoAxis;
-
-	_tmp11_ = value;
-
-	hkl_parameter_set_value_unit (&_tmp10_->parent, _tmp11_);
-
-	_tmp12_ = pseudoAxis;
-
-	_tmp13_ = _tmp12_->engine;
-
-	_tmp14_ = hkl_pseudo_axis_engine_set (_tmp13_, &_error_);
-
-	if (_tmp14_ == FALSE) {
-
-		HklGeometry* _tmp15_;
-		HklPseudoAxisEngineList* _tmp16_;
-		HklGeometryList* _tmp17_;
-		HklGeometryListItem* _tmp18_;
-		gint _tmp18__length1;
-		HklGeometryListItem _tmp19_;
-		HklGeometry* _tmp20_;
-		HklPseudoAxisEngineList* _tmp21_;
-		GtkListStore* _tmp22_;
-		GtkTreeIter _tmp23_;
-		gdouble _tmp24_;
-
-		_tmp15_ = priv->geometry;
-
-		_tmp16_ = priv->engines;
-
-		_tmp17_ = _tmp16_->geometries;
-
-		_tmp18_ = _tmp17_->items;
-
-		_tmp18__length1 = _tmp17_->len;
-
-		_tmp19_ = _tmp18_[0];
-
-		_tmp20_ = _tmp19_.geometry;
-
-		hkl_geometry_init_geometry (_tmp15_, _tmp20_);
-
-		_tmp21_ = priv->engines;
-
-		hkl_pseudo_axis_engine_list_get (_tmp21_);
-
-		_tmp22_ = model;
-
-		_tmp23_ = iter;
-
-		_tmp24_ = value;
-
-		gtk_list_store_set (_tmp22_, &_tmp23_, PSEUDO_AXIS_COL_WRITE, _tmp24_, -1);
-
-		hkl_gui_window_update_axes (self);
-
-		hkl_gui_window_update_pseudo_axes (self);
-
-		hkl_gui_window_update_pseudo_axes_frames (self);
-
-		hkl_gui_window_update_solutions (self);
-
-	}
-
-	_hkl_error_free0 (_error_);
-
-	_g_object_unref0 (model);
-
-}
 
 
 static void hkl_gui_window_on_cell_tree_view_pseudo_axes_is_initialized_toggled (const gchar* path, HklGuiWindow* self) {
