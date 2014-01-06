@@ -22,7 +22,6 @@
 #include "hkl-types.h"
 #include "glib/gthread.h"               // for g_once_init_enter, etc
 #include "glibconfig.h"                 // for gsize
-#include "gobject/gboxed.h"
 #include "hkl-detector-private.h"       // for hkl_detector_new_copy
 #include "hkl-error-private.h"          // for hkl_error_free, etc
 #include "hkl-geometry-private.h"       // for hkl_geometry_list_free, etc

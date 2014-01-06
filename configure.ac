@@ -232,7 +232,7 @@ AC_ARG_ENABLE([gui],
 	[enable_gui=yes])
 AM_CONDITIONAL([GUI], [test x$enable_gui = xyes])
 AM_COND_IF([GUI],
-	[PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.4])
+	[PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.0])
 	PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.18])
 	AM_COND_IF([HKL3D],
 		   [PKG_CHECK_MODULES([GLU], [glu >= 7.7.1])
