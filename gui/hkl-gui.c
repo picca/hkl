@@ -173,7 +173,7 @@ struct _HklGuiWindowPrivate {
 	GtkTreeView* _treeview_axes;
 	GtkTreeView* _treeview_pseudo_axes;
 	GtkTreeView* _treeview_pseudo_axes_parameters;
-	GtkTreeView* _treeview1;
+	GtkTreeView* _treeview_solutions;
 	GtkToolButton* _toolbutton_add_reflection;
 	GtkToolButton* _toolbutton_goto_reflection;
 	GtkToolButton* _toolbutton_del_reflection;
@@ -193,7 +193,7 @@ struct _HklGuiWindowPrivate {
 	GtkListStore* _liststore_diffractometer;
 	GtkListStore* _liststore_axis;
 	GtkListStore* _liststore_pseudo_axes;
-	GtkListStore* store_solutions;
+	GtkListStore* _liststore_solutions;
 	GtkListStore* store_samples;
 
 	GList *pseudo_frames;
@@ -274,7 +274,7 @@ static void hkl_gui_window_update_pseudo_axes (HklGuiWindow* self);
 
 static void hkl_gui_window_set_up_tree_view_pseudo_axes_parameters (HklGuiWindow* self);
 
-static void hkl_gui_window_set_up_tree_view_treeview1 (HklGuiWindow* self);
+static void hkl_gui_window_set_up_tree_view_solutions (HklGuiWindow* self);
 
 static void hkl_gui_window_update_solutions (HklGuiWindow* self);
 
@@ -510,7 +510,7 @@ hkl_gui_window_get_widgets_and_objects_from_ui (HklGuiWindow* self)
 	get_object(builder, GTK_TREE_VIEW, priv, treeview_crystals);
 	get_object(builder, GTK_TREE_VIEW, priv, treeview_axes);
 	get_object(builder, GTK_TREE_VIEW, priv, treeview_pseudo_axes);
-	get_object(builder, GTK_TREE_VIEW, priv, treeview1);
+	get_object(builder, GTK_TREE_VIEW, priv, treeview_solutions);
 	priv->_treeview_pseudo_axes_parameters = GTK_TREE_VIEW(gtk_builder_get_object (builder, "treeview_pseudoAxes_parameters"));
 
 
@@ -596,7 +596,7 @@ void hkl_gui_window_combobox1_changed_cb(GtkComboBox *combobox, gpointer *user_d
 
 	/* FIXME create the right solution Model Column */
 	/* this._solutionModelColumns = 0; */
-	//hkl_gui_window_set_up_tree_view_treeview1(self);
+	hkl_gui_window_set_up_tree_view_solutions(self);
 #if HKL3D
 	hkl_gui_window_set_up_3D(self);
 #endif
@@ -770,7 +770,7 @@ void hkl_gui_window_cellrenderertext5_edited_cb(GtkCellRendererText *renderer,
 		hkl_gui_window_update_pseudo_axes (self);
 		//hkl_gui_window_update_pseudo_axes_frames (self);
 
-		//hkl_gui_window_update_solutions (self);
+		hkl_gui_window_update_solutions (self);
 	}
 }
 
@@ -805,8 +805,7 @@ static void hkl_gui_window_update_pseudo_axes_frames (HklGuiWindow* self)
 			       _update_pseudo_frame_cb, self);
 }
 
-static void
-hkl_gui_window_set_up_pseudo_axes_frames (HklGuiWindow* self)
+static void hkl_gui_window_set_up_pseudo_axes_frames (HklGuiWindow* self)
 {
 	HklGuiWindowPrivate *priv;
 	GtkVBox* vbox2;
@@ -907,10 +906,10 @@ static void hkl_gui_window_set_up_tree_view_axes (HklGuiWindow* self)
 	hkl_gui_window_update_axes (self);
 }
 
-gboolean _update_pseudo_axes (GtkTreeModel *model,
-			      GtkTreePath *path,
-			      GtkTreeIter *iter,
-			      gpointer data)
+static gboolean _update_pseudo_axes (GtkTreeModel *model,
+				     GtkTreePath *path,
+				     GtkTreeIter *iter,
+				     gpointer data)
 {
 	HklParameter *parameter;
 	gdouble value, min, max;
@@ -977,6 +976,172 @@ static void hkl_gui_window_set_up_tree_view_pseudo_axes (HklGuiWindow* self)
 	}
 
 	hkl_gui_window_update_pseudo_axes (self);
+}
+
+void hkl_gui_window_treeview_solutions_cursor_changed_cb (GtkTreeView *tree_view,
+							  gpointer     user_data)
+{
+	HklGuiWindow* self;
+	HklGuiWindowPrivate *priv;
+
+	GtkTreePath* path = NULL;
+	GtkTreeViewColumn* focus_column = NULL;
+	GtkTreeIter iter = {0};
+	gsize index = 0UL;
+
+	g_return_if_fail (tree_view != NULL);
+	g_return_if_fail (user_data != NULL);
+	
+	self = user_data;
+	priv = self->priv;
+
+	gtk_tree_view_get_cursor (tree_view, &path, &focus_column);
+	gtk_tree_model_get_iter (GTK_TREE_MODEL(priv->_liststore_solutions), &iter, path);
+	gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_solutions), &iter,
+			    SOLUTION_COL_INDEX, &index,
+			    -1);
+
+	hkl_engine_list_select_solution (priv->diffractometer->engines, index);
+	hkl_engine_list_get (priv->diffractometer->engines);
+
+	hkl_gui_window_update_axes (self);
+	hkl_gui_window_update_pseudo_axes (self);
+	//hkl_gui_window_update_pseudo_axes_frames (self);
+
+	gtk_tree_path_free (path);
+}
+
+
+static void hkl_gui_window_update_solutions (HklGuiWindow* self)
+{
+	HklGuiWindowPrivate *priv;
+	const HklGeometryList *geometries;
+	const darray_item *items;
+	GtkTreeIter iter = {0};
+
+	g_return_if_fail (self != NULL);
+
+	priv = self->priv;
+
+	geometries = hkl_engine_list_geometries(priv->diffractometer->engines);
+	
+	gtk_list_store_clear(priv->_liststore_solutions);
+	items = hkl_geometry_list_items_get(geometries);
+	if (darray_size(*items)){
+		gint n_values = gtk_tree_model_get_n_columns (GTK_TREE_MODEL(priv->_liststore_solutions));
+		GValue *values = g_new0(GValue, n_values);
+		gint *columns = g_new0(gint, n_values);
+		gint position;
+	
+		for(position=0;position<darray_size(*items);++position){
+			gint column = 0;
+			const HklGeometry *geometry;
+			HklParameter **parameter;
+			const darray_parameter *parameters;
+
+			geometry = hkl_geometry_list_item_geometry_get(darray_item(*items,
+										   position));
+			parameters = hkl_geometry_axes_get(geometry);
+
+			if (position == 0)
+				g_value_init(&values[column], G_TYPE_INT);
+			g_value_set_int(&values[column], position);
+			columns[0] = column;
+
+			darray_foreach(parameter, *parameters){
+				double value = hkl_parameter_value_unit_get(*parameter);
+
+				column = column + 1;
+				if(position == 0)
+					g_value_init(&values[column], G_TYPE_DOUBLE);
+				g_value_set_double(&values[column], value);
+				columns[column] = column;
+			}
+			gtk_list_store_insert_with_valuesv(priv->_liststore_solutions,
+							   &iter, position,
+							   columns, values, n_values);
+		}
+		g_free(columns);
+		g_free(values);
+	}
+}
+
+
+static void _delete_column(gpointer data,
+			    gpointer user_data)
+{
+	GtkTreeViewColumn *column;
+	GtkTreeView *treeview;
+
+	g_return_if_fail (data != NULL);
+	g_return_if_fail (user_data != NULL);
+
+	column = data;
+	treeview = user_data;
+
+	gtk_tree_view_remove_column (treeview, column);
+}
+
+static void hkl_gui_window_set_up_tree_view_solutions (HklGuiWindow* self)
+{
+	HklGuiWindowPrivate *priv;
+	const darray_parameter *parameters;
+	int i;
+	GtkCellRenderer* renderer = NULL;
+	GtkTreeViewColumn* column = NULL;
+	GList* columns;
+	GType* types;
+	gint n_columns;
+
+	g_return_if_fail (self != NULL);
+
+	priv = self->priv;
+
+	parameters = hkl_geometry_axes_get(priv->diffractometer->geometry);
+
+	n_columns = SOLUTION_COL_N_COLUMNS + darray_size(*parameters);
+
+	/* prepare types for the liststore */
+	types = g_new0 (GType, n_columns);
+
+
+	/* first remove all the columns */
+	columns = gtk_tree_view_get_columns (priv->_treeview_solutions);
+	g_list_foreach(columns, _delete_column, priv->_treeview_solutions);
+	g_list_free(columns);
+
+	/* now add the index column */
+	renderer = gtk_cell_renderer_text_new ();
+	column = gtk_tree_view_column_new_with_attributes ("index",
+							   renderer, "text",
+							   SOLUTION_COL_INDEX, NULL);
+
+	gtk_tree_view_append_column (priv->_treeview_solutions, column);
+	types[0] = G_TYPE_INT;
+
+	/* add the axes column */
+	for(i=1; i<n_columns; ++i){
+		HklParameter *parameter;
+
+		parameter = darray_item(*parameters, i - SOLUTION_COL_N_COLUMNS);
+		renderer = gtk_cell_renderer_text_new ();
+		column = gtk_tree_view_column_new_with_attributes (hkl_parameter_name_get(parameter),
+								   renderer, "text",
+								   i, NULL);
+
+		gtk_tree_view_append_column (priv->_treeview_solutions, column);
+		types[i] = G_TYPE_DOUBLE;
+	}
+
+	if (priv->_liststore_solutions)
+		g_object_unref(priv->_liststore_solutions);
+	priv->_liststore_solutions = gtk_list_store_newv (n_columns, types);
+	g_free (types);
+
+	gtk_tree_view_set_model (priv->_treeview_solutions,
+				 GTK_TREE_MODEL(priv->_liststore_solutions));
+
+	hkl_gui_window_update_solutions (self);
 }
 
 /*
@@ -1649,311 +1814,6 @@ static void _hkl_gui_window_on_tree_view1_cursor_changed_gtk_tree_view_cursor_ch
 }
 
 
-static void hkl_gui_window_set_up_tree_view_treeview1 (HklGuiWindow* self) {
-	gsize i = 0UL;
-	GtkCellRendererText* renderer = NULL;
-	GtkTreeViewColumn* column = NULL;
-	GtkTreeView* _tmp0_;
-	GList* _tmp1_ = NULL;
-	GList* columns;
-	GList* _tmp2_;
-	GtkCellRendererText* _tmp5_;
-	GtkCellRendererText* _tmp6_;
-	GtkTreeViewColumn* _tmp7_;
-	GtkTreeView* _tmp8_;
-	GtkTreeViewColumn* _tmp9_;
-	HklGeometry* _tmp28_;
-	HklAxis* _tmp29_;
-	gint _tmp29__length1;
-	GType* _tmp30_ = NULL;
-	GType* types;
-	gint types_length1;
-	gint _types_size_;
-	GType* _tmp31_;
-	gint _tmp31__length1;
-	GType _tmp32_;
-	GType* _tmp42_;
-	gint _tmp42__length1;
-	GtkListStore* _tmp43_;
-	GtkTreeView* _tmp44_;
-	GtkListStore* _tmp45_;
-	GtkTreeView* _tmp46_;
-
-	g_return_if_fail (self != NULL);
-
-	_tmp0_ = priv->_treeview1;
-
-	_tmp1_ = gtk_tree_view_get_columns (_tmp0_);
-
-	columns = _tmp1_;
-
-	_tmp2_ = columns;
-
-	{
-		GList* col_collection = NULL;
-		GList* col_it = NULL;
-
-		col_collection = _tmp2_;
-
-		for (col_it = col_collection; col_it != NULL; col_it = col_it->next) {
-
-			GtkTreeViewColumn* col = NULL;
-
-			col = (GtkTreeViewColumn*) col_it->data;
-
-			{
-				GtkTreeView* _tmp3_;
-				GtkTreeViewColumn* _tmp4_;
-
-				_tmp3_ = priv->_treeview1;
-
-				_tmp4_ = col;
-
-				gtk_tree_view_remove_column (_tmp3_, _tmp4_);
-
-			}
-		}
-	}
-
-	_tmp5_ = (GtkCellRendererText*) gtk_cell_renderer_text_new ();
-
-	g_object_ref_sink (_tmp5_);
-
-	_g_object_unref0 (renderer);
-
-	renderer = _tmp5_;
-
-	_tmp6_ = renderer;
-
-	_tmp7_ = gtk_tree_view_column_new_with_attributes ("index", (GtkCellRenderer*) _tmp6_, "text", SOLUTION_COL_INDEX, NULL);
-
-	g_object_ref_sink (_tmp7_);
-
-	_g_object_unref0 (column);
-
-	column = _tmp7_;
-
-	_tmp8_ = priv->_treeview1;
-
-	_tmp9_ = column;
-
-	gtk_tree_view_append_column (_tmp8_, _tmp9_);
-
-	{
-		gboolean _tmp10_;
-
-		i = (gsize) 0;
-
-		_tmp10_ = TRUE;
-
-		while (TRUE) {
-
-			gboolean _tmp11_;
-			gsize _tmp13_;
-			HklGeometry* _tmp14_;
-			HklAxis* _tmp15_;
-			gint _tmp15__length1;
-			HklGeometry* _tmp16_;
-			HklAxis* _tmp17_;
-			gint _tmp17__length1;
-			gsize _tmp18_;
-			HklAxis* axis;
-			GtkCellRendererText* _tmp19_;
-			HklAxis* _tmp20_;
-			HklParameter _tmp21_;
-			const gchar* _tmp22_;
-			GtkCellRendererText* _tmp23_;
-			gsize _tmp24_;
-			GtkTreeViewColumn* _tmp25_;
-			GtkTreeView* _tmp26_;
-			GtkTreeViewColumn* _tmp27_;
-
-			_tmp11_ = _tmp10_;
-
-			if (!_tmp11_) {
-
-				gsize _tmp12_;
-
-				_tmp12_ = i;
-
-				i = _tmp12_ + 1;
-
-			}
-
-			_tmp10_ = FALSE;
-
-			_tmp13_ = i;
-
-			_tmp14_ = priv->geometry;
-
-			_tmp15_ = _tmp14_->axes;
-
-			_tmp15__length1 = _tmp14_->len;
-
-			if (!(_tmp13_ < ((gsize) _tmp15__length1))) {
-
-				break;
-
-			}
-
-			_tmp16_ = priv->geometry;
-
-			_tmp17_ = _tmp16_->axes;
-
-			_tmp17__length1 = _tmp16_->len;
-
-			_tmp18_ = i;
-
-			axis = &_tmp17_[_tmp18_];
-
-			_tmp19_ = (GtkCellRendererText*) gtk_cell_renderer_text_new ();
-
-			g_object_ref_sink (_tmp19_);
-
-			_g_object_unref0 (renderer);
-
-			renderer = _tmp19_;
-
-			_tmp20_ = axis;
-
-			_tmp21_ = (*_tmp20_).parent_instance;
-
-			_tmp22_ = _tmp21_.name;
-
-			_tmp23_ = renderer;
-
-			_tmp24_ = i;
-
-			_tmp25_ = gtk_tree_view_column_new_with_attributes (_tmp22_, (GtkCellRenderer*) _tmp23_, "text", SOLUTION_COL_N_COLUMNS + _tmp24_, NULL);
-
-			g_object_ref_sink (_tmp25_);
-
-			_g_object_unref0 (column);
-
-			column = _tmp25_;
-
-			_tmp26_ = priv->_treeview1;
-
-			_tmp27_ = column;
-
-			gtk_tree_view_append_column (_tmp26_, _tmp27_);
-
-		}
-	}
-
-	_tmp28_ = priv->geometry;
-
-	_tmp29_ = _tmp28_->axes;
-
-	_tmp29__length1 = _tmp28_->len;
-
-	_tmp30_ = g_new0 (GType, SOLUTION_COL_N_COLUMNS + _tmp29__length1);
-
-	types = _tmp30_;
-
-	types_length1 = SOLUTION_COL_N_COLUMNS + _tmp29__length1;
-
-	_types_size_ = types_length1;
-
-	_tmp31_ = types;
-
-	_tmp31__length1 = types_length1;
-
-	_tmp31_[0] = G_TYPE_INT;
-
-	_tmp32_ = _tmp31_[0];
-
-	{
-		gboolean _tmp33_;
-
-		i = (gsize) 0;
-
-		_tmp33_ = TRUE;
-
-		while (TRUE) {
-
-			gboolean _tmp34_;
-			gsize _tmp36_;
-			HklGeometry* _tmp37_;
-			HklAxis* _tmp38_;
-			gint _tmp38__length1;
-			GType* _tmp39_;
-			gint _tmp39__length1;
-			gsize _tmp40_;
-			GType _tmp41_;
-
-			_tmp34_ = _tmp33_;
-
-			if (!_tmp34_) {
-
-				gsize _tmp35_;
-
-				_tmp35_ = i;
-
-				i = _tmp35_ + 1;
-
-			}
-
-			_tmp33_ = FALSE;
-
-			_tmp36_ = i;
-
-			_tmp37_ = priv->geometry;
-
-			_tmp38_ = _tmp37_->axes;
-
-			_tmp38__length1 = _tmp37_->len;
-
-			if (!(_tmp36_ < ((gsize) _tmp38__length1))) {
-
-				break;
-
-			}
-
-			_tmp39_ = types;
-
-			_tmp39__length1 = types_length1;
-
-			_tmp40_ = i;
-
-			_tmp39_[SOLUTION_COL_N_COLUMNS + _tmp40_] = G_TYPE_DOUBLE;
-
-			_tmp41_ = _tmp39_[SOLUTION_COL_N_COLUMNS + _tmp40_];
-
-		}
-	}
-
-	_tmp42_ = types;
-
-	_tmp42__length1 = types_length1;
-
-	_tmp43_ = gtk_list_store_newv (_tmp42__length1, _tmp42_);
-
-	_g_object_unref0 (priv->store_solutions);
-
-	priv->store_solutions = _tmp43_;
-
-	_tmp44_ = priv->_treeview1;
-
-	_tmp45_ = priv->store_solutions;
-
-	gtk_tree_view_set_model (_tmp44_, (GtkTreeModel*) _tmp45_);
-
-	_tmp46_ = priv->_treeview1;
-
-	g_signal_connect_object (_tmp46_, "cursor-changed", (GCallback) _hkl_gui_window_on_tree_view1_cursor_changed_gtk_tree_view_cursor_changed, self, 0);
-
-	hkl_gui_window_update_solutions (self);
-
-	types = (g_free (types), NULL);
-
-	_g_list_free0 (columns);
-
-	_g_object_unref0 (column);
-
-	_g_object_unref0 (renderer);
-
-}
 
 
 static void _hkl_gui_window_on_cell_tree_view_reflections_h_edited_gtk_cell_renderer_text_edited (GtkCellRendererText* _sender, const gchar* path, const gchar* new_text, gpointer self) {
@@ -4410,164 +4270,6 @@ static void hkl_gui_window_update_crystal_model (HklGuiWindow* self, HklSample* 
 
 
 
-static void hkl_gui_window_update_solutions (HklGuiWindow* self) {
-	gsize i;
-	GtkListStore* _tmp0_;
-	HklPseudoAxisEngineList* _tmp1_;
-	HklGeometryList* _tmp2_;
-	HklGeometryListItem* _tmp3_;
-	gint _tmp3__length1;
-
-	g_return_if_fail (self != NULL);
-
-	i = (gsize) 0;
-
-	_tmp0_ = priv->store_solutions;
-
-	gtk_list_store_clear (_tmp0_);
-
-	_tmp1_ = priv->engines;
-
-	_tmp2_ = _tmp1_->geometries;
-
-	_tmp3_ = _tmp2_->items;
-
-	_tmp3__length1 = _tmp2_->len;
-
-	{
-		HklGeometryListItem* item_collection = NULL;
-		gint item_collection_length1 = 0;
-		gint _item_collection_size_ = 0;
-		gint item_it = 0;
-
-		item_collection = _tmp3_;
-
-		item_collection_length1 = _tmp3__length1;
-
-		for (item_it = 0; item_it < _tmp3__length1; item_it = item_it + 1) {
-
-			HklGeometryListItem item = {0};
-
-			item = item_collection[item_it];
-
-			{
-				GtkTreeIter iter = {0};
-				GtkListStore* _tmp4_;
-				GtkTreeIter _tmp5_ = {0};
-				GtkListStore* _tmp6_;
-				GtkTreeIter _tmp7_;
-				gsize _tmp8_;
-
-				_tmp4_ = priv->store_solutions;
-
-				gtk_list_store_append (_tmp4_, &_tmp5_);
-
-				iter = _tmp5_;
-
-				_tmp6_ = priv->store_solutions;
-
-				_tmp7_ = iter;
-
-				_tmp8_ = i;
-
-				i = _tmp8_ + 1;
-
-				gtk_list_store_set (_tmp6_, &_tmp7_, SOLUTION_COL_INDEX, _tmp8_, -1);
-
-				{
-					gint j;
-
-					j = 0;
-
-					{
-						gboolean _tmp9_;
-
-						_tmp9_ = TRUE;
-
-						while (TRUE) {
-
-							gboolean _tmp10_;
-							gint _tmp12_;
-							HklGeometryListItem _tmp13_;
-							HklGeometry* _tmp14_;
-							HklAxis* _tmp15_;
-							gint _tmp15__length1;
-							HklGeometryListItem _tmp16_;
-							HklGeometry* _tmp17_;
-							HklAxis* _tmp18_;
-							gint _tmp18__length1;
-							gint _tmp19_;
-							HklAxis* axis;
-							GtkListStore* _tmp20_;
-							GtkTreeIter _tmp21_;
-							gint _tmp22_;
-							HklAxis* _tmp23_;
-							HklAxis _tmp24_;
-							gdouble _tmp25_ = 0.0;
-
-							_tmp10_ = _tmp9_;
-
-							if (!_tmp10_) {
-
-								gint _tmp11_;
-
-								_tmp11_ = j;
-
-								j = _tmp11_ + 1;
-
-							}
-
-							_tmp9_ = FALSE;
-
-							_tmp12_ = j;
-
-							_tmp13_ = item;
-
-							_tmp14_ = _tmp13_.geometry;
-
-							_tmp15_ = _tmp14_->axes;
-
-							_tmp15__length1 = _tmp14_->len;
-
-							if (!(_tmp12_ < _tmp15__length1)) {
-
-								break;
-
-							}
-
-							_tmp16_ = item;
-
-							_tmp17_ = _tmp16_.geometry;
-
-							_tmp18_ = _tmp17_->axes;
-
-							_tmp18__length1 = _tmp17_->len;
-
-							_tmp19_ = j;
-
-							axis = &_tmp18_[_tmp19_];
-
-							_tmp20_ = priv->store_solutions;
-
-							_tmp21_ = iter;
-
-							_tmp22_ = j;
-
-							_tmp23_ = axis;
-
-							_tmp24_ = *_tmp23_;
-
-							_tmp25_ = hkl_axis_get_value_unit (&_tmp24_);
-
-							gtk_list_store_set (_tmp20_, &_tmp21_, SOLUTION_COL_N_COLUMNS + _tmp22_, _tmp25_, -1);
-
-						}
-					}
-				}
-			}
-		}
-	}
-}
 
 
 static void hkl_gui_window_on_tree_view_pseudo_axes_cursor_changed (HklGuiWindow* self) {
@@ -7554,89 +7256,6 @@ static gboolean hkl_gui_window_on_tree_view_crystals_key_press_event (GdkEventKe
 	result = TRUE;
 
 	return result;
-
-}
-
-
-static void hkl_gui_window_on_tree_view1_cursor_changed (HklGuiWindow* self) {
-	GtkTreePath* path = NULL;
-	GtkTreeViewColumn* focus_column = NULL;
-	GtkTreeIter iter = {0};
-	gsize index = 0UL;
-	GtkTreeView* _tmp0_;
-	GtkTreePath* _tmp1_ = NULL;
-	GtkTreeViewColumn* _tmp2_ = NULL;
-	GtkTreeViewColumn* _tmp3_;
-	GtkListStore* _tmp4_;
-	GtkTreeIter _tmp5_ = {0};
-	GtkListStore* _tmp6_;
-	GtkTreeIter _tmp7_;
-	HklGeometry* _tmp8_;
-	HklPseudoAxisEngineList* _tmp9_;
-	HklGeometryList* _tmp10_;
-	HklGeometryListItem* _tmp11_;
-	gint _tmp11__length1;
-	HklGeometryListItem _tmp12_;
-	HklGeometry* _tmp13_;
-	HklPseudoAxisEngineList* _tmp14_;
-
-	g_return_if_fail (self != NULL);
-
-	_tmp0_ = priv->_treeview1;
-
-	gtk_tree_view_get_cursor (_tmp0_, &_tmp1_, &_tmp2_);
-
-	_gtk_tree_path_free0 (path);
-
-	path = _tmp1_;
-
-	_g_object_unref0 (focus_column);
-
-	_tmp3_ = _g_object_ref0 (_tmp2_);
-
-	focus_column = _tmp3_;
-
-	_tmp4_ = priv->store_solutions;
-
-	gtk_tree_model_get_iter ((GtkTreeModel*) _tmp4_, &_tmp5_, path);
-
-	iter = _tmp5_;
-
-	_tmp6_ = priv->store_solutions;
-
-	_tmp7_ = iter;
-
-	gtk_tree_model_get ((GtkTreeModel*) _tmp6_, &_tmp7_, SOLUTION_COL_INDEX, &index, -1);
-
-	_tmp8_ = priv->geometry;
-
-	_tmp9_ = priv->engines;
-
-	_tmp10_ = _tmp9_->geometries;
-
-	_tmp11_ = _tmp10_->items;
-
-	_tmp11__length1 = _tmp10_->len;
-
-	_tmp12_ = _tmp11_[index];
-
-	_tmp13_ = _tmp12_.geometry;
-
-	hkl_geometry_init_geometry (_tmp8_, _tmp13_);
-
-	_tmp14_ = priv->engines;
-
-	hkl_pseudo_axis_engine_list_get (_tmp14_);
-
-	hkl_gui_window_update_axes (self);
-
-	hkl_gui_window_update_pseudo_axes (self);
-
-	hkl_gui_window_update_pseudo_axes_frames (self);
-
-	_g_object_unref0 (focus_column);
-
-	_gtk_tree_path_free0 (path);
 
 }
 
