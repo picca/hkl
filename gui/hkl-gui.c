@@ -719,6 +719,7 @@ void hkl_gui_window_cellrenderertext5_edited_cb(GtkCellRendererText *renderer,
 	HklGuiWindowPrivate *priv;
 	GtkTreeIter iter = {0};
 	gdouble value = 0.0;
+	gdouble old_value;
 	HklParameter* parameter = NULL;
 	HklEngine *engine = NULL;
 	HklError *error = NULL;
@@ -740,6 +741,7 @@ void hkl_gui_window_cellrenderertext5_edited_cb(GtkCellRendererText *renderer,
 			    -1);
 
 	value = atof(new_text); /* TODO need to check for the right conversion */
+	old_value = hkl_parameter_value_unit_get(parameter);
 	hkl_parameter_value_unit_set (parameter, value, NULL);
 
 	if(hkl_engine_set(engine, &error)){
@@ -758,6 +760,8 @@ void hkl_gui_window_cellrenderertext5_edited_cb(GtkCellRendererText *renderer,
 
 		hkl_gui_window_update_solutions (self);
 	}else{
+		hkl_parameter_value_unit_set(parameter, old_value, NULL);
+
 		/* show an error message */
 		gtk_label_set_text (GTK_LABEL (priv->info_message),
 				    hkl_error_message_get(error));
