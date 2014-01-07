@@ -185,8 +185,9 @@ struct _HklGuiWindowPrivate {
 	GtkToolButton* _toolbutton_affiner;
 	GtkStatusbar* _statusbar;
 	GtkImageMenuItem* _menuitem5;
+	GtkVBox* _box_info_bar; /* fake for the infor bar */
 	GtkVBox* _vbox7;
-	GtkBox* _vbox2;
+	GtkVBox* _vbox2;
 	GtkDialog* _dialog1;
 	GtkButton* _button1;
 	GtkComboBox* _combobox1;
@@ -194,7 +195,10 @@ struct _HklGuiWindowPrivate {
 	GtkListStore* _liststore_axis;
 	GtkListStore* _liststore_pseudo_axes;
 	GtkListStore* _liststore_solutions;
+
 	GtkListStore* store_samples;
+	GtkInfoBar *info_bar;
+	GtkLabel *info_message;
 
 	GList *pseudo_frames;
 
@@ -236,68 +240,40 @@ SPINBUTTON_VALUE_CHANGED_CB_DECL(spinbutton_gamma);
 SPINBUTTON_VALUE_CHANGED_CB_DECL(spinbutton_gamma_min);
 SPINBUTTON_VALUE_CHANGED_CB_DECL(spinbutton_gamma_max);
 SPINBUTTON_VALUE_CHANGED_CB_DECL(spinbutton_gamma_star);
-
 static void hkl_gui_window_get_widgets_and_objects_from_ui (HklGuiWindow* self);
 static void hkl_gui_window_set_up_diffractometer_model (HklGuiWindow* self);
 static void hkl_gui_window_connect_all_signals (HklGuiWindow* self);
-
-
 HklGuiWindow* hkl_gui_window_construct (GType object_type);
-
 static void hkl_gui_window_set_up_tree_view_reflections (HklGuiWindow* self);
-
 static void hkl_gui_window_set_up_tree_view_crystals (HklGuiWindow* self);
-
 static void hkl_gui_window_update_tree_view_crystals (HklGuiWindow* self);
-
 static void hkl_gui_window_update_source (HklGuiWindow* self);
-
 static void hkl_gui_window_update_lattice (HklGuiWindow* self);
-
 static void hkl_gui_window_update_lattice_parameters (HklGuiWindow* self);
-
 static void hkl_gui_window_update_reciprocal_lattice (HklGuiWindow* self);
-
 static void hkl_gui_window_update_UxUyUz (HklGuiWindow* self);
-
 static void hkl_gui_window_update_UB (HklGuiWindow* self);
-
 static void hkl_gui_window_set_up_pseudo_axes_frames (HklGuiWindow* self);
-
 static void hkl_gui_window_set_up_tree_view_axes (HklGuiWindow* self);
-
 static void hkl_gui_window_update_axes (HklGuiWindow* self);
-
 static void hkl_gui_window_set_up_tree_view_pseudo_axes (HklGuiWindow* self);
-
 static void hkl_gui_window_update_pseudo_axes (HklGuiWindow* self);
-
 static void hkl_gui_window_set_up_tree_view_pseudo_axes_parameters (HklGuiWindow* self);
-
 static void hkl_gui_window_set_up_tree_view_solutions (HklGuiWindow* self);
-
 static void hkl_gui_window_update_solutions (HklGuiWindow* self);
-
 static void hkl_gui_window_set_up_3D (HklGuiWindow* self);
-
 static void hkl_gui_window_update_pseudo_axes_parameters (HklGuiWindow* self);
-
 static void _hkl_gui_window_update_reflections (HklSample* sample, GtkListStore* model);
-
 static void hkl_gui_window_update_reflections (HklGuiWindow* self, HklSample* sample);
-
 static void hkl_gui_window_update_crystal_model (HklGuiWindow* self, HklSample* sample);
-
 static void hkl_gui_window_update_pseudo_axes_frames (HklGuiWindow* self);
-
 void hkl_gui_window_main (gchar** args, int args_length1);
-
 static void hkl_gui_window_finalize (GObject* obj);
+static void hkl_gui_window_set_up_info_bar(HklGuiWindow *self);
 
 /* callbacks */
 
 void combobox1_changed_cb(GtkComboBox *combobox, gpointer *user_data);
-
 void hkl_gui_window_cellrendererspin1_edited_cb(GtkCellRendererText *renderer,
 						gchar *path,
 						gchar *new_text,
@@ -326,6 +302,13 @@ static void delete_diffractometer(struct diffractometer_t *self)
 	hkl_detector_free(self->detector);
 }
 
+
+static void dump_diffractometer(struct diffractometer_t *self)
+{
+	hkl_geometry_fprintf(stderr, self->geometry);
+	hkl_engine_list_fprintf(stderr, self->engines);
+	hkl_detector_fprintf(stderr, self->detector);
+}
 
 G_DEFINE_TYPE (HklGuiWindow, hkl_gui_window, G_TYPE_OBJECT);
 
@@ -529,7 +512,8 @@ hkl_gui_window_get_widgets_and_objects_from_ui (HklGuiWindow* self)
 	get_object(builder, GTK_IMAGE_MENU_ITEM, priv, menuitem5);
 
 	get_object(builder, GTK_VBOX, priv, vbox7);
-	get_object(builder, GTK_BOX, priv, vbox2);
+	get_object(builder, GTK_VBOX, priv, vbox2);
+	get_object(builder, GTK_VBOX, priv, box_info_bar);
 
 	get_object(builder, GTK_DIALOG, priv, dialog1);
 
@@ -597,6 +581,7 @@ void hkl_gui_window_combobox1_changed_cb(GtkComboBox *combobox, gpointer *user_d
 	/* FIXME create the right solution Model Column */
 	/* this._solutionModelColumns = 0; */
 	hkl_gui_window_set_up_tree_view_solutions(self);
+	hkl_gui_window_set_up_info_bar(self);
 #if HKL3D
 	hkl_gui_window_set_up_3D(self);
 #endif
@@ -758,6 +743,7 @@ void hkl_gui_window_cellrenderertext5_edited_cb(GtkCellRendererText *renderer,
 	hkl_parameter_value_unit_set (parameter, value, NULL);
 
 	if(hkl_engine_set(engine, &error)){
+		gtk_widget_hide(GTK_WIDGET(priv->info_bar));
 		hkl_engine_list_select_solution(priv->diffractometer->engines, 0);
 		hkl_engine_list_get(priv->diffractometer->engines);
 
@@ -771,6 +757,15 @@ void hkl_gui_window_cellrenderertext5_edited_cb(GtkCellRendererText *renderer,
 		//hkl_gui_window_update_pseudo_axes_frames (self);
 
 		hkl_gui_window_update_solutions (self);
+	}else{
+		/* show an error message */
+		gtk_label_set_text (GTK_LABEL (priv->info_message),
+				    hkl_error_message_get(error));
+		gtk_info_bar_set_message_type (priv->info_bar,
+					       GTK_MESSAGE_ERROR);
+		gtk_widget_show (GTK_WIDGET(priv->info_bar));
+
+		dump_diffractometer(priv->diffractometer);
 	}
 }
 
@@ -1082,6 +1077,7 @@ static void _delete_column(gpointer data,
 	gtk_tree_view_remove_column (treeview, column);
 }
 
+
 static void hkl_gui_window_set_up_tree_view_solutions (HklGuiWindow* self)
 {
 	HklGuiWindowPrivate *priv;
@@ -1142,6 +1138,39 @@ static void hkl_gui_window_set_up_tree_view_solutions (HklGuiWindow* self)
 				 GTK_TREE_MODEL(priv->_liststore_solutions));
 
 	hkl_gui_window_update_solutions (self);
+}
+
+void hkl_gui_window_set_up_info_bar(HklGuiWindow *self)
+{
+	HklGuiWindowPrivate *priv;
+	GtkWidget *content_area;
+
+	g_return_if_fail (self != NULL);
+
+	priv = self->priv;
+
+	/* set up info bar until we can use glade for this purpose or
+	 * switch to gtk3 */
+	if (priv->info_bar)
+		return;
+
+	priv->info_bar = GTK_INFO_BAR(gtk_info_bar_new ());
+	gtk_widget_set_no_show_all (GTK_WIDGET(priv->info_bar), TRUE);
+
+	priv->info_message = GTK_LABEL(gtk_label_new (""));
+	gtk_widget_show (GTK_WIDGET(priv->info_message));
+
+	content_area = gtk_info_bar_get_content_area (GTK_INFO_BAR (priv->info_bar));
+	gtk_container_add (GTK_CONTAINER (content_area),
+			   GTK_WIDGET(priv->info_message));
+	gtk_info_bar_add_button (priv->info_bar,
+				 GTK_STOCK_OK, GTK_RESPONSE_OK);
+	g_signal_connect (priv->info_bar, "response",
+			  G_CALLBACK (gtk_widget_hide), NULL);
+
+	gtk_box_pack_start(GTK_BOX(priv->_box_info_bar),
+			   GTK_WIDGET(priv->info_bar),
+			   TRUE, TRUE, 0);
 }
 
 /*
