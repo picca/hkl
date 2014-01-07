@@ -1031,34 +1031,34 @@ static void hkl_gui_window_update_solutions (HklGuiWindow* self)
 		gint n_values = gtk_tree_model_get_n_columns (GTK_TREE_MODEL(priv->_liststore_solutions));
 		GValue *values = g_new0(GValue, n_values);
 		gint *columns = g_new0(gint, n_values);
-		gint position;
-	
-		for(position=0;position<darray_size(*items);++position){
+		gint i;
+
+		/* prepare the GValue before using them */
+		g_value_init(&values[0], G_TYPE_INT);
+		for(i=1; i<n_values; ++i)
+			g_value_init(&values[i], G_TYPE_DOUBLE);
+
+		for(i=0; i<darray_size(*items);++i){
 			gint column = 0;
 			const HklGeometry *geometry;
 			HklParameter **parameter;
 			const darray_parameter *parameters;
 
-			geometry = hkl_geometry_list_item_geometry_get(darray_item(*items,
-										   position));
+			geometry = hkl_geometry_list_item_geometry_get(darray_item(*items, i));
 			parameters = hkl_geometry_axes_get(geometry);
 
-			if (position == 0)
-				g_value_init(&values[column], G_TYPE_INT);
-			g_value_set_int(&values[column], position);
+			g_value_set_int(&values[column], i);
 			columns[0] = column;
 
 			darray_foreach(parameter, *parameters){
 				double value = hkl_parameter_value_unit_get(*parameter);
 
 				column = column + 1;
-				if(position == 0)
-					g_value_init(&values[column], G_TYPE_DOUBLE);
 				g_value_set_double(&values[column], value);
 				columns[column] = column;
 			}
 			gtk_list_store_insert_with_valuesv(priv->_liststore_solutions,
-							   &iter, position,
+							   &iter, i,
 							   columns, values, n_values);
 		}
 		g_free(columns);
