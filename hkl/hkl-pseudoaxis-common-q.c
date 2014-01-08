@@ -40,6 +40,12 @@
 #include "hkl/ccan/container_of/container_of.h"  // for container_of
 #include "hkl/ccan/darray/darray.h"     // for darray_item
 
+
+double qmax(double wavelength)
+{
+	return 2 * HKL_TAU / wavelength;
+}
+
 /*****/
 /* q */
 /*****/
@@ -63,7 +69,7 @@ static int _q_func(const gsl_vector *x, void *params, gsl_vector *f)
 	set_geometry_axes(engine, x->data);
 
 	tth = gsl_sf_angle_restrict_symm(x->data[0]);
-	q = 2 * HKL_TAU / hkl_source_get_wavelength(&engine->geometry->source) * sin(tth/2.);
+	q = qmax(hkl_source_get_wavelength(&engine->geometry->source)) * sin(tth/2.);
 
 	f->data[0] = engine_q->q->_value - q;
 
@@ -98,7 +104,7 @@ static int get_q_real(HklMode *self,
 		theta = -theta;
 
 	/* update q */
-	engine->q->_value = 2 * HKL_TAU / wavelength * sin(theta);
+	engine->q->_value = qmax(wavelength) * sin(theta);
 
 	return HKL_TRUE;
 }
@@ -184,7 +190,7 @@ static void _q2(HklGeometry *geometry, HklDetector *detector,
 	hkl_detector_compute_kf(detector, geometry, &kf);
 	theta = hkl_vector_angle(&ki, &kf) / 2.;
 
-	*q = 2 * HKL_TAU / wavelength * sin(theta);
+	*q = qmax(wavelength) * sin(theta);
 
 	/* project kf on the x plan to compute alpha */
 	hkl_vector_project_on_plan(&kf, &x);

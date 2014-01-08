@@ -345,6 +345,8 @@ int hkl_engine_initialize(HklEngine *self, HklError **error)
  **/
 int hkl_engine_set(HklEngine *self, HklError **error)
 {
+	int found = 0;
+
 	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
 	if(!self->geometry || !self->detector || !self->sample
@@ -367,11 +369,17 @@ int hkl_engine_set(HklEngine *self, HklError **error)
 
 	hkl_geometry_list_multiply(self->engines->geometries);
 	hkl_geometry_list_multiply_from_range(self->engines->geometries);
+
+	found = darray_size(self->engines->geometries->items);
+
 	hkl_geometry_list_remove_invalid(self->engines->geometries);
 	hkl_geometry_list_sort(self->engines->geometries, self->engines->geometry);
 
 	if(darray_empty(self->engines->geometries->items)){
-		hkl_error_set(error, "no remaining solutions");
+		hkl_error_set(error,
+			      "found %d solution(s), but no remaining solution due to axis range exclusion.\n\n"
+			      "Check diffractometer axis min, max range.",
+			      found);
 		return HKL_FALSE;
 	}
 

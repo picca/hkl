@@ -127,6 +127,7 @@ HKLAPI void hkl_matrix_times_matrix(HklMatrix *self, const HklMatrix *m) HKL_ARG
 typedef struct _HklError HklError;
 
 HKLAPI const char *hkl_error_message_get(const HklError *self) HKL_ARG_NONNULL(1);
+HKLAPI void hkl_error_clear (HklError **err) HKL_ARG_NONNULL(1);
 
 /*************/
 /* Parameter */

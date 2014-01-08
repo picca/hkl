@@ -38,6 +38,7 @@
 #include "hkl-parameter-private.h"      // for _HklParameter, etc
 #include "hkl-pseudoaxis-auto-private.h"  // for CHECK_NAN, etc
 #include "hkl-pseudoaxis-common-hkl-private.h"  // for HklEngineHkl
+#include "hkl-pseudoaxis-common-q-private.h"  // for HklEngineHkl
 #include "hkl-pseudoaxis-private.h"     // for _HklEngine, _HklMode, etc
 #include "hkl-quaternion-private.h"     // for hkl_quaternion_init, etc
 #include "hkl-sample-private.h"         // for _HklSample
@@ -249,6 +250,27 @@ static int get_last_axis_idx(HklGeometry *geometry, int holder_idx, char const *
 	return last;
 }
 
+
+static int hkl_is_reachable(HklEngine *engine, double wavelength, HklError **error)
+{
+	HklEngineHkl *engine_hkl = container_of(engine, HklEngineHkl, engine);
+	HklVector Hkl = {
+		.data = {
+			engine_hkl->h->_value,
+			engine_hkl->k->_value,
+			engine_hkl->l->_value,
+		},
+	};
+
+	hkl_matrix_times_vector(&engine->sample->UB, &Hkl);
+	if (hkl_vector_norm2(&Hkl) > qmax(wavelength)){
+		hkl_error_set(error, "unreachable hkl, try to change the wavelength");
+		return HKL_FALSE;
+	}
+
+	return HKL_TRUE;
+}
+
 /**
  * RUBh_minus_Q_func: (skip)
  * @x:
@@ -358,14 +380,21 @@ int hkl_mode_set_hkl_real(HklMode *self,
 			  HklError **error)
 {
 	int last_axis;
-
 	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
+	/* check the input parameters */
+	if(!hkl_is_reachable(engine, geometry->source.wave_length,
+			     error)){
+		hkl_assert(error == NULL || *error != NULL);
+		return HKL_FALSE;
+	}
+	hkl_assert(error == NULL || *error == NULL);
+
+	/* compute the mode */
 	if(!hkl_mode_auto_set_real(self, engine,
 				   geometry, detector, sample,
 				   error)){
 		hkl_assert(error == NULL || *error != NULL);
-		//fprintf(stdout, "message :%s\n", (*error)->message);
 		return HKL_FALSE;
 	}
 	hkl_assert(error == NULL || *error == NULL);
@@ -691,13 +720,13 @@ int hkl_mode_init_psi_constant_vertical_real(HklMode *self,
 	return HKL_TRUE;
 }
 
-/***********************/
+/*************/
 /* HklEngine */
-/***********************/
+/*************/
 
 static void hkl_engine_hkl_free_real(HklEngine *base)
 {
-	HklEngineHkl *self=container_of(base, HklEngineHkl, engine);
+	HklEngineHkl *self = container_of(base, HklEngineHkl, engine);
 	hkl_engine_release(&self->engine);
 	free(self);
 }
