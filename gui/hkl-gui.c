@@ -703,10 +703,41 @@ void hkl_gui_window_cellrendererspin4_edited_cb(GtkCellRendererText *renderer,
 	hkl_parameter_min_max_unit_set (parameter, min, value);
 
 	gtk_list_store_set (priv->_liststore_axis, &iter,
-			    AXIS_COL_MIN, value,
+			    AXIS_COL_MAX, value,
 			    -1);
 
 	hkl_gui_window_update_pseudo_axes (self);
+}
+
+
+static void raise_error(HklGuiWindow *self, HklError **error)
+{
+	HklGuiWindowPrivate *priv;
+
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (error != NULL);
+
+	priv = self->priv;
+
+	/* show an error message */
+	gtk_label_set_text (GTK_LABEL (priv->info_message),
+			    hkl_error_message_get(*error));
+	gtk_info_bar_set_message_type (priv->info_bar,
+				       GTK_MESSAGE_ERROR);
+	gtk_widget_show (GTK_WIDGET(priv->info_bar));
+
+	hkl_error_clear(error);
+}
+
+static void clear_error(HklGuiWindow *self, HklError **error)
+{
+	HklGuiWindowPrivate *priv;
+
+	g_return_if_fail (self != NULL);
+
+	priv = self->priv;
+
+	gtk_widget_hide(GTK_WIDGET(priv->info_bar));
 }
 
 /* pseudo axis write */
@@ -742,10 +773,15 @@ void hkl_gui_window_cellrenderertext5_edited_cb(GtkCellRendererText *renderer,
 
 	value = atof(new_text); /* TODO need to check for the right conversion */
 	old_value = hkl_parameter_value_unit_get(parameter);
-	hkl_parameter_value_unit_set (parameter, value, NULL);
+
+	g_assert(error != NULL || error == NULL);
+	hkl_parameter_value_unit_set (parameter, value, &error);
+	if(error != NULL){
+		raise_error(self, &error);
+	}
 
 	if(hkl_engine_set(engine, &error)){
-		gtk_widget_hide(GTK_WIDGET(priv->info_bar));
+		clear_error(self, &error);
 		hkl_engine_list_select_solution(priv->diffractometer->engines, 0);
 		hkl_engine_list_get(priv->diffractometer->engines);
 
@@ -757,20 +793,12 @@ void hkl_gui_window_cellrenderertext5_edited_cb(GtkCellRendererText *renderer,
 		hkl_gui_window_update_axes (self);
 		hkl_gui_window_update_pseudo_axes (self);
 		//hkl_gui_window_update_pseudo_axes_frames (self);
-
-		hkl_gui_window_update_solutions (self);
 	}else{
 		hkl_parameter_value_unit_set(parameter, old_value, NULL);
-
-		/* show an error message */
-		gtk_label_set_text (GTK_LABEL (priv->info_message),
-				    hkl_error_message_get(error));
-		gtk_info_bar_set_message_type (priv->info_bar,
-					       GTK_MESSAGE_ERROR);
-		gtk_widget_show (GTK_WIDGET(priv->info_bar));
-
+		raise_error(self, &error);
 		dump_diffractometer(priv->diffractometer);
 	}
+	hkl_gui_window_update_solutions (self);
 }
 
 
