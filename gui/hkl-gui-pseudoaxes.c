@@ -142,11 +142,11 @@ static void hkl_gui_engine_update_pseudo_axis (HklGuiEngine* self)
 	priv = self->priv;
 
 	gtk_list_store_clear (priv->store_pseudo);
-	parameters = hkl_engine_pseudo_axes (self->priv->engine);
+	parameters = hkl_engine_pseudo_axes (priv->engine);
 	darray_foreach(parameter, *parameters){
-		gtk_list_store_append (self->priv->store_pseudo,
+		gtk_list_store_append (priv->store_pseudo,
 				       &iter);
-		gtk_list_store_set (self->priv->store_pseudo,
+		gtk_list_store_set (priv->store_pseudo,
 				    &iter,
 				    PSEUDO_COL_NAME, hkl_parameter_name_get (*parameter),
 				    PSEUDO_COL_VALUE, hkl_parameter_value_unit_get (*parameter),
@@ -186,48 +186,55 @@ static void hkl_gui_engine_update_mode (HklGuiEngine* self)
 }
 
 
-static void hkl_gui_engine_update_mode_parameters (HklGuiEngine* self) {
+static void hkl_gui_engine_update_mode_parameters (HklGuiEngine* self)
+{
+	HklGuiEnginePrivate *priv;
 	HklMode *mode;
 
 	g_return_if_fail (self != NULL);
 
-	mode = hkl_engine_mode(self->priv->engine);
+	priv = self->priv;
+
+	mode = hkl_engine_mode (priv->engine);
 	if (mode){
 		darray_parameter *parameters;
 		HklParameter **parameter;
 
 		parameters = hkl_mode_parameters(mode);
-		if(darray_size(*parameters)){
+		if(darray_size (*parameters)){
 			GtkTreeIter iter = {0};
 
-			gtk_list_store_clear (self->priv->store_mode_parameter);
-			darray_foreach(parameter, *parameters){
-				gtk_list_store_append (self->priv->store_mode_parameter, &iter);
-				gtk_list_store_set (self->priv->store_mode_parameter,
+			gtk_list_store_clear (priv->store_mode_parameter);
+			darray_foreach (parameter, *parameters){
+				gtk_list_store_append (priv->store_mode_parameter, &iter);
+				gtk_list_store_set (priv->store_mode_parameter,
 						    &iter,
 						    PSEUDO_COL_NAME, hkl_parameter_name_get (*parameter),
 						    PSEUDO_COL_VALUE, hkl_parameter_value_unit_get (*parameter),
 						    -1);
 			}
-			gtk_expander_set_expanded (self->priv->expander1, TRUE);
-			gtk_widget_show (GTK_WIDGET (self->priv->expander1));
+			gtk_expander_set_expanded (priv->expander1, TRUE);
+			gtk_widget_show (GTK_WIDGET (priv->expander1));
 		}else
-			gtk_widget_hide (GTK_WIDGET (self->priv->expander1));
+			gtk_widget_hide (GTK_WIDGET (priv->expander1));
 	}else
-		gtk_widget_hide (GTK_WIDGET(self->priv->expander1));
+		gtk_widget_hide (GTK_WIDGET (priv->expander1));
 }
 
 
 void hkl_gui_engine_update (HklGuiEngine* self)
 {
+	HklGuiEnginePrivate *priv;
 	GtkTreeViewColumn* col;
 	GList* cells;
 
 	g_return_if_fail (self != NULL);
 
+	priv = self->priv;
+
 	hkl_gui_engine_update_pseudo_axis (self);
 
-	col = gtk_tree_view_get_column(self->priv->treeview1, 1);
+	col = gtk_tree_view_get_column(priv->treeview1, 1);
 	cells = gtk_cell_layout_get_cells(GTK_CELL_LAYOUT(col));
 	g_object_set (G_OBJECT(cells->data), "background", NULL, NULL);
 	g_list_free(cells);
@@ -262,18 +269,21 @@ void hkl_gui_engine_set_engine (HklGuiEngine *self,
 
 static void hkl_gui_engine_on_combobox1_changed (GtkComboBox* combobox, HklGuiEngine* self)
 {
+	HklGuiEnginePrivate *priv;
 	gchar *mode;
 	GtkTreeIter iter = {0};
 
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (combobox != NULL);
 
+	priv = self->priv;
+
 	if(gtk_combo_box_get_active_iter(combobox, &iter)){
-		gtk_tree_model_get(GTK_TREE_MODEL(self->priv->store_mode),
+		gtk_tree_model_get(GTK_TREE_MODEL(priv->store_mode),
 				   &iter,
 				   MODE_COL_NAME, &mode,
 				   -1);
-		hkl_engine_select_mode_by_name(self->priv->engine, mode);
+		hkl_engine_select_mode_by_name(priv->engine, mode);
 		hkl_gui_engine_update_mode_parameters(self);
 	}
 }
@@ -281,14 +291,18 @@ static void hkl_gui_engine_on_combobox1_changed (GtkComboBox* combobox, HklGuiEn
 
 static void hkl_gui_engine_on_button1_clicked (GtkButton* button, HklGuiEngine* self)
 {
+	HklGuiEnginePrivate *priv;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (button != NULL);
 
-	if(hkl_engine_set(self->priv->engine, NULL)){
+	priv = self->priv;
+
+	if(hkl_engine_set(priv->engine, NULL)){
 	        HklEngineList *engines;
 
-		engines = hkl_engine_engines(self->priv->engine);
+		engines = hkl_engine_engines(priv->engine);
 		hkl_engine_list_select_solution(engines, 0);
+		hkl_engine_list_get(engines);
 	}
 
 	g_signal_emit_by_name (self, "changed");
@@ -297,10 +311,13 @@ static void hkl_gui_engine_on_button1_clicked (GtkButton* button, HklGuiEngine* 
 
 static void hkl_gui_engine_on_button2_clicked (GtkButton* button, HklGuiEngine* self)
 {
+	HklGuiEnginePrivate *priv;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (button != NULL);
 
-	if(hkl_engine_initialize(self->priv->engine, NULL)){
+	priv = self->priv;
+
+	if(hkl_engine_initialize(priv->engine, NULL)){
 		/* some init method update the parameters */
 		hkl_gui_engine_update_mode_parameters(self);
 	}
@@ -312,6 +329,7 @@ static void hkl_gui_engine_on_cell_tree_view_pseudo_axis_value_edited (GtkCellRe
 								       const gchar* new_text,
 								       HklGuiEngine* self)
 {
+	HklGuiEnginePrivate *priv;
 	GtkTreeIter iter = {0};
 	GtkListStore* model = NULL;
 
@@ -320,19 +338,21 @@ static void hkl_gui_engine_on_cell_tree_view_pseudo_axis_value_edited (GtkCellRe
 	g_return_if_fail (path != NULL);
 	g_return_if_fail (new_text != NULL);
 
-	if (gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(self->priv->store_pseudo),
+	priv = self->priv;
+
+	if (gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(priv->store_pseudo),
 						 &iter, path)) {
 		gdouble value = 0.0;
 		HklPseudoAxis* pseudo = NULL;
 
 		value = atof(new_text);
-		gtk_tree_model_get (GTK_TREE_MODEL(self->priv->store_pseudo),
+		gtk_tree_model_get (GTK_TREE_MODEL(priv->store_pseudo),
 				    &iter,
 				    PSEUDO_COL_PSEUDO, &pseudo, -1);
 
 		if (pseudo) {
 			g_object_set (G_OBJECT(renderer), "background", "red", NULL, NULL);
-			gtk_list_store_set (self->priv->store_pseudo,
+			gtk_list_store_set (priv->store_pseudo,
 					    &iter,
 					    PSEUDO_COL_VALUE, value,
 					    -1);
@@ -416,22 +436,22 @@ static void hkl_gui_engine_init (HklGuiEngine * self)
 
 	gtk_builder_connect_signals (builder, self);
 
-	g_signal_connect_object (self->priv->combobox1,
+	g_signal_connect_object (priv->combobox1,
 				 "changed",
 				 (GCallback) hkl_gui_engine_on_combobox1_changed,
 				 self, 0);
 
-	g_signal_connect_object (self->priv->button1,
+	g_signal_connect_object (priv->button1,
 				 "clicked",
 				 (GCallback) hkl_gui_engine_on_button1_clicked,
 				 self, 0);
 
-	g_signal_connect_object (self->priv->button2,
+	g_signal_connect_object (priv->button2,
 				 "clicked",
 				 (GCallback) hkl_gui_engine_on_button2_clicked,
 				 self, 0);
 
-	col = gtk_tree_view_get_column (self->priv->treeview1, 1);
+	col = gtk_tree_view_get_column (priv->treeview1, 1);
 	cells = gtk_cell_layout_get_cells(GTK_CELL_LAYOUT(col));
 	g_list_foreach(cells, _connect_renderer, self);
 	g_list_free(cells);

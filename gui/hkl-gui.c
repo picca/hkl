@@ -200,7 +200,7 @@ struct _HklGuiWindowPrivate {
 	GtkInfoBar *info_bar;
 	GtkLabel *info_message;
 
-	GList *pseudo_frames;
+	darray(HklGuiEngine *) pseudo_frames;
 
 	struct diffractometer_t *diffractometer; /* unowned */
 	HklSample *sample; /* unowned */
@@ -312,6 +312,8 @@ static void hkl_gui_window_init (HklGuiWindow * self)
 	priv = self->priv;
 	priv->diffractometer = NULL;
 
+	darray_init(priv->pseudo_frames);
+
 	priv->sample = hkl_sample_new ("test");
 	priv->reciprocal = hkl_lattice_new_default ();
 
@@ -356,13 +358,14 @@ static gboolean _finalize_liststore_diffractometer(GtkTreeModel *model,
 	return FALSE;
 }
 
-
 static void hkl_gui_window_finalize (GObject* object)
 {
 	HklGuiWindow * self = HKL_GUI_WINDOW(object);
 	HklGuiWindowPrivate *priv = self->priv;
 
 	g_object_unref(priv->builder);
+
+	darray_free(priv->pseudo_frames);
 
 	gtk_tree_model_foreach(GTK_TREE_MODEL(priv->_liststore_diffractometer),
 			       _finalize_liststore_diffractometer,
@@ -499,6 +502,67 @@ static void hkl_gui_window_get_widgets_and_objects_from_ui (HklGuiWindow* self)
 }
 
 
+static void hkl_gui_window_update_pseudo_axes_frames (HklGuiWindow* self)
+{
+	HklGuiEngine **engine;
+
+	g_return_if_fail (self != NULL);
+
+	darray_foreach(engine, self->priv->pseudo_frames){
+		hkl_gui_engine_update(*engine);
+	}
+}
+
+
+static void hkl_gui_window_pseudo_axes_frame_changed_cb (HklGuiEngine *engine, HklGuiWindow *self)
+{
+	g_return_if_fail (self != NULL);
+
+	hkl_gui_window_update_axes (self);
+	hkl_gui_window_update_pseudo_axes (self);
+	hkl_gui_window_update_pseudo_axes_frames (self);
+	hkl_gui_window_update_solutions (self);
+}
+
+
+static void hkl_gui_window_set_up_pseudo_axes_frames (HklGuiWindow* self)
+{
+	HklGuiWindowPrivate *priv;
+	HklGuiEngine **pseudo;
+	GtkVBox* vbox2;
+	HklEngine **engine;
+	darray_engine *engines;
+
+	g_return_if_fail (self != NULL);
+
+	priv = self->priv;
+
+	darray_foreach (pseudo, priv->pseudo_frames){
+		gtk_container_remove(GTK_CONTAINER(priv->_vbox2),
+				     GTK_WIDGET (hkl_gui_engine_get_frame (*pseudo)));
+		g_object_unref(*pseudo);
+	}
+	darray_size (priv->pseudo_frames) = 0;
+
+	engines = hkl_engine_list_engines (priv->diffractometer->engines);
+	darray_foreach (engine, *engines){
+		HklGuiEngine *pseudo;
+
+		pseudo = hkl_gui_engine_new (*engine);
+		darray_append(priv->pseudo_frames, pseudo);
+		gtk_container_add (GTK_CONTAINER (priv->_vbox2),
+				   GTK_WIDGET (hkl_gui_engine_get_frame(pseudo)));
+
+		g_signal_connect_object (pseudo,
+					 "changed",
+					 G_CALLBACK(hkl_gui_window_pseudo_axes_frame_changed_cb),
+					 self, 0);
+	}
+
+	gtk_widget_show_all (GTK_WIDGET (priv->_vbox2));
+}
+
+
 static void hkl_gui_window_set_up_diffractometer_model (HklGuiWindow* self)
 {
 	unsigned int i, n;
@@ -606,7 +670,7 @@ void hkl_gui_window_cellrendererspin1_edited_cb(GtkCellRendererText *renderer,
 			    -1);
 
 	hkl_gui_window_update_pseudo_axes (self);
-	//hkl_gui_window_update_pseudo_axes_frames (self);
+	hkl_gui_window_update_pseudo_axes_frames (self);
 }
 
 
@@ -774,77 +838,13 @@ void hkl_gui_window_cellrenderertext5_edited_cb(GtkCellRendererText *renderer,
 
 		hkl_gui_window_update_axes (self);
 		hkl_gui_window_update_pseudo_axes (self);
-		//hkl_gui_window_update_pseudo_axes_frames (self);
+		hkl_gui_window_update_pseudo_axes_frames (self);
 	}else{
 		hkl_parameter_value_unit_set(parameter, old_value, NULL);
 		raise_error(self, &error);
 		dump_diffractometer(priv->diffractometer);
 	}
 	hkl_gui_window_update_solutions (self);
-}
-
-
-static void _destroy_pseudo_frame_cb(GtkWidget *widget, gpointer data)
-{
-	g_return_if_fail (widget != NULL);
-	g_return_if_fail (data != NULL);
-
-	gtk_widget_destroy(widget);
-}
-
-
-static void _update_pseudo_frame_cb(GtkWidget *widget, gpointer data)
-{
-	g_return_if_fail (widget != NULL);
-	g_return_if_fail (data != NULL);
-
-	hkl_gui_engine_update(data);
-}
-
-
-static void hkl_gui_window_update_pseudo_axes_frames (HklGuiWindow* self)
-{
-	HklGuiWindowPrivate *priv;
-
-	g_return_if_fail (self != NULL);
-
-	priv = self->priv;
-
-	gtk_container_foreach (GTK_CONTAINER(priv->_vbox2),
-			       _update_pseudo_frame_cb, self);
-}
-
-
-static void hkl_gui_window_set_up_pseudo_axes_frames (HklGuiWindow* self)
-{
-	HklGuiWindowPrivate *priv;
-	GtkVBox* vbox2;
-	HklEngine **engine;
-	darray_engine *engines;
-
-	g_return_if_fail (self != NULL);
-
-	priv = self->priv;
-
-	gtk_container_foreach (GTK_CONTAINER(priv->_vbox2),
-			       _destroy_pseudo_frame_cb, self);
-
-	engines = hkl_engine_list_engines (priv->diffractometer->engines);
-	darray_foreach (engine, *engines){
-		HklGuiEngine *frame;
-
-		frame = hkl_gui_engine_new (*engine);
-		gtk_container_add (GTK_CONTAINER (priv->_vbox2),
-				   GTK_WIDGET (hkl_gui_engine_get_frame(frame)));
-		/*
-		g_signal_connect_object (frame,
-					 "changed",
-					 (GCallback) _hkl_gui_window_on_pseudo_axes_frame_changed_hkl_gui_pseudo_axes_frame_changed,
-					 self, 0);
-		*/
-	}
-
-	gtk_widget_show_all (GTK_WIDGET (priv->_vbox2));
 }
 
 
@@ -1552,11 +1552,6 @@ hkl_gui_window_connect_all_signals (HklGuiWindow* self)
 				 self, 0);
 }
 
-
-static void _hkl_gui_window_on_pseudo_axes_frame_changed_hkl_gui_pseudo_axes_frame_changed (HklGuiEngine* _sender, gpointer self)
-{
-	hkl_gui_window_on_pseudo_axes_frame_changed (self);
-}
 
 
 
@@ -7054,21 +7049,6 @@ static gboolean hkl_gui_window_on_tree_view_crystals_key_press_event (GdkEventKe
 	result = TRUE;
 
 	return result;
-
-}
-
-
-static void hkl_gui_window_on_pseudo_axes_frame_changed (HklGuiWindow* self) {
-
-	g_return_if_fail (self != NULL);
-
-	hkl_gui_window_update_axes (self);
-
-	hkl_gui_window_update_pseudo_axes (self);
-
-	hkl_gui_window_update_pseudo_axes_frames (self);
-
-	hkl_gui_window_update_solutions (self);
 
 }
 
