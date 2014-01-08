@@ -240,45 +240,21 @@ SPINBUTTON_VALUE_CHANGED_CB_DECL(spinbutton_gamma);
 SPINBUTTON_VALUE_CHANGED_CB_DECL(spinbutton_gamma_min);
 SPINBUTTON_VALUE_CHANGED_CB_DECL(spinbutton_gamma_max);
 SPINBUTTON_VALUE_CHANGED_CB_DECL(spinbutton_gamma_star);
+
 static void hkl_gui_window_get_widgets_and_objects_from_ui (HklGuiWindow* self);
 static void hkl_gui_window_set_up_diffractometer_model (HklGuiWindow* self);
-static void hkl_gui_window_connect_all_signals (HklGuiWindow* self);
-HklGuiWindow* hkl_gui_window_construct (GType object_type);
 static void hkl_gui_window_set_up_tree_view_reflections (HklGuiWindow* self);
 static void hkl_gui_window_set_up_tree_view_crystals (HklGuiWindow* self);
 static void hkl_gui_window_update_tree_view_crystals (HklGuiWindow* self);
-static void hkl_gui_window_update_source (HklGuiWindow* self);
-static void hkl_gui_window_update_lattice (HklGuiWindow* self);
-static void hkl_gui_window_update_lattice_parameters (HklGuiWindow* self);
-static void hkl_gui_window_update_reciprocal_lattice (HklGuiWindow* self);
-static void hkl_gui_window_update_UxUyUz (HklGuiWindow* self);
-static void hkl_gui_window_update_UB (HklGuiWindow* self);
 static void hkl_gui_window_set_up_pseudo_axes_frames (HklGuiWindow* self);
 static void hkl_gui_window_set_up_tree_view_axes (HklGuiWindow* self);
 static void hkl_gui_window_update_axes (HklGuiWindow* self);
 static void hkl_gui_window_set_up_tree_view_pseudo_axes (HklGuiWindow* self);
 static void hkl_gui_window_update_pseudo_axes (HklGuiWindow* self);
-static void hkl_gui_window_set_up_tree_view_pseudo_axes_parameters (HklGuiWindow* self);
 static void hkl_gui_window_set_up_tree_view_solutions (HklGuiWindow* self);
 static void hkl_gui_window_update_solutions (HklGuiWindow* self);
-static void hkl_gui_window_set_up_3D (HklGuiWindow* self);
-static void hkl_gui_window_update_pseudo_axes_parameters (HklGuiWindow* self);
-static void _hkl_gui_window_update_reflections (HklSample* sample, GtkListStore* model);
-static void hkl_gui_window_update_reflections (HklGuiWindow* self, HklSample* sample);
-static void hkl_gui_window_update_crystal_model (HklGuiWindow* self, HklSample* sample);
-static void hkl_gui_window_update_pseudo_axes_frames (HklGuiWindow* self);
-void hkl_gui_window_main (gchar** args, int args_length1);
 static void hkl_gui_window_finalize (GObject* obj);
 static void hkl_gui_window_set_up_info_bar(HklGuiWindow *self);
-
-/* callbacks */
-
-void combobox1_changed_cb(GtkComboBox *combobox, gpointer *user_data);
-void hkl_gui_window_cellrendererspin1_edited_cb(GtkCellRendererText *renderer,
-						gchar *path,
-						gchar *new_text,
-						gpointer user_data);
-
 
 static struct diffractometer_t *create_diffractometer(HklFactory *factory)
 {
@@ -312,8 +288,8 @@ static void dump_diffractometer(struct diffractometer_t *self)
 
 G_DEFINE_TYPE (HklGuiWindow, hkl_gui_window, G_TYPE_OBJECT);
 
-static void 
-hkl_gui_window_class_init (HklGuiWindowClass * class)
+
+static void hkl_gui_window_class_init (HklGuiWindowClass * class)
 {
 	GObjectClass *gobject_class;
 	
@@ -324,8 +300,8 @@ hkl_gui_window_class_init (HklGuiWindowClass * class)
 	g_type_class_add_private (class, sizeof (HklGuiWindowPrivate));
 }
 
-static void
-hkl_gui_window_init (HklGuiWindow * self)
+
+static void hkl_gui_window_init (HklGuiWindow * self)
 {
 	HklGuiWindowPrivate *priv;
 
@@ -364,6 +340,7 @@ hkl_gui_window_init (HklGuiWindow * self)
 	//hkl_gui_window_connect_all_signals (self);
 }
 
+
 static gboolean _finalize_liststore_diffractometer(GtkTreeModel *model,
 						   GtkTreePath *path,
 						   GtkTreeIter *iter,
@@ -379,8 +356,8 @@ static gboolean _finalize_liststore_diffractometer(GtkTreeModel *model,
 	return FALSE;
 }
 
-static void
-hkl_gui_window_finalize (GObject* object)
+
+static void hkl_gui_window_finalize (GObject* object)
 {
 	HklGuiWindow * self = HKL_GUI_WINDOW(object);
 	HklGuiWindowPrivate *priv = self->priv;
@@ -394,8 +371,8 @@ hkl_gui_window_finalize (GObject* object)
 	G_OBJECT_CLASS (hkl_gui_window_parent_class)->finalize (object);
 }
 
-HklGuiWindow* 
-hkl_gui_window_new (void)
+
+HklGuiWindow* hkl_gui_window_new (void)
 {
 	return g_object_new (HKL_GUI_TYPE_WINDOW, NULL);
 }
@@ -403,8 +380,7 @@ hkl_gui_window_new (void)
 
 #define get_object(builder, type, priv, name) priv->_ ## name = type(gtk_builder_get_object(builder, #name))
 
-static void
-hkl_gui_window_get_widgets_and_objects_from_ui (HklGuiWindow* self)
+static void hkl_gui_window_get_widgets_and_objects_from_ui (HklGuiWindow* self)
 {
 	HklGuiWindowPrivate *priv = self->priv;
 
@@ -522,8 +498,8 @@ hkl_gui_window_get_widgets_and_objects_from_ui (HklGuiWindow* self)
 	gtk_builder_connect_signals (builder, self);
 }
 
-static void
-hkl_gui_window_set_up_diffractometer_model (HklGuiWindow* self)
+
+static void hkl_gui_window_set_up_diffractometer_model (HklGuiWindow* self)
 {
 	unsigned int i, n;
 	HklFactory **factories;
@@ -543,6 +519,7 @@ hkl_gui_window_set_up_diffractometer_model (HklGuiWindow* self)
 				    -1);
 	}
 }
+
 
 void hkl_gui_window_combobox1_changed_cb(GtkComboBox *combobox, gpointer *user_data)
 {
@@ -586,6 +563,7 @@ void hkl_gui_window_combobox1_changed_cb(GtkComboBox *combobox, gpointer *user_d
 	hkl_gui_window_set_up_3D(self);
 #endif
 }
+
 
 /* axis read cb */
 void hkl_gui_window_cellrendererspin1_edited_cb(GtkCellRendererText *renderer,
@@ -631,6 +609,7 @@ void hkl_gui_window_cellrendererspin1_edited_cb(GtkCellRendererText *renderer,
 	//hkl_gui_window_update_pseudo_axes_frames (self);
 }
 
+
 /* axis min cb */
 void hkl_gui_window_cellrendererspin3_edited_cb(GtkCellRendererText *renderer,
 						gchar *path,
@@ -669,6 +648,7 @@ void hkl_gui_window_cellrendererspin3_edited_cb(GtkCellRendererText *renderer,
 
 	hkl_gui_window_update_pseudo_axes (self);
 }
+
 
 /* axis max cb */
 void hkl_gui_window_cellrendererspin4_edited_cb(GtkCellRendererText *renderer,
@@ -729,6 +709,7 @@ static void raise_error(HklGuiWindow *self, HklError **error)
 	hkl_error_clear(error);
 }
 
+
 static void clear_error(HklGuiWindow *self, HklError **error)
 {
 	HklGuiWindowPrivate *priv;
@@ -739,6 +720,7 @@ static void clear_error(HklGuiWindow *self, HklError **error)
 
 	gtk_widget_hide(GTK_WIDGET(priv->info_bar));
 }
+
 
 /* pseudo axis write */
 void hkl_gui_window_cellrenderertext5_edited_cb(GtkCellRendererText *renderer,
@@ -832,6 +814,7 @@ static void hkl_gui_window_update_pseudo_axes_frames (HklGuiWindow* self)
 			       _update_pseudo_frame_cb, self);
 }
 
+
 static void hkl_gui_window_set_up_pseudo_axes_frames (HklGuiWindow* self)
 {
 	HklGuiWindowPrivate *priv;
@@ -865,10 +848,10 @@ static void hkl_gui_window_set_up_pseudo_axes_frames (HklGuiWindow* self)
 }
 
 
-gboolean _update_axis (GtkTreeModel *model,
-		       GtkTreePath *path,
-		       GtkTreeIter *iter,
-		       gpointer data)
+static gboolean _update_axis (GtkTreeModel *model,
+			      GtkTreePath *path,
+			      GtkTreeIter *iter,
+			      gpointer data)
 {
 	HklParameter *parameter;
 	gdouble value, min, max;
@@ -889,6 +872,7 @@ gboolean _update_axis (GtkTreeModel *model,
 	return FALSE;
 }
 
+
 static void hkl_gui_window_update_axes (HklGuiWindow* self)
 {
 	HklGuiWindowPrivate *priv;
@@ -903,6 +887,7 @@ static void hkl_gui_window_update_axes (HklGuiWindow* self)
 			       _update_axis,
 			       self);
 }
+
 
 static void hkl_gui_window_set_up_tree_view_axes (HklGuiWindow* self)
 {
@@ -933,6 +918,7 @@ static void hkl_gui_window_set_up_tree_view_axes (HklGuiWindow* self)
 	hkl_gui_window_update_axes (self);
 }
 
+
 static gboolean _update_pseudo_axes (GtkTreeModel *model,
 				     GtkTreePath *path,
 				     GtkTreeIter *iter,
@@ -954,6 +940,7 @@ static gboolean _update_pseudo_axes (GtkTreeModel *model,
 			   -1);
 	return FALSE;
 }
+
 
 static void hkl_gui_window_update_pseudo_axes (HklGuiWindow* self)
 {
@@ -1004,6 +991,7 @@ static void hkl_gui_window_set_up_tree_view_pseudo_axes (HklGuiWindow* self)
 
 	hkl_gui_window_update_pseudo_axes (self);
 }
+
 
 void hkl_gui_window_treeview_solutions_cursor_changed_cb (GtkTreeView *tree_view,
 							  gpointer     user_data)
@@ -1172,6 +1160,7 @@ static void hkl_gui_window_set_up_tree_view_solutions (HklGuiWindow* self)
 	hkl_gui_window_update_solutions (self);
 }
 
+
 void hkl_gui_window_set_up_info_bar(HklGuiWindow *self)
 {
 	HklGuiWindowPrivate *priv;
@@ -1206,131 +1195,6 @@ void hkl_gui_window_set_up_info_bar(HklGuiWindow *self)
 }
 
 /*
-static void _hkl_gui_window_on_spinbutton_a_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_spinbutton_a_value_changed (self);
-
-}
-
-
-static void _hkl_gui_window_on_spinbutton_b_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_spinbutton_b_value_changed (self);
-
-}
-
-
-static void _hkl_gui_window_on_spinbutton_c_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_spinbutton_c_value_changed (self);
-
-}
-
-
-static void _hkl_gui_window_on_spinbutton_alpha_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_spinbutton_alpha_value_changed (self);
-
-}
-
-
-static void _hkl_gui_window_on_spinbutton_beta_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_spinbutton_beta_value_changed (self);
-
-}
-
-
-static void _hkl_gui_window_on_spinbutton_gamma_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_spinbutton_gamma_value_changed (self);
-
-}
-
-
-static void _hkl_gui_window_on_spinbutton_a_min_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_spinbutton_a_min_value_changed (self);
-
-}
-
-
-static void _hkl_gui_window_on_spinbutton_b_min_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_spinbutton_b_min_value_changed (self);
-
-}
-
-
-static void _hkl_gui_window_on_spinbutton_c_min_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_spinbutton_c_min_value_changed (self);
-
-}
-
-
-static void _hkl_gui_window_on_spinbutton_alpha_min_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_spinbutton_alpha_min_value_changed (self);
-
-}
-
-
-static void _hkl_gui_window_on_spinbutton_beta_min_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_spinbutton_beta_min_value_changed (self);
-
-}
-
-
-static void _hkl_gui_window_on_spinbutton_gamma_min_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_spinbutton_gamma_min_value_changed (self);
-
-}
-
-
-static void _hkl_gui_window_on_spinbutton_a_max_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_spinbutton_a_max_value_changed (self);
-
-}
-
-
-static void _hkl_gui_window_on_spinbutton_b_max_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_spinbutton_b_max_value_changed (self);
-
-}
-
-
-static void _hkl_gui_window_on_spinbutton_c_max_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_spinbutton_c_max_value_changed (self);
-
-}
-
-
-static void _hkl_gui_window_on_spinbutton_alpha_max_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_spinbutton_alpha_max_value_changed (self);
-
-}
-
-
-static void _hkl_gui_window_on_spinbutton_beta_max_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_spinbutton_beta_max_value_changed (self);
-
-}
-
-
-static void _hkl_gui_window_on_spinbutton_gamma_max_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_spinbutton_gamma_max_value_changed (self);
-
-}
-
 
 static void _hkl_gui_window_on_spinbutton_lambda_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self) {
 
@@ -4503,133 +4367,6 @@ static void hkl_gui_window_on_tree_view_crystals_cursor_changed (HklGuiWindow* s
 	_gtk_tree_path_free0 (path);
 
 }
-
-
-static void hkl_gui_window_on_spinbutton_a_value_changed (HklGuiWindow* self) {
-
-	g_return_if_fail (self != NULL);
-
-}
-
-
-static void hkl_gui_window_on_spinbutton_b_value_changed (HklGuiWindow* self) {
-
-	g_return_if_fail (self != NULL);
-
-}
-
-
-static void hkl_gui_window_on_spinbutton_c_value_changed (HklGuiWindow* self) {
-
-	g_return_if_fail (self != NULL);
-
-}
-
-
-static void hkl_gui_window_on_spinbutton_alpha_value_changed (HklGuiWindow* self) {
-
-	g_return_if_fail (self != NULL);
-
-}
-
-
-static void hkl_gui_window_on_spinbutton_beta_value_changed (HklGuiWindow* self) {
-
-	g_return_if_fail (self != NULL);
-
-}
-
-
-static void hkl_gui_window_on_spinbutton_gamma_value_changed (HklGuiWindow* self) {
-
-	g_return_if_fail (self != NULL);
-
-}
-
-
-static void hkl_gui_window_on_spinbutton_a_min_value_changed (HklGuiWindow* self) {
-
-	g_return_if_fail (self != NULL);
-
-}
-
-
-static void hkl_gui_window_on_spinbutton_b_min_value_changed (HklGuiWindow* self) {
-
-	g_return_if_fail (self != NULL);
-
-}
-
-
-static void hkl_gui_window_on_spinbutton_c_min_value_changed (HklGuiWindow* self) {
-
-	g_return_if_fail (self != NULL);
-
-}
-
-
-static void hkl_gui_window_on_spinbutton_alpha_min_value_changed (HklGuiWindow* self) {
-
-	g_return_if_fail (self != NULL);
-
-}
-
-
-static void hkl_gui_window_on_spinbutton_beta_min_value_changed (HklGuiWindow* self) {
-
-	g_return_if_fail (self != NULL);
-
-}
-
-
-static void hkl_gui_window_on_spinbutton_gamma_min_value_changed (HklGuiWindow* self) {
-
-	g_return_if_fail (self != NULL);
-
-}
-
-
-static void hkl_gui_window_on_spinbutton_a_max_value_changed (HklGuiWindow* self) {
-
-	g_return_if_fail (self != NULL);
-
-}
-
-
-static void hkl_gui_window_on_spinbutton_b_max_value_changed (HklGuiWindow* self) {
-
-	g_return_if_fail (self != NULL);
-
-}
-
-
-static void hkl_gui_window_on_spinbutton_c_max_value_changed (HklGuiWindow* self) {
-
-	g_return_if_fail (self != NULL);
-
-}
-
-
-static void hkl_gui_window_on_spinbutton_alpha_max_value_changed (HklGuiWindow* self) {
-
-	g_return_if_fail (self != NULL);
-
-}
-
-
-static void hkl_gui_window_on_spinbutton_beta_max_value_changed (HklGuiWindow* self) {
-
-	g_return_if_fail (self != NULL);
-
-}
-
-
-static void hkl_gui_window_on_spinbutton_gamma_max_value_changed (HklGuiWindow* self) {
-
-	g_return_if_fail (self != NULL);
-
-}
-
 
 static void hkl_gui_window_on_spinbutton_lambda_value_changed (HklGuiWindow* self) {
 	HklGeometry* _tmp0_;
