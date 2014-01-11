@@ -288,23 +288,35 @@ static void hkl_gui_engine_on_combobox1_changed (GtkComboBox* combobox, HklGuiEn
 	}
 }
 
+static gboolean _set_pseudo(GtkTreeModel *model,
+			    GtkTreePath *path,
+			    GtkTreeIter *iter,
+			    gpointer data)
+{
+	HklParameter *parameter;
+	double value;
+
+	gtk_tree_model_get (model, iter,
+			    PSEUDO_COL_PSEUDO, &parameter,
+			    PSEUDO_COL_VALUE, &value,
+			    -1);
+	hkl_parameter_value_unit_set(parameter, value, NULL);
+
+	return FALSE;
+}
 
 static void hkl_gui_engine_on_button1_clicked (GtkButton* button, HklGuiEngine* self)
 {
 	HklGuiEnginePrivate *priv;
+
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (button != NULL);
 
 	priv = self->priv;
 
-	if(hkl_engine_set(priv->engine, NULL)){
-	        HklEngineList *engines;
-
-		engines = hkl_engine_engines(priv->engine);
-		hkl_engine_list_select_solution(engines, 0);
-		hkl_engine_list_get(engines);
-	}
-
+	gtk_tree_model_foreach(GTK_TREE_MODEL(priv->store_pseudo),
+			       _set_pseudo,
+			       self);
 	g_signal_emit_by_name (self, "changed");
 }
 

@@ -101,14 +101,50 @@ typedef enum  {
 	DIFFRACTOMETER_COL_N_COLUMNS
 } DiffractometerCol;
 
+/******************/
+/* Diffractometer */
+/******************/
+
 struct diffractometer_t {
 	HklGeometry *geometry;
 	HklDetector *detector;
 	HklEngineList *engines;
 };
 
-static struct diffractometer_t *create_diffractometer(HklFactory *factory);
-static void delete_diffractometer(struct diffractometer_t *self);
+
+static struct diffractometer_t *create_diffractometer(HklFactory *factory)
+{
+	struct diffractometer_t *self;
+
+	self = malloc(sizeof(*self));
+
+	self->geometry = hkl_factory_create_new_geometry (factory);
+	self->engines = hkl_factory_create_new_engine_list (factory);
+	self->detector = hkl_detector_factory_new (HKL_DETECTOR_TYPE_0D);
+	hkl_detector_idx_set (self->detector, 1);
+
+	return self;
+}
+
+
+static void delete_diffractometer(struct diffractometer_t *self)
+{
+	hkl_geometry_free(self->geometry);
+	hkl_engine_list_free(self->engines);
+	hkl_detector_free(self->detector);
+}
+
+
+static void dump_diffractometer(struct diffractometer_t *self)
+{
+	hkl_geometry_fprintf(stderr, self->geometry);
+	hkl_engine_list_fprintf(stderr, self->engines);
+	hkl_detector_fprintf(stderr, self->detector);
+}
+
+/****************/
+/* HklGuiWindow */
+/****************/
 
 struct _HklGuiWindowPrivate {
 	GtkBuilder* builder;
@@ -256,35 +292,6 @@ static void hkl_gui_window_update_solutions (HklGuiWindow* self);
 static void hkl_gui_window_finalize (GObject* obj);
 static void hkl_gui_window_set_up_info_bar(HklGuiWindow *self);
 
-static struct diffractometer_t *create_diffractometer(HklFactory *factory)
-{
-	struct diffractometer_t *self;
-
-	self = malloc(sizeof(*self));
-
-	self->geometry = hkl_factory_create_new_geometry (factory);
-	self->engines = hkl_factory_create_new_engine_list (factory);
-	self->detector = hkl_detector_factory_new (HKL_DETECTOR_TYPE_0D);
-	hkl_detector_idx_set (self->detector, 1);
-
-	return self;
-}
-
-
-static void delete_diffractometer(struct diffractometer_t *self)
-{
-	hkl_geometry_free(self->geometry);
-	hkl_engine_list_free(self->engines);
-	hkl_detector_free(self->detector);
-}
-
-
-static void dump_diffractometer(struct diffractometer_t *self)
-{
-	hkl_geometry_fprintf(stderr, self->geometry);
-	hkl_engine_list_fprintf(stderr, self->engines);
-	hkl_detector_fprintf(stderr, self->detector);
-}
 
 G_DEFINE_TYPE (HklGuiWindow, hkl_gui_window, G_TYPE_OBJECT);
 
@@ -514,14 +521,76 @@ static void hkl_gui_window_update_pseudo_axes_frames (HklGuiWindow* self)
 }
 
 
-static void hkl_gui_window_pseudo_axes_frame_changed_cb (HklGuiEngine *engine, HklGuiWindow *self)
+static void raise_error(HklGuiWindow *self, HklError **error)
 {
+	HklGuiWindowPrivate *priv;
+
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (error != NULL);
+
+	priv = self->priv;
+
+	/* show an error message */
+	gtk_label_set_text (GTK_LABEL (priv->info_message),
+			    hkl_error_message_get(*error));
+	gtk_info_bar_set_message_type (priv->info_bar,
+				       GTK_MESSAGE_ERROR);
+	gtk_widget_show (GTK_WIDGET(priv->info_bar));
+
+	hkl_error_clear(error);
+}
+
+
+static void clear_error(HklGuiWindow *self, HklError **error)
+{
+	HklGuiWindowPrivate *priv;
+
 	g_return_if_fail (self != NULL);
 
-	hkl_gui_window_update_axes (self);
-	hkl_gui_window_update_pseudo_axes (self);
-	hkl_gui_window_update_pseudo_axes_frames (self);
+	priv = self->priv;
+
+	gtk_widget_hide(GTK_WIDGET(priv->info_bar));
+}
+
+
+static gboolean hkl_engine_to_axes(HklGuiWindow *self, HklEngine *engine)
+{
+	HklGuiWindowPrivate *priv;
+	HklError *error = NULL;
+	gboolean res = TRUE;
+
+	g_return_val_if_fail (self != NULL, FALSE);
+	g_return_val_if_fail (engine != NULL, FALSE);
+
+	priv = self->priv;
+
+	if(hkl_engine_set(engine, &error)){
+		clear_error(self, &error);
+		hkl_engine_list_select_solution(priv->diffractometer->engines, 0);
+		hkl_engine_list_get(priv->diffractometer->engines);
+
+		hkl_gui_window_update_axes (self);
+		hkl_gui_window_update_pseudo_axes (self);
+		hkl_gui_window_update_pseudo_axes_frames (self);
+	}else{
+		raise_error(self, &error);
+		dump_diffractometer(priv->diffractometer);
+		res = FALSE;
+	}
 	hkl_gui_window_update_solutions (self);
+	return res;
+}
+
+
+static void hkl_gui_window_pseudo_axes_frame_changed_cb (HklGuiEngine *gui_engine, HklGuiWindow *self)
+{
+	HklEngine *engine;
+
+	g_return_if_fail (self != NULL);
+
+	g_object_get(G_OBJECT(gui_engine), "engine", &engine);
+
+	hkl_engine_to_axes(self, engine);
 }
 
 
@@ -754,38 +823,6 @@ void hkl_gui_window_cellrendererspin4_edited_cb(GtkCellRendererText *renderer,
 }
 
 
-static void raise_error(HklGuiWindow *self, HklError **error)
-{
-	HklGuiWindowPrivate *priv;
-
-	g_return_if_fail (self != NULL);
-	g_return_if_fail (error != NULL);
-
-	priv = self->priv;
-
-	/* show an error message */
-	gtk_label_set_text (GTK_LABEL (priv->info_message),
-			    hkl_error_message_get(*error));
-	gtk_info_bar_set_message_type (priv->info_bar,
-				       GTK_MESSAGE_ERROR);
-	gtk_widget_show (GTK_WIDGET(priv->info_bar));
-
-	hkl_error_clear(error);
-}
-
-
-static void clear_error(HklGuiWindow *self, HklError **error)
-{
-	HklGuiWindowPrivate *priv;
-
-	g_return_if_fail (self != NULL);
-
-	priv = self->priv;
-
-	gtk_widget_hide(GTK_WIDGET(priv->info_bar));
-}
-
-
 /* pseudo axis write */
 void hkl_gui_window_cellrenderertext5_edited_cb(GtkCellRendererText *renderer,
 						gchar *path,
@@ -826,25 +863,14 @@ void hkl_gui_window_cellrenderertext5_edited_cb(GtkCellRendererText *renderer,
 		raise_error(self, &error);
 	}
 
-	if(hkl_engine_set(engine, &error)){
-		clear_error(self, &error);
-		hkl_engine_list_select_solution(priv->diffractometer->engines, 0);
-		hkl_engine_list_get(priv->diffractometer->engines);
-
+	if (hkl_engine_to_axes(self, engine)){
 		gtk_list_store_set (priv->_liststore_pseudo_axes,
 				    &iter,
 				    PSEUDO_AXIS_COL_WRITE, value,
 				    -1);
-
-		hkl_gui_window_update_axes (self);
-		hkl_gui_window_update_pseudo_axes (self);
-		hkl_gui_window_update_pseudo_axes_frames (self);
 	}else{
 		hkl_parameter_value_unit_set(parameter, old_value, NULL);
-		raise_error(self, &error);
-		dump_diffractometer(priv->diffractometer);
 	}
-	hkl_gui_window_update_solutions (self);
 }
 
 
