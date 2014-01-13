@@ -588,7 +588,9 @@ static void hkl_gui_window_pseudo_axes_frame_changed_cb (HklGuiEngine *gui_engin
 
 	g_return_if_fail (self != NULL);
 
-	g_object_get(G_OBJECT(gui_engine), "engine", &engine);
+	g_object_get(G_OBJECT(gui_engine),
+		     "engine", &engine,
+		     NULL);
 
 	hkl_engine_to_axes(self, engine);
 }
