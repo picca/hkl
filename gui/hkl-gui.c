@@ -41,6 +41,8 @@
 #define HKL_GUI_IS_WINDOW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), HKL_GUI_TYPE_WINDOW))
 #define HKL_GUI_WINDOW_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), HKL_GUI_TYPE_WINDOW, HklGuiWindowClass))
 
+G_DEFINE_TYPE (HklGuiWindow, hkl_gui_window, G_TYPE_OBJECT);
+
 typedef enum  {
 	REFLECTION_COL_INDEX = 0,
 	REFLECTION_COL_H,
@@ -112,7 +114,8 @@ struct diffractometer_t {
 };
 
 
-static struct diffractometer_t *create_diffractometer(HklFactory *factory)
+static struct diffractometer_t *
+create_diffractometer(HklFactory *factory)
 {
 	struct diffractometer_t *self;
 
@@ -126,8 +129,8 @@ static struct diffractometer_t *create_diffractometer(HklFactory *factory)
 	return self;
 }
 
-
-static void delete_diffractometer(struct diffractometer_t *self)
+static void
+delete_diffractometer(struct diffractometer_t *self)
 {
 	hkl_geometry_free(self->geometry);
 	hkl_engine_list_free(self->engines);
@@ -135,7 +138,8 @@ static void delete_diffractometer(struct diffractometer_t *self)
 }
 
 
-static void dump_diffractometer(struct diffractometer_t *self)
+static void
+dump_diffractometer(struct diffractometer_t *self)
 {
 	/* hkl_geometry_fprintf(stderr, self->geometry); */
 	/* hkl_engine_list_fprintf(stderr, self->engines); */
@@ -243,6 +247,8 @@ struct _HklGuiWindowPrivate {
 	HklLattice *reciprocal;
 };
 
+#define HKL_GUI_WINDOW_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), HKL_GUI_TYPE_WINDOW, HklGuiWindowPrivate))
+
 #define SPINBUTTON_VALUE_CHANGED_CB(name) hkl_gui_on_ ## name ## _value_changed_cb
 #define SPINBUTTON_VALUE_CHANGED_CB_DECL(name)				\
 	static void SPINBUTTON_VALUE_CHANGED_CB(name)(GtkSpinButton *spinbutton, gpointer data)	\
@@ -277,83 +283,28 @@ SPINBUTTON_VALUE_CHANGED_CB_DECL(spinbutton_gamma_min);
 SPINBUTTON_VALUE_CHANGED_CB_DECL(spinbutton_gamma_max);
 SPINBUTTON_VALUE_CHANGED_CB_DECL(spinbutton_gamma_star);
 
-static void hkl_gui_window_get_widgets_and_objects_from_ui (HklGuiWindow* self);
-static void hkl_gui_window_set_up_diffractometer_model (HklGuiWindow* self);
-static void hkl_gui_window_set_up_tree_view_reflections (HklGuiWindow* self);
-static void hkl_gui_window_set_up_tree_view_crystals (HklGuiWindow* self);
-static void hkl_gui_window_update_tree_view_crystals (HklGuiWindow* self);
-static void hkl_gui_window_set_up_pseudo_axes_frames (HklGuiWindow* self);
-static void hkl_gui_window_set_up_tree_view_axes (HklGuiWindow* self);
-static void hkl_gui_window_update_axes (HklGuiWindow* self);
-static void hkl_gui_window_set_up_tree_view_pseudo_axes (HklGuiWindow* self);
-static void hkl_gui_window_update_pseudo_axes (HklGuiWindow* self);
-static void hkl_gui_window_set_up_tree_view_solutions (HklGuiWindow* self);
-static void hkl_gui_window_update_solutions (HklGuiWindow* self);
-static void hkl_gui_window_finalize (GObject* obj);
-static void hkl_gui_window_set_up_info_bar(HklGuiWindow *self);
+/* static void hkl_gui_window_get_widgets_and_objects_from_ui (HklGuiWindow* self); */
+/* static void set_up_diffractometer_model (HklGuiWindow* self); */
+/* static void set_up_tree_view_reflections (HklGuiWindow* self); */
+/* static void set_up_tree_view_crystals (HklGuiWindow* self); */
+/* static void update_tree_view_crystals (HklGuiWindow* self); */
+/* static void set_up_pseudo_axes_frames (HklGuiWindow* self); */
+/* static void set_up_tree_view_axes (HklGuiWindow* self); */
+/* static void update_axes (HklGuiWindow* self); */
+/* static void set_up_tree_view_pseudo_axes (HklGuiWindow* self); */
+/* static void update_pseudo_axes (HklGuiWindow* self); */
+/* static void set_up_tree_view_solutions (HklGuiWindow* self); */
+/* static void update_solutions (HklGuiWindow* self); */
+/* static void finalize (GObject* obj); */
+/* static void set_up_info_bar(HklGuiWindow *self); */
 
 
-G_DEFINE_TYPE (HklGuiWindow, hkl_gui_window, G_TYPE_OBJECT);
 
-
-static void hkl_gui_window_class_init (HklGuiWindowClass * class)
-{
-	GObjectClass *gobject_class;
-
-	gobject_class = (GObjectClass *) class;
-
-	gobject_class->finalize = hkl_gui_window_finalize;
-
-	g_type_class_add_private (class, sizeof (HklGuiWindowPrivate));
-}
-
-
-static void hkl_gui_window_init (HklGuiWindow * self)
-{
-	HklGuiWindowPrivate *priv;
-
-	self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self,
-						  HKL_GUI_TYPE_WINDOW,
-						  HklGuiWindowPrivate);
-
-	priv = self->priv;
-	priv->diffractometer = NULL;
-
-	darray_init(priv->pseudo_frames);
-
-	priv->sample = hkl_sample_new ("test");
-	priv->reciprocal = hkl_lattice_new_default ();
-
-	hkl_gui_window_get_widgets_and_objects_from_ui (self);
-
-	hkl_gui_window_set_up_diffractometer_model (self);
-
-	//hkl_gui_window_set_up_tree_view_reflections (self);
-
-	//hkl_gui_window_set_up_tree_view_crystals (self);
-
-	//hkl_gui_window_update_tree_view_crystals (self);
-
-	//hkl_gui_window_update_source (self);
-
-	//hkl_gui_window_update_lattice (self);
-
-	//hkl_gui_window_update_lattice_parameters (self);
-
-	//hkl_gui_window_update_reciprocal_lattice (self);
-
-	//hkl_gui_window_update_UxUyUz (self);
-
-	//hkl_gui_window_update_UB (self);
-
-	//hkl_gui_window_connect_all_signals (self);
-}
-
-
-static gboolean _finalize_liststore_diffractometer(GtkTreeModel *model,
-						   GtkTreePath *path,
-						   GtkTreeIter *iter,
-						   gpointer data)
+static gboolean
+finalize_liststore_diffractometer(GtkTreeModel *model,
+				   GtkTreePath *path,
+				   GtkTreeIter *iter,
+				   gpointer data)
 {
 	struct diffractometer_t *diffractometer;
 
@@ -365,21 +316,23 @@ static gboolean _finalize_liststore_diffractometer(GtkTreeModel *model,
 	return FALSE;
 }
 
-static void hkl_gui_window_finalize (GObject* object)
+static void
+finalize (GObject* object)
 {
-	HklGuiWindow * self = HKL_GUI_WINDOW(object);
-	HklGuiWindowPrivate *priv = self->priv;
+	HklGuiWindowPrivate *priv =  HKL_GUI_WINDOW_GET_PRIVATE(object);
 
 	g_object_unref(priv->builder);
 
 	darray_free(priv->pseudo_frames);
 
 	gtk_tree_model_foreach(GTK_TREE_MODEL(priv->_liststore_diffractometer),
-			       _finalize_liststore_diffractometer,
+			       finalize_liststore_diffractometer,
 			       NULL);
 
 	G_OBJECT_CLASS (hkl_gui_window_parent_class)->finalize (object);
 }
+
+
 
 
 HklGuiWindow* hkl_gui_window_new (void)
@@ -390,10 +343,10 @@ HklGuiWindow* hkl_gui_window_new (void)
 
 #define get_object(builder, type, priv, name) priv->_ ## name = type(gtk_builder_get_object(builder, #name))
 
-static void hkl_gui_window_get_widgets_and_objects_from_ui (HklGuiWindow* self)
+static void
+hkl_gui_window_get_widgets_and_objects_from_ui (HklGuiWindow* self)
 {
-	HklGuiWindowPrivate *priv = self->priv;
-
+	HklGuiWindowPrivate *priv =  HKL_GUI_WINDOW_GET_PRIVATE(self);
 	GtkBuilder* builder;
 
 	g_return_if_fail (self != NULL);
@@ -508,27 +461,26 @@ static void hkl_gui_window_get_widgets_and_objects_from_ui (HklGuiWindow* self)
 	gtk_builder_connect_signals (builder, self);
 }
 
-
-static void hkl_gui_window_update_pseudo_axes_frames (HklGuiWindow* self)
+static void
+update_pseudo_axes_frames (HklGuiWindow* self)
 {
+	HklGuiWindowPrivate *priv =  HKL_GUI_WINDOW_GET_PRIVATE(self);
 	HklGuiEngine **engine;
 
 	g_return_if_fail (self != NULL);
 
-	darray_foreach(engine, self->priv->pseudo_frames){
+	darray_foreach(engine, priv->pseudo_frames){
 		hkl_gui_engine_update(*engine);
 	}
 }
 
-
-static void raise_error(HklGuiWindow *self, HklError **error)
+static void
+raise_error(HklGuiWindow *self, HklError **error)
 {
-	HklGuiWindowPrivate *priv;
+	HklGuiWindowPrivate *priv =  HKL_GUI_WINDOW_GET_PRIVATE(self);
 
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (error != NULL);
-
-	priv = self->priv;
 
 	/* show an error message */
 	gtk_label_set_text (GTK_LABEL (priv->info_message),
@@ -540,346 +492,19 @@ static void raise_error(HklGuiWindow *self, HklError **error)
 	hkl_error_clear(error);
 }
 
-
-static void clear_error(HklGuiWindow *self, HklError **error)
+static void
+clear_error(HklGuiWindow *self, HklError **error)
 {
-	HklGuiWindowPrivate *priv;
+	HklGuiWindowPrivate *priv =  HKL_GUI_WINDOW_GET_PRIVATE(self);
 
 	g_return_if_fail (self != NULL);
-
-	priv = self->priv;
 
 	gtk_widget_hide(GTK_WIDGET(priv->info_bar));
 }
 
-
-static gboolean hkl_engine_to_axes(HklGuiWindow *self, HklEngine *engine)
-{
-	HklGuiWindowPrivate *priv;
-	HklError *error = NULL;
-	gboolean res = TRUE;
-
-	g_return_val_if_fail (self != NULL, FALSE);
-	g_return_val_if_fail (engine != NULL, FALSE);
-
-	priv = self->priv;
-
-	if(hkl_engine_set(engine, &error)){
-		clear_error(self, &error);
-		hkl_engine_list_select_solution(priv->diffractometer->engines, 0);
-		hkl_engine_list_get(priv->diffractometer->engines);
-
-		hkl_gui_window_update_axes (self);
-		hkl_gui_window_update_pseudo_axes (self);
-		hkl_gui_window_update_pseudo_axes_frames (self);
-	}else{
-		raise_error(self, &error);
-		dump_diffractometer(priv->diffractometer);
-		res = FALSE;
-	}
-	hkl_gui_window_update_solutions (self);
-	return res;
-}
-
-
-static void hkl_gui_window_pseudo_axes_frame_changed_cb (HklGuiEngine *gui_engine, HklGuiWindow *self)
-{
-	HklEngine *engine;
-
-	g_return_if_fail (self != NULL);
-
-	g_object_get(G_OBJECT(gui_engine),
-		     "engine", &engine,
-		     NULL);
-
-	hkl_engine_to_axes(self, engine);
-}
-
-
-static void hkl_gui_window_set_up_pseudo_axes_frames (HklGuiWindow* self)
-{
-	HklGuiWindowPrivate *priv;
-	HklGuiEngine **pseudo;
-	GtkVBox* vbox2;
-	HklEngine **engine;
-	darray_engine *engines;
-
-	g_return_if_fail (self != NULL);
-
-	priv = self->priv;
-
-	darray_foreach (pseudo, priv->pseudo_frames){
-		gtk_container_remove(GTK_CONTAINER(priv->_vbox2),
-				     GTK_WIDGET (hkl_gui_engine_get_frame (*pseudo)));
-		g_object_unref(*pseudo);
-	}
-	darray_size (priv->pseudo_frames) = 0;
-
-	engines = hkl_engine_list_engines (priv->diffractometer->engines);
-	darray_foreach (engine, *engines){
-		HklGuiEngine *pseudo;
-
-		pseudo = hkl_gui_engine_new (*engine);
-		darray_append(priv->pseudo_frames, pseudo);
-		gtk_container_add (GTK_CONTAINER (priv->_vbox2),
-				   GTK_WIDGET (hkl_gui_engine_get_frame(pseudo)));
-
-		g_signal_connect_object (pseudo,
-					 "changed",
-					 G_CALLBACK(hkl_gui_window_pseudo_axes_frame_changed_cb),
-					 self, 0);
-	}
-
-	gtk_widget_show_all (GTK_WIDGET (priv->_vbox2));
-}
-
-
-static void hkl_gui_window_set_up_diffractometer_model (HklGuiWindow* self)
-{
-	unsigned int i, n;
-	HklFactory **factories;
-
-	g_return_if_fail (self != NULL);
-
-	factories = hkl_factory_get_all(&n);
-	for(i=0; i<n; ++i){
-		GtkTreeIter iter = {0};
-
-		gtk_list_store_append (self->priv->_liststore_diffractometer, &iter);
-		gtk_list_store_set (self->priv->_liststore_diffractometer,
-				    &iter,
-				    DIFFRACTOMETER_COL_NAME, hkl_factory_name(factories[i]),
-				    DIFFRACTOMETER_COL_FACTORY, factories[i],
-				    DIFFRACTOMETER_COL_DIFFRACTOMETER, NULL,
-				    -1);
-	}
-}
-
-
-void hkl_gui_window_combobox1_changed_cb(GtkComboBox *combobox, gpointer *user_data)
-{
-	HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
-	HklGuiWindowPrivate *priv = self->priv;
-	HklFactory *factory;
-	struct diffractometer_t *dif = NULL;
-
-	GtkTreeIter iter = {0};
-
-	if(gtk_combo_box_get_active_iter (combobox, &iter)){
-		gtk_tree_model_get(GTK_TREE_MODEL(priv->_liststore_diffractometer),
-				   &iter,
-				   DIFFRACTOMETER_COL_FACTORY, &factory,
-				   DIFFRACTOMETER_COL_DIFFRACTOMETER, &dif,
-				   -1);
-
-		if (!dif){
-			dif = create_diffractometer(factory);
-			gtk_list_store_set(priv->_liststore_diffractometer,
-					   &iter,
-					   DIFFRACTOMETER_COL_DIFFRACTOMETER, dif,
-					   -1);
-		}
-		printf("toto\n");
-	}
-	priv->diffractometer = dif;
-	/* TODO check if this is the right place for this */
-	hkl_engine_list_init(dif->engines, dif->geometry, dif->detector, priv->sample);
-
-	hkl_gui_window_set_up_pseudo_axes_frames(self);
-	hkl_gui_window_set_up_tree_view_axes(self);
-	//hkl_gui_window_set_up_tree_view_pseudo_axes_parameters(self);
-	hkl_gui_window_set_up_tree_view_pseudo_axes(self);
-
-	/* FIXME create the right solution Model Column */
-	/* this._solutionModelColumns = 0; */
-	hkl_gui_window_set_up_tree_view_solutions(self);
-	hkl_gui_window_set_up_info_bar(self);
-#if HKL3D
-	hkl_gui_window_set_up_3D(self);
-#endif
-}
-
-
-/* axis read cb */
-void hkl_gui_window_cellrendererspin1_edited_cb(GtkCellRendererText *renderer,
-						gchar *path,
-						gchar *new_text,
-						gpointer user_data)
-{
-	HklGuiWindow *self;
-	HklGuiWindowPrivate *priv;
-	GtkTreeIter iter = {0};
-	gdouble value = 0.0;
-	HklParameter* parameter = NULL;
-
-	g_return_if_fail (renderer != NULL);
-	g_return_if_fail (path != NULL);
-	g_return_if_fail (new_text != NULL);
-	g_return_if_fail (user_data != NULL);
-
-	self = user_data;
-	priv = self->priv;
-
-	gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(priv->_liststore_axis),
-					     &iter,
-					     path);
-	gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_axis), &iter,
-					   AXIS_COL_AXIS, &parameter,
-					   -1);
-
-	value = atof(new_text); /* TODO need to check for the right conversion */
-	hkl_parameter_value_unit_set (parameter, value, NULL);
-	hkl_geometry_axis_set(priv->diffractometer->geometry,
-			      parameter);
-
-	hkl_engine_list_get(priv->diffractometer->engines);
-
-	/* ok so set the model with the new value */
-	gtk_list_store_set (priv->_liststore_axis, &iter,
-			    AXIS_COL_READ, value,
-			    AXIS_COL_WRITE, value,
-			    -1);
-
-	hkl_gui_window_update_pseudo_axes (self);
-	hkl_gui_window_update_pseudo_axes_frames (self);
-}
-
-
-/* axis min cb */
-void hkl_gui_window_cellrendererspin3_edited_cb(GtkCellRendererText *renderer,
-						gchar *path,
-						gchar *new_text,
-						gpointer user_data)
-{
-	HklGuiWindow *self;
-	HklGuiWindowPrivate *priv;
-	GtkTreeIter iter = {0};
-	gdouble value = 0.0;
-	HklParameter* parameter = NULL;
-	gdouble shit, max;
-
-	g_return_if_fail (renderer != NULL);
-	g_return_if_fail (path != NULL);
-	g_return_if_fail (new_text != NULL);
-	g_return_if_fail (user_data != NULL);
-
-	self = user_data;
-	priv = self->priv;
-
-	gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(priv->_liststore_axis),
-					     &iter,
-					     path);
-	gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_axis), &iter,
-					   AXIS_COL_AXIS, &parameter,
-					   -1);
-
-	value = atof(new_text); /* TODO need to check for the right conversion */
-	hkl_parameter_min_max_unit_get (parameter, &shit, &max);
-	hkl_parameter_min_max_unit_set (parameter, value, max);
-
-	gtk_list_store_set (priv->_liststore_axis, &iter,
-			    AXIS_COL_MIN, value,
-			    -1);
-
-	hkl_gui_window_update_pseudo_axes (self);
-}
-
-
-/* axis max cb */
-void hkl_gui_window_cellrendererspin4_edited_cb(GtkCellRendererText *renderer,
-						gchar *path,
-						gchar *new_text,
-						gpointer user_data)
-{
-	HklGuiWindow *self;
-	HklGuiWindowPrivate *priv;
-	GtkTreeIter iter = {0};
-	gdouble value = 0.0;
-	HklParameter* parameter = NULL;
-	gdouble shit, min;
-
-	g_return_if_fail (renderer != NULL);
-	g_return_if_fail (path != NULL);
-	g_return_if_fail (new_text != NULL);
-	g_return_if_fail (user_data != NULL);
-
-	self = user_data;
-	priv = self->priv;
-
-	gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(priv->_liststore_axis),
-					     &iter,
-					     path);
-	gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_axis), &iter,
-					   AXIS_COL_AXIS, &parameter,
-					   -1);
-
-	value = atof(new_text); /* TODO need to check for the right conversion */
-	hkl_parameter_min_max_unit_get (parameter, &min, &shit);
-	hkl_parameter_min_max_unit_set (parameter, min, value);
-
-	gtk_list_store_set (priv->_liststore_axis, &iter,
-			    AXIS_COL_MAX, value,
-			    -1);
-
-	hkl_gui_window_update_pseudo_axes (self);
-}
-
-
-/* pseudo axis write */
-void hkl_gui_window_cellrenderertext5_edited_cb(GtkCellRendererText *renderer,
-						gchar *path,
-						gchar *new_text,
-						gpointer user_data)
-{
-	HklGuiWindow *self;
-	HklGuiWindowPrivate *priv;
-	GtkTreeIter iter = {0};
-	gdouble value = 0.0;
-	gdouble old_value;
-	HklParameter* parameter = NULL;
-	HklEngine *engine = NULL;
-	HklError *error = NULL;
-
-	g_return_if_fail (renderer != NULL);
-	g_return_if_fail (path != NULL);
-	g_return_if_fail (new_text != NULL);
-	g_return_if_fail (user_data != NULL);
-
-	self = user_data;
-	priv = self->priv;
-
-	gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(priv->_liststore_pseudo_axes),
-					     &iter,
-					     path);
-	gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_pseudo_axes), &iter,
-			    PSEUDO_AXIS_COL_PARAMETER, &parameter,
-			    PSEUDO_AXIS_COL_ENGINE, &engine,
-			    -1);
-
-	value = atof(new_text); /* TODO need to check for the right conversion */
-	old_value = hkl_parameter_value_unit_get(parameter);
-
-	g_assert(error != NULL || error == NULL);
-	hkl_parameter_value_unit_set (parameter, value, &error);
-	if(error != NULL){
-		raise_error(self, &error);
-	}
-
-	if (hkl_engine_to_axes(self, engine)){
-		gtk_list_store_set (priv->_liststore_pseudo_axes,
-				    &iter,
-				    PSEUDO_AXIS_COL_WRITE, value,
-				    -1);
-	}else{
-		hkl_parameter_value_unit_set(parameter, old_value, NULL);
-	}
-}
-
-
-static gboolean _update_axis (GtkTreeModel *model,
-			      GtkTreePath *path,
-			      GtkTreeIter *iter,
-			      gpointer data)
+static gboolean
+_update_axis (GtkTreeModel *model, GtkTreePath *path,
+	      GtkTreeIter *iter, gpointer data)
 {
 	HklParameter *parameter;
 	gdouble value, min, max;
@@ -900,57 +525,22 @@ static gboolean _update_axis (GtkTreeModel *model,
 	return FALSE;
 }
 
-
-static void hkl_gui_window_update_axes (HklGuiWindow* self)
+static void
+update_axes (HklGuiWindow* self)
 {
-	HklGuiWindowPrivate *priv;
-	gboolean valid = FALSE;
+	HklGuiWindowPrivate *priv =  HKL_GUI_WINDOW_GET_PRIVATE(self);
 	GtkTreeIter iter = {0};
 
 	g_return_if_fail (self != NULL);
-
-	priv = self->priv;
 
 	gtk_tree_model_foreach(GTK_TREE_MODEL(priv->_liststore_axis),
 			       _update_axis,
 			       self);
 }
 
-
-static void hkl_gui_window_set_up_tree_view_axes (HklGuiWindow* self)
-{
-	HklGuiWindowPrivate *priv;
-	HklParameter **parameter;
-	const darray_parameter *parameters;
-	GtkCellRenderer* renderer = NULL;
-	GtkTreeViewColumn* column = NULL;
-	GList* columns;
-
-	g_return_if_fail (self != NULL);
-
-	priv = self->priv;
-
-	gtk_list_store_clear (priv->_liststore_axis);
-
-	parameters = hkl_geometry_axes_get(priv->diffractometer->geometry);
-	darray_foreach (parameter, *parameters){
-		GtkTreeIter iter = {0};
-
-		gtk_list_store_append (priv->_liststore_axis, &iter);
-		gtk_list_store_set (priv->_liststore_axis, &iter,
-				    AXIS_COL_AXIS, *parameter,
-				    AXIS_COL_NAME, hkl_parameter_name_get(*parameter),
-				    -1);
-	}
-
-	hkl_gui_window_update_axes (self);
-}
-
-
-static gboolean _update_pseudo_axes (GtkTreeModel *model,
-				     GtkTreePath *path,
-				     GtkTreeIter *iter,
-				     gpointer data)
+static gboolean
+_update_pseudo_axes (GtkTreeModel *model, GtkTreePath *path,
+		     GtkTreeIter *iter, gpointer data)
 {
 	HklParameter *parameter;
 	gdouble value, min, max;
@@ -969,102 +559,27 @@ static gboolean _update_pseudo_axes (GtkTreeModel *model,
 	return FALSE;
 }
 
-
-static void hkl_gui_window_update_pseudo_axes (HklGuiWindow* self)
+static void
+update_pseudo_axes (HklGuiWindow* self)
 {
-	HklGuiWindowPrivate *priv;
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
 
 	g_return_if_fail (self != NULL);
-
-	priv = self->priv;
 
 	gtk_tree_model_foreach(GTK_TREE_MODEL(priv->_liststore_pseudo_axes),
 			       _update_pseudo_axes,
 			       self);
 }
 
-
-static void hkl_gui_window_set_up_tree_view_pseudo_axes (HklGuiWindow* self)
+static void
+update_solutions (HklGuiWindow* self)
 {
-	HklGuiWindowPrivate *priv;
-	HklParameter **parameter;
-	const darray_parameter *parameters;
-	HklEngine **engine;
-	const darray_engine *engines;
-
-	GtkCellRendererText* renderer = NULL;
-	GtkTreeViewColumn* column = NULL;
-	GList* columns;
-
-	g_return_if_fail (self != NULL);
-
-	priv = self->priv;
-
-	gtk_list_store_clear(priv->_liststore_pseudo_axes);
-
-	engines = hkl_engine_list_engines(priv->diffractometer->engines);
-	darray_foreach(engine, *engines){
-		parameters = hkl_engine_pseudo_axes(*engine);
-		darray_foreach(parameter, *parameters){
-			GtkTreeIter iter = {0};
-
-			gtk_list_store_append (priv->_liststore_pseudo_axes, &iter);
-			gtk_list_store_set (priv->_liststore_pseudo_axes, &iter,
-					    PSEUDO_AXIS_COL_PARAMETER, *parameter,
-					    PSEUDO_AXIS_COL_ENGINE, *engine,
-					    PSEUDO_AXIS_COL_NAME, hkl_parameter_name_get(*parameter),
-					    -1);
-		}
-	}
-
-	hkl_gui_window_update_pseudo_axes (self);
-}
-
-
-void hkl_gui_window_treeview_solutions_cursor_changed_cb (GtkTreeView *tree_view,
-							  gpointer     user_data)
-{
-	HklGuiWindow* self;
-	HklGuiWindowPrivate *priv;
-
-	GtkTreePath* path = NULL;
-	GtkTreeViewColumn* focus_column = NULL;
-	GtkTreeIter iter = {0};
-	gsize index = 0UL;
-
-	g_return_if_fail (tree_view != NULL);
-	g_return_if_fail (user_data != NULL);
-
-	self = user_data;
-	priv = self->priv;
-
-	gtk_tree_view_get_cursor (tree_view, &path, &focus_column);
-	gtk_tree_model_get_iter (GTK_TREE_MODEL(priv->_liststore_solutions), &iter, path);
-	gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_solutions), &iter,
-			    SOLUTION_COL_INDEX, &index,
-			    -1);
-
-	hkl_engine_list_select_solution (priv->diffractometer->engines, index);
-	hkl_engine_list_get (priv->diffractometer->engines);
-
-	hkl_gui_window_update_axes (self);
-	hkl_gui_window_update_pseudo_axes (self);
-	hkl_gui_window_update_pseudo_axes_frames (self);
-
-	gtk_tree_path_free (path);
-}
-
-
-static void hkl_gui_window_update_solutions (HklGuiWindow* self)
-{
-	HklGuiWindowPrivate *priv;
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
 	const HklGeometryList *geometries;
 	const darray_item *items;
 	GtkTreeIter iter = {0};
 
 	g_return_if_fail (self != NULL);
-
-	priv = self->priv;
 
 	geometries = hkl_engine_list_geometries(priv->diffractometer->engines);
 
@@ -1109,26 +624,182 @@ static void hkl_gui_window_update_solutions (HklGuiWindow* self)
 	}
 }
 
-
-static void _delete_column(gpointer data,
-			    gpointer user_data)
+static gboolean
+hkl_engine_to_axes(HklGuiWindow *self, HklEngine *engine)
 {
-	GtkTreeViewColumn *column;
-	GtkTreeView *treeview;
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
+	HklError *error = NULL;
+	gboolean res = TRUE;
 
-	g_return_if_fail (data != NULL);
-	g_return_if_fail (user_data != NULL);
+	g_return_val_if_fail (self != NULL, FALSE);
+	g_return_val_if_fail (engine != NULL, FALSE);
 
-	column = data;
-	treeview = user_data;
+	if(hkl_engine_set(engine, &error)){
+		clear_error(self, &error);
+		hkl_engine_list_select_solution(priv->diffractometer->engines, 0);
+		hkl_engine_list_get(priv->diffractometer->engines);
 
-	gtk_tree_view_remove_column (treeview, column);
+		update_axes (self);
+		update_pseudo_axes (self);
+		update_pseudo_axes_frames (self);
+	}else{
+		raise_error(self, &error);
+		dump_diffractometer(priv->diffractometer);
+		res = FALSE;
+	}
+	update_solutions (self);
+	return res;
+}
+
+static void
+pseudo_axes_frame_changed_cb (HklGuiEngine *gui_engine, HklGuiWindow *self)
+{
+	HklEngine *engine;
+
+	g_return_if_fail (self != NULL);
+
+	g_object_get(G_OBJECT(gui_engine),
+		     "engine", &engine,
+		     NULL);
+
+	hkl_engine_to_axes(self, engine);
+}
+
+static void
+set_up_pseudo_axes_frames (HklGuiWindow* self)
+{
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
+	HklGuiEngine **pseudo;
+	GtkVBox* vbox2;
+	HklEngine **engine;
+	darray_engine *engines;
+
+	g_return_if_fail (self != NULL);
+
+	darray_foreach (pseudo, priv->pseudo_frames){
+		gtk_container_remove(GTK_CONTAINER(priv->_vbox2),
+				     GTK_WIDGET (hkl_gui_engine_get_frame (*pseudo)));
+		g_object_unref(*pseudo);
+	}
+	darray_size (priv->pseudo_frames) = 0;
+
+	engines = hkl_engine_list_engines (priv->diffractometer->engines);
+	darray_foreach (engine, *engines){
+		HklGuiEngine *pseudo;
+
+		pseudo = hkl_gui_engine_new (*engine);
+		darray_append(priv->pseudo_frames, pseudo);
+		gtk_container_add (GTK_CONTAINER (priv->_vbox2),
+				   GTK_WIDGET (hkl_gui_engine_get_frame(pseudo)));
+
+		g_signal_connect_object (pseudo,
+					 "changed",
+					 G_CALLBACK(pseudo_axes_frame_changed_cb),
+					 self, 0);
+	}
+
+	gtk_widget_show_all (GTK_WIDGET (priv->_vbox2));
 }
 
 
-static void hkl_gui_window_set_up_tree_view_solutions (HklGuiWindow* self)
+static void
+set_up_diffractometer_model (HklGuiWindow* self)
 {
-	HklGuiWindowPrivate *priv;
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
+	unsigned int i, n;
+	HklFactory **factories;
+
+	g_return_if_fail (self != NULL);
+
+	factories = hkl_factory_get_all(&n);
+	for(i=0; i<n; ++i){
+		GtkTreeIter iter = {0};
+
+		gtk_list_store_append (priv->_liststore_diffractometer, &iter);
+		gtk_list_store_set (priv->_liststore_diffractometer,
+				    &iter,
+				    DIFFRACTOMETER_COL_NAME, hkl_factory_name(factories[i]),
+				    DIFFRACTOMETER_COL_FACTORY, factories[i],
+				    DIFFRACTOMETER_COL_DIFFRACTOMETER, NULL,
+				    -1);
+	}
+}
+
+static void
+set_up_tree_view_axes (HklGuiWindow* self)
+{
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
+	HklParameter **parameter;
+	const darray_parameter *parameters;
+	GtkCellRenderer* renderer = NULL;
+	GtkTreeViewColumn* column = NULL;
+	GList* columns;
+
+	g_return_if_fail (self != NULL);
+
+	gtk_list_store_clear (priv->_liststore_axis);
+
+	parameters = hkl_geometry_axes_get(priv->diffractometer->geometry);
+	darray_foreach (parameter, *parameters){
+		GtkTreeIter iter = {0};
+
+		gtk_list_store_append (priv->_liststore_axis, &iter);
+		gtk_list_store_set (priv->_liststore_axis, &iter,
+				    AXIS_COL_AXIS, *parameter,
+				    AXIS_COL_NAME, hkl_parameter_name_get(*parameter),
+				    -1);
+	}
+
+	update_axes (self);
+}
+
+static void
+set_up_tree_view_pseudo_axes (HklGuiWindow* self)
+{
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
+	HklParameter **parameter;
+	const darray_parameter *parameters;
+	HklEngine **engine;
+	const darray_engine *engines;
+
+	GtkCellRendererText* renderer = NULL;
+	GtkTreeViewColumn* column = NULL;
+	GList* columns;
+
+	g_return_if_fail (self != NULL);
+
+	gtk_list_store_clear(priv->_liststore_pseudo_axes);
+
+	engines = hkl_engine_list_engines(priv->diffractometer->engines);
+	darray_foreach(engine, *engines){
+		parameters = hkl_engine_pseudo_axes(*engine);
+		darray_foreach(parameter, *parameters){
+			GtkTreeIter iter = {0};
+
+			gtk_list_store_append (priv->_liststore_pseudo_axes, &iter);
+			gtk_list_store_set (priv->_liststore_pseudo_axes, &iter,
+					    PSEUDO_AXIS_COL_PARAMETER, *parameter,
+					    PSEUDO_AXIS_COL_ENGINE, *engine,
+					    PSEUDO_AXIS_COL_NAME, hkl_parameter_name_get(*parameter),
+					    -1);
+		}
+	}
+
+	update_pseudo_axes (self);
+}
+
+static void
+_delete_column(gpointer data,
+	       gpointer user_data)
+{
+	gtk_tree_view_remove_column (GTK_TREE_VIEW(user_data),
+				     GTK_TREE_VIEW_COLUMN(data));
+}
+
+static void
+set_up_tree_view_solutions (HklGuiWindow* self)
+{
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
 	const darray_parameter *parameters;
 	int i;
 	GtkCellRenderer* renderer = NULL;
@@ -1138,8 +809,6 @@ static void hkl_gui_window_set_up_tree_view_solutions (HklGuiWindow* self)
 	gint n_columns;
 
 	g_return_if_fail (self != NULL);
-
-	priv = self->priv;
 
 	parameters = hkl_geometry_axes_get(priv->diffractometer->geometry);
 
@@ -1185,18 +854,16 @@ static void hkl_gui_window_set_up_tree_view_solutions (HklGuiWindow* self)
 	gtk_tree_view_set_model (priv->_treeview_solutions,
 				 GTK_TREE_MODEL(priv->_liststore_solutions));
 
-	hkl_gui_window_update_solutions (self);
+	update_solutions (self);
 }
 
-
-void hkl_gui_window_set_up_info_bar(HklGuiWindow *self)
+void
+set_up_info_bar(HklGuiWindow *self)
 {
-	HklGuiWindowPrivate *priv;
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
 	GtkWidget *content_area;
 
 	g_return_if_fail (self != NULL);
-
-	priv = self->priv;
 
 	/* set up info bar until we can use glade for this purpose or
 	 * switch to gtk3 */
@@ -1221,6 +888,251 @@ void hkl_gui_window_set_up_info_bar(HklGuiWindow *self)
 			   GTK_WIDGET(priv->info_bar),
 			   TRUE, TRUE, 0);
 }
+
+void
+combobox1_changed_cb(GtkComboBox *combobox, gpointer *user_data)
+{
+	HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
+	HklFactory *factory;
+	struct diffractometer_t *dif = NULL;
+
+	GtkTreeIter iter = {0};
+
+	if(gtk_combo_box_get_active_iter (combobox, &iter)){
+		gtk_tree_model_get(GTK_TREE_MODEL(priv->_liststore_diffractometer),
+				   &iter,
+				   DIFFRACTOMETER_COL_FACTORY, &factory,
+				   DIFFRACTOMETER_COL_DIFFRACTOMETER, &dif,
+				   -1);
+
+		if (!dif){
+			dif = create_diffractometer(factory);
+			gtk_list_store_set(priv->_liststore_diffractometer,
+					   &iter,
+					   DIFFRACTOMETER_COL_DIFFRACTOMETER, dif,
+					   -1);
+		}
+		printf("toto\n");
+	}
+	priv->diffractometer = dif;
+	/* TODO check if this is the right place for this */
+	hkl_engine_list_init(dif->engines, dif->geometry, dif->detector, priv->sample);
+
+	set_up_pseudo_axes_frames(self);
+	set_up_tree_view_axes(self);
+	//hkl_gui_window_set_up_tree_view_pseudo_axes_parameters(self);
+	set_up_tree_view_pseudo_axes(self);
+
+	/* FIXME create the right solution Model Column */
+	/* this._solutionModelColumns = 0; */
+	set_up_tree_view_solutions(self);
+	set_up_info_bar(self);
+#if HKL3D
+	set_up_3D(self);
+#endif
+}
+
+
+/* axis read cb */
+void
+hkl_gui_window_cellrendererspin1_edited_cb(GtkCellRendererText *renderer,
+					   gchar *path,
+					   gchar *new_text,
+					   gpointer user_data)
+{
+	HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
+	GtkTreeIter iter = {0};
+	gdouble value = 0.0;
+	HklParameter* parameter = NULL;
+
+	g_return_if_fail (renderer != NULL);
+	g_return_if_fail (path != NULL);
+	g_return_if_fail (new_text != NULL);
+	g_return_if_fail (user_data != NULL);
+
+	gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(priv->_liststore_axis),
+					     &iter,
+					     path);
+	gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_axis), &iter,
+					   AXIS_COL_AXIS, &parameter,
+					   -1);
+
+	value = atof(new_text); /* TODO need to check for the right conversion */
+	hkl_parameter_value_unit_set (parameter, value, NULL);
+	hkl_geometry_axis_set(priv->diffractometer->geometry,
+			      parameter);
+
+	hkl_engine_list_get(priv->diffractometer->engines);
+
+	/* ok so set the model with the new value */
+	gtk_list_store_set (priv->_liststore_axis, &iter,
+			    AXIS_COL_READ, value,
+			    AXIS_COL_WRITE, value,
+			    -1);
+
+	update_pseudo_axes (self);
+	update_pseudo_axes_frames (self);
+}
+
+
+/* axis min cb */
+void
+hkl_gui_window_cellrendererspin3_edited_cb(GtkCellRendererText *renderer,
+					   gchar *path,
+					   gchar *new_text,
+					   gpointer user_data)
+{
+	HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
+	GtkTreeIter iter = {0};
+	gdouble value = 0.0;
+	HklParameter* parameter = NULL;
+	gdouble shit, max;
+
+	g_return_if_fail (renderer != NULL);
+	g_return_if_fail (path != NULL);
+	g_return_if_fail (new_text != NULL);
+	g_return_if_fail (user_data != NULL);
+
+	gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(priv->_liststore_axis),
+					     &iter,
+					     path);
+	gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_axis), &iter,
+					   AXIS_COL_AXIS, &parameter,
+					   -1);
+
+	value = atof(new_text); /* TODO need to check for the right conversion */
+	hkl_parameter_min_max_unit_get (parameter, &shit, &max);
+	hkl_parameter_min_max_unit_set (parameter, value, max);
+
+	gtk_list_store_set (priv->_liststore_axis, &iter,
+			    AXIS_COL_MIN, value,
+			    -1);
+
+	update_pseudo_axes (self);
+}
+
+
+/* axis max cb */
+void
+hkl_gui_window_cellrendererspin4_edited_cb(GtkCellRendererText *renderer,
+					   gchar *path,
+					   gchar *new_text,
+					   gpointer user_data)
+{
+	HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
+	GtkTreeIter iter = {0};
+	gdouble value = 0.0;
+	HklParameter* parameter = NULL;
+	gdouble shit, min;
+
+	g_return_if_fail (renderer != NULL);
+	g_return_if_fail (path != NULL);
+	g_return_if_fail (new_text != NULL);
+	g_return_if_fail (user_data != NULL);
+
+	gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(priv->_liststore_axis),
+					     &iter,
+					     path);
+	gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_axis), &iter,
+					   AXIS_COL_AXIS, &parameter,
+					   -1);
+
+	value = atof(new_text); /* TODO need to check for the right conversion */
+	hkl_parameter_min_max_unit_get (parameter, &min, &shit);
+	hkl_parameter_min_max_unit_set (parameter, min, value);
+
+	gtk_list_store_set (priv->_liststore_axis, &iter,
+			    AXIS_COL_MAX, value,
+			    -1);
+
+	update_pseudo_axes (self);
+}
+
+
+/* pseudo axis write */
+void
+hkl_gui_window_cellrenderertext5_edited_cb(GtkCellRendererText *renderer,
+					   gchar *path,
+					   gchar *new_text,
+					   gpointer user_data)
+{
+	HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
+	GtkTreeIter iter = {0};
+	gdouble value = 0.0;
+	gdouble old_value;
+	HklParameter* parameter = NULL;
+	HklEngine *engine = NULL;
+	HklError *error = NULL;
+
+	g_return_if_fail (renderer != NULL);
+	g_return_if_fail (path != NULL);
+	g_return_if_fail (new_text != NULL);
+	g_return_if_fail (user_data != NULL);
+
+	gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(priv->_liststore_pseudo_axes),
+					     &iter,
+					     path);
+	gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_pseudo_axes), &iter,
+			    PSEUDO_AXIS_COL_PARAMETER, &parameter,
+			    PSEUDO_AXIS_COL_ENGINE, &engine,
+			    -1);
+
+	value = atof(new_text); /* TODO need to check for the right conversion */
+	old_value = hkl_parameter_value_unit_get(parameter);
+
+	g_assert(error != NULL || error == NULL);
+	hkl_parameter_value_unit_set (parameter, value, &error);
+	if(error != NULL){
+		raise_error(self, &error);
+	}
+
+	if (hkl_engine_to_axes(self, engine)){
+		gtk_list_store_set (priv->_liststore_pseudo_axes,
+				    &iter,
+				    PSEUDO_AXIS_COL_WRITE, value,
+				    -1);
+	}else{
+		hkl_parameter_value_unit_set(parameter, old_value, NULL);
+	}
+}
+
+
+void
+hkl_gui_window_treeview_solutions_cursor_changed_cb (GtkTreeView *tree_view,
+						     gpointer     user_data)
+{
+	HklGuiWindow* self = HKL_GUI_WINDOW(user_data);
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
+
+	GtkTreePath* path = NULL;
+	GtkTreeViewColumn* focus_column = NULL;
+	GtkTreeIter iter = {0};
+	gsize index = 0UL;
+
+	g_return_if_fail (tree_view != NULL);
+	g_return_if_fail (user_data != NULL);
+
+	gtk_tree_view_get_cursor (tree_view, &path, &focus_column);
+	gtk_tree_model_get_iter (GTK_TREE_MODEL(priv->_liststore_solutions), &iter, path);
+	gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_solutions), &iter,
+			    SOLUTION_COL_INDEX, &index,
+			    -1);
+
+	hkl_engine_list_select_solution (priv->diffractometer->engines, index);
+	hkl_engine_list_get (priv->diffractometer->engines);
+
+	update_axes (self);
+	update_pseudo_axes (self);
+	update_pseudo_axes_frames (self);
+
+	gtk_tree_path_free (path);
+}
+
 
 /*
 
@@ -7177,6 +7089,53 @@ void hkl_gui_window_on_combobox1_changed (HklGuiWindow* self) {
 
 */
 
+static void
+hkl_gui_window_class_init (HklGuiWindowClass *class)
+{
+	GObjectClass *gobject_class = G_OBJECT_CLASS (class);
+
+	g_type_class_add_private (class, sizeof (HklGuiWindowPrivate));
+
+	/* virtual method */
+	gobject_class->finalize = finalize;
+}
+
+
+static void hkl_gui_window_init (HklGuiWindow * self)
+{
+	HklGuiWindowPrivate *priv =  HKL_GUI_WINDOW_GET_PRIVATE(self);
+
+	priv->diffractometer = NULL;
+
+	darray_init(priv->pseudo_frames);
+
+	priv->sample = hkl_sample_new ("test");
+	priv->reciprocal = hkl_lattice_new_default ();
+
+	hkl_gui_window_get_widgets_and_objects_from_ui (self);
+
+	set_up_diffractometer_model (self);
+
+	//set_up_tree_view_reflections (self);
+
+	//hkl_gui_window_set_up_tree_view_crystals (self);
+
+	//hkl_gui_window_update_tree_view_crystals (self);
+
+	//hkl_gui_window_update_source (self);
+
+	//hkl_gui_window_update_lattice (self);
+
+	//hkl_gui_window_update_lattice_parameters (self);
+
+	//hkl_gui_window_update_reciprocal_lattice (self);
+
+	//hkl_gui_window_update_UxUyUz (self);
+
+	//hkl_gui_window_update_UB (self);
+
+	//hkl_gui_window_connect_all_signals (self);
+}
 
 int main (int argc, char ** argv)
 {
