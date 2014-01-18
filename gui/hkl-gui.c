@@ -33,7 +33,6 @@
 #include <math.h>
 #include <stdio.h>
 
-
 #define HKL_GUI_TYPE_WINDOW (hkl_gui_window_get_type ())
 #define HKL_GUI_WINDOW(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), HKL_GUI_TYPE_WINDOW, HklGuiWindow))
 #define HKL_GUI_WINDOW_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), HKL_GUI_TYPE_WINDOW, HklGuiWindowClass))
@@ -49,6 +48,7 @@ typedef enum  {
 	REFLECTION_COL_K,
 	REFLECTION_COL_L,
 	REFLECTION_COL_FLAG,
+	REFLECTION_COL_REFLECTION,
 	REFLECTION_COL_N_COLUMNS
 } ReflectionCol;
 
@@ -235,6 +235,7 @@ struct _HklGuiWindowPrivate {
 	GtkListStore* _liststore_axis;
 	GtkListStore* _liststore_pseudo_axes;
 	GtkListStore* _liststore_solutions;
+	GtkListStore* _liststore_reflections;
 
 	GtkListStore* store_samples;
 	GtkInfoBar *info_bar;
@@ -303,6 +304,7 @@ hkl_gui_window_get_widgets_and_objects_from_ui (HklGuiWindow* self)
 	get_object(builder, GTK_LIST_STORE, priv, liststore_diffractometer);
 	get_object(builder, GTK_LIST_STORE, priv, liststore_axis);
 	get_object(builder, GTK_LIST_STORE, priv, liststore_pseudo_axes);
+	get_object(builder, GTK_LIST_STORE, priv, liststore_reflections);
 
 	get_object(builder, GTK_LABEL, priv, label_UB11);
 	get_object(builder, GTK_LABEL, priv, label_UB12);
@@ -762,7 +764,6 @@ set_up_tree_view_solutions (HklGuiWindow* self)
 	/* prepare types for the liststore */
 	types = g_new0 (GType, n_columns);
 
-
 	/* first remove all the columns */
 	columns = gtk_tree_view_get_columns (priv->_treeview_solutions);
 	g_list_foreach(columns, _delete_column, priv->_treeview_solutions);
@@ -835,7 +836,7 @@ set_up_info_bar(HklGuiWindow *self)
 }
 
 void
-combobox1_changed_cb(GtkComboBox *combobox, gpointer *user_data)
+hkl_gui_window_combobox1_changed_cb(GtkComboBox *combobox, gpointer *user_data)
 {
 	HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
 	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
@@ -1078,6 +1079,141 @@ hkl_gui_window_treeview_solutions_cursor_changed_cb (GtkTreeView *tree_view,
 	gtk_tree_path_free (path);
 }
 
+/* reflection h */
+void
+hkl_gui_window_cellrenderertext7_edited_cb(GtkCellRendererText* _sender, const gchar* path,
+					   const gchar* new_text, gpointer self)
+{
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
+
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (path != NULL);
+	g_return_if_fail (new_text != NULL);
+
+	if (priv->sample){
+		gdouble h = 0.0;
+		gdouble k = 0.0;
+		gdouble l = 0.0;
+		HklSampleReflection* reflection = NULL;
+		GtkTreeIter iter = {0};
+
+		gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(priv->_liststore_reflections),
+						     &iter, path);
+		gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_reflections),
+				    &iter,
+				    REFLECTION_COL_REFLECTION, &reflection,
+				    -1);
+
+		hkl_sample_reflection_hkl_get (reflection, &h, &k, &l);
+		h = atof(new_text);
+		hkl_sample_reflection_hkl_set (reflection, h, k, l);
+		gtk_list_store_set (priv->_liststore_reflections,
+				    &iter,
+				    REFLECTION_COL_H, h,
+				    -1);
+	}
+}
+
+/* reflection k */
+void
+hkl_gui_window_cellrenderertext8_edited_cb (GtkCellRendererText* _sender, const gchar* path,
+					    const gchar* new_text, gpointer self)
+{
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
+
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (path != NULL);
+	g_return_if_fail (new_text != NULL);
+
+	if (priv->sample){
+		gdouble h = 0.0;
+		gdouble k = 0.0;
+		gdouble l = 0.0;
+		HklSampleReflection* reflection = NULL;
+		GtkTreeIter iter = {0};
+
+		gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(priv->_liststore_reflections),
+						     &iter, path);
+		gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_reflections),
+				    &iter,
+				    REFLECTION_COL_REFLECTION, &reflection,
+				    -1);
+
+		hkl_sample_reflection_hkl_get (reflection, &h, &k, &l);
+		k = atof(new_text);
+		hkl_sample_reflection_hkl_set (reflection, h, k, l);
+		gtk_list_store_set (priv->_liststore_reflections,
+				    &iter,
+				    REFLECTION_COL_K, k,
+				    -1);
+	}
+}
+
+/* reflection l */
+void
+hkl_gui_window_cellrenderertext9_edited_cb (GtkCellRendererText* _sender, const gchar* path,
+					    const gchar* new_text, gpointer self)
+{
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
+
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (path != NULL);
+	g_return_if_fail (new_text != NULL);
+
+	if (priv->sample){
+		gdouble h = 0.0;
+		gdouble k = 0.0;
+		gdouble l = 0.0;
+		HklSampleReflection* reflection = NULL;
+		GtkTreeIter iter = {0};
+
+		gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(priv->_liststore_reflections),
+						     &iter, path);
+		gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_reflections),
+				    &iter,
+				    REFLECTION_COL_REFLECTION, &reflection,
+				    -1);
+
+		hkl_sample_reflection_hkl_get (reflection, &h, &k, &l);
+		l = atof(new_text);
+		hkl_sample_reflection_hkl_set (reflection, h, k, l);
+		gtk_list_store_set (priv->_liststore_reflections,
+				    &iter,
+				    REFLECTION_COL_L, l,
+				    -1);
+	}
+}
+
+/* reflection flag */
+void
+hkl_gui_window_cellrenderertoggle1_toggled_cb (GtkCellRendererToggle* renderer, const gchar* path,
+					       gpointer self)
+{
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
+
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (path != NULL);
+
+	if (priv->sample){
+		gboolean flag;
+		HklSampleReflection* reflection = NULL;
+		GtkTreeIter iter = {0};
+
+		gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(priv->_liststore_reflections),
+						     &iter, path);
+		gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_reflections),
+				    &iter,
+				    REFLECTION_COL_REFLECTION, &reflection,
+				    -1);
+
+		flag = gtk_cell_renderer_toggle_get_active(renderer);
+		hkl_sample_reflection_flag_set (reflection, flag);
+		gtk_list_store_set (priv->_liststore_reflections,
+				    &iter,
+				    REFLECTION_COL_FLAG, flag,
+				    -1);
+	}
+}
 
 /*
 
@@ -1621,268 +1757,6 @@ static void _hkl_gui_window_on_tree_view1_cursor_changed_gtk_tree_view_cursor_ch
 
 
 
-static void _hkl_gui_window_on_cell_tree_view_reflections_h_edited_gtk_cell_renderer_text_edited (GtkCellRendererText* _sender, const gchar* path, const gchar* new_text, gpointer self) {
-
-	hkl_gui_window_on_cell_tree_view_reflections_h_edited (path, new_text, self);
-
-}
-
-
-static void _hkl_gui_window_on_cell_tree_view_reflections_k_edited_gtk_cell_renderer_text_edited (GtkCellRendererText* _sender, const gchar* path, const gchar* new_text, gpointer self) {
-
-	hkl_gui_window_on_cell_tree_view_reflections_k_edited (path, new_text, self);
-
-}
-
-
-static void _hkl_gui_window_on_cell_tree_view_reflections_l_edited_gtk_cell_renderer_text_edited (GtkCellRendererText* _sender, const gchar* path, const gchar* new_text, gpointer self) {
-
-	hkl_gui_window_on_cell_tree_view_reflections_l_edited (path, new_text, self);
-
-}
-
-
-static void _hkl_gui_window_on_cell_tree_view_reflections_flag_toggled_gtk_cell_renderer_toggle_toggled (GtkCellRendererToggle* _sender, const gchar* path, gpointer self) {
-
-	hkl_gui_window_on_cell_tree_view_reflections_flag_toggled (path, self);
-
-}
-
-
-static void hkl_gui_window_set_up_tree_view_reflections (HklGuiWindow* self) {
-	GtkTreeViewColumn* column = NULL;
-	GtkCellRendererText* renderer = NULL;
-	GtkTreeView* _tmp0_;
-	GList* _tmp1_ = NULL;
-	GList* columns;
-	GList* _tmp2_;
-	GtkCellRendererText* _tmp5_;
-	GtkCellRendererText* _tmp6_;
-	GtkTreeViewColumn* _tmp7_;
-	GtkTreeView* _tmp8_;
-	GtkTreeViewColumn* _tmp9_;
-	GtkCellRendererText* _tmp10_;
-	GtkCellRendererText* _tmp11_;
-	GtkCellRendererText* _tmp12_;
-	GtkCellRendererText* _tmp13_;
-	GtkTreeViewColumn* _tmp14_;
-	GtkTreeView* _tmp15_;
-	GtkTreeViewColumn* _tmp16_;
-	GtkCellRendererText* _tmp17_;
-	GtkCellRendererText* _tmp18_;
-	GtkCellRendererText* _tmp19_;
-	GtkCellRendererText* _tmp20_;
-	GtkTreeViewColumn* _tmp21_;
-	GtkTreeView* _tmp22_;
-	GtkTreeViewColumn* _tmp23_;
-	GtkCellRendererText* _tmp24_;
-	GtkCellRendererText* _tmp25_;
-	GtkCellRendererText* _tmp26_;
-	GtkCellRendererText* _tmp27_;
-	GtkTreeViewColumn* _tmp28_;
-	GtkTreeView* _tmp29_;
-	GtkTreeViewColumn* _tmp30_;
-	GtkCellRendererToggle* _tmp31_;
-	GtkCellRendererToggle* toggle;
-	GtkTreeViewColumn* _tmp32_;
-	GtkTreeView* _tmp33_;
-	GtkTreeViewColumn* _tmp34_;
-	GtkTreeView* _tmp35_;
-	GtkTreeSelection* _tmp36_ = NULL;
-
-	g_return_if_fail (self != NULL);
-
-	_tmp0_ = priv->_treeview_reflections;
-
-	_tmp1_ = gtk_tree_view_get_columns (_tmp0_);
-
-	columns = _tmp1_;
-
-	_tmp2_ = columns;
-
-	{
-		GList* col_collection = NULL;
-		GList* col_it = NULL;
-
-		col_collection = _tmp2_;
-
-		for (col_it = col_collection; col_it != NULL; col_it = col_it->next) {
-
-			GtkTreeViewColumn* col = NULL;
-
-			col = (GtkTreeViewColumn*) col_it->data;
-
-			{
-				GtkTreeView* _tmp3_;
-				GtkTreeViewColumn* _tmp4_;
-
-				_tmp3_ = priv->_treeview_reflections;
-
-				_tmp4_ = col;
-
-				gtk_tree_view_remove_column (_tmp3_, _tmp4_);
-
-			}
-		}
-	}
-
-	_tmp5_ = (GtkCellRendererText*) gtk_cell_renderer_text_new ();
-
-	g_object_ref_sink (_tmp5_);
-
-	_g_object_unref0 (renderer);
-
-	renderer = _tmp5_;
-
-	_tmp6_ = renderer;
-
-	_tmp7_ = gtk_tree_view_column_new_with_attributes ("index", (GtkCellRenderer*) _tmp6_, "text", REFLECTION_COL_INDEX, NULL);
-
-	g_object_ref_sink (_tmp7_);
-
-	_g_object_unref0 (column);
-
-	column = _tmp7_;
-
-	_tmp8_ = priv->_treeview_reflections;
-
-	_tmp9_ = column;
-
-	gtk_tree_view_append_column (_tmp8_, _tmp9_);
-
-	_tmp10_ = (GtkCellRendererText*) gtk_cell_renderer_text_new ();
-
-	g_object_ref_sink (_tmp10_);
-
-	_g_object_unref0 (renderer);
-
-	renderer = _tmp10_;
-
-	_tmp11_ = renderer;
-
-	g_signal_connect_object (_tmp11_, "edited", (GCallback) _hkl_gui_window_on_cell_tree_view_reflections_h_edited_gtk_cell_renderer_text_edited, self, 0);
-
-	_tmp12_ = renderer;
-
-	g_object_set (_tmp12_, "editable", TRUE, NULL);
-
-	_tmp13_ = renderer;
-
-	_tmp14_ = gtk_tree_view_column_new_with_attributes ("h", (GtkCellRenderer*) _tmp13_, "text", REFLECTION_COL_H, NULL);
-
-	g_object_ref_sink (_tmp14_);
-
-	_g_object_unref0 (column);
-
-	column = _tmp14_;
-
-	_tmp15_ = priv->_treeview_reflections;
-
-	_tmp16_ = column;
-
-	gtk_tree_view_append_column (_tmp15_, _tmp16_);
-
-	_tmp17_ = (GtkCellRendererText*) gtk_cell_renderer_text_new ();
-
-	g_object_ref_sink (_tmp17_);
-
-	_g_object_unref0 (renderer);
-
-	renderer = _tmp17_;
-
-	_tmp18_ = renderer;
-
-	g_signal_connect_object (_tmp18_, "edited", (GCallback) _hkl_gui_window_on_cell_tree_view_reflections_k_edited_gtk_cell_renderer_text_edited, self, 0);
-
-	_tmp19_ = renderer;
-
-	g_object_set (_tmp19_, "editable", TRUE, NULL);
-
-	_tmp20_ = renderer;
-
-	_tmp21_ = gtk_tree_view_column_new_with_attributes ("k", (GtkCellRenderer*) _tmp20_, "text", REFLECTION_COL_K, NULL);
-
-	g_object_ref_sink (_tmp21_);
-
-	_g_object_unref0 (column);
-
-	column = _tmp21_;
-
-	_tmp22_ = priv->_treeview_reflections;
-
-	_tmp23_ = column;
-
-	gtk_tree_view_append_column (_tmp22_, _tmp23_);
-
-	_tmp24_ = (GtkCellRendererText*) gtk_cell_renderer_text_new ();
-
-	g_object_ref_sink (_tmp24_);
-
-	_g_object_unref0 (renderer);
-
-	renderer = _tmp24_;
-
-	_tmp25_ = renderer;
-
-	g_signal_connect_object (_tmp25_, "edited", (GCallback) _hkl_gui_window_on_cell_tree_view_reflections_l_edited_gtk_cell_renderer_text_edited, self, 0);
-
-	_tmp26_ = renderer;
-
-	g_object_set (_tmp26_, "editable", TRUE, NULL);
-
-	_tmp27_ = renderer;
-
-	_tmp28_ = gtk_tree_view_column_new_with_attributes ("l", (GtkCellRenderer*) _tmp27_, "text", REFLECTION_COL_L, NULL);
-
-	g_object_ref_sink (_tmp28_);
-
-	_g_object_unref0 (column);
-
-	column = _tmp28_;
-
-	_tmp29_ = priv->_treeview_reflections;
-
-	_tmp30_ = column;
-
-	gtk_tree_view_append_column (_tmp29_, _tmp30_);
-
-	_tmp31_ = (GtkCellRendererToggle*) gtk_cell_renderer_toggle_new ();
-
-	g_object_ref_sink (_tmp31_);
-
-	toggle = _tmp31_;
-
-	g_signal_connect_object (toggle, "toggled", (GCallback) _hkl_gui_window_on_cell_tree_view_reflections_flag_toggled_gtk_cell_renderer_toggle_toggled, self, 0);
-
-	_tmp32_ = gtk_tree_view_column_new_with_attributes ("flag", (GtkCellRenderer*) toggle, "active", REFLECTION_COL_FLAG, NULL);
-
-	g_object_ref_sink (_tmp32_);
-
-	_g_object_unref0 (column);
-
-	column = _tmp32_;
-
-	_tmp33_ = priv->_treeview_reflections;
-
-	_tmp34_ = column;
-
-	gtk_tree_view_append_column (_tmp33_, _tmp34_);
-
-	_tmp35_ = priv->_treeview_reflections;
-
-	_tmp36_ = gtk_tree_view_get_selection (_tmp35_);
-
-	gtk_tree_selection_set_mode (_tmp36_, GTK_SELECTION_MULTIPLE);
-
-	_g_object_unref0 (toggle);
-
-	_g_list_free0 (columns);
-
-	_g_object_unref0 (renderer);
-
-	_g_object_unref0 (column);
-
-}
 
 
 static void _hkl_gui_window_on_cell_tree_view_crystals_name_edited_gtk_cell_renderer_text_edited (GtkCellRendererText* _sender, const gchar* path, const gchar* new_text, gpointer self) {
@@ -5184,610 +5058,6 @@ static void hkl_gui_window_on_cell_tree_view_crystals_name_edited (const gchar* 
 }
 
 
-static void hkl_gui_window_on_cell_tree_view_reflections_h_edited (const gchar* path, const gchar* new_text, HklGuiWindow* self) {
-	HklSampleList* _tmp0_;
-	HklSample* _tmp1_;
-	HklSample* sample;
-	HklSample* _tmp2_;
-
-	g_return_if_fail (self != NULL);
-
-	g_return_if_fail (path != NULL);
-
-	g_return_if_fail (new_text != NULL);
-
-	_tmp0_ = priv->samples;
-
-	_tmp1_ = _tmp0_->current;
-
-	sample = _tmp1_;
-
-	_tmp2_ = sample;
-
-	if (_tmp2_ != NULL) {
-
-		gint index = 0;
-		gdouble h = 0.0;
-		gdouble k = 0.0;
-		gdouble l = 0.0;
-		HklSampleReflection* reflection = NULL;
-		GtkListStore* model = NULL;
-		GtkTreeIter iter = {0};
-		GtkTreeView* _tmp3_;
-		GtkTreeModel* _tmp4_ = NULL;
-		GtkListStore* _tmp5_;
-		GtkListStore* _tmp6_;
-		const gchar* _tmp7_;
-		GtkTreeIter _tmp8_ = {0};
-		GtkListStore* _tmp9_;
-		GtkTreeIter _tmp10_;
-		HklSample* _tmp11_;
-		HklSampleReflection** _tmp12_;
-		gint _tmp12__length1;
-		gint _tmp13_;
-		HklSampleReflection* _tmp14_;
-		const gchar* _tmp15_;
-		gdouble _tmp16_ = 0.0;
-		HklSampleReflection* _tmp17_;
-		HklVector _tmp18_;
-		gdouble* _tmp19_;
-		gint _tmp19__length1;
-		gdouble _tmp20_;
-		HklSampleReflection* _tmp21_;
-		HklVector _tmp22_;
-		gdouble* _tmp23_;
-		gint _tmp23__length1;
-		gdouble _tmp24_;
-		HklSampleReflection* _tmp25_;
-		gdouble _tmp26_;
-		gdouble _tmp27_;
-		gdouble _tmp28_;
-		GtkListStore* _tmp29_;
-		GtkTreeIter _tmp30_;
-		gdouble _tmp31_;
-		HklSampleReflection* _tmp32_;
-		gint _tmp33_;
-		HklSample* _tmp34_;
-
-		_tmp3_ = priv->_treeview_reflections;
-
-		_tmp4_ = gtk_tree_view_get_model (_tmp3_);
-
-		_tmp5_ = _g_object_ref0 (G_TYPE_CHECK_INSTANCE_TYPE (_tmp4_, GTK_TYPE_LIST_STORE) ? ((GtkListStore*) _tmp4_) : NULL);
-
-		_g_object_unref0 (model);
-
-		model = _tmp5_;
-
-		_tmp6_ = model;
-
-		_tmp7_ = path;
-
-		gtk_tree_model_get_iter_from_string ((GtkTreeModel*) _tmp6_, &_tmp8_, _tmp7_);
-
-		iter = _tmp8_;
-
-		_tmp9_ = model;
-
-		_tmp10_ = iter;
-
-		gtk_tree_model_get ((GtkTreeModel*) _tmp9_, &_tmp10_, REFLECTION_COL_INDEX, &index, -1);
-
-		_tmp11_ = sample;
-
-		_tmp12_ = _tmp11_->reflections;
-
-		_tmp12__length1 = _tmp11_->reflections_len;
-
-		_tmp13_ = index;
-
-		_tmp14_ = _tmp12_[_tmp13_];
-
-		reflection = _tmp14_;
-
-		_tmp15_ = new_text;
-
-		_tmp16_ = double_parse (_tmp15_);
-
-		h = _tmp16_;
-
-		_tmp17_ = reflection;
-
-		_tmp18_ = _tmp17_->hkl;
-
-		_tmp19_ = _tmp18_.data;
-
-		_tmp19__length1 = _tmp18_.data_length1;
-
-		_tmp20_ = _tmp19_[1];
-
-		k = _tmp20_;
-
-		_tmp21_ = reflection;
-
-		_tmp22_ = _tmp21_->hkl;
-
-		_tmp23_ = _tmp22_.data;
-
-		_tmp23__length1 = _tmp22_.data_length1;
-
-		_tmp24_ = _tmp23_[2];
-
-		l = _tmp24_;
-
-		_tmp25_ = reflection;
-
-		_tmp26_ = h;
-
-		_tmp27_ = k;
-
-		_tmp28_ = l;
-
-		hkl_sample_reflection_set_hkl (_tmp25_, _tmp26_, _tmp27_, _tmp28_);
-
-		_tmp29_ = model;
-
-		_tmp30_ = iter;
-
-		_tmp31_ = h;
-
-		_tmp32_ = reflection;
-
-		_tmp33_ = _tmp32_->flag;
-
-		gtk_list_store_set (_tmp29_, &_tmp30_, REFLECTION_COL_H, _tmp31_, REFLECTION_COL_FLAG, _tmp33_, -1);
-
-		_tmp34_ = sample;
-
-		hkl_gui_window_update_crystal_model (self, _tmp34_);
-
-		_g_object_unref0 (model);
-
-	}
-}
-
-
-static void hkl_gui_window_on_cell_tree_view_reflections_k_edited (const gchar* path, const gchar* new_text, HklGuiWindow* self) {
-	HklSampleList* _tmp0_;
-	HklSample* _tmp1_;
-	HklSample* sample;
-	HklSample* _tmp2_;
-
-	g_return_if_fail (self != NULL);
-
-	g_return_if_fail (path != NULL);
-
-	g_return_if_fail (new_text != NULL);
-
-	_tmp0_ = priv->samples;
-
-	_tmp1_ = _tmp0_->current;
-
-	sample = _tmp1_;
-
-	_tmp2_ = sample;
-
-	if (_tmp2_ != NULL) {
-
-		gint index = 0;
-		gdouble h = 0.0;
-		gdouble k = 0.0;
-		gdouble l = 0.0;
-		GtkListStore* model = NULL;
-		GtkTreeIter iter = {0};
-		HklSampleReflection* reflection = NULL;
-		GtkTreeView* _tmp3_;
-		GtkTreeModel* _tmp4_ = NULL;
-		GtkListStore* _tmp5_;
-		GtkListStore* _tmp6_;
-		const gchar* _tmp7_;
-		GtkTreeIter _tmp8_ = {0};
-		GtkListStore* _tmp9_;
-		GtkTreeIter _tmp10_;
-		HklSample* _tmp11_;
-		HklSampleReflection** _tmp12_;
-		gint _tmp12__length1;
-		gint _tmp13_;
-		HklSampleReflection* _tmp14_;
-		HklSampleReflection* _tmp15_;
-		HklVector _tmp16_;
-		gdouble* _tmp17_;
-		gint _tmp17__length1;
-		gdouble _tmp18_;
-		const gchar* _tmp19_;
-		gdouble _tmp20_ = 0.0;
-		HklSampleReflection* _tmp21_;
-		HklVector _tmp22_;
-		gdouble* _tmp23_;
-		gint _tmp23__length1;
-		gdouble _tmp24_;
-		HklSampleReflection* _tmp25_;
-		gdouble _tmp26_;
-		gdouble _tmp27_;
-		gdouble _tmp28_;
-		GtkListStore* _tmp29_;
-		GtkTreeIter _tmp30_;
-		gdouble _tmp31_;
-		HklSampleReflection* _tmp32_;
-		gint _tmp33_;
-		HklSample* _tmp34_;
-
-		_tmp3_ = priv->_treeview_reflections;
-
-		_tmp4_ = gtk_tree_view_get_model (_tmp3_);
-
-		_tmp5_ = _g_object_ref0 (G_TYPE_CHECK_INSTANCE_TYPE (_tmp4_, GTK_TYPE_LIST_STORE) ? ((GtkListStore*) _tmp4_) : NULL);
-
-		_g_object_unref0 (model);
-
-		model = _tmp5_;
-
-		_tmp6_ = model;
-
-		_tmp7_ = path;
-
-		gtk_tree_model_get_iter_from_string ((GtkTreeModel*) _tmp6_, &_tmp8_, _tmp7_);
-
-		iter = _tmp8_;
-
-		_tmp9_ = model;
-
-		_tmp10_ = iter;
-
-		gtk_tree_model_get ((GtkTreeModel*) _tmp9_, &_tmp10_, REFLECTION_COL_INDEX, &index, -1);
-
-		_tmp11_ = sample;
-
-		_tmp12_ = _tmp11_->reflections;
-
-		_tmp12__length1 = _tmp11_->reflections_len;
-
-		_tmp13_ = index;
-
-		_tmp14_ = _tmp12_[_tmp13_];
-
-		reflection = _tmp14_;
-
-		_tmp15_ = reflection;
-
-		_tmp16_ = _tmp15_->hkl;
-
-		_tmp17_ = _tmp16_.data;
-
-		_tmp17__length1 = _tmp16_.data_length1;
-
-		_tmp18_ = _tmp17_[0];
-
-		h = _tmp18_;
-
-		_tmp19_ = new_text;
-
-		_tmp20_ = double_parse (_tmp19_);
-
-		k = _tmp20_;
-
-		_tmp21_ = reflection;
-
-		_tmp22_ = _tmp21_->hkl;
-
-		_tmp23_ = _tmp22_.data;
-
-		_tmp23__length1 = _tmp22_.data_length1;
-
-		_tmp24_ = _tmp23_[2];
-
-		l = _tmp24_;
-
-		_tmp25_ = reflection;
-
-		_tmp26_ = h;
-
-		_tmp27_ = k;
-
-		_tmp28_ = l;
-
-		hkl_sample_reflection_set_hkl (_tmp25_, _tmp26_, _tmp27_, _tmp28_);
-
-		_tmp29_ = model;
-
-		_tmp30_ = iter;
-
-		_tmp31_ = k;
-
-		_tmp32_ = reflection;
-
-		_tmp33_ = _tmp32_->flag;
-
-		gtk_list_store_set (_tmp29_, &_tmp30_, REFLECTION_COL_K, _tmp31_, REFLECTION_COL_FLAG, _tmp33_, -1);
-
-		_tmp34_ = sample;
-
-		hkl_gui_window_update_crystal_model (self, _tmp34_);
-
-		_g_object_unref0 (model);
-
-	}
-}
-
-
-static void hkl_gui_window_on_cell_tree_view_reflections_l_edited (const gchar* path, const gchar* new_text, HklGuiWindow* self) {
-	GtkTreeIter iter = {0};
-	GtkListStore* model = NULL;
-	GtkTreeView* _tmp0_;
-	GtkTreeModel* _tmp1_ = NULL;
-	GtkListStore* _tmp2_;
-	GtkListStore* _tmp3_;
-	const gchar* _tmp4_;
-	GtkTreeIter _tmp5_ = {0};
-	HklSampleList* _tmp6_;
-	HklSample* _tmp7_;
-	HklSample* sample;
-	HklSample* _tmp8_;
-
-	g_return_if_fail (self != NULL);
-
-	g_return_if_fail (path != NULL);
-
-	g_return_if_fail (new_text != NULL);
-
-	_tmp0_ = priv->_treeview_reflections;
-
-	_tmp1_ = gtk_tree_view_get_model (_tmp0_);
-
-	_tmp2_ = _g_object_ref0 (G_TYPE_CHECK_INSTANCE_TYPE (_tmp1_, GTK_TYPE_LIST_STORE) ? ((GtkListStore*) _tmp1_) : NULL);
-
-	_g_object_unref0 (model);
-
-	model = _tmp2_;
-
-	_tmp3_ = model;
-
-	_tmp4_ = path;
-
-	gtk_tree_model_get_iter_from_string ((GtkTreeModel*) _tmp3_, &_tmp5_, _tmp4_);
-
-	iter = _tmp5_;
-
-	_tmp6_ = priv->samples;
-
-	_tmp7_ = _tmp6_->current;
-
-	sample = _tmp7_;
-
-	_tmp8_ = sample;
-
-	if (_tmp8_ != NULL) {
-
-		gint index = 0;
-		gdouble h = 0.0;
-		gdouble k = 0.0;
-		gdouble l = 0.0;
-		HklSampleReflection* reflection = NULL;
-		GtkListStore* _tmp9_;
-		GtkTreeIter _tmp10_;
-		HklSample* _tmp11_;
-		HklSampleReflection** _tmp12_;
-		gint _tmp12__length1;
-		gint _tmp13_;
-		HklSampleReflection* _tmp14_;
-		HklSampleReflection* _tmp15_;
-		HklVector _tmp16_;
-		gdouble* _tmp17_;
-		gint _tmp17__length1;
-		gdouble _tmp18_;
-		HklSampleReflection* _tmp19_;
-		HklVector _tmp20_;
-		gdouble* _tmp21_;
-		gint _tmp21__length1;
-		gdouble _tmp22_;
-		const gchar* _tmp23_;
-		gdouble _tmp24_ = 0.0;
-		HklSampleReflection* _tmp25_;
-		gdouble _tmp26_;
-		gdouble _tmp27_;
-		gdouble _tmp28_;
-		GtkListStore* _tmp29_;
-		GtkTreeIter _tmp30_;
-		gdouble _tmp31_;
-		HklSampleReflection* _tmp32_;
-		gint _tmp33_;
-		HklSample* _tmp34_;
-
-		_tmp9_ = model;
-
-		_tmp10_ = iter;
-
-		gtk_tree_model_get ((GtkTreeModel*) _tmp9_, &_tmp10_, REFLECTION_COL_INDEX, &index, -1);
-
-		_tmp11_ = sample;
-
-		_tmp12_ = _tmp11_->reflections;
-
-		_tmp12__length1 = _tmp11_->reflections_len;
-
-		_tmp13_ = index;
-
-		_tmp14_ = _tmp12_[_tmp13_];
-
-		reflection = _tmp14_;
-
-		_tmp15_ = reflection;
-
-		_tmp16_ = _tmp15_->hkl;
-
-		_tmp17_ = _tmp16_.data;
-
-		_tmp17__length1 = _tmp16_.data_length1;
-
-		_tmp18_ = _tmp17_[0];
-
-		h = _tmp18_;
-
-		_tmp19_ = reflection;
-
-		_tmp20_ = _tmp19_->hkl;
-
-		_tmp21_ = _tmp20_.data;
-
-		_tmp21__length1 = _tmp20_.data_length1;
-
-		_tmp22_ = _tmp21_[1];
-
-		k = _tmp22_;
-
-		_tmp23_ = new_text;
-
-		_tmp24_ = double_parse (_tmp23_);
-
-		l = _tmp24_;
-
-		_tmp25_ = reflection;
-
-		_tmp26_ = h;
-
-		_tmp27_ = k;
-
-		_tmp28_ = l;
-
-		hkl_sample_reflection_set_hkl (_tmp25_, _tmp26_, _tmp27_, _tmp28_);
-
-		_tmp29_ = model;
-
-		_tmp30_ = iter;
-
-		_tmp31_ = l;
-
-		_tmp32_ = reflection;
-
-		_tmp33_ = _tmp32_->flag;
-
-		gtk_list_store_set (_tmp29_, &_tmp30_, REFLECTION_COL_L, _tmp31_, REFLECTION_COL_FLAG, _tmp33_, -1);
-
-		_tmp34_ = sample;
-
-		hkl_gui_window_update_crystal_model (self, _tmp34_);
-
-	}
-
-	_g_object_unref0 (model);
-
-}
-
-
-static void hkl_gui_window_on_cell_tree_view_reflections_flag_toggled (const gchar* path, HklGuiWindow* self) {
-	HklSampleList* _tmp0_;
-	HklSample* _tmp1_;
-	HklSample* sample;
-	HklSample* _tmp2_;
-
-	g_return_if_fail (self != NULL);
-
-	g_return_if_fail (path != NULL);
-
-	_tmp0_ = priv->samples;
-
-	_tmp1_ = _tmp0_->current;
-
-	sample = _tmp1_;
-
-	_tmp2_ = sample;
-
-	if (_tmp2_ != NULL) {
-
-		gint index = 0;
-		gint flag = 0;
-		HklSampleReflection* reflection = NULL;
-		GtkListStore* model = NULL;
-		GtkTreeIter iter = {0};
-		GtkTreeView* _tmp3_;
-		GtkTreeModel* _tmp4_ = NULL;
-		GtkListStore* _tmp5_;
-		GtkListStore* _tmp6_;
-		const gchar* _tmp7_;
-		GtkTreeIter _tmp8_ = {0};
-		GtkListStore* _tmp9_;
-		GtkTreeIter _tmp10_;
-		HklSample* _tmp11_;
-		HklSampleReflection** _tmp12_;
-		gint _tmp12__length1;
-		gint _tmp13_;
-		HklSampleReflection* _tmp14_;
-		HklSampleReflection* _tmp15_;
-		gint _tmp16_;
-		HklSampleReflection* _tmp17_;
-		gint _tmp18_;
-		GtkListStore* _tmp19_;
-		GtkTreeIter _tmp20_;
-		gint _tmp21_;
-
-		_tmp3_ = priv->_treeview_reflections;
-
-		_tmp4_ = gtk_tree_view_get_model (_tmp3_);
-
-		_tmp5_ = _g_object_ref0 (G_TYPE_CHECK_INSTANCE_TYPE (_tmp4_, GTK_TYPE_LIST_STORE) ? ((GtkListStore*) _tmp4_) : NULL);
-
-		_g_object_unref0 (model);
-
-		model = _tmp5_;
-
-		_tmp6_ = model;
-
-		_tmp7_ = path;
-
-		gtk_tree_model_get_iter_from_string ((GtkTreeModel*) _tmp6_, &_tmp8_, _tmp7_);
-
-		iter = _tmp8_;
-
-		_tmp9_ = model;
-
-		_tmp10_ = iter;
-
-		gtk_tree_model_get ((GtkTreeModel*) _tmp9_, &_tmp10_, REFLECTION_COL_INDEX, &index, -1);
-
-		_tmp11_ = sample;
-
-		_tmp12_ = _tmp11_->reflections;
-
-		_tmp12__length1 = _tmp11_->reflections_len;
-
-		_tmp13_ = index;
-
-		_tmp14_ = _tmp12_[_tmp13_];
-
-		reflection = _tmp14_;
-
-		_tmp15_ = reflection;
-
-		_tmp16_ = _tmp15_->flag;
-
-		if (_tmp16_ == 0) {
-
-			flag = 1;
-
-		} else {
-
-			flag = 0;
-
-		}
-
-		_tmp17_ = reflection;
-
-		_tmp18_ = flag;
-
-		hkl_sample_reflection_set_flag (_tmp17_, _tmp18_);
-
-		_tmp19_ = model;
-
-		_tmp20_ = iter;
-
-		_tmp21_ = flag;
-
-		gtk_list_store_set (_tmp19_, &_tmp20_, REFLECTION_COL_FLAG, _tmp21_, -1);
-
-		_g_object_unref0 (model);
-
-	}
-}
 
 
 static void hkl_gui_window_on_toolbutton_add_reflection_clicked (HklGuiWindow* self) {
@@ -7060,8 +6330,6 @@ static void hkl_gui_window_init (HklGuiWindow * self)
 	hkl_gui_window_get_widgets_and_objects_from_ui (self);
 
 	set_up_diffractometer_model (self);
-
-	//set_up_tree_view_reflections (self);
 
 	//hkl_gui_window_set_up_tree_view_crystals (self);
 
