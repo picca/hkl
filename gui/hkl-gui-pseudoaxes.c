@@ -408,8 +408,6 @@ static void hkl_gui_engine_class_init (HklGuiEngineClass * class)
 			      g_cclosure_marshal_VOID__VOID,
 			      G_TYPE_NONE, /* return_type */
 			      0);
-
-	g_type_class_add_private (class, sizeof (HklGuiEnginePrivate));
 }
 
 
