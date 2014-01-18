@@ -1223,6 +1223,37 @@ hkl_gui_window_treeview_reflections_key_press_event_cb (GtkWidget* _sender, GdkE
 }
 
 
+void
+hkl_gui_window_toolbutton_add_reflection_clicked_cb(GtkToolButton* _sender,
+						    gpointer self)
+{
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
+
+	if (priv->sample) {
+		HklSampleReflection *reflection;
+		GtkTreeIter iter = {0};
+		gboolean flag;
+		gint n_rows;
+
+		reflection = hkl_sample_reflection_new(priv->diffractometer->geometry,
+						       priv->diffractometer->detector,
+						       0, 0, 0);
+		hkl_sample_add_reflection(priv->sample, reflection);
+		flag = hkl_sample_reflection_flag_get(reflection);
+
+		n_rows = gtk_tree_model_iter_n_children(GTK_TREE_MODEL(priv->_liststore_reflections),
+							NULL );
+		gtk_list_store_insert_with_values (priv->_liststore_pseudo_axes,
+						   &iter, -1,
+						   REFLECTION_COL_INDEX, n_rows,
+						   REFLECTION_COL_H, 0,
+						   REFLECTION_COL_K, 0,
+						   REFLECTION_COL_L, 0,
+						   REFLECTION_COL_FLAG, flag,
+						   REFLECTION_COL_REFLECTION, reflection,
+						   -1);
+	}
+}
 
 /*
 
@@ -1332,12 +1363,6 @@ static gboolean _hkl_gui_window_on_tree_view_crystals_key_press_event_gtk_widget
 
 }
 
-
-static void _hkl_gui_window_on_toolbutton_add_reflection_clicked_gtk_tool_button_clicked (GtkToolButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_toolbutton_add_reflection_clicked (self);
-
-}
 
 
 static void _hkl_gui_window_on_toolbutton_goto_reflection_clicked_gtk_tool_button_clicked (GtkToolButton* _sender, gpointer self) {
@@ -5060,62 +5085,6 @@ static void hkl_gui_window_on_cell_tree_view_crystals_name_edited (const gchar* 
 
 
 
-static void hkl_gui_window_on_toolbutton_add_reflection_clicked (HklGuiWindow* self) {
-	HklSampleList* _tmp0_;
-	HklSample* _tmp1_;
-	HklSample* sample;
-	HklSample* _tmp2_;
-
-	g_return_if_fail (self != NULL);
-
-	_tmp0_ = priv->samples;
-
-	_tmp1_ = _tmp0_->current;
-
-	sample = _tmp1_;
-
-	_tmp2_ = sample;
-
-	if (_tmp2_ != NULL) {
-
-		gdouble h;
-		gdouble k;
-		gdouble l;
-		HklSample* _tmp3_;
-		HklGeometry* _tmp4_;
-		HklDetector* _tmp5_;
-		gdouble _tmp6_;
-		gdouble _tmp7_;
-		gdouble _tmp8_;
-		HklSampleReflection* _tmp9_ = NULL;
-		HklSample* _tmp10_;
-
-		h = (gdouble) 0;
-
-		k = (gdouble) 0;
-
-		l = (gdouble) 0;
-
-		_tmp3_ = sample;
-
-		_tmp4_ = priv->geometry;
-
-		_tmp5_ = priv->detector;
-
-		_tmp6_ = h;
-
-		_tmp7_ = k;
-
-		_tmp8_ = l;
-
-		_tmp9_ = hkl_sample_add_reflection (_tmp3_, _tmp4_, _tmp5_, _tmp6_, _tmp7_, _tmp8_);
-
-		_tmp10_ = sample;
-
-		hkl_gui_window_update_reflections (self, _tmp10_);
-
-	}
-}
 
 
 static void _gtk_tree_path_free0_ (gpointer var) {
