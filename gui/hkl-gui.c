@@ -1049,7 +1049,7 @@ void hkl_gui_window_treeview_solutions_cursor_changed_cb (GtkTreeView *tree_view
 
 	hkl_gui_window_update_axes (self);
 	hkl_gui_window_update_pseudo_axes (self);
-	//hkl_gui_window_update_pseudo_axes_frames (self);
+	hkl_gui_window_update_pseudo_axes_frames (self);
 
 	gtk_tree_path_free (path);
 }
