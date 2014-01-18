@@ -67,13 +67,15 @@ struct _HklGuiEnginePrivate {
 
 G_DEFINE_TYPE (HklGuiEngine, hkl_gui_engine, G_TYPE_OBJECT);
 
+#define HKL_GUI_ENGINE_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), HKL_GUI_TYPE_ENGINE, HklGuiEnginePrivate))
+
 static void hkl_gui_engine_set_property (GObject         *object,
 					 guint            prop_id,
 					 const GValue    *value,
 					 GParamSpec      *pspec)
 {
 	HklGuiEngine *self = HKL_GUI_ENGINE (object);
-	HklGuiEnginePrivate *priv = self->priv;
+	HklGuiEnginePrivate *priv = HKL_GUI_ENGINE_GET_PRIVATE(self);
 
 	switch (prop_id) {
 	case PROP_ENGINE:
@@ -91,7 +93,7 @@ static void  hkl_gui_engine_get_property (GObject         *object,
 					  GParamSpec      *pspec)
 {
 	HklGuiEngine *self = HKL_GUI_ENGINE (object);
-	HklGuiEnginePrivate *priv = self->priv;
+	HklGuiEnginePrivate *priv = HKL_GUI_ENGINE_GET_PRIVATE(self);
 
 	switch (prop_id)
 	{
@@ -107,7 +109,7 @@ static void  hkl_gui_engine_get_property (GObject         *object,
 static void hkl_gui_engine_finalize (GObject* object)
 {
 	HklGuiEngine * self = HKL_GUI_ENGINE(object);
-	HklGuiEnginePrivate *priv = self->priv;
+	HklGuiEnginePrivate *priv = HKL_GUI_ENGINE_GET_PRIVATE(self);
 
 	g_object_unref(priv->builder);
 
@@ -125,9 +127,7 @@ HklGuiEngine* hkl_gui_engine_new (HklEngine* engine)
 
 HklEngine* hkl_gui_engine_get_engine (HklGuiEngine *self)
 {
-	HklGuiEnginePrivate *priv;
-
-	priv = self->priv;
+	HklGuiEnginePrivate *priv = HKL_GUI_ENGINE_GET_PRIVATE(self);
 
 	return priv->engine;
 }
@@ -135,9 +135,7 @@ HklEngine* hkl_gui_engine_get_engine (HklGuiEngine *self)
 
 GtkFrame *hkl_gui_engine_get_frame(HklGuiEngine *self)
 {
-	HklGuiEnginePrivate *priv;
-
-	priv = self->priv;
+	HklGuiEnginePrivate *priv = HKL_GUI_ENGINE_GET_PRIVATE(self);
 
 	return priv->frame1;
 }
@@ -145,14 +143,12 @@ GtkFrame *hkl_gui_engine_get_frame(HklGuiEngine *self)
 
 static void hkl_gui_engine_update_pseudo_axis (HklGuiEngine* self)
 {
-	HklGuiEnginePrivate *priv;
+	HklGuiEnginePrivate *priv = HKL_GUI_ENGINE_GET_PRIVATE(self);
 	GtkTreeIter iter = {0};
 	darray_parameter *parameters;
 	HklParameter **parameter;
 
 	g_return_if_fail (self != NULL);
-
-	priv = self->priv;
 
 	gtk_list_store_clear (priv->store_pseudo);
 	parameters = hkl_engine_pseudo_axes (priv->engine);
@@ -171,15 +167,13 @@ static void hkl_gui_engine_update_pseudo_axis (HklGuiEngine* self)
 
 static void hkl_gui_engine_update_mode (HklGuiEngine* self)
 {
-	HklGuiEnginePrivate *priv;
+	HklGuiEnginePrivate *priv = HKL_GUI_ENGINE_GET_PRIVATE(self);
 	GtkTreeIter iter = {0};
 	GtkTreeIter current = {0};
 	darray_mode *modes;
 	HklMode **mode;
 
 	g_return_if_fail (self != NULL);
-
-	priv = self->priv;
 
 	modes = hkl_engine_modes(priv->engine);
 	gtk_list_store_clear (priv->store_mode);
@@ -201,12 +195,10 @@ static void hkl_gui_engine_update_mode (HklGuiEngine* self)
 
 static void hkl_gui_engine_update_mode_parameters (HklGuiEngine* self)
 {
-	HklGuiEnginePrivate *priv;
+	HklGuiEnginePrivate *priv = HKL_GUI_ENGINE_GET_PRIVATE(self);
 	HklMode *mode;
 
 	g_return_if_fail (self != NULL);
-
-	priv = self->priv;
 
 	mode = hkl_engine_mode (priv->engine);
 	if (mode){
@@ -237,13 +229,11 @@ static void hkl_gui_engine_update_mode_parameters (HklGuiEngine* self)
 
 void hkl_gui_engine_update (HklGuiEngine* self)
 {
-	HklGuiEnginePrivate *priv;
+	HklGuiEnginePrivate *priv = HKL_GUI_ENGINE_GET_PRIVATE(self);
 	GtkTreeViewColumn* col;
 	GList* cells;
 
 	g_return_if_fail (self != NULL);
-
-	priv = self->priv;
 
 	hkl_gui_engine_update_pseudo_axis (self);
 
@@ -257,12 +247,10 @@ void hkl_gui_engine_update (HklGuiEngine* self)
 void hkl_gui_engine_set_engine (HklGuiEngine *self,
 				HklEngine *engine)
 {
-	HklGuiEnginePrivate *priv;
+	HklGuiEnginePrivate *priv = HKL_GUI_ENGINE_GET_PRIVATE(self);
 
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (engine != NULL);
-
-	priv = self->priv;
 
 	priv->engine = engine;
 
@@ -282,14 +270,12 @@ void hkl_gui_engine_set_engine (HklGuiEngine *self,
 
 static void hkl_gui_engine_on_combobox1_changed (GtkComboBox* combobox, HklGuiEngine* self)
 {
-	HklGuiEnginePrivate *priv;
+	HklGuiEnginePrivate *priv = HKL_GUI_ENGINE_GET_PRIVATE(self);
 	gchar *mode;
 	GtkTreeIter iter = {0};
 
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (combobox != NULL);
-
-	priv = self->priv;
 
 	if(gtk_combo_box_get_active_iter(combobox, &iter)){
 		gtk_tree_model_get(GTK_TREE_MODEL(priv->store_mode),
@@ -320,12 +306,10 @@ static gboolean _set_pseudo(GtkTreeModel *model,
 
 static void hkl_gui_engine_on_button1_clicked (GtkButton* button, HklGuiEngine* self)
 {
-	HklGuiEnginePrivate *priv;
+	HklGuiEnginePrivate *priv = HKL_GUI_ENGINE_GET_PRIVATE(self);
 
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (button != NULL);
-
-	priv = self->priv;
 
 	gtk_tree_model_foreach(GTK_TREE_MODEL(priv->store_pseudo),
 			       _set_pseudo,
@@ -337,11 +321,10 @@ static void hkl_gui_engine_on_button1_clicked (GtkButton* button, HklGuiEngine* 
 
 static void hkl_gui_engine_on_button2_clicked (GtkButton* button, HklGuiEngine* self)
 {
-	HklGuiEnginePrivate *priv;
+	HklGuiEnginePrivate *priv = HKL_GUI_ENGINE_GET_PRIVATE(self);
+
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (button != NULL);
-
-	priv = self->priv;
 
 	if(hkl_engine_initialize(priv->engine, NULL)){
 		/* some init method update the parameters */
@@ -355,7 +338,7 @@ static void hkl_gui_engine_on_cell_tree_view_pseudo_axis_value_edited (GtkCellRe
 								       const gchar* new_text,
 								       HklGuiEngine* self)
 {
-	HklGuiEnginePrivate *priv;
+	HklGuiEnginePrivate *priv = HKL_GUI_ENGINE_GET_PRIVATE(self);
 	GtkTreeIter iter = {0};
 	GtkListStore* model = NULL;
 
@@ -363,8 +346,6 @@ static void hkl_gui_engine_on_cell_tree_view_pseudo_axis_value_edited (GtkCellRe
 	g_return_if_fail (renderer != NULL);
 	g_return_if_fail (path != NULL);
 	g_return_if_fail (new_text != NULL);
-
-	priv = self->priv;
 
 	if (gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(priv->store_pseudo),
 						 &iter, path)) {
@@ -454,15 +435,10 @@ static void _connect_renderer(gpointer data, gpointer user_data)
 
 static void hkl_gui_engine_init (HklGuiEngine * self)
 {
-	HklGuiEnginePrivate *priv;
+	HklGuiEnginePrivate *priv = HKL_GUI_ENGINE_GET_PRIVATE(self);
 	GtkBuilder *builder;
 	GtkTreeViewColumn* col;
 	GList* cells;
-
-	self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self,
-						  HKL_GUI_TYPE_ENGINE,
-						  HklGuiEnginePrivate);
-	priv = self->priv;
 
 	priv->engine = NULL;
 	priv->builder = builder = gtk_builder_new ();
