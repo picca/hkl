@@ -299,7 +299,7 @@ G_DEFINE_TYPE (HklGuiWindow, hkl_gui_window, G_TYPE_OBJECT);
 static void hkl_gui_window_class_init (HklGuiWindowClass * class)
 {
 	GObjectClass *gobject_class;
-	
+
 	gobject_class = (GObjectClass *) class;
 
 	gobject_class->finalize = hkl_gui_window_finalize;
@@ -664,7 +664,7 @@ void hkl_gui_window_combobox1_changed_cb(GtkComboBox *combobox, gpointer *user_d
 	struct diffractometer_t *dif = NULL;
 
 	GtkTreeIter iter = {0};
-	
+
 	if(gtk_combo_box_get_active_iter (combobox, &iter)){
 		gtk_tree_model_get(GTK_TREE_MODEL(priv->_liststore_diffractometer),
 				   &iter,
@@ -1034,7 +1034,7 @@ void hkl_gui_window_treeview_solutions_cursor_changed_cb (GtkTreeView *tree_view
 
 	g_return_if_fail (tree_view != NULL);
 	g_return_if_fail (user_data != NULL);
-	
+
 	self = user_data;
 	priv = self->priv;
 
@@ -1067,7 +1067,7 @@ static void hkl_gui_window_update_solutions (HklGuiWindow* self)
 	priv = self->priv;
 
 	geometries = hkl_engine_list_geometries(priv->diffractometer->engines);
-	
+
 	gtk_list_store_clear(priv->_liststore_solutions);
 	items = hkl_geometry_list_items_get(geometries);
 	if (darray_size(*items)){
@@ -1489,7 +1489,7 @@ hkl_gui_window_connect_all_signals (HklGuiWindow* self)
 				 "clicked",
 				 (GCallback) _hkl_gui_window_on_button2_clicked_gtk_button_clicked,
 				 self, 0);
-	
+
 	CONNECT_CHECKBUTTON(checkbutton_a);
 	CONNECT_CHECKBUTTON(checkbutton_b);
 	CONNECT_CHECKBUTTON(checkbutton_c);
