@@ -1215,6 +1215,15 @@ hkl_gui_window_cellrenderertoggle1_toggled_cb (GtkCellRendererToggle* renderer, 
 	}
 }
 
+gboolean
+hkl_gui_window_treeview_reflections_key_press_event_cb (GtkWidget* _sender, GdkEventKey* event,
+							gpointer self)
+{
+	return TRUE;
+}
+
+
+
 /*
 
 static void _hkl_gui_window_on_spinbutton_lambda_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self) {
@@ -1297,15 +1306,6 @@ static void _hkl_gui_window_on_checkbutton_Uy_toggled_gtk_toggle_button_toggled 
 static void _hkl_gui_window_on_checkbutton_Uz_toggled_gtk_toggle_button_toggled (GtkToggleButton* _sender, gpointer self) {
 
 	hkl_gui_window_on_checkbutton_Uz_toggled (self);
-
-}
-
-
-static gboolean _hkl_gui_window_on_tree_view_reflections_key_press_event_gtk_widget_key_press_event (GtkWidget* _sender, GdkEventKey* event, gpointer self) {
-	gboolean result;
-	result = hkl_gui_window_on_tree_view_reflections_key_press_event (event, self);
-
-	return result;
 
 }
 
@@ -6180,18 +6180,6 @@ static void hkl_gui_window_on_toolbutton_affiner_clicked (HklGuiWindow* self) {
 }
 
 
-static gboolean hkl_gui_window_on_tree_view_reflections_key_press_event (GdkEventKey* event, HklGuiWindow* self) {
-	gboolean result = FALSE;
-
-	g_return_val_if_fail (self != NULL, FALSE);
-
-	g_return_val_if_fail (event != NULL, FALSE);
-
-	result = TRUE;
-
-	return result;
-
-}
 
 
 static gboolean hkl_gui_window_on_tree_view_crystals_key_press_event (GdkEventKey* event, HklGuiWindow* self) {
