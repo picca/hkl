@@ -30,8 +30,21 @@
 
 enum {
   PROP_0,
+
   PROP_ENGINE,
+
+  N_PROPERTIES
 };
+
+/* Keep a pointer to the properties definition */
+static GParamSpec *obj_properties[N_PROPERTIES] = { NULL, };
+
+enum {
+	CHANGED,
+
+	N_SIGNALS
+};
+static guint signals[N_SIGNALS] = { 0 };
 
 struct _HklGuiEnginePrivate {
 	/* Properties */
@@ -317,7 +330,8 @@ static void hkl_gui_engine_on_button1_clicked (GtkButton* button, HklGuiEngine* 
 	gtk_tree_model_foreach(GTK_TREE_MODEL(priv->store_pseudo),
 			       _set_pseudo,
 			       self);
-	g_signal_emit_by_name (self, "changed");
+
+	g_signal_emit(self, signals[CHANGED], 0);
 }
 
 
@@ -372,6 +386,22 @@ static void hkl_gui_engine_on_cell_tree_view_pseudo_axis_value_edited (GtkCellRe
 	}
 }
 
+static GObject * hkl_gui_engine_constructor (GType                  gtype,
+					     guint                  n_properties,
+					     GObjectConstructParam *properties)
+{
+	GObject *obj;
+
+	{
+		/* Always chain up to the parent constructor */
+		obj = G_OBJECT_CLASS (hkl_gui_engine_parent_class)->constructor (gtype, n_properties, properties);
+	}
+
+	/* update the object state depending on constructor properties */
+
+	return obj;
+}
+
 static void hkl_gui_engine_class_init (HklGuiEngineClass * class)
 {
 	GObjectClass *gobject_class;
@@ -379,27 +409,33 @@ static void hkl_gui_engine_class_init (HklGuiEngineClass * class)
 	gobject_class = (GObjectClass *) class;
 
 	gobject_class->finalize = hkl_gui_engine_finalize;
+	gobject_class->constructor = hkl_gui_engine_constructor;
 
 	gobject_class->set_property = hkl_gui_engine_set_property;
 	gobject_class->get_property = hkl_gui_engine_get_property;
 
-	g_object_class_install_property (gobject_class,
-					 PROP_ENGINE,
-					 g_param_spec_pointer ("engine",
-							       "Engine",
-							       "The Hkl Engine used underneath",
-							       G_PARAM_READABLE |
-							       G_PARAM_WRITABLE));
+	obj_properties[PROP_ENGINE] =
+		g_param_spec_pointer ("engine",
+				      "Engine",
+				      "The Hkl Engine used underneath",
+				      G_PARAM_CONSTRUCT_ONLY |
+				      G_PARAM_READWRITE |
+				      G_PARAM_STATIC_STRINGS);
 
-	g_signal_new ("changed",
-		      HKL_GUI_TYPE_ENGINE,
-		      G_SIGNAL_RUN_LAST,
-		      0, /* class offset */
-		      NULL, /* accumulator */
-		      NULL, /* accu_data */
-		      g_cclosure_marshal_VOID__VOID,
-		      G_TYPE_NONE, /* return_type */
-		      0);
+	g_object_class_install_properties (gobject_class,
+					   N_PROPERTIES,
+					   obj_properties);
+
+	signals[CHANGED] =
+		g_signal_new ("changed",
+			      HKL_GUI_TYPE_ENGINE,
+			      G_SIGNAL_RUN_LAST,
+			      0, /* class offset */
+			      NULL, /* accumulator */
+			      NULL, /* accu_data */
+			      g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE, /* return_type */
+			      0);
 
 	g_type_class_add_private (class, sizeof (HklGuiEnginePrivate));
 }
@@ -415,7 +451,6 @@ static void _connect_renderer(gpointer data, gpointer user_data)
 				 (GCallback) hkl_gui_engine_on_cell_tree_view_pseudo_axis_value_edited,
 				 self, 0);
 }
-
 
 static void hkl_gui_engine_init (HklGuiEngine * self)
 {
