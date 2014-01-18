@@ -137,9 +137,9 @@ static void delete_diffractometer(struct diffractometer_t *self)
 
 static void dump_diffractometer(struct diffractometer_t *self)
 {
-	hkl_geometry_fprintf(stderr, self->geometry);
-	hkl_engine_list_fprintf(stderr, self->engines);
-	hkl_detector_fprintf(stderr, self->detector);
+	/* hkl_geometry_fprintf(stderr, self->geometry); */
+	/* hkl_engine_list_fprintf(stderr, self->engines); */
+	/* hkl_detector_fprintf(stderr, self->detector); */
 }
 
 /****************/
