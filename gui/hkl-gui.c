@@ -582,6 +582,43 @@ update_source (HklGuiWindow* self)
 				   hkl_geometry_wavelength_get(priv->diffractometer->geometry));
 }
 
+static void
+update_reflections (HklGuiWindow *self)
+{
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
+
+	gtk_list_store_clear (priv->_liststore_reflections);
+
+	if(priv->sample){
+		HklSampleReflection* reflection = NULL;
+		guint index = 0;
+
+		hkl_sample_first_reflection_get(priv->sample);
+		while(reflection){
+			GtkTreeIter iter = {0};
+			gdouble h, k, l;
+			gboolean flag;
+
+			hkl_sample_reflection_hkl_get(reflection, &h, &k, &l);
+			flag = hkl_sample_reflection_flag_get(reflection);
+
+			gtk_list_store_append (priv->_liststore_reflections, &iter);
+
+			gtk_list_store_set (priv->_liststore_reflections,
+					    &iter,
+					    REFLECTION_COL_INDEX, index++,
+					    REFLECTION_COL_H, h,
+					    REFLECTION_COL_K, k,
+					    REFLECTION_COL_L, l,
+					    REFLECTION_COL_FLAG, flag,
+					    REFLECTION_COL_REFLECTION, reflection,
+					    -1);
+			reflection = hkl_sample_next_reflection_get(priv->sample,
+								    reflection);
+		}
+	}
+}
+
 static gboolean
 hkl_engine_to_axes(HklGuiWindow *self, HklEngine *engine)
 {
@@ -1322,6 +1359,76 @@ hkl_gui_window_toolbutton_goto_reflection_clicked_cb (GtkToolButton* _sender, gp
 	}
 }
 
+void
+_del_reflection(gpointer data, gpointer user_data)
+{
+	HklSampleReflection *reflection;
+	GtkTreeIter iter = {0};
+	GtkTreePath *treepath = data;
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
+
+	gtk_tree_model_get_iter (GTK_TREE_MODEL(priv->_liststore_reflections),
+				 &iter, treepath);
+
+	gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_reflections),
+			    &iter,
+			    REFLECTION_COL_REFLECTION, &reflection,
+			    -1);
+	hkl_sample_del_reflection(priv->sample, reflection);
+}
+
+void
+hkl_gui_window_toolbutton_del_reflection_clicked_cb (GtkToolButton* _sender, gpointer user_data)
+{
+	HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
+	HklSample* sample = NULL;
+
+	g_return_if_fail (self != NULL);
+
+	if (priv->sample) {
+		GtkTreeSelection* selection = NULL;
+		guint nb_rows = 0U;
+
+		selection = gtk_tree_view_get_selection (priv->_treeview_reflections);
+		nb_rows = gtk_tree_selection_count_selected_rows (selection);
+		if (nb_rows > 0) {
+			GtkTreeModel* model = NULL;
+			GList* list;
+			guint* indexes;
+			gint i;
+			GtkMessageDialog* dialog;
+
+			model = GTK_TREE_MODEL(priv->_liststore_reflections);
+			list = gtk_tree_selection_get_selected_rows (selection, &model);
+
+
+			dialog = GTK_MESSAGE_DIALOG(
+				gtk_message_dialog_new (NULL,
+							GTK_DIALOG_DESTROY_WITH_PARENT,
+							GTK_MESSAGE_WARNING,
+							GTK_BUTTONS_YES_NO,
+							"Are you sure that you want to delete reflections"));
+
+			switch (gtk_dialog_run (GTK_DIALOG(dialog))) {
+			case GTK_RESPONSE_YES:
+			{
+				g_list_foreach(list, _del_reflection, NULL);
+				update_reflections (self);
+				break;
+			}
+			default:
+				break;
+			}
+
+			g_list_free_full (list, (GDestroyNotify) gtk_tree_path_free);
+		} else {
+			gtk_statusbar_push (priv->_statusbar, 0,
+					    "Please select at least one reflection.");
+		}
+	}
+}
+
 
 /*
 
@@ -1432,13 +1539,6 @@ static gboolean _hkl_gui_window_on_tree_view_crystals_key_press_event_gtk_widget
 }
 
 
-
-
-static void _hkl_gui_window_on_toolbutton_del_reflection_clicked_gtk_tool_button_clicked (GtkToolButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_toolbutton_del_reflection_clicked (self);
-
-}
 
 
 static void _hkl_gui_window_on_toolbutton_setUB_clicked_gtk_tool_button_clicked (GtkToolButton* _sender, gpointer self) {
@@ -3392,124 +3492,6 @@ static void hkl_gui_window_update_UxUyUz (HklGuiWindow* self) {
 }
 
 
-static void _hkl_gui_window_update_reflections (HklSample* sample, GtkListStore* model) {
-	gsize i = 0UL;
-	GtkListStore* _tmp0_;
-	HklSample* _tmp1_;
-	HklSampleReflection** _tmp2_;
-	gint _tmp2__length1;
-
-	g_return_if_fail (sample != NULL);
-
-	g_return_if_fail (model != NULL);
-
-	_tmp0_ = model;
-
-	gtk_list_store_clear (_tmp0_);
-
-	i = (gsize) 0;
-
-	_tmp1_ = sample;
-
-	_tmp2_ = _tmp1_->reflections;
-
-	_tmp2__length1 = _tmp1_->reflections_len;
-
-	{
-		HklSampleReflection** reflection_collection = NULL;
-		gint reflection_collection_length1 = 0;
-		gint _reflection_collection_size_ = 0;
-		gint reflection_it = 0;
-
-		reflection_collection = _tmp2_;
-
-		reflection_collection_length1 = _tmp2__length1;
-
-		for (reflection_it = 0; reflection_it < _tmp2__length1; reflection_it = reflection_it + 1) {
-
-			HklSampleReflection* reflection = NULL;
-
-			reflection = reflection_collection[reflection_it];
-
-			{
-				GtkTreeIter iter = {0};
-				GtkListStore* _tmp3_;
-				GtkTreeIter _tmp4_ = {0};
-				GtkListStore* _tmp5_;
-				GtkTreeIter _tmp6_;
-				gsize _tmp7_;
-				HklSampleReflection* _tmp8_;
-				HklVector _tmp9_;
-				gdouble* _tmp10_;
-				gint _tmp10__length1;
-				gdouble _tmp11_;
-				HklSampleReflection* _tmp12_;
-				HklVector _tmp13_;
-				gdouble* _tmp14_;
-				gint _tmp14__length1;
-				gdouble _tmp15_;
-				HklSampleReflection* _tmp16_;
-				HklVector _tmp17_;
-				gdouble* _tmp18_;
-				gint _tmp18__length1;
-				gdouble _tmp19_;
-				HklSampleReflection* _tmp20_;
-				gint _tmp21_;
-
-				_tmp3_ = model;
-
-				gtk_list_store_append (_tmp3_, &_tmp4_);
-
-				iter = _tmp4_;
-
-				_tmp5_ = model;
-
-				_tmp6_ = iter;
-
-				_tmp7_ = i;
-
-				i = _tmp7_ + 1;
-
-				_tmp8_ = reflection;
-
-				_tmp9_ = _tmp8_->hkl;
-
-				_tmp10_ = _tmp9_.data;
-
-				_tmp10__length1 = _tmp9_.data_length1;
-
-				_tmp11_ = _tmp10_[0];
-
-				_tmp12_ = reflection;
-
-				_tmp13_ = _tmp12_->hkl;
-
-				_tmp14_ = _tmp13_.data;
-
-				_tmp14__length1 = _tmp13_.data_length1;
-
-				_tmp15_ = _tmp14_[1];
-
-				_tmp16_ = reflection;
-
-				_tmp17_ = _tmp16_->hkl;
-
-				_tmp18_ = _tmp17_.data;
-
-				_tmp18__length1 = _tmp17_.data_length1;
-
-				_tmp19_ = _tmp18_[2];
-
-				_tmp20_ = reflection;
-
-				_tmp21_ = _tmp20_->flag;
-
-				gtk_list_store_set (_tmp5_, &_tmp6_, REFLECTION_COL_INDEX, _tmp7_, REFLECTION_COL_H, _tmp11_, REFLECTION_COL_K, _tmp15_, REFLECTION_COL_L, _tmp19_, REFLECTION_COL_FLAG, _tmp21_, -1);
-
-			}
-		}
-	}
-}
 
 
 static void hkl_gui_window_update_tree_view_crystals (HklGuiWindow* self) {
@@ -5144,273 +5126,6 @@ static gpointer _gtk_tree_path_copy0 (gpointer self) {
 }
 
 
-static void hkl_gui_window_on_toolbutton_del_reflection_clicked (HklGuiWindow* self) {
-	HklSample* sample = NULL;
-	HklSampleList* _tmp0_;
-	HklSample* _tmp1_;
-	HklSample* _tmp2_;
-
-	g_return_if_fail (self != NULL);
-
-	_tmp0_ = priv->samples;
-
-	_tmp1_ = _tmp0_->current;
-
-	sample = _tmp1_;
-
-	_tmp2_ = sample;
-
-	if (_tmp2_ != NULL) {
-
-		GtkTreeSelection* selection = NULL;
-		guint nb_rows = 0U;
-		GtkTreeView* _tmp3_;
-		GtkTreeSelection* _tmp4_ = NULL;
-		GtkTreeSelection* _tmp5_;
-		GtkTreeSelection* _tmp6_;
-		gint _tmp7_ = 0;
-		guint _tmp8_;
-
-		_tmp3_ = priv->_treeview_reflections;
-
-		_tmp4_ = gtk_tree_view_get_selection (_tmp3_);
-
-		_tmp5_ = _g_object_ref0 (_tmp4_);
-
-		_g_object_unref0 (selection);
-
-		selection = _tmp5_;
-
-		_tmp6_ = selection;
-
-		_tmp7_ = gtk_tree_selection_count_selected_rows (_tmp6_);
-
-		nb_rows = (guint) _tmp7_;
-
-		_tmp8_ = nb_rows;
-
-		if (_tmp8_ > ((guint) 0)) {
-
-			GtkTreeModel* model = NULL;
-			GtkTreeIter iter = {0};
-			GtkTreeSelection* _tmp9_;
-			GtkTreeModel* _tmp10_ = NULL;
-			GList* _tmp11_ = NULL;
-			GtkTreeModel* _tmp12_;
-			GList* list;
-			guint _tmp13_;
-			guint* _tmp14_ = NULL;
-			guint* indexes;
-			gint indexes_length1;
-			gint _indexes_size_;
-			gint i;
-			GList* _tmp15_;
-			GtkMessageDialog* _tmp24_;
-			GtkMessageDialog* dialog;
-			GtkMessageDialog* _tmp25_;
-			gint _tmp26_ = 0;
-			gint respons;
-			gint _tmp27_;
-
-			_tmp9_ = selection;
-
-			_tmp11_ = gtk_tree_selection_get_selected_rows (_tmp9_, &_tmp10_);
-
-			_g_object_unref0 (model);
-
-			_tmp12_ = _g_object_ref0 (_tmp10_);
-
-			model = _tmp12_;
-
-			list = _tmp11_;
-
-			_tmp13_ = nb_rows;
-
-			_tmp14_ = g_new0 (guint, _tmp13_);
-
-			indexes = _tmp14_;
-
-			indexes_length1 = _tmp13_;
-
-			_indexes_size_ = indexes_length1;
-
-			i = 0;
-
-			_tmp15_ = list;
-
-			{
-				GList* path_collection = NULL;
-				GList* path_it = NULL;
-
-				path_collection = _tmp15_;
-
-				for (path_it = path_collection; path_it != NULL; path_it = path_it->next) {
-
-					GtkTreePath* _tmp16_;
-					GtkTreePath* path = NULL;
-
-					_tmp16_ = _gtk_tree_path_copy0 ((GtkTreePath*) path_it->data);
-
-					path = _tmp16_;
-
-					{
-						GtkTreeModel* _tmp17_;
-						GtkTreePath* _tmp18_;
-						GtkTreeIter _tmp19_ = {0};
-						GtkTreeModel* _tmp20_;
-						GtkTreeIter _tmp21_;
-						guint* _tmp22_;
-						gint _tmp22__length1;
-						gint _tmp23_;
-
-						_tmp17_ = model;
-
-						_tmp18_ = path;
-
-						gtk_tree_model_get_iter (_tmp17_, &_tmp19_, _tmp18_);
-
-						iter = _tmp19_;
-
-						_tmp20_ = model;
-
-						_tmp21_ = iter;
-
-						_tmp22_ = indexes;
-
-						_tmp22__length1 = indexes_length1;
-
-						_tmp23_ = i;
-
-						i = _tmp23_ + 1;
-
-						gtk_tree_model_get (_tmp20_, &_tmp21_, REFLECTION_COL_INDEX, &_tmp22_[_tmp23_], -1);
-
-						_gtk_tree_path_free0 (path);
-
-					}
-				}
-			}
-
-			_tmp24_ = (GtkMessageDialog*) gtk_message_dialog_new (NULL, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_WARNING, GTK_BUTTONS_YES_NO, "Are you sure that you want to delete reflections");
-
-			g_object_ref_sink (_tmp24_);
-
-			dialog = _tmp24_;
-
-			_tmp25_ = dialog;
-
-			_tmp26_ = gtk_dialog_run ((GtkDialog*) _tmp25_);
-
-			respons = _tmp26_;
-
-			_tmp27_ = respons;
-
-			switch (_tmp27_) {
-
-			case GTK_RESPONSE_YES:
-
-			{
-				HklSample* _tmp39_;
-				{
-					gboolean _tmp28_;
-
-					i = 0;
-
-					_tmp28_ = TRUE;
-
-					while (TRUE) {
-
-						gboolean _tmp29_;
-						gint _tmp31_;
-						guint _tmp32_;
-						guint* _tmp33_;
-						gint _tmp33__length1;
-						gint _tmp34_;
-						guint _tmp35_;
-						gint _tmp36_;
-						guint index;
-						HklSample* _tmp37_;
-						guint _tmp38_;
-
-						_tmp29_ = _tmp28_;
-
-						if (!_tmp29_) {
-
-							gint _tmp30_;
-
-							_tmp30_ = i;
-
-							i = _tmp30_ + 1;
-
-						}
-
-						_tmp28_ = FALSE;
-
-						_tmp31_ = i;
-
-						_tmp32_ = nb_rows;
-
-						if (!(((guint) _tmp31_) < _tmp32_)) {
-
-							break;
-
-						}
-
-						_tmp33_ = indexes;
-
-						_tmp33__length1 = indexes_length1;
-
-						_tmp34_ = i;
-
-						_tmp35_ = _tmp33_[_tmp34_];
-
-						_tmp36_ = i;
-
-						index = _tmp35_ - _tmp36_;
-
-						_tmp37_ = sample;
-
-						_tmp38_ = index;
-
-						hkl_sample_del_reflection (_tmp37_, (gsize) _tmp38_);
-
-					}
-				}
-
-				_tmp39_ = sample;
-
-				hkl_gui_window_update_reflections (self, _tmp39_);
-
-				break;
-
-			}
-			default:
-
-				break;
-
-			}
-
-			_g_object_unref0 (dialog);
-
-			indexes = (g_free (indexes), NULL);
-
-			__g_list_free__gtk_tree_path_free0_0 (list);
-
-			_g_object_unref0 (model);
-
-		} else {
-			GtkStatusbar* _tmp40_;
-
-			_tmp40_ = priv->_statusBar;
-
-			gtk_statusbar_push (_tmp40_, (guint) 0, "Please select at least one reflection.");
-
-		}
-
-		_g_object_unref0 (selection);
-
-	}
-}
 
 
 static void hkl_gui_window_on_toolbutton_setUB_clicked (HklGuiWindow* self) {
