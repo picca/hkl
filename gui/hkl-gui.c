@@ -1529,6 +1529,24 @@ set_up_tree_view_crystals (HklGuiWindow* self)
 	gtk_tree_path_free(path);
 }
 
+static void
+_add_sample_and_edit_name(HklGuiWindow *self, HklSample *sample)
+{
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
+	GtkTreeIter iter = {0};
+	GtkTreePath* path = NULL;
+	GtkTreeViewColumn* column = NULL;
+
+	iter = _add_sample(self, sample);
+
+	path = gtk_tree_model_get_path(GTK_TREE_MODEL(priv->_liststore_crystals),
+					       &iter);
+	column = gtk_tree_view_get_column (priv->_treeview_crystals, 0);
+	gtk_tree_view_set_cursor (priv->_treeview_crystals, path, column, TRUE);
+
+	gtk_tree_path_free(path);
+}
+
 void
 hkl_gui_window_toolbutton_add_crystal_clicked_cb (GtkToolButton* _sender, gpointer user_data)
 {
@@ -1539,22 +1557,26 @@ hkl_gui_window_toolbutton_add_crystal_clicked_cb (GtkToolButton* _sender, gpoint
 	g_return_if_fail (user_data != NULL);
 
 	sample = hkl_sample_new ("new_sample");
-	if(sample){
-		GtkTreeIter iter = {0};
-		GtkTreePath* path = NULL;
-		GtkTreeViewColumn* column = NULL;
-
-		iter = _add_sample(self, sample);
-
-		path = gtk_tree_model_get_path(GTK_TREE_MODEL(priv->_liststore_crystals),
-					       &iter);
-		column = gtk_tree_view_get_column (priv->_treeview_crystals, 0);
-		gtk_tree_view_set_cursor (priv->_treeview_crystals, path, column, TRUE);
-
-		gtk_tree_path_free(path);
-	}
+	if(sample)
+		_add_sample_and_edit_name(self, sample);
 }
 
+void
+hkl_gui_window_toolbutton_copy_crystal_clicked_cb (GtkToolButton* _sender, gpointer user_data)
+{
+	HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
+	HklSample *copy = NULL;
+
+	g_return_if_fail (self != NULL);
+
+	if(priv->sample) {
+		copy = hkl_sample_new_copy(priv->sample);
+		if (copy)
+			_add_sample_and_edit_name(self, copy);
+	}else
+		gtk_statusbar_push (priv->_statusbar, (guint) 0, "Please select a crystal to copy.");
+}
 
 
 /*
@@ -1678,13 +1700,6 @@ static void _hkl_gui_window_on_toolbutton_setUB_clicked_gtk_tool_button_clicked 
 static void _hkl_gui_window_on_toolbutton_computeUB_clicked_gtk_tool_button_clicked (GtkToolButton* _sender, gpointer self) {
 
 	hkl_gui_window_on_toolbutton_computeUB_clicked (self);
-
-}
-
-
-static void _hkl_gui_window_on_toolbutton_copy_crystal_clicked_gtk_tool_button_clicked (GtkToolButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_toolbutton_copy_crystal_clicked (self);
 
 }
 
@@ -5234,121 +5249,6 @@ static void hkl_gui_window_on_toolbutton_computeUB_clicked (HklGuiWindow* self) 
 }
 
 
-static void hkl_gui_window_on_toolbutton_copy_crystal_clicked (HklGuiWindow* self) {
-	GtkTreePath* path = NULL;
-	GtkTreeViewColumn* column = NULL;
-	HklSampleList* _tmp0_;
-	HklSample* _tmp1_;
-	HklSample* old_sample;
-	HklSample* _tmp2_;
-	HklSampleList* _tmp4_;
-	HklSample* _tmp5_;
-	HklSample* _tmp6_;
-	HklSample* sample;
-	HklSample* _tmp7_;
-	HklSampleList* _tmp8_;
-	HklSample* _tmp9_;
-	HklSampleList* _tmp10_;
-	GtkTreeView* _tmp11_;
-	GtkTreePath* _tmp12_ = NULL;
-	GtkTreeViewColumn* _tmp13_ = NULL;
-	GtkTreeViewColumn* _tmp14_;
-	GtkTreeView* _tmp15_;
-	GtkTreeViewColumn* _tmp16_ = NULL;
-	GtkTreeViewColumn* _tmp17_;
-	GtkTreeView* _tmp18_;
-	GtkTreePath* _tmp19_;
-	GtkTreeViewColumn* _tmp20_;
-
-	g_return_if_fail (self != NULL);
-
-	_tmp0_ = priv->samples;
-
-	_tmp1_ = _tmp0_->current;
-
-	old_sample = _tmp1_;
-
-	_tmp2_ = old_sample;
-
-	if (_tmp2_ == NULL) {
-
-		GtkStatusbar* _tmp3_;
-
-		_tmp3_ = priv->_statusBar;
-
-		gtk_statusbar_push (_tmp3_, (guint) 0, "Please select a crystal to copy.");
-
-		_g_object_unref0 (column);
-
-		_gtk_tree_path_free0 (path);
-
-		return;
-
-	}
-
-	_tmp4_ = priv->samples;
-
-	_tmp5_ = _tmp4_->current;
-
-	_tmp6_ = hkl_sample_new_copy (_tmp5_);
-
-	sample = _tmp6_;
-
-	_tmp7_ = sample;
-
-	hkl_sample_set_name (_tmp7_, "copy");
-
-	_tmp8_ = priv->samples;
-
-	_tmp9_ = sample;
-
-	sample = NULL;
-
-	hkl_sample_list_append (_tmp8_, _tmp9_);
-
-	_tmp10_ = priv->samples;
-
-	hkl_sample_list_select_current (_tmp10_, "copy");
-
-	hkl_gui_window_update_tree_view_crystals (self);
-
-	_tmp11_ = priv->_treeview_crystals;
-
-	gtk_tree_view_get_cursor (_tmp11_, &_tmp12_, &_tmp13_);
-
-	_gtk_tree_path_free0 (path);
-
-	path = _tmp12_;
-
-	_g_object_unref0 (column);
-
-	_tmp14_ = _g_object_ref0 (_tmp13_);
-
-	column = _tmp14_;
-
-	_tmp15_ = priv->_treeview_crystals;
-
-	_tmp16_ = gtk_tree_view_get_column (_tmp15_, 0);
-
-	_tmp17_ = _g_object_ref0 (_tmp16_);
-
-	_g_object_unref0 (column);
-
-	column = _tmp17_;
-
-	_tmp18_ = priv->_treeview_crystals;
-
-	_tmp19_ = path;
-
-	_tmp20_ = column;
-
-	gtk_tree_view_set_cursor (_tmp18_, _tmp19_, _tmp20_, TRUE);
-
-	_g_object_unref0 (column);
-
-	_gtk_tree_path_free0 (path);
-
-}
 
 
 static void hkl_gui_window_on_toolbutton_del_crystal_clicked (HklGuiWindow* self) {
