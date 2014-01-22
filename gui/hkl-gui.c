@@ -1321,7 +1321,7 @@ hkl_gui_window_toolbutton_add_reflection_clicked_cb(GtkToolButton* _sender,
 
 		n_rows = gtk_tree_model_iter_n_children(GTK_TREE_MODEL(priv->_liststore_reflections),
 							NULL );
-		gtk_list_store_insert_with_values (priv->_liststore_pseudo_axes,
+		gtk_list_store_insert_with_values (priv->_liststore_reflections,
 						   &iter, -1,
 						   REFLECTION_COL_INDEX, n_rows,
 						   REFLECTION_COL_H, 0,
@@ -1505,27 +1505,30 @@ hkl_gui_window_treeview_crystals_cursor_changed_cb (GtkTreeView* _sender, gpoint
 	g_return_if_fail (user_data != NULL);
 
 	gtk_tree_view_get_cursor (priv->_treeview_crystals, &path, &column);
-	gtk_tree_model_get_iter (GTK_TREE_MODEL(priv->_liststore_crystals),
-				 &iter, path);
-	gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_crystals),
-			    &iter,
-			    SAMPLE_COL_SAMPLE, &sample,
-			    -1);
+	if(path){
+		if (gtk_tree_model_get_iter (GTK_TREE_MODEL(priv->_liststore_crystals),
+					     &iter, path) == TRUE){
+			gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_crystals),
+					    &iter,
+					    SAMPLE_COL_SAMPLE, &sample,
+					    -1);
 
-	if(sample){
-		priv->sample = sample;
-		diffractometer_engine_list_init(priv->diffractometer,
-						priv->sample);
-		update_reflections(self);
-		/* update_lattice(self); */
-		/* update_lattice_parameters (self); */
-		/* update_reciprocal_lattice (self); */
-		/* update_UxUyUz (self); */
-		/* update_UB (self); */
-		update_pseudo_axes (self);
-		update_pseudo_axes_frames (self);
+			if(sample){
+				priv->sample = sample;
+				diffractometer_engine_list_init(priv->diffractometer,
+								priv->sample);
+				update_reflections(self);
+				/* update_lattice(self); */
+				/* update_lattice_parameters (self); */
+				/* update_reciprocal_lattice (self); */
+				/* update_UxUyUz (self); */
+				/* update_UB (self); */
+				update_pseudo_axes (self);
+				update_pseudo_axes_frames (self);
+			}
+		}
+		gtk_tree_path_free (path);
 	}
-	gtk_tree_path_free (path);
 }
 
 
@@ -1652,17 +1655,19 @@ hkl_gui_window_toolbutton_del_crystal_clicked_cb (GtkToolButton* _sender, gpoint
 
 			gtk_tree_view_get_cursor(priv->_treeview_crystals,
 						 &path, &column);
-			if (gtk_tree_model_get_iter (GTK_TREE_MODEL(priv->_liststore_crystals),
-						     &iter, path) == TRUE) {
-				gtk_tree_path_free(path);
+			if (path){
+				if (gtk_tree_model_get_iter (GTK_TREE_MODEL(priv->_liststore_crystals),
+							     &iter, path) == TRUE) {
+					gtk_tree_path_free(path);
 
-				hkl_sample_free(priv->sample);
-				if (gtk_list_store_remove(priv->_liststore_crystals,
-							  &iter) == TRUE){
-					path = gtk_tree_model_get_path(GTK_TREE_MODEL(priv->_liststore_crystals),
-								       &iter);
-					gtk_tree_view_set_cursor(priv->_treeview_crystals,
-								 path, NULL, FALSE);
+					hkl_sample_free(priv->sample);
+					if (gtk_list_store_remove(priv->_liststore_crystals,
+								  &iter) == TRUE){
+						path = gtk_tree_model_get_path(GTK_TREE_MODEL(priv->_liststore_crystals),
+									       &iter);
+						gtk_tree_view_set_cursor(priv->_treeview_crystals,
+									 path, NULL, FALSE);
+					}
 				}
 			}
 		}
