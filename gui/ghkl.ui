@@ -924,6 +924,7 @@
                             <property name="can_focus">False</property>
                             <property name="use_action_appearance">False</property>
                             <property name="stock_id">gtk-add</property>
+                            <signal name="clicked" handler="hkl_gui_window_toolbutton_add_crystal_clicked_cb" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
