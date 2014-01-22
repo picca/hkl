@@ -40,6 +40,8 @@
 #define HKL_GUI_IS_WINDOW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), HKL_GUI_TYPE_WINDOW))
 #define HKL_GUI_WINDOW_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), HKL_GUI_TYPE_WINDOW, HklGuiWindowClass))
 
+#define EMBED_BREAKPOINT  asm volatile ("int3;")
+
 G_DEFINE_TYPE (HklGuiWindow, hkl_gui_window, G_TYPE_OBJECT);
 
 typedef enum  {
@@ -624,7 +626,7 @@ update_reflections (HklGuiWindow *self)
 		HklSampleReflection* reflection = NULL;
 		guint index = 0;
 
-		hkl_sample_first_reflection_get(priv->sample);
+		reflection = hkl_sample_first_reflection_get(priv->sample);
 		while(reflection){
 			GtkTreeIter iter = {0};
 			gdouble h, k, l;
@@ -1307,8 +1309,14 @@ hkl_gui_window_toolbutton_add_reflection_clicked_cb(GtkToolButton* _sender,
 {
 	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
 
+	if (priv->diffractometer == NULL){
+		gtk_statusbar_push (priv->_statusbar, 0,
+				    "Please select a diffractometer before adding reflections");
+		return;
+	}
+
 	if (priv->sample) {
-		HklSampleReflection *reflection;
+		HklSampleReflection *reflection = NULL;
 		GtkTreeIter iter = {0};
 		gboolean flag;
 		gint n_rows;
@@ -1324,9 +1332,9 @@ hkl_gui_window_toolbutton_add_reflection_clicked_cb(GtkToolButton* _sender,
 		gtk_list_store_insert_with_values (priv->_liststore_reflections,
 						   &iter, -1,
 						   REFLECTION_COL_INDEX, n_rows,
-						   REFLECTION_COL_H, 0,
-						   REFLECTION_COL_K, 0,
-						   REFLECTION_COL_L, 0,
+						   REFLECTION_COL_H, 0.,
+						   REFLECTION_COL_K, 0.,
+						   REFLECTION_COL_L, 0.,
 						   REFLECTION_COL_FLAG, flag,
 						   REFLECTION_COL_REFLECTION, reflection,
 						   -1);
