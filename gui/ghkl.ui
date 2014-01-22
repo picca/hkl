@@ -1030,6 +1030,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="model">liststore_crystals</property>
+                            <signal name="cursor-changed" handler="hkl_gui_window_treeview_crystals_cursor_changed_cb" swapped="no"/>
                             <child internal-child="selection">
                               <object class="GtkTreeSelection" id="treeview-selection5"/>
                             </child>

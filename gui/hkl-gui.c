@@ -145,6 +145,19 @@ dump_diffractometer(struct diffractometer_t *self)
 	/* hkl_detector_fprintf(stderr, self->detector); */
 }
 
+static void
+diffractometer_engine_list_init(struct diffractometer_t *self,
+				HklSample *sample)
+{
+	g_return_if_fail(self != NULL);
+	g_return_if_fail(sample != NULL);
+
+	hkl_engine_list_init(self->engines,
+			     self->geometry,
+			     self->detector,
+			     sample);
+}
+
 /****************/
 /* HklGuiWindow */
 /****************/
@@ -1478,6 +1491,45 @@ hkl_gui_window_cellrenderertext10_edited_cb(GtkCellRendererText* _sender, const 
 			   -1);
 }
 
+void
+hkl_gui_window_treeview_crystals_cursor_changed_cb (GtkTreeView* _sender, gpointer user_data)
+{
+	GtkTreePath* path = NULL;
+	GtkTreeViewColumn* column = NULL;
+	GtkTreeIter iter = {0};
+
+	HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
+	HklSample *sample;
+
+	g_return_if_fail (user_data != NULL);
+
+	gtk_tree_view_get_cursor (priv->_treeview_crystals, &path, &column);
+	gtk_tree_model_get_iter (GTK_TREE_MODEL(priv->_liststore_crystals),
+				 &iter, path);
+	gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_crystals),
+			    &iter,
+			    SAMPLE_COL_SAMPLE, &sample,
+			    -1);
+
+	if(sample){
+		priv->sample = sample;
+		diffractometer_engine_list_init(priv->diffractometer,
+						priv->sample);
+		update_reflections(self);
+		/* update_lattice(self); */
+		/* update_lattice_parameters (self); */
+		/* update_reciprocal_lattice (self); */
+		/* update_UxUyUz (self); */
+		/* update_UB (self); */
+		update_pseudo_axes (self);
+		update_pseudo_axes_frames (self);
+	}
+	gtk_tree_path_free (path);
+}
+
+
+
 static GtkTreeIter
 _add_sample(HklGuiWindow *self, HklSample *sample)
 {
@@ -1556,7 +1608,7 @@ hkl_gui_window_toolbutton_add_crystal_clicked_cb (GtkToolButton* _sender, gpoint
 
 	g_return_if_fail (user_data != NULL);
 
-	sample = hkl_sample_new ("new_sample");
+	sample = hkl_sample_new ("new");
 	if(sample)
 		_add_sample_and_edit_name(self, sample);
 }
@@ -1668,13 +1720,6 @@ static void _hkl_gui_window_on_checkbutton_Uz_toggled_gtk_toggle_button_toggled 
 static void _hkl_gui_window_on_tree_view_pseudo_axes_cursor_changed_gtk_tree_view_cursor_changed (GtkTreeView* _sender, gpointer self) {
 
 	hkl_gui_window_on_tree_view_pseudo_axes_cursor_changed (self);
-
-}
-
-
-static void _hkl_gui_window_on_tree_view_crystals_cursor_changed_gtk_tree_view_cursor_changed (GtkTreeView* _sender, gpointer self) {
-
-	hkl_gui_window_on_tree_view_crystals_cursor_changed (self);
 
 }
 
@@ -3902,111 +3947,6 @@ static void hkl_gui_window_on_tree_view_pseudo_axes_cursor_changed (HklGuiWindow
 	_tmp10_ = priv->_treeview_pseudo_axes_parameters;
 
 	gtk_tree_view_set_model (_tmp10_, (GtkTreeModel*) model);
-
-	_g_object_unref0 (model);
-
-	_g_object_unref0 (focus_column);
-
-	_gtk_tree_path_free0 (path);
-
-}
-
-
-static void hkl_gui_window_on_tree_view_crystals_cursor_changed (HklGuiWindow* self) {
-	GtkTreePath* path = NULL;
-	GtkTreeViewColumn* focus_column = NULL;
-	GtkTreeModel* model = NULL;
-	GtkListStore* reflections = NULL;
-	GtkTreeIter iter = {0};
-	gchar* name = NULL;
-	GtkTreeView* _tmp0_;
-	GtkTreePath* _tmp1_ = NULL;
-	GtkTreeViewColumn* _tmp2_ = NULL;
-	GtkTreeViewColumn* _tmp3_;
-	GtkTreeView* _tmp4_;
-	GtkTreeModel* _tmp5_ = NULL;
-	GtkTreeModel* _tmp6_;
-	GtkTreeIter _tmp7_ = {0};
-	GtkTreeIter _tmp8_;
-	HklSampleList* _tmp9_;
-	HklPseudoAxisEngineList* _tmp10_;
-	HklGeometry* _tmp11_;
-	HklDetector* _tmp12_;
-	HklSampleList* _tmp13_;
-	HklSample* _tmp14_;
-	GtkTreeView* _tmp15_;
-
-	g_return_if_fail (self != NULL);
-
-	_tmp0_ = priv->_treeview_crystals;
-
-	gtk_tree_view_get_cursor (_tmp0_, &_tmp1_, &_tmp2_);
-
-	_gtk_tree_path_free0 (path);
-
-	path = _tmp1_;
-
-	_g_object_unref0 (focus_column);
-
-	_tmp3_ = _g_object_ref0 (_tmp2_);
-
-	focus_column = _tmp3_;
-
-	_tmp4_ = priv->_treeview_crystals;
-
-	_tmp5_ = gtk_tree_view_get_model (_tmp4_);
-
-	_tmp6_ = _g_object_ref0 (_tmp5_);
-
-	_g_object_unref0 (model);
-
-	model = _tmp6_;
-
-	gtk_tree_model_get_iter (model, &_tmp7_, path);
-
-	iter = _tmp7_;
-
-	_tmp8_ = iter;
-
-	gtk_tree_model_get (model, &_tmp8_, SAMPLE_COL_NAME, &name, SAMPLE_COL_REFLECTIONS, &reflections, -1);
-
-	_tmp9_ = priv->samples;
-
-	hkl_sample_list_select_current (_tmp9_, name);
-
-	_tmp10_ = priv->engines;
-
-	_tmp11_ = priv->geometry;
-
-	_tmp12_ = priv->detector;
-
-	_tmp13_ = priv->samples;
-
-	_tmp14_ = _tmp13_->current;
-
-	hkl_pseudo_axis_engine_list_init (_tmp10_, _tmp11_, _tmp12_, _tmp14_);
-
-	_tmp15_ = priv->_treeview_reflections;
-
-	gtk_tree_view_set_model (_tmp15_, (GtkTreeModel*) reflections);
-
-	hkl_gui_window_update_lattice (self);
-
-	hkl_gui_window_update_lattice_parameters (self);
-
-	hkl_gui_window_update_reciprocal_lattice (self);
-
-	hkl_gui_window_update_UxUyUz (self);
-
-	hkl_gui_window_update_UB (self);
-
-	hkl_gui_window_update_pseudo_axes (self);
-
-	hkl_gui_window_update_pseudo_axes_frames (self);
-
-	_g_free0 (name);
-
-	_g_object_unref0 (reflections);
 
 	_g_object_unref0 (model);
 
