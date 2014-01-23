@@ -219,9 +219,9 @@ struct _HklGuiWindowPrivate {
 	GtkCheckButton* _checkbutton_alpha;
 	GtkCheckButton* _checkbutton_beta;
 	GtkCheckButton* _checkbutton_gamma;
-	GtkCheckButton* _checkbutton_Ux;
-	GtkCheckButton* _checkbutton_Uy;
-	GtkCheckButton* _checkbutton_Uz;
+	GtkCheckButton* _checkbutton_ux;
+	GtkCheckButton* _checkbutton_uy;
+	GtkCheckButton* _checkbutton_uz;
 	GtkTreeView* _treeview_reflections;
 	GtkTreeView* _treeview_crystals;
 	GtkTreeView* _treeview_axes;
@@ -404,9 +404,9 @@ hkl_gui_window_get_widgets_and_objects_from_ui (HklGuiWindow* self)
 	get_object(builder, GTK_CHECK_BUTTON, priv, checkbutton_alpha);
 	get_object(builder, GTK_CHECK_BUTTON, priv, checkbutton_beta);
 	get_object(builder, GTK_CHECK_BUTTON, priv, checkbutton_gamma);
-	get_object(builder, GTK_CHECK_BUTTON, priv, checkbutton_Ux);
-	get_object(builder, GTK_CHECK_BUTTON, priv, checkbutton_Uy);
-	get_object(builder, GTK_CHECK_BUTTON, priv, checkbutton_Uz);
+	get_object(builder, GTK_CHECK_BUTTON, priv, checkbutton_ux);
+	get_object(builder, GTK_CHECK_BUTTON, priv, checkbutton_uy);
+	get_object(builder, GTK_CHECK_BUTTON, priv, checkbutton_uz);
 
 
 	get_object(builder, GTK_TREE_VIEW, priv, treeview_reflections);
@@ -1560,6 +1560,29 @@ update_reciprocal_lattice (HklGuiWindow* self)
 	}
 }
 
+#define set_ux_uy_uz(sample, parameter) do {				\
+		const HklParameter *p;					\
+		p = hkl_sample_## parameter ##_get((sample));		\
+			gboolean fit = hkl_parameter_fit_get(p);	\
+			gtk_spin_button_set_value(priv->_spinbutton_## parameter, \
+						  hkl_parameter_value_unit_get(p)); \
+			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(priv->_checkbutton_## parameter), fit); \
+	}while(0)
+
+static void
+update_ux_uy_uz (HklGuiWindow* self)
+{
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
+
+	g_return_if_fail (self != NULL);
+
+	if (priv->sample != NULL) {
+		set_ux_uy_uz(priv->sample, ux);
+		set_ux_uy_uz(priv->sample, uy);
+		set_ux_uy_uz(priv->sample, uz);
+	}
+}
+
 void
 hkl_gui_window_treeview_crystals_cursor_changed_cb (GtkTreeView* _sender, gpointer user_data)
 {
@@ -1589,7 +1612,7 @@ hkl_gui_window_treeview_crystals_cursor_changed_cb (GtkTreeView* _sender, gpoint
 				update_reflections(self);
 				update_lattice(self);
 				update_reciprocal_lattice (self);
-				/* update_UxUyUz (self); */
+				update_ux_uy_uz (self);
 				/* update_UB (self); */
 				update_pseudo_axes (self);
 				update_pseudo_axes_frames (self);
@@ -2776,111 +2799,6 @@ static void hkl_gui_window_update_UB (HklGuiWindow* self) {
 }
 
 
-static void hkl_gui_window_update_UxUyUz (HklGuiWindow* self) {
-	HklSampleList* _tmp0_;
-	HklSample* _tmp1_;
-	HklSample* sample;
-	HklSample* _tmp2_;
-
-	g_return_if_fail (self != NULL);
-
-	_tmp0_ = priv->samples;
-
-	_tmp1_ = _tmp0_->current;
-
-	sample = _tmp1_;
-
-	_tmp2_ = sample;
-
-	if (_tmp2_ != NULL) {
-
-		GtkSpinButton* _tmp3_;
-		HklSample* _tmp4_;
-		HklParameter* _tmp5_;
-		gdouble _tmp6_ = 0.0;
-		GtkSpinButton* _tmp7_;
-		HklSample* _tmp8_;
-		HklParameter* _tmp9_;
-		gdouble _tmp10_ = 0.0;
-		GtkSpinButton* _tmp11_;
-		HklSample* _tmp12_;
-		HklParameter* _tmp13_;
-		gdouble _tmp14_ = 0.0;
-		GtkCheckButton* _tmp15_;
-		HklSample* _tmp16_;
-		HklParameter* _tmp17_;
-		gboolean _tmp18_;
-		GtkCheckButton* _tmp19_;
-		HklSample* _tmp20_;
-		HklParameter* _tmp21_;
-		gboolean _tmp22_;
-		GtkCheckButton* _tmp23_;
-		HklSample* _tmp24_;
-		HklParameter* _tmp25_;
-		gboolean _tmp26_;
-
-		_tmp3_ = priv->_spinbutton_ux;
-
-		_tmp4_ = sample;
-
-		_tmp5_ = _tmp4_->ux;
-
-		_tmp6_ = hkl_parameter_get_value_unit (_tmp5_);
-
-		gtk_spin_button_set_value (_tmp3_, _tmp6_);
-
-		_tmp7_ = priv->_spinbutton_uy;
-
-		_tmp8_ = sample;
-
-		_tmp9_ = _tmp8_->uy;
-
-		_tmp10_ = hkl_parameter_get_value_unit (_tmp9_);
-
-		gtk_spin_button_set_value (_tmp7_, _tmp10_);
-
-		_tmp11_ = priv->_spinbutton_uz;
-
-		_tmp12_ = sample;
-
-		_tmp13_ = _tmp12_->uz;
-
-		_tmp14_ = hkl_parameter_get_value_unit (_tmp13_);
-
-		gtk_spin_button_set_value (_tmp11_, _tmp14_);
-
-		_tmp15_ = priv->_checkbutton_Ux;
-
-		_tmp16_ = sample;
-
-		_tmp17_ = _tmp16_->ux;
-
-		_tmp18_ = (*_tmp17_).fit;
-
-		gtk_toggle_button_set_active ((GtkToggleButton*) _tmp15_, _tmp18_);
-
-		_tmp19_ = priv->_checkbutton_Uy;
-
-		_tmp20_ = sample;
-
-		_tmp21_ = _tmp20_->uy;
-
-		_tmp22_ = (*_tmp21_).fit;
-
-		gtk_toggle_button_set_active ((GtkToggleButton*) _tmp19_, _tmp22_);
-
-		_tmp23_ = priv->_checkbutton_Uz;
-
-		_tmp24_ = sample;
-
-		_tmp25_ = _tmp24_->uz;
-
-		_tmp26_ = (*_tmp25_).fit;
-
-		gtk_toggle_button_set_active ((GtkToggleButton*) _tmp23_, _tmp26_);
-
-	}
-}
 
 
 static void hkl_gui_window_on_tree_view_pseudo_axes_cursor_changed (HklGuiWindow* self) {
