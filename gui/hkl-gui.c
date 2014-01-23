@@ -1583,6 +1583,57 @@ update_ux_uy_uz (HklGuiWindow* self)
 	}
 }
 
+static void
+update_UB (HklGuiWindow* self)
+{
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
+
+	g_return_if_fail (self != NULL);
+
+	if (priv->sample != NULL) {
+		const HklMatrix *UB = hkl_sample_UB_get (priv->sample);
+		gchar *text = g_new0 (gchar, G_ASCII_DTOSTR_BUF_SIZE);
+
+		gtk_label_set_text(priv->_label_UB11,
+				   g_ascii_dtostr(text,
+						  G_ASCII_DTOSTR_BUF_SIZE,
+						  hkl_matrix_get(UB, 0, 0)));
+		gtk_label_set_text(priv->_label_UB12,
+				   g_ascii_dtostr(text,
+						  G_ASCII_DTOSTR_BUF_SIZE,
+						  hkl_matrix_get(UB, 0, 1)));
+		gtk_label_set_text(priv->_label_UB13,
+				   g_ascii_dtostr(text,
+						  G_ASCII_DTOSTR_BUF_SIZE,
+						  hkl_matrix_get(UB, 0, 2)));
+		gtk_label_set_text(priv->_label_UB21,
+				   g_ascii_dtostr(text,
+						  G_ASCII_DTOSTR_BUF_SIZE,
+						  hkl_matrix_get(UB, 1, 0)));
+		gtk_label_set_text(priv->_label_UB22,
+				   g_ascii_dtostr(text,
+						  G_ASCII_DTOSTR_BUF_SIZE,
+						  hkl_matrix_get(UB, 1, 1)));
+		gtk_label_set_text(priv->_label_UB23,
+				   g_ascii_dtostr(text,
+						  G_ASCII_DTOSTR_BUF_SIZE,
+						  hkl_matrix_get(UB, 1, 2)));
+		gtk_label_set_text(priv->_label_UB31,
+				   g_ascii_dtostr(text,
+						  G_ASCII_DTOSTR_BUF_SIZE,
+						  hkl_matrix_get(UB, 2, 0)));
+		gtk_label_set_text(priv->_label_UB32,
+				   g_ascii_dtostr(text,
+						  G_ASCII_DTOSTR_BUF_SIZE,
+						  hkl_matrix_get(UB, 2, 1)));
+		gtk_label_set_text(priv->_label_UB33,
+				   g_ascii_dtostr(text,
+						  G_ASCII_DTOSTR_BUF_SIZE,
+						  hkl_matrix_get(UB, 2, 2)));
+		g_free(text);
+	}
+}
+
 void
 hkl_gui_window_treeview_crystals_cursor_changed_cb (GtkTreeView* _sender, gpointer user_data)
 {
@@ -1613,7 +1664,7 @@ hkl_gui_window_treeview_crystals_cursor_changed_cb (GtkTreeView* _sender, gpoint
 				update_lattice(self);
 				update_reciprocal_lattice (self);
 				update_ux_uy_uz (self);
-				/* update_UB (self); */
+				update_UB (self);
 				update_pseudo_axes (self);
 				update_pseudo_axes_frames (self);
 			}
@@ -2454,349 +2505,7 @@ static void hkl_gui_window_update_pseudo_axes_parameters (HklGuiWindow* self) {
 
 
 
-static gchar* double_to_string (gdouble self) {
-	gchar* result = NULL;
-	gchar* _tmp0_ = NULL;
-	gchar* _tmp1_;
-	gint _tmp1__length1;
-	const gchar* _tmp2_ = NULL;
-	gchar* _tmp3_;
-	gchar* _tmp4_;
 
-	_tmp0_ = g_new0 (gchar, G_ASCII_DTOSTR_BUF_SIZE);
-
-	_tmp1_ = _tmp0_;
-
-	_tmp1__length1 = G_ASCII_DTOSTR_BUF_SIZE;
-
-	_tmp2_ = g_ascii_dtostr (_tmp1_, G_ASCII_DTOSTR_BUF_SIZE, self);
-
-	_tmp3_ = g_strdup (_tmp2_);
-
-	_tmp4_ = _tmp3_;
-
-	_tmp1_ = (g_free (_tmp1_), NULL);
-
-	result = _tmp4_;
-
-	return result;
-
-}
-
-
-static void hkl_gui_window_update_UB (HklGuiWindow* self) {
-	HklSampleList* _tmp0_;
-	HklSample* _tmp1_;
-	HklSample* sample;
-	HklSample* _tmp2_;
-
-	g_return_if_fail (self != NULL);
-
-	_tmp0_ = priv->samples;
-
-	_tmp1_ = _tmp0_->current;
-
-	sample = _tmp1_;
-
-	_tmp2_ = sample;
-
-	if (_tmp2_ != NULL) {
-
-		HklMatrix UB = {0};
-		HklSample* _tmp3_;
-		HklMatrix _tmp4_ = {0};
-		GtkLabel* _tmp5_;
-		HklMatrix _tmp6_;
-		gdouble** _tmp7_;
-		gint _tmp7__length1;
-		gdouble* _tmp8_;
-		gint _tmp8__length1;
-		gdouble _tmp9_;
-		gchar* _tmp10_ = NULL;
-		gchar* _tmp11_;
-		GtkLabel* _tmp12_;
-		HklMatrix _tmp13_;
-		gdouble** _tmp14_;
-		gint _tmp14__length1;
-		gdouble* _tmp15_;
-		gint _tmp15__length1;
-		gdouble _tmp16_;
-		gchar* _tmp17_ = NULL;
-		gchar* _tmp18_;
-		GtkLabel* _tmp19_;
-		HklMatrix _tmp20_;
-		gdouble** _tmp21_;
-		gint _tmp21__length1;
-		gdouble* _tmp22_;
-		gint _tmp22__length1;
-		gdouble _tmp23_;
-		gchar* _tmp24_ = NULL;
-		gchar* _tmp25_;
-		GtkLabel* _tmp26_;
-		HklMatrix _tmp27_;
-		gdouble** _tmp28_;
-		gint _tmp28__length1;
-		gdouble* _tmp29_;
-		gint _tmp29__length1;
-		gdouble _tmp30_;
-		gchar* _tmp31_ = NULL;
-		gchar* _tmp32_;
-		GtkLabel* _tmp33_;
-		HklMatrix _tmp34_;
-		gdouble** _tmp35_;
-		gint _tmp35__length1;
-		gdouble* _tmp36_;
-		gint _tmp36__length1;
-		gdouble _tmp37_;
-		gchar* _tmp38_ = NULL;
-		gchar* _tmp39_;
-		GtkLabel* _tmp40_;
-		HklMatrix _tmp41_;
-		gdouble** _tmp42_;
-		gint _tmp42__length1;
-		gdouble* _tmp43_;
-		gint _tmp43__length1;
-		gdouble _tmp44_;
-		gchar* _tmp45_ = NULL;
-		gchar* _tmp46_;
-		GtkLabel* _tmp47_;
-		HklMatrix _tmp48_;
-		gdouble** _tmp49_;
-		gint _tmp49__length1;
-		gdouble* _tmp50_;
-		gint _tmp50__length1;
-		gdouble _tmp51_;
-		gchar* _tmp52_ = NULL;
-		gchar* _tmp53_;
-		GtkLabel* _tmp54_;
-		HklMatrix _tmp55_;
-		gdouble** _tmp56_;
-		gint _tmp56__length1;
-		gdouble* _tmp57_;
-		gint _tmp57__length1;
-		gdouble _tmp58_;
-		gchar* _tmp59_ = NULL;
-		gchar* _tmp60_;
-		GtkLabel* _tmp61_;
-		HklMatrix _tmp62_;
-		gdouble** _tmp63_;
-		gint _tmp63__length1;
-		gdouble* _tmp64_;
-		gint _tmp64__length1;
-		gdouble _tmp65_;
-		gchar* _tmp66_ = NULL;
-		gchar* _tmp67_;
-
-		_tmp3_ = sample;
-
-		hkl_sample_get_UB (_tmp3_, &_tmp4_);
-
-		(&UB);
-
-		UB = _tmp4_;
-
-		_tmp5_ = priv->_label_UB11;
-
-		_tmp6_ = UB;
-
-		_tmp7_ = _tmp6_.data;
-
-		_tmp7__length1 = -1;
-
-		_tmp8_ = _tmp7_[0];
-
-		_tmp8__length1 = -1;
-
-		_tmp9_ = _tmp8_[0];
-
-		_tmp10_ = double_to_string (_tmp9_);
-
-		_tmp11_ = _tmp10_;
-
-		gtk_label_set_text (_tmp5_, _tmp11_);
-
-		_g_free0 (_tmp11_);
-
-		_tmp12_ = priv->_label_UB12;
-
-		_tmp13_ = UB;
-
-		_tmp14_ = _tmp13_.data;
-
-		_tmp14__length1 = -1;
-
-		_tmp15_ = _tmp14_[0];
-
-		_tmp15__length1 = -1;
-
-		_tmp16_ = _tmp15_[1];
-
-		_tmp17_ = double_to_string (_tmp16_);
-
-		_tmp18_ = _tmp17_;
-
-		gtk_label_set_text (_tmp12_, _tmp18_);
-
-		_g_free0 (_tmp18_);
-
-		_tmp19_ = priv->_label_UB13;
-
-		_tmp20_ = UB;
-
-		_tmp21_ = _tmp20_.data;
-
-		_tmp21__length1 = -1;
-
-		_tmp22_ = _tmp21_[0];
-
-		_tmp22__length1 = -1;
-
-		_tmp23_ = _tmp22_[2];
-
-		_tmp24_ = double_to_string (_tmp23_);
-
-		_tmp25_ = _tmp24_;
-
-		gtk_label_set_text (_tmp19_, _tmp25_);
-
-		_g_free0 (_tmp25_);
-
-		_tmp26_ = priv->_label_UB21;
-
-		_tmp27_ = UB;
-
-		_tmp28_ = _tmp27_.data;
-
-		_tmp28__length1 = -1;
-
-		_tmp29_ = _tmp28_[1];
-
-		_tmp29__length1 = -1;
-
-		_tmp30_ = _tmp29_[0];
-
-		_tmp31_ = double_to_string (_tmp30_);
-
-		_tmp32_ = _tmp31_;
-
-		gtk_label_set_text (_tmp26_, _tmp32_);
-
-		_g_free0 (_tmp32_);
-
-		_tmp33_ = priv->_label_UB22;
-
-		_tmp34_ = UB;
-
-		_tmp35_ = _tmp34_.data;
-
-		_tmp35__length1 = -1;
-
-		_tmp36_ = _tmp35_[1];
-
-		_tmp36__length1 = -1;
-
-		_tmp37_ = _tmp36_[1];
-
-		_tmp38_ = double_to_string (_tmp37_);
-
-		_tmp39_ = _tmp38_;
-
-		gtk_label_set_text (_tmp33_, _tmp39_);
-
-		_g_free0 (_tmp39_);
-
-		_tmp40_ = priv->_label_UB23;
-
-		_tmp41_ = UB;
-
-		_tmp42_ = _tmp41_.data;
-
-		_tmp42__length1 = -1;
-
-		_tmp43_ = _tmp42_[1];
-
-		_tmp43__length1 = -1;
-
-		_tmp44_ = _tmp43_[2];
-
-		_tmp45_ = double_to_string (_tmp44_);
-
-		_tmp46_ = _tmp45_;
-
-		gtk_label_set_text (_tmp40_, _tmp46_);
-
-		_g_free0 (_tmp46_);
-
-		_tmp47_ = priv->_label_UB31;
-
-		_tmp48_ = UB;
-
-		_tmp49_ = _tmp48_.data;
-
-		_tmp49__length1 = -1;
-
-		_tmp50_ = _tmp49_[2];
-
-		_tmp50__length1 = -1;
-
-		_tmp51_ = _tmp50_[0];
-
-		_tmp52_ = double_to_string (_tmp51_);
-
-		_tmp53_ = _tmp52_;
-
-		gtk_label_set_text (_tmp47_, _tmp53_);
-
-		_g_free0 (_tmp53_);
-
-		_tmp54_ = priv->_label_UB32;
-
-		_tmp55_ = UB;
-
-		_tmp56_ = _tmp55_.data;
-
-		_tmp56__length1 = -1;
-
-		_tmp57_ = _tmp56_[2];
-
-		_tmp57__length1 = -1;
-
-		_tmp58_ = _tmp57_[1];
-
-		_tmp59_ = double_to_string (_tmp58_);
-
-		_tmp60_ = _tmp59_;
-
-		gtk_label_set_text (_tmp54_, _tmp60_);
-
-		_g_free0 (_tmp60_);
-
-		_tmp61_ = priv->_label_UB33;
-
-		_tmp62_ = UB;
-
-		_tmp63_ = _tmp62_.data;
-
-		_tmp63__length1 = -1;
-
-		_tmp64_ = _tmp63_[2];
-
-		_tmp64__length1 = -1;
-
-		_tmp65_ = _tmp64_[2];
-
-		_tmp66_ = double_to_string (_tmp65_);
-
-		_tmp67_ = _tmp66_;
-
-		gtk_label_set_text (_tmp61_, _tmp67_);
-
-		_g_free0 (_tmp67_);
-
-		(&UB);
-
-	}
-}
 
 
 
