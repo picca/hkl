@@ -1452,14 +1452,14 @@ hkl_gui_window_toolbutton_del_reflection_clicked_cb (GtkToolButton* _sender, gpo
 			switch (gtk_dialog_run (GTK_DIALOG(dialog))) {
 			case GTK_RESPONSE_YES:
 			{
-				g_list_foreach(list, _del_reflection, NULL);
+				g_list_foreach(list, _del_reflection, self);
 				update_reflections (self);
 				break;
 			}
 			default:
 				break;
 			}
-
+			gtk_widget_destroy (GTK_WIDGET(dialog));
 			g_list_free_full (list, (GDestroyNotify) gtk_tree_path_free);
 		} else {
 			gtk_statusbar_push (priv->_statusbar, 0,
