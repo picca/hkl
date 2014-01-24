@@ -1328,7 +1328,7 @@ hkl_gui_window_toolbutton_add_reflection_clicked_cb(GtkToolButton* _sender,
 		flag = hkl_sample_reflection_flag_get(reflection);
 
 		n_rows = gtk_tree_model_iter_n_children(GTK_TREE_MODEL(priv->_liststore_reflections),
-							NULL );
+							NULL);
 		gtk_list_store_insert_with_values (priv->_liststore_reflections,
 						   &iter, -1,
 						   REFLECTION_COL_INDEX, n_rows,
