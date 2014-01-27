@@ -3513,8 +3513,6 @@ static void hkl_gui_window_init (HklGuiWindow * self)
 	set_up_diffractometer_model (self);
 
 	set_up_tree_view_crystals (self);
-
-	//hkl_gui_window_update_source (self);
 }
 
 int main (int argc, char ** argv)
