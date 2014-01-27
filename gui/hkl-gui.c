@@ -565,46 +565,49 @@ update_solutions (HklGuiWindow* self)
 
 	g_return_if_fail (self != NULL);
 
-	geometries = hkl_engine_list_geometries(priv->diffractometer->engines);
 
-	gtk_list_store_clear(priv->_liststore_solutions);
-	items = hkl_geometry_list_items_get(geometries);
-	if (darray_size(*items)){
-		gint n_values = gtk_tree_model_get_n_columns (GTK_TREE_MODEL(priv->_liststore_solutions));
-		GValue *values = g_new0(GValue, n_values);
-		gint *columns = g_new0(gint, n_values);
-		gint i;
+	if(priv->diffractometer){
+		geometries = hkl_engine_list_geometries(priv->diffractometer->engines);
 
-		/* prepare the GValue before using them */
-		g_value_init(&values[0], G_TYPE_INT);
-		for(i=1; i<n_values; ++i)
-			g_value_init(&values[i], G_TYPE_DOUBLE);
+		gtk_list_store_clear(priv->_liststore_solutions);
+		items = hkl_geometry_list_items_get(geometries);
+		if (darray_size(*items)){
+			gint n_values = gtk_tree_model_get_n_columns (GTK_TREE_MODEL(priv->_liststore_solutions));
+			GValue *values = g_new0(GValue, n_values);
+			gint *columns = g_new0(gint, n_values);
+			gint i;
 
-		for(i=0; i<darray_size(*items);++i){
-			gint column = 0;
-			const HklGeometry *geometry;
-			HklParameter **parameter;
-			const darray_parameter *parameters;
+			/* prepare the GValue before using them */
+			g_value_init(&values[0], G_TYPE_INT);
+			for(i=1; i<n_values; ++i)
+				g_value_init(&values[i], G_TYPE_DOUBLE);
 
-			geometry = hkl_geometry_list_item_geometry_get(darray_item(*items, i));
-			parameters = hkl_geometry_axes_get(geometry);
+			for(i=0; i<darray_size(*items);++i){
+				gint column = 0;
+				const HklGeometry *geometry;
+				HklParameter **parameter;
+				const darray_parameter *parameters;
 
-			g_value_set_int(&values[column], i);
-			columns[0] = column;
+				geometry = hkl_geometry_list_item_geometry_get(darray_item(*items, i));
+				parameters = hkl_geometry_axes_get(geometry);
 
-			darray_foreach(parameter, *parameters){
-				double value = hkl_parameter_value_unit_get(*parameter);
+				g_value_set_int(&values[column], i);
+				columns[0] = column;
 
-				column = column + 1;
-				g_value_set_double(&values[column], value);
-				columns[column] = column;
+				darray_foreach(parameter, *parameters){
+					double value = hkl_parameter_value_unit_get(*parameter);
+
+					column = column + 1;
+					g_value_set_double(&values[column], value);
+					columns[column] = column;
+				}
+				gtk_list_store_insert_with_valuesv(priv->_liststore_solutions,
+								   &iter, i,
+								   columns, values, n_values);
 			}
-			gtk_list_store_insert_with_valuesv(priv->_liststore_solutions,
-							   &iter, i,
-							   columns, values, n_values);
+			g_free(columns);
+			g_free(values);
 		}
-		g_free(columns);
-		g_free(values);
 	}
 }
 
@@ -1659,7 +1662,7 @@ hkl_gui_window_treeview_crystals_cursor_changed_cb (GtkTreeView* _sender, gpoint
 					    SAMPLE_COL_SAMPLE, &sample,
 					    -1);
 
-			if(sample){
+			if(sample && sample != priv->sample){
 				priv->sample = sample;
 				diffractometer_engine_list_init(priv->diffractometer,
 								priv->sample);
@@ -1670,6 +1673,7 @@ hkl_gui_window_treeview_crystals_cursor_changed_cb (GtkTreeView* _sender, gpoint
 				update_UB (self);
 				update_pseudo_axes (self);
 				update_pseudo_axes_frames (self);
+				update_solutions(self);
 			}
 		}
 		gtk_tree_path_free (path);
