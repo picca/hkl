@@ -154,17 +154,23 @@ diffractometer_get_pseudo(struct diffractometer_t *self)
 }
 
 static void
-diffractometer_engine_list_init(struct diffractometer_t *self,
-				HklSample *sample)
+diffractometer_set_sample(struct diffractometer_t *self,
+			  HklSample *sample)
 {
-	g_return_if_fail(self != NULL);
-	g_return_if_fail(sample != NULL);
-
 	hkl_engine_list_init(self->engines,
 			     self->geometry,
 			     self->detector,
 			     sample);
-	diffractometer_get_pseudo(self);
+	hkl_engine_list_get(self->engines);
+}
+
+static void
+diffractometer_set_wavelength(struct diffractometer_t *self,
+			      double wavelength)
+{
+	hkl_geometry_wavelength_set(self->geometry,
+				    wavelength);
+	hkl_engine_list_get(self->engines);
 }
 
 /****************/
@@ -922,6 +928,19 @@ set_up_info_bar(HklGuiWindow *self)
 			   TRUE, TRUE, 0);
 }
 
+static void
+set_up_lambda(HklGuiWindow *self)
+{
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
+
+	g_object_set(G_OBJECT(priv->_spinbutton_lambda),
+		     "sensitive", TRUE,
+		     NULL);
+
+	gtk_spin_button_set_value(priv->_spinbutton_lambda,
+				  hkl_geometry_wavelength_get(priv->diffractometer->geometry));
+}
+
 void
 hkl_gui_window_combobox1_changed_cb(GtkComboBox *combobox, gpointer *user_data)
 {
@@ -946,23 +965,22 @@ hkl_gui_window_combobox1_changed_cb(GtkComboBox *combobox, gpointer *user_data)
 					   DIFFRACTOMETER_COL_DIFFRACTOMETER, dif,
 					   -1);
 		}
-		printf("toto\n");
 	}
-	priv->diffractometer = dif;
-	/* TODO check if this is the right place for this */
-	hkl_engine_list_init(dif->engines, dif->geometry, dif->detector, priv->sample);
+	if(dif != priv->diffractometer){
+		priv->diffractometer = dif;
 
-	set_up_pseudo_axes_frames(self);
-	set_up_tree_view_axes(self);
-	set_up_tree_view_pseudo_axes(self);
+		diffractometer_set_sample(dif, priv->sample);
 
-	/* FIXME create the right solution Model Column */
-	/* this._solutionModelColumns = 0; */
-	set_up_tree_view_solutions(self);
-	set_up_info_bar(self);
+		set_up_lambda(self);
+		set_up_pseudo_axes_frames(self);
+		set_up_tree_view_axes(self);
+		set_up_tree_view_pseudo_axes(self);
+		set_up_tree_view_solutions(self);
+		set_up_info_bar(self);
 #if HKL3D
-	set_up_3D(self);
+		set_up_3D(self);
 #endif
+	}
 }
 
 
@@ -1663,8 +1681,8 @@ hkl_gui_window_treeview_crystals_cursor_changed_cb (GtkTreeView* _sender, gpoint
 
 			if(sample && sample != priv->sample){
 				priv->sample = sample;
-				diffractometer_engine_list_init(priv->diffractometer,
-								priv->sample);
+				diffractometer_set_sample(priv->diffractometer,
+							  priv->sample);
 				update_reflections(self);
 				update_lattice(self);
 				update_reciprocal_lattice (self);
@@ -1950,16 +1968,19 @@ hkl_gui_window_button2_clicked_cb (GtkButton* _sender, gpointer user_data)
 	}
 }
 
+void
+hkl_gui_window_spinbutton_lambda_value_changed_cb (GtkSpinButton* _sender, gpointer user_data)
+{
+	HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
 
+	diffractometer_set_wavelength(priv->diffractometer,
+				      gtk_spin_button_get_value(_sender));
+	update_pseudo_axes (self);
+	update_pseudo_axes_frames (self);
+}
 
 /*
-
-
-static void _hkl_gui_window_on_spinbutton_lambda_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_spinbutton_lambda_value_changed (self);
-
-}
 
 
 static void _hkl_gui_window_on_spinbutton_uxuyuz_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self) {
@@ -2189,32 +2210,6 @@ static void hkl_gui_window_set_up_3D (HklGuiWindow* self) {
 	gtk_widget_show_all ((GtkWidget*) _tmp11_);
 
 }
-
-
-
-
-
-static void hkl_gui_window_on_spinbutton_lambda_value_changed (HklGuiWindow* self) {
-	HklGeometry* _tmp0_;
-	GtkSpinButton* _tmp1_;
-	gdouble _tmp2_ = 0.0;
-
-	g_return_if_fail (self != NULL);
-
-	_tmp0_ = priv->geometry;
-
-	_tmp1_ = priv->_spinbutton_lambda;
-
-	_tmp2_ = gtk_spin_button_get_value (_tmp1_);
-
-	_tmp0_->source.wave_length = _tmp2_;
-
-	hkl_gui_window_update_pseudo_axes (self);
-
-	hkl_gui_window_update_pseudo_axes_frames (self);
-
-}
-
 
 static void hkl_gui_window_on_spinbutton_uxuyuz_value_changed (HklGuiWindow* self) {
 

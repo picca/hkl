@@ -598,12 +598,14 @@
                             <child>
                               <object class="GtkSpinButton" id="spinbutton_lambda">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="invisible_char">●</property>
                                 <property name="invisible_char_set">True</property>
                                 <property name="adjustment">adjustment4</property>
                                 <property name="climb_rate">1</property>
                                 <property name="digits">3</property>
+                                <signal name="value-changed" handler="hkl_gui_window_spinbutton_lambda_value_changed_cb" swapped="no"/>
                               </object>
                             </child>
                           </object>
