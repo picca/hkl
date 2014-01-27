@@ -565,7 +565,6 @@ update_solutions (HklGuiWindow* self)
 
 	g_return_if_fail (self != NULL);
 
-
 	if(priv->diffractometer){
 		geometries = hkl_engine_list_geometries(priv->diffractometer->engines);
 
