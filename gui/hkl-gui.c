@@ -148,12 +148,6 @@ dump_diffractometer(struct diffractometer_t *self)
 }
 
 static void
-diffractometer_get_pseudo(struct diffractometer_t *self)
-{
-	hkl_engine_list_get(self->engines);
-}
-
-static void
 diffractometer_set_sample(struct diffractometer_t *self,
 			  HklSample *sample)
 {
@@ -941,6 +935,7 @@ set_up_lambda(HklGuiWindow *self)
 				  hkl_geometry_wavelength_get(priv->diffractometer->geometry));
 }
 
+/* select diffractometer */
 void
 hkl_gui_window_combobox1_changed_cb(GtkComboBox *combobox, gpointer *user_data)
 {
@@ -1681,16 +1676,21 @@ hkl_gui_window_treeview_crystals_cursor_changed_cb (GtkTreeView* _sender, gpoint
 
 			if(sample && sample != priv->sample){
 				priv->sample = sample;
-				diffractometer_set_sample(priv->diffractometer,
-							  priv->sample);
+
 				update_reflections(self);
 				update_lattice(self);
 				update_reciprocal_lattice (self);
 				update_ux_uy_uz (self);
 				update_UB (self);
-				update_pseudo_axes (self);
-				update_pseudo_axes_frames (self);
-				update_solutions(self);
+
+				if(priv->diffractometer){
+					diffractometer_set_sample(priv->diffractometer,
+								  priv->sample);
+
+					update_pseudo_axes (self);
+					update_pseudo_axes_frames (self);
+					update_solutions(self);
+				}
 			}
 		}
 		gtk_tree_path_free (path);
@@ -1740,7 +1740,7 @@ set_up_tree_view_crystals (HklGuiWindow* self)
 
 	g_return_if_fail (self != NULL);
 
-	iter = _add_sample(self, priv->sample);
+	iter = _add_sample(self, hkl_sample_new("default"));
 
 	path = gtk_tree_model_get_path(GTK_TREE_MODEL(priv->_liststore_crystals),
 				       &iter);
@@ -1898,8 +1898,6 @@ _update_crystal_model(GtkTreeModel *model,
 				   SAMPLE_COL_BETA, beta,
 				   SAMPLE_COL_GAMMA, gamma,
 				   -1);
-		diffractometer_get_pseudo(priv->diffractometer);
-
 		return TRUE;
 	}
 	return FALSE;
@@ -1959,6 +1957,10 @@ hkl_gui_window_button2_clicked_cb (GtkButton* _sender, gpointer user_data)
 		get_ux_uy_uz(priv->sample, ux);
 		get_ux_uy_uz(priv->sample, uy);
 		get_ux_uy_uz(priv->sample, uz);
+
+		if(priv->diffractometer)
+			diffractometer_set_sample(priv->diffractometer,
+						  priv->sample);
 
 		update_crystal_model (self);
 		update_reciprocal_lattice (self);
@@ -3082,10 +3084,10 @@ static void hkl_gui_window_init (HklGuiWindow * self)
 	HklGuiWindowPrivate *priv =  HKL_GUI_WINDOW_GET_PRIVATE(self);
 
 	priv->diffractometer = NULL;
+	priv->sample = NULL;
 
 	darray_init(priv->pseudo_frames);
 
-	priv->sample = hkl_sample_new ("test");
 	priv->reciprocal = hkl_lattice_new_default ();
 
 	hkl_gui_window_get_widgets_and_objects_from_ui (self);
