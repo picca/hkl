@@ -1601,6 +1601,14 @@ update_ux_uy_uz (HklGuiWindow* self)
 	}
 }
 
+#define set_UB(i, j) do{						\
+		gtk_label_set_markup(priv->_label_UB ## i ## j,		\
+				     g_ascii_formatd(text,		\
+						     G_ASCII_DTOSTR_BUF_SIZE, \
+						     "<tt> %+.4f </tt>",	\
+						     hkl_matrix_get(UB, i - 1, j - 1))); \
+	}while(0)
+
 static void
 update_UB (HklGuiWindow* self)
 {
@@ -1612,42 +1620,16 @@ update_UB (HklGuiWindow* self)
 		const HklMatrix *UB = hkl_sample_UB_get (priv->sample);
 		gchar *text = g_new0 (gchar, G_ASCII_DTOSTR_BUF_SIZE);
 
-		gtk_label_set_text(priv->_label_UB11,
-				   g_ascii_dtostr(text,
-						  G_ASCII_DTOSTR_BUF_SIZE,
-						  hkl_matrix_get(UB, 0, 0)));
-		gtk_label_set_text(priv->_label_UB12,
-				   g_ascii_dtostr(text,
-						  G_ASCII_DTOSTR_BUF_SIZE,
-						  hkl_matrix_get(UB, 0, 1)));
-		gtk_label_set_text(priv->_label_UB13,
-				   g_ascii_dtostr(text,
-						  G_ASCII_DTOSTR_BUF_SIZE,
-						  hkl_matrix_get(UB, 0, 2)));
-		gtk_label_set_text(priv->_label_UB21,
-				   g_ascii_dtostr(text,
-						  G_ASCII_DTOSTR_BUF_SIZE,
-						  hkl_matrix_get(UB, 1, 0)));
-		gtk_label_set_text(priv->_label_UB22,
-				   g_ascii_dtostr(text,
-						  G_ASCII_DTOSTR_BUF_SIZE,
-						  hkl_matrix_get(UB, 1, 1)));
-		gtk_label_set_text(priv->_label_UB23,
-				   g_ascii_dtostr(text,
-						  G_ASCII_DTOSTR_BUF_SIZE,
-						  hkl_matrix_get(UB, 1, 2)));
-		gtk_label_set_text(priv->_label_UB31,
-				   g_ascii_dtostr(text,
-						  G_ASCII_DTOSTR_BUF_SIZE,
-						  hkl_matrix_get(UB, 2, 0)));
-		gtk_label_set_text(priv->_label_UB32,
-				   g_ascii_dtostr(text,
-						  G_ASCII_DTOSTR_BUF_SIZE,
-						  hkl_matrix_get(UB, 2, 1)));
-		gtk_label_set_text(priv->_label_UB33,
-				   g_ascii_dtostr(text,
-						  G_ASCII_DTOSTR_BUF_SIZE,
-						  hkl_matrix_get(UB, 2, 2)));
+		set_UB(1, 1);
+		set_UB(1, 2);
+		set_UB(1, 3);
+		set_UB(2, 1);
+		set_UB(2, 2);
+		set_UB(2, 3);
+		set_UB(3, 1);
+		set_UB(3, 2);
+		set_UB(3, 3);
+
 		g_free(text);
 	}
 }
