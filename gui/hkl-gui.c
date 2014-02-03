@@ -1964,6 +1964,57 @@ hkl_gui_window_spinbutton_lambda_value_changed_cb (GtkSpinButton* _sender, gpoin
 	update_pseudo_axes_frames (self);
 }
 
+void
+hkl_gui_window_spinbutton_ux_value_changed_cb (GtkSpinButton *_senser, gpointer user_data)
+{
+	HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
+
+	get_ux_uy_uz(priv->sample, ux);
+
+	if(priv->diffractometer)
+		diffractometer_set_sample(priv->diffractometer,
+					  priv->sample);
+
+	update_UB (self);
+	update_pseudo_axes (self);
+	update_pseudo_axes_frames (self);
+}
+
+void
+hkl_gui_window_spinbutton_uy_value_changed_cb (GtkSpinButton *_senser, gpointer user_data)
+{
+	HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
+
+	get_ux_uy_uz(priv->sample, uy);
+
+	if(priv->diffractometer)
+		diffractometer_set_sample(priv->diffractometer,
+					  priv->sample);
+
+	update_UB (self);
+	update_pseudo_axes (self);
+	update_pseudo_axes_frames (self);
+}
+
+void
+hkl_gui_window_spinbutton_uz_value_changed_cb (GtkSpinButton *_senser, gpointer user_data)
+{
+	HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
+
+	get_ux_uy_uz(priv->sample, uz);
+
+	if(priv->diffractometer)
+		diffractometer_set_sample(priv->diffractometer,
+					  priv->sample);
+
+	update_UB (self);
+	update_pseudo_axes (self);
+	update_pseudo_axes_frames (self);
+}
+
 /*
 
 

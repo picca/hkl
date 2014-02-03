@@ -2036,6 +2036,7 @@
                                     <property name="adjustment">adjustment32</property>
                                     <property name="digits">3</property>
                                     <property name="numeric">True</property>
+                                    <signal name="value-changed" handler="hkl_gui_window_spinbutton_ux_value_changed_cb" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="left_attach">1</property>
@@ -2054,6 +2055,7 @@
                                     <property name="adjustment">adjustment33</property>
                                     <property name="digits">3</property>
                                     <property name="numeric">True</property>
+                                    <signal name="value-changed" handler="hkl_gui_window_spinbutton_uy_value_changed_cb" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="left_attach">1</property>
@@ -2072,6 +2074,7 @@
                                     <property name="adjustment">adjustment34</property>
                                     <property name="digits">3</property>
                                     <property name="numeric">True</property>
+                                    <signal name="value-changed" handler="hkl_gui_window_spinbutton_uz_value_changed_cb" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="left_attach">1</property>
