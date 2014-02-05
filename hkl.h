@@ -332,11 +332,11 @@ HKLAPI void hkl_sample_uz_set(HklSample *self, const HklParameter *uz) HKL_ARG_N
 
 HKLAPI const HklMatrix *hkl_sample_U_get(const HklSample *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_sample_U_set(HklSample *self, const HklMatrix *U) HKL_ARG_NONNULL(1);
+HKLAPI void hkl_sample_U_set(HklSample *self, const HklMatrix *U, HklError **error) HKL_ARG_NONNULL(1);
 
 HKLAPI const HklMatrix *hkl_sample_UB_get(const HklSample *self) HKL_ARG_NONNULL(1);
 
-HKLAPI double hkl_sample_UB_set(HklSample *self, const HklMatrix *UB) HKL_ARG_NONNULL(1, 2);
+HKLAPI double hkl_sample_UB_set(HklSample *self, const HklMatrix *UB, HklError **error) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI HklSampleReflection *hkl_sample_first_reflection_get(HklSample *self) HKL_ARG_NONNULL(1);
 

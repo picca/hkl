@@ -500,7 +500,10 @@ const HklMatrix *hkl_sample_U_get(const HklSample *self)
 	return &self->U;
 }
 
-void hkl_sample_U_set(HklSample *self, const HklMatrix *U)
+/*
+ * TODO implemente the error
+ */
+void hkl_sample_U_set(HklSample *self, const HklMatrix *U, HklError **error)
 {
 	double x, y, z;
 
@@ -527,13 +530,15 @@ const HklMatrix *hkl_sample_UB_get(const HklSample *self)
  * hkl_sample_UB_set:
  * @self: the sample to modify
  * @UB: the UB matrix to set
+ * @error: error set in case of impossibility
  *
  * Set the UB matrix using an external UB matrix. In fact you give
  * the UB matrix but only the U matrix of the sample is affected by
  * this operation. We keep the B matrix constant.
  * U * B = UB -> U = UB * B^-1
+ * TODO implemente the error
  **/
-double hkl_sample_UB_set(HklSample *self, const HklMatrix *UB)
+double hkl_sample_UB_set(HklSample *self, const HklMatrix *UB, HklError **error)
 {
 	struct set_UB_t params = {
 		.sample = self,

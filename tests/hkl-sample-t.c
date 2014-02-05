@@ -119,7 +119,7 @@ static void del_reflection(void)
 	hkl_geometry_free(geometry);
 }
 
-static void  set_UB(void )
+static void set_UB(void )
 {
 	HklSample *sample;
 	HklMatrix *UB = hkl_matrix_new_full(HKL_TAU/1.54, 0., 0.,
@@ -131,7 +131,8 @@ static void  set_UB(void )
 
 	sample = hkl_sample_new("test");
 
-	hkl_sample_UB_set(sample, UB);
+	/* TODO check a U matrix error */
+	hkl_sample_UB_set(sample, UB, NULL);
 	ok(HKL_TRUE == hkl_matrix_cmp(U,
 				      hkl_sample_U_get(sample)), __func__);
 	is_double(-90. * HKL_DEGTORAD,

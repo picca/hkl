@@ -409,3 +409,53 @@ HklSampleReflection *hkl_sample_add_reflection_binding(HklSample *self,
 
 	return reflection;
 }
+
+#define HKL_SAMPLE_ERROR hkl_sample_error_quark ()
+
+GQuark hkl_sample_error_quark (void)
+{
+	return g_quark_from_static_string ("hkl-sample-error-quark");
+}
+
+typedef enum {
+	HKL_SAMPLE_ERROR_UB_SET /* can not set the UB list values */
+} HklSampleError;
+
+
+/**
+ * hkl_sample_UB_set_binding:
+ * @self: the sample to modify
+ * @UB: the UB matrix to set
+ * @error: error set in case of impossibility
+ *
+ * Set the UB matrix using an external UB matrix. In fact you give
+ * the UB matrix but only the U matrix of the sample is affected by
+ * this operation. We keep the B matrix constant.
+ * U * B = UB -> U = UB * B^-1
+ *
+ * Rename to: hkl_sample_UB_set
+ *
+ * Return value: the fitness of the UB affinement.
+ **/
+gdouble hkl_sample_UB_set_binding(HklSample *self,
+				  const HklMatrix *UB,
+				  GError **error)
+{
+	HklError *err = NULL;
+	gdouble fitness;
+
+	g_return_val_if_fail(error == NULL ||*error == NULL, FALSE);
+
+	fitness = hkl_sample_UB_set(self, UB, &err);
+
+	if(err != NULL){
+		g_set_error(error,
+			    HKL_SAMPLE_ERROR,
+			    HKL_SAMPLE_ERROR_UB_SET,
+			    strdup(err->message));
+
+		hkl_error_clear(&err);
+		return NAN;
+	}
+	return fitness;
+}

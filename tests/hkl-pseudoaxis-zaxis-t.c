@@ -51,7 +51,7 @@ static void solution(void)
 				  90 * HKL_DEGTORAD);
 	hkl_sample_lattice_set(sample, lattice);
 	U = hkl_matrix_new_euler(-90*HKL_DEGTORAD, 0, 0);
-	hkl_sample_U_set(sample, U);
+	hkl_sample_U_set(sample, U, NULL);
 	hkl_lattice_free(lattice);
 	hkl_matrix_free(U);
 

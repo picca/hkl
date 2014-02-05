@@ -276,7 +276,7 @@ static void petra3(void)
 	U = hkl_matrix_new_euler(-112.5 * HKL_DEGTORAD,
 				 -87.84 * HKL_DEGTORAD,
 				 157.48 * HKL_DEGTORAD);
-	hkl_sample_U_set(sample, U);
+	hkl_sample_U_set(sample, U, NULL);
 	hkl_matrix_free(U);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
@@ -372,7 +372,7 @@ static void petra3_2(void)
 	U = hkl_matrix_new_euler(-90.0 * HKL_DEGTORAD,
 				 0.0 * HKL_DEGTORAD,
 				 -90.0 * HKL_DEGTORAD);
-	hkl_sample_U_set(sample, U);
+	hkl_sample_U_set(sample, U, NULL);
 	hkl_matrix_free(U);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);

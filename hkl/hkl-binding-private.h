@@ -93,6 +93,11 @@ HKLAPI HklSampleReflection *hkl_sample_add_reflection_binding(HklSample *self,
 							      const HklDetector *detector,
 							      double h, double k, double l);
 
+HKLAPI gdouble hkl_sample_UB_set_binding(HklSample *self,
+					 const HklMatrix *UB,
+					 GError **error);
+
+
 HKL_END_DECLS
 
 #endif /* __HKL_BINDING_PRIVATE_H__ */

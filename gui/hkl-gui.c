@@ -2015,14 +2015,40 @@ hkl_gui_window_spinbutton_uz_value_changed_cb (GtkSpinButton *_senser, gpointer 
 	update_pseudo_axes_frames (self);
 }
 
-/*
+void
+hkl_gui_window_toolbutton_setUB_clicked_cb(GtkToolButton* _sender, gpointer user_data)
+{
+	HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
 
+	HklMatrix *UB;
 
-static void _hkl_gui_window_on_spinbutton_uxuyuz_value_changed_gtk_spin_button_value_changed (GtkSpinButton* _sender, gpointer self) {
+	UB = hkl_matrix_new_full(gtk_spin_button_get_value(priv->_spinbutton_U11),
+				 gtk_spin_button_get_value(priv->_spinbutton_U12),
+				 gtk_spin_button_get_value(priv->_spinbutton_U13),
+				 gtk_spin_button_get_value(priv->_spinbutton_U21),
+				 gtk_spin_button_get_value(priv->_spinbutton_U22),
+				 gtk_spin_button_get_value(priv->_spinbutton_U23),
+				 gtk_spin_button_get_value(priv->_spinbutton_U31),
+				 gtk_spin_button_get_value(priv->_spinbutton_U32),
+				 gtk_spin_button_get_value(priv->_spinbutton_U33));
 
-	hkl_gui_window_on_spinbutton_uxuyuz_value_changed (self);
+	hkl_sample_UB_set (priv->sample, UB, NULL);
+	if(priv->diffractometer)
+		diffractometer_set_sample(priv->diffractometer,
+					  priv->sample);
 
+	update_lattice (self);
+	update_crystal_model (self);
+	update_reciprocal_lattice (self);
+	update_UB (self);
+	update_pseudo_axes (self);
+	update_pseudo_axes_frames (self);
+
+	hkl_matrix_free(UB);
 }
+
+/*
 
 
 static void _hkl_gui_window_on_checkbutton_a_toggled_gtk_toggle_button_toggled (GtkToggleButton* _sender, gpointer self) {
@@ -2104,13 +2130,6 @@ static gboolean _hkl_gui_window_on_tree_view_crystals_key_press_event_gtk_widget
 }
 
 
-
-
-static void _hkl_gui_window_on_toolbutton_setUB_clicked_gtk_tool_button_clicked (GtkToolButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_toolbutton_setUB_clicked (self);
-
-}
 
 
 static void _hkl_gui_window_on_toolbutton_computeUB_clicked_gtk_tool_button_clicked (GtkToolButton* _sender, gpointer self) {
@@ -2245,15 +2264,6 @@ static void hkl_gui_window_set_up_3D (HklGuiWindow* self) {
 	gtk_widget_show_all ((GtkWidget*) _tmp11_);
 
 }
-
-static void hkl_gui_window_on_spinbutton_uxuyuz_value_changed (HklGuiWindow* self) {
-
-	g_return_if_fail (self != NULL);
-
-}
-
-
-
 
 static void hkl_gui_window_on_checkbutton_a_toggled (HklGuiWindow* self) {
 	HklSampleList* _tmp0_;
@@ -2673,312 +2683,6 @@ static void hkl_gui_window_on_cell_tree_view_pseudo_axes_is_initialized_toggled 
 
 }
 
-static void hkl_gui_window_on_toolbutton_setUB_clicked (HklGuiWindow* self) {
-	HklSampleList* _tmp0_;
-	HklSample* _tmp1_;
-
-	g_return_if_fail (self != NULL);
-
-	_tmp0_ = priv->samples;
-
-	_tmp1_ = _tmp0_->current;
-
-	if (_tmp1_ != NULL) {
-
-		HklMatrix UB = {0};
-		HklSampleList* _tmp2_;
-		HklSample* _tmp3_;
-		HklMatrix _tmp4_ = {0};
-		HklMatrix _tmp5_;
-		gdouble** _tmp6_;
-		gint _tmp6__length1;
-		gdouble* _tmp7_;
-		gint _tmp7__length1;
-		GtkSpinButton* _tmp8_;
-		gdouble _tmp9_ = 0.0;
-		gdouble _tmp10_;
-		HklMatrix _tmp11_;
-		gdouble** _tmp12_;
-		gint _tmp12__length1;
-		gdouble* _tmp13_;
-		gint _tmp13__length1;
-		GtkSpinButton* _tmp14_;
-		gdouble _tmp15_ = 0.0;
-		gdouble _tmp16_;
-		HklMatrix _tmp17_;
-		gdouble** _tmp18_;
-		gint _tmp18__length1;
-		gdouble* _tmp19_;
-		gint _tmp19__length1;
-		GtkSpinButton* _tmp20_;
-		gdouble _tmp21_ = 0.0;
-		gdouble _tmp22_;
-		HklMatrix _tmp23_;
-		gdouble** _tmp24_;
-		gint _tmp24__length1;
-		gdouble* _tmp25_;
-		gint _tmp25__length1;
-		GtkSpinButton* _tmp26_;
-		gdouble _tmp27_ = 0.0;
-		gdouble _tmp28_;
-		HklMatrix _tmp29_;
-		gdouble** _tmp30_;
-		gint _tmp30__length1;
-		gdouble* _tmp31_;
-		gint _tmp31__length1;
-		GtkSpinButton* _tmp32_;
-		gdouble _tmp33_ = 0.0;
-		gdouble _tmp34_;
-		HklMatrix _tmp35_;
-		gdouble** _tmp36_;
-		gint _tmp36__length1;
-		gdouble* _tmp37_;
-		gint _tmp37__length1;
-		GtkSpinButton* _tmp38_;
-		gdouble _tmp39_ = 0.0;
-		gdouble _tmp40_;
-		HklMatrix _tmp41_;
-		gdouble** _tmp42_;
-		gint _tmp42__length1;
-		gdouble* _tmp43_;
-		gint _tmp43__length1;
-		GtkSpinButton* _tmp44_;
-		gdouble _tmp45_ = 0.0;
-		gdouble _tmp46_;
-		HklMatrix _tmp47_;
-		gdouble** _tmp48_;
-		gint _tmp48__length1;
-		gdouble* _tmp49_;
-		gint _tmp49__length1;
-		GtkSpinButton* _tmp50_;
-		gdouble _tmp51_ = 0.0;
-		gdouble _tmp52_;
-		HklMatrix _tmp53_;
-		gdouble** _tmp54_;
-		gint _tmp54__length1;
-		gdouble* _tmp55_;
-		gint _tmp55__length1;
-		GtkSpinButton* _tmp56_;
-		gdouble _tmp57_ = 0.0;
-		gdouble _tmp58_;
-		HklSampleList* _tmp59_;
-		HklSample* _tmp60_;
-		HklSampleList* _tmp61_;
-		HklSample* _tmp62_;
-		FILE* _tmp63_;
-		HklSampleList* _tmp64_;
-		HklSample* _tmp65_;
-
-		_tmp2_ = priv->samples;
-
-		_tmp3_ = _tmp2_->current;
-
-		hkl_sample_get_UB (_tmp3_, &_tmp4_);
-
-		(&UB);
-
-		UB = _tmp4_;
-
-		_tmp5_ = UB;
-
-		_tmp6_ = _tmp5_.data;
-
-		_tmp6__length1 = -1;
-
-		_tmp7_ = _tmp6_[0];
-
-		_tmp7__length1 = -1;
-
-		_tmp8_ = priv->_spinbutton_U11;
-
-		_tmp9_ = gtk_spin_button_get_value (_tmp8_);
-
-		_tmp7_[0] = _tmp9_;
-
-		_tmp10_ = _tmp7_[0];
-
-		_tmp11_ = UB;
-
-		_tmp12_ = _tmp11_.data;
-
-		_tmp12__length1 = -1;
-
-		_tmp13_ = _tmp12_[0];
-
-		_tmp13__length1 = -1;
-
-		_tmp14_ = priv->_spinbutton_U12;
-
-		_tmp15_ = gtk_spin_button_get_value (_tmp14_);
-
-		_tmp13_[1] = _tmp15_;
-
-		_tmp16_ = _tmp13_[1];
-
-		_tmp17_ = UB;
-
-		_tmp18_ = _tmp17_.data;
-
-		_tmp18__length1 = -1;
-
-		_tmp19_ = _tmp18_[0];
-
-		_tmp19__length1 = -1;
-
-		_tmp20_ = priv->_spinbutton_U13;
-
-		_tmp21_ = gtk_spin_button_get_value (_tmp20_);
-
-		_tmp19_[2] = _tmp21_;
-
-		_tmp22_ = _tmp19_[2];
-
-		_tmp23_ = UB;
-
-		_tmp24_ = _tmp23_.data;
-
-		_tmp24__length1 = -1;
-
-		_tmp25_ = _tmp24_[1];
-
-		_tmp25__length1 = -1;
-
-		_tmp26_ = priv->_spinbutton_U21;
-
-		_tmp27_ = gtk_spin_button_get_value (_tmp26_);
-
-		_tmp25_[0] = _tmp27_;
-
-		_tmp28_ = _tmp25_[0];
-
-		_tmp29_ = UB;
-
-		_tmp30_ = _tmp29_.data;
-
-		_tmp30__length1 = -1;
-
-		_tmp31_ = _tmp30_[1];
-
-		_tmp31__length1 = -1;
-
-		_tmp32_ = priv->_spinbutton_U22;
-
-		_tmp33_ = gtk_spin_button_get_value (_tmp32_);
-
-		_tmp31_[1] = _tmp33_;
-
-		_tmp34_ = _tmp31_[1];
-
-		_tmp35_ = UB;
-
-		_tmp36_ = _tmp35_.data;
-
-		_tmp36__length1 = -1;
-
-		_tmp37_ = _tmp36_[1];
-
-		_tmp37__length1 = -1;
-
-		_tmp38_ = priv->_spinbutton_U23;
-
-		_tmp39_ = gtk_spin_button_get_value (_tmp38_);
-
-		_tmp37_[2] = _tmp39_;
-
-		_tmp40_ = _tmp37_[2];
-
-		_tmp41_ = UB;
-
-		_tmp42_ = _tmp41_.data;
-
-		_tmp42__length1 = -1;
-
-		_tmp43_ = _tmp42_[2];
-
-		_tmp43__length1 = -1;
-
-		_tmp44_ = priv->_spinbutton_U31;
-
-		_tmp45_ = gtk_spin_button_get_value (_tmp44_);
-
-		_tmp43_[0] = _tmp45_;
-
-		_tmp46_ = _tmp43_[0];
-
-		_tmp47_ = UB;
-
-		_tmp48_ = _tmp47_.data;
-
-		_tmp48__length1 = -1;
-
-		_tmp49_ = _tmp48_[2];
-
-		_tmp49__length1 = -1;
-
-		_tmp50_ = priv->_spinbutton_U32;
-
-		_tmp51_ = gtk_spin_button_get_value (_tmp50_);
-
-		_tmp49_[1] = _tmp51_;
-
-		_tmp52_ = _tmp49_[1];
-
-		_tmp53_ = UB;
-
-		_tmp54_ = _tmp53_.data;
-
-		_tmp54__length1 = -1;
-
-		_tmp55_ = _tmp54_[2];
-
-		_tmp55__length1 = -1;
-
-		_tmp56_ = priv->_spinbutton_U33;
-
-		_tmp57_ = gtk_spin_button_get_value (_tmp56_);
-
-		_tmp55_[2] = _tmp57_;
-
-		_tmp58_ = _tmp55_[2];
-
-		_tmp59_ = priv->samples;
-
-		_tmp60_ = _tmp59_->current;
-
-		hkl_sample_set_UB (_tmp60_, &UB);
-
-		_tmp61_ = priv->samples;
-
-		_tmp62_ = _tmp61_->current;
-
-		_tmp63_ = stdout;
-
-		hkl_sample_fprintf (_tmp63_, _tmp62_);
-
-		hkl_gui_window_update_lattice (self);
-
-		hkl_gui_window_update_lattice_parameters (self);
-
-		hkl_gui_window_update_reciprocal_lattice (self);
-
-		_tmp64_ = priv->samples;
-
-		_tmp65_ = _tmp64_->current;
-
-		hkl_gui_window_update_crystal_model (self, _tmp65_);
-
-		hkl_gui_window_update_UB (self);
-
-		hkl_gui_window_update_UxUyUz (self);
-
-		hkl_gui_window_update_pseudo_axes (self);
-
-		hkl_gui_window_update_pseudo_axes_frames (self);
-
-		(&UB);
-
-	}
-}
 
 
 static void hkl_gui_window_on_toolbutton_computeUB_clicked (HklGuiWindow* self) {

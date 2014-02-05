@@ -54,7 +54,7 @@ static void qper_qpar(void)
 
 	sample = hkl_sample_new("test");
 	U = hkl_matrix_new_euler(-90.0 * HKL_DEGTORAD, 0., 0.);
-	hkl_sample_U_set(sample, U);
+	hkl_sample_U_set(sample, U, NULL);
 	hkl_matrix_free(U);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);

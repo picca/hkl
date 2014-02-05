@@ -965,6 +965,7 @@
                             <property name="label" translatable="yes">set UB</property>
                             <property name="use_underline">True</property>
                             <property name="stock_id">gtk-preferences</property>
+                            <signal name="clicked" handler="hkl_gui_window_toolbutton_setUB_clicked_cb" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -1375,6 +1376,9 @@
                                             <property name="x_options"/>
                                             <property name="y_options"/>
                                           </packing>
+                                        </child>
+                                        <child>
+                                          <placeholder/>
                                         </child>
                                         <child>
                                           <placeholder/>
@@ -2244,6 +2248,9 @@
                                 <child>
                                   <placeholder/>
                                 </child>
+                                <child>
+                                  <placeholder/>
+                                </child>
                               </object>
                               <packing>
                                 <property name="expand">True</property>
@@ -2696,6 +2703,7 @@
                             <property name="label" translatable="yes">extra</property>
                           </object>
                           <packing>
+                            <property name="position">1</property>
                             <property name="tab_fill">False</property>
                           </packing>
                         </child>
