@@ -2137,7 +2137,6 @@ hkl_gui_window_toolbutton_affiner_clicked_cb (GtkToolButton* _sender, gpointer u
 }
 
 #define toggle_lattice(parameter) do{					\
-		HklGuiWindow *self = HKL_GUI_WINDOW(user_data);		\
 		HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data); \
 		HklLattice *lattice;					\
 		HklParameter *p;				\
@@ -2189,6 +2188,36 @@ hkl_gui_window_checkbutton_gamma_toggled_cb(GtkCheckButton *checkbutton,
 					    gpointer user_data)
 {
 	toggle_lattice(gamma);
+}
+
+#define toggle_ux_uy_uz(parameter) do{					\
+		HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data); \
+		HklParameter *p;					\
+		p = hkl_parameter_new_copy(hkl_sample_## parameter ##_get(priv->sample)); \
+		hkl_parameter_fit_set(p,			\
+				      gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(checkbutton))); \
+		hkl_sample_## parameter ##_set(priv->sample, p);	\
+	}while(0)
+
+void
+hkl_gui_window_checkbutton_ux_toggled_cb(GtkCheckButton *checkbutton,
+					 gpointer user_data)
+{
+	toggle_ux_uy_uz(ux);
+}
+
+void
+hkl_gui_window_checkbutton_uy_toggled_cb(GtkCheckButton *checkbutton,
+					 gpointer user_data)
+{
+	toggle_ux_uy_uz(uy);
+}
+
+void
+hkl_gui_window_checkbutton_uz_toggled_cb(GtkCheckButton *checkbutton,
+					 gpointer user_data)
+{
+	toggle_ux_uy_uz(uz);
 }
 
 /*
@@ -2280,115 +2309,6 @@ static void hkl_gui_window_set_up_3D (HklGuiWindow* self) {
 
 }
 
-static void hkl_gui_window_on_checkbutton_Ux_toggled (HklGuiWindow* self) {
-	HklSampleList* _tmp0_;
-	HklSample* _tmp1_;
-	HklSample* sample;
-	HklSample* _tmp2_;
-
-	g_return_if_fail (self != NULL);
-
-	_tmp0_ = priv->samples;
-
-	_tmp1_ = _tmp0_->current;
-
-	sample = _tmp1_;
-
-	_tmp2_ = sample;
-
-	if (_tmp2_ != NULL) {
-
-		HklSample* _tmp3_;
-		HklParameter* _tmp4_;
-		GtkCheckButton* _tmp5_;
-		gboolean _tmp6_ = FALSE;
-
-		_tmp3_ = sample;
-
-		_tmp4_ = _tmp3_->ux;
-
-		_tmp5_ = priv->_checkbutton_Ux;
-
-		_tmp6_ = gtk_toggle_button_get_active ((GtkToggleButton*) _tmp5_);
-
-		(*_tmp4_).fit = _tmp6_;
-
-	}
-}
-
-
-static void hkl_gui_window_on_checkbutton_Uy_toggled (HklGuiWindow* self) {
-	HklSampleList* _tmp0_;
-	HklSample* _tmp1_;
-	HklSample* sample;
-	HklSample* _tmp2_;
-
-	g_return_if_fail (self != NULL);
-
-	_tmp0_ = priv->samples;
-
-	_tmp1_ = _tmp0_->current;
-
-	sample = _tmp1_;
-
-	_tmp2_ = sample;
-
-	if (_tmp2_ != NULL) {
-
-		HklSample* _tmp3_;
-		HklParameter* _tmp4_;
-		GtkCheckButton* _tmp5_;
-		gboolean _tmp6_ = FALSE;
-
-		_tmp3_ = sample;
-
-		_tmp4_ = _tmp3_->uy;
-
-		_tmp5_ = priv->_checkbutton_Uy;
-
-		_tmp6_ = gtk_toggle_button_get_active ((GtkToggleButton*) _tmp5_);
-
-		(*_tmp4_).fit = _tmp6_;
-
-	}
-}
-
-
-static void hkl_gui_window_on_checkbutton_Uz_toggled (HklGuiWindow* self) {
-	HklSampleList* _tmp0_;
-	HklSample* _tmp1_;
-	HklSample* sample;
-	HklSample* _tmp2_;
-
-	g_return_if_fail (self != NULL);
-
-	_tmp0_ = priv->samples;
-
-	_tmp1_ = _tmp0_->current;
-
-	sample = _tmp1_;
-
-	_tmp2_ = sample;
-
-	if (_tmp2_ != NULL) {
-
-		HklSample* _tmp3_;
-		HklParameter* _tmp4_;
-		GtkCheckButton* _tmp5_;
-		gboolean _tmp6_ = FALSE;
-
-		_tmp3_ = sample;
-
-		_tmp4_ = _tmp3_->uz;
-
-		_tmp5_ = priv->_checkbutton_Uz;
-
-		_tmp6_ = gtk_toggle_button_get_active ((GtkToggleButton*) _tmp5_);
-
-		(*_tmp4_).fit = _tmp6_;
-
-	}
-}
 
 static gboolean hkl_gui_window_on_tree_view_crystals_key_press_event (GdkEventKey* event, HklGuiWindow* self) {
 	gboolean result = FALSE;

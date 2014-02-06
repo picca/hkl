@@ -1451,6 +1451,9 @@
                                         <child>
                                           <placeholder/>
                                         </child>
+                                        <child>
+                                          <placeholder/>
+                                        </child>
                                       </object>
                                     </child>
                                   </object>
@@ -2073,6 +2076,7 @@
                                     <property name="use_underline">True</property>
                                     <property name="xalign">0.5</property>
                                     <property name="draw_indicator">True</property>
+                                    <signal name="toggled" handler="hkl_gui_window_checkbutton_ux_toggled_cb" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="top_attach">7</property>
@@ -2090,6 +2094,7 @@
                                     <property name="use_underline">True</property>
                                     <property name="xalign">0.5</property>
                                     <property name="draw_indicator">True</property>
+                                    <signal name="toggled" handler="hkl_gui_window_checkbutton_uy_toggled_cb" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="top_attach">8</property>
@@ -2107,6 +2112,7 @@
                                     <property name="use_underline">True</property>
                                     <property name="xalign">0.5</property>
                                     <property name="draw_indicator">True</property>
+                                    <signal name="toggled" handler="hkl_gui_window_checkbutton_uz_toggled_cb" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="top_attach">9</property>
@@ -2114,6 +2120,9 @@
                                     <property name="x_options">GTK_FILL</property>
                                     <property name="y_options"/>
                                   </packing>
+                                </child>
+                                <child>
+                                  <placeholder/>
                                 </child>
                                 <child>
                                   <placeholder/>
