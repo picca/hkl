@@ -2390,74 +2390,6 @@ static void hkl_gui_window_on_checkbutton_Uz_toggled (HklGuiWindow* self) {
 	}
 }
 
-static void hkl_gui_window_on_cell_tree_view_pseudo_axes_is_initialized_toggled (const gchar* path, HklGuiWindow* self) {
-	GtkTreeModel* model = NULL;
-	GtkTreeIter iter = {0};
-	HklPseudoAxis* pseudoAxis = NULL;
-	gboolean old_flag = FALSE;
-	GtkTreeView* _tmp0_;
-	GtkTreeModel* _tmp1_ = NULL;
-	GtkTreeModel* _tmp2_;
-	GtkTreeModel* _tmp3_;
-	const gchar* _tmp4_;
-	GtkTreeIter _tmp5_ = {0};
-	GtkTreeModel* _tmp6_;
-	GtkTreeIter _tmp7_;
-	gboolean _tmp8_;
-
-	g_return_if_fail (self != NULL);
-
-	g_return_if_fail (path != NULL);
-
-	_tmp0_ = priv->_treeview_pseudo_axes;
-
-	_tmp1_ = gtk_tree_view_get_model (_tmp0_);
-
-	_tmp2_ = _g_object_ref0 (_tmp1_);
-
-	_g_object_unref0 (model);
-
-	model = _tmp2_;
-
-	_tmp3_ = model;
-
-	_tmp4_ = path;
-
-	gtk_tree_model_get_iter_from_string (_tmp3_, &_tmp5_, _tmp4_);
-
-	iter = _tmp5_;
-
-	_tmp6_ = model;
-
-	_tmp7_ = iter;
-
-	gtk_tree_model_get (_tmp6_, &_tmp7_, PSEUDO_AXIS_COL_PSEUDOAXIS, &pseudoAxis, PSEUDO_AXIS_COL_INITIALIZED, &old_flag, -1);
-
-	_tmp8_ = old_flag;
-
-	if (!_tmp8_) {
-
-		HklPseudoAxis* _tmp9_;
-		HklPseudoAxisEngine* _tmp10_;
-		gboolean _tmp11_ = FALSE;
-
-		_tmp9_ = pseudoAxis;
-
-		_tmp10_ = _tmp9_->engine;
-
-		_tmp11_ = hkl_pseudo_axis_engine_initialize (_tmp10_, NULL);
-
-		if (_tmp11_) {
-
-			hkl_gui_window_update_pseudo_axes (self);
-
-		}
-	}
-
-	_g_object_unref0 (model);
-
-}
-
 static gboolean hkl_gui_window_on_tree_view_crystals_key_press_event (GdkEventKey* event, HklGuiWindow* self) {
 	gboolean result = FALSE;
 
@@ -2468,30 +2400,6 @@ static gboolean hkl_gui_window_on_tree_view_crystals_key_press_event (GdkEventKe
 	result = TRUE;
 
 	return result;
-
-}
-
-
-static void hkl_gui_window_on_menuitem5_activate (HklGuiWindow* self) {
-	GtkDialog* _tmp0_;
-
-	g_return_if_fail (self != NULL);
-
-	_tmp0_ = priv->_dialog1;
-
-	gtk_widget_show ((GtkWidget*) _tmp0_);
-
-}
-
-
-void hkl_gui_window_on_button1_clicked (HklGuiWindow* self) {
-	GtkDialog* _tmp0_;
-
-	g_return_if_fail (self != NULL);
-
-	_tmp0_ = priv->_dialog1;
-
-	gtk_widget_hide ((GtkWidget*) _tmp0_);
 
 }
 
