@@ -2136,78 +2136,62 @@ hkl_gui_window_toolbutton_affiner_clicked_cb (GtkToolButton* _sender, gpointer u
 	update_pseudo_axes_frames (self);
 }
 
+#define toggle_lattice(parameter) do{					\
+		HklGuiWindow *self = HKL_GUI_WINDOW(user_data);		\
+		HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data); \
+		HklLattice *lattice;					\
+		HklParameter *p;				\
+		lattice = hkl_lattice_new_copy(hkl_sample_lattice_get(priv->sample)); \
+		p = hkl_parameter_new_copy(hkl_lattice_## parameter ##_get(lattice)); \
+		hkl_parameter_fit_set(p,			\
+				      gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(checkbutton))); \
+		hkl_lattice_## parameter ##_set(lattice, p);			\
+		hkl_sample_lattice_set(priv->sample, lattice);		\
+	}while(0)
+
+void
+hkl_gui_window_checkbutton_a_toggled_cb(GtkCheckButton *checkbutton,
+					gpointer user_data)
+{
+	toggle_lattice(a);
+}
+
+void
+hkl_gui_window_checkbutton_b_toggled_cb(GtkCheckButton *checkbutton,
+					gpointer user_data)
+{
+	toggle_lattice(b);
+}
+
+void
+hkl_gui_window_checkbutton_c_toggled_cb(GtkCheckButton *checkbutton,
+					gpointer user_data)
+{
+	toggle_lattice(c);
+}
+
+void
+hkl_gui_window_checkbutton_alpha_toggled_cb(GtkCheckButton *checkbutton,
+					    gpointer user_data)
+{
+	toggle_lattice(alpha);
+}
+
+void
+hkl_gui_window_checkbutton_beta_toggled_cb(GtkCheckButton *checkbutton,
+					   gpointer user_data)
+{
+	toggle_lattice(beta);
+}
+
+void
+hkl_gui_window_checkbutton_gamma_toggled_cb(GtkCheckButton *checkbutton,
+					    gpointer user_data)
+{
+	toggle_lattice(gamma);
+}
+
 /*
-
-
-static void _hkl_gui_window_on_checkbutton_a_toggled_gtk_toggle_button_toggled (GtkToggleButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_checkbutton_a_toggled (self);
-
-}
-
-
-static void _hkl_gui_window_on_checkbutton_b_toggled_gtk_toggle_button_toggled (GtkToggleButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_checkbutton_b_toggled (self);
-
-}
-
-
-static void _hkl_gui_window_on_checkbutton_c_toggled_gtk_toggle_button_toggled (GtkToggleButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_checkbutton_c_toggled (self);
-
-}
-
-
-static void _hkl_gui_window_on_checkbutton_alpha_toggled_gtk_toggle_button_toggled (GtkToggleButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_checkbutton_alpha_toggled (self);
-
-}
-
-
-static void _hkl_gui_window_on_checkbutton_beta_toggled_gtk_toggle_button_toggled (GtkToggleButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_checkbutton_beta_toggled (self);
-
-}
-
-
-static void _hkl_gui_window_on_checkbutton_gamma_toggled_gtk_toggle_button_toggled (GtkToggleButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_checkbutton_gamma_toggled (self);
-
-}
-
-
-static void _hkl_gui_window_on_checkbutton_Ux_toggled_gtk_toggle_button_toggled (GtkToggleButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_checkbutton_Ux_toggled (self);
-
-}
-
-
-static void _hkl_gui_window_on_checkbutton_Uy_toggled_gtk_toggle_button_toggled (GtkToggleButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_checkbutton_Uy_toggled (self);
-
-}
-
-
-static void _hkl_gui_window_on_checkbutton_Uz_toggled_gtk_toggle_button_toggled (GtkToggleButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_checkbutton_Uz_toggled (self);
-
-}
-
-
-static void _hkl_gui_window_on_tree_view_pseudo_axes_cursor_changed_gtk_tree_view_cursor_changed (GtkTreeView* _sender, gpointer self) {
-
-	hkl_gui_window_on_tree_view_pseudo_axes_cursor_changed (self);
-
-}
-
 
 static gboolean _hkl_gui_window_on_tree_view_crystals_key_press_event_gtk_widget_key_press_event (GtkWidget* _sender, GdkEventKey* event, gpointer self) {
 	gboolean result;
@@ -2216,46 +2200,6 @@ static gboolean _hkl_gui_window_on_tree_view_crystals_key_press_event_gtk_widget
 	return result;
 
 }
-
-static void _hkl_gui_window_on_menuitem5_activate_gtk_menu_item_activate (GtkMenuItem* _sender, gpointer self) {
-
-	hkl_gui_window_on_menuitem5_activate (self);
-
-}
-
-
-static void _hkl_gui_window_on_button1_clicked_gtk_button_clicked (GtkButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_button1_clicked (self);
-
-}
-
-
-static void _hkl_gui_window_on_combobox1_changed_gtk_combo_box_changed (GtkComboBox* _sender, gpointer self) {
-
-	hkl_gui_window_on_combobox1_changed (self);
-}
-
-static void _hkl_gui_window_on_cell_tree_view_pseudo_axes_is_initialized_toggled_gtk_cell_renderer_toggle_toggled (GtkCellRendererToggle* _sender, const gchar* path, gpointer self) {
-
-	hkl_gui_window_on_cell_tree_view_pseudo_axes_is_initialized_toggled (path, self);
-
-}
-
-
-
-
-static void _hkl_gui_window_on_tree_view1_cursor_changed_gtk_tree_view_cursor_changed (GtkTreeView* _sender, gpointer self) {
-
-	hkl_gui_window_on_tree_view1_cursor_changed (self);
-
-}
-
-
-
-
-
-
 
 static void hkl_gui_window_set_up_3D (HklGuiWindow* self) {
 	HklGeometry* _tmp0_;
@@ -2335,246 +2279,6 @@ static void hkl_gui_window_set_up_3D (HklGuiWindow* self) {
 	gtk_widget_show_all ((GtkWidget*) _tmp11_);
 
 }
-
-static void hkl_gui_window_on_checkbutton_a_toggled (HklGuiWindow* self) {
-	HklSampleList* _tmp0_;
-	HklSample* _tmp1_;
-	HklSample* sample;
-	HklSample* _tmp2_;
-
-	g_return_if_fail (self != NULL);
-
-	_tmp0_ = priv->samples;
-
-	_tmp1_ = _tmp0_->current;
-
-	sample = _tmp1_;
-
-	_tmp2_ = sample;
-
-	if (_tmp2_ != NULL) {
-
-		HklSample* _tmp3_;
-		HklLattice* _tmp4_;
-		HklParameter* _tmp5_;
-		GtkCheckButton* _tmp6_;
-		gboolean _tmp7_ = FALSE;
-
-		_tmp3_ = sample;
-
-		_tmp4_ = _tmp3_->lattice;
-
-		_tmp5_ = _tmp4_->a;
-
-		_tmp6_ = priv->_checkbutton_a;
-
-		_tmp7_ = gtk_toggle_button_get_active ((GtkToggleButton*) _tmp6_);
-
-		(*_tmp5_).fit = _tmp7_;
-
-	}
-}
-
-
-static void hkl_gui_window_on_checkbutton_b_toggled (HklGuiWindow* self) {
-	HklSampleList* _tmp0_;
-	HklSample* _tmp1_;
-	HklSample* sample;
-	HklSample* _tmp2_;
-
-	g_return_if_fail (self != NULL);
-
-	_tmp0_ = priv->samples;
-
-	_tmp1_ = _tmp0_->current;
-
-	sample = _tmp1_;
-
-	_tmp2_ = sample;
-
-	if (_tmp2_ != NULL) {
-
-		HklSample* _tmp3_;
-		HklLattice* _tmp4_;
-		HklParameter* _tmp5_;
-		GtkCheckButton* _tmp6_;
-		gboolean _tmp7_ = FALSE;
-
-		_tmp3_ = sample;
-
-		_tmp4_ = _tmp3_->lattice;
-
-		_tmp5_ = _tmp4_->b;
-
-		_tmp6_ = priv->_checkbutton_b;
-
-		_tmp7_ = gtk_toggle_button_get_active ((GtkToggleButton*) _tmp6_);
-
-		(*_tmp5_).fit = _tmp7_;
-
-	}
-}
-
-
-static void hkl_gui_window_on_checkbutton_c_toggled (HklGuiWindow* self) {
-	HklSampleList* _tmp0_;
-	HklSample* _tmp1_;
-	HklSample* sample;
-	HklSample* _tmp2_;
-
-	g_return_if_fail (self != NULL);
-
-	_tmp0_ = priv->samples;
-
-	_tmp1_ = _tmp0_->current;
-
-	sample = _tmp1_;
-
-	_tmp2_ = sample;
-
-	if (_tmp2_ != NULL) {
-
-		HklSample* _tmp3_;
-		HklLattice* _tmp4_;
-		HklParameter* _tmp5_;
-		GtkCheckButton* _tmp6_;
-		gboolean _tmp7_ = FALSE;
-
-		_tmp3_ = sample;
-
-		_tmp4_ = _tmp3_->lattice;
-
-		_tmp5_ = _tmp4_->c;
-
-		_tmp6_ = priv->_checkbutton_c;
-
-		_tmp7_ = gtk_toggle_button_get_active ((GtkToggleButton*) _tmp6_);
-
-		(*_tmp5_).fit = _tmp7_;
-
-	}
-}
-
-
-static void hkl_gui_window_on_checkbutton_alpha_toggled (HklGuiWindow* self) {
-	HklSampleList* _tmp0_;
-	HklSample* _tmp1_;
-	HklSample* sample;
-	HklSample* _tmp2_;
-
-	g_return_if_fail (self != NULL);
-
-	_tmp0_ = priv->samples;
-
-	_tmp1_ = _tmp0_->current;
-
-	sample = _tmp1_;
-
-	_tmp2_ = sample;
-
-	if (_tmp2_ != NULL) {
-
-		HklSample* _tmp3_;
-		HklLattice* _tmp4_;
-		HklParameter* _tmp5_;
-		GtkCheckButton* _tmp6_;
-		gboolean _tmp7_ = FALSE;
-
-		_tmp3_ = sample;
-
-		_tmp4_ = _tmp3_->lattice;
-
-		_tmp5_ = _tmp4_->alpha;
-
-		_tmp6_ = priv->_checkbutton_alpha;
-
-		_tmp7_ = gtk_toggle_button_get_active ((GtkToggleButton*) _tmp6_);
-
-		(*_tmp5_).fit = _tmp7_;
-
-	}
-}
-
-
-static void hkl_gui_window_on_checkbutton_beta_toggled (HklGuiWindow* self) {
-	HklSampleList* _tmp0_;
-	HklSample* _tmp1_;
-	HklSample* sample;
-	HklSample* _tmp2_;
-
-	g_return_if_fail (self != NULL);
-
-	_tmp0_ = priv->samples;
-
-	_tmp1_ = _tmp0_->current;
-
-	sample = _tmp1_;
-
-	_tmp2_ = sample;
-
-	if (_tmp2_ != NULL) {
-
-		HklSample* _tmp3_;
-		HklLattice* _tmp4_;
-		HklParameter* _tmp5_;
-		GtkCheckButton* _tmp6_;
-		gboolean _tmp7_ = FALSE;
-
-		_tmp3_ = sample;
-
-		_tmp4_ = _tmp3_->lattice;
-
-		_tmp5_ = _tmp4_->beta;
-
-		_tmp6_ = priv->_checkbutton_beta;
-
-		_tmp7_ = gtk_toggle_button_get_active ((GtkToggleButton*) _tmp6_);
-
-		(*_tmp5_).fit = _tmp7_;
-
-	}
-}
-
-
-static void hkl_gui_window_on_checkbutton_gamma_toggled (HklGuiWindow* self) {
-	HklSampleList* _tmp0_;
-	HklSample* _tmp1_;
-	HklSample* sample;
-	HklSample* _tmp2_;
-
-	g_return_if_fail (self != NULL);
-
-	_tmp0_ = priv->samples;
-
-	_tmp1_ = _tmp0_->current;
-
-	sample = _tmp1_;
-
-	_tmp2_ = sample;
-
-	if (_tmp2_ != NULL) {
-
-		HklSample* _tmp3_;
-		HklLattice* _tmp4_;
-		HklParameter* _tmp5_;
-		GtkCheckButton* _tmp6_;
-		gboolean _tmp7_ = FALSE;
-
-		_tmp3_ = sample;
-
-		_tmp4_ = _tmp3_->lattice;
-
-		_tmp5_ = _tmp4_->gamma;
-
-		_tmp6_ = priv->_checkbutton_gamma;
-
-		_tmp7_ = gtk_toggle_button_get_active ((GtkToggleButton*) _tmp6_);
-
-		(*_tmp5_).fit = _tmp7_;
-
-	}
-}
-
 
 static void hkl_gui_window_on_checkbutton_Ux_toggled (HklGuiWindow* self) {
 	HklSampleList* _tmp0_;

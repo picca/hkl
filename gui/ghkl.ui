@@ -1908,6 +1908,7 @@
                                     <property name="use_underline">True</property>
                                     <property name="xalign">0.5</property>
                                     <property name="draw_indicator">True</property>
+                                    <signal name="toggled" handler="hkl_gui_window_checkbutton_a_toggled_cb" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="top_attach">1</property>
@@ -1925,6 +1926,7 @@
                                     <property name="use_underline">True</property>
                                     <property name="xalign">0.5</property>
                                     <property name="draw_indicator">True</property>
+                                    <signal name="toggled" handler="hkl_gui_window_checkbutton_b_toggled_cb" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="top_attach">2</property>
@@ -1942,6 +1944,7 @@
                                     <property name="use_underline">True</property>
                                     <property name="xalign">0.5</property>
                                     <property name="draw_indicator">True</property>
+                                    <signal name="toggled" handler="hkl_gui_window_checkbutton_c_toggled_cb" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="top_attach">3</property>
@@ -1959,6 +1962,7 @@
                                     <property name="use_underline">True</property>
                                     <property name="xalign">0.5</property>
                                     <property name="draw_indicator">True</property>
+                                    <signal name="toggled" handler="hkl_gui_window_checkbutton_alpha_toggled_cb" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="top_attach">4</property>
@@ -1976,6 +1980,7 @@
                                     <property name="use_underline">True</property>
                                     <property name="xalign">0.5</property>
                                     <property name="draw_indicator">True</property>
+                                    <signal name="toggled" handler="hkl_gui_window_checkbutton_beta_toggled_cb" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="top_attach">5</property>
@@ -1993,6 +1998,7 @@
                                     <property name="use_underline">True</property>
                                     <property name="xalign">0.5</property>
                                     <property name="draw_indicator">True</property>
+                                    <signal name="toggled" handler="hkl_gui_window_checkbutton_gamma_toggled_cb" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="top_attach">6</property>
