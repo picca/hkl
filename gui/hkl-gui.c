@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -1486,6 +1486,16 @@ hkl_gui_window_toolbutton_del_reflection_clicked_cb (GtkToolButton* _sender, gpo
 	}
 }
 
+static void
+set_up_tree_view_reflections(HklGuiWindow *self)
+{
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
+	GtkTreeSelection* selection = NULL;
+
+	selection = gtk_tree_view_get_selection (priv->_treeview_reflections);
+	gtk_tree_selection_set_mode(selection, GTK_SELECTION_MULTIPLE);
+}
+
 /* crystal name */
 void
 hkl_gui_window_cellrenderertext10_edited_cb(GtkCellRendererText* _sender, const gchar* path,
@@ -2042,10 +2052,68 @@ hkl_gui_window_toolbutton_setUB_clicked_cb(GtkToolButton* _sender, gpointer user
 	update_crystal_model (self);
 	update_reciprocal_lattice (self);
 	update_UB (self);
+	update_ux_uy_uz (self);
 	update_pseudo_axes (self);
 	update_pseudo_axes_frames (self);
 
 	hkl_matrix_free(UB);
+}
+
+void
+hkl_gui_window_toolbutton_computeUB_clicked_cb (GtkToolButton* _sender, gpointer user_data)
+{
+	HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
+	GtkTreeSelection* selection = NULL;
+	guint nb_rows = 0U;
+
+	selection = gtk_tree_view_get_selection (priv->_treeview_reflections);
+	nb_rows = gtk_tree_selection_count_selected_rows (selection);
+	if (nb_rows > 1) {
+		GtkTreeModel* model = NULL;
+		GList* list;
+		GtkTreeIter iter = {0};
+		GtkTreePath *path;
+		HklSampleReflection *ref1, *ref2;
+
+		model = GTK_TREE_MODEL(priv->_liststore_reflections);
+		list = gtk_tree_selection_get_selected_rows (selection, &model);
+
+		/* get the first reflection */
+		path = g_list_nth_data(list, 0);
+		gtk_tree_model_get_iter (GTK_TREE_MODEL(priv->_liststore_reflections),
+					 &iter,
+					 path);
+		gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_reflections), &iter,
+				    REFLECTION_COL_REFLECTION, &ref1,
+				    -1);
+
+		/* get the second one */
+		path = g_list_nth_data(list, 1);
+		gtk_tree_model_get_iter (GTK_TREE_MODEL(priv->_liststore_reflections),
+					 &iter,
+					 path);
+		gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_reflections), &iter,
+				    REFLECTION_COL_REFLECTION, &ref2,
+				    -1);
+
+		hkl_sample_compute_UB_busing_levy(priv->sample,
+						  ref1, ref2);
+
+		if(priv->diffractometer)
+			diffractometer_set_sample(priv->diffractometer,
+						  priv->sample);
+
+		update_UB (self);
+		update_ux_uy_uz (self);
+		update_pseudo_axes (self);
+		update_pseudo_axes_frames (self);
+
+		g_list_free_full (list, (GDestroyNotify) gtk_tree_path_free);
+	} else {
+		gtk_statusbar_push (priv->_statusbar, 0,
+				    "Please select at least two reflection.");
+	}
 }
 
 /*
@@ -2128,16 +2196,6 @@ static gboolean _hkl_gui_window_on_tree_view_crystals_key_press_event_gtk_widget
 	return result;
 
 }
-
-
-
-
-static void _hkl_gui_window_on_toolbutton_computeUB_clicked_gtk_tool_button_clicked (GtkToolButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_toolbutton_computeUB_clicked (self);
-
-}
-
 
 static void _hkl_gui_window_on_toolbutton_affiner_clicked_gtk_tool_button_clicked (GtkToolButton* _sender, gpointer self) {
 
@@ -2683,44 +2741,6 @@ static void hkl_gui_window_on_cell_tree_view_pseudo_axes_is_initialized_toggled 
 
 }
 
-
-
-static void hkl_gui_window_on_toolbutton_computeUB_clicked (HklGuiWindow* self) {
-	HklSampleList* _tmp0_;
-	HklSample* _tmp1_;
-	HklSample* sample;
-	HklSample* _tmp2_;
-
-	g_return_if_fail (self != NULL);
-
-	_tmp0_ = priv->samples;
-
-	_tmp1_ = _tmp0_->current;
-
-	sample = _tmp1_;
-
-	_tmp2_ = sample;
-
-	if (_tmp2_ != NULL) {
-
-		HklSample* _tmp3_;
-
-		_tmp3_ = sample;
-
-		hkl_sample_compute_UB_busing_levy (_tmp3_, (gsize) 0, (gsize) 1);
-
-		hkl_gui_window_update_UB (self);
-
-		hkl_gui_window_update_UxUyUz (self);
-
-		hkl_gui_window_update_pseudo_axes (self);
-
-		hkl_gui_window_update_pseudo_axes_frames (self);
-
-	}
-}
-
-
 static void hkl_gui_window_on_toolbutton_affiner_clicked (HklGuiWindow* self) {
 	HklSampleList* _tmp0_;
 	HklSample* _tmp1_;
@@ -2832,6 +2852,8 @@ static void hkl_gui_window_init (HklGuiWindow * self)
 	set_up_diffractometer_model (self);
 
 	set_up_tree_view_crystals (self);
+
+	set_up_tree_view_reflections(self);
 }
 
 int main (int argc, char ** argv)
