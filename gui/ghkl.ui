@@ -967,9 +967,10 @@
                           <object class="GtkToolButton" id="toolbutton_affiner">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="label" translatable="yes">Affiner</property>
+                            <property name="label" translatable="yes">Refine</property>
                             <property name="use_underline">True</property>
                             <property name="stock_id">gtk-execute</property>
+                            <signal name="clicked" handler="hkl_gui_window_toolbutton_affiner_clicked_cb" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -1350,6 +1351,9 @@
                                             <property name="x_options"/>
                                             <property name="y_options"/>
                                           </packing>
+                                        </child>
+                                        <child>
+                                          <placeholder/>
                                         </child>
                                         <child>
                                           <placeholder/>
@@ -2104,6 +2108,9 @@
                                     <property name="x_options">GTK_FILL</property>
                                     <property name="y_options"/>
                                   </packing>
+                                </child>
+                                <child>
+                                  <placeholder/>
                                 </child>
                                 <child>
                                   <placeholder/>

@@ -2116,6 +2116,26 @@ hkl_gui_window_toolbutton_computeUB_clicked_cb (GtkToolButton* _sender, gpointer
 	}
 }
 
+void
+hkl_gui_window_toolbutton_affiner_clicked_cb (GtkToolButton* _sender, gpointer user_data)
+{
+	HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
+
+	hkl_sample_affine (priv->sample);
+	if(priv->diffractometer)
+		diffractometer_set_sample(priv->diffractometer,
+					  priv->sample);
+
+	update_lattice (self);
+	update_crystal_model (self);
+	update_reciprocal_lattice (self);
+	update_UB (self);
+	update_ux_uy_uz (self);
+	update_pseudo_axes (self);
+	update_pseudo_axes_frames (self);
+}
+
 /*
 
 
@@ -2196,13 +2216,6 @@ static gboolean _hkl_gui_window_on_tree_view_crystals_key_press_event_gtk_widget
 	return result;
 
 }
-
-static void _hkl_gui_window_on_toolbutton_affiner_clicked_gtk_tool_button_clicked (GtkToolButton* _sender, gpointer self) {
-
-	hkl_gui_window_on_toolbutton_affiner_clicked (self);
-
-}
-
 
 static void _hkl_gui_window_on_menuitem5_activate_gtk_menu_item_activate (GtkMenuItem* _sender, gpointer self) {
 
@@ -2740,50 +2753,6 @@ static void hkl_gui_window_on_cell_tree_view_pseudo_axes_is_initialized_toggled 
 	_g_object_unref0 (model);
 
 }
-
-static void hkl_gui_window_on_toolbutton_affiner_clicked (HklGuiWindow* self) {
-	HklSampleList* _tmp0_;
-	HklSample* _tmp1_;
-	HklSample* sample;
-	HklSample* _tmp2_;
-	HklSample* _tmp4_;
-
-	g_return_if_fail (self != NULL);
-
-	_tmp0_ = priv->samples;
-
-	_tmp1_ = _tmp0_->current;
-
-	sample = _tmp1_;
-
-	_tmp2_ = sample;
-
-	if (_tmp2_ != NULL) {
-
-		HklSample* _tmp3_;
-
-		_tmp3_ = sample;
-
-		hkl_sample_affine (_tmp3_);
-
-	}
-
-	_tmp4_ = sample;
-
-	hkl_gui_window_update_crystal_model (self, _tmp4_);
-
-	hkl_gui_window_update_lattice (self);
-
-	hkl_gui_window_update_reciprocal_lattice (self);
-
-	hkl_gui_window_update_UB (self);
-
-	hkl_gui_window_update_UxUyUz (self);
-
-}
-
-
-
 
 static gboolean hkl_gui_window_on_tree_view_crystals_key_press_event (GdkEventKey* event, HklGuiWindow* self) {
 	gboolean result = FALSE;
