@@ -783,3 +783,56 @@ static HklEngineList *hkl_engine_list_new_soleil_sirius_turret(const HklFactory 
 }
 
 REGISTER_DIFFRACTOMETER(soleil_sirius_turret, "SOLEIL SIRIUS TURRET", HKL_GEOMETRY_TYPE_SOLEIL_SIRIUS_TURRET_DESCRIPTION);
+
+/***********************/
+/* SOLEIL SIRIUS KAPPA */
+/***********************/
+
+#define HKL_GEOMETRY_TYPE_SOLEIL_SIRIUS_KAPPA_DESCRIPTION		\
+	"+ xrays source fix along the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 4 axes for the sample\n"					\
+	"\n"								\
+	"  + **mu** : rotating around the :math:`-\\vec{z}` direction (0, 0, -1)\n" \
+	"  + **komega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **kappa** : rotating around the :math:`\\vec{x}` direction (0, :math:`-\\cos\\alpha`, :math:`-\\sin\\alpha`)\n" \
+	"  + **kphi** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"\n"								\
+	"+ 2 axes for the detector\n"					\
+	"\n"								\
+	"  + **delta** : rotation around the :math:`-\\vec{z}` direction (0, 0, -1)\n" \
+	"  + **gamma** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
+
+static HklGeometry *hkl_geometry_new_soleil_sirius_kappa(const HklFactory *factory)
+{
+	HklGeometry *self = hkl_geometry_new(factory);
+	double alpha = 50 * HKL_DEGTORAD;
+	HklHolder *h;
+
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "mu", 0, 0, -1);
+	hkl_holder_add_rotation_axis(h, "komega", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, "kappa", 0, -cos(alpha), -sin(alpha));
+	hkl_holder_add_rotation_axis(h, "kphi", 0, -1, 0);
+
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "delta", 0, 0, -1);
+	hkl_holder_add_rotation_axis(h, "gamma", 0, -1, 0);
+
+	return self;
+}
+
+static HklEngineList *hkl_engine_list_new_soleil_sirius_kappa(const HklFactory *factory)
+{
+	HklEngineList *self = hkl_engine_list_new();
+
+	self->geometries->multiply = hkl_geometry_list_multiply_k6c_real;
+	hkl_engine_list_add(self, hkl_engine_k6c_hkl_new());
+	hkl_engine_list_add(self, hkl_engine_eulerians_new());
+	hkl_engine_list_add(self, hkl_engine_k6c_psi_new());
+	hkl_engine_list_add(self, hkl_engine_q2_new());
+	hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
+
+	return self;
+}
+
+REGISTER_DIFFRACTOMETER(soleil_sirius_kappa, "SOLEIL SIRIUS KAPPA", HKL_GEOMETRY_TYPE_SOLEIL_SIRIUS_KAPPA_DESCRIPTION);
