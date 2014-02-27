@@ -217,6 +217,24 @@ static void hkl_geometry_init_soleil_sirius_turret(HklGeometry *self,
 	hkl_holder_add_rotation_axis(h, "gamma", 0, -1, 0);
 }
 
+static void hkl_geometry_init_soleil_sirius_kappa(HklGeometry *self,
+						  const  HklGeometryConfig *config, double alpha)
+{
+	HklHolder *h;
+
+	self->config = config;
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "mu", 0, 0, -1);
+	hkl_holder_add_rotation_axis(h, "komega", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, "kappa", 0, -cos(alpha), -sin(alpha));
+	hkl_holder_add_rotation_axis(h, "kphi", 0, -1, 0);
+
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "delta", 0, 0, -1);
+	hkl_holder_add_rotation_axis(h, "gamma", 0, -1, 0);
+}
+
+
 const HklGeometryConfig *hkl_geometry_factory_get_config_from_type(HklGeometryType type)
 {
 	const HklGeometryConfig *config;
@@ -280,6 +298,12 @@ HklGeometry *hkl_geometry_factory_new(const HklGeometryConfig *config, ...)
 		break;
 	case HKL_GEOMETRY_TYPE_SOLEIL_SIRIUS_TURRET:
 		hkl_geometry_init_soleil_sirius_turret(geom, config);
+		break;
+	case HKL_GEOMETRY_TYPE_SOLEIL_SIRIUS_KAPPA:
+		va_start(ap, config);
+		alpha = va_arg(ap, double);
+		va_end(ap);
+		hkl_geometry_init_soleil_sirius_kappa(geom, config, alpha);
 		break;
 	}
 

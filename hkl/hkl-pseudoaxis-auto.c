@@ -131,7 +131,7 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 			gsl_multiroot_fsolver_set(s, f, x);
 			gsl_multiroot_fsolver_iterate(s);
 		}
-		status = gsl_multiroot_test_residual (s->f, HKL_EPSILON);
+		status = gsl_multiroot_test_residual (s->f, HKL_EPSILON / 10.);
 	} while (status == GSL_CONTINUE && iter < 2000);
 
 #ifdef DEBUG

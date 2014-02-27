@@ -233,6 +233,15 @@ HKL_TEST_SUITE_FUNC(set)
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
+	/* test all SOLEIL SIRIUS KAPPA engines */
+	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_SOLEIL_SIRIUS_KAPPA);
+	geometry = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
+	engines = hkl_pseudo_axis_engine_list_factory(config);
+	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
+	test_engines(test, engines);
+	hkl_geometry_free(geometry);
+	hkl_pseudo_axis_engine_list_free(engines);
+
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
 

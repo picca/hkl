@@ -32,6 +32,7 @@
 #include <hkl/hkl-pseudoaxis-zaxis.h>
 #include <hkl/hkl-pseudoaxis-soleil-sixs-med.h>
 #include <hkl/hkl-pseudoaxis-petra3.h>
+#include <hkl/hkl-pseudoaxis-soleil-sirius-turret.h>
 
 static void kappa_2_kappap(double komega, double kappa, double kphi, double alpha,
 			   double *komegap, double *kappap, double *kphip)
@@ -129,6 +130,7 @@ HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_factory(const HklGeometryCo
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_qper_qpar_new());
 		break;
 	case HKL_GEOMETRY_TYPE_KAPPA6C:
+	case HKL_GEOMETRY_TYPE_SOLEIL_SIRIUS_KAPPA:
 		self->geometries->multiply = hkl_geometry_list_multiply_k6c_real;
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_k6c_hkl_new());
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_eulerians_new());

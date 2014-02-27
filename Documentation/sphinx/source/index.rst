@@ -25,6 +25,7 @@ Contents:
    diffractometers/mars
    diffractometers/petra3
    diffractometers/soleil_sirius_turret
+   diffractometers/soleil_sirius_kappa
    pseudo
    development
 
