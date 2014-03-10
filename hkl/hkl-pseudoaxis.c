@@ -544,12 +544,12 @@ const HklGeometryList *hkl_engine_list_geometries_get(const HklEngineList *self)
 }
 
 /**
- * hkl_engine_list_get_geometry: (skip)
+ * hkl_engine_list_geometry_get: (skip)
  * @self: the this ptr
  *
  * Return: a pointer on the geometry member
  **/
-HklGeometry *hkl_engine_list_get_geometry(HklEngineList *self)
+HklGeometry *hkl_engine_list_geometry_get(HklEngineList *self)
 {
 	return self->geometry;
 }

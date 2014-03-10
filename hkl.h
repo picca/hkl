@@ -437,11 +437,11 @@ HKLAPI void hkl_engine_list_free(HklEngineList *self) HKL_ARG_NONNULL(1);
 
 HKLAPI darray_engine *hkl_engine_list_engines_get(HklEngineList *self) HKL_ARG_NONNULL(1);
 
+HKLAPI HklGeometry *hkl_engine_list_geometry_get(HklEngineList *self) HKL_ARG_NONNULL(1);
+
 HKLAPI void hkl_engine_list_geometry_set(HklEngineList *self, const HklGeometry *geometry) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI const HklGeometryList *hkl_engine_list_geometries_get(const HklEngineList *self) HKL_ARG_NONNULL(1);
-
-HKLAPI HklGeometry *hkl_engine_list_get_geometry(HklEngineList *self) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_engine_list_select_solution(HklEngineList *self, unsigned int idx) HKL_ARG_NONNULL(1);
 
