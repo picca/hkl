@@ -138,7 +138,7 @@ void PseudoAxesFrame::on_cell_TreeView_pseudoAxis_value_edited(Glib::ustring con
 void PseudoAxesFrame::on_button1_clicked(void)
 {
 	if(hkl_engine_set(_engine, NULL)){
-		HklEngineList *engines = hkl_engine_engines(this->_engine);
+		HklEngineList *engines = hkl_engine_engines_get(this->_engine);
 		hkl_engine_list_select_solution(engines, 0);
 		this->_signal_changed();
 	}

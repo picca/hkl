@@ -32,7 +32,7 @@ def compute_hkl_trajectories(engine, hkl1=None, hkl2=None, n=100):
     for hh, kk, ll in zip(h, k, l):
         try:
             engine.set_values_unit([hh, kk, ll])
-            solutions = engine.engines().geometries()
+            solutions = engine.engines_get().geometries()
             for i, item in enumerate(solutions.items()):
                 try:
                     trajectories[i]
@@ -40,7 +40,7 @@ def compute_hkl_trajectories(engine, hkl1=None, hkl2=None, n=100):
                     trajectories.append([])
                 values = item.geometry().get_axes_values_unit()
                 trajectories[i].append(values)
-            engine.engines().select_solution(0)
+            engine.engines_get().select_solution(0)
         except GLib.GError, err:
             pass
 

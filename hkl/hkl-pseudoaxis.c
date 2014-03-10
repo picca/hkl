@@ -262,12 +262,12 @@ darray_mode *hkl_engine_modes_get(HklEngine *self)
 }
 
 /**
- * hkl_engine_engines:
+ * hkl_engine_engines_get:
  * @self: the this ptr
  *
  * Return value: (transfer none): the HklEngineList which contain this HklEngine
  **/
-HklEngineList *hkl_engine_engines(HklEngine *self)
+HklEngineList *hkl_engine_engines_get(HklEngine *self)
 {
 	return self->engines;
 }
