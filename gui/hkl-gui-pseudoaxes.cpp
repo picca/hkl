@@ -191,7 +191,7 @@ void PseudoAxesFrame::updatePseudoAxis(void)
 void PseudoAxesFrame::updateMode(void)
 {
 	HklMode **mode;
-	darray_mode *modes = hkl_engine_modes(this->_engine);
+	darray_mode *modes = hkl_engine_modes_get(this->_engine);
 
 	_mode_ListStore->clear();
 	darray_foreach(mode, *modes){

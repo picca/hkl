@@ -135,7 +135,7 @@ static void degenerated(void)
 	geometries = hkl_engine_list_geometries(engines);
 
 	engine = hkl_engine_list_get_by_name(engines, "hkl");
-	modes = hkl_engine_modes(engine);
+	modes = hkl_engine_modes_get(engine);
 	pseudo_axes = hkl_engine_pseudo_axes_get(engine);
 
 	darray_foreach(mode, *modes) {
@@ -201,7 +201,7 @@ static void q2(void)
 	geometries = hkl_engine_list_geometries(engines);
 
 	engine = hkl_engine_list_get_by_name(engines, "q2");
-	modes = hkl_engine_modes(engine);
+	modes = hkl_engine_modes_get(engine);
 	pseudo_axes = hkl_engine_pseudo_axes_get(engine);
 
 	/* the init part */

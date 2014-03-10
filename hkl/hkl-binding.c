@@ -264,15 +264,15 @@ typedef enum {
 
 
 /**
- * hkl_engine_modes_as_gslist:
+ * hkl_engine_modes_get_as_gslist:
  * @self: the this ptr
  *
- * Return value: (element-type HklMode) (transfer container): list of mdoe,
+ * Return value: (element-type HklMode) (transfer container): list of mode,
  *               free the list with g_slist_free when done.
  *
- * Rename to: hkl_engine_modes
+ * Rename to: hkl_engine_modes_get
  **/
-GSList* hkl_engine_modes_as_gslist(HklEngine *self)
+GSList* hkl_engine_modes_get_as_gslist(HklEngine *self)
 {
 	GSList *list = NULL;
 	HklMode **mode;

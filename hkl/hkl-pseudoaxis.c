@@ -251,12 +251,12 @@ HklMode *hkl_engine_mode_get(HklEngine *self)
 }
 
 /**
- * hkl_engine_modes: (skip)
+ * hkl_engine_modes_get: (skip)
  * @self: the this ptr
  *
  * Return value: (transfer none): the current mode of the HklEngine
  **/
-darray_mode *hkl_engine_modes(HklEngine *self)
+darray_mode *hkl_engine_modes_get(HklEngine *self)
 {
 	return &self->modes;
 }

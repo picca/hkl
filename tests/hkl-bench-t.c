@@ -28,7 +28,7 @@ static void hkl_test_bench_run_real(HklEngine *engine, HklGeometry *geometry, si
 {
 	size_t i;
 	HklMode **mode;
-	darray_mode *modes = hkl_engine_modes(engine);
+	darray_mode *modes = hkl_engine_modes_get(engine);
 
 	/* pseudo -> geometry */
 	darray_foreach(mode, *modes){
@@ -139,7 +139,7 @@ static void hkl_test_bench_eulerians(void)
 	hkl_engine_list_init(engines, geometry, detector, sample);
 
 	engine = hkl_engine_list_get_by_name(engines, "eulerians");
-	modes = hkl_engine_modes(engine);
+	modes = hkl_engine_modes_get(engine);
 
 	darray_foreach(mode, *modes){
 		static double eulerians[] = {0, 90 * HKL_DEGTORAD, 0};

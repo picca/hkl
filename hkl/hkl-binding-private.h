@@ -69,12 +69,11 @@ HKLAPI const HklGeometry *hkl_geometry_list_item_geometry(const HklGeometryListI
 /* HklEngine */
 /***********************/
 
-HKLAPI GSList* hkl_engine_modes_as_gslist(HklEngine *self);
+HKLAPI GSList* hkl_engine_modes_get_as_gslist(HklEngine *self);
 
-HKLAPI gboolean hkl_engine_set_values_unit(
-	HklEngine *self,
-	double values[], unsigned int len,
-	GError **error);
+HKLAPI gboolean hkl_engine_set_values_unit(HklEngine *self,
+					   double values[], unsigned int len,
+					   GError **error);
 
 /***************************/
 /* HklPSeudoAxisEngineList */

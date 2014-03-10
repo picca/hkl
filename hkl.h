@@ -413,7 +413,7 @@ HKLAPI HklParameterList *hkl_engine_pseudo_axes_get(HklEngine *self) HKL_ARG_NON
 
 HKLAPI HklMode *hkl_engine_mode_get(HklEngine *self) HKL_ARG_NONNULL(1);
 
-HKLAPI darray_mode *hkl_engine_modes(HklEngine *self) HKL_ARG_NONNULL(1);
+HKLAPI darray_mode *hkl_engine_modes_get(HklEngine *self) HKL_ARG_NONNULL(1);
 
 HKLAPI HklEngineList *hkl_engine_engines(HklEngine *self) HKL_ARG_NONNULL(1);
 

@@ -71,7 +71,7 @@ def plot_hkl_trajectory(filename, geometry, engines,
         hkl1) + " -> " + repr(hkl2) + " page " + str(page))
     _plot_legend(axes_names)
     idx = 2
-    for mode in hkl.modes():
+    for mode in hkl.modes_get():
         hkl.select_mode(mode)
         trajectories = compute_hkl_trajectories(hkl, hkl1=hkl1, hkl2=hkl2, n=n)
         print "\"" + filename + "\"", idx, mode.name_get(), len(trajectories)
