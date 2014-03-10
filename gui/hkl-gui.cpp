@@ -310,7 +310,7 @@ void HKLWindow::set_up_pseudo_axes_frames(void)
 	HklEngine **engine;
 	Gtk::VBox *vbox2 = NULL;
 	PseudoAxesFrame *pseudo;
-	darray_engine *engines = hkl_engine_list_engines(this->_engines);
+	darray_engine *engines = hkl_engine_list_engines_get(this->_engines);
 
 	_refGlade->get_widget("vbox2", vbox2);
 
@@ -414,7 +414,7 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 	Gtk::CellRenderer * renderer;
 	HklEngine **engine;
 	HklParameter **pseudo_axis;
-	darray_engine *engines = hkl_engine_list_engines(this->_engines);
+	darray_engine *engines = hkl_engine_list_engines_get(this->_engines);
 
 	/* add the columns */
 	_TreeView_pseudoAxes->remove_all_columns();

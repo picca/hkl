@@ -158,7 +158,7 @@ class TestAPI(unittest.TestCase):
             values[1] += .01
 
         # check that all the values computed are reachable
-        for engine in engines.engines():
+        for engine in engines.engines_get():
             self.assertTrue(type(engine) is Hkl.Engine)
             self.assertTrue(type(engine.name_get()) is str)
             for parameter in engine.pseudo_axes_get().parameters():

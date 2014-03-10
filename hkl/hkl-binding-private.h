@@ -79,7 +79,7 @@ HKLAPI gboolean hkl_engine_set_values_unit(HklEngine *self,
 /* HklPSeudoAxisEngineList */
 /***************************/
 
-HKLAPI GSList* hkl_engine_list_engines_as_gslist(HklEngineList *self);
+HKLAPI GSList* hkl_engine_list_engines_get_as_gslist(HklEngineList *self);
 
 /*************/
 /* HklSample */

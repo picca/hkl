@@ -134,7 +134,7 @@ def main():
 
         engines.init(geometry, detector, sample)
 
-        engines_names = [engine.name_get() for engine in engines.engines()]
+        engines_names = [engine.name_get() for engine in engines.engines_get()]
         if 'hkl' in engines_names:
             plot_hkl_trajectory(key, geometry, engines,
                                 hkl1=[0, 0, 1], hkl2=[0, 1, 1], n=100)

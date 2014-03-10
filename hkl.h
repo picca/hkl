@@ -435,7 +435,7 @@ HKLAPI void hkl_engine_fprintf(FILE *f, const HklEngine *self) HKL_ARG_NONNULL(1
 
 HKLAPI void hkl_engine_list_free(HklEngineList *self) HKL_ARG_NONNULL(1);
 
-HKLAPI darray_engine *hkl_engine_list_engines(HklEngineList *self) HKL_ARG_NONNULL(1);
+HKLAPI darray_engine *hkl_engine_list_engines_get(HklEngineList *self) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_engine_list_geometry_set(HklEngineList *self, const HklGeometry *geometry) HKL_ARG_NONNULL(1, 2);
 

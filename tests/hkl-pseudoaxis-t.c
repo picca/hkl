@@ -125,7 +125,7 @@ static int test_engines(HklEngineList *engine_list, int n)
 {
 	int res = HKL_TRUE;
 	HklEngine **engine;
-	darray_engine *engines = hkl_engine_list_engines(engine_list);
+	darray_engine *engines = hkl_engine_list_engines_get(engine_list);
 
 	darray_foreach(engine, *engines){
 		res &= test_engine(*engine, engine_list, n);

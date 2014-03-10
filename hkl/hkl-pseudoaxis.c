@@ -522,12 +522,12 @@ int hkl_engine_list_add(HklEngineList *self,
 }
 
 /**
- * hkl_engine_list_engines: (skip)
+ * hkl_engine_list_engines_get: (skip)
  * @self: the this ptr
  *
  * Return: a pointer on the engine array
  **/
-darray_engine *hkl_engine_list_engines(HklEngineList *self)
+darray_engine *hkl_engine_list_engines_get(HklEngineList *self)
 {
 	return (darray_engine *)self;
 }
