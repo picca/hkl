@@ -598,7 +598,7 @@ HklEngine *hkl_engine_list_engine_get_by_name(HklEngineList *self,
 }
 
 /**
- * hkl_engine_list_get_pseudo_axis_by_name:
+ * hkl_engine_list_pseudo_axis_get_by_name:
  * @self: the engine list
  * @name: the name of the requested #HklPseudoAxis
  *
@@ -606,7 +606,7 @@ HklEngine *hkl_engine_list_engine_get_by_name(HklEngineList *self,
  *
  * Returns: (transfer none) (allow-none): the requested #HklPseudoAxis
  **/
-HklParameter *hkl_engine_list_get_pseudo_axis_by_name(
+HklParameter *hkl_engine_list_pseudo_axis_get_by_name(
 	const HklEngineList *self, const char *name)
 {
 	HklEngine **engine;

@@ -448,7 +448,7 @@ HKLAPI void hkl_engine_list_select_solution(HklEngineList *self, unsigned int id
 HKLAPI HklEngine *hkl_engine_list_engine_get_by_name(HklEngineList *self,
 					      const char *name) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI HklParameter *hkl_engine_list_get_pseudo_axis_by_name(const HklEngineList *self,
+HKLAPI HklParameter *hkl_engine_list_pseudo_axis_get_by_name(const HklEngineList *self,
 							     const char *name) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI void hkl_engine_list_init(HklEngineList *self,
