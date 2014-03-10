@@ -59,7 +59,7 @@ static void hkl_test_bench_run_real(HklEngine *engine, HklGeometry *geometry, si
 		fprintf(stdout, "\"%s\" \"%s\" \"%s\" (%d/%d) iterations %f / %f / %f [min/mean/max] ms each\n",
 			hkl_geometry_name_get(geometry),
 			hkl_engine_name(engine),
-			hkl_mode_name(*mode), n, i, min, mean/n, max);
+			hkl_mode_name_get(*mode), n, i, min, mean/n, max);
 	}
 }
 

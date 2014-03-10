@@ -102,7 +102,7 @@ class TestAPI(unittest.TestCase):
         # check for all modes
         for mode in engine.modes():
             self.assertTrue(type(mode) is Hkl.Mode)
-            self.assertTrue(type(mode.name()) is str)
+            self.assertTrue(type(mode.name_get()) is str)
 
             # check the parameters
             parameters = mode.parameters()

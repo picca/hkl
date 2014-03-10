@@ -90,12 +90,12 @@ HklParameter *hkl_parameter_new_pseudo_axis(
 /***********/
 
 /**
- * hkl_mode_name:
+ * hkl_mode_name_get:
  * @self: the this ptr
  *
  * Return value: the name of the HklMode
  **/
-const char *hkl_mode_name(const HklMode *self)
+const char *hkl_mode_name_get(const HklMode *self)
 {
 	return self->info->name;
 }
