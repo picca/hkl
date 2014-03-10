@@ -439,7 +439,7 @@ HKLAPI darray_engine *hkl_engine_list_engines_get(HklEngineList *self) HKL_ARG_N
 
 HKLAPI void hkl_engine_list_geometry_set(HklEngineList *self, const HklGeometry *geometry) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI const HklGeometryList *hkl_engine_list_geometries(const HklEngineList *self) HKL_ARG_NONNULL(1);
+HKLAPI const HklGeometryList *hkl_engine_list_geometries_get(const HklEngineList *self) HKL_ARG_NONNULL(1);
 
 HKLAPI HklGeometry *hkl_engine_list_get_geometry(HklEngineList *self) HKL_ARG_NONNULL(1);
 

@@ -150,7 +150,7 @@ static void hkl_test_bench_eulerians(void)
 		/* studdy this degenerated case */
 		hkl_parameter_list_values_set(pseudo_axes, eulerians, 3, NULL);
 		if (hkl_engine_set(engine, NULL)) {
-			const HklGeometryList *geometries = hkl_engine_list_geometries(engines);
+			const HklGeometryList *geometries = hkl_engine_list_geometries_get(engines);
 			const darray_item *items = hkl_geometry_list_items_get(geometries);
 			HklGeometryListItem **item;
 

@@ -32,7 +32,7 @@ def compute_hkl_trajectories(engine, hkl1=None, hkl2=None, n=100):
     for hh, kk, ll in zip(h, k, l):
         try:
             engine.set_values_unit([hh, kk, ll])
-            solutions = engine.engines_get().geometries()
+            solutions = engine.engines_get().geometries_get()
             for i, item in enumerate(solutions.items()):
                 try:
                     trajectories[i]

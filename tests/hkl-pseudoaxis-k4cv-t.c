@@ -48,7 +48,7 @@ static void degenerated(void)
 
 	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geometry, detector, sample);
-	geometries = hkl_engine_list_geometries(engines);
+	geometries = hkl_engine_list_geometries_get(engines);
 
 	engine = hkl_engine_list_get_by_name(engines, "hkl");
 	modes = hkl_engine_modes_get(engine);
@@ -112,7 +112,7 @@ static void eulerians(void)
 
 	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geometry, detector, sample);
-	geometries = hkl_engine_list_geometries(engines);
+	geometries = hkl_engine_list_geometries_get(engines);
 
 	engine = hkl_engine_list_get_by_name(engines, "eulerians");
 	modes = hkl_engine_modes_get(engine);
@@ -179,7 +179,7 @@ static void q(void)
 
 	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geometry, detector, sample);
-	geometries = hkl_engine_list_geometries(engines);
+	geometries = hkl_engine_list_geometries_get(engines);
 
 	engine = hkl_engine_list_get_by_name(engines, "q");
 	modes = hkl_engine_modes_get(engine);

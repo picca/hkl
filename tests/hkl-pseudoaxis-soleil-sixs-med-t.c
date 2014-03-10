@@ -62,7 +62,7 @@ static void qper_qpar(void)
 
 	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geom, detector, sample);
-	geometries = hkl_engine_list_geometries(engines);
+	geometries = hkl_engine_list_geometries_get(engines);
 	items = hkl_geometry_list_items_get(geometries);
 
 	engine = hkl_engine_list_get_by_name(engines, "qper_qpar");

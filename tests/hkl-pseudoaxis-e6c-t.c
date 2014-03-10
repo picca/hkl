@@ -132,7 +132,7 @@ static void degenerated(void)
 
 	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geometry, detector, sample);
-	geometries = hkl_engine_list_geometries(engines);
+	geometries = hkl_engine_list_geometries_get(engines);
 
 	engine = hkl_engine_list_get_by_name(engines, "hkl");
 	modes = hkl_engine_modes_get(engine);
@@ -198,7 +198,7 @@ static void q2(void)
 
 	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geometry, detector, sample);
-	geometries = hkl_engine_list_geometries(engines);
+	geometries = hkl_engine_list_geometries_get(engines);
 
 	engine = hkl_engine_list_get_by_name(engines, "q2");
 	modes = hkl_engine_modes_get(engine);
@@ -284,7 +284,7 @@ static void petra3(void)
 
 	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geometry, detector, sample);
-	geometries = hkl_engine_list_geometries(engines);
+	geometries = hkl_engine_list_geometries_get(engines);
 
 	/* set the hkl pseudo axis in psi_constant_vertical */
 	hkl = hkl_engine_list_get_by_name(engines, "hkl");
@@ -380,7 +380,7 @@ static void petra3_2(void)
 
 	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geometry, detector, sample);
-	geometries = hkl_engine_list_geometries(engines);
+	geometries = hkl_engine_list_geometries_get(engines);
 	items = hkl_geometry_list_items_get(geometries);
 
 	/* set the hkl pseudo axis in psi_constant_vertical */

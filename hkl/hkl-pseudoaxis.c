@@ -533,12 +533,12 @@ darray_engine *hkl_engine_list_engines_get(HklEngineList *self)
 }
 
 /**
- * hkl_engine_list_geometries:
+ * hkl_engine_list_geometries_get:
  * @self: the this ptr
  *
  * Return: a pointer on the engine array
  **/
-const HklGeometryList *hkl_engine_list_geometries(const HklEngineList *self)
+const HklGeometryList *hkl_engine_list_geometries_get(const HklEngineList *self)
 {
 	return self->geometries;
 }

@@ -996,7 +996,7 @@ void HKLWindow::updateSolutions(void)
 	LOG;
 
 	size_t i = 0;
-	const HklGeometryList *geometries = hkl_engine_list_geometries(this->_engines);
+	const HklGeometryList *geometries = hkl_engine_list_geometries_get(this->_engines);
 	HklGeometryListItem **item;
 
 	_solutionModel->clear();

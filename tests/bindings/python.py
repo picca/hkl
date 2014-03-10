@@ -150,7 +150,7 @@ class TestAPI(unittest.TestCase):
                 hkl.set_values_unit(values)
             except GLib.GError, err:
                 print values, err
-            solutions = engines.geometries()
+            solutions = engines.geometries_get()
             self.assertTrue(type(solutions) is Hkl.GeometryList)
             for item in solutions.items():
                 self.assertTrue(type(item) is Hkl.GeometryListItem)

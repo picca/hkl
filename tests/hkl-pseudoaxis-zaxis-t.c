@@ -62,7 +62,7 @@ static void solution(void)
 	/* select the hkl pseudo axis */
 	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geometry, detector, sample);
-	geometries = hkl_engine_list_geometries(engines);
+	geometries = hkl_engine_list_geometries_get(engines);
 	engine = hkl_engine_list_get_by_name(engines, "hkl");
 	pseudo_axes = hkl_engine_pseudo_axes_get(engine);
 
