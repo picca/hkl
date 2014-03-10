@@ -240,12 +240,12 @@ HklParameterList *hkl_engine_pseudo_axes_get(HklEngine *self)
 }
 
 /**
- * hkl_engine_mode:
+ * hkl_engine_mode_get:
  * @self: the this ptr
  *
  * Return value: (transfer none): the current mode of the HklEngine
  **/
-HklMode *hkl_engine_mode(HklEngine *self)
+HklMode *hkl_engine_mode_get(HklEngine *self)
 {
 	return self->mode;
 }

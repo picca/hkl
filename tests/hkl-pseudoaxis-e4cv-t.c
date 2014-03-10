@@ -161,7 +161,7 @@ static void psi_getter(void)
 	hkl_engine_list_init(engines, geom, detector, sample);
 
 	engine = hkl_engine_list_get_by_name(engines, "psi");
-	mode = hkl_engine_mode(engine);
+	mode = hkl_engine_mode_get(engine);
 	parameters = hkl_mode_parameters_get(mode);
 
 	/* the getter part */
@@ -242,7 +242,7 @@ static void psi_setter(void)
 	engine = hkl_engine_list_get_by_name(engines, "psi");
 	pseudo_axes = hkl_engine_pseudo_axes_get(engine);
 	modes = hkl_engine_modes(engine);
-	parameters = hkl_mode_parameters_get(hkl_engine_mode(engine));
+	parameters = hkl_mode_parameters_get(hkl_engine_mode_get(engine));
 
 	/* the init part */
 	hkl_geometry_set_values_unit_v(geometry, 30., 0., 0., 60.);
@@ -377,7 +377,7 @@ static void hkl_psi_constant_vertical(void)
 	hkl_engine_select_mode_by_name(engine,
 				       "psi_constant");
 
-	mode = hkl_engine_mode(engine);
+	mode = hkl_engine_mode_get(engine);
 	parameters = hkl_mode_parameters_get(mode);
 
 	/* the init part */
