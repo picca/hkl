@@ -101,12 +101,12 @@ const char *hkl_mode_name_get(const HklMode *self)
 }
 
 /**
- * hkl_mode_parameters:
+ * hkl_mode_parameters_get:
  * @self: the this ptr
  *
  * Return value: (transfer none): the parameters of the HklMode
  **/
-HklParameterList *hkl_mode_parameters(HklMode *self)
+HklParameterList *hkl_mode_parameters_get(HklMode *self)
 {
 	return &self->parameters;
 }

@@ -59,7 +59,7 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 			}
 
 			/* randomize the parameters */
-			hkl_parameter_list_randomize(hkl_mode_parameters(*mode));
+			hkl_parameter_list_randomize(hkl_mode_parameters_get(*mode));
 
 			/* pseudo -> geometry */
 			hkl_engine_initialize(engine, NULL);

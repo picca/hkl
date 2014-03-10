@@ -142,7 +142,7 @@ static void degenerated(void)
 		darray_parameter *parameters;
 
 		hkl_engine_select_mode(engine, *mode);
-		parameters = hkl_mode_parameters(*mode);
+		parameters = hkl_mode_parameters_get(*mode);
 		if (darray_size(*parameters))
 			hkl_parameter_value_set(darray_item(*parameters, 0), 0, NULL);
 
@@ -292,7 +292,7 @@ static void petra3(void)
 	hkl_engine_set_values_v(hkl, 1, 1, 0);
 	/* set the mode parameters 0, 0, 1, 90. */
 	mode = hkl_engine_mode(hkl);
-	hkl_parameter_list_values_set(hkl_mode_parameters(mode),
+	hkl_parameter_list_values_set(hkl_mode_parameters_get(mode),
 				      parameters, ARRAY_SIZE(parameters),
 				      NULL);
 
@@ -301,7 +301,7 @@ static void petra3(void)
 	hkl_engine_select_mode_by_name(psi, "psi_constant_vertical");
 	/* set the mode parameters 0, 0, 1 */
 	mode = hkl_engine_mode(psi);
-	hkl_parameter_list_values_set(hkl_mode_parameters(mode),
+	hkl_parameter_list_values_set(hkl_mode_parameters_get(mode),
 				      parameters, ARRAY_SIZE(parameters), NULL);
 
 	/* Compute the hkl [1, 1, 0] in psi_constant_vertical mode with */
@@ -398,12 +398,12 @@ static void petra3_2(void)
 	parameters[2] = 0;
 	parameters[3] = PSI = 0;
 	mode = hkl_engine_mode(hkl);
-	hkl_parameter_list_values_set(hkl_mode_parameters(mode),
+	hkl_parameter_list_values_set(hkl_mode_parameters_get(mode),
 				      parameters, ARRAY_SIZE(parameters),
 				      NULL);
 	/* for psi */
 	mode = hkl_engine_mode(psi);
-	hkl_parameter_list_values_set(hkl_mode_parameters(mode),
+	hkl_parameter_list_values_set(hkl_mode_parameters_get(mode),
 				      parameters, ARRAY_SIZE(parameters),
 				      NULL);
 
@@ -432,7 +432,7 @@ static void petra3_2(void)
 	/* freeze 45; ca 0 0 2 */
 	parameters[3] = PSI = 45.0 * HKL_DEGTORAD;
 	mode = hkl_engine_mode(hkl);
-	hkl_parameter_list_values_set(hkl_mode_parameters(mode),
+	hkl_parameter_list_values_set(hkl_mode_parameters_get(mode),
 				      parameters, ARRAY_SIZE(parameters), NULL);
 	hkl_engine_set_values_v(hkl, 0., 0., 2.);
 
@@ -463,14 +463,14 @@ static void petra3_2(void)
 	parameters[3] = PSI = 0;
 	/* for hkl */
 	mode = hkl_engine_mode(hkl);
-	hkl_parameter_list_values_set(hkl_mode_parameters(mode),
+	hkl_parameter_list_values_set(hkl_mode_parameters_get(mode),
 				      parameters, ARRAY_SIZE(parameters),
 				      NULL);
 	hkl_engine_set_values_v(hkl, 0., 0., 2.);
 
 	/* for psi */
 	mode = hkl_engine_mode(psi);
-	hkl_parameter_list_values_set(hkl_mode_parameters(mode),
+	hkl_parameter_list_values_set(hkl_mode_parameters_get(mode),
 				      parameters, ARRAY_SIZE(parameters),
 				      NULL);
 
@@ -497,7 +497,7 @@ static void petra3_2(void)
 	parameters[3] = PSI = 45 * HKL_DEGTORAD;
 	/* for hkl */
 	mode = hkl_engine_mode(hkl);
-	hkl_parameter_list_values_set(hkl_mode_parameters(mode),
+	hkl_parameter_list_values_set(hkl_mode_parameters_get(mode),
 				      parameters, ARRAY_SIZE(parameters),
 				      NULL);
 	hkl_engine_set_values_v(hkl, 0., 0., 2.);

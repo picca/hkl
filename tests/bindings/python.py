@@ -105,7 +105,7 @@ class TestAPI(unittest.TestCase):
             self.assertTrue(type(mode.name_get()) is str)
 
             # check the parameters
-            parameters = mode.parameters()
+            parameters = mode.parameters_get()
             self.assertTrue(type(parameters) is Hkl.ParameterList)
             for parameter in parameters.parameters():
                 self.assertTrue(type(parameter) is Hkl.Parameter)

@@ -206,7 +206,7 @@ void PseudoAxesFrame::updateModeParameters(void)
 	HklMode *mode = hkl_engine_mode(this->_engine);
 
 	if(mode){
-		darray_parameter *parameters = hkl_mode_parameters(mode);
+		darray_parameter *parameters = hkl_mode_parameters_get(mode);
 
 		if(darray_size(*parameters)){
 			HklParameter **parameter;

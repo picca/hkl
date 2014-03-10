@@ -440,7 +440,7 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 	darray_foreach(engine, *engines){
 		darray_parameter *pseudo_axes = (darray_parameter *)hkl_engine_pseudo_axes(*engine);
 		HklMode *mode = hkl_engine_mode(*engine);
-		darray_parameter *parameters = hkl_mode_parameters(mode);
+		darray_parameter *parameters = hkl_mode_parameters_get(mode);
 
 		darray_foreach(pseudo_axis, *pseudo_axes){
 			Gtk::ListStore::Row row = *(_pseudoAxeModel->append());

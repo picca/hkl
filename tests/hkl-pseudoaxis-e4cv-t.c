@@ -104,7 +104,7 @@ static void degenerated(void)
 	darray_foreach(mode, *modes){
 		static double values[] = {0, 0, 1};
 		HklParameterList *pseudo_axes = hkl_engine_pseudo_axes(engine);
-		darray_parameter *parameters = hkl_mode_parameters(*mode);
+		darray_parameter *parameters = hkl_mode_parameters_get(*mode);
 
 		hkl_engine_select_mode(engine, *mode);
 		if (darray_size(*parameters))
@@ -162,7 +162,7 @@ static void psi_getter(void)
 
 	engine = hkl_engine_list_get_by_name(engines, "psi");
 	mode = hkl_engine_mode(engine);
-	parameters = hkl_mode_parameters(mode);
+	parameters = hkl_mode_parameters_get(mode);
 
 	/* the getter part */
 	hkl_geometry_set_values_unit_v(geom, 30., 0., 0., 60.);
@@ -242,7 +242,7 @@ static void psi_setter(void)
 	engine = hkl_engine_list_get_by_name(engines, "psi");
 	pseudo_axes = hkl_engine_pseudo_axes(engine);
 	modes = hkl_engine_modes(engine);
-	parameters = hkl_mode_parameters(hkl_engine_mode(engine));
+	parameters = hkl_mode_parameters_get(hkl_engine_mode(engine));
 
 	/* the init part */
 	hkl_geometry_set_values_unit_v(geometry, 30., 0., 0., 60.);
@@ -378,7 +378,7 @@ static void hkl_psi_constant_vertical(void)
 				       "psi_constant");
 
 	mode = hkl_engine_mode(engine);
-	parameters = hkl_mode_parameters(mode);
+	parameters = hkl_mode_parameters_get(mode);
 
 	/* the init part */
 	hkl_geometry_set_values_unit_v(geometry, 30., 0., 0., 60.);

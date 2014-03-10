@@ -399,7 +399,7 @@ typedef darray(HklEngine *) darray_engine;
 
 HKLAPI const char * hkl_mode_name_get(const HklMode *self) HKL_ARG_NONNULL(1);
 
-HKLAPI HklParameterList *hkl_mode_parameters(HklMode *self) HKL_ARG_NONNULL(1);
+HKLAPI HklParameterList *hkl_mode_parameters_get(HklMode *self) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_mode_fprintf(FILE *f, const HklMode *self) HKL_ARG_NONNULL(1, 2);
 

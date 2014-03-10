@@ -56,7 +56,7 @@ static void degenerated(void)
 
 	darray_foreach(mode, *modes) {
 		hkl_engine_select_mode(engine, *mode);
-		parameters = hkl_mode_parameters(*mode);
+		parameters = hkl_mode_parameters_get(*mode);
 		if(darray_size(*parameters))
 			hkl_parameter_value_set(darray_item(*parameters, 0), 1, NULL);
 
@@ -122,7 +122,7 @@ static void eulerians(void)
 		darray_parameter *parameters;
 
 		hkl_engine_select_mode(engine, *mode);
-		parameters = hkl_mode_parameters(*mode);
+		parameters = hkl_mode_parameters_get(*mode);
 		if(darray_size(*parameters))
 			hkl_parameter_value_set(darray_item(*parameters, 0), 1, NULL);
 

@@ -109,7 +109,7 @@ static void degenerated(void)
 		darray_parameter *parameters;
 
 		hkl_engine_select_mode(engine, *mode);
-		parameters = hkl_mode_parameters(*mode);
+		parameters = hkl_mode_parameters_get(*mode);
 		if (darray_size(*parameters))
 			hkl_parameter_value_set(darray_item(*parameters, 0), 0, NULL);
 
@@ -164,7 +164,7 @@ static void psi_getter(void)
 
 	engine = hkl_engine_list_get_by_name(engines, "psi");
 	mode = hkl_engine_mode(engine);
-	parameters = hkl_mode_parameters(mode);
+	parameters = hkl_mode_parameters_get(mode);
 
 	/* the getter part */
 	hkl_geometry_set_values_unit_v(geometry, 30., 0., 0., 60.);
@@ -240,7 +240,7 @@ static void psi_setter(void)
 
 	/* the init part */
 	hkl_geometry_set_values_unit_v(geometry, 30., 0., 0., 60.);
-	hkl_parameter_list_values_set(hkl_mode_parameters(hkl_engine_mode(engine)),
+	hkl_parameter_list_values_set(hkl_mode_parameters_get(hkl_engine_mode(engine)),
 				      hkl, ARRAY_SIZE(hkl), NULL);
 	hkl_engine_initialize(engine, NULL);
 
@@ -380,7 +380,7 @@ static void hkl_psi_constant_horizontal(void)
 
 	/* the init part */
 	hkl_geometry_set_values_unit_v(geometry, 30., 0., 0., 60.);
-	hkl_parameter_list_values_set(hkl_mode_parameters(mode),
+	hkl_parameter_list_values_set(hkl_mode_parameters_get(mode),
 				      hkl2, ARRAY_SIZE(hkl2), NULL);
 	hkl_engine_initialize(engine, NULL);
 
