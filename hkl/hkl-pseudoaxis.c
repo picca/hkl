@@ -207,12 +207,12 @@ static void hkl_engine_prepare_internal(HklEngine *self)
 }
 
 /**
- * hkl_engine_name:
+ * hkl_engine_name_get:
  * @self: the this ptr
  *
  * Return value: the name of the HklEngine
  **/
-const char *hkl_engine_name(const HklEngine *self)
+const char *hkl_engine_name_get(const HklEngine *self)
 {
 	return self->info->name;
 }

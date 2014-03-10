@@ -405,7 +405,7 @@ HKLAPI void hkl_mode_fprintf(FILE *f, const HklMode *self) HKL_ARG_NONNULL(1, 2)
 
 /* HklEngine */
 
-HKLAPI const char *hkl_engine_name(const HklEngine *self) HKL_ARG_NONNULL(1);
+HKLAPI const char *hkl_engine_name_get(const HklEngine *self) HKL_ARG_NONNULL(1);
 
 HKLAPI unsigned int hkl_engine_len(const HklEngine *self) HKL_ARG_NONNULL(1);
 

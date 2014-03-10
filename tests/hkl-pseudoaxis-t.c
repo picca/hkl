@@ -97,7 +97,7 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 #if with_log
 		fprintf(stderr, "\n\"%s\" \"%s\" \"%s\"",
 			hkl_geometry_name_get(geometry),
-			hkl_engine_name(engine),
+			hkl_engine_name_get(engine),
 			hkl_mode_name_get(*mode));
 		fprintf(stderr, " unreachable : %d/%d", unreachable, i);
 		if(ko){

@@ -160,7 +160,7 @@ class TestAPI(unittest.TestCase):
         # check that all the values computed are reachable
         for engine in engines.engines():
             self.assertTrue(type(engine) is Hkl.Engine)
-            self.assertTrue(type(engine.name()) is str)
+            self.assertTrue(type(engine.name_get()) is str)
             for parameter in engine.pseudo_axes().parameters():
                 self.assertTrue(type(parameter) is Hkl.Parameter)
                 self.assertTrue(type(parameter.value_get()) is float)
