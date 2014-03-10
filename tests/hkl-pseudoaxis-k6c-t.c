@@ -49,7 +49,7 @@ static void degenerated(void)
 	hkl_engine_list_init(engines, geometry, detector, sample);
 	geometries = hkl_engine_list_geometries_get(engines);
 
-	engine = hkl_engine_list_get_by_name(engines, "hkl");
+	engine = hkl_engine_list_engine_get_by_name(engines, "hkl");
 	modes = hkl_engine_modes_get(engine);
 	pseudo_axes = hkl_engine_pseudo_axes_get(engine);
 
@@ -118,7 +118,7 @@ static void eulerians(void)
 	hkl_engine_list_init(engines, geometry, detector, sample);
 	geometries = hkl_engine_list_geometries_get(engines);
 
-	engine = hkl_engine_list_get_by_name(engines, "eulerians");
+	engine = hkl_engine_list_engine_get_by_name(engines, "eulerians");
 	modes = hkl_engine_modes_get(engine);
 
 	darray_foreach(mode, *modes){
@@ -184,7 +184,7 @@ static void q2(void)
 	hkl_engine_list_init(engines, geometry, detector, sample);
 	geometries = hkl_engine_list_geometries_get(engines);
 
-	engine = hkl_engine_list_get_by_name(engines, "q2");
+	engine = hkl_engine_list_engine_get_by_name(engines, "q2");
 	modes = hkl_engine_modes_get(engine);
 	pseudo_axes = hkl_engine_pseudo_axes_get(engine);
 
@@ -251,7 +251,7 @@ static void m15110(void)
 	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geometry, detector, sample);
 
-	engine = hkl_engine_list_get_by_name(engines, "psi");
+	engine = hkl_engine_list_engine_get_by_name(engines, "psi");
 
 	/* the init part must succed */
 	hkl_geometry_set_values_unit_v(geometry, 0., 62.95, 134.75, 0., 0., 60.);

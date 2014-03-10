@@ -63,7 +63,7 @@ static void solution(void)
 	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geometry, detector, sample);
 	geometries = hkl_engine_list_geometries_get(engines);
-	engine = hkl_engine_list_get_by_name(engines, "hkl");
+	engine = hkl_engine_list_engine_get_by_name(engines, "hkl");
 	pseudo_axes = hkl_engine_pseudo_axes_get(engine);
 
 	/* the init part must succed */

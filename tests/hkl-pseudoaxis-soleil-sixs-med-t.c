@@ -65,7 +65,7 @@ static void qper_qpar(void)
 	geometries = hkl_engine_list_geometries_get(engines);
 	items = hkl_geometry_list_items_get(geometries);
 
-	engine = hkl_engine_list_get_by_name(engines, "qper_qpar");
+	engine = hkl_engine_list_engine_get_by_name(engines, "qper_qpar");
 	pseudo_axes = hkl_engine_pseudo_axes_get(engine);
 
 	Qper = &darray_item(*pseudo_axes, 0)->_value;

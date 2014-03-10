@@ -97,7 +97,7 @@ class TestAPI(unittest.TestCase):
         """
         factory = Hkl.factories()['K6C']
         engines = factory.create_new_engine_list()
-        engine = engines.get_by_name("hkl")
+        engine = engines.engine_get_by_name("hkl")
 
         # check for all modes
         for mode in engine.modes_get():
@@ -137,7 +137,7 @@ class TestAPI(unittest.TestCase):
         engines.get()
 
         # get the hkl engine and do a computation
-        hkl = engines.get_by_name("hkl")
+        hkl = engines.engine_get_by_name("hkl")
         values = hkl.pseudo_axes_get().values_unit_get()
 
         # check for all modes

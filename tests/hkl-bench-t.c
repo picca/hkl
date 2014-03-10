@@ -67,7 +67,7 @@ static void hkl_test_bench_run_v(HklEngineList *engines, HklGeometry *geometry,
 				 char const *name, int n, ...)
 {
 	va_list ap;
-	HklEngine *engine = hkl_engine_list_get_by_name(engines, name);
+	HklEngine *engine = hkl_engine_list_engine_get_by_name(engines, name);
 	HklParameter **pseudo_axis;
 	darray_parameter *pseudo_axes = (darray_parameter *)hkl_engine_pseudo_axes_get(engine);
 
@@ -138,7 +138,7 @@ static void hkl_test_bench_eulerians(void)
 	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geometry, detector, sample);
 
-	engine = hkl_engine_list_get_by_name(engines, "eulerians");
+	engine = hkl_engine_list_engine_get_by_name(engines, "eulerians");
 	modes = hkl_engine_modes_get(engine);
 
 	darray_foreach(mode, *modes){

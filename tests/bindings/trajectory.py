@@ -64,7 +64,7 @@ def plot_hkl_trajectory(filename, geometry, engines,
     """
     axes_names = [axis.name_get() for axis in geometry.axes()]
 
-    hkl = engines.get_by_name("hkl")
+    hkl = engines.engine_get_by_name("hkl")
     page = 1
     plt.clf()
     plt.suptitle("\"" + filename + "\" " + repr(

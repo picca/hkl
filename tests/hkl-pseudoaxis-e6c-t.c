@@ -77,7 +77,7 @@ static void getter(void)
 	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geometry, detector, sample);
 
-	engine = hkl_engine_list_get_by_name(engines, "hkl");
+	engine = hkl_engine_list_engine_get_by_name(engines, "hkl");
 
 	/* geometry -> pseudo */
 	hkl_geometry_set_values_unit_v(geometry, 0., 30., 0., 0., 0., 60.);
@@ -134,7 +134,7 @@ static void degenerated(void)
 	hkl_engine_list_init(engines, geometry, detector, sample);
 	geometries = hkl_engine_list_geometries_get(engines);
 
-	engine = hkl_engine_list_get_by_name(engines, "hkl");
+	engine = hkl_engine_list_engine_get_by_name(engines, "hkl");
 	modes = hkl_engine_modes_get(engine);
 	pseudo_axes = hkl_engine_pseudo_axes_get(engine);
 
@@ -200,7 +200,7 @@ static void q2(void)
 	hkl_engine_list_init(engines, geometry, detector, sample);
 	geometries = hkl_engine_list_geometries_get(engines);
 
-	engine = hkl_engine_list_get_by_name(engines, "q2");
+	engine = hkl_engine_list_engine_get_by_name(engines, "q2");
 	modes = hkl_engine_modes_get(engine);
 	pseudo_axes = hkl_engine_pseudo_axes_get(engine);
 
@@ -287,7 +287,7 @@ static void petra3(void)
 	geometries = hkl_engine_list_geometries_get(engines);
 
 	/* set the hkl pseudo axis in psi_constant_vertical */
-	hkl = hkl_engine_list_get_by_name(engines, "hkl");
+	hkl = hkl_engine_list_engine_get_by_name(engines, "hkl");
 	hkl_engine_select_mode_by_name(hkl, "psi_constant_vertical");
 	hkl_engine_set_values_v(hkl, 1, 1, 0);
 	/* set the mode parameters 0, 0, 1, 90. */
@@ -297,7 +297,7 @@ static void petra3(void)
 				      NULL);
 
 	/* set the psi pseudo axis */
-	psi = hkl_engine_list_get_by_name(engines, "psi");
+	psi = hkl_engine_list_engine_get_by_name(engines, "psi");
 	hkl_engine_select_mode_by_name(psi, "psi_constant_vertical");
 	/* set the mode parameters 0, 0, 1 */
 	mode = hkl_engine_mode_get(psi);
@@ -384,10 +384,10 @@ static void petra3_2(void)
 	items = hkl_geometry_list_items_get(geometries);
 
 	/* set the hkl pseudo axis in psi_constant_vertical */
-	hkl = hkl_engine_list_get_by_name(engines, "hkl");
+	hkl = hkl_engine_list_engine_get_by_name(engines, "hkl");
 	hkl_engine_select_mode_by_name(hkl, "psi_constant_vertical");
 	/* set the psi pseudo engine to read the psi value */
-	psi = hkl_engine_list_get_by_name(engines, "psi");
+	psi = hkl_engine_list_engine_get_by_name(engines, "psi");
 	pseudo_axes = hkl_engine_pseudo_axes_get(psi);
 
 	/* PsiRef 0 1 0 */

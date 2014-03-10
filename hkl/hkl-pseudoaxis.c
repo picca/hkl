@@ -576,7 +576,7 @@ void hkl_engine_list_select_solution(HklEngineList *self, unsigned int idx)
 }
 
 /**
- * hkl_engine_list_get_by_name:
+ * hkl_engine_list_engine_get_by_name:
  * @self: the this ptr
  * @name: the name of the requested #HklPseudoAxisEngin
  *
@@ -584,7 +584,7 @@ void hkl_engine_list_select_solution(HklEngineList *self, unsigned int idx)
  *
  * Returns: (transfer none) (allow-none): the requested engine
  **/
-HklEngine *hkl_engine_list_get_by_name(HklEngineList *self,
+HklEngine *hkl_engine_list_engine_get_by_name(HklEngineList *self,
 				       const char *name)
 {
 	HklEngine **engine;

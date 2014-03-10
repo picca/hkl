@@ -44,7 +44,7 @@ static void getter(void)
 	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geometry, detector, sample);
 
-	engine = hkl_engine_list_get_by_name(engines, "hkl");
+	engine = hkl_engine_list_engine_get_by_name(engines, "hkl");
 
 	/* geometry -> pseudo */
 	hkl_geometry_set_values_unit_v(geometry, 30., 0., 0., 60.);
@@ -100,7 +100,7 @@ static void degenerated(void)
 	hkl_engine_list_init(engines, geometry, detector, sample);
 	geometries = hkl_engine_list_geometries_get(engines);
 
-	engine = hkl_engine_list_get_by_name(engines, "hkl");
+	engine = hkl_engine_list_engine_get_by_name(engines, "hkl");
 	modes = hkl_engine_modes_get(engine);
 	pseudo_axes = hkl_engine_pseudo_axes_get(engine);
 
@@ -162,7 +162,7 @@ static void psi_getter(void)
 	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geometry, detector, sample);
 
-	engine = hkl_engine_list_get_by_name(engines, "psi");
+	engine = hkl_engine_list_engine_get_by_name(engines, "psi");
 	mode = hkl_engine_mode_get(engine);
 	parameters = hkl_mode_parameters_get(mode);
 
@@ -234,7 +234,7 @@ static void psi_setter(void)
 	hkl_engine_list_init(engines, geometry, detector, sample);
 	geometries = hkl_engine_list_geometries_get(engines);
 
-	engine = hkl_engine_list_get_by_name(engines, "psi");
+	engine = hkl_engine_list_engine_get_by_name(engines, "psi");
 	modes = hkl_engine_modes_get(engine);
 	pseudo_axes = hkl_engine_pseudo_axes_get(engine);
 
@@ -303,7 +303,7 @@ static void q(void)
 	hkl_engine_list_init(engines, geometry, detector, sample);
 	geometries = hkl_engine_list_geometries_get(engines);
 
-	engine = hkl_engine_list_get_by_name(engines, "q");
+	engine = hkl_engine_list_engine_get_by_name(engines, "q");
 	modes = hkl_engine_modes_get(engine);
 	pseudo_axes = hkl_engine_pseudo_axes_get(engine);
 
@@ -371,7 +371,7 @@ static void hkl_psi_constant_horizontal(void)
 	hkl_engine_list_init(engines, geometry, detector, sample);
 	geometries = hkl_engine_list_geometries_get(engines);
 
-	engine = hkl_engine_list_get_by_name(engines, "hkl");
+	engine = hkl_engine_list_engine_get_by_name(engines, "hkl");
 	mode = hkl_engine_mode_get(engine);
 	pseudo_axes = hkl_engine_pseudo_axes_get(engine);
 

@@ -445,7 +445,7 @@ HKLAPI const HklGeometryList *hkl_engine_list_geometries_get(const HklEngineList
 
 HKLAPI void hkl_engine_list_select_solution(HklEngineList *self, unsigned int idx) HKL_ARG_NONNULL(1);
 
-HKLAPI HklEngine *hkl_engine_list_get_by_name(HklEngineList *self,
+HKLAPI HklEngine *hkl_engine_list_engine_get_by_name(HklEngineList *self,
 					      const char *name) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI HklParameter *hkl_engine_list_get_pseudo_axis_by_name(const HklEngineList *self,
