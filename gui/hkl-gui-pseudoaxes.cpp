@@ -177,7 +177,7 @@ void PseudoAxesFrame::on_cell_treeview2_mode_parameter_value_edited(Glib::ustrin
 void PseudoAxesFrame::updatePseudoAxis(void)
 {
 	HklParameter **parameter;
-	darray_parameter *pseudo_axes = (darray_parameter *)hkl_engine_pseudo_axes(this->_engine);
+	darray_parameter *pseudo_axes = (darray_parameter *)hkl_engine_pseudo_axes_get(this->_engine);
 
 	_pseudoAxis_ListStore->clear();
 	darray_foreach(parameter, *pseudo_axes){

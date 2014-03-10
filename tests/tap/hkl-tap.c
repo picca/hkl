@@ -46,7 +46,7 @@ int check_pseudoaxes(HklEngine *engine,
 	int res = HKL_TRUE;
 	unsigned int i = 0;
 	HklParameter **pseudo_axis;
-	darray_parameter *pseudo_axes = hkl_engine_pseudo_axes(engine);
+	darray_parameter *pseudo_axes = hkl_engine_pseudo_axes_get(engine);
 
 	hkl_assert(hkl_engine_len(engine) == len);
 
@@ -75,7 +75,7 @@ void hkl_engine_set_values_v(HklEngine *self, ...)
 	uint i;
 	va_list ap;
 	unsigned int len = hkl_engine_len(self);
-	HklParameterList *pseudo_axes = hkl_engine_pseudo_axes(self);
+	HklParameterList *pseudo_axes = hkl_engine_pseudo_axes_get(self);
 	double values[len];
 
 	va_start(ap, self);

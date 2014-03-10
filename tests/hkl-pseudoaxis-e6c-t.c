@@ -136,7 +136,7 @@ static void degenerated(void)
 
 	engine = hkl_engine_list_get_by_name(engines, "hkl");
 	modes = hkl_engine_modes(engine);
-	pseudo_axes = hkl_engine_pseudo_axes(engine);
+	pseudo_axes = hkl_engine_pseudo_axes_get(engine);
 
 	darray_foreach(mode, *modes) {
 		darray_parameter *parameters;
@@ -202,7 +202,7 @@ static void q2(void)
 
 	engine = hkl_engine_list_get_by_name(engines, "q2");
 	modes = hkl_engine_modes(engine);
-	pseudo_axes = hkl_engine_pseudo_axes(engine);
+	pseudo_axes = hkl_engine_pseudo_axes_get(engine);
 
 	/* the init part */
 	hkl_geometry_set_values_unit_v(geometry, 0., 30., 0., 0., 0., 60.);
@@ -309,7 +309,7 @@ static void petra3(void)
 	if(hkl_engine_set(hkl, NULL)){
 		const darray_item *items = hkl_geometry_list_items_get(geometries);
 		HklGeometryListItem **item;
-		darray_parameter *pseudo_axes = hkl_engine_pseudo_axes(psi);
+		darray_parameter *pseudo_axes = hkl_engine_pseudo_axes_get(psi);
 
 		darray_foreach(item, *items) {
 			double PSI = parameters[3];
@@ -388,7 +388,7 @@ static void petra3_2(void)
 	hkl_engine_select_mode_by_name(hkl, "psi_constant_vertical");
 	/* set the psi pseudo engine to read the psi value */
 	psi = hkl_engine_list_get_by_name(engines, "psi");
-	pseudo_axes = hkl_engine_pseudo_axes(psi);
+	pseudo_axes = hkl_engine_pseudo_axes_get(psi);
 
 	/* PsiRef 0 1 0 */
 	/* freeze 0; ca 0 0 2 */

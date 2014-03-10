@@ -64,7 +64,7 @@ static void solution(void)
 	hkl_engine_list_init(engines, geometry, detector, sample);
 	geometries = hkl_engine_list_geometries(engines);
 	engine = hkl_engine_list_get_by_name(engines, "hkl");
-	pseudo_axes = hkl_engine_pseudo_axes(engine);
+	pseudo_axes = hkl_engine_pseudo_axes_get(engine);
 
 	/* the init part must succed */
 	hkl_geometry_set_values_unit_v(geometry, 1., 0., 0., 0.);

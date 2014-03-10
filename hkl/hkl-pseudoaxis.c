@@ -229,12 +229,12 @@ unsigned int hkl_engine_len(const HklEngine *self)
 }
 
 /**
- * hkl_engine_pseudo_axes:
+ * hkl_engine_pseudo_axes_get:
  * @self: the this ptr
  *
  * Return value: (transfer none): the pseudo_axes managed by this HklEngine
  **/
-HklParameterList *hkl_engine_pseudo_axes(HklEngine *self)
+HklParameterList *hkl_engine_pseudo_axes_get(HklEngine *self)
 {
 	return &self->pseudo_axes;
 }

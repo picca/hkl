@@ -409,7 +409,7 @@ HKLAPI const char *hkl_engine_name_get(const HklEngine *self) HKL_ARG_NONNULL(1)
 
 HKLAPI unsigned int hkl_engine_len(const HklEngine *self) HKL_ARG_NONNULL(1);
 
-HKLAPI HklParameterList *hkl_engine_pseudo_axes(HklEngine *self) HKL_ARG_NONNULL(1);
+HKLAPI HklParameterList *hkl_engine_pseudo_axes_get(HklEngine *self) HKL_ARG_NONNULL(1);
 
 HKLAPI HklMode *hkl_engine_mode(HklEngine *self) HKL_ARG_NONNULL(1);
 

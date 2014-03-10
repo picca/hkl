@@ -36,7 +36,7 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 	const HklGeometryList *geometries = hkl_engine_list_geometries(engine_list);
 	HklGeometry *geometry = hkl_engine_list_get_geometry(engine_list);
 	darray_mode *modes = hkl_engine_modes(engine);
-	darray_parameter *pseudo_axes = (darray_parameter *)hkl_engine_pseudo_axes(engine);
+	darray_parameter *pseudo_axes = (darray_parameter *)hkl_engine_pseudo_axes_get(engine);
 
 	/* randomize the geometry */
 	hkl_geometry_randomize(geometry);

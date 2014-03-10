@@ -438,7 +438,7 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 
 	//Fill the models from the diffractometer pseudoAxes
 	darray_foreach(engine, *engines){
-		darray_parameter *pseudo_axes = (darray_parameter *)hkl_engine_pseudo_axes(*engine);
+		darray_parameter *pseudo_axes = (darray_parameter *)hkl_engine_pseudo_axes_get(*engine);
 		HklMode *mode = hkl_engine_mode(*engine);
 		darray_parameter *parameters = hkl_mode_parameters_get(mode);
 

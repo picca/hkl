@@ -52,7 +52,7 @@ static void degenerated(void)
 
 	engine = hkl_engine_list_get_by_name(engines, "hkl");
 	modes = hkl_engine_modes(engine);
-	pseudo_axes = hkl_engine_pseudo_axes(engine);
+	pseudo_axes = hkl_engine_pseudo_axes_get(engine);
 
 	darray_foreach(mode, *modes) {
 		hkl_engine_select_mode(engine, *mode);
@@ -116,7 +116,7 @@ static void eulerians(void)
 
 	engine = hkl_engine_list_get_by_name(engines, "eulerians");
 	modes = hkl_engine_modes(engine);
-	pseudo_axes = hkl_engine_pseudo_axes(engine);
+	pseudo_axes = hkl_engine_pseudo_axes_get(engine);
 
 	darray_foreach(mode, *modes){
 		darray_parameter *parameters;
