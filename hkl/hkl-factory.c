@@ -46,6 +46,8 @@ struct _HklFactory
 {
 	const char *name;
 	const char *description;
+	const char **axes;
+	size_t axes_length;
 	HklFactoryGeometryFunction create_new_geometry;
 	HklFactoryEngineListFunction create_new_engine_list;
 };
@@ -73,6 +75,22 @@ const char *hkl_factory_name(const HklFactory *self)
 	return self->name;
 }
 
+/**
+ * hkl_factory_axes_get:
+ * @self: the this ptr
+ * @length: (out caller-allocates): the length of the returned array
+ *
+ * get all the axes of the given geometry.
+ *
+ * Returns: (array length=length) (transfer none): array of the axes names.
+ **/
+const char **hkl_factory_axes_get(const HklFactory *self,
+				  size_t *length)
+{
+	*length = self->axes_length;
+	return self->axes;
+}
+
 HklGeometry *hkl_factory_create_new_geometry(const HklFactory *self)
 {
 	return self->create_new_geometry(self);
@@ -86,6 +104,8 @@ HklEngineList *hkl_factory_create_new_engine_list(const HklFactory *self)
 #define REGISTER_DIFFRACTOMETER(name_, real_name_, description_)	\
 	static HklFactory name_ = {.name = real_name_,			\
 				   .description = description_,		\
+				   .axes = hkl_geometry_ ## name_ ## _axes, \
+				   .axes_length = ARRAY_SIZE(hkl_geometry_ ## name_ ## _axes), \
 				   .create_new_geometry = &hkl_geometry_new_ ## name_, \
 				   .create_new_engine_list = &hkl_engine_list_new_ ## name_ \
 	};								\
@@ -177,6 +197,8 @@ static void hkl_geometry_list_multiply_k6c_real(HklGeometryList *self,
 	"\n"								\
 	"  + **tth** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
 
+static const char* hkl_geometry_twoC_axes[] = {"omega", "tth"};
+
 static HklGeometry *hkl_geometry_new_twoC(const HklFactory *factory)
 {
 	HklGeometry *self = hkl_geometry_new(factory);
@@ -214,6 +236,8 @@ REGISTER_DIFFRACTOMETER(twoC, "TwoC", HKL_GEOMETRY_TWOC_DESCRIPTION);
 	"+ 1 axis for the detector\n"					\
 	"\n"								\
 	"  + **tth** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
+
+static const char* hkl_geometry_eulerian4C_vertical_axes[] = {"omega", "chi", "phi", "tth"};
 
 static HklGeometry *hkl_geometry_new_eulerian4C_vertical(const HklFactory *factory)
 {
@@ -262,6 +286,8 @@ REGISTER_DIFFRACTOMETER(eulerian4C_vertical, "E4CV", HKL_GEOMETRY_EULERIAN4C_VER
 	"+ 1 axis for the detector\n"					\
 	"\n"								\
 	"  + **tth** : rotation around the :math:`-\\\vec{y}` direction (0, -1, 0)\n"
+
+static const char* hkl_geometry_kappa4C_vertical_axes[] = {"komega", "kappa", "kphi", "tth"};
 
 static HklGeometry *hkl_geometry_new_kappa4C_vertical(const HklFactory *factory)
 {
@@ -312,6 +338,8 @@ REGISTER_DIFFRACTOMETER(kappa4C_vertical, "K4CV", HKL_GEOMETRY_KAPPA4C_VERTICAL_
 	"\n"								\
 	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
 	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
+
+static const char* hkl_geometry_eulerian6C_axes[] = {"mu", "omega", "chi", "phi", "gamma", "delta"};
 
 static HklGeometry *hkl_geometry_new_eulerian6C(const HklFactory *factory)
 {
@@ -365,6 +393,8 @@ REGISTER_DIFFRACTOMETER(eulerian6C, "E6C", HKL_GEOMETRY_EULERIAN6C_DESCRIPTION);
 	"\n"								\
 	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
 	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
+
+static const char* hkl_geometry_kappa6C_axes[] = {"mu", "komega", "kappa", "kphi", "gamma", "delta"};
 
 static HklGeometry *hkl_geometry_new_kappa6C(const HklFactory *factory)
 {
@@ -420,6 +450,8 @@ REGISTER_DIFFRACTOMETER(kappa6C, "K6C", HKL_GEOMETRY_KAPPA6C_DESCRIPTION);
 	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
 	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n"
 
+static const char* hkl_geometry_zaxis_axes[] = {"mu", "omega", "delta", "gamma"};
+
 static HklGeometry *hkl_geometry_new_zaxis(const HklFactory *factory)
 {
 	HklGeometry *self = hkl_geometry_new(factory);
@@ -468,6 +500,8 @@ REGISTER_DIFFRACTOMETER(zaxis, "ZAXIS", HKL_GEOMETRY_TYPE_ZAXIS_DESCRIPTION);
 	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
 	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
 
+static const char* hkl_geometry_soleil_sixs_med_2_2_axes[] = {"beta", "mu", "omega", "gamma", "delta"};
+
 static HklGeometry *hkl_geometry_new_soleil_sixs_med_2_2(const HklFactory *factory)
 {
 	HklGeometry *self = hkl_geometry_new(factory);
@@ -515,6 +549,8 @@ REGISTER_DIFFRACTOMETER(soleil_sixs_med_2_2,"SOLEIL SIXS MED2+2", HKL_GEOMETRY_T
 	"\n"								\
 	"  + **tth** : rotation around the :math:`\\vec{z}` direction (0, -1, 0)\n"
 
+static const char* hkl_geometry_soleil_mars_axes[] = {"omega", "chi", "phi", "tth"};
+
 static HklGeometry *hkl_geometry_new_soleil_mars(const HklFactory *factory)
 {
 	HklGeometry *self = hkl_geometry_new(factory);
@@ -560,6 +596,8 @@ REGISTER_DIFFRACTOMETER(soleil_mars, "SOLEIL MARS", HKL_GEOMETRY_TYPE_SOLEIL_MAR
 	"  + **pitch** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
 	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
 	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
+
+static const char* hkl_geometry_soleil_sixs_med_1_2_axes[] = {"pitch", "mu", "gamma", "delta"};
 
 static HklGeometry *hkl_geometry_new_soleil_sixs_med_1_2(const HklFactory *factory)
 {
@@ -610,6 +648,8 @@ REGISTER_DIFFRACTOMETER(soleil_sixs_med_1_2, "SOLEIL SIXS MED1+2", HKL_GEOMETRY_
 	"  + **delta** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
 	"  + **gamma** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
 
+static const char* hkl_geometry_petra3_p09_eh2_axes[] = {"mu", "omega", "chi", "phi", "delta", "gamma"};
+
 static HklGeometry *hkl_geometry_new_petra3_p09_eh2(const HklFactory *factory)
 {
 	HklGeometry *self = hkl_geometry_new(factory);
@@ -658,6 +698,8 @@ REGISTER_DIFFRACTOMETER(petra3_p09_eh2, "PETRA3 P09 EH2", HKL_GEOMETRY_TYPE_PETR
 	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
 	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
 	"  + **eta_a** : rotation around the :math:`-\\vec{x}` direction (-1, 0, 0)\n"
+
+static const char* hkl_geometry_soleil_sixs_med_2_3_axes[] = {"beta", "mu", "omega", "gamma", "delta", "eta_a"};
 
 static HklGeometry *hkl_geometry_new_soleil_sixs_med_2_3(const HklFactory *factory)
 {
@@ -708,6 +750,8 @@ REGISTER_DIFFRACTOMETER(soleil_sixs_med_2_3, "SOLEIL SIXS MED2+3", HKL_GEOMETRY_
 	"\n"								\
 	"  + **tth** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n"
 
+static const char* hkl_geometry_eulerian4C_horizontal_axes[] = {"omega", "chi", "phi", "tth"};
+
 static HklGeometry *hkl_geometry_new_eulerian4C_horizontal(const HklFactory *factory)
 {
 	HklGeometry *self = hkl_geometry_new(factory);
@@ -753,6 +797,8 @@ REGISTER_DIFFRACTOMETER(eulerian4C_horizontal, "E4CH", HKL_GEOMETRY_TYPE_EULERIA
 	"\n"								\
 	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, 0, -1)\n" \
 	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, -1, 0)\n"
+
+static const char* hkl_geometry_soleil_sirius_turret_axes[] = {"thetah", "alphay", "alphax", "delta", "gamma"};
 
 static HklGeometry *hkl_geometry_new_soleil_sirius_turret(const HklFactory *factory)
 {
@@ -801,6 +847,8 @@ REGISTER_DIFFRACTOMETER(soleil_sirius_turret, "SOLEIL SIRIUS TURRET", HKL_GEOMET
 	"\n"								\
 	"  + **delta** : rotation around the :math:`-\\vec{z}` direction (0, 0, -1)\n" \
 	"  + **gamma** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
+
+static const char* hkl_geometry_soleil_sirius_kappa_axes[] = {"mu", "komega", "kappa", "kphi", "delta", "gamma"};
 
 static HklGeometry *hkl_geometry_new_soleil_sirius_kappa(const HklFactory *factory)
 {

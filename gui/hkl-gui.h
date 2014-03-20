@@ -235,6 +235,7 @@ private:
 	Gtk::Button *_button1; // close
 	Gtk::ComboBox *_combobox1; // select diffractometer type
 
+	HklFactory *_factory;
 	HklGeometry *_geometry;
 	HklDetector *_detector;
 	HklSample *_sample;

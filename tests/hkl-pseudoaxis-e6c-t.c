@@ -25,7 +25,7 @@
 
 #include "hkl-axis-private.h" /* temporary */
 
-#define CHECK_AXIS_VALUE(axis, value) fabs((value) - hkl_parameter_value_get(axis)) < HKL_EPSILON
+#define CHECK_AXIS_VALUE(geometry, axis, value) fabs((value) - hkl_parameter_value_get(hkl_geometry_axis_get(geometry, axis))) < HKL_EPSILON
 
 
 static int hkl_geometry_list_check_geometry_unit(const HklGeometryList *self,
@@ -41,15 +41,17 @@ static int hkl_geometry_list_check_geometry_unit(const HklGeometryList *self,
 	int res = HKL_TRUE;
 
 	darray_foreach(item, *items){
-		const darray_parameter *axes = hkl_geometry_axes_get(hkl_geometry_list_item_geometry_get(*item));
+		const HklGeometry *geometry;
+
+		geometry = hkl_geometry_list_item_geometry_get(*item);
 
 		res = HKL_TRUE;
-		res &= CHECK_AXIS_VALUE(darray_item(*axes, 0), mu * HKL_DEGTORAD);
-		res &= CHECK_AXIS_VALUE(darray_item(*axes, 1), omega * HKL_DEGTORAD);
-		res &= CHECK_AXIS_VALUE(darray_item(*axes, 2), chi * HKL_DEGTORAD);
-		res &= CHECK_AXIS_VALUE(darray_item(*axes, 3), phi * HKL_DEGTORAD);
-		res &= CHECK_AXIS_VALUE(darray_item(*axes, 4), gamma * HKL_DEGTORAD);
-		res &= CHECK_AXIS_VALUE(darray_item(*axes, 5), delta * HKL_DEGTORAD);
+		res &= CHECK_AXIS_VALUE(geometry, "mu", mu * HKL_DEGTORAD);
+		res &= CHECK_AXIS_VALUE(geometry, "omega", omega * HKL_DEGTORAD);
+		res &= CHECK_AXIS_VALUE(geometry, "chi", chi * HKL_DEGTORAD);
+		res &= CHECK_AXIS_VALUE(geometry, "phi", phi * HKL_DEGTORAD);
+		res &= CHECK_AXIS_VALUE(geometry, "gamma", gamma * HKL_DEGTORAD);
+		res &= CHECK_AXIS_VALUE(geometry, "delta", delta * HKL_DEGTORAD);
 
 		if (res)
 			break;

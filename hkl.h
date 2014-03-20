@@ -218,8 +218,6 @@ HKLAPI void hkl_geometry_free(HklGeometry *self) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_geometry_set(HklGeometry *self, const HklGeometry *src) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI const darray_parameter *hkl_geometry_axes_get(const HklGeometry *self) HKL_ARG_NONNULL(1);
-
 HKLAPI const HklParameter *hkl_geometry_axis_get(const HklGeometry *self, const char *name) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI void hkl_geometry_axis_set(HklGeometry *self, const HklParameter *axis) HKL_ARG_NONNULL(1, 2);
@@ -472,6 +470,9 @@ HKLAPI HklFactory **hkl_factory_get_all(unsigned int *n) HKL_ARG_NONNULL(1);
 HKLAPI HklFactory *hkl_factory_get_by_name(const char *name) HKL_ARG_NONNULL(1);
 
 HKLAPI const char *hkl_factory_name(const HklFactory *self) HKL_ARG_NONNULL(1);
+
+HKLAPI const char **hkl_factory_axes_get(const HklFactory *self,
+					 size_t *length) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI HklGeometry *hkl_factory_create_new_geometry(const HklFactory *self) HKL_ARG_NONNULL(1);
 

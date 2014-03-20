@@ -34,7 +34,6 @@ static void check_model_validity(Hkl3D *hkl3d)
 	int res;
 	Hkl3DObject *obji;
 	Hkl3DObject *objj;
-	const darray_parameter *axes;
 
 	res = TRUE;
 
@@ -57,8 +56,7 @@ static void check_model_validity(Hkl3D *hkl3d)
 	}
 
 	/* check the _movingObjects validity, all Hkl3DAxis must have a size of 1 */
-	axes = hkl_geometry_axes_get(hkl3d->geometry->geometry);
-	for(i=0; i<darray_size(*axes); ++i)
+	for(i=0; i<6; ++i)
 		res &= hkl3d->geometry->axes[i]->len == 1;
 
 	ok(res == TRUE, "no identical objects");

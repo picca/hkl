@@ -28,6 +28,7 @@ HKLWindow::HKLWindow(void)
 
 	size_t i;
 
+	_factory = NULL;
 	_geometry = NULL;
 	_engines = NULL;
 
@@ -356,6 +357,9 @@ void HKLWindow::set_up_TreeView_axes(void)
 
 	size_t i;
 	int index;
+	const char **axes;
+	size_t axes_length;
+
 	Gtk::CellRenderer * renderer;
 
 	//Create the Model
@@ -391,14 +395,14 @@ void HKLWindow::set_up_TreeView_axes(void)
 		sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_axes_max_edited));
 
 	//Fill the models from the diffractometerAxes
-	const darray_parameter *axes;
-	HklParameter **axis;
-
-	axes = hkl_geometry_axes_get(this->_geometry);
-	darray_foreach(axis, *axes){
+	axes = hkl_factory_axes_get(this->_factory, &axes_length);
+	for(i=0; i<axes_length; ++i){
 		Gtk::ListStore::Row row = *(_axeModel->append());
-		row[_axeModelColumns.axis] = *axis;
-		row[_axeModelColumns.name] = hkl_parameter_name_get(*axis);
+		// this static_cast is wrong but for now it
+		// works. This should be fixed with the C version of
+		// the gui.
+		row[_axeModelColumns.axis] = const_cast<HklParameter *>(hkl_geometry_axis_get(this->_geometry, axes[i]));
+		row[_axeModelColumns.name] = axes[i];
 	}
 
 	//Set the model for the TreeView
@@ -496,21 +500,20 @@ void HKLWindow::set_up_TreeView_treeview1(void)
 {
 	LOG;
 
-	int i=0;
-	const darray_parameter *axes;
-	HklParameter **axis;
+	size_t i, axes_length;
+	const char **axes;
 
 	//Create the Columns
 	if(_solutionModelColumns)
 		delete _solutionModelColumns;
-	_solutionModelColumns = new SolutionModelColumns(_geometry);
+	_solutionModelColumns = new SolutionModelColumns(this->_factory);
 
 	/* add the columns */
 	_treeview1->remove_all_columns();
-	axes = hkl_geometry_axes_get(this->_geometry);
-	darray_foreach(axis, *axes)
-		_treeview1->append_column_numeric(hkl_parameter_name_get(*axis),
-						  _solutionModelColumns->axes[i++],
+	axes = hkl_factory_axes_get(this->_factory, &axes_length);
+	for(i=0;i<axes_length;++i)
+		_treeview1->append_column_numeric(axes[i],
+						  _solutionModelColumns->axes[i],
 						  "%lf");
 
 	//Create the model from the columns
@@ -1004,18 +1007,21 @@ void HKLWindow::updateSolutions(void)
 	Gtk::ListStore::Row row;
 	const darray_item *items = hkl_geometry_list_items_get(geometries);
 	darray_foreach(item, *items){
-		HklParameter **axis;
-		int j = 0;
+		const char **axes;
+		size_t j, axes_length;
+		const HklGeometry *geometry;
 
 		row = *(_solutionModel->append());
 		row[_solutionModelColumns->index] = i++;
 		row[_solutionModelColumns->item] = *item;
 
-		const HklGeometry *geometry = hkl_geometry_list_item_geometry_get(*item);
-		const darray_parameter *axes = hkl_geometry_axes_get(geometry);
-		darray_foreach(axis, *axes){
-			row[_solutionModelColumns->axes[j++]] =		\
-				hkl_parameter_value_unit_get(*axis);
+		geometry = hkl_geometry_list_item_geometry_get(*item);
+		axes = hkl_factory_axes_get(this->_factory, &axes_length);
+		for(j=0; j<axes_length; ++j){
+			const HklParameter *axis;
+
+			axis = hkl_geometry_axis_get(geometry, axes[j]);
+			row[_solutionModelColumns->axes[j]] = hkl_parameter_value_unit_get(axis);
 		}
 	}
 }

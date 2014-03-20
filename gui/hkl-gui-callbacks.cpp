@@ -912,13 +912,15 @@ void HKLWindow::on_combobox1_changed(void)
 	HklFactory **factories;
 
 	factories = hkl_factory_get_all(&n);
+	this->_factory = factories[idx];
+
 	if(_geometry)
 		hkl_geometry_free(_geometry);
-	_geometry = hkl_factory_create_new_geometry(factories[idx]);
+	_geometry = hkl_factory_create_new_geometry(this->_factory);
 
 	if(_engines)
 		hkl_engine_list_free(_engines);
-	_engines = hkl_factory_create_new_engine_list(factories[idx]);
+	_engines = hkl_factory_create_new_engine_list(this->_factory);
 	hkl_engine_list_init(_engines, _geometry, _detector, _sample);
 
 	this->set_up_pseudo_axes_frames();

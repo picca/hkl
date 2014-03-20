@@ -294,11 +294,6 @@ void hkl_geometry_set(HklGeometry *self, const HklGeometry *src)
 		darray_item(self->holders, i)->q = darray_item(src->holders, i)->q;
 }
 
-const darray_parameter *hkl_geometry_axes_get(const HklGeometry *self)
-{
-	return &self->axes;
-}
-
 /**
  * hkl_geometry_axis_get: (skip)
  * @self: the this ptr

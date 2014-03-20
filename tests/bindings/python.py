@@ -22,7 +22,6 @@ Copyright (C) 2012-2013 Synchrotron SOLEIL
 Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
 """
 
-import sys
 import math
 import unittest
 from gi.repository import GLib
@@ -30,21 +29,31 @@ from gi.repository import Hkl
 
 
 class TestAPI(unittest.TestCase):
+    """Test all the Hkl API, if something brakes here it means that API
+    has changed !!!
 
-    @unittest.skip("factory not yet ready")
+    """
     def test_factory_api(self):
         """
         enforce the Factory API
         """
         # factories dict <name, Factory>
         factories = Hkl.factories()
-        for key, value in factories.iteritems():
+        for key, factory in factories.iteritems():
             self.assertTrue(type(key) == str)
-            self.assertTrue(type(value) == Hkl.Factory)
+            self.assertTrue(type(factory) == Hkl.Factory)
 
-        kappa6C_factory = factories['Kappa6C']
-        geometry = kappa6C_factory.create_new_geometry()
-        engines = kappa6C_factory.create_new_engine_list()
+            # read all the axes names
+            axes = factory.axes_get()
+            self.assertTrue(type(axes) == list)
+            for axis in axes:
+                self.assertTrue(type(axis) == str)
+
+            # create all the geometry and engines
+            geometry = factory.create_new_geometry()
+            self.assertTrue(type(geometry) == Hkl.Geometry)
+            engines = factory.create_new_engine_list()
+            self.assertTrue(type(engines) == Hkl.EngineList)
 
     def test_detector_api(self):
         """
