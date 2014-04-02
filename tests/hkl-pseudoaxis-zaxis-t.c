@@ -72,15 +72,14 @@ static void solution(void)
 	/* compute the 1 1 0 */
 	hkl_parameter_list_values_set(pseudo_axes, hkl, ARRAY_SIZE(hkl), NULL);
 	if (hkl_engine_set(engine, NULL)){
-		const darray_item *items = hkl_geometry_list_items_get(geometries);
-		HklGeometryListItem **item;
+		const HklGeometryListItem *item;
 
-		darray_foreach(item, *items){
+		HKL_GEOMETRY_LIST_FOREACH(item, geometries){
 			static double null[] = {0, 0, 0};
 
 			hkl_parameter_list_values_set(pseudo_axes, null, ARRAY_SIZE(null), NULL);
 			hkl_geometry_set(geometry,
-					 hkl_geometry_list_item_geometry_get(*item));
+					 hkl_geometry_list_item_geometry_get(item));
 			hkl_engine_get(engine, NULL);
 			res &= check_pseudoaxes(engine, hkl, 3);
 		}

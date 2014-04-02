@@ -196,7 +196,7 @@ static void list(void)
 	int i = 0;
 	HklGeometry *g;
 	HklGeometryList *list;
-	HklGeometryListItem **item;
+	const HklGeometryListItem *item;
 	HklHolder *holder;
 	static double values[] = {0. * HKL_DEGTORAD, 10 * HKL_DEGTORAD, 30 * HKL_DEGTORAD};
 
@@ -211,25 +211,25 @@ static void list(void)
 	hkl_geometry_set_values_v(g, 3, values[0], 0., 0.);
 	hkl_geometry_fprintf(stderr, g);
 	hkl_geometry_list_add(list, g);
-	is_int(1, darray_size(list->items), __func__);
+	is_int(1, hkl_geometry_list_n_items_get(list), __func__);
 
 	/* can not add two times the same geometry */
 	hkl_geometry_list_add(list, g);
-	is_int(1, darray_size(list->items), __func__);
+	is_int(1, hkl_geometry_list_n_items_get(list), __func__);
 
 	hkl_geometry_set_values_v(g, 3, values[2], 0., 0.);
 	hkl_geometry_list_add(list, g);
 	hkl_geometry_set_values_v(g, 3, values[1], 0., 0.);
 	hkl_geometry_list_add(list, g);
-	is_int(3, darray_size(list->items), __func__);
+	is_int(3, hkl_geometry_list_n_items_get(list), __func__);
 
 	hkl_geometry_set_values_v(g, 3, values[0], 0., 0.);
 	hkl_geometry_list_sort(list, g);
 
 	hkl_geometry_list_fprintf(stderr, list);
-	darray_foreach(item, list->items){
+	HKL_GEOMETRY_LIST_FOREACH(item, list){
 		is_double(values[i++],
-			  hkl_parameter_value_get(darray_item((*item)->geometry->axes, 0)),
+			  hkl_parameter_value_get(darray_item(item->geometry->axes, 0)),
 			  HKL_EPSILON, __func__);
 	}
 
@@ -310,9 +310,9 @@ static void  list_remove_invalid(void)
 				  180.* HKL_DEGTORAD);
 	hkl_geometry_list_add(list, g);
 
-	is_int(3, darray_size(list->items), __func__);
+	is_int(3, hkl_geometry_list_n_items_get(list), __func__);
 	hkl_geometry_list_remove_invalid(list);
-	is_int(2, darray_size(list->items), __func__);
+	is_int(2, hkl_geometry_list_n_items_get(list), __func__);
 
 	hkl_geometry_free(g);
 	hkl_geometry_list_free(list);

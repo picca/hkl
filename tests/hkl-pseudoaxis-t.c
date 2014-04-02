@@ -67,10 +67,9 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 
 			/* geometry -> pseudo */
 			if(hkl_engine_set(engine, NULL)) {
-				const darray_item *items = hkl_geometry_list_items_get(geometries);
-				HklGeometryListItem **item;
+				const HklGeometryListItem *item;
 
-				darray_foreach(item, *items){
+				HKL_GEOMETRY_LIST_FOREACH(item, geometries){
 					/* first modify the pseudoAxes values */
 					/* to be sure that the result is the */
 					/* computed result. */
@@ -80,7 +79,7 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 					}
 
 					hkl_geometry_set(geometry,
-							 hkl_geometry_list_item_geometry_get(*item));
+							 hkl_geometry_list_item_geometry_get(item));
 					hkl_engine_get(engine, NULL);
 
 					j = 0;

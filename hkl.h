@@ -210,8 +210,6 @@ typedef struct _HklGeometry HklGeometry;
 typedef struct _HklGeometryList HklGeometryList;
 typedef struct _HklGeometryListItem HklGeometryListItem;
 
-typedef darray(HklGeometryListItem *) darray_item;
-
 /* HklGeometry */
 
 HKLAPI void hkl_geometry_free(HklGeometry *self) HKL_ARG_NONNULL(1);
@@ -236,7 +234,16 @@ HKLAPI void hkl_geometry_fprintf(FILE *file, const HklGeometry *self) HKL_ARG_NO
 
 /* HklGeometryList */
 
-HKLAPI const darray_item *hkl_geometry_list_items_get(const HklGeometryList *self) HKL_ARG_NONNULL(1);
+#define HKL_GEOMETRY_LIST_FOREACH(item, list) for((item)=hkl_geometry_list_items_first_get((list)); \
+						  (item);		\
+						  (item)=hkl_geometry_list_items_next_get((list), (item)))
+
+HKLAPI size_t hkl_geometry_list_n_items_get(const HklGeometryList *self) HKL_ARG_NONNULL(1);
+
+HKLAPI const HklGeometryListItem *hkl_geometry_list_items_first_get(const HklGeometryList *self) HKL_ARG_NONNULL(1);
+
+HKLAPI const HklGeometryListItem *hkl_geometry_list_items_next_get(const HklGeometryList *self,
+								   const HklGeometryListItem *item) HKL_ARG_NONNULL(1, 2);
 
 /* HklGeometryListItem */
 
@@ -441,7 +448,8 @@ HKLAPI void hkl_engine_list_geometry_set(HklEngineList *self, const HklGeometry 
 
 HKLAPI const HklGeometryList *hkl_engine_list_geometries_get(const HklEngineList *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_engine_list_select_solution(HklEngineList *self, unsigned int idx) HKL_ARG_NONNULL(1);
+HKLAPI void hkl_engine_list_select_solution(HklEngineList *self,
+					    const HklGeometryListItem *item) HKL_ARG_NONNULL(1);
 
 HKLAPI HklEngine *hkl_engine_list_engine_get_by_name(HklEngineList *self,
 					      const char *name) HKL_ARG_NONNULL(1, 2);

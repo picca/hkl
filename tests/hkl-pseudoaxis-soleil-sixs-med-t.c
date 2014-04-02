@@ -26,12 +26,11 @@
 
 #include "hkl-axis-private.h" /* temporary */
 
-#define GET_GAMMA(items, index) hkl_parameter_value_unit_get(		\
+#define GET_GAMMA(geometries) hkl_parameter_value_unit_get(		\
 		hkl_geometry_axis_get(					\
 			hkl_geometry_list_item_geometry_get(		\
-				darray_item(*(items), (index))),	\
+				hkl_geometry_list_items_first_get((geometries))), \
 			"gamma"))
-
 
 static void qper_qpar(void)
 {
@@ -46,7 +45,6 @@ static void qper_qpar(void)
 	double gamma;
 	darray_parameter *pseudo_axes;
 	const HklGeometryList *geometries;
-	const darray_item *items;
 	HklMatrix *U;
 
 	factory = hkl_factory_get_by_name("SOLEIL SIXS MED2+3");
@@ -63,7 +61,6 @@ static void qper_qpar(void)
 	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geom, detector, sample);
 	geometries = hkl_engine_list_geometries_get(engines);
-	items = hkl_geometry_list_items_get(geometries);
 
 	engine = hkl_engine_list_engine_get_by_name(engines, "qper_qpar");
 	pseudo_axes = hkl_engine_pseudo_axes_get(engine);
@@ -79,7 +76,7 @@ static void qper_qpar(void)
 	*Qper = 0.1;
 	*Qpar = 4.;
 	if(hkl_engine_set(engine, NULL) == HKL_TRUE){
-		gamma = GET_GAMMA(items, 0);
+		gamma = GET_GAMMA(geometries);
 		is_double(2.61077, gamma, HKL_EPSILON * 10, __func__);
 	}
 
@@ -87,7 +84,7 @@ static void qper_qpar(void)
 	*Qper = -0.1;
 	*Qpar = 4.;
 	if(hkl_engine_set(engine, NULL) == HKL_TRUE){
-		gamma = GET_GAMMA(items, 0);
+		gamma = GET_GAMMA(geometries);
 		is_double(-2.7956354, gamma, HKL_EPSILON * 10, __func__);
 	}
 

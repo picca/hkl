@@ -29,6 +29,7 @@
 #include "hkl-vector-private.h"         // for HklQuaternion
 #include "hkl.h"                        // for HklGeometry, etc
 #include "hkl/ccan/darray/darray.h"     // for darray
+#include "hkl/ccan/list/list.h"
 
 HKL_BEGIN_DECLS
 
@@ -61,11 +62,13 @@ struct _HklGeometry
 struct _HklGeometryList
 {
 	HklGeometryListMultiplyFunction multiply;
-	darray_item items;
+	struct list_head items;
+	size_t n_items;
 };
 
 struct _HklGeometryListItem
 {
+	struct list_node list;
 	HklGeometry *geometry;
 };
 

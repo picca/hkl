@@ -223,11 +223,10 @@ void hkl_geometry_set_axes_values_unit(HklGeometry *self, double *values, unsign
 GSList* hkl_geometry_list_items(HklGeometryList *self)
 {
 	GSList *list = NULL;
-	HklGeometryListItem **item;
+	HklGeometryListItem *item;
 
-	darray_foreach(item, self->items){
-		list = g_slist_append(list, *item);
-	}
+	list_for_each(&self->items, item, list)
+		list = g_slist_append(list, item);
 
 	return list;
 }

@@ -370,7 +370,7 @@ int hkl_engine_set(HklEngine *self, HklError **error)
 	hkl_geometry_list_remove_invalid(self->engines->geometries);
 	hkl_geometry_list_sort(self->engines->geometries, self->engines->geometry);
 
-	if(darray_empty(self->engines->geometries->items)){
+	if(self->engines->geometries->n_items == 0){
 		hkl_error_set(error, "no remaining solutions");
 		return HKL_FALSE;
 	}
@@ -437,7 +437,7 @@ void hkl_engine_fprintf(FILE *f, const HklEngine *self)
 	/* the pseudoAxes part */
 	hkl_parameter_list_fprintf(f, &self->pseudo_axes);
 
-	if(darray_empty(self->engines->geometries->items)){
+	if(self->engines->geometries->n_items != 0){
 		fprintf(f, "\n   ");
 		hkl_geometry_list_fprintf(f, self->engines->geometries);
 	}
@@ -563,16 +563,14 @@ void hkl_engine_list_geometry_set(HklEngineList *self, const HklGeometry *geomet
 /**
  * hkl_engine_list_select_solution:
  * @self: the this ptr
- * @idx: the index of the solution to select
+ * @item: the #HklGeoemtryListItem selected.
  *
- * this method set the geometry member with the ith selected solution.
- * if the index is out of range (idx > number of solution) the method
- * do nothing.
+ * this method set the geometry member with the selected solution.
  **/
-void hkl_engine_list_select_solution(HklEngineList *self, unsigned int idx)
+void hkl_engine_list_select_solution(HklEngineList *self,
+				     const HklGeometryListItem *item)
 {
-	hkl_geometry_init_geometry(self->geometry,
-				   darray_item(self->geometries->items, idx)->geometry);
+	hkl_geometry_init_geometry(self->geometry, item->geometry);
 }
 
 /**

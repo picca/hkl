@@ -63,17 +63,16 @@ static void degenerated(void)
 		/* studdy this degenerated case */
 		hkl_parameter_list_values_set(pseudo_axes, hkl, ARRAY_SIZE(hkl), NULL);
 		if (hkl_engine_set(engine, NULL)){
-			const darray_item *items = hkl_geometry_list_items_get(geometries);
-			HklGeometryListItem **item;
+			const HklGeometryListItem *item;
 
-			darray_foreach(item, *items){
+			HKL_GEOMETRY_LIST_FOREACH(item, geometries){
 				static double null[] = {0, 0, 0};
 
 				hkl_parameter_list_values_set(pseudo_axes,
 							      null, ARRAY_SIZE(null),
 							      NULL);
 				hkl_geometry_set(geometry,
-						 hkl_geometry_list_item_geometry_get(*item));
+						 hkl_geometry_list_item_geometry_get(item));
 				hkl_engine_get(engine, NULL);
 				res &= check_pseudoaxes(engine, hkl, 3);
 			}
@@ -131,21 +130,24 @@ static void eulerians(void)
 					      eulerians, ARRAY_SIZE(eulerians),
 					      NULL);
 		if (hkl_engine_set(engine, NULL)) {
-			const darray_item *items = hkl_geometry_list_items_get(geometries);
+			const HklGeometryListItem *item;
 
-			res &= darray_size(*items) == 2;
-
-			/* first solution = 0, 90, 0 */
+			/* first solution = -180, -90, 180 */
+			item = hkl_geometry_list_items_first_get(geometries);
 			hkl_geometry_set(geometry,
-					 hkl_geometry_list_item_geometry_get(darray_item(*items, 1)));
+					 hkl_geometry_list_item_geometry_get(item));
+			hkl_engine_get(engine, NULL);
+			res &= check_pseudoaxes_v(engine, -180. * HKL_DEGTORAD, -90 * HKL_DEGTORAD, 180. * HKL_DEGTORAD);
+
+			/* second solution = 0, 90, 0 */
+			item = hkl_geometry_list_items_next_get(geometries,item);
+			hkl_geometry_set(geometry,
+					 hkl_geometry_list_item_geometry_get(item));
 			hkl_engine_get(engine, NULL);
 			res &= check_pseudoaxes_v(engine, 0., 90 * HKL_DEGTORAD, 0.);
 
-			/* second solution = -180, -90, 180 */
-			hkl_geometry_set(geometry,
-					 hkl_geometry_list_item_geometry_get(darray_item(*items, 0)));
-			hkl_engine_get(engine, NULL);
-			res &= check_pseudoaxes_v(engine, -180. * HKL_DEGTORAD, -90 * HKL_DEGTORAD, 180. * HKL_DEGTORAD);
+			/* no more solution */
+			res &= hkl_geometry_list_items_next_get(geometries, item) == NULL;
 		}
 	}
 
@@ -195,13 +197,12 @@ static void q(void)
 		for(q=-1.; q<1.; q += 0.1){
 			hkl_engine_set_values_v(engine, q, NULL);
 			if(hkl_engine_set(engine, NULL)){
-				const darray_item *items = hkl_geometry_list_items_get(geometries);
-				HklGeometryListItem **item;
+				const HklGeometryListItem *item;
 
-				darray_foreach(item, *items){
+				HKL_GEOMETRY_LIST_FOREACH(item, geometries){
 					hkl_engine_set_values_v(engine, 0.);
 					hkl_geometry_set(geometry,
-							 hkl_geometry_list_item_geometry_get(*item));
+							 hkl_geometry_list_item_geometry_get(item));
 					hkl_engine_get(engine, NULL);
 					res &= check_pseudoaxes_v(engine, q);
 				}

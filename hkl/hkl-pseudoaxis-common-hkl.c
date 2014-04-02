@@ -375,7 +375,8 @@ int hkl_mode_set_hkl_real(HklMode *self,
 	last_axis = get_last_axis_idx(geometry, 0, self->info->axes, self->info->n_axes);
 	if(last_axis >= 0){
 		uint i;
-		uint len = darray_size(engine->engines->geometries->items);
+		const HklGeometryListItem *item;
+		uint len = engine->engines->geometries->n_items;
 
 		/* For each solution already found we will generate another one */
 		/* using the Ewalds construction by rotating Q around the last sample */
@@ -396,9 +397,10 @@ int hkl_mode_set_hkl_real(HklMode *self,
 		/* at the end we just need to solve numerically the position of the detector */
 
 		/* we will add solution to the geometries so save its length before */
-		for(i=0; i<len; ++i){
+		for(i=0, item=list_top(&engine->engines->geometries->items, HklGeometryListItem, list);
+		    i<len;
+		    ++i, item=list_next(&engine->engines->geometries->items, item, list)){
 			int j;
-			HklGeometry *geom;
 			HklVector ki;
 			HklVector kf;
 			HklVector kf2;
@@ -409,8 +411,9 @@ int hkl_mode_set_hkl_real(HklMode *self,
 			HklVector cp = {0};
 			HklVector op = {0};
 			double angle;
+			HklGeometry *geom;
 
-			geom = hkl_geometry_new_copy(darray_item(engine->engines->geometries->items, i)->geometry);
+			geom = hkl_geometry_new_copy(item->geometry);
 
 			/* get the Q vector kf - ki */
 			hkl_detector_compute_kf(detector, geom, &q);
@@ -456,9 +459,11 @@ int hkl_mode_set_hkl_real(HklMode *self,
 			fprintf(stdout, "\n   q2: <%f, %f, %f>", kf2.data[0], kf2.data[1], kf2.data[2]);
 #endif
 			hkl_vector_add_vector(&kf2, &ki);
+
 			/* at the end we just need to solve numerically the position of the detector */
 			if(fit_detector_position(self, geom, detector, &kf2))
-				hkl_geometry_list_add(engine->engines->geometries, geom);
+				hkl_geometry_list_add(engine->engines->geometries,
+						      geom);
 
 			hkl_geometry_free(geom);
 		}

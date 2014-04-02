@@ -1001,21 +1001,20 @@ void HKLWindow::updateSolutions(void)
 
 	size_t i = 0;
 	const HklGeometryList *geometries = hkl_engine_list_geometries_get(this->_engines);
-	HklGeometryListItem **item;
+	const HklGeometryListItem *item;
 
 	_solutionModel->clear();
 	Gtk::ListStore::Row row;
-	const darray_item *items = hkl_geometry_list_items_get(geometries);
-	darray_foreach(item, *items){
+	HKL_GEOMETRY_LIST_FOREACH(item, geometries){
 		const char **axes;
 		size_t j, axes_length;
 		const HklGeometry *geometry;
 
 		row = *(_solutionModel->append());
 		row[_solutionModelColumns->index] = i++;
-		row[_solutionModelColumns->item] = *item;
+		row[_solutionModelColumns->item] = item;
 
-		geometry = hkl_geometry_list_item_geometry_get(*item);
+		geometry = hkl_geometry_list_item_geometry_get(item);
 		axes = hkl_factory_axes_get(this->_factory, &axes_length);
 		for(j=0; j<axes_length; ++j){
 			const HklParameter *axis;
