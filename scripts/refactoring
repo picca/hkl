@@ -1,0 +1,2 @@
+rgrep -w -l -I $1 * | xargs sed -i "s,$1,$2,g"
+echo "rename $1 -> $2" > .git/GITGUI_BCK
