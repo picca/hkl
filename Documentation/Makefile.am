@@ -1,3 +1,3 @@
-SUBDIRS=api figures sphinx
+SUBDIRS=api sphinx
 
 dist_man_MANS = ghkl.1

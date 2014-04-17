@@ -32,10 +32,10 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 	double values[10]; /* this should be the number of pseudo_axis */
 	int unreachable = 0;
 	int ko = HKL_FALSE;
-	HklMode **mode;
+	const char **mode;
 	const HklGeometryList *geometries = hkl_engine_list_geometries_get(engine_list);
 	HklGeometry *geometry = hkl_engine_list_geometry_get(engine_list);
-	darray_mode *modes = hkl_engine_modes_get(engine);
+	const darray_string *modes = hkl_engine_modes_get(engine);
 	darray_parameter *pseudo_axes = (darray_parameter *)hkl_engine_pseudo_axes_get(engine);
 
 	/* randomize the geometry */
@@ -44,7 +44,7 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 	darray_foreach(mode, *modes){
 		hkl_engine_select_mode(engine, *mode);
 		/* for now unactive the eulerians check */
-		if(!strcmp(hkl_mode_name_get(*mode), "eulerians"))
+		if(!strcmp(*mode, "eulerians"))
 			continue;
 		unreachable = 0;
 
@@ -59,7 +59,7 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 			}
 
 			/* randomize the parameters */
-			hkl_parameter_list_randomize(hkl_mode_parameters_get(*mode));
+			hkl_engine_parameters_randomize(engine);
 
 			/* pseudo -> geometry */
 			hkl_engine_initialize(engine, NULL);
@@ -97,7 +97,7 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 		fprintf(stderr, "\n\"%s\" \"%s\" \"%s\"",
 			hkl_geometry_name_get(geometry),
 			hkl_engine_name_get(engine),
-			hkl_mode_name_get(*mode));
+			*mode);
 		fprintf(stderr, " unreachable : %d/%d", unreachable, i);
 		if(ko){
 			fprintf(stderr, " ko");

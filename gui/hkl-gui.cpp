@@ -443,8 +443,7 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 	//Fill the models from the diffractometer pseudoAxes
 	darray_foreach(engine, *engines){
 		darray_parameter *pseudo_axes = (darray_parameter *)hkl_engine_pseudo_axes_get(*engine);
-		HklMode *mode = hkl_engine_mode_get(*engine);
-		darray_parameter *parameters = hkl_mode_parameters_get(mode);
+		const darray_string *parameters = hkl_engine_parameters_get(*engine);
 
 		darray_foreach(pseudo_axis, *pseudo_axes){
 			Gtk::ListStore::Row row = *(_pseudoAxeModel->append());
@@ -452,16 +451,17 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 			row[_pseudoAxeModelColumns.parameter] = *pseudo_axis;
 			row[_pseudoAxeModelColumns.name] = hkl_parameter_name_get(*pseudo_axis);
 
+
 			if(darray_size(*parameters)){
 				Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(_parameterModelColumns);
-				HklParameter **parameter;
+				const char **parameter;
 
 				darray_foreach(parameter, *parameters){
 					Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(_parameterModelColumns);
 					row = *(model->append());
-					row[_parameterModelColumns.parameter] = *parameter;
-					row[_parameterModelColumns.name] = hkl_parameter_name_get(*parameter);
-					row[_parameterModelColumns.value] = hkl_parameter_value_unit_get(*parameter);
+					row[_parameterModelColumns.engine] = *engine;
+					row[_parameterModelColumns.name] = *parameter;
+					row[_parameterModelColumns.value] = hkl_parameter_value_unit_get(hkl_engine_parameter_get(*engine, *parameter));
 				}
 				_mapPseudoAxeParameterModel.insert(std::pair<HklParameter *, Glib::RefPtr<Gtk::ListStore> >(*pseudo_axis, model));
 			}
@@ -688,9 +688,9 @@ void HKLWindow::update_pseudoAxes_parameters(void)
 		Gtk::TreeModel::Children::iterator end_row = rows.end();
 		while(iter_row != end_row){
 			Gtk::TreeRow row = *iter_row;
-			HklParameter *parameter = row[_parameterModelColumns.parameter];
-			row[_parameterModelColumns.name] = hkl_parameter_name_get(parameter);
-			row[_parameterModelColumns.value] = hkl_parameter_value_unit_get(parameter);
+			const HklEngine *engine = row[_parameterModelColumns.engine];
+			row[_parameterModelColumns.value] = hkl_parameter_value_unit_get(hkl_engine_parameter_get(engine,
+														  row[_parameterModelColumns.name]));
 			++iter_row;
 		}
 		++iter;

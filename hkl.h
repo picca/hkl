@@ -393,20 +393,11 @@ HKLAPI void hkl_sample_reflection_geometry_set(HklSampleReflection *self,
 /**************/
 
 typedef struct _HklPseudoAxis HklPseudoAxis;
-typedef struct _HklMode HklMode;
 typedef struct _HklEngine HklEngine;
 typedef struct _HklEngineList HklEngineList;
 
-typedef darray(HklMode *) darray_mode;
+typedef darray(const char *) darray_string;
 typedef darray(HklEngine *) darray_engine;
-
-/* HklMode */
-
-HKLAPI const char * hkl_mode_name_get(const HklMode *self) HKL_ARG_NONNULL(1);
-
-HKLAPI HklParameterList *hkl_mode_parameters_get(HklMode *self) HKL_ARG_NONNULL(1);
-
-HKLAPI void hkl_mode_fprintf(FILE *f, const HklMode *self) HKL_ARG_NONNULL(1, 2);
 
 /* HklEngine */
 
@@ -416,17 +407,26 @@ HKLAPI unsigned int hkl_engine_len(const HklEngine *self) HKL_ARG_NONNULL(1);
 
 HKLAPI HklParameterList *hkl_engine_pseudo_axes_get(HklEngine *self) HKL_ARG_NONNULL(1);
 
-HKLAPI HklMode *hkl_engine_mode_get(HklEngine *self) HKL_ARG_NONNULL(1);
-
-HKLAPI darray_mode *hkl_engine_modes_get(HklEngine *self) HKL_ARG_NONNULL(1);
-
-HKLAPI HklEngineList *hkl_engine_engines_get(HklEngine *self) HKL_ARG_NONNULL(1);
+HKLAPI const darray_string *hkl_engine_modes_get(const HklEngine *self) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_engine_select_mode(HklEngine *self,
-				   HklMode *mode) HKL_ARG_NONNULL(1, 2);
+				   const char *name) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI void hkl_engine_select_mode_by_name(HklEngine *self,
-					   const char *name) HKL_ARG_NONNULL(1, 2);
+HKLAPI const darray_string *hkl_engine_parameters_get(const HklEngine *self) HKL_ARG_NONNULL(1);
+
+HKLAPI unsigned int hkl_engine_parameters_set(HklEngine *self,
+					      double values[], size_t n_values,
+					      HklError **error) HKL_ARG_NONNULL(1, 2, 4);
+
+HKLAPI void hkl_engine_parameters_randomize(HklEngine *self) HKL_ARG_NONNULL(1);
+
+HKLAPI const HklParameter *hkl_engine_parameter_get(const HklEngine *self,
+						    const char *name) HKL_ARG_NONNULL(1, 2);
+
+HKLAPI void hkl_engine_parameter_set(HklEngine *self,
+				     const HklParameter *parameter) HKL_ARG_NONNULL(1, 2);
+
+HKLAPI HklEngineList *hkl_engine_engines_get(HklEngine *self) HKL_ARG_NONNULL(1);
 
 HKLAPI int hkl_engine_initialize(HklEngine *self, HklError **error) HKL_ARG_NONNULL(1);
 

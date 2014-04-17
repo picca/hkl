@@ -37,8 +37,11 @@ HKL_BEGIN_DECLS
 
 typedef struct _HklModeOperations HklModeOperations;
 typedef struct _HklModeInfo HklModeInfo;
+typedef struct _HklMode HklMode;
 typedef struct _HklEngineInfo HklEngineInfo;
 typedef struct _HklEngineOperations HklEngineOperations;
+
+typedef darray(HklMode *) darray_mode;
 
 struct _HklModeInfo {
 	const char *name;
@@ -53,6 +56,7 @@ struct _HklMode
 	const HklModeInfo *info;
 	const HklModeOperations *ops;
 	darray_parameter parameters;
+	darray_string parameters_names;
 };
 
 struct _HklEngineInfo {
@@ -73,6 +77,7 @@ struct _HklEngine
 	darray_parameter pseudo_axes;
 	darray_mode modes;
 	darray_parameter axes;
+	darray_string mode_names;
 };
 
 struct _HklEngineList
@@ -148,6 +153,7 @@ struct _HklModeOperations
 static inline void hkl_mode_free_real(HklMode *self)
 {
 	hkl_parameter_list_free(&self->parameters);
+	darray_free(self->parameters_names);
 
 	free(self);
 }
@@ -204,9 +210,13 @@ static inline int hkl_mode_init(
 
 	/* parameters */
 	darray_init(self->parameters);
+	darray_init(self->parameters_names);
 	for(i=0; i<self->info->n_parameters; ++i){
-		darray_append(self->parameters,
-			      hkl_parameter_new_copy(&self->info->parameters[i]));
+		HklParameter *parameter;
+
+		parameter = hkl_parameter_new_copy(&self->info->parameters[i]);
+		darray_append(self->parameters, parameter);
+		darray_append(self->parameters_names, parameter->name);
 	}
 
 	return HKL_TRUE;
@@ -264,6 +274,8 @@ static void hkl_engine_release(HklEngine *self)
 
 	/* release the HklPseudoAxe memory */
 	hkl_parameter_list_free(&self->pseudo_axes);
+
+	darray_free(self->mode_names);
 }
 
 struct _HklEngineOperations
@@ -304,6 +316,7 @@ static inline void hkl_engine_add_mode(HklEngine *self,
 				       HklMode *mode)
 {
 	darray_append(self->modes, mode);
+	darray_append(self->mode_names, mode->info->name);
 }
 
 /**
@@ -332,6 +345,8 @@ static inline void hkl_engine_add_geometry(HklEngine *self,
 
 	hkl_geometry_list_add(self->engines->geometries, self->geometry);
 }
+
+extern void hkl_engine_mode_set(HklEngine *self, HklMode *mode);
 
 /*****************/
 /* HklEngineList */

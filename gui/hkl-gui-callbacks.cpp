@@ -450,6 +450,7 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_parameters_value_edited(Glib::ustrin
 	LOG;
 
 	double value;
+	HklEngine *engine;
 	HklParameter *parameter;
 
 	Gtk::TreePath path(spath);
@@ -457,9 +458,14 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_parameters_value_edited(Glib::ustrin
 	Gtk::ListStore::Row row = *(listStore->get_iter(path));
 	sscanf(newText.c_str(), "%lf", &value);
 
-	parameter = row[_parameterModelColumns.parameter];
+	
+	engine = row[_parameterModelColumns.engine];
+	parameter = hkl_parameter_new_copy(hkl_engine_parameter_get(engine,
+								    row[_parameterModelColumns.name]));
 	/* TODO error check */
 	hkl_parameter_value_unit_set(parameter, value, NULL);
+	hkl_engine_parameter_set(engine, parameter);
+	hkl_parameter_free(parameter);
 
 	row[_parameterModelColumns.value] = value;
 	this->updatePseudoAxes();

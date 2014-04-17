@@ -90,28 +90,6 @@ HklParameter *hkl_parameter_new_pseudo_axis(
 /***********/
 
 /**
- * hkl_mode_name_get:
- * @self: the this ptr
- *
- * Return value: the name of the HklMode
- **/
-const char *hkl_mode_name_get(const HklMode *self)
-{
-	return self->info->name;
-}
-
-/**
- * hkl_mode_parameters_get:
- * @self: the this ptr
- *
- * Return value: (transfer none): the parameters of the HklMode
- **/
-HklParameterList *hkl_mode_parameters_get(HklMode *self)
-{
-	return &self->parameters;
-}
-
-/**
  * hkl_mode_fprintf: (skip)
  * @f:
  * @self:
@@ -147,6 +125,7 @@ void hkl_engine_init(HklEngine *self,
 	self->ops = ops;
 	darray_init(self->modes);
 	darray_init(self->pseudo_axes);
+	darray_init(self->mode_names);
 	self->geometry = NULL;
 	self->detector = NULL;
 	self->sample = NULL;
@@ -240,25 +219,125 @@ HklParameterList *hkl_engine_pseudo_axes_get(HklEngine *self)
 }
 
 /**
- * hkl_engine_mode_get:
- * @self: the this ptr
+ * hkl_engine_mode_set: (skip)
+ * @self: the HklEngine
+ * @name: the mode to select
  *
- * Return value: (transfer none): the current mode of the HklEngine
+ * This method also populate the self->axes from the mode->axes_names.
+ * this is to speed the computation of the numerical axes.
  **/
-HklMode *hkl_engine_mode_get(HklEngine *self)
+void hkl_engine_mode_set(HklEngine *self, HklMode *mode)
 {
-	return self->mode;
+	self->mode = mode;
+	hkl_engine_prepare_internal(self);
 }
 
 /**
- * hkl_engine_modes_get: (skip)
+ * hkl_engine_modes_get:
  * @self: the this ptr
  *
- * Return value: (transfer none): the current mode of the HklEngine
+ * Return value: (type gpointer): All the modes supported by the #HklEngine
  **/
-darray_mode *hkl_engine_modes_get(HklEngine *self)
+const darray_string *hkl_engine_modes_get(const HklEngine *self)
 {
-	return &self->modes;
+	return &self->mode_names;
+}
+
+/**
+ * hkl_engine_parameters_get:
+ * @self: the this ptr
+ *
+ * Return value: (type gpointer): All the parameters of #HklEngine.
+ **/
+const darray_string *hkl_engine_parameters_get(const HklEngine *self)
+{
+	return &self->mode->parameters_names;
+}
+
+/**
+ * hkl_engine_parameters_set: (skip)
+ * @self: the this ptr
+ * @values: (array length=n_values): the values to set 
+ * @n_values: the size of the values array.
+ * @error: (allow-none): the Error
+ *
+ * Set the engine parameters values
+ *
+ * Returns: true if no-error was set or false otherwise.
+ **/
+unsigned int hkl_engine_parameters_set(HklEngine *self,
+				       double values[], size_t n_values,
+				       HklError **error)
+{
+	unsigned int res = HKL_TRUE;
+
+	if(n_values != darray_size(self->mode->parameters)){
+		hkl_error_set(error, "cannot set engine parameters, wrong number of parameter (%d) given, (%d) expected\n",
+			      n_values, darray_size(self->mode->parameters));
+		res = HKL_FALSE;
+	} else {
+		for(size_t i=0; i<n_values; ++i){
+			if(!hkl_parameter_value_set(darray_item(self->mode->parameters, i),
+						    values[i], error)){
+				res = HKL_FALSE;
+				break;
+			}
+		}
+	}
+	return res;
+}
+
+/**
+ * hkl_engine_parameters_randomize: (skip)
+ * @self: the this ptr
+ *
+ * randomize all the parameters of the #HklEngine
+ **/
+void hkl_engine_parameters_randomize(HklEngine *self)
+{
+	HklParameter **parameter;
+
+	darray_foreach(parameter, self->mode->parameters){
+		hkl_parameter_randomize(*parameter);
+	}
+}
+
+/**
+ * hkl_engine_parameter_get: (skip)
+ * @self: the this ptr
+ * @name: the name of the expected parameter
+ *
+ * get the #HklParameter with the given @name.
+ *
+ * Returns: (allow-none): retun the parameter or NULL if the engine
+ *                        does not contain this parameter.
+ **/
+const HklParameter *hkl_engine_parameter_get(const HklEngine *self,
+					     const char *name)
+{
+	HklParameter **parameter;
+
+	darray_foreach(parameter, self->mode->parameters)
+		if(!strcmp((*parameter)->name, name))
+			return *parameter;
+}
+
+/**
+ * hkl_engine_parameter_set: (skip)
+ * @self: the this ptr
+ * @parameter: the parameter to set.
+ *
+ * set a parameter of the #HklEngine
+ **/
+void hkl_engine_parameter_set(HklEngine *self, const HklParameter *parameter)
+{
+	HklParameter **p;
+
+	darray_foreach(p, self->mode->parameters)
+		if(!strcmp((*p)->name, parameter->name)){
+			hkl_parameter_init_copy(*p, parameter);
+			break;
+		}
 }
 
 /**
@@ -275,27 +354,20 @@ HklEngineList *hkl_engine_engines_get(HklEngine *self)
 /**
  * hkl_engine_select_mode:
  * @self: the HklEngine
- * @mode: the #HklPseudoAxisMode to select
+ * @name: the mode to select
  *
  * This method also populate the self->axes from the mode->axes_names.
  * this is to speed the computation of the numerical axes.
  **/
-void hkl_engine_select_mode(HklEngine *self,
-			    HklMode *mode)
-{
-	self->mode = mode;
-	hkl_engine_prepare_internal(self);
-}
-
-void hkl_engine_select_mode_by_name(HklEngine *self,
-				    const char *name)
+void hkl_engine_select_mode(HklEngine *self, const char *name)
 {
 	HklMode **mode;
 
-	darray_foreach(mode, self->modes){
-		if(!strcmp((*mode)->info->name, name))
-			hkl_engine_select_mode(self, (*mode));
-	}
+	darray_foreach(mode, self->modes)
+		if(!strcmp((*mode)->info->name, name)){
+			hkl_engine_mode_set(self, *mode);
+			break;
+		}
 }
 
 /**

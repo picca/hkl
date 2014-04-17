@@ -75,10 +75,10 @@ def plot_hkl_trajectory(filename, geometry, engines,
     for mode in hkl.modes_get():
         hkl.select_mode(mode)
         trajectories = compute_hkl_trajectories(hkl, hkl1=hkl1, hkl2=hkl2, n=n)
-        print "\"" + filename + "\"", idx, mode.name_get(), len(trajectories)
+        print "\"" + filename + "\"", idx, mode, len(trajectories)
 
         plt.subplot(3, 4, idx)
-        plt.title("%s" % (mode.name_get(),))
+        plt.title(mode)
         if not len(trajectories):
             plt.text(0.5, 0.5, "Failed", size=20, rotation=0.,
                      ha="center", va="center",

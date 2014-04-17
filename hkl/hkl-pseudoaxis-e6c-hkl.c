@@ -269,7 +269,7 @@ HklEngine *hkl_engine_e6c_hkl_new(void)
 
 	default_mode = bissector_vertical();
 	hkl_engine_add_mode(self, default_mode);
-	hkl_engine_select_mode(self, default_mode);
+	hkl_engine_mode_set(self, default_mode);
 
 	hkl_engine_add_mode(self, constant_omega_vertical());
 	hkl_engine_add_mode(self, constant_chi_vertical());

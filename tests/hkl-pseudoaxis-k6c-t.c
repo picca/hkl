@@ -28,8 +28,8 @@ static void degenerated(void)
 	int res = HKL_TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
-	HklMode **mode;
-	darray_mode *modes;
+	const darray_string *modes;
+	const char **mode;
 	const HklFactory *factory;
 	HklGeometry *geometry;
 	const HklGeometryList *geometries;
@@ -54,16 +54,24 @@ static void degenerated(void)
 	pseudo_axes = hkl_engine_pseudo_axes_get(engine);
 
 	darray_foreach(mode, *modes){
-		darray_parameter *parameters;
+		const darray_string *parameters;
 
 		hkl_engine_select_mode(engine, *mode);
-		parameters = hkl_mode_parameters_get(*mode);
-		if (!strcasecmp(hkl_mode_name_get(*mode),
-				"constant_chi_vertical"))
-			hkl_parameter_value_set(darray_item(*parameters, 0), 1, NULL);
-		if (!strcasecmp(hkl_mode_name_get(*mode),
-				"constant_incidence"))
-			hkl_parameter_value_set(darray_item(*parameters, 3), 1, NULL);
+		parameters = hkl_engine_parameters_get(engine);
+		if (!strcasecmp(*mode, "constant_chi_vertical")){
+			HklParameter *p = hkl_parameter_new_copy(hkl_engine_parameter_get(engine,
+											  darray_item(*parameters, 0)));
+			hkl_parameter_value_set(p, 1, NULL);
+			hkl_engine_parameter_set(engine, p);
+			hkl_parameter_free(p);
+		}
+		if (!strcasecmp(*mode, "constant_incidence")){
+			HklParameter *p = hkl_parameter_new_copy(hkl_engine_parameter_get(engine,
+											  darray_item(*parameters, 3)));
+			hkl_parameter_value_set(p, 1, NULL);
+			hkl_engine_parameter_set(engine, p);
+			hkl_parameter_free(p);
+		}
 
 		/* studdy this degenerated case */
 		hkl_parameter_list_values_set(pseudo_axes,
@@ -97,8 +105,8 @@ static void eulerians(void)
 	int res = HKL_TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
-	HklMode **mode;
-	darray_mode *modes;
+	const darray_string *modes;
+	const char **mode;
 	const HklGeometryListItem *item;
 	const HklFactory *factory;
 	HklGeometry *geometry;
@@ -122,12 +130,17 @@ static void eulerians(void)
 
 	darray_foreach(mode, *modes){
 		double omega, chi, phi;
-		darray_parameter *parameters;
+		const darray_string *parameters;
 
 		hkl_engine_select_mode(engine, *mode);
-		parameters = hkl_mode_parameters_get(*mode);
-		if (darray_size(*parameters))
-			hkl_parameter_value_set(darray_item(*parameters, 0), 1, NULL);
+		parameters = hkl_engine_parameters_get(engine);
+		if (darray_size(*parameters)){
+			HklParameter *p = hkl_parameter_new_copy(hkl_engine_parameter_get(engine,
+											  darray_item(*parameters, 0)));
+			hkl_parameter_value_set(p, 1, NULL);
+			hkl_engine_parameter_set(engine, p);
+			hkl_parameter_free(p);
+		}
 
 		/* studdy this degenerated case */
 		hkl_engine_set_values_v(engine, 0., 90. * HKL_DEGTORAD, 0.);
@@ -167,8 +180,8 @@ static void q2(void)
 	int res = HKL_TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
-	HklMode **mode;
-	darray_mode *modes;
+	const darray_string *modes;
+	const char **mode;
 	const HklFactory *factory;
 	HklGeometry *geometry;
 	const HklGeometryList *geometries;

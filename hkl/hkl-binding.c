@@ -263,24 +263,33 @@ typedef enum {
 
 
 /**
- * hkl_engine_modes_get_as_gslist:
+ * hkl_engine_modes_get_binding:
  * @self: the this ptr
- *
- * Return value: (element-type HklMode) (transfer container): list of mode,
- *               free the list with g_slist_free when done.
+ * @length: (out caller-allocates): return the length of the returned array.
  *
  * Rename to: hkl_engine_modes_get
+ *
+ * Return value: (array length=length) (transfer none): All the modes supported by the #HklEngine
  **/
-GSList* hkl_engine_modes_get_as_gslist(HklEngine *self)
+const char **hkl_engine_modes_get_binding(const HklEngine *self, size_t *length)
 {
-	GSList *list = NULL;
-	HklMode **mode;
+	*length = darray_size(self->mode_names);
+	return &darray_item(self->mode_names, 0);
+}
 
-	darray_foreach(mode, self->modes){
-		list = g_slist_append(list, *mode);
-	}
-
-	return list;
+/**
+ * hkl_engine_parameters_get_binding:
+ * @self: the this ptr
+ * @length: (out caller-allocates): return the length of the returned array.
+ *
+ * Rename to: hkl_engine_parameters_get
+ *
+ * Return value: (array length=length) (transfer none): All the parameters of #HklEngine.
+ **/
+const char **hkl_engine_parameters_get_binding(const HklEngine *self, size_t *length)
+{
+	*length = darray_size(self->mode->parameters_names);
+	return &darray_item(self->mode->parameters_names, 0);
 }
 
 /**

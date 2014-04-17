@@ -116,13 +116,13 @@ public:
 class ParameterModelColumns : public Gtk::TreeModel::ColumnRecord
 {
 public:
-	Gtk::TreeModelColumn<HklParameter *> parameter;
-	Gtk::TreeModelColumn<Glib::ustring> name;
+	Gtk::TreeModelColumn<HklEngine *> engine;
+	Gtk::TreeModelColumn<const char *> name;
 	Gtk::TreeModelColumn<double> value;
 
 	ParameterModelColumns()
 		{
-			this->add(parameter);
+			this->add(engine);
 			this->add(name);
 			this->add(value);
 		}

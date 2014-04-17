@@ -100,25 +100,6 @@ class TestAPI(unittest.TestCase):
             self.assertTrue(type(axis.name_get()) is str)
             axis.min_max_unit_set(0, math.radians(180))
 
-    def test_mode_api(self):
-        """
-        enforce the HklMode API
-        """
-        factory = Hkl.factories()['K6C']
-        engines = factory.create_new_engine_list()
-        engine = engines.engine_get_by_name("hkl")
-
-        # check for all modes
-        for mode in engine.modes_get():
-            self.assertTrue(type(mode) is Hkl.Mode)
-            self.assertTrue(type(mode.name_get()) is str)
-
-            # check the parameters
-            parameters = mode.parameters_get()
-            self.assertTrue(type(parameters) is Hkl.ParameterList)
-            for parameter in parameters.parameters():
-                self.assertTrue(type(parameter) is Hkl.Parameter)
-
     def test_engine_api(self):
         """
         enforce the HklEngine API
@@ -151,7 +132,7 @@ class TestAPI(unittest.TestCase):
 
         # check for all modes
         for mode in hkl.modes_get():
-            self.assertTrue(type(mode) is Hkl.Mode)
+            self.assertTrue(type(mode) is str)
 
         # set the hkl engine and get the results
         for _ in range(100):
@@ -170,6 +151,10 @@ class TestAPI(unittest.TestCase):
         for engine in engines.engines_get():
             self.assertTrue(type(engine) is Hkl.Engine)
             self.assertTrue(type(engine.name_get()) is str)
+            self.assertTrue(type(engine.modes_get()) is list)
+            self.assertTrue(len(engine.modes_get()))
+            for mode in engine.modes_get():
+                self.assertTrue(type(mode) is str)
             for parameter in engine.pseudo_axes_get().parameters():
                 self.assertTrue(type(parameter) is Hkl.Parameter)
                 self.assertTrue(type(parameter.value_get()) is float)

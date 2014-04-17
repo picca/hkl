@@ -216,7 +216,7 @@ HklEngine *hkl_engine_eulerians_new(void)
 	/* eulerians [default] */
 	mode = mode_eulerians();
 	hkl_engine_add_mode(&self->engine, mode);
-	hkl_engine_select_mode(&self->engine, mode);
+	hkl_engine_mode_set(&self->engine, mode);
 
 	return &self->engine;
 }

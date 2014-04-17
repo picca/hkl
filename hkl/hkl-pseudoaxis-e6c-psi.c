@@ -59,7 +59,7 @@ HklEngine *hkl_engine_e6c_psi_new(void)
 
 	default_mode = psi_vertical();
 	hkl_engine_add_mode(self, default_mode);
-	hkl_engine_select_mode(self, default_mode);
+	hkl_engine_mode_set(self, default_mode);
 
 	return self;
 }

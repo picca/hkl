@@ -105,7 +105,7 @@ void PseudoAxesFrame::on_combobox1_changed(void)
 {
 	Gtk::TreeModel::iterator iter = _combobox1->get_active();
 	Gtk::ListStore::Row row = *(iter);
-	hkl_engine_select_mode(_engine, row[_mode_columns.mode]);
+	hkl_engine_select_mode(_engine, row[_mode_columns.name]);
 	this->updateModeParameters();
 	this->_signal_changed();
 }
@@ -162,12 +162,13 @@ void PseudoAxesFrame::on_cell_treeview2_mode_parameter_value_edited(Glib::ustrin
 
 	sscanf(newText.c_str(), "%lf", &value);
 
-	parameter = row[_mode_parameter_columns.parameter];
-	if(parameter){
+	parameter = hkl_parameter_new_copy(hkl_engine_parameter_get(this->_engine,
+								    row[_mode_parameter_columns.name]));
 		/* TODO check the error */
-		hkl_parameter_value_unit_set(parameter, value, NULL);
-		row[_mode_parameter_columns.value] = value;
-	}
+	hkl_parameter_value_unit_set(parameter, value, NULL);
+	hkl_engine_parameter_set(this->_engine, parameter);
+	hkl_parameter_free(parameter);
+	row[_mode_parameter_columns.value] = value;
 }
 
 /****************/
@@ -190,38 +191,31 @@ void PseudoAxesFrame::updatePseudoAxis(void)
 
 void PseudoAxesFrame::updateMode(void)
 {
-	HklMode **mode;
-	darray_mode *modes = hkl_engine_modes_get(this->_engine);
+	const darray_string *modes = hkl_engine_modes_get(this->_engine);
+	const char **mode;
 
 	_mode_ListStore->clear();
 	darray_foreach(mode, *modes){
 		Gtk::TreeRow row = *(_mode_ListStore->append());
-		row[_mode_columns.name] = hkl_mode_name_get(*mode);
-		row[_mode_columns.mode] = *mode;
+		row[_mode_columns.name] = *mode;
 	}
 }
 
 void PseudoAxesFrame::updateModeParameters(void)
 {
-	HklMode *mode = hkl_engine_mode_get(this->_engine);
+	const darray_string *parameters = hkl_engine_parameters_get(this->_engine);
 
-	if(mode){
-		darray_parameter *parameters = hkl_mode_parameters_get(mode);
+	if(darray_size(*parameters)){
+		const char **parameter;
 
-		if(darray_size(*parameters)){
-			HklParameter **parameter;
-
-			_mode_parameter_ListStore->clear();
-			darray_foreach(parameter, *parameters){
-				Gtk::TreeRow row = *(_mode_parameter_ListStore->append());
-				row[_mode_parameter_columns.name] = hkl_parameter_name_get(*parameter);
-				row[_mode_parameter_columns.value] = hkl_parameter_value_unit_get(*parameter);
-				row[_mode_parameter_columns.parameter] = *parameter;
-			}
-			_expander1->set_expanded(1);
-			_expander1->show();
-		}else
-			_expander1->hide();
+		_mode_parameter_ListStore->clear();
+		darray_foreach(parameter, *parameters){
+			Gtk::TreeRow row = *(_mode_parameter_ListStore->append());
+			row[_mode_parameter_columns.name] = *parameter;
+			row[_mode_parameter_columns.value] = hkl_parameter_value_unit_get(hkl_engine_parameter_get(this->_engine, *parameter));
+		}
+		_expander1->set_expanded(1);
+		_expander1->show();
 	}else
 		_expander1->hide();
 }

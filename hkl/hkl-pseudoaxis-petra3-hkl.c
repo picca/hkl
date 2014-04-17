@@ -170,7 +170,7 @@ HklEngine *hkl_engine_petra3_p09_eh2_hkl_new(void)
 
 	default_mode = zaxis_alpha_fixed();
 	hkl_engine_add_mode(self, default_mode);
-	hkl_engine_select_mode(self, default_mode);
+	hkl_engine_mode_set(self, default_mode);
 
 	hkl_engine_add_mode(self, zaxis_beta_fixed());
 	hkl_engine_add_mode(self, zaxis_alpha_eq_beta());

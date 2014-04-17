@@ -27,18 +27,25 @@
 static void hkl_test_bench_run_real(HklEngine *engine, HklGeometry *geometry, size_t n)
 {
 	size_t i;
-	HklMode **mode;
-	darray_mode *modes = hkl_engine_modes_get(engine);
+	const darray_string *modes = hkl_engine_modes_get(engine);
+	const char **mode;
 
 	/* pseudo -> geometry */
 	darray_foreach(mode, *modes){
 		double min, max, mean;
-		darray_parameter *parameters;
+		const darray_string *parameters;
+		const char **parameter;
 
 		hkl_engine_select_mode(engine, *mode);
-		parameters = hkl_mode_parameters_get(*mode);
-		if (darray_size(*parameters))
-			hkl_parameter_value_set(darray_item(*parameters, 0), 1, NULL);
+		parameters = hkl_engine_parameters_get(engine);
+		if (darray_size(*parameters)){
+			HklParameter *p;
+
+			p = hkl_parameter_new_copy(hkl_engine_parameter_get(engine, darray_item(*parameters, 0)));
+			hkl_parameter_value_set(p, 1, NULL);
+			hkl_engine_parameter_set(engine, p);
+			hkl_parameter_free(p);
+		}
 
 		mean = max = 0;
 		min = 1000; /* arbitrary value always greater than the real min */
@@ -59,7 +66,7 @@ static void hkl_test_bench_run_real(HklEngine *engine, HklGeometry *geometry, si
 		fprintf(stdout, "\"%s\" \"%s\" \"%s\" (%d/%d) iterations %f / %f / %f [min/mean/max] ms each\n",
 			hkl_geometry_name_get(geometry),
 			hkl_engine_name_get(engine),
-			hkl_mode_name_get(*mode), n, i, min, mean/n, max);
+			*mode, n, i, min, mean/n, max);
 	}
 }
 
@@ -121,8 +128,8 @@ static void hkl_test_bench_eulerians(void)
 {
 	HklEngineList *engines;
 	HklEngine *engine;
-	HklMode **mode;
-	darray_mode *modes;
+	const char **mode;
+	const darray_string *modes;
 	const HklFactory *factory;
 	HklGeometry *geometry;
 	HklDetector *detector;

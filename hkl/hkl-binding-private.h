@@ -65,11 +65,15 @@ HKLAPI GSList* hkl_geometry_list_items(HklGeometryList *self);
 
 HKLAPI const HklGeometry *hkl_geometry_list_item_geometry(const HklGeometryListItem *self);
 
-/***********************/
+/*************/
 /* HklEngine */
-/***********************/
+/*************/
 
-HKLAPI GSList* hkl_engine_modes_get_as_gslist(HklEngine *self);
+HKLAPI const char **hkl_engine_modes_get_binding(const HklEngine *self,
+						 size_t *length) HKL_ARG_NONNULL(1, 2);
+
+HKLAPI const char **hkl_engine_parameters_get_binding(const HklEngine *self,
+						      size_t *length) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI gboolean hkl_engine_set_values_unit(HklEngine *self,
 					   double values[], unsigned int len,

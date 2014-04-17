@@ -154,7 +154,7 @@ HklEngine *hkl_engine_q_new(void)
 	/* q [default] */
 	mode = mode_q();
 	hkl_engine_add_mode(&self->engine, mode);
-	hkl_engine_select_mode(&self->engine, mode);
+	hkl_engine_mode_set(&self->engine, mode);
 
 	return &self->engine;
 }
@@ -282,7 +282,7 @@ HklEngine *hkl_engine_q2_new(void)
 	/* q2 [default] */
 	mode = mode_q2();
 	hkl_engine_add_mode(&self->engine, mode);
-	hkl_engine_select_mode(&self->engine, mode);
+	hkl_engine_mode_set(&self->engine, mode);
 
 	return &self->engine;
 }
@@ -445,7 +445,7 @@ HklEngine *hkl_engine_qper_qpar_new(void)
 	/* qper_qpar [default] */
 	mode = mode_qper_qpar();
 	hkl_engine_add_mode(&self->engine, mode);
-	hkl_engine_select_mode(&self->engine, mode);
+	hkl_engine_mode_set(&self->engine, mode);
 
 	return &self->engine;
 }

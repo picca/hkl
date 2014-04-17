@@ -101,7 +101,7 @@ HklEngine *hkl_engine_soleil_sixs_med_2_2_hkl_new(void)
 
 	default_mode = mu_fixed();
 	hkl_engine_add_mode(self, default_mode);
-	hkl_engine_select_mode(self, default_mode);
+	hkl_engine_mode_set(self, default_mode);
 
 	hkl_engine_add_mode(self, reflectivity());
 
@@ -133,7 +133,7 @@ HklEngine *hkl_engine_soleil_sixs_med_1_2_hkl_new(void)
 
 	default_mode = pitch_fixed();
 	hkl_engine_add_mode(self, default_mode);
-	hkl_engine_select_mode(self, default_mode);
+	hkl_engine_mode_set(self, default_mode);
 
 	return self;
 }
@@ -290,7 +290,7 @@ HklEngine *hkl_engine_soleil_sixs_med_2_3_hkl_new(void)
 
 	default_mode = mu_fixed();
 	hkl_engine_add_mode(self, default_mode);
-	hkl_engine_select_mode(self, default_mode);
+	hkl_engine_mode_set(self, default_mode);
 
 	return self;
 }
