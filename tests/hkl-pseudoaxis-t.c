@@ -35,7 +35,7 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 	const HklGeometryList *geometries = hkl_engine_list_geometries_get(engine_list);
 	HklGeometry *geometry = hkl_engine_list_geometry_get(engine_list);
 	const darray_string *modes = hkl_engine_modes_get(engine);
-	const darray_string *pseudo_axes = hkl_engine_pseudo_axes_get(engine);
+	const darray_string *pseudo_axes = hkl_engine_pseudo_axes_names_get(engine);
 	const size_t n_pseudo_axes = darray_size(*pseudo_axes);
 	double targets[n_pseudo_axes];
 	double currents[n_pseudo_axes];

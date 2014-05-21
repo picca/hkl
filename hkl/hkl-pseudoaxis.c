@@ -210,12 +210,12 @@ unsigned int hkl_engine_len(const HklEngine *self)
 }
 
 /**
- * hkl_engine_pseudo_axes_get:
+ * hkl_engine_pseudo_axes_names_get:
  * @self: the this ptr
  *
  * Return value: (transfer none): the pseudo_axes managed by this HklEngine
  **/
-const darray_string *hkl_engine_pseudo_axes_get(HklEngine *self)
+const darray_string *hkl_engine_pseudo_axes_names_get(HklEngine *self)
 {
 	return &self->pseudo_axes_names;
 }

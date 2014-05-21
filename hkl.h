@@ -387,7 +387,7 @@ HKLAPI const char *hkl_engine_name_get(const HklEngine *self) HKL_ARG_NONNULL(1)
 
 HKLAPI unsigned int hkl_engine_len(const HklEngine *self) HKL_ARG_NONNULL(1);
 
-HKLAPI const darray_string *hkl_engine_pseudo_axes_get(HklEngine *self) HKL_ARG_NONNULL(1);
+HKLAPI const darray_string *hkl_engine_pseudo_axes_names_get(HklEngine *self) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_engine_pseudo_axes_values_get(HklEngine *self,
 					      double values[], size_t n_values) HKL_ARG_NONNULL(1, 2);
