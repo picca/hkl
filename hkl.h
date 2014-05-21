@@ -77,7 +77,7 @@
 # endif
 #else
 /**
- * @def HKLEAPI
+ * @def HKLAPI
  * @brief Used to export functions(by changing visibility).
  */
 # define HKLAPI
