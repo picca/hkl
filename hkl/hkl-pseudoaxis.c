@@ -360,12 +360,12 @@ const darray_string *hkl_engine_modes_get(const HklEngine *self)
 }
 
 /**
- * hkl_engine_parameters_get:
+ * hkl_engine_parameters_names_get:
  * @self: the this ptr
  *
  * Return value: (type gpointer): All the parameters of #HklEngine.
  **/
-const darray_string *hkl_engine_parameters_get(const HklEngine *self)
+const darray_string *hkl_engine_parameters_names_get(const HklEngine *self)
 {
 	return &self->mode->parameters_names;
 }

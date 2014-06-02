@@ -203,7 +203,7 @@ void PseudoAxesFrame::updateMode(void)
 
 void PseudoAxesFrame::updateModeParameters(void)
 {
-	const darray_string *parameters = hkl_engine_parameters_get(this->_engine);
+	const darray_string *parameters = hkl_engine_parameters_names_get(this->_engine);
 
 	if(darray_size(*parameters)){
 		const char **parameter;

@@ -278,15 +278,15 @@ const char **hkl_engine_modes_get_binding(const HklEngine *self, size_t *length)
 }
 
 /**
- * hkl_engine_parameters_get_binding:
+ * hkl_engine_parameters_names_get_binding:
  * @self: the this ptr
  * @length: (out caller-allocates): return the length of the returned array.
  *
- * Rename to: hkl_engine_parameters_get
+ * Rename to: hkl_engine_parameters_names_get
  *
  * Return value: (array length=length) (transfer none): All the parameters of #HklEngine.
  **/
-const char **hkl_engine_parameters_get_binding(const HklEngine *self, size_t *length)
+const char **hkl_engine_parameters_names_get_binding(const HklEngine *self, size_t *length)
 {
 	*length = darray_size(self->mode->parameters_names);
 	return &darray_item(self->mode->parameters_names, 0);

@@ -410,7 +410,7 @@ HKLAPI const darray_string *hkl_engine_modes_get(const HklEngine *self) HKL_ARG_
 HKLAPI void hkl_engine_select_mode(HklEngine *self,
 				   const char *name) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI const darray_string *hkl_engine_parameters_get(const HklEngine *self) HKL_ARG_NONNULL(1);
+HKLAPI const darray_string *hkl_engine_parameters_names_get(const HklEngine *self) HKL_ARG_NONNULL(1);
 
 HKLAPI unsigned int hkl_engine_parameters_set(HklEngine *self,
 					      double values[], size_t n_values,

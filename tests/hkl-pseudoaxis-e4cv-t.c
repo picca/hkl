@@ -105,7 +105,7 @@ static void degenerated(void)
 		static double values[] = {0, 0, 1};
 
 		hkl_engine_select_mode(engine, *mode);
-		const darray_string *parameters = hkl_engine_parameters_get(engine);
+		const darray_string *parameters = hkl_engine_parameters_names_get(engine);
 		if (darray_size(*parameters)){
 			HklParameter *p = hkl_parameter_new_copy(hkl_engine_parameter_get(engine,
 											  darray_item(*parameters, 0)));
