@@ -31,7 +31,7 @@ void HKLWindow::on_treeView_pseudoAxes_cursor_changed(void)
 	Gtk::TreeViewColumn * column;
 	_TreeView_pseudoAxes->get_cursor(path, column);
 	Gtk::ListStore::Row row = *(_pseudoAxeModel->get_iter(path));
-	HklParameter *parameter = row[_pseudoAxeModelColumns.parameter];
+	const char *parameter = row[_pseudoAxeModelColumns.name];
 	_TreeView_pseudoAxes_parameters->set_model(_mapPseudoAxeParameterModel[parameter]);
 }
 
@@ -420,11 +420,13 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & s
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
 
-	parameter = row[_pseudoAxeModelColumns.parameter];
 	engine = row[_pseudoAxeModelColumns.engine];
+	parameter = hkl_parameter_new_copy(hkl_engine_parameter_get(engine,
+								    row[_pseudoAxeModelColumns.name]));
 	sscanf(newText.c_str(), "%lf", &value);
 
-	if(hkl_parameter_value_unit_set(parameter, value, NULL))
+	if(hkl_parameter_value_unit_set(parameter, value, NULL)){
+		hkl_engine_parameter_set(engine, parameter);
 		if(hkl_engine_set(engine, NULL)){
 			hkl_engine_list_select_solution(this->_engines, 0);
 
@@ -441,6 +443,8 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & s
 			}
 #endif
 		}
+	}
+	hkl_parameter_free(parameter);
 }
 
 //PseudoAxes Parameters

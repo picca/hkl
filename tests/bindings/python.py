@@ -128,7 +128,7 @@ class TestAPI(unittest.TestCase):
 
         # get the hkl engine and do a computation
         hkl = engines.engine_get_by_name("hkl")
-        values = hkl.pseudo_axes_get().values_unit_get()
+        values = hkl.pseudo_axes_values_get()
 
         # check for all modes
         for mode in hkl.modes_get():
@@ -155,9 +155,10 @@ class TestAPI(unittest.TestCase):
             self.assertTrue(len(engine.modes_get()))
             for mode in engine.modes_get():
                 self.assertTrue(type(mode) is str)
-            for parameter in engine.pseudo_axes_get().parameters():
-                self.assertTrue(type(parameter) is Hkl.Parameter)
-                self.assertTrue(type(parameter.value_get()) is float)
+            values = engine.pseudo_axes_values_get()
+            self.assertTrue(type(values) is list)
+            for value in values:
+                self.assertTrue(type(value) is float)
 
     @unittest.skip("for testing figures")
     def test_doc_exemple(self):

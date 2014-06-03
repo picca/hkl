@@ -34,15 +34,6 @@ HKL_BEGIN_DECLS
 
 HKLAPI GHashTable *hkl_factories(void);
 
-/********************/
-/* HklParameterList */
-/********************/
-
-HKLAPI GSList* hkl_parameter_list_parameters(HklParameterList *self);
-
-HKLAPI gboolean hkl_parameter_list_values_unit_set_binding(HklParameterList *self,
-							   double *values, uint len,
-							   GError **error);
 /***************/
 /* HklGeometry */
 /***************/
@@ -74,6 +65,9 @@ HKLAPI const char **hkl_engine_modes_get_binding(const HklEngine *self,
 
 HKLAPI const char **hkl_engine_parameters_get_binding(const HklEngine *self,
 						      size_t *length) HKL_ARG_NONNULL(1, 2);
+
+HKLAPI double *hkl_engine_pseudo_axes_values_get_binding(const HklEngine *self,
+							 guint *len);
 
 HKLAPI gboolean hkl_engine_set_values_unit(HklEngine *self,
 					   double values[], unsigned int len,

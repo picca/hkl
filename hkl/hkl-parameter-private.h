@@ -198,6 +198,25 @@ extern void hkl_parameter_fprintf(FILE *f, HklParameter *self);
 /* HklParameterList */
 /********************/
 
+typedef struct _HklParameterList HklParameterList;
+typedef HklParameterList darray_parameter;
+
+struct _HklParameterList {
+	_darray(HklParameter *);
+};
+
+extern void hkl_parameter_list_free(HklParameterList *self);
+
+unsigned int hkl_parameter_list_values_set(HklParameterList *self,
+					   double values[], unsigned int len,
+					   HklError **error);
+
+double *hkl_parameter_list_values_unit_get(const HklParameterList *self,
+					   unsigned int *len);
+
+void hkl_parameter_list_randomize(HklParameterList *self);
+
+
 extern void hkl_parameter_list_values_get(const HklParameterList *self,
 					  double values[], unsigned int *len);
 
@@ -205,8 +224,6 @@ extern unsigned int hkl_parameter_list_values_unit_set(HklParameterList *self,
 						       double values[],
 						       unsigned int len,
 						       HklError **error);
-
-extern void hkl_parameter_list_free(HklParameterList *self);
 
 extern void hkl_parameter_list_fprintf(FILE *f, const HklParameterList *self);
 

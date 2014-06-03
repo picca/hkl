@@ -45,19 +45,17 @@ int check_pseudoaxes(HklEngine *engine,
 {
 	int res = HKL_TRUE;
 	unsigned int i = 0;
-	HklParameter **pseudo_axis;
-	darray_parameter *pseudo_axes = hkl_engine_pseudo_axes_get(engine);
+	double currents[len];
 
 	hkl_assert(hkl_engine_len(engine) == len);
 
-	darray_foreach(pseudo_axis, *pseudo_axes){
-		double current = hkl_parameter_value_get(*pseudo_axis);
-		res &= fabs(current - expected[i]) <= HKL_EPSILON;
+	hkl_engine_pseudo_axes_values_get(engine, currents, len);
+	for(i=0; i<len; ++i){
+		res &= fabs(currents[i] - expected[i]) <= HKL_EPSILON;
 		if (!res){
 			fprintf(stderr, "current: %f, expected: %f, epsilon: %f\n",
-				current, expected[i], HKL_EPSILON);
+				currents[i], expected[i], HKL_EPSILON);
 		}
-		++i;
 	}
 	return res;
 }
@@ -75,7 +73,6 @@ void hkl_engine_set_values_v(HklEngine *self, ...)
 	uint i;
 	va_list ap;
 	unsigned int len = hkl_engine_len(self);
-	HklParameterList *pseudo_axes = hkl_engine_pseudo_axes_get(self);
 	double values[len];
 
 	va_start(ap, self);
@@ -83,7 +80,5 @@ void hkl_engine_set_values_v(HklEngine *self, ...)
 		values[i] = va_arg(ap, double);
 		
 	va_end(ap);
-	hkl_parameter_list_values_set(pseudo_axes,
-				      values, len,
-				      NULL);
+	hkl_engine_pseudo_axes_values_set(self, values, len, NULL);
 }

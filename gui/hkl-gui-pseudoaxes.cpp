@@ -177,15 +177,15 @@ void PseudoAxesFrame::on_cell_treeview2_mode_parameter_value_edited(Glib::ustrin
 
 void PseudoAxesFrame::updatePseudoAxis(void)
 {
-	HklParameter **parameter;
-	darray_parameter *pseudo_axes = (darray_parameter *)hkl_engine_pseudo_axes_get(this->_engine);
+	const char **pseudo_axis;
+	const darray_string *pseudo_axes = hkl_engine_pseudo_axes_get(this->_engine);
 
 	_pseudoAxis_ListStore->clear();
-	darray_foreach(parameter, *pseudo_axes){
+	darray_foreach(pseudo_axis, *pseudo_axes){
 		Gtk::TreeRow row = *(_pseudoAxis_ListStore->append());
-		row[_pseudoAxis_columns.name] = hkl_parameter_name_get(*parameter);
-		row[_pseudoAxis_columns.value] = hkl_parameter_value_unit_get(*parameter);
-		row[_pseudoAxis_columns.parameter] = *parameter;
+		row[_pseudoAxis_columns.name] = *pseudo_axis;
+		row[_pseudoAxis_columns.value] = hkl_parameter_value_unit_get(hkl_engine_pseudo_axis_get(this->_engine,
+													 *pseudo_axis));
 	}
 }
 

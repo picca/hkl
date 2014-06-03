@@ -417,7 +417,6 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 	int index;
 	Gtk::CellRenderer * renderer;
 	HklEngine **engine;
-	HklParameter **pseudo_axis;
 	darray_engine *engines = hkl_engine_list_engines_get(this->_engines);
 
 	/* add the columns */
@@ -442,14 +441,14 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 
 	//Fill the models from the diffractometer pseudoAxes
 	darray_foreach(engine, *engines){
-		darray_parameter *pseudo_axes = (darray_parameter *)hkl_engine_pseudo_axes_get(*engine);
+		const char **pseudo_axis;
+		const darray_string *pseudo_axes = hkl_engine_pseudo_axes_get(*engine);
 		const darray_string *parameters = hkl_engine_parameters_get(*engine);
 
 		darray_foreach(pseudo_axis, *pseudo_axes){
 			Gtk::ListStore::Row row = *(_pseudoAxeModel->append());
 			row[_pseudoAxeModelColumns.engine] = *engine;
-			row[_pseudoAxeModelColumns.parameter] = *pseudo_axis;
-			row[_pseudoAxeModelColumns.name] = hkl_parameter_name_get(*pseudo_axis);
+			row[_pseudoAxeModelColumns.name] = *pseudo_axis;
 
 
 			if(darray_size(*parameters)){
@@ -463,7 +462,7 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 					row[_parameterModelColumns.name] = *parameter;
 					row[_parameterModelColumns.value] = hkl_parameter_value_unit_get(hkl_engine_parameter_get(*engine, *parameter));
 				}
-				_mapPseudoAxeParameterModel.insert(std::pair<HklParameter *, Glib::RefPtr<Gtk::ListStore> >(*pseudo_axis, model));
+				_mapPseudoAxeParameterModel.insert(std::pair<std::string, Glib::RefPtr<Gtk::ListStore> >(*pseudo_axis, model));
 			}
 		}
 	}
@@ -662,10 +661,11 @@ void HKLWindow::updatePseudoAxes(void)
 	while(iter != end){
 		double min;
 		double max;
-		HklParameter *parameter;
-
+		const HklParameter *parameter;
 		Gtk::TreeRow row = *iter;
-		parameter = row[_pseudoAxeModelColumns.parameter];
+
+		parameter = hkl_engine_pseudo_axis_get(row[_pseudoAxeModelColumns.engine],
+						       row[_pseudoAxeModelColumns.name]);
 		row[_pseudoAxeModelColumns.read] = hkl_parameter_value_unit_get(parameter);
 		row[_pseudoAxeModelColumns.write] = hkl_parameter_value_unit_get(parameter);
 		hkl_parameter_min_max_unit_get(parameter, &min, &max);
@@ -680,17 +680,17 @@ void HKLWindow::update_pseudoAxes_parameters(void)
 {
 	LOG;
 
-	std::map<HklParameter *, Glib::RefPtr<Gtk::ListStore> >::iterator iter = _mapPseudoAxeParameterModel.begin();
-	std::map<HklParameter *, Glib::RefPtr<Gtk::ListStore> >::iterator end = _mapPseudoAxeParameterModel.end();
+	std::map<std::string, Glib::RefPtr<Gtk::ListStore> >::iterator iter = _mapPseudoAxeParameterModel.begin();
+	std::map<std::string, Glib::RefPtr<Gtk::ListStore> >::iterator end = _mapPseudoAxeParameterModel.end();
 	while(iter != end){
 		Gtk::TreeModel::Children rows = iter->second->children();
 		Gtk::TreeModel::Children::iterator iter_row = rows.begin();
 		Gtk::TreeModel::Children::iterator end_row = rows.end();
 		while(iter_row != end_row){
 			Gtk::TreeRow row = *iter_row;
-			const HklEngine *engine = row[_parameterModelColumns.engine];
-			row[_parameterModelColumns.value] = hkl_parameter_value_unit_get(hkl_engine_parameter_get(engine,
-														  row[_parameterModelColumns.name]));
+			const HklParameter *parameter = hkl_engine_parameter_get(row[_parameterModelColumns.engine],
+										 row[_parameterModelColumns.name]);
+			row[_parameterModelColumns.value] = hkl_parameter_value_unit_get(parameter);
 			++iter_row;
 		}
 		++iter;

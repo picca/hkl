@@ -293,6 +293,35 @@ const char **hkl_engine_parameters_get_binding(const HklEngine *self, size_t *le
 }
 
 /**
+ * hkl_engine_pseudo_axes_values_get_binding:
+ * @self: the this ptr
+ * @len: (out caller-allocates): the length of the returned array
+ *
+ * Rename to: hkl_engine_pseudo_axes_values_get
+ *
+ * Return value: (array length=len) (transfer container): list of pseudo axes values,
+ *          free the list with free when done.
+ **/
+double *hkl_engine_pseudo_axes_values_get_binding(const HklEngine *self, guint *len)
+{
+	double *values;
+	uint i = 0;
+	HklParameter **axis;
+
+	if(!self || !len || darray_size(self->pseudo_axes) == 0)
+		return NULL;
+
+	*len = darray_size(self->pseudo_axes);
+	values = malloc(darray_size(self->pseudo_axes) * sizeof(*values));
+
+	darray_foreach(axis, self->pseudo_axes){
+		values[i++] = hkl_parameter_value_unit_get(*axis);
+	}
+
+	return values;
+}
+
+/**
  * hkl_engine_set_values_unit:
  * @self: the this ptr
  * @values: (array length=len): the values to set

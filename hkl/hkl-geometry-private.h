@@ -24,6 +24,7 @@
 
 #include <stddef.h>                     // for size_t
 #include <stdio.h>                      // for FILE
+#include "hkl-parameter-private.h"      // for darray_parameter
 #include "hkl-quaternion-private.h"     // for _HklQuaternion
 #include "hkl-source-private.h"         // for HklSource
 #include "hkl-vector-private.h"         // for HklQuaternion

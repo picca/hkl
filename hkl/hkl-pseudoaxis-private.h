@@ -74,9 +74,10 @@ struct _HklEngine
 	HklSample *sample;
 	HklMode *mode; /* not owned */
 	HklEngineList *engines; /* not owned */
-	darray_parameter pseudo_axes;
-	darray_mode modes;
 	darray_parameter axes;
+	darray_parameter pseudo_axes;
+	darray_string pseudo_axes_names;
+	darray_mode modes;
 	darray_string mode_names;
 };
 
@@ -274,6 +275,8 @@ static void hkl_engine_release(HklEngine *self)
 
 	/* release the HklPseudoAxe memory */
 	hkl_parameter_list_free(&self->pseudo_axes);
+
+	darray_free(self->pseudo_axes_names);
 
 	darray_free(self->mode_names);
 }

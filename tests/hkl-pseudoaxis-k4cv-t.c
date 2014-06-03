@@ -36,7 +36,6 @@ static void degenerated(void)
 	HklDetector *detector;
 	HklSample *sample;
 	static double hkl[] = {0, 1, 0};
-	HklParameterList *pseudo_axes;
 
 	factory = hkl_factory_get_by_name("K4CV");
 	geometry = hkl_factory_create_new_geometry(factory);
@@ -51,7 +50,6 @@ static void degenerated(void)
 
 	engine = hkl_engine_list_engine_get_by_name(engines, "hkl");
 	modes = hkl_engine_modes_get(engine);
-	pseudo_axes = hkl_engine_pseudo_axes_get(engine);
 
 	darray_foreach(mode, *modes) {
 		const darray_string *parameters;
@@ -67,16 +65,17 @@ static void degenerated(void)
 		}
 
 		/* studdy this degenerated case */
-		hkl_parameter_list_values_set(pseudo_axes, hkl, ARRAY_SIZE(hkl), NULL);
+		hkl_engine_pseudo_axes_values_set(engine,
+						  hkl, ARRAY_SIZE(hkl), NULL);
 		if (hkl_engine_set(engine, NULL)){
 			const HklGeometryListItem *item;
 
 			HKL_GEOMETRY_LIST_FOREACH(item, geometries){
 				static double null[] = {0, 0, 0};
 
-				hkl_parameter_list_values_set(pseudo_axes,
-							      null, ARRAY_SIZE(null),
-							      NULL);
+				hkl_engine_pseudo_axes_values_set(engine,
+								  null, ARRAY_SIZE(null),
+								  NULL);
 				hkl_geometry_set(geometry,
 						 hkl_geometry_list_item_geometry_get(item));
 				hkl_engine_get(engine, NULL);
@@ -106,7 +105,6 @@ static void eulerians(void)
 	HklDetector *detector;
 	HklSample *sample;
 	static double eulerians[] = {0., 90 * HKL_DEGTORAD, 0.};
-	HklParameterList *pseudo_axes;
 
 	factory = hkl_factory_get_by_name("K4CV");
 	geometry = hkl_factory_create_new_geometry(factory);
@@ -121,7 +119,6 @@ static void eulerians(void)
 
 	engine = hkl_engine_list_engine_get_by_name(engines, "eulerians");
 	modes = hkl_engine_modes_get(engine);
-	pseudo_axes = hkl_engine_pseudo_axes_get(engine);
 
 	darray_foreach(mode, *modes){
 		const darray_string *parameters;
@@ -137,9 +134,9 @@ static void eulerians(void)
 		}
 
 		/* studdy this degenerated case */
-		hkl_parameter_list_values_set(pseudo_axes,
-					      eulerians, ARRAY_SIZE(eulerians),
-					      NULL);
+		hkl_engine_pseudo_axes_values_set(engine,
+						  eulerians, ARRAY_SIZE(eulerians),
+						  NULL);
 		if (hkl_engine_set(engine, NULL)) {
 			const HklGeometryListItem *item;
 

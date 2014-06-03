@@ -6,7 +6,6 @@ AM_LDFLAGS += $(GSL_LIBS)
 AM_CFLAGS = -I$(top_srcdir) \
 	-I$(top_builddir) \
 	$(GSL_CFLAGS)
-	-fvisibility=hiden
 
 hkl_c_sources = \
 	hkl-error.c \
@@ -80,6 +79,10 @@ hkl_private_h_sources = \
 lib_LTLIBRARIES = libhkl.la
 libhkl_la_SOURCES = $(hkl_c_sources) $(hkl_private_h_sources)
 libhkl_la_LIBADD = ccan/libccan.la
+libhkl_la_CFLAGS = \
+	$(AM_CFLAGS) \
+	-Wno-initializer-overrides # \ do not activate visibility yet.
+	-fvisibility=hidden
 
 # introspection
 

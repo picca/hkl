@@ -41,9 +41,8 @@ static void qper_qpar(void)
 	HklDetector *detector;
 	HklSample *sample;
 	size_t i, f_idx;
-	double *Qper, *Qpar;
+	double qper_qpar[2];
 	double gamma;
-	darray_parameter *pseudo_axes;
 	const HklGeometryList *geometries;
 	HklMatrix *U;
 
@@ -63,26 +62,24 @@ static void qper_qpar(void)
 	geometries = hkl_engine_list_geometries_get(engines);
 
 	engine = hkl_engine_list_engine_get_by_name(engines, "qper_qpar");
-	pseudo_axes = hkl_engine_pseudo_axes_get(engine);
-
-	Qper = &darray_item(*pseudo_axes, 0)->_value;
-	Qpar = &darray_item(*pseudo_axes, 1)->_value;
 
 	/* the init part */
 	hkl_geometry_set_values_unit_v(geom, 0., 0.1, 0., 0., 90., 0.);
 	hkl_engine_initialize(engine, NULL);
 
 	/* gamma must be positif */
-	*Qper = 0.1;
-	*Qpar = 4.;
+	qper_qpar[0] = 0.1;
+	qper_qpar[1] = 4.;
+	hkl_engine_pseudo_axes_values_set(engine, qper_qpar, ARRAY_SIZE(qper_qpar), NULL);
 	if(hkl_engine_set(engine, NULL) == HKL_TRUE){
 		gamma = GET_GAMMA(geometries);
 		is_double(2.61077, gamma, HKL_EPSILON * 10, __func__);
 	}
 
 	/* gamma must be negatif */
-	*Qper = -0.1;
-	*Qpar = 4.;
+	qper_qpar[0] = -0.1;
+	qper_qpar[1] = 4.;
+	hkl_engine_pseudo_axes_values_set(engine, qper_qpar, ARRAY_SIZE(qper_qpar), NULL);
 	if(hkl_engine_set(engine, NULL) == HKL_TRUE){
 		gamma = GET_GAMMA(geometries);
 		is_double(-2.7956354, gamma, HKL_EPSILON * 10, __func__);

@@ -35,7 +35,6 @@ static void solution(void)
 	HklSample *sample;
 	HklLattice *lattice;
 	static double hkl[] = {1, 1, 0};
-	HklParameterList *pseudo_axes;
 	HklMatrix *U;
 
 	/* get the geometry and set the source */
@@ -64,20 +63,19 @@ static void solution(void)
 	hkl_engine_list_init(engines, geometry, detector, sample);
 	geometries = hkl_engine_list_geometries_get(engines);
 	engine = hkl_engine_list_engine_get_by_name(engines, "hkl");
-	pseudo_axes = hkl_engine_pseudo_axes_get(engine);
 
 	/* the init part must succed */
 	hkl_geometry_set_values_unit_v(geometry, 1., 0., 0., 0.);
 
 	/* compute the 1 1 0 */
-	hkl_parameter_list_values_set(pseudo_axes, hkl, ARRAY_SIZE(hkl), NULL);
+	hkl_engine_pseudo_axes_values_set(engine, hkl, ARRAY_SIZE(hkl), NULL);
 	if (hkl_engine_set(engine, NULL)){
 		const HklGeometryListItem *item;
 
 		HKL_GEOMETRY_LIST_FOREACH(item, geometries){
 			static double null[] = {0, 0, 0};
 
-			hkl_parameter_list_values_set(pseudo_axes, null, ARRAY_SIZE(null), NULL);
+			hkl_engine_pseudo_axes_values_set(engine, null, ARRAY_SIZE(null), NULL);
 			hkl_geometry_set(geometry,
 					 hkl_geometry_list_item_geometry_get(item));
 			hkl_engine_get(engine, NULL);

@@ -103,7 +103,6 @@ static void degenerated(void)
 
 	darray_foreach(mode, *modes){
 		static double values[] = {0, 0, 1};
-		HklParameterList *pseudo_axes = hkl_engine_pseudo_axes_get(engine);
 
 		hkl_engine_select_mode(engine, *mode);
 		const darray_string *parameters = hkl_engine_parameters_get(engine);
@@ -116,7 +115,7 @@ static void degenerated(void)
 		}
 
 		/* studdy this degenerated case */
-		hkl_parameter_list_values_set(pseudo_axes, values, 3, NULL);
+		hkl_engine_pseudo_axes_values_set(engine, values, 3, NULL);
 
 		if(hkl_engine_set(engine, NULL)){
 			const HklGeometryListItem *item;
@@ -124,11 +123,11 @@ static void degenerated(void)
 			HKL_GEOMETRY_LIST_FOREACH(item, geometries){
 				static double null[] = {0, 0, 0};
 
-				hkl_parameter_list_values_set(pseudo_axes, null, 3, NULL);
+				hkl_engine_pseudo_axes_values_set(engine, null, ARRAY_SIZE(null), NULL);
 				hkl_geometry_set(geometry,
 						 hkl_geometry_list_item_geometry_get(item));
 				hkl_engine_get(engine, NULL);
-				res &= check_pseudoaxes(engine, values, 3);
+				res &= check_pseudoaxes(engine, values, ARRAY_SIZE(values));
 			}
 		}
 	}
@@ -215,7 +214,6 @@ static void psi_setter(void)
 	int res = HKL_TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
-	HklParameterList *pseudo_axes;
 	const darray_string *modes;
 	const char **mode;
 	const HklFactory *factory;
@@ -237,7 +235,6 @@ static void psi_setter(void)
 	geometries = hkl_engine_list_geometries_get(engines);
 
 	engine = hkl_engine_list_engine_get_by_name(engines, "psi");
-	pseudo_axes = hkl_engine_pseudo_axes_get(engine);
 	modes = hkl_engine_modes_get(engine);
 
 	/* the init part */
@@ -250,14 +247,14 @@ static void psi_setter(void)
 
 		hkl_engine_select_mode(engine, *mode);
 		for(psi=-180 * HKL_DEGTORAD;psi<180 * HKL_DEGTORAD;psi += HKL_DEGTORAD){
-			hkl_parameter_list_values_set(pseudo_axes, &psi, 1, NULL);
+			hkl_engine_pseudo_axes_values_set(engine, &psi, 1, NULL);
 			if(hkl_engine_set(engine, NULL)){
 				const HklGeometryListItem *item;
 
 				HKL_GEOMETRY_LIST_FOREACH(item, geometries){
 					static double null[] = {0};
 
-					hkl_parameter_list_values_set(pseudo_axes, null, 1, NULL);
+					hkl_engine_pseudo_axes_values_set(engine, null, ARRAY_SIZE(null), NULL);
 					hkl_geometry_set(geometry,
 							 hkl_geometry_list_item_geometry_get(item));
 					hkl_engine_get(engine, NULL);
@@ -308,18 +305,17 @@ static void q(void)
 
 	darray_foreach(mode, *modes){
 		double q;
-		HklParameterList *pseudo_axes = hkl_engine_pseudo_axes_get(engine);
 
 		hkl_engine_select_mode(engine, *mode);
 		for(q=-1.; q<1.; q += 0.1){
-			hkl_parameter_list_values_set(pseudo_axes, &q, 1, NULL);
+			hkl_engine_pseudo_axes_values_set(engine, &q, 1, NULL);
 			if(hkl_engine_set(engine, NULL)){
 				const HklGeometryListItem *item;
 
 				HKL_GEOMETRY_LIST_FOREACH(item, geometries){
 					static double null[] = {0};
 
-					hkl_parameter_list_values_set(pseudo_axes, null, 1, NULL);
+					hkl_engine_pseudo_axes_values_set(engine, null, ARRAY_SIZE(null), NULL);
 					hkl_geometry_set(geometry,
 							 hkl_geometry_list_item_geometry_get(item));
 					hkl_engine_get(engine, NULL);
@@ -349,7 +345,6 @@ static void hkl_psi_constant_vertical(void)
 	HklSample *sample;
 	static double hkl[] = {1, 0, 1};
 	static double hkl2[] = {1, 1, 0};
-	HklParameterList *pseudo_axes;
 
 	factory = hkl_factory_get_by_name("E4CV");
 	geometry = hkl_factory_create_new_geometry(factory);
@@ -363,7 +358,6 @@ static void hkl_psi_constant_vertical(void)
 	geometries = hkl_engine_list_geometries_get(engines);
 
 	engine = hkl_engine_list_engine_get_by_name(engines, "hkl");
-	pseudo_axes = hkl_engine_pseudo_axes_get(engine);
 
 	hkl_engine_select_mode(engine, "psi_constant");
 
@@ -372,17 +366,17 @@ static void hkl_psi_constant_vertical(void)
 	hkl_engine_parameters_set(engine, hkl2, ARRAY_SIZE(hkl2), NULL);
 	hkl_engine_initialize(engine, NULL);
 
-	hkl_parameter_list_values_set(pseudo_axes,
-				      hkl, ARRAY_SIZE(hkl), NULL);
+	hkl_engine_pseudo_axes_values_set(engine,
+					  hkl, ARRAY_SIZE(hkl), NULL);
 	if(hkl_engine_set(engine, NULL)){
 		const HklGeometryListItem *item;
 
 		HKL_GEOMETRY_LIST_FOREACH(item, geometries){
 			static double null[] = {0, 0, 0};
 
-			hkl_parameter_list_values_set(pseudo_axes,
-						      null, ARRAY_SIZE(null),
-						      NULL);
+			hkl_engine_pseudo_axes_values_set(engine,
+							  null, ARRAY_SIZE(null),
+							  NULL);
 			hkl_geometry_set(geometry,
 					 hkl_geometry_list_item_geometry_get(item));
 			hkl_engine_get(engine, NULL);

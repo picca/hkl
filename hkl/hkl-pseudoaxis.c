@@ -125,6 +125,7 @@ void hkl_engine_init(HklEngine *self,
 	self->ops = ops;
 	darray_init(self->modes);
 	darray_init(self->pseudo_axes);
+	darray_init(self->pseudo_axes_names);
 	darray_init(self->mode_names);
 	self->geometry = NULL;
 	self->detector = NULL;
@@ -143,6 +144,7 @@ HklParameter *register_pseudo_axis(HklEngine *self,
 
 	parameter = hkl_parameter_new_pseudo_axis(conf, self);
 	darray_append(self->pseudo_axes, parameter);
+	darray_append(self->pseudo_axes_names, parameter->name);
 
 	return parameter;
 }
@@ -213,9 +215,123 @@ unsigned int hkl_engine_len(const HklEngine *self)
  *
  * Return value: (transfer none): the pseudo_axes managed by this HklEngine
  **/
-HklParameterList *hkl_engine_pseudo_axes_get(HklEngine *self)
+const darray_string *hkl_engine_pseudo_axes_get(HklEngine *self)
 {
-	return &self->pseudo_axes;
+	return &self->pseudo_axes_names;
+}
+
+/**
+ * hkl_engine_pseudo_axes_values_get:
+ * @self: the this ptr
+ * @values: (array length=n_values): the values to get
+ * @n_values: the size of the values array.
+ *
+ * Get the engine pseudo axes values
+ **/
+void hkl_engine_pseudo_axes_values_get(HklEngine *self,
+				       double values[], size_t n_values)
+{
+	hkl_assert(n_values == self->info->n_pseudo_axes);
+
+	for(size_t i=0; i<n_values; ++i)
+		values[i] = hkl_parameter_value_get(darray_item(self->pseudo_axes, i));
+}
+
+/**
+ * hkl_engine_pseudo_axes_values_set: (skip)
+ * @self: the this ptr
+ * @values: (array length=n_values): the values to set
+ * @n_values: the size of the values array.
+ * @error: (allow-none): the Error
+ *
+ * Set the engine pseudo axes values
+ *
+ * Returns: true if no-error was set or false otherwise.
+ **/
+unsigned int hkl_engine_pseudo_axes_values_set(HklEngine *self,
+					       double values[], size_t n_values,
+					       HklError **error)
+{
+	unsigned int res = HKL_TRUE;
+
+	if(n_values != self->info->n_pseudo_axes){
+		hkl_error_set(error, "cannot set engine pseudo axes, wrong number of parameter (%d) given, (%d) expected\n",
+			      n_values, self->info->n_pseudo_axes);
+		res = HKL_FALSE;
+	} else {
+		for(size_t i=0; i<n_values; ++i){
+			if(!hkl_parameter_value_set(darray_item(self->pseudo_axes, i),
+						    values[i], error)){
+				res = HKL_FALSE;
+				break;
+			}
+		}
+	}
+	return res;
+}
+
+/**
+ * hkl_engine_pseudo_axes_randomize: (skip)
+ * @self: the this ptr
+ *
+ * randomize all the parameters of the #HklEngine
+ **/
+void hkl_engine_pseudo_axes_randomize(HklEngine *self)
+{
+	HklParameter **parameter;
+
+	darray_foreach(parameter, self->pseudo_axes){
+		hkl_parameter_randomize(*parameter);
+	}
+}
+
+/**
+ * hkl_engine_pseudo_axis_get: (skip)
+ * @self: the this ptr
+ * @name: the name of the expected psudo_axis
+ *
+ * get the #HklParameter with the given @name.
+ *
+ * Returns: (allow-none): retun the parameter or NULL if the engine
+ *                        does not contain this pseudo_axis.
+ * TODO: unit test
+ **/
+const HklParameter *hkl_engine_pseudo_axis_get(const HklEngine *self,
+					       const char *name)
+{
+	HklParameter **parameter;
+
+	darray_foreach(parameter, self->pseudo_axes)
+		if(!strcmp((*parameter)->name, name))
+			return *parameter;
+	return NULL;
+}
+
+/**
+ * hkl_engine_pseudo_axis_set: (skip)
+ * @self: the this ptr
+ * @parameter: the parameter to set.
+ * @error: the #HklError set.
+ *
+ * set a parameter of the #HklEngine
+ * return value: HKL_TRUE if succeded or HKL_FALSE otherwise.
+ * TODO: unit test
+ **/
+unsigned int hkl_engine_pseudo_axis_set(HklEngine *self,
+					const HklParameter *parameter,
+					HklError **error)
+{
+	HklParameter **p;
+
+	darray_foreach(p, self->pseudo_axes)
+		if(!strcmp((*p)->name, parameter->name)){
+			hkl_parameter_init_copy(*p, parameter);
+			return HKL_TRUE;
+		}
+	hkl_error_set(error,
+		      "Can not find the pseudo axis \"%s\" in the \"%s\" engine\n",
+		      parameter->name, self->info->name);
+	return HKL_FALSE;
 }
 
 /**
@@ -257,7 +373,7 @@ const darray_string *hkl_engine_parameters_get(const HklEngine *self)
 /**
  * hkl_engine_parameters_set: (skip)
  * @self: the this ptr
- * @values: (array length=n_values): the values to set 
+ * @values: (array length=n_values): the values to set
  * @n_values: the size of the values array.
  * @error: (allow-none): the Error
  *
@@ -309,7 +425,7 @@ void hkl_engine_parameters_randomize(HklEngine *self)
  *
  * get the #HklParameter with the given @name.
  *
- * Returns: (allow-none): retun the parameter or NULL if the engine
+ * Returns: (allow-none): return the parameter or NULL if the engine
  *                        does not contain this parameter.
  **/
 const HklParameter *hkl_engine_parameter_get(const HklEngine *self,
@@ -320,6 +436,7 @@ const HklParameter *hkl_engine_parameter_get(const HklEngine *self,
 	darray_foreach(parameter, self->mode->parameters)
 		if(!strcmp((*parameter)->name, name))
 			return *parameter;
+	return NULL;
 }
 
 /**
@@ -328,6 +445,7 @@ const HklParameter *hkl_engine_parameter_get(const HklEngine *self,
  * @parameter: the parameter to set.
  *
  * set a parameter of the #HklEngine
+ * TODO add an error
  **/
 void hkl_engine_parameter_set(HklEngine *self, const HklParameter *parameter)
 {

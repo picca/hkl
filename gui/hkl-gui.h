@@ -265,7 +265,7 @@ private:
 	Glib::RefPtr<Gtk::ListStore> _pseudoAxeModel;
 
 	ParameterModelColumns _parameterModelColumns;
-	std::map<HklParameter *, Glib::RefPtr<Gtk::ListStore> > _mapPseudoAxeParameterModel;
+	std::map<std::string, Glib::RefPtr<Gtk::ListStore> > _mapPseudoAxeParameterModel;
 
 	SolutionModelColumns *_solutionModelColumns;
 	Glib::RefPtr<Gtk::ListStore> _solutionModel;
