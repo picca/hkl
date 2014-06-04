@@ -210,6 +210,7 @@ HKLAPI void hkl_geometry_wavelength_set(HklGeometry *self, double wavelength) HK
 
 HKLAPI void hkl_geometry_randomize(HklGeometry *self) HKL_ARG_NONNULL(1);
 
+/* TODO after bissecting it seems that this method is slow (to replace) */
 HKLAPI int hkl_geometry_set_values_unit_v(HklGeometry *self, ...) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_geometry_fprintf(FILE *file, const HklGeometry *self) HKL_ARG_NONNULL(1, 2);
