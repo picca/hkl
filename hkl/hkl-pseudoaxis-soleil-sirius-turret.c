@@ -13,9 +13,9 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2013 Synchrotron SOLEIL
- *                    L'Orme des Merisiers Saint-Aubin
- *                    BP 48 91192 GIF-sur-YVETTE CEDEX
+ * Copyright (C) 2013-2014 Synchrotron SOLEIL
+ *                         L'Orme des Merisiers Saint-Aubin
+ *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
