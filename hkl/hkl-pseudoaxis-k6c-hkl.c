@@ -212,10 +212,7 @@ static int _constant_omega_v(const gsl_vector *x, void *params, gsl_vector *f)
 	const double kappa = x->data[1];
 	double omega;
 	HklEngine *engine = params;
-	double omega0;
-	uint shit;
-
-	hkl_parameter_list_values_get(&engine->mode->parameters, &omega0, &shit);
+	double omega0 = darray_item(engine->mode->parameters, 0)->_value;
 
 	CHECK_NAN(x->data, x->size);
 
@@ -237,10 +234,7 @@ static int _constant_chi_v(const gsl_vector *x, void *params, gsl_vector *f)
 	const double kappa = x->data[1];
 	double chi;
 	HklEngine *engine = params;
-	double chi0;
-	uint shit;
-
-	hkl_parameter_list_values_get(&engine->mode->parameters, &chi0, &shit);
+	double chi0 = darray_item(engine->mode->parameters, 0)->_value;
 
 	CHECK_NAN(x->data, x->size);
 
@@ -263,10 +257,7 @@ static int _constant_phi_v(const gsl_vector *x, void *params, gsl_vector *f)
 	const double kphi = x->data[2];
 	double phi;
 	HklEngine *engine = params;
-	double phi0;
-	uint shit;
-
-	hkl_parameter_list_values_get(&engine->mode->parameters, &phi0, &shit);
+	double phi0 = darray_item(engine->mode->parameters, 0)->_value;
 
 	CHECK_NAN(x->data, x->size);
 
@@ -313,8 +304,6 @@ static int _constant_incidence_func(const gsl_vector *x, void *params, gsl_vecto
 	double azimuth;
 	HklEngine *engine = params;
 	HklModeAutoWithInit *mode = container_of(engine->mode, HklModeAutoWithInit, mode);
-	double parameters[5];
-	uint shit;
 	HklVector n;
 	double incidence0;
 	double azimuth0;
@@ -325,13 +314,11 @@ static int _constant_incidence_func(const gsl_vector *x, void *params, gsl_vecto
 	RUBh_minus_Q(x->data, params, f->data);
 
 	/* get the mode parameters */
-	hkl_parameter_list_values_get(&engine->mode->parameters,
-				      parameters, &shit);
-	n.data[0] = parameters[0];
-	n.data[1] = parameters[1];
-	n.data[2] = parameters[2];
-	incidence0 = parameters[3];
-	azimuth0 = parameters[4];
+	n.data[0] = darray_item(engine->mode->parameters, 0)->_value;
+	n.data[1] = darray_item(engine->mode->parameters, 1)->_value;
+	n.data[2] = darray_item(engine->mode->parameters, 2)->_value;
+	incidence0 = darray_item(engine->mode->parameters, 3)->_value;
+	azimuth0 = darray_item(engine->mode->parameters, 4)->_value;
 
 	/* compute the two angles */
 

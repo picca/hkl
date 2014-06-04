@@ -64,77 +64,6 @@ GHashTable *hkl_factories(void)
 	return table;
 }
 
-/********************/
-/* HklParameterList */
-/********************/
-
-#define HKL_PARAMETER_LIST_ERROR hkl_parameter_list_error_quark ()
-
-GQuark hkl_parameter_list_error_quark (void)
-{
-	return g_quark_from_static_string ("hkl-parameter-list-error-quark");
-}
-
-typedef enum {
-	HKL_PARAMETER_LIST_ERROR_VALUES_SET /* can not set the parameter list values */
-} HklParameterListError;
-
-/**
- * hkl_parameter_list_values_unit_set_binding:
- * @self: the this ptr
- * @values: (array length=len): the values to set
- * @len: the length of the values
- * @error: error set if something goes wrong
- *
- * set the parameter list with the given values
- *
- * Rename to: hkl_parameter_list_values_unit_set
- *
- * Return value: true if succeed or false otherwise
- **/
-gboolean hkl_parameter_list_values_unit_set_binding(HklParameterList *self,
-						    double values[], uint len,
-						    GError **error)
-{
-	HklError *err = NULL;
-
-	g_return_val_if_fail(error == NULL ||*error == NULL, FALSE);
-
-	if(!hkl_parameter_list_values_unit_set(self,
-					       values, len, &err)){
-		g_assert(&err == NULL || err != NULL);
-
-		g_set_error(error,
-			    HKL_PARAMETER_LIST_ERROR,
-			    HKL_PARAMETER_LIST_ERROR_VALUES_SET,
-			    strdup(err->message));
-
-		hkl_error_clear(&err);
-
-		return FALSE;
-	}
-	return TRUE;
-}
-
-/**
- * hkl_parameter_list_parameters:
- * @self: the this ptr
- *
- * Return value: (element-type HklParameter) (transfer container): list of parameters
- *               free the list with g_slist_free when done.
- **/
-GSList* hkl_parameter_list_parameters(HklParameterList *self)
-{
-	GSList *list = NULL;
-	HklParameter **parameter;
-
-	darray_foreach(parameter, *self){
-		list = g_slist_append(list, *parameter);
-	}
-
-	return list;
-}
-
 /************/
 /* Geometry */
 /************/
@@ -336,7 +265,7 @@ gboolean hkl_engine_set_values_unit(HklEngine *self,
 				    double values[], unsigned int len,
 				    GError **error)
 {
-	HklParameter *parameter;
+	HklParameter **pseudo_axis;
 	uint i = 0;
 	HklError *err = NULL;
 
@@ -345,18 +274,19 @@ gboolean hkl_engine_set_values_unit(HklEngine *self,
 	if(len != self->info->n_pseudo_axes)
 		return FALSE;
 
-	if(!hkl_parameter_list_values_unit_set(&self->pseudo_axes,
-					       values, len, &err)){
-		g_assert(&err == NULL || err != NULL);
+	darray_foreach(pseudo_axis, self->pseudo_axes){
+		if(!hkl_parameter_value_unit_set(*pseudo_axis, values[i++], &err)){
+			g_assert(&err == NULL || err != NULL);
 
-		g_set_error(error,
-			    HKL_ENGINE_ERROR,
-			    HKL_ENGINE_ERROR_SET,
-			    strdup(err->message));
+			g_set_error(error,
+				    HKL_ENGINE_ERROR,
+				    HKL_ENGINE_ERROR_SET,
+				    strdup(err->message));
 
-		hkl_error_clear(&err);
+			hkl_error_clear(&err);
 
-		return FALSE;
+			return FALSE;
+		}
 	}
 
 	if(!hkl_engine_set(self, &err)){

@@ -74,8 +74,6 @@ int _psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 		f->data[2] = 1;
 		f->data[3] = 1;
 	}else{
-		uint len;
-
 		/* R * UB */
 		/* for now the 0 holder is the sample holder. */
 		sample_holder = darray_item(engine->geometry->holders, 0);
@@ -98,7 +96,9 @@ int _psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 
 		/* compute hkl1 in the laboratory referentiel */
 		/* for now the 0 holder is the sample holder. */
-		hkl_parameter_list_values_get(&engine->mode->parameters, hkl1.data, &len);
+		for(unsigned int i=0; i<3; ++i)
+			hkl1.data[i] = darray_item(engine->mode->parameters, i)->_value;
+
 		hkl_matrix_times_vector(&engine->sample->UB, &hkl1);
 		hkl_vector_rotated_quaternion(&hkl1, &sample_holder->q);
 
@@ -191,8 +191,6 @@ static int hkl_mode_get_psi_real(HklMode *base,
 		hkl_error_set(error, "can not compute psi when hkl is null (kf == ki)");
 		return HKL_FALSE;
 	}else{
-		uint shit;
-
 		/* needed for a problem of precision */
 		hkl_vector_normalize(&Q);
 
@@ -204,7 +202,9 @@ static int hkl_mode_get_psi_real(HklMode *base,
 		/* compute hkl1 in the laboratory referentiel */
 		/* the geometry was already updated in the detector compute kf */
 		/* for now the 0 holder is the sample holder. */
-		hkl_parameter_list_values_get(&base->parameters, hkl1.data, &shit);
+		for(unsigned int i=0; i<3; ++i)
+			hkl1.data[i] = darray_item(base->parameters, i)->_value;
+
 		hkl_matrix_times_vector(&sample->UB, &hkl1);
 		hkl_vector_rotated_quaternion(&hkl1, &darray_item(geometry->holders, 0)->q);
 

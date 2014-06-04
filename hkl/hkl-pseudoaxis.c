@@ -99,12 +99,18 @@ HklParameter *hkl_parameter_new_pseudo_axis(
 void hkl_mode_fprintf(FILE *f, const HklMode *self)
 {
 	unsigned int i;
+	HklParameter **parameter;
 
 	fprintf(f, "mode: \"%s\"\n", self->info->name);
 	fprintf(f, "initialize: %p\n", self->ops->init);
 	fprintf(f, "get: %p\n", self->ops->get);
 	fprintf(f, "set: %p\n", self->ops->set);
-	hkl_parameter_list_fprintf(f, &self->parameters);
+
+	darray_foreach(parameter, self->parameters){
+		fprintf(f, "\n     ");
+		hkl_parameter_fprintf(f, *parameter);
+	}
+
 	if(self->info->axes){
 		fprintf(f, "axes names:");
 		for(i=0; i<self->info->n_axes; ++i)
@@ -610,6 +616,8 @@ int hkl_engine_get(HklEngine *self, HklError **error)
  **/
 void hkl_engine_fprintf(FILE *f, const HklEngine *self)
 {
+	HklParameter **pseudo_axis;
+
 	fprintf(f, "\nPseudoAxesEngine : \"%s\"", self->info->name);
 
 	/* mode */
@@ -625,7 +633,10 @@ void hkl_engine_fprintf(FILE *f, const HklEngine *self)
 	}
 
 	/* the pseudoAxes part */
-	hkl_parameter_list_fprintf(f, &self->pseudo_axes);
+	darray_foreach(pseudo_axis, self->pseudo_axes){
+		fprintf(f, "\n     ");
+		hkl_parameter_fprintf(f, *pseudo_axis);
+	}
 
 	if(self->engines->geometries->n_items != 0){
 		fprintf(f, "\n   ");

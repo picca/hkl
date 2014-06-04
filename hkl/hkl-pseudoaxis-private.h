@@ -153,7 +153,13 @@ struct _HklModeOperations
 
 static inline void hkl_mode_free_real(HklMode *self)
 {
-	hkl_parameter_list_free(&self->parameters);
+	HklParameter **parameter;
+
+	darray_foreach(parameter, self->parameters){
+		hkl_parameter_free(*parameter);
+	}
+	darray_free(self->parameters);
+
 	darray_free(self->parameters_names);
 
 	free(self);
@@ -255,6 +261,7 @@ static inline void hkl_mode_free(HklMode *self)
 static void hkl_engine_release(HklEngine *self)
 {
 	HklMode **mode;
+	HklParameter **pseudo_axis;
 
 	if(self->geometry)
 		hkl_geometry_free(self->geometry);
@@ -274,7 +281,10 @@ static void hkl_engine_release(HklEngine *self)
 	darray_free(self->axes);
 
 	/* release the HklPseudoAxe memory */
-	hkl_parameter_list_free(&self->pseudo_axes);
+	darray_foreach(pseudo_axis, self->pseudo_axes){
+		hkl_parameter_free(*pseudo_axis);
+	}
+	darray_free(self->pseudo_axes);
 
 	darray_free(self->pseudo_axes_names);
 
