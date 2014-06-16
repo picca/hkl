@@ -291,13 +291,13 @@ static void petra3(void)
 	hkl_engine_select_mode(hkl, "psi_constant_vertical");
 	hkl_engine_set_values_v(hkl, 1, 1, 0);
 	/* set the mode parameters 0, 0, 1, 90. */
-	hkl_engine_parameters_set(hkl, hkl_p, ARRAY_SIZE(hkl_p), NULL);
+	hkl_engine_parameters_values_set(hkl, hkl_p, ARRAY_SIZE(hkl_p), NULL);
 
 	/* set the psi pseudo axis */
 	psi = hkl_engine_list_engine_get_by_name(engines, "psi");
 	hkl_engine_select_mode(psi, "psi_constant_vertical");
 	/* set the mode parameters 0, 0, 1 */
-	hkl_engine_parameters_set(psi, psi_p, ARRAY_SIZE(psi_p), NULL);
+	hkl_engine_parameters_values_set(psi, psi_p, ARRAY_SIZE(psi_p), NULL);
 
 	/* Compute the hkl [1, 1, 0] in psi_constant_vertical mode with */
 	/* h2,k2,l2= [0, 0,1] and psi = 90 */
@@ -388,12 +388,12 @@ static void petra3_2(void)
 	hkl_p[1] = 1;
 	hkl_p[2] = 0;
 	hkl_p[3] = PSI = 0;
-	hkl_engine_parameters_set(hkl, hkl_p, ARRAY_SIZE(hkl_p), NULL);
+	hkl_engine_parameters_values_set(hkl, hkl_p, ARRAY_SIZE(hkl_p), NULL);
 	/* for psi */
 	psi_p[0] = 0;
 	psi_p[1] = 1;
 	psi_p[2] = 0;
-	hkl_engine_parameters_set(psi, psi_p, ARRAY_SIZE(psi_p), NULL);
+	hkl_engine_parameters_values_set(psi, psi_p, ARRAY_SIZE(psi_p), NULL);
 
 	/* freeze 0; ca 0 0 2 */
 	hkl_engine_set_values_v(hkl, 0., 0., 2.);
@@ -422,7 +422,7 @@ static void petra3_2(void)
 
 	/* freeze 45; ca 0 0 2 */
 	hkl_p[3] = PSI = 45.0 * HKL_DEGTORAD;
-	hkl_engine_parameters_set(hkl, hkl_p, ARRAY_SIZE(hkl_p), NULL);
+	hkl_engine_parameters_values_set(hkl, hkl_p, ARRAY_SIZE(hkl_p), NULL);
 	hkl_engine_set_values_v(hkl, 0., 0., 2.);
 
 	/*      del              th               chi              phi */
@@ -454,14 +454,14 @@ static void petra3_2(void)
 	hkl_p[2] = 0;
 	hkl_p[3] = PSI = 0;
 	/* for hkl */
-	hkl_engine_parameters_set(hkl, hkl_p, ARRAY_SIZE(hkl_p), NULL);
+	hkl_engine_parameters_values_set(hkl, hkl_p, ARRAY_SIZE(hkl_p), NULL);
 	hkl_engine_set_values_v(hkl, 0., 0., 2.);
 
 	/* for psi */
 	psi_p[0] = 1;
 	psi_p[1] = 1;
 	psi_p[2] = 0;
-	hkl_engine_parameters_set(psi, psi_p, ARRAY_SIZE(psi_p), NULL);
+	hkl_engine_parameters_values_set(psi, psi_p, ARRAY_SIZE(psi_p), NULL);
 
 	/*      del              th               chi              phi */
 	/*      23.37681         11.68839         90               -90 */
@@ -488,7 +488,7 @@ static void petra3_2(void)
 	/* freeze 45; ca 0 0 2 */
 	hkl_p[3] = PSI = 45 * HKL_DEGTORAD;
 	/* for hkl */
-	hkl_engine_parameters_set(hkl, hkl_p, ARRAY_SIZE(hkl_p), NULL);
+	hkl_engine_parameters_values_set(hkl, hkl_p, ARRAY_SIZE(hkl_p), NULL);
 	hkl_engine_set_values_v(hkl, 0., 0., 2.);
 
 	/*      del              th               chi              phi */

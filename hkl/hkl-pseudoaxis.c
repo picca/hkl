@@ -377,7 +377,7 @@ const darray_string *hkl_engine_parameters_names_get(const HklEngine *self)
 }
 
 /**
- * hkl_engine_parameters_set: (skip)
+ * hkl_engine_parameters_values_set: (skip)
  * @self: the this ptr
  * @values: (array length=n_values): the values to set
  * @n_values: the size of the values array.
@@ -387,9 +387,9 @@ const darray_string *hkl_engine_parameters_names_get(const HklEngine *self)
  *
  * Returns: true if no-error was set or false otherwise.
  **/
-unsigned int hkl_engine_parameters_set(HklEngine *self,
-				       double values[], size_t n_values,
-				       HklError **error)
+unsigned int hkl_engine_parameters_values_set(HklEngine *self,
+					      double values[], size_t n_values,
+					      HklError **error)
 {
 	unsigned int res = HKL_TRUE;
 

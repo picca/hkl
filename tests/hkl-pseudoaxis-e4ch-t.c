@@ -169,28 +169,28 @@ static void psi_getter(void)
 	hkl_engine_initialize(engine, NULL);
 
 	hkl[0] = 1, hkl[1] = 0, hkl[2] = 0;
-	hkl_engine_parameters_set(engine, hkl, ARRAY_SIZE(hkl), NULL);
+	hkl_engine_parameters_values_set(engine, hkl, ARRAY_SIZE(hkl), NULL);
 	res &= hkl_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, 0.);
 
 	/* here Q and <h, k, l>_ref are colinear must FAIL */
 	hkl[0] = 0, hkl[1] = 1, hkl[2] = 0;
-	hkl_engine_parameters_set(engine, hkl, ARRAY_SIZE(hkl), NULL);
+	hkl_engine_parameters_values_set(engine, hkl, ARRAY_SIZE(hkl), NULL);
 	res &= !hkl_engine_get(engine, NULL);
 
 	hkl[0] = -1, hkl[1] = 0, hkl[2] = 0;
-	hkl_engine_parameters_set(engine, hkl, ARRAY_SIZE(hkl), NULL);
+	hkl_engine_parameters_values_set(engine, hkl, ARRAY_SIZE(hkl), NULL);
 	res &= hkl_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, 180. * HKL_DEGTORAD);
 
 	hkl[0] = 0, hkl[1] = 0, hkl[2] = -1;
-	hkl_engine_parameters_set(engine, hkl, ARRAY_SIZE(hkl), NULL);
+	hkl_engine_parameters_values_set(engine, hkl, ARRAY_SIZE(hkl), NULL);
 	res &= hkl_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, 90. * HKL_DEGTORAD);
 
 	/* Q and <h, k, l>_ref are colinear so must FAIL */
 	hkl[0] = 0, hkl[1] = -1, hkl[2] = 0;
-	hkl_engine_parameters_set(engine, hkl, ARRAY_SIZE(hkl), NULL);
+	hkl_engine_parameters_values_set(engine, hkl, ARRAY_SIZE(hkl), NULL);
 	res &= !hkl_engine_get(engine, NULL);
 
 	ok(res == HKL_TRUE, "psi getter");
@@ -231,7 +231,7 @@ static void psi_setter(void)
 
 	/* the init part */
 	hkl_geometry_set_values_unit_v(geometry, 30., 0., 0., 60.);
-	hkl_engine_parameters_set(engine, hkl, ARRAY_SIZE(hkl), NULL);
+	hkl_engine_parameters_values_set(engine, hkl, ARRAY_SIZE(hkl), NULL);
 	hkl_engine_initialize(engine, NULL);
 
 	darray_foreach(mode, *modes){
@@ -361,7 +361,7 @@ static void hkl_psi_constant_horizontal(void)
 
 	/* the init part */
 	hkl_geometry_set_values_unit_v(geometry, 30., 0., 0., 60.);
-	hkl_engine_parameters_set(engine, hkl2, ARRAY_SIZE(hkl2), NULL);
+	hkl_engine_parameters_values_set(engine, hkl2, ARRAY_SIZE(hkl2), NULL);
 	hkl_engine_initialize(engine, NULL);
 
 	hkl_engine_pseudo_axes_values_set(engine,

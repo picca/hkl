@@ -413,9 +413,9 @@ HKLAPI void hkl_engine_select_mode(HklEngine *self,
 
 HKLAPI const darray_string *hkl_engine_parameters_names_get(const HklEngine *self) HKL_ARG_NONNULL(1);
 
-HKLAPI unsigned int hkl_engine_parameters_set(HklEngine *self,
-					      double values[], size_t n_values,
-					      HklError **error) HKL_ARG_NONNULL(1, 2);
+HKLAPI unsigned int hkl_engine_parameters_values_set(HklEngine *self,
+						     double values[], size_t n_values,
+						     HklError **error) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI void hkl_engine_parameters_randomize(HklEngine *self) HKL_ARG_NONNULL(1);
 
