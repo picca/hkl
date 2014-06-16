@@ -160,6 +160,13 @@ class TestAPI(unittest.TestCase):
             for value in values:
                 self.assertTrue(type(value) is float)
 
+        # check that all engine parameters are reachables
+        for engine in engines.engines_get():
+            for mode in engine.modes_names_get():
+                engine.select_mode(mode)
+                parameters = engine.parameters_names_get()
+                self.assertTrue(type(parameters) is list)
+
     @unittest.skip("for testing figures")
     def test_doc_exemple(self):
         # execfile("../../Documentation/sphinx/source/bindings/python.py")
