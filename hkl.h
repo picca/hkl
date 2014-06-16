@@ -406,7 +406,7 @@ HKLAPI unsigned int hkl_engine_pseudo_axis_set(HklEngine *self,
 					       const HklParameter *parameter,
 					       HklError **error) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI const darray_string *hkl_engine_modes_get(const HklEngine *self) HKL_ARG_NONNULL(1);
+HKLAPI const darray_string *hkl_engine_modes_names_get(const HklEngine *self) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_engine_select_mode(HklEngine *self,
 				   const char *name) HKL_ARG_NONNULL(1, 2);

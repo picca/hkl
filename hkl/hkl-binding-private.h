@@ -60,8 +60,8 @@ HKLAPI const HklGeometry *hkl_geometry_list_item_geometry(const HklGeometryListI
 /* HklEngine */
 /*************/
 
-HKLAPI const char **hkl_engine_modes_get_binding(const HklEngine *self,
-						 size_t *length) HKL_ARG_NONNULL(1, 2);
+HKLAPI const char **hkl_engine_modes_names_get_binding(const HklEngine *self,
+						       size_t *length) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI const char **hkl_engine_parameters_get_binding(const HklEngine *self,
 						      size_t *length) HKL_ARG_NONNULL(1, 2);

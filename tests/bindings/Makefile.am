@@ -6,4 +6,7 @@ EXTRA_DIST = $(TESTS)
 ipython:
 	env GI_TYPELIB_PATH=$(top_builddir)/hkl $(LIBTOOL) --mode=execute -dlopen $(top_builddir)/hkl/libhkl.la ipython
 
+gdb:
+	env GI_TYPELIB_PATH=$(top_builddir)/hkl $(LIBTOOL) --mode=execute -dlopen $(top_builddir)/hkl/libhkl.la gdb python
+
 CLEANFILES = trajectories.pdf

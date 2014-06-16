@@ -355,12 +355,12 @@ void hkl_engine_mode_set(HklEngine *self, HklMode *mode)
 }
 
 /**
- * hkl_engine_modes_get:
+ * hkl_engine_modes_names_get:
  * @self: the this ptr
  *
  * Return value: (type gpointer): All the modes supported by the #HklEngine
  **/
-const darray_string *hkl_engine_modes_get(const HklEngine *self)
+const darray_string *hkl_engine_modes_names_get(const HklEngine *self)
 {
 	return &self->mode_names;
 }
