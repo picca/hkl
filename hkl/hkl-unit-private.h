@@ -22,9 +22,9 @@
 #ifndef __HKL_UNIT_PRIVATE_H__
 #define __HKL_UNIT_PRIVATE_H__
 
-#include "hkl.h"                        // for HKL_BEGIN_DECLS, etc
+#include "hkl.h"                        // for G_BEGIN_DECLS, etc
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
 
 typedef struct _HklUnit HklUnit;
 
@@ -53,6 +53,6 @@ extern int hkl_unit_compatible(const HklUnit *self, const HklUnit *unit);
 
 extern double hkl_unit_factor(const HklUnit *self, const HklUnit *unit);
 
-HKL_END_DECLS
+G_END_DECLS
 
 #endif /* __HKL_UNIT_PRIVATE_H__ */

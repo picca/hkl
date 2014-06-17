@@ -28,15 +28,6 @@
 #include <glib.h>                       // for g_set_error, GError etc
 #include <hkl/ccan/darray/darray.h>     // for darray
 
-/* Guard C code in headers, while including them from C++ */
-#ifdef __cplusplus
-# define HKL_BEGIN_DECLS  extern "C" {
-# define HKL_END_DECLS    }
-#else
-# define HKL_BEGIN_DECLS
-# define HKL_END_DECLS
-#endif
-
 /* deprecated */
 #if    __GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 1)
 # define HKL_DEPRECATED __attribute__((__deprecated__))
@@ -92,7 +83,7 @@
 
 #define _darray(type) type *item; size_t size; size_t alloc
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
 
 /**********/
 /* Matrix */
@@ -478,6 +469,6 @@ HKLAPI HklGeometry *hkl_factory_create_new_geometry(const HklFactory *self) HKL_
 
 HKLAPI HklEngineList *hkl_factory_create_new_engine_list(const HklFactory *self) HKL_ARG_NONNULL(1);
 
-HKL_END_DECLS
+G_END_DECLS
 
 #endif

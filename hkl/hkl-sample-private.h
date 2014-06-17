@@ -28,7 +28,7 @@
 #include "hkl-vector-private.h"         // for HklVector
 #include "hkl.h"                        // for HklParameter, etc
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
 
 /*************/
 /* HklSample */
@@ -65,6 +65,6 @@ extern HklSampleReflection *hkl_sample_reflection_new_copy(const HklSampleReflec
 
 extern void hkl_sample_reflection_free(HklSampleReflection *self);
 
-HKL_END_DECLS
+G_END_DECLS
 
 #endif

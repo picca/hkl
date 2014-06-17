@@ -24,7 +24,7 @@
 
 #include "hkl.h"
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
 
 extern int check_pseudoaxes_v(HklEngine *engine, ...);
 
@@ -33,6 +33,6 @@ extern int check_pseudoaxes(HklEngine *engine,
 
 extern void hkl_engine_set_values_v(HklEngine *self, ...);
 
-HKL_END_DECLS
+G_END_DECLS
 
 #endif /* __HKL_TAP_H__ */

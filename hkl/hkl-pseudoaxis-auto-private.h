@@ -33,7 +33,7 @@
 #include "hkl/ccan/container_of/container_of.h"  // for container_of
 #include "hkl/ccan/array_size/array_size.h"  // ARRAY_SIZE
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
 
 typedef struct _HklFunction HklFunction;
 typedef struct _HklModeAutoInfo HklModeAutoInfo;
@@ -165,6 +165,6 @@ static int hkl_mode_auto_with_init_init_real(HklMode *mode,
 extern HklMode *hkl_mode_auto_with_init_new(const HklModeAutoInfo *info,
 					    const HklModeOperations *ops);
 
-HKL_END_DECLS
+G_END_DECLS
 
 #endif /* __HKL_PSEUDOAXIS_AUTO_H__ */

@@ -22,12 +22,12 @@
 #ifndef __HKL_PSEUDOAXIS_PETRA3_H__
 #define __HKL_PSEUDOAXIS_PETRA3_H__
 
-#include "hkl.h"                        // for HklEngine, HKL_BEGIN_DECLS, etc
+#include "hkl.h"                        // for HklEngine, G_BEGIN_DECLS, etc
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
 
 extern HklEngine *hkl_engine_petra3_p09_eh2_hkl_new(void);
 
-HKL_END_DECLS
+G_END_DECLS
 
 #endif /* __HKL_PSEUDOAXIS_PETRA3_H__ */

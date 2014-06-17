@@ -27,7 +27,7 @@
 #include "hkl-vector-private.h"         // for HklVector, HklQuaternion
 #include "hkl.h"                        // for HklParameter, etc
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
 
 typedef struct _HklAxis HklAxis;
 
@@ -39,6 +39,6 @@ struct _HklAxis {
 
 extern HklParameter *hkl_parameter_new_axis(char const *name, HklVector const *axis_v);
 
-HKL_END_DECLS
+G_END_DECLS
 
 #endif /* __HKL_AXIS_PRIVATE_H__ */

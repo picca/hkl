@@ -23,7 +23,7 @@
 #define __HKL_MACROS_PRIVATE_H__
 
 #include <assert.h>                     // for assert
-#include "hkl.h"                        // for HKL_BEGIN_DECLS, etc
+#include "hkl.h"                        // for G_BEGIN_DECLS, etc
 
 /* specific part for the eulerian -> kappa conversion */
 #define HKL_EULERIAN_KAPPA_SOLUTION 1
@@ -75,13 +75,13 @@
 
 #define hkl_return_val_if_fail(expr, val) if (expr) { } else return val
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
 
 extern void hkl_printbt(void);
 
 void *_hkl_malloc(int size, const char *error);
 
-HKL_END_DECLS
+G_END_DECLS
 
 /* malloc method */
 #define HKL_MALLOC(type) (type *)_hkl_malloc(sizeof(type), "Can not allocate memory for a " #type)

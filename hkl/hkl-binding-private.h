@@ -26,7 +26,7 @@
 #include <sys/types.h>                  // for uint
 #include "hkl.h"                        // for HKLAPI, HklGeometry, etc
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
 
 /**************/
 /* HklFactory */
@@ -90,6 +90,6 @@ HKLAPI HklSampleReflection *hkl_sample_add_reflection_binding(HklSample *self,
 							      const HklDetector *detector,
 							      double h, double k, double l);
 
-HKL_END_DECLS
+G_END_DECLS
 
 #endif /* __HKL_BINDING_PRIVATE_H__ */

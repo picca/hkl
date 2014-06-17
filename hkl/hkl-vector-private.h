@@ -23,9 +23,9 @@
 #define __HKL_VECTOR_PRIVATE_H__
 
 #include <stdio.h>                      // for FILE
-#include "hkl.h"                        // for HKL_BEGIN_DECLS, etc
+#include "hkl.h"                        // for G_BEGIN_DECLS, etc
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
 
 /* forward declaration begin */
 typedef struct _HklQuaternion HklQuaternion;
@@ -124,6 +124,6 @@ extern void hkl_vector_project_on_plan_with_point(HklVector *self,
 						  const HklVector *normal,
 						  const HklVector *point);
 
-HKL_END_DECLS
+G_END_DECLS
 
 #endif

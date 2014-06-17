@@ -24,10 +24,10 @@
 
 #include "hkl.h"
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
 
 extern HklEngine *hkl_engine_soleil_sirius_turret_hkl_new(void);
 
-HKL_END_DECLS
+G_END_DECLS
 
 #endif /* __HKL_PSEUDOAXIS_SOLEIL_SIRIUS_TURRET_PRIVATE_H__ */

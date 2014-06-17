@@ -32,7 +32,7 @@
 #include "hkl/ccan/darray/darray.h"     // for darray
 #include "hkl/ccan/list/list.h"
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
 
 typedef struct _HklHolder HklHolder;
 typedef void (* HklGeometryListMultiplyFunction) (HklGeometryList *self,
@@ -149,6 +149,6 @@ extern HklGeometryListItem *hkl_geometry_list_item_new_copy(const HklGeometryLis
 
 extern void hkl_geometry_list_item_free(HklGeometryListItem *self);
 
-HKL_END_DECLS
+G_END_DECLS
 
 #endif /* __HKL_GEOMETRY_PRIVATE_H__ */

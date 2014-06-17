@@ -188,12 +188,12 @@ in the file ``include/hkl/hkl-pseudoaxis-e6c.h`` which contain this::
 
    #include <hkl/hkl-pseudoaxis-auto.h>
 
-   HKL_BEGIN_DECLS
+   G_BEGIN_DECLS
 
    extern HklEngine *hkl_engine_e6c_hkl_new(void);
    extern HklEngine *hkl_engine_e6c_psi_new(void);
 
-   HKL_END_DECLS
+   G_END_DECLS
 
    #endif /* __HKL_PSEUDOAXIS_E6C_H__ */
 

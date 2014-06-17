@@ -33,7 +33,7 @@
 #include "hkl.h"                        // for HklEngine, HklMode, etc
 #include "hkl/ccan/darray/darray.h"     // for darray_foreach, etc
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
 
 typedef struct _HklModeOperations HklModeOperations;
 typedef struct _HklModeInfo HklModeInfo;
@@ -395,6 +395,6 @@ extern int hkl_engine_list_add(HklEngineList *self,
 
 extern void hkl_engine_list_clear(HklEngineList *self);
 
-HKL_END_DECLS
+G_END_DECLS
 
 #endif /* __HKL_PSEUDOAXIS_PRIVATE_H__ */

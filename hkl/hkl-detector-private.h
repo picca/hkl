@@ -27,7 +27,7 @@
 #include "hkl-vector-private.h"         // for HklVector
 #include "hkl.h"                        // for HklDetector, etc
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
 
 struct _HklDetector
 {
@@ -45,6 +45,6 @@ extern void hkl_detector_attach_to_holder(HklDetector *self,
 extern int hkl_detector_compute_kf(HklDetector const *self, HklGeometry *g,
 				   HklVector *kf) HKL_ARG_NONNULL(1, 2, 3);
 
-HKL_END_DECLS
+G_END_DECLS
 
 #endif /* __HKL_DETECTOR_PRIVATE_H__ */

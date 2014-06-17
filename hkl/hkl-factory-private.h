@@ -25,10 +25,10 @@
 #include "hkl.h"
 #include "hkl/ccan/autodata/autodata.h"
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
 
 AUTODATA_TYPE(factories, HklFactory);
 
-HKL_END_DECLS
+G_END_DECLS
 
 #endif /* __HKL_FACTORY_H__ */

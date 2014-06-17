@@ -26,7 +26,7 @@
 
 #include "hkl.h"
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
 
 struct _HklLattice
 {
@@ -44,6 +44,6 @@ extern void hkl_lattice_randomize(HklLattice *self);
 
 extern void hkl_lattice_fprintf(FILE *f, const HklLattice *self);
 
-HKL_END_DECLS
+G_END_DECLS
 
 #endif /* __HKL_LATTICE_PRIVATE_H__ */

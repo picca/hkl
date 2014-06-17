@@ -22,9 +22,9 @@
 #ifndef _HKL_INTERVAL_PRIVATE_H
 #define _HKL_INTERVAL_PRIVATE_H
 
-#include "hkl.h"                        // for HKL_BEGIN_DECLS, etc
+#include "hkl.h"                        // for G_BEGIN_DECLS, etc
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
 
 typedef struct _HklInterval HklInterval;
 
@@ -72,6 +72,6 @@ extern double hkl_interval_length(const HklInterval *self);
 
 extern void hkl_interval_angle_restrict_symm(HklInterval *self);
 
-HKL_END_DECLS
+G_END_DECLS
 
 #endif

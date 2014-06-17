@@ -31,7 +31,7 @@
 #include "hkl-unit-private.h"           // for HklUnit, hkl_unit_factor
 #include "hkl.h"                        // for HklParameter, HKL_TRUE, etc
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
 
 typedef struct _HklParameterOperations HklParameterOperations;
 
@@ -200,6 +200,6 @@ extern void hkl_parameter_fprintf(FILE *f, HklParameter *self);
 
 typedef darray(HklParameter *) darray_parameter;
 
-HKL_END_DECLS
+G_END_DECLS
 
 #endif /* __HKL_PARAMETER_PRIVATE_H__ */

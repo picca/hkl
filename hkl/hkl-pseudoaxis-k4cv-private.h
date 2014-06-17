@@ -22,13 +22,13 @@
 #ifndef __HKL_PSEUDOAXIS_K4CV_H__
 #define __HKL_PSEUDOAXIS_K4CV_H__
 
-#include "hkl.h"                        // for HklEngine, HKL_BEGIN_DECLS, etc
+#include "hkl.h"                        // for HklEngine, G_BEGIN_DECLS, etc
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
 
 extern HklEngine *hkl_engine_k4cv_hkl_new(void);
 extern HklEngine *hkl_engine_k4cv_psi_new(void);
 
-HKL_END_DECLS
+G_END_DECLS
 
 #endif /* __HKL_PSEUDOAXIS_K4CV_H__ */
