@@ -25,6 +25,7 @@
 #include <math.h>                       // for M_PI
 #include <stddef.h>                     // for size_t
 #include <stdio.h>                      // for FILE
+#include <glib.h>                       // for g_set_error, GError etc
 #include <hkl/ccan/darray/darray.h>     // for darray
 
 /* Guard C code in headers, while including them from C++ */
@@ -120,14 +121,6 @@ HKLAPI int hkl_matrix_cmp(const HklMatrix *self, const HklMatrix *m) HKL_ARG_NON
 
 HKLAPI void hkl_matrix_times_matrix(HklMatrix *self, const HklMatrix *m) HKL_ARG_NONNULL(1, 2);
 
-/*********/
-/* Error */
-/*********/
-
-typedef struct _HklError HklError;
-
-HKLAPI const char *hkl_error_message_get(const HklError *self) HKL_ARG_NONNULL(1);
-
 /*************/
 /* Parameter */
 /*************/
@@ -145,12 +138,12 @@ HKLAPI const char *hkl_parameter_name_get(const HklParameter *self) HKL_ARG_NONN
 HKLAPI double hkl_parameter_value_get(const HklParameter *self) HKL_ARG_NONNULL(1);
 
 HKLAPI int hkl_parameter_value_set(HklParameter *self, double value,
-				   HklError **error) HKL_ARG_NONNULL(1);
+				   GError **error) HKL_ARG_NONNULL(1);
 
 HKLAPI double hkl_parameter_value_unit_get(const HklParameter *self) HKL_ARG_NONNULL(1);
 
 HKLAPI int hkl_parameter_value_unit_set(HklParameter *self, double value,
-					HklError **error) HKL_ARG_NONNULL(1);
+					GError **error) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_parameter_min_max_get(const HklParameter *self, double *min, double *max) HKL_ARG_NONNULL(1, 2, 3);
 
@@ -395,7 +388,7 @@ HKLAPI void hkl_engine_pseudo_axes_values_get(HklEngine *self,
 
 HKLAPI unsigned int hkl_engine_pseudo_axes_values_set(HklEngine *self,
 						      double values[], size_t n_values,
-						      HklError **error) HKL_ARG_NONNULL(1, 2);
+						      GError **error) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI void hkl_engine_pseudo_axes_randomize(HklEngine *self) HKL_ARG_NONNULL(1);
 
@@ -404,7 +397,7 @@ HKLAPI const HklParameter *hkl_engine_pseudo_axis_get(const HklEngine *self,
 
 HKLAPI unsigned int hkl_engine_pseudo_axis_set(HklEngine *self,
 					       const HklParameter *parameter,
-					       HklError **error) HKL_ARG_NONNULL(1, 2);
+					       GError **error) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI const darray_string *hkl_engine_modes_names_get(const HklEngine *self) HKL_ARG_NONNULL(1);
 
@@ -415,7 +408,7 @@ HKLAPI const darray_string *hkl_engine_parameters_names_get(const HklEngine *sel
 
 HKLAPI unsigned int hkl_engine_parameters_values_set(HklEngine *self,
 						     double values[], size_t n_values,
-						     HklError **error) HKL_ARG_NONNULL(1, 2);
+						     GError **error) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI void hkl_engine_parameters_randomize(HklEngine *self) HKL_ARG_NONNULL(1);
 
@@ -427,11 +420,11 @@ HKLAPI void hkl_engine_parameter_set(HklEngine *self,
 
 HKLAPI HklEngineList *hkl_engine_engines_get(HklEngine *self) HKL_ARG_NONNULL(1);
 
-HKLAPI int hkl_engine_initialize(HklEngine *self, HklError **error) HKL_ARG_NONNULL(1);
+HKLAPI int hkl_engine_initialize(HklEngine *self, GError **error) HKL_ARG_NONNULL(1);
 
-HKLAPI int hkl_engine_set(HklEngine *self, HklError **error) HKL_ARG_NONNULL(1);
+HKLAPI int hkl_engine_set(HklEngine *self, GError **error) HKL_ARG_NONNULL(1);
 
-HKLAPI int hkl_engine_get(HklEngine *self, HklError **error) HKL_ARG_NONNULL(1);
+HKLAPI int hkl_engine_get(HklEngine *self, GError **error) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_engine_fprintf(FILE *f, const HklEngine *self) HKL_ARG_NONNULL(1, 2);
 

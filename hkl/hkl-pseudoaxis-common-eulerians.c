@@ -24,7 +24,6 @@
 #include <math.h>                       // for sin, asin, M_PI_2, tan, etc
 #include <stdlib.h>                     // for free
 #include <sys/types.h>                  // for uint
-#include "hkl-error-private.h"          // for hkl_error_set
 #include "hkl-geometry-private.h"
 #include "hkl-macros-private.h"         // for HKL_MALLOC
 #include "hkl-parameter-private.h"      // for _HklParameter, etc
@@ -34,6 +33,17 @@
 #include "hkl/ccan/array_size/array_size.h"  // for ARRAY_SIZE
 #include "hkl/ccan/container_of/container_of.h"  // for container_of
 #include "hkl/ccan/darray/darray.h"     // for darray_item
+
+#define HKL_MODE_EULERIANS_ERROR hkl_mode_eulerians_error_quark ()
+
+static GQuark hkl_mode_eulerians_error_quark (void)
+{
+	return g_quark_from_static_string ("hkl-mode-eulerians-error-quark");
+}
+
+typedef enum {
+	HKL_MODE_EULERIANS_ERROR_SET, /* can not set the engine */
+} HklModeEuleriansError;
 
 static int kappa_to_eulerian(const double angles[],
 			     double *omega, double *chi, double *phi,
@@ -84,16 +94,16 @@ static int eulerian_to_kappa(const double omega, const double chi, const double 
 	return status;
 }
 
-/***************************/
+/***********/
 /* HklMode */
-/***************************/
+/***********/
 
 static int hkl_mode_get_eulerians_real(HklMode *self,
 				       HklEngine *engine,
 				       HklGeometry *geometry,
 				       HklDetector *detector,
 				       HklSample *sample,
-				       HklError **error)
+				       GError **error)
 {
 	HklEngineEulerians *eulerians;
 	const double angles[] = {
@@ -127,7 +137,7 @@ static int hkl_mode_set_eulerians_real(HklMode *self,
 				       HklGeometry *geometry,
 				       HklDetector *detector,
 				       HklSample *sample,
-				       HklError **error)
+				       GError **error)
 {
 	double solution;
 	uint n_values = engine->info->n_pseudo_axes;
@@ -140,7 +150,10 @@ static int hkl_mode_set_eulerians_real(HklMode *self,
 			      engine_eulerians->chi->_value,
 			      engine_eulerians->phi->_value,
 			      angles, 50 * HKL_DEGTORAD, solution)){
-		hkl_error_set(error, "unreachable solution : 0° < chi < 50°");
+		g_set_error(error,
+			    HKL_MODE_EULERIANS_ERROR,
+			    HKL_MODE_EULERIANS_ERROR_SET,
+			    "unreachable solution : 0° < chi < 50°");
 		return HKL_FALSE;
 	}else
 		hkl_engine_add_geometry(engine, angles);

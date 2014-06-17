@@ -30,7 +30,6 @@
 #include <stdlib.h>                     // for rand, RAND_MAX
 #include <string.h>                     // for NULL, memset, memcpy
 #include <sys/types.h>                  // for uint
-#include "hkl-error-private.h"          // for hkl_error_set
 #include "hkl-geometry-private.h"       // for hkl_geometry_update
 #include "hkl-macros-private.h"         // for HKL_MALLOC, hkl_assert, etc
 #include "hkl-parameter-private.h"      // for _HklParameter
@@ -41,6 +40,17 @@
 #include "hkl/ccan/darray/darray.h"     // for darray_foreach
 
 /* #define DEBUG */
+
+#define HKL_MODE_AUTO_ERROR hkl_mode_auto_error_quark ()
+
+static GQuark hkl_mode_auto_error_quark (void)
+{
+	return g_quark_from_static_string ("hkl-mode-auto-error-quark");
+}
+
+typedef enum {
+	HKL_MODE_AUTO_ERROR_SET, /* can not set the engine */
+} HklModeAutoError;
 
 /*********************************************/
 /* methods use to solve numerical pseudoAxes */
@@ -386,7 +396,7 @@ int hkl_mode_auto_set_real(HklMode *self,
 			   HklGeometry *geometry,
 			   HklDetector *detector,
 			   HklSample *sample,
-			   HklError **error)
+			   GError **error)
 {
 	size_t i;
 	int ok = HKL_FALSE;
@@ -395,7 +405,10 @@ int hkl_mode_auto_set_real(HklMode *self,
 	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
 	if(!self || !engine || !geometry || !detector || !sample){
-		hkl_error_set(error, "Internal error");
+		g_set_error(error,
+			    HKL_MODE_AUTO_ERROR,
+			    HKL_MODE_AUTO_ERROR_SET,
+			    "Internal error");
 		return HKL_FALSE;
 	}
 
@@ -403,7 +416,10 @@ int hkl_mode_auto_set_real(HklMode *self,
 		ok |= solve_function(engine, info->functions[i]);
 
 	if(!ok){
-		hkl_error_set(error, "none of the functions were solved !!!");
+		g_set_error(error,
+			    HKL_MODE_AUTO_ERROR,
+			    HKL_MODE_AUTO_ERROR_SET,
+			    "none of the functions were solved !!!");
 		return HKL_FALSE;
 	}
 

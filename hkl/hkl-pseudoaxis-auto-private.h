@@ -26,7 +26,6 @@
 #include <stddef.h>                     // for NULL
 #include <sys/types.h>                  // for uint
 #include "hkl-detector-private.h"       // for hkl_detector_new_copy
-#include "hkl-error-private.h"          // for hkl_error_set
 #include "hkl-geometry-private.h"       // for hkl_geometry_new_copy
 #include "hkl-macros-private.h"         // for hkl_assert, etc
 #include "hkl-pseudoaxis-private.h"     // for HklModeOperations, etc
@@ -82,7 +81,7 @@ extern int hkl_mode_auto_set_real(HklMode *self,
 				  HklGeometry *geometry,
 				  HklDetector *detector,
 				  HklSample *sample,
-				  HklError **error);
+				  GError **error);
 
 /***********************/
 /* HklModeAutoWithInit */
@@ -94,6 +93,17 @@ struct _HklModeAutoWithInit {
 	HklDetector *detector;
 	HklSample *sample;
 };
+
+#define HKL_MODE_AUTO_WITH_INIT_ERROR hkl_mode_auto_with_init_error_quark ()
+
+static GQuark hkl_mode_auto_with_init_error_quark (void)
+{
+	return g_quark_from_static_string ("hkl-mode-auto-with-init-error-quark");
+}
+
+typedef enum {
+	HKL_MODE_AUTO_WITH_INIT_ERROR_INIT /* can not set the pseudo axis engine */
+} HklModeError;
 
 #define HKL_MODE_OPERATIONS_AUTO_WITH_INIT_DEFAULTS		\
 	HKL_MODE_OPERATIONS_AUTO_DEFAULTS,			\
@@ -119,14 +129,17 @@ static int hkl_mode_auto_with_init_init_real(HklMode *mode,
 					     HklGeometry *geometry,
 					     HklDetector *detector,
 					     HklSample *sample,
-					     HklError **error)
+					     GError **error)
 {
 	HklModeAutoWithInit *self = container_of(mode, HklModeAutoWithInit, mode);
 
 	hkl_return_val_if_fail(error == NULL || *error == NULL, HKL_FALSE);
 
 	if (!hkl_mode_init_real(mode, engine, geometry, detector, sample, error)){
-		hkl_error_set(error, "internal error");
+		g_set_error(error, 
+			    HKL_MODE_AUTO_WITH_INIT_ERROR,
+			    HKL_MODE_AUTO_WITH_INIT_ERROR_INIT,
+			    "internal error");
 	}
 	hkl_assert(error == NULL || *error == NULL);
 

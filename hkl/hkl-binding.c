@@ -23,8 +23,6 @@
 #include <stdlib.h>                     // for malloc
 #include <string.h>                     // for NULL, strdup
 #include <sys/types.h>                  // for uint
-#include <glib.h>                       // for g_set_error, GError etc
-#include "hkl-error-private.h"          // for hkl_error_clear, _HklError
 #include "hkl-factory-private.h"        // for __start_xautodata_factories, etc
 #include "hkl-geometry-private.h"       // for _HklGeometry, etc
 #include "hkl-parameter-private.h"
@@ -179,18 +177,6 @@ const HklGeometry *hkl_geometry_list_item_geometry(const HklGeometryListItem *se
 /* HklEngine */
 /*************/
 
-#define HKL_ENGINE_ERROR hkl_engine_error_quark ()
-
-GQuark hkl_engine_error_quark (void)
-{
-	return g_quark_from_static_string ("hkl-pseudo-axis-engine-error-quark");
-}
-
-typedef enum {
-	HKL_ENGINE_ERROR_SET /* can not set the pseudo axis engine */
-} HklEngineError;
-
-
 /**
  * hkl_engine_modes_names_get_binding:
  * @self: the this ptr
@@ -267,7 +253,7 @@ gboolean hkl_engine_set_values_unit(HklEngine *self,
 {
 	HklParameter **pseudo_axis;
 	uint i = 0;
-	HklError *err = NULL;
+	GError *err = NULL;
 
 	g_return_val_if_fail(error == NULL ||*error == NULL, FALSE);
 
@@ -283,7 +269,7 @@ gboolean hkl_engine_set_values_unit(HklEngine *self,
 				    HKL_ENGINE_ERROR_SET,
 				    strdup(err->message));
 
-			hkl_error_clear(&err);
+			g_clear_error(&err);
 
 			return FALSE;
 		}
@@ -297,7 +283,7 @@ gboolean hkl_engine_set_values_unit(HklEngine *self,
 			    HKL_ENGINE_ERROR_SET,
 			    strdup(err->message));
 
-		hkl_error_clear(&err);
+		g_clear_error(&err);
 
 		return FALSE;
 	}

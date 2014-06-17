@@ -948,11 +948,11 @@ void HKLWindow::updateReflections(const HklSample *sample,
 	}
 }
 
-void HKLWindow::updateStatusBar(const HklError *error)
+void HKLWindow::updateStatusBar(const GError *error)
 {
 	LOG;
 
-	_statusBar->push(hkl_error_message_get(error));
+	_statusBar->push(error->message);
 }
 
 void HKLWindow::updateCrystalModel(HklSample * sample)

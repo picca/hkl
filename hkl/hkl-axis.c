@@ -74,7 +74,7 @@ static inline void hkl_axis_init_copy_real(HklParameter *self, const HklParamete
 
 static inline unsigned int hkl_axis_set_value_real(
 	HklParameter *self, double value,
-	HklError **error)
+	GError **error)
 {
 	HklAxis *axis = container_of(self, HklAxis, parameter);
 
@@ -88,7 +88,7 @@ static inline unsigned int hkl_axis_set_value_real(
 
 static inline unsigned int hkl_axis_set_value_unit_real(
 	HklParameter *self, double value,
-	HklError **error)
+	GError **error)
 {
 	HklAxis *axis = container_of(self, HklAxis, parameter);
 

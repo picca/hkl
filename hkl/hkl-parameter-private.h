@@ -62,9 +62,9 @@ struct _HklParameterOperations {
 	double         (*get_value_closest)(const HklParameter *self,
 					    const HklParameter *other);
 	unsigned int   (*set_value)(HklParameter *self, double value,
-				    HklError **error);
+				    GError **error);
 	unsigned int   (*set_value_unit)(HklParameter *self, double value,
-					 HklError **error);
+					 GError **error);
 	void           (*set_value_smallest_in_range)(HklParameter *self);
 	void           (*randomize)(HklParameter *self);
 	int            (*is_valid)(const HklParameter *self);
@@ -111,7 +111,7 @@ static inline double hkl_parameter_value_get_closest_real(const HklParameter *se
 
 static inline unsigned int hkl_parameter_value_set_real(
 	HklParameter *self, double value,
-	HklError **error)
+	GError **error)
 {
 	self->_value = value;
 	self->changed = HKL_TRUE;
@@ -121,7 +121,7 @@ static inline unsigned int hkl_parameter_value_set_real(
 
 static inline unsigned int hkl_parameter_value_unit_set_real(
 	HklParameter *self, double value,
-	HklError **error)
+	GError **error)
 {
 	double factor = hkl_unit_factor(self->unit, self->punit);
 

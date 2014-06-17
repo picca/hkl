@@ -93,6 +93,27 @@ struct _HklEngineList
 #define INFO(n, ax) .name = n, .axes=ax, .n_axes=ARRAY_SIZE(ax)
 #define INFO_WITH_PARAMS(name, axes, parameters) INFO(name, axes), .parameters=parameters, .n_parameters=ARRAY_SIZE(parameters)
 
+/* HklEngineError */
+
+#define HKL_ENGINE_ERROR hkl_engine_error_quark ()
+
+static GQuark hkl_engine_error_quark (void)
+{
+	return g_quark_from_static_string ("hkl-engine-error-quark");
+}
+
+typedef enum {
+	HKL_ENGINE_ERROR_PSEUDO_AXES_VALUES_SET, /* can not set the engine pseudo axes values */
+	HKL_ENGINE_ERROR_PSEUDO_AXIS_SET, /* can not set the pseudo axis */
+	HKL_ENGINE_ERROR_PARAMETERS_VALUES_SET, /* can not set the parameters values */
+	HKL_ENGINE_ERROR_INITIALIZE, /* can not initialize the engine */
+	HKL_ENGINE_ERROR_SET, /* can not set the engine */
+	HKL_ENGINE_ERROR_GET, /* can not get the engine */
+} HklEngineError;
+
+
+/* HklEngine */
+
 static inline void set_geometry_axes(HklEngine *engine, const double values[])
 {
 	HklParameter **axis;
@@ -130,19 +151,19 @@ struct _HklModeOperations
 		     HklGeometry *geometry,
 		     HklDetector *detector,
 		     HklSample *sample,
-		     HklError **error);
+		     GError **error);
 	int (* get)(HklMode *self,
 		    HklEngine *engine,
 		    HklGeometry *geometry,
 		    HklDetector *detector,
 		    HklSample *sample,
-		    HklError **error);
+		    GError **error);
 	int (* set)(HklMode *self,
 		    HklEngine *engine,
 		    HklGeometry *geometry,
 		    HklDetector *detector,
 		    HklSample *sample,
-		    HklError **error);
+		    GError **error);
 };
 
 #define HKL_MODE_OPERATIONS_DEFAULTS		\
@@ -170,7 +191,7 @@ static int hkl_mode_init_real(HklMode *mode,
 			      HklGeometry *geometry,
 			      HklDetector *detector,
 			      HklSample *sample,
-			      HklError **error)
+			      GError **error)
 {
 	if (!self || !mode || !geometry || !detector || !sample)
 		return HKL_FALSE;
@@ -186,7 +207,7 @@ static int hkl_mode_get_real(HklMode *self,
 			     HklGeometry *geometry,
 			     HklDetector *detector,
 			     HklSample *sample,
-			     HklError **error)
+			     GError **error)
 {
 	return HKL_TRUE;
 }
@@ -196,7 +217,7 @@ static int hkl_mode_set_real(HklMode *self,
 			     HklGeometry *geometry,
 			     HklDetector *detector,
 			     HklSample *sample,
-			     HklError **error)
+			     GError **error)
 {
 	return HKL_TRUE;
 }

@@ -25,7 +25,6 @@
 #include <string.h>                     // for NULL, strcmp
 #include <sys/types.h>                  // for uint
 #include "hkl-detector-private.h"       // for hkl_detector_new_copy
-#include "hkl-error-private.h"          // for hkl_error_set
 #include "hkl-geometry-private.h"       // for _HklGeometryList, etc
 #include "hkl-macros-private.h"         // for hkl_assert, HKL_MALLOC, etc
 #include "hkl-parameter-private.h"      // for hkl_parameter_list_fprintf, etc
@@ -256,13 +255,16 @@ void hkl_engine_pseudo_axes_values_get(HklEngine *self,
  **/
 unsigned int hkl_engine_pseudo_axes_values_set(HklEngine *self,
 					       double values[], size_t n_values,
-					       HklError **error)
+					       GError **error)
 {
 	unsigned int res = HKL_TRUE;
 
 	if(n_values != self->info->n_pseudo_axes){
-		hkl_error_set(error, "cannot set engine pseudo axes, wrong number of parameter (%d) given, (%d) expected\n",
-			      n_values, self->info->n_pseudo_axes);
+		g_set_error(error,
+			    HKL_ENGINE_ERROR,
+			    HKL_ENGINE_ERROR_PSEUDO_AXES_VALUES_SET,
+			    "cannot set engine pseudo axes, wrong number of parameter (%d) given, (%d) expected\n",
+			    n_values, self->info->n_pseudo_axes);
 		res = HKL_FALSE;
 	} else {
 		for(size_t i=0; i<n_values; ++i){
@@ -317,7 +319,7 @@ const HklParameter *hkl_engine_pseudo_axis_get(const HklEngine *self,
  * hkl_engine_pseudo_axis_set: (skip)
  * @self: the this ptr
  * @parameter: the parameter to set.
- * @error: the #HklError set.
+ * @error: the #GError set.
  *
  * set a parameter of the #HklEngine
  * return value: HKL_TRUE if succeded or HKL_FALSE otherwise.
@@ -325,7 +327,7 @@ const HklParameter *hkl_engine_pseudo_axis_get(const HklEngine *self,
  **/
 unsigned int hkl_engine_pseudo_axis_set(HklEngine *self,
 					const HklParameter *parameter,
-					HklError **error)
+					GError **error)
 {
 	HklParameter **p;
 
@@ -334,9 +336,12 @@ unsigned int hkl_engine_pseudo_axis_set(HklEngine *self,
 			hkl_parameter_init_copy(*p, parameter);
 			return HKL_TRUE;
 		}
-	hkl_error_set(error,
-		      "Can not find the pseudo axis \"%s\" in the \"%s\" engine\n",
-		      parameter->name, self->info->name);
+	g_set_error(error,
+		    HKL_ENGINE_ERROR,
+		    HKL_ENGINE_ERROR_PSEUDO_AXIS_SET,
+		    "Can not find the pseudo axis \"%s\" in the \"%s\" engine\n",
+		    parameter->name, self->info->name);
+
 	return HKL_FALSE;
 }
 
@@ -389,13 +394,16 @@ const darray_string *hkl_engine_parameters_names_get(const HklEngine *self)
  **/
 unsigned int hkl_engine_parameters_values_set(HklEngine *self,
 					      double values[], size_t n_values,
-					      HklError **error)
+					      GError **error)
 {
 	unsigned int res = HKL_TRUE;
 
 	if(n_values != darray_size(self->mode->parameters)){
-		hkl_error_set(error, "cannot set engine parameters, wrong number of parameter (%d) given, (%d) expected\n",
-			      n_values, darray_size(self->mode->parameters));
+		g_set_error(error,
+			    HKL_ENGINE_ERROR,
+			    HKL_ENGINE_ERROR_PARAMETERS_VALUES_SET,
+			    "cannot set engine parameters, wrong number of parameter (%d) given, (%d) expected\n",
+			    n_values, darray_size(self->mode->parameters));
 		res = HKL_FALSE;
 	} else {
 		for(size_t i=0; i<n_values; ++i){
@@ -497,19 +505,22 @@ void hkl_engine_select_mode(HklEngine *self, const char *name)
 /**
  * hkl_engine_initialize: (skip)
  * @self: the HklEngine
- * @error: (allow-none): NULL or an HklError to check for error's during the initialization
+ * @error: (allow-none): NULL or an GError to check for error's during the initialization
  *
  * initialize the HklEngine
  *
  * Returns:
  **/
-int hkl_engine_initialize(HklEngine *self, HklError **error)
+int hkl_engine_initialize(HklEngine *self, GError **error)
 {
 	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
 	if(!self->geometry || !self->detector || !self->sample
 	   || !self->mode) {
-		hkl_error_set(error, "Internal error");
+		g_set_error(error,
+			    HKL_ENGINE_ERROR,
+			    HKL_ENGINE_ERROR_INITIALIZE,
+			    "Internal error");
 		return HKL_FALSE;
 	}
 
@@ -533,19 +544,22 @@ int hkl_engine_initialize(HklEngine *self, HklError **error)
 /**
  * hkl_engine_set: (skip)
  * @self: the HklEngine
- * @error: (allow-none): NULL or an HklError
+ * @error: (allow-none): NULL or an GError
  *
  * use the HklPseudoaxisEngine values to compute the real axes values.
  *
  * Returns:
  **/
-int hkl_engine_set(HklEngine *self, HklError **error)
+int hkl_engine_set(HklEngine *self, GError **error)
 {
 	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
 	if(!self->geometry || !self->detector || !self->sample
 	   || !self->mode || !self->mode->ops->set){
-		hkl_error_set(error, "Internal error");
+		g_set_error(error,
+			    HKL_ENGINE_ERROR,
+			    HKL_ENGINE_ERROR_SET,
+			    "Internal error");
 		return HKL_FALSE;
 	}
 
@@ -567,7 +581,10 @@ int hkl_engine_set(HklEngine *self, HklError **error)
 	hkl_geometry_list_sort(self->engines->geometries, self->engines->geometry);
 
 	if(self->engines->geometries->n_items == 0){
-		hkl_error_set(error, "no remaining solutions");
+		g_set_error(error,
+			    HKL_ENGINE_ERROR,
+			    HKL_ENGINE_ERROR_SET,
+			    "no remaining solutions");
 		return HKL_FALSE;
 	}
 
@@ -577,19 +594,22 @@ int hkl_engine_set(HklEngine *self, HklError **error)
 /**
  * hkl_engine_get: (skip)
  * @self: The HklEngine
- * @error: (allow-none): NULL or an HklError
+ * @error: (allow-none): NULL or an GError
  *
  * get the values of the pseudo-axes from the real-axes values
  *
  * Returns:
  **/
-int hkl_engine_get(HklEngine *self, HklError **error)
+int hkl_engine_get(HklEngine *self, GError **error)
 {
 	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
 	if(!self->engines || !self->engines->geometry || !self->engines->detector
 	   || !self->engines->sample || !self->mode || !self->mode->ops->get){
-		hkl_error_set(error, "Internal error");
+		g_set_error(error,
+			    HKL_ENGINE_ERROR,
+			    HKL_ENGINE_ERROR_GET,
+			    "Internal error");
 		return HKL_FALSE;
 	}
 

@@ -80,7 +80,7 @@ static int get_q_real(HklMode *self,
 		      HklGeometry *geometry,
 		      HklDetector *detector,
 		      HklSample *sample,
-		      HklError **error)
+		      GError **error)
 {
 	double wavelength;
 	double theta;
@@ -223,7 +223,7 @@ static int get_q2_real(HklMode *self,
 		       HklGeometry *geometry,
 		       HklDetector *detector,
 		       HklSample *sample,
-		       HklError **error)
+		       GError **error)
 {
 	HklEngineQ2 *engine_q2 = container_of(engine, HklEngineQ2, engine);
 
@@ -377,7 +377,7 @@ static int get_qper_qpar_real(HklMode *self,
 			      HklGeometry *geometry,
 			      HklDetector *detector,
 			      HklSample *sample,
-			      HklError **error)
+			      GError **error)
 {
 	HklEngineQperQpar *engine_qper_qpar = container_of(engine, HklEngineQperQpar, engine);
 

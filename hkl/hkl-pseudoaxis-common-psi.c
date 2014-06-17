@@ -26,7 +26,6 @@
 #include <stdlib.h>                     // for NULL, exit, free
 #include <sys/types.h>                  // for uint
 #include "hkl-detector-private.h"       // for hkl_detector_compute_kf
-#include "hkl-error-private.h"          // for hkl_error_set
 #include "hkl-geometry-private.h"       // for HklHolder, _HklGeometry, etc
 #include "hkl-macros-private.h"         // for HKL_MALLOC, hkl_assert, etc
 #include "hkl-matrix-private.h"         // for hkl_matrix_solve, etc
@@ -42,6 +41,18 @@
 #include "hkl/ccan/array_size/array_size.h"  // for ARRAY_SIZE
 #include "hkl/ccan/container_of/container_of.h"  // for container_of
 #include "hkl/ccan/darray/darray.h"     // for darray_item
+
+#define HKL_MODE_PSI_ERROR hkl_mode_psi_error_quark ()
+
+static GQuark hkl_mode_psi_error_quark (void)
+{
+	return g_quark_from_static_string ("hkl-mode-psi-error-quark");
+}
+
+typedef enum {
+	HKL_MODE_PSI_ERROR_INIT, /* can not init the engine */
+	HKL_MODE_PSI_ERROR_GET, /* can not get the engine */
+} HklModePsiError;
 
 /***********************/
 /* numerical functions */
@@ -125,7 +136,7 @@ static int hkl_mode_init_psi_real(HklMode *base,
 				  HklGeometry *geometry,
 				  HklDetector *detector,
 				  HklSample *sample,
-				  HklError **error)
+				  GError **error)
 {
 	HklVector ki;
 	HklMatrix RUB;
@@ -135,7 +146,10 @@ static int hkl_mode_init_psi_real(HklMode *base,
 	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
 	if (!hkl_mode_init_real(base, engine, geometry, detector, sample, error)){
-		hkl_error_set(error, "internal error");
+		g_set_error(error,
+			    HKL_MODE_PSI_ERROR,
+			    HKL_MODE_PSI_ERROR_INIT,
+			    "internal error");
 		return HKL_FALSE;
 	}
 	hkl_assert(error == NULL || *error == NULL);
@@ -154,8 +168,11 @@ static int hkl_mode_init_psi_real(HklMode *base,
 	hkl_detector_compute_kf(detector, geometry, &self->Q0);
 	hkl_vector_minus_vector(&self->Q0, &ki);
 	if (hkl_vector_is_null(&self->Q0)){
-		hkl_error_set(error, "can not initialize the \"%s\" engine when hkl is null",
-			      engine->info->name);
+		g_set_error(error,
+			    HKL_MODE_PSI_ERROR,
+			    HKL_MODE_PSI_ERROR_INIT,
+			    "can not initialize the \"%s\" engine when hkl is null",
+			    engine->info->name);
 		return HKL_FALSE;
 	}else
 		/* compute hkl0 */
@@ -169,7 +186,7 @@ static int hkl_mode_get_psi_real(HklMode *base,
 				 HklGeometry *geometry,
 				 HklDetector *detector,
 				 HklSample *sample,
-				 HklError **error)
+				 GError **error)
 {
 	HklVector ki;
 	HklVector kf;
@@ -178,7 +195,10 @@ static int hkl_mode_get_psi_real(HklMode *base,
 	HklVector n;
 
 	if (!base || !engine || !engine->mode || !geometry || !detector || !sample){
-		hkl_error_set(error, "internal error");
+		g_set_error(error,
+			    HKL_MODE_PSI_ERROR,
+			    HKL_MODE_PSI_ERROR_GET,
+			    "internal error");
 		return HKL_FALSE;
 	}
 
@@ -188,7 +208,10 @@ static int hkl_mode_get_psi_real(HklMode *base,
 	Q = kf;
 	hkl_vector_minus_vector(&Q, &ki);
 	if (hkl_vector_is_null(&Q)){
-		hkl_error_set(error, "can not compute psi when hkl is null (kf == ki)");
+		g_set_error(error,
+			    HKL_MODE_PSI_ERROR,
+			    HKL_MODE_PSI_ERROR_GET,
+			    "can not compute psi when hkl is null (kf == ki)");
 		return HKL_FALSE;
 	}else{
 		/* needed for a problem of precision */
@@ -212,7 +235,10 @@ static int hkl_mode_get_psi_real(HklMode *base,
 		hkl_vector_project_on_plan(&hkl1, &Q);
 
 		if (hkl_vector_is_null(&hkl1)){
-			hkl_error_set(error, "can not compute psi when Q and the ref vector are colinear");
+			g_set_error(error,
+				    HKL_MODE_PSI_ERROR,
+				    HKL_MODE_PSI_ERROR_GET,
+				    "can not compute psi when Q and the ref vector are colinear");
 			return HKL_FALSE;
 		}else{
 			HklEnginePsi *psi_engine = container_of(engine, HklEnginePsi, engine);
@@ -249,9 +275,9 @@ HklMode *hkl_mode_psi_new(const HklModeAutoInfo *info)
 	return &self->parent;
 }
 
-/***********************/
+/*************/
 /* HklEngine */
-/***********************/
+/*************/
 
 static void hkl_engine_psi_free_real(HklEngine *base)
 {

@@ -58,21 +58,21 @@ extern int hkl_mode_get_hkl_real(HklMode *self,
 				 HklGeometry *geometry,
 				 HklDetector *detector,
 				 HklSample *sample,
-				 HklError **error);
+				 GError **error);
 
 extern int hkl_mode_set_hkl_real(HklMode *self,
 				 HklEngine *engine,
 				 HklGeometry *geometry,
 				 HklDetector *detector,
 				 HklSample *sample,
-				 HklError **error);
+				 GError **error);
 
 extern int hkl_mode_init_psi_constant_vertical_real(HklMode *base,
 						    HklEngine *engine,
 						    HklGeometry *geometry,
 						    HklDetector *detector,
 						    HklSample *sample,
-						    HklError **error);
+						    GError **error);
 
 extern HklEngine *hkl_engine_hkl_new(void);
 

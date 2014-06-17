@@ -1,14 +1,17 @@
 ## Process this file with automake to produce Makefile.in
 SUBDIRS = ccan
 
-AM_LDFLAGS = -no-undefined -version-info 5:0:0
-AM_LDFLAGS += $(GSL_LIBS)
-AM_CFLAGS = -I$(top_srcdir) \
+AM_LDFLAGS = \
+	-no-undefined -version-info 5:0:0 \
+	$(GLIB_LIBS) \
+	$(GSL_LIBS)
+AM_CFLAGS = \
+	-I$(top_srcdir) \
 	-I$(top_builddir) \
+	$(GLIB_CFLAGS) \
 	$(GSL_CFLAGS)
 
 hkl_c_sources = \
-	hkl-error.c \
 	hkl-axis.c \
 	hkl-detector.c \
 	hkl-detector-factory.c \
@@ -48,7 +51,6 @@ hkl_public_h_sources = ../hkl.h
 hkl_private_h_sources = \
 	hkl-axis-private.h \
 	hkl-detector-private.h \
-	hkl-error-private.h \
 	hkl-factory-private.h \
 	hkl-geometry-private.h \
 	hkl-interval-private.h \
@@ -110,7 +112,6 @@ introspection_files = \
 	../hkl.h \
 	hkl-binding-private.h \
 	hkl-types.h \
-	hkl-error.c \
 	hkl-matrix.c \
 	hkl-parameter.c \
 	hkl-axis.c \

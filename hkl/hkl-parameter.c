@@ -183,7 +183,7 @@ inline double hkl_parameter_value_get_closest(const HklParameter *self,
  * Return value: true if succeed or false otherwise
  **/
 inline int hkl_parameter_value_set(HklParameter *self, double value,
-				   HklError **error)
+				   GError **error)
 {
 	return self->ops->set_value(self, value, error);
 }
@@ -200,7 +200,7 @@ inline int hkl_parameter_value_set(HklParameter *self, double value,
  * Return value: true if succeed or false otherwise
  **/
 inline int hkl_parameter_value_unit_set(HklParameter *self, double value,
-					HklError **error)
+					GError **error)
 {
 	return self->ops->set_value_unit(self, value, error);
 }

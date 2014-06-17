@@ -25,8 +25,9 @@ then checkout the next branch like this::
 Building hkl
 ************
 
-To build hkl you need `Python 2.3+ <http://www.python.org>`_ and the
-`GNU Scientific Library 1.12 <http://www.gnu.org/software/gsl/>`_::
+To build hkl you need `Python 2.3+ <http://www.python.org>`_ the
+`GNU Scientific Library 1.12 <http://www.gnu.org/software/gsl/>`_
+and `GLib-2.0 >= 2.3.4 <https://developer.gnome.org/glib/>`_::
 
      $ ./configure --disable-ghkl
      $ make

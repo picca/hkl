@@ -140,7 +140,7 @@ protected:
 	void updateUB(void);
 	void updateUxUyUz(void);
 	void updateReflections(const HklSample *sample, Glib::RefPtr<Gtk::ListStore> &);
-	void updateStatusBar(const HklError *error);
+	void updateStatusBar(const GError *error);
 	void updateCrystalModel(HklSample *sample);
 	void updatePseudoAxesFrames(void);
 	void updateSolutions(void);

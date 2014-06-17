@@ -31,7 +31,6 @@
 #include <sys/types.h>                  // for uint
 #include "hkl-axis-private.h"           // for HklAxis
 #include "hkl-detector-private.h"       // for hkl_detector_compute_kf
-#include "hkl-error-private.h"          // for hkl_error_set
 #include "hkl-geometry-private.h"       // for HklHolder, _HklGeometry, etc
 #include "hkl-macros-private.h"         // for hkl_assert, HKL_MALLOC, etc
 #include "hkl-matrix-private.h"         // for hkl_matrix_times_vector, etc
@@ -320,7 +319,7 @@ int hkl_mode_get_hkl_real(HklMode *self,
 			  HklGeometry *geometry,
 			  HklDetector *detector,
 			  HklSample *sample,
-			  HklError **error)
+			  GError **error)
 {
 	HklHolder *sample_holder;
 	HklMatrix RUB;
@@ -355,7 +354,7 @@ int hkl_mode_set_hkl_real(HklMode *self,
 			  HklGeometry *geometry,
 			  HklDetector *detector,
 			  HklSample *sample,
-			  HklError **error)
+			  GError **error)
 {
 	int last_axis;
 
@@ -629,19 +628,33 @@ int _psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f
 	return  GSL_SUCCESS;
 }
 
+#define HKL_MODE_PSI_CONSTANT_VERTICAL_ERROR hkl_mode_psi_constant_vertical_error_quark ()
+
+static GQuark hkl_mode_psi_constant_vertical_error_quark (void)
+{
+	return g_quark_from_static_string ("hkl-mode-psi-constant-vertical-error-quark");
+}
+
+typedef enum {
+	HKL_MODE_PSI_CONSTANT_VERTICAL_ERROR_INIT, /* can not init the engine */
+} HklModePsiConstantVerticalError;
+
 int hkl_mode_init_psi_constant_vertical_real(HklMode *self,
 					     HklEngine *engine,
 					     HklGeometry *geometry,
 					     HklDetector *detector,
 					     HklSample *sample,
-					     HklError **error)
+					     GError **error)
 {
 	HklVector hkl;
 	HklVector ki, kf, Q, n;
 
 	if (!self || !engine || !engine->mode || !geometry || !detector || !sample
 	    || !hkl_mode_init_real(self, engine, geometry, detector, sample, error)){
-		hkl_error_set(error, "internal error");
+		g_set_error(error,
+			    HKL_MODE_PSI_CONSTANT_VERTICAL_ERROR,
+			    HKL_MODE_PSI_CONSTANT_VERTICAL_ERROR_INIT,
+			    "internal error");
 		return HKL_FALSE;
 	}
 
@@ -652,8 +665,11 @@ int hkl_mode_init_psi_constant_vertical_real(HklMode *self,
 	hkl_vector_minus_vector(&Q, &ki);
 
 	if (hkl_vector_is_null(&Q)){
-		hkl_error_set(error, "can not initialize the \"%s\" mode with a null hkl (kf == ki)"
-			      "\nplease select a non-null hkl", engine->mode->info->name);
+		g_set_error(error,
+			    HKL_MODE_PSI_CONSTANT_VERTICAL_ERROR,
+			    HKL_MODE_PSI_CONSTANT_VERTICAL_ERROR_INIT,
+			    "can not initialize the \"%s\" mode with a null hkl (kf == ki)"
+			    "\nplease select a non-null hkl", engine->mode->info->name);
 		return HKL_FALSE;
 	}else{
 		/* needed for a problem of precision */
@@ -678,9 +694,12 @@ int hkl_mode_init_psi_constant_vertical_real(HklMode *self,
 		hkl_vector_project_on_plan(&hkl, &Q);
 
 		if (hkl_vector_is_null(&hkl)){
-			hkl_error_set(error, "can not initialize the \"%s\" mode"
-				      "\nwhen Q and the <h2, k2, l2> ref vector are colinear."
-				      "\nplease change one or both of them", engine->mode->info->name);
+			g_set_error(error,
+				    HKL_MODE_PSI_CONSTANT_VERTICAL_ERROR,
+				    HKL_MODE_PSI_CONSTANT_VERTICAL_ERROR_INIT,
+				    "can not initialize the \"%s\" mode"
+				    "\nwhen Q and the <h2, k2, l2> ref vector are colinear."
+				    "\nplease change one or both of them", engine->mode->info->name);
 			return HKL_FALSE;
 		}else{
 			/* compute the angle beetween hkl and n and
@@ -696,9 +715,9 @@ int hkl_mode_init_psi_constant_vertical_real(HklMode *self,
 	return HKL_TRUE;
 }
 
-/***********************/
+/*************/
 /* HklEngine */
-/***********************/
+/*************/
 
 static void hkl_engine_hkl_free_real(HklEngine *base)
 {
