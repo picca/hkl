@@ -39,9 +39,9 @@ static int check_lattice_param(double a, double b, double c,
 		- cos(gamma)*cos(gamma) + 2. * cos(alpha)*cos(beta)*cos(gamma);
 
 	if (D < 0.)
-		return HKL_FALSE;
+		return FALSE;
 	else
-		return HKL_TRUE;
+		return TRUE;
 }
 
 /* public */
@@ -67,27 +67,27 @@ HklLattice *hkl_lattice_new(double a, double b, double c,
 		self = HKL_MALLOC(HklLattice);
 
 		self->a = hkl_parameter_new("a", 0, a, a+10,
-					    HKL_TRUE, HKL_TRUE,
+					    TRUE, TRUE,
 					    &hkl_unit_length_nm,
 					    &hkl_unit_length_nm);
 		self->b = hkl_parameter_new("b", 0, b, b+10,
-					    HKL_TRUE, HKL_TRUE,
+					    TRUE, TRUE,
 					    &hkl_unit_length_nm,
 					    &hkl_unit_length_nm);
 		self->c = hkl_parameter_new("c", 0, c, c+10,
-					    HKL_TRUE, HKL_TRUE,
+					    TRUE, TRUE,
 					    &hkl_unit_length_nm,
 					    &hkl_unit_length_nm);
 		self->alpha = hkl_parameter_new("alpha", -M_PI, alpha, M_PI,
-						HKL_TRUE, HKL_TRUE,
+						TRUE, TRUE,
 						&hkl_unit_angle_rad,
 						&hkl_unit_angle_deg);
 		self->beta = hkl_parameter_new("beta", -M_PI, beta, M_PI,
-					       HKL_TRUE, HKL_TRUE,
+					       TRUE, TRUE,
 					       &hkl_unit_angle_rad,
 					       &hkl_unit_angle_deg);
 		self->gamma = hkl_parameter_new("gamma", -M_PI, gamma, M_PI,
-						HKL_TRUE, HKL_TRUE,
+						TRUE, TRUE,
 						&hkl_unit_angle_rad,
 						&hkl_unit_angle_deg);
 	}
@@ -300,7 +300,7 @@ int hkl_lattice_set(HklLattice *self,
 		    double alpha, double beta, double gamma)
 {
 	if(!check_lattice_param(a, b, c, alpha, beta, gamma))
-		return HKL_FALSE;
+		return FALSE;
 
 	hkl_parameter_value_set(self->a, a, NULL);
 	hkl_parameter_value_set(self->b, b, NULL);
@@ -309,7 +309,7 @@ int hkl_lattice_set(HklLattice *self,
 	hkl_parameter_value_set(self->beta, beta, NULL);
 	hkl_parameter_value_set(self->gamma, gamma, NULL);
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 /**
@@ -363,7 +363,7 @@ int hkl_lattice_get_B(const HklLattice *self, HklMatrix *B)
 	if (D > 0.)
 		D = sqrt(D);
 	else
-		return HKL_FALSE;
+		return FALSE;
 
 	s_alpha = sin(hkl_parameter_value_get(self->alpha));
 	s_beta  = sin(hkl_parameter_value_get(self->beta));
@@ -385,7 +385,7 @@ int hkl_lattice_get_B(const HklLattice *self, HklMatrix *B)
 	B->data[2][1] = 0;
 	B->data[2][2] = b22;
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 /**
@@ -396,7 +396,7 @@ int hkl_lattice_get_B(const HklLattice *self, HklMatrix *B)
  * Compute the invert of B (needed by the hkl_sample_UB_set method)
  * should be optimized
  *
- * Returns: HKL_TRUE or HKL_FALSE depending of the success of the
+ * Returns: TRUE or FALSE depending of the success of the
  * computation.
  **/
 int hkl_lattice_get_1_B(const HklLattice *self, HklMatrix *B)
@@ -410,7 +410,7 @@ int hkl_lattice_get_1_B(const HklLattice *self, HklMatrix *B)
 	double f;
 
 	if(!self || !B)
-		return HKL_FALSE;
+		return FALSE;
 
 	/*
 	 * first compute the B matrix
@@ -442,7 +442,7 @@ int hkl_lattice_get_1_B(const HklLattice *self, HklMatrix *B)
 	B->data[2][1] = 0;
 	B->data[2][2] = 1 / f;
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 /**
@@ -473,7 +473,7 @@ int hkl_lattice_reciprocal(const HklLattice *self, HklLattice *reciprocal)
 	if (D > 0.)
 		D = sqrt(D);
 	else
-		return HKL_FALSE;
+		return FALSE;
 
 	s_alpha = sin(hkl_parameter_value_get(self->alpha));
 	s_beta  = sin(hkl_parameter_value_get(self->beta));
@@ -498,7 +498,7 @@ int hkl_lattice_reciprocal(const HklLattice *self, HklLattice *reciprocal)
 			atan2(s_beta2, c_beta2),
 			atan2(s_beta3, c_beta3));
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 /**

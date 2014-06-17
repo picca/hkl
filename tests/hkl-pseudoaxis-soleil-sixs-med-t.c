@@ -71,7 +71,7 @@ static void qper_qpar(void)
 	qper_qpar[0] = 0.1;
 	qper_qpar[1] = 4.;
 	hkl_engine_pseudo_axes_values_set(engine, qper_qpar, ARRAY_SIZE(qper_qpar), NULL);
-	if(hkl_engine_set(engine, NULL) == HKL_TRUE){
+	if(hkl_engine_set(engine, NULL) == TRUE){
 		gamma = GET_GAMMA(geometries);
 		is_double(2.61077, gamma, HKL_EPSILON * 10, __func__);
 	}
@@ -80,7 +80,7 @@ static void qper_qpar(void)
 	qper_qpar[0] = -0.1;
 	qper_qpar[1] = 4.;
 	hkl_engine_pseudo_axes_values_set(engine, qper_qpar, ARRAY_SIZE(qper_qpar), NULL);
-	if(hkl_engine_set(engine, NULL) == HKL_TRUE){
+	if(hkl_engine_set(engine, NULL) == TRUE){
 		gamma = GET_GAMMA(geometries);
 		is_double(-2.7956354, gamma, HKL_EPSILON * 10, __func__);
 	}

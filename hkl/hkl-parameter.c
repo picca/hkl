@@ -52,9 +52,9 @@ static int hkl_parameter_init(HklParameter *self, const char *name,
 		self->changed = changed;
 		self->ops = &hkl_parameter_operations_defaults;
 	} else
-		return HKL_FALSE;
+		return FALSE;
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 /**

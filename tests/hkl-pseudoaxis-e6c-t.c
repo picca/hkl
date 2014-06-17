@@ -37,14 +37,14 @@ static int hkl_geometry_list_check_geometry_unit(const HklGeometryList *self,
 						 double delta)
 {
 	const HklGeometryListItem *item;
-	int res = HKL_TRUE;
+	int res = TRUE;
 
 	HKL_GEOMETRY_LIST_FOREACH(item, self){
 		const HklGeometry *geometry;
 
 		geometry = hkl_geometry_list_item_geometry_get(item);
 
-		res = HKL_TRUE;
+		res = TRUE;
 		res &= CHECK_AXIS_VALUE(geometry, "mu", mu * HKL_DEGTORAD);
 		res &= CHECK_AXIS_VALUE(geometry, "omega", omega * HKL_DEGTORAD);
 		res &= CHECK_AXIS_VALUE(geometry, "chi", chi * HKL_DEGTORAD);
@@ -60,7 +60,7 @@ static int hkl_geometry_list_check_geometry_unit(const HklGeometryList *self,
 
 static void getter(void)
 {
-	int res = HKL_TRUE;
+	int res = TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
 	const HklFactory *factory;
@@ -101,7 +101,7 @@ static void getter(void)
 	hkl_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, 1., 0., -1.);
 
-	ok(res == HKL_TRUE, "getter");
+	ok(res == TRUE, "getter");
 
 	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);
@@ -111,7 +111,7 @@ static void getter(void)
 
 static void degenerated(void)
 {
-	int res = HKL_TRUE;
+	int res = TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
 	const darray_string *modes;
@@ -170,7 +170,7 @@ static void degenerated(void)
 		}
 	}
 
-	ok(res == HKL_TRUE, "degenerated");
+	ok(res == TRUE, "degenerated");
 
 	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);
@@ -180,7 +180,7 @@ static void degenerated(void)
 
 static void q2(void)
 {
-	int res = HKL_TRUE;
+	int res = TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
 	const char **mode;
@@ -238,7 +238,7 @@ static void q2(void)
 			}
 	}
 
-	ok(res == HKL_TRUE, "q2");
+	ok(res == TRUE, "q2");
 
 	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);
@@ -251,7 +251,7 @@ static void petra3(void)
 	static double values[] = {1, 1, 0};
 	static double hkl_p[] = {0, 0, 1, 90 * HKL_DEGTORAD};
 	static double psi_p[] = {0, 0, 1};
-	int res = HKL_TRUE;
+	int res = TRUE;
 	HklEngineList *engines;
 	HklEngine *hkl;
 	HklEngine *psi;
@@ -317,7 +317,7 @@ static void petra3(void)
 		}
 	}
 
-	ok(res == HKL_TRUE, "petra3");
+	ok(res == TRUE, "petra3");
 
 	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);
@@ -328,7 +328,7 @@ static void petra3(void)
 /* Problem observed with the psi_constant_vertical mode */
 static void petra3_2(void)
 {
-	int res = HKL_TRUE;
+	int res = TRUE;
 	HklEngineList *engines;
 	HklEngine *hkl;
 	HklEngine *psi;
@@ -513,7 +513,7 @@ static void petra3_2(void)
 		}
 	}
 
-	ok(res == HKL_TRUE, __func__);
+	ok(res == TRUE, __func__);
 
 	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);

@@ -27,7 +27,7 @@
 
 static void compatible(void)
 {
-	int res = HKL_TRUE;
+	int res = TRUE;
 
 	const HklUnit *unit;
 	const HklUnit *punit;
@@ -37,7 +37,7 @@ static void compatible(void)
 	res &= !hkl_unit_compatible(&hkl_unit_angle_rad, &hkl_unit_length_nm);
 	res &= hkl_unit_compatible(NULL, NULL);
 
-	ok(res == HKL_TRUE, __func__);
+	ok(res == TRUE, __func__);
 }
 
 static void factor(void)

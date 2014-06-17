@@ -133,7 +133,7 @@ static int hkl_mode_auto_with_init_init_real(HklMode *mode,
 {
 	HklModeAutoWithInit *self = container_of(mode, HklModeAutoWithInit, mode);
 
-	hkl_return_val_if_fail(error == NULL || *error == NULL, HKL_FALSE);
+	hkl_return_val_if_fail(error == NULL || *error == NULL, FALSE);
 
 	if (!hkl_mode_init_real(mode, engine, geometry, detector, sample, error)){
 		g_set_error(error, 
@@ -159,7 +159,7 @@ static int hkl_mode_auto_with_init_init_real(HklMode *mode,
 		self->sample = hkl_sample_new_copy(sample);
 	}
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 extern HklMode *hkl_mode_auto_with_init_new(const HklModeAutoInfo *info,

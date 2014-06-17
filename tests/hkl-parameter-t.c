@@ -30,31 +30,31 @@ static void new(void)
 	HklParameter *p;
 
 	ok(NULL == hkl_parameter_new("", 2, 1, 3,
-				     HKL_FALSE, HKL_TRUE,
+				     FALSE, TRUE,
 				     &hkl_unit_angle_rad, &hkl_unit_angle_deg), __func__);
 	ok(NULL == hkl_parameter_new("", 2, 1, 3,
-				     HKL_FALSE, HKL_TRUE,
+				     FALSE, TRUE,
 				     &hkl_unit_angle_rad, &hkl_unit_angle_deg), __func__);
 	ok(NULL == hkl_parameter_new("", 2, 1, 3,
-				     HKL_FALSE, HKL_TRUE,
+				     FALSE, TRUE,
 				     &hkl_unit_angle_rad, &hkl_unit_angle_deg), __func__);
 	ok(NULL == hkl_parameter_new("toto", 2, 1, 3,
-				     HKL_FALSE, HKL_TRUE,
+				     FALSE, TRUE,
 				     &hkl_unit_angle_rad, &hkl_unit_angle_deg), __func__);
 
 	ok(NULL == hkl_parameter_new("toto", 1, 2, 3,
-				     HKL_FALSE, HKL_TRUE,
+				     FALSE, TRUE,
 				     &hkl_unit_angle_rad, &hkl_unit_length_nm), __func__);
 
 	p = hkl_parameter_new("toto", 1, 2, 3,
-			      HKL_FALSE, HKL_TRUE,
+			      FALSE, TRUE,
 			      &hkl_unit_angle_rad, &hkl_unit_angle_deg);
 	ok(0 == !p, __func__);
 	is_double(1., p->range.min, HKL_EPSILON, __func__);
 	is_double(2., p->_value, HKL_EPSILON, __func__);
 	is_double(3., p->range.max, HKL_EPSILON, __func__);
-	ok(HKL_FALSE == p->fit, __func__);
-	ok(HKL_TRUE == p->changed, __func__);
+	ok(FALSE == p->fit, __func__);
+	ok(TRUE == p->changed, __func__);
 	ok(&hkl_unit_angle_rad == p->unit, __func__);
 	ok(&hkl_unit_angle_deg == p->punit, __func__);
 
@@ -66,7 +66,7 @@ static void new_copy(void)
 	HklParameter *copy, *p;
 
 	p = hkl_parameter_new("toto", 1, 2, 3,
-			      HKL_FALSE, HKL_TRUE,
+			      FALSE, TRUE,
 			      &hkl_unit_angle_rad, &hkl_unit_angle_deg);
 
 	copy = hkl_parameter_new_copy(p);
@@ -89,22 +89,22 @@ static void init(void)
 	HklParameter *p;
 
 	ok(NULL == hkl_parameter_new("", 2, 1, 3,
-				     HKL_FALSE, HKL_TRUE,
+				     FALSE, TRUE,
 				     &hkl_unit_angle_rad, &hkl_unit_angle_deg), __func__);
 	ok(NULL == hkl_parameter_new("", 2, 1, 3,
-				     HKL_FALSE, HKL_TRUE,
+				     FALSE, TRUE,
 				     &hkl_unit_angle_rad, &hkl_unit_angle_deg), __func__);
 	ok(NULL == hkl_parameter_new("", 2, 1, 3,
-				     HKL_FALSE, HKL_TRUE,
+				     FALSE, TRUE,
 				     &hkl_unit_angle_rad, &hkl_unit_angle_deg), __func__);
 	ok(NULL == hkl_parameter_new("toto", 2, 1, 3,
-				     HKL_FALSE, HKL_TRUE,
+				     FALSE, TRUE,
 				     &hkl_unit_angle_rad, &hkl_unit_angle_deg), __func__);
 	ok(NULL == hkl_parameter_new("toto", 1, 2, 3,
-				     HKL_FALSE, HKL_TRUE,
+				     FALSE, TRUE,
 				     &hkl_unit_angle_rad, &hkl_unit_length_nm), __func__);
 	p = hkl_parameter_new("toto", 1, 2, 3,
-			      HKL_FALSE, HKL_TRUE,
+			      FALSE, TRUE,
 			      &hkl_unit_angle_rad, &hkl_unit_angle_deg);
 	ok(NULL != p, __func__);
 
@@ -116,12 +116,12 @@ static void is_valid(void)
 	HklParameter *p;
 
 	p = hkl_parameter_new("toto", 1, 2, 3,
-			      HKL_FALSE, HKL_TRUE,
+			      FALSE, TRUE,
 			      &hkl_unit_angle_rad, &hkl_unit_angle_deg);
-	ok(HKL_TRUE == hkl_parameter_is_valid(p), __func__);
+	ok(TRUE == hkl_parameter_is_valid(p), __func__);
 
 	hkl_parameter_value_set(p, 10, NULL);
-	ok(HKL_FALSE == hkl_parameter_is_valid(p), __func__);
+	ok(FALSE == hkl_parameter_is_valid(p), __func__);
 
 	hkl_parameter_free(p);
 }

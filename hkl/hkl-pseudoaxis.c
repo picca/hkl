@@ -257,7 +257,7 @@ unsigned int hkl_engine_pseudo_axes_values_set(HklEngine *self,
 					       double values[], size_t n_values,
 					       GError **error)
 {
-	unsigned int res = HKL_TRUE;
+	unsigned int res = TRUE;
 
 	if(n_values != self->info->n_pseudo_axes){
 		g_set_error(error,
@@ -265,12 +265,12 @@ unsigned int hkl_engine_pseudo_axes_values_set(HklEngine *self,
 			    HKL_ENGINE_ERROR_PSEUDO_AXES_VALUES_SET,
 			    "cannot set engine pseudo axes, wrong number of parameter (%d) given, (%d) expected\n",
 			    n_values, self->info->n_pseudo_axes);
-		res = HKL_FALSE;
+		res = FALSE;
 	} else {
 		for(size_t i=0; i<n_values; ++i){
 			if(!hkl_parameter_value_set(darray_item(self->pseudo_axes, i),
 						    values[i], error)){
-				res = HKL_FALSE;
+				res = FALSE;
 				break;
 			}
 		}
@@ -322,7 +322,7 @@ const HklParameter *hkl_engine_pseudo_axis_get(const HklEngine *self,
  * @error: the #GError set.
  *
  * set a parameter of the #HklEngine
- * return value: HKL_TRUE if succeded or HKL_FALSE otherwise.
+ * return value: TRUE if succeded or FALSE otherwise.
  * TODO: unit test
  **/
 unsigned int hkl_engine_pseudo_axis_set(HklEngine *self,
@@ -334,7 +334,7 @@ unsigned int hkl_engine_pseudo_axis_set(HklEngine *self,
 	darray_foreach(p, self->pseudo_axes)
 		if(!strcmp((*p)->name, parameter->name)){
 			hkl_parameter_init_copy(*p, parameter);
-			return HKL_TRUE;
+			return TRUE;
 		}
 	g_set_error(error,
 		    HKL_ENGINE_ERROR,
@@ -342,7 +342,7 @@ unsigned int hkl_engine_pseudo_axis_set(HklEngine *self,
 		    "Can not find the pseudo axis \"%s\" in the \"%s\" engine\n",
 		    parameter->name, self->info->name);
 
-	return HKL_FALSE;
+	return FALSE;
 }
 
 /**
@@ -396,7 +396,7 @@ unsigned int hkl_engine_parameters_values_set(HklEngine *self,
 					      double values[], size_t n_values,
 					      GError **error)
 {
-	unsigned int res = HKL_TRUE;
+	unsigned int res = TRUE;
 
 	if(n_values != darray_size(self->mode->parameters)){
 		g_set_error(error,
@@ -404,12 +404,12 @@ unsigned int hkl_engine_parameters_values_set(HklEngine *self,
 			    HKL_ENGINE_ERROR_PARAMETERS_VALUES_SET,
 			    "cannot set engine parameters, wrong number of parameter (%d) given, (%d) expected\n",
 			    n_values, darray_size(self->mode->parameters));
-		res = HKL_FALSE;
+		res = FALSE;
 	} else {
 		for(size_t i=0; i<n_values; ++i){
 			if(!hkl_parameter_value_set(darray_item(self->mode->parameters, i),
 						    values[i], error)){
-				res = HKL_FALSE;
+				res = FALSE;
 				break;
 			}
 		}
@@ -513,7 +513,7 @@ void hkl_engine_select_mode(HklEngine *self, const char *name)
  **/
 int hkl_engine_initialize(HklEngine *self, GError **error)
 {
-	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
+	hkl_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
 	if(!self->geometry || !self->detector || !self->sample
 	   || !self->mode) {
@@ -521,7 +521,7 @@ int hkl_engine_initialize(HklEngine *self, GError **error)
 			    HKL_ENGINE_ERROR,
 			    HKL_ENGINE_ERROR_INITIALIZE,
 			    "Internal error");
-		return HKL_FALSE;
+		return FALSE;
 	}
 
 	/* a NULL initialize method is valid */
@@ -533,12 +533,12 @@ int hkl_engine_initialize(HklEngine *self, GError **error)
 				     self->engines->sample,
 				     error)){
 		hkl_assert(error == NULL || *error != NULL);
-		return HKL_FALSE;
+		return FALSE;
 	}
 
 	hkl_assert(error == NULL || *error == NULL);
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 /**
@@ -552,7 +552,7 @@ int hkl_engine_initialize(HklEngine *self, GError **error)
  **/
 int hkl_engine_set(HklEngine *self, GError **error)
 {
-	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
+	hkl_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
 	if(!self->geometry || !self->detector || !self->sample
 	   || !self->mode || !self->mode->ops->set){
@@ -560,7 +560,7 @@ int hkl_engine_set(HklEngine *self, GError **error)
 			    HKL_ENGINE_ERROR,
 			    HKL_ENGINE_ERROR_SET,
 			    "Internal error");
-		return HKL_FALSE;
+		return FALSE;
 	}
 
 	hkl_engine_prepare_internal(self);
@@ -571,7 +571,7 @@ int hkl_engine_set(HklEngine *self, GError **error)
 				  self->sample,
 				  error)){
 		hkl_assert(error == NULL || *error != NULL);
-		return HKL_FALSE;
+		return FALSE;
 	}
 	hkl_assert(error == NULL || *error == NULL);
 
@@ -585,10 +585,10 @@ int hkl_engine_set(HklEngine *self, GError **error)
 			    HKL_ENGINE_ERROR,
 			    HKL_ENGINE_ERROR_SET,
 			    "no remaining solutions");
-		return HKL_FALSE;
+		return FALSE;
 	}
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 /**
@@ -602,7 +602,7 @@ int hkl_engine_set(HklEngine *self, GError **error)
  **/
 int hkl_engine_get(HklEngine *self, GError **error)
 {
-	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
+	hkl_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
 	if(!self->engines || !self->engines->geometry || !self->engines->detector
 	   || !self->engines->sample || !self->mode || !self->mode->ops->get){
@@ -610,7 +610,7 @@ int hkl_engine_get(HklEngine *self, GError **error)
 			    HKL_ENGINE_ERROR,
 			    HKL_ENGINE_ERROR_GET,
 			    "Internal error");
-		return HKL_FALSE;
+		return FALSE;
 	}
 
 	if (!self->mode->ops->get(self->mode,
@@ -620,11 +620,11 @@ int hkl_engine_get(HklEngine *self, GError **error)
 				  self->engines->sample,
 				  error)){
 		hkl_assert(error == NULL || *error != NULL);
-		return HKL_FALSE;
+		return FALSE;
 	}
 	hkl_assert(error == NULL || *error == NULL);
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 /**
@@ -732,14 +732,14 @@ int hkl_engine_list_add(HklEngineList *self,
 			HklEngine *engine)
 {
 	if (!engine)
-		return HKL_FALSE;
+		return FALSE;
 
 	/* set the engines to access the Geometries list. */
 	engine->engines = self;
 
 	darray_append(*self, engine);
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 /**
@@ -896,7 +896,7 @@ void hkl_engine_list_init(HklEngineList *self,
 int hkl_engine_list_get(HklEngineList *self)
 {
 	HklEngine **engine;
-	int res = HKL_TRUE;
+	int res = TRUE;
 
 	darray_foreach(engine, *self){
 		res &= hkl_engine_get(*engine, NULL);

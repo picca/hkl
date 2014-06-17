@@ -25,7 +25,7 @@
 
 static void solution(void)
 {
-	int res = HKL_TRUE;
+	int res = TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
 	const HklFactory *factory;
@@ -82,7 +82,7 @@ static void solution(void)
 			res &= check_pseudoaxes(engine, hkl, 3);
 		}
 	}else
-		res = HKL_FALSE;
+		res = FALSE;
 	if(!res)
 		hkl_engine_fprintf(stdout, engine);
 
@@ -91,7 +91,7 @@ static void solution(void)
 	hkl_sample_free(sample);
 	hkl_geometry_free(geometry);
 
-	ok(res == HKL_TRUE, "solution");
+	ok(res == TRUE, "solution");
 }
 
 int main(int argc, char** argv)

@@ -100,7 +100,7 @@ static int get_q_real(HklMode *self,
 	/* update q */
 	engine->q->_value = 2 * HKL_TAU / wavelength * sin(theta);
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 /* not declared in the constructor as it is used also in the q2 pseudo
@@ -229,7 +229,7 @@ static int get_q2_real(HklMode *self,
 
 	_q2(geometry, detector, &engine_q2->q->_value, &engine_q2->alpha->_value);
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 static HklMode *mode_q2(void)
@@ -385,7 +385,7 @@ static int get_qper_qpar_real(HklMode *self,
 		   &engine_qper_qpar->qper->_value,
 		   &engine_qper_qpar->qpar->_value);
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 static HklMode *mode_qper_qpar(void)

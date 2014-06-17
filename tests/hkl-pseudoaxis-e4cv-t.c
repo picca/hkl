@@ -25,7 +25,7 @@
 
 static void getter(void)
 {
-	int res = HKL_TRUE;
+	int res = TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
 	const HklFactory *factory;
@@ -66,7 +66,7 @@ static void getter(void)
 	hkl_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, 1., 0., -1.);
 
-	ok(res == HKL_TRUE, "getter");
+	ok(res == TRUE, "getter");
 
 	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);
@@ -76,7 +76,7 @@ static void getter(void)
 
 static void degenerated(void)
 {
-	int res = HKL_TRUE;
+	int res = TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
 	const char **mode;
@@ -132,7 +132,7 @@ static void degenerated(void)
 		}
 	}
 
-	ok(res == HKL_TRUE, "degenerated");
+	ok(res == TRUE, "degenerated");
 
 	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);
@@ -142,7 +142,7 @@ static void degenerated(void)
 
 static void psi_getter(void)
 {
-	int res = HKL_TRUE;
+	int res = TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
 	const HklFactory *factory;
@@ -201,7 +201,7 @@ static void psi_getter(void)
 	hkl_engine_parameters_values_set(engine, hkl, ARRAY_SIZE(hkl), NULL);
 	res &= !hkl_engine_get(engine, NULL);
 
-	ok(res == HKL_TRUE, "psi getter");
+	ok(res == TRUE, "psi getter");
 
 	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);
@@ -211,7 +211,7 @@ static void psi_getter(void)
 
 static void psi_setter(void)
 {
-	int res = HKL_TRUE;
+	int res = TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
 	const darray_string *modes;
@@ -264,7 +264,7 @@ static void psi_setter(void)
 		}
 	}
 
-	ok(res == HKL_TRUE, "psi setter");
+	ok(res == TRUE, "psi setter");
 
 	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);
@@ -274,7 +274,7 @@ static void psi_setter(void)
 
 static void q(void)
 {
-	int res = HKL_TRUE;
+	int res = TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
 	const darray_string *modes;
@@ -325,7 +325,7 @@ static void q(void)
 		}
 	}
 
-	ok(res == HKL_TRUE, "q");
+	ok(res == TRUE, "q");
 
 	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);
@@ -335,7 +335,7 @@ static void q(void)
 
 static void hkl_psi_constant_vertical(void)
 {
-	int res = HKL_TRUE;
+	int res = TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
 	const HklFactory *factory;
@@ -384,7 +384,7 @@ static void hkl_psi_constant_vertical(void)
 		}
 	}
 
-	ok(res == HKL_TRUE, "psi constant vertical");
+	ok(res == TRUE, "psi constant vertical");
 
 	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);

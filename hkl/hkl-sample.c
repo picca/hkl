@@ -86,12 +86,12 @@ static int hkl_sample_compute_UB(HklSample *self)
 	HklMatrix B;
 
 	if (!hkl_lattice_get_B(self->lattice, &B))
-		return HKL_FALSE;
+		return FALSE;
 
 	self->UB = self->U;
 	hkl_matrix_times_matrix(&self->UB, &B);
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 /*
@@ -274,15 +274,15 @@ HklSample* hkl_sample_new(const char *name)
 	hkl_matrix_init(&self->UB,1, 0, 0, 0, 1, 0, 0, 0, 1);
 
 	self->ux = hkl_parameter_new("ux", -M_PI, 0., M_PI,
-				     HKL_TRUE, HKL_TRUE,
+				     TRUE, TRUE,
 				     &hkl_unit_angle_rad,
 				     &hkl_unit_angle_deg);
 	self->uy = hkl_parameter_new("uy", -M_PI, 0., M_PI,
-				     HKL_TRUE, HKL_TRUE,
+				     TRUE, TRUE,
 				     &hkl_unit_angle_rad,
 				     &hkl_unit_angle_deg);
 	self->uz = hkl_parameter_new("uz", -M_PI, 0., M_PI,
-				     HKL_TRUE, HKL_TRUE,
+				     TRUE, TRUE,
 				     &hkl_unit_angle_rad,
 				     &hkl_unit_angle_deg);
 
@@ -640,9 +640,9 @@ int hkl_sample_compute_UB_busing_levy(HklSample *self,
 		hkl_sample_compute_UxUyUz(self);
 		hkl_sample_compute_UB(self);
 	} else
-		return HKL_FALSE;
+		return FALSE;
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 /**
@@ -794,7 +794,7 @@ HklSampleReflection *hkl_sample_reflection_new(const HklGeometry *geometry,
 	self->hkl.data[0] = h;
 	self->hkl.data[1] = k;
 	self->hkl.data[2] = l;
-	self->flag = HKL_TRUE;
+	self->flag = TRUE;
 
 	hkl_sample_reflection_update(self);
 

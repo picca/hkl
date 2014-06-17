@@ -25,7 +25,7 @@
 #include <stdlib.h>                     // for free, NULL
 #include "hkl-interval-private.h"       // for HklInterval
 #include "hkl-macros-private.h"         // for HKL_MALLOC
-#include "hkl.h"                        // for HKL_FALSE, HKL_TRUE
+#include "hkl.h"                        // for FALSE, TRUE
 
 /**
  * hkl_interval_dup: (skip)
@@ -216,9 +216,9 @@ void hkl_interval_divides_double(HklInterval *self, double const d)
 int hkl_interval_contain_zero(HklInterval const *self)
 {
 	if (self->min <= 0 && self->max >= 0)
-		return HKL_TRUE;
+		return TRUE;
 	else
-		return HKL_FALSE;
+		return FALSE;
 }
 
 /**

@@ -45,9 +45,6 @@
 # define HKL_DEPRECATED_FOR(f) HKL_DEPRECATED
 #endif
 
-#define HKL_TRUE 1
-#define HKL_FALSE 0
-
 #define HKL_TINY 1e-7
 #define HKL_EPSILON 1e-6
 #define HKL_DEGTORAD (M_PI/180.)

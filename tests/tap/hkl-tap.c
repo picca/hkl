@@ -43,7 +43,7 @@ int check_pseudoaxes_v(HklEngine *engine, ...)
 int check_pseudoaxes(HklEngine *engine,
 		     double expected[], uint len)
 {
-	int res = HKL_TRUE;
+	int res = TRUE;
 	unsigned int i = 0;
 	double currents[len];
 

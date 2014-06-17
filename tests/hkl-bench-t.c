@@ -190,7 +190,7 @@ int main(int argc, char **argv)
 	hkl_test_bench_k6c(n);
 	hkl_test_bench_eulerians();
 
-	ok(HKL_TRUE == HKL_TRUE, __func__);
+	ok(TRUE == TRUE, __func__);
 
 	return 0;
 }

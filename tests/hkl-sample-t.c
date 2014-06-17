@@ -132,7 +132,7 @@ static void  set_UB(void )
 	sample = hkl_sample_new("test");
 
 	hkl_sample_UB_set(sample, UB);
-	ok(HKL_TRUE == hkl_matrix_cmp(U,
+	ok(TRUE == hkl_matrix_cmp(U,
 				      hkl_sample_U_get(sample)), __func__);
 	is_double(-90. * HKL_DEGTORAD,
 		  hkl_parameter_value_get(hkl_sample_ux_get(sample)),
@@ -180,7 +180,7 @@ static void compute_UB_busing_levy(void)
 	hkl_sample_add_reflection(sample, r1);
 
 	hkl_sample_compute_UB_busing_levy(sample, r0, r1);
-	ok(HKL_TRUE == hkl_matrix_cmp(m_I, hkl_sample_U_get(sample)), __func__);
+	ok(TRUE == hkl_matrix_cmp(m_I, hkl_sample_U_get(sample)), __func__);
 	is_double(0., hkl_parameter_value_get(hkl_sample_ux_get(sample)), HKL_EPSILON, __func__);
 	is_double(0., hkl_parameter_value_get(hkl_sample_uy_get(sample)), HKL_EPSILON, __func__);
 	is_double(0., hkl_parameter_value_get(hkl_sample_uz_get(sample)), HKL_EPSILON, __func__);
@@ -194,7 +194,7 @@ static void compute_UB_busing_levy(void)
 	hkl_sample_add_reflection(sample, r3);
 
 	hkl_sample_compute_UB_busing_levy(sample, r2, r3);
-	ok(HKL_TRUE == hkl_matrix_cmp(m_ref, hkl_sample_U_get(sample)), __func__);
+	ok(TRUE == hkl_matrix_cmp(m_ref, hkl_sample_U_get(sample)), __func__);
 	is_double(-90. * HKL_DEGTORAD, hkl_parameter_value_get(hkl_sample_ux_get(sample)), HKL_EPSILON, __func__);
 	is_double(0., hkl_parameter_value_get(hkl_sample_uy_get(sample)), HKL_EPSILON, __func__);
 	is_double(0., hkl_parameter_value_get(hkl_sample_uz_get(sample)), HKL_EPSILON, __func__);
@@ -258,7 +258,7 @@ static void affine(void)
 	hkl_lattice_get(hkl_sample_lattice_get(sample),
 			&a, &b, &c, &alpha, &beta, &gamma);
 
-	ok(HKL_TRUE == hkl_matrix_cmp(m_ref, hkl_sample_U_get(sample)), __func__);
+	ok(TRUE == hkl_matrix_cmp(m_ref, hkl_sample_U_get(sample)), __func__);
 	is_double(1.54, a, HKL_EPSILON, __func__);
 	is_double(1.54, b, HKL_EPSILON, __func__);
 	is_double(1.54, c, HKL_EPSILON, __func__);
@@ -390,7 +390,7 @@ static void reflection_set_geometry(void)
 	hkl_lattice_get(hkl_sample_lattice_get(sample),
 			&a, &b, &c, &alpha, &beta, &gamma);
 
-	ok(HKL_TRUE == hkl_matrix_cmp(m_ref, hkl_sample_U_get(sample)), __func__);
+	ok(TRUE == hkl_matrix_cmp(m_ref, hkl_sample_U_get(sample)), __func__);
 	is_double(1.54, a, HKL_EPSILON, __func__);
 	is_double(1.54, b, HKL_EPSILON, __func__);
 	is_double(1.54, c, HKL_EPSILON, __func__);

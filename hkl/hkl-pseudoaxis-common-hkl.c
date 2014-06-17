@@ -113,7 +113,7 @@ static int fit_detector_position(HklMode *mode, HklGeometry *geometry,
 	gsl_multiroot_function f;
 	gsl_vector *x;
 	int status;
-	int res = HKL_FALSE;
+	int res = FALSE;
 	int iter;
 	HklHolder *sample_holder = darray_item(geometry->holders, 0);
 	HklHolder *detector_holder = darray_item(geometry->holders, 1);
@@ -201,7 +201,7 @@ static int fit_detector_position(HklMode *mode, HklGeometry *geometry,
 		hkl_geometry_fprintf(stdout, params.geometry);
 #endif
 		if(status != GSL_CONTINUE){
-			res = HKL_TRUE;
+			res = TRUE;
 			/* put the axes in the -pi, pi range. */
 			for(i=0; i<params.len; ++i){
 				double value;
@@ -346,7 +346,7 @@ int hkl_mode_get_hkl_real(HklMode *self,
 	engine_hkl->k->_value = hkl.data[1];
 	engine_hkl->l->_value = hkl.data[2];
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 int hkl_mode_set_hkl_real(HklMode *self,
@@ -358,14 +358,14 @@ int hkl_mode_set_hkl_real(HklMode *self,
 {
 	int last_axis;
 
-	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
+	hkl_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
 	if(!hkl_mode_auto_set_real(self, engine,
 				   geometry, detector, sample,
 				   error)){
 		hkl_assert(error == NULL || *error != NULL);
 		//fprintf(stdout, "message :%s\n", (*error)->message);
-		return HKL_FALSE;
+		return FALSE;
 	}
 	hkl_assert(error == NULL || *error == NULL);
 
@@ -446,7 +446,7 @@ int hkl_mode_set_hkl_real(HklMode *self,
 			if(!hkl_parameter_value_set(&axis->parameter,
 						    hkl_parameter_value_get(&axis->parameter) + angle,
 						    error))
-				return HKL_FALSE;
+				return FALSE;
 			hkl_geometry_update(geom);
 #ifdef DEBUG
 			fprintf(stdout, "\n- try to add a solution by rotating Q <%f, %f, %f> around the \"%s\" axis <%f, %f, %f> of %f radian",
@@ -467,7 +467,7 @@ int hkl_mode_set_hkl_real(HklMode *self,
 			hkl_geometry_free(geom);
 		}
 	}
-	return HKL_TRUE;
+	return TRUE;
 }
 
 /***************************************/
@@ -655,7 +655,7 @@ int hkl_mode_init_psi_constant_vertical_real(HklMode *self,
 			    HKL_MODE_PSI_CONSTANT_VERTICAL_ERROR,
 			    HKL_MODE_PSI_CONSTANT_VERTICAL_ERROR_INIT,
 			    "internal error");
-		return HKL_FALSE;
+		return FALSE;
 	}
 
 	/* kf - ki = Q */
@@ -670,7 +670,7 @@ int hkl_mode_init_psi_constant_vertical_real(HklMode *self,
 			    HKL_MODE_PSI_CONSTANT_VERTICAL_ERROR_INIT,
 			    "can not initialize the \"%s\" mode with a null hkl (kf == ki)"
 			    "\nplease select a non-null hkl", engine->mode->info->name);
-		return HKL_FALSE;
+		return FALSE;
 	}else{
 		/* needed for a problem of precision */
 		hkl_vector_normalize(&Q);
@@ -700,7 +700,7 @@ int hkl_mode_init_psi_constant_vertical_real(HklMode *self,
 				    "can not initialize the \"%s\" mode"
 				    "\nwhen Q and the <h2, k2, l2> ref vector are colinear."
 				    "\nplease change one or both of them", engine->mode->info->name);
-			return HKL_FALSE;
+			return FALSE;
 		}else{
 			/* compute the angle beetween hkl and n and
 			 * store in in the fourth parameter */
@@ -708,11 +708,11 @@ int hkl_mode_init_psi_constant_vertical_real(HklMode *self,
 				    darray_item(self->parameters, 3),
 				    hkl_vector_oriented_angle(&n, &hkl, &Q),
 				    error))
-				return HKL_FALSE;
+				return FALSE;
 		}
 	}
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 /*************/

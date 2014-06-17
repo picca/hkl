@@ -29,7 +29,7 @@
 #include "hkl-interval-private.h"       // for HklInterval
 #include "hkl-macros-private.h"         // for HKL_MALLOC
 #include "hkl-unit-private.h"           // for HklUnit, hkl_unit_factor
-#include "hkl.h"                        // for HklParameter, HKL_TRUE, etc
+#include "hkl.h"                        // for HklParameter, TRUE, etc
 
 G_BEGIN_DECLS
 
@@ -46,7 +46,7 @@ struct _HklParameter {
 	const HklParameterOperations *ops;
 };
 
-#define HKL_PARAMETER_DEFAULTS .name="dummy", .range={.min=0, .max=0}, ._value=0, .unit=NULL, .punit=NULL, .fit=HKL_TRUE, .changed=HKL_TRUE, .ops = &hkl_parameter_operations_defaults
+#define HKL_PARAMETER_DEFAULTS .name="dummy", .range={.min=0, .max=0}, ._value=0, .unit=NULL, .punit=NULL, .fit=TRUE, .changed=TRUE, .ops = &hkl_parameter_operations_defaults
 
 #define HKL_PARAMETER_DEFAULTS_ANGLE HKL_PARAMETER_DEFAULTS, .range={.min=-M_PI, .max=M_PI}, .unit = &hkl_unit_angle_rad, .punit = &hkl_unit_angle_deg
 
@@ -100,7 +100,7 @@ static inline void hkl_parameter_free_real(HklParameter *self)
 static inline void hkl_parameter_init_copy_real(HklParameter *self, const HklParameter *src)
 {
 	*self = *src;
-	self->changed = HKL_TRUE;
+	self->changed = TRUE;
 }
 
 static inline double hkl_parameter_value_get_closest_real(const HklParameter *self,
@@ -114,9 +114,9 @@ static inline unsigned int hkl_parameter_value_set_real(
 	GError **error)
 {
 	self->_value = value;
-	self->changed = HKL_TRUE;
+	self->changed = TRUE;
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 static inline unsigned int hkl_parameter_value_unit_set_real(
@@ -139,7 +139,7 @@ static inline void hkl_parameter_randomize_real(HklParameter *self)
 		double alea = (double)rand() / (RAND_MAX + 1.);
 		self->_value = self->range.min
 			+ (self->range.max - self->range.min) * alea;
-		self->changed = HKL_TRUE;
+		self->changed = TRUE;
 	}
 }
 
@@ -147,9 +147,9 @@ static inline int hkl_parameter_is_valid_real(const HklParameter *self)
 {
 	if(self->_value < (self->range.min - HKL_EPSILON)
 	   || self->_value > (self->range.max + HKL_EPSILON))
-		return HKL_FALSE;
+		return FALSE;
 	else
-		return HKL_TRUE;
+		return TRUE;
 }
 
 static inline void hkl_parameter_fprintf_real(FILE *f, const HklParameter *self)

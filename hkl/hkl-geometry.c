@@ -391,7 +391,7 @@ void hkl_geometry_update(HklGeometry *self)
 		}
 
 		darray_foreach(axis, self->axes){
-			(*axis)->changed = HKL_FALSE;
+			(*axis)->changed = FALSE;
 		}
 	}
 }
@@ -479,7 +479,7 @@ int hkl_geometry_set_values_v(HklGeometry *self, size_t len, ...)
 	HklParameter **axis;
 
 	if (!self || darray_size(self->axes) != len)
-		return HKL_FALSE;
+		return FALSE;
 
 	va_start(ap, len);
 	darray_foreach(axis, self->axes){
@@ -490,7 +490,7 @@ int hkl_geometry_set_values_v(HklGeometry *self, size_t len, ...)
 
 	hkl_geometry_update(self);
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 int hkl_geometry_set_values_unit_v(HklGeometry *self, ...)
@@ -507,7 +507,7 @@ int hkl_geometry_set_values_unit_v(HklGeometry *self, ...)
 
 	hkl_geometry_update(self);
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 /**
@@ -584,10 +584,10 @@ int hkl_geometry_is_valid(const HklGeometry *self)
 
 	darray_foreach(axis, self->axes){
 		if(!hkl_parameter_is_valid(*axis))
-			return HKL_FALSE;
+			return FALSE;
 	}
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 /**
@@ -606,13 +606,13 @@ int hkl_geometry_closest_from_geometry_with_range(HklGeometry *self,
 	size_t i;
 	uint len = darray_size(self->axes);
 	double *values = alloca(len * sizeof(*values));
-	int ko = HKL_FALSE;
+	int ko = FALSE;
 
 	for(i=0;i<len;++i){
 		values[i] = hkl_parameter_value_get_closest(darray_item(self->axes, i),
 							    darray_item(ref->axes, i));
 		if(gsl_isnan(values[i])){
-			ko = HKL_TRUE;
+			ko = TRUE;
 			break;
 		}
 	}

@@ -289,13 +289,13 @@ the file ``src/hkl-pseudoaxis-e6c-hkl.c``::
 	HklParameter l2;
 
 	hkl_parameter_init(&h2, "h2", -1, 1, 1,
-			   HKL_TRUE, HKL_TRUE,
+			   TRUE, TRUE,
 			   NULL, NULL);
 	hkl_parameter_init(&k2, "k2", -1, 1, 1,
-			   HKL_TRUE, HKL_TRUE,
+			   TRUE, TRUE,
 			   NULL, NULL);
 	hkl_parameter_init(&l2, "l2", -1, 1, 1,
-			   HKL_TRUE, HKL_TRUE,
+			   TRUE, TRUE,
 			   NULL, NULL);
 
 	mode = hkl_mode_new(

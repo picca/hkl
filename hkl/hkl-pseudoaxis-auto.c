@@ -112,7 +112,7 @@ static void find_degenerated_axes(HklEngine *self,
  * If a solution was found it also check for degenerated axes.
  * A degenerated axes is an Axes with no effect on the function.
  * @see find_degenerated
- * @return HKL_TRUE or HKL_FALSE.
+ * @return TRUE or FALSE.
  */
 static int find_first_geometry(HklEngine *self,
 			       gsl_multiroot_function *f,
@@ -126,7 +126,7 @@ static int find_first_geometry(HklEngine *self,
 	double *x_data0 = alloca(len * sizeof(*x_data0));
 	size_t iter = 0;
 	int status;
-	int res = HKL_FALSE;
+	int res = FALSE;
 	size_t i;
 	HklParameter **axis;
 
@@ -193,7 +193,7 @@ static int find_first_geometry(HklEngine *self,
 		}
 
 		hkl_geometry_update(self->geometry);
-		res = HKL_TRUE;
+		res = TRUE;
 	}
 
 	/* release memory */
@@ -250,7 +250,7 @@ static int test_sector(gsl_vector const *x,
 		       gsl_multiroot_function *function,
 		       gsl_vector *f)
 {
-	int res = HKL_TRUE;
+	int res = TRUE;
 	size_t i;
 	double *f_data = f->data;
 
@@ -258,7 +258,7 @@ static int test_sector(gsl_vector const *x,
 
 	for(i=0; i<f->size; ++i)
 		if (fabs(f_data[i]) > HKL_EPSILON){
-			res = HKL_FALSE;
+			res = FALSE;
 			break;
 		}
 
@@ -272,7 +272,7 @@ static int test_sector(gsl_vector const *x,
 	for(i=0; i<f->size; ++i)
 		fprintf(stdout, "\t%f", gsl_sf_angle_restrict_symm(x->data[i]) * HKL_RADTODEG);
 
-	if(res == HKL_FALSE)
+	if(res == FALSE)
 		fprintf(stdout, "\t FAIL");
 	else
 		fprintf(stdout, "\t SUCCESS");
@@ -317,7 +317,7 @@ static void perm_r(size_t axes_len, size_t op_len[], int p[], size_t axes_idx,
  * @param self the current HklEngine
  * @param function The mode function
  *
- * @return HKL_TRUE or HKL_FALSE
+ * @return TRUE or FALSE
  *
  * This method find a first solution with a numerical method from the
  * GSL library (the multi root solver hybrid). Then it multiplicates the
@@ -399,17 +399,17 @@ int hkl_mode_auto_set_real(HklMode *self,
 			   GError **error)
 {
 	size_t i;
-	int ok = HKL_FALSE;
+	int ok = FALSE;
 	HklModeAutoInfo *info = container_of(self->info, HklModeAutoInfo, mode);
 
-	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
+	hkl_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
 	if(!self || !engine || !geometry || !detector || !sample){
 		g_set_error(error,
 			    HKL_MODE_AUTO_ERROR,
 			    HKL_MODE_AUTO_ERROR_SET,
 			    "Internal error");
-		return HKL_FALSE;
+		return FALSE;
 	}
 
 	for(i=0;i<info->n_functions;++i)
@@ -420,14 +420,14 @@ int hkl_mode_auto_set_real(HklMode *self,
 			    HKL_MODE_AUTO_ERROR,
 			    HKL_MODE_AUTO_ERROR_SET,
 			    "none of the functions were solved !!!");
-		return HKL_FALSE;
+		return FALSE;
 	}
 
 #ifdef DEBUG
 	hkl_engine_fprintf(stdout, engine);
 #endif
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 HklMode *hkl_mode_auto_with_init_new(const HklModeAutoInfo *info,

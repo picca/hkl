@@ -31,7 +31,7 @@
 #include "hkl-parameter-private.h"      // for _HklParameter, etc
 #include "hkl-quaternion-private.h"     // for hkl_quaternion_fprintf, etc
 #include "hkl-vector-private.h"         // for hkl_vector_fprintf, etc
-#include "hkl.h"                        // for HklParameter, HKL_TRUE, etc
+#include "hkl.h"                        // for HklParameter, TRUE, etc
 #include "hkl/ccan/container_of/container_of.h"  // for container_of
 
 /***********/
@@ -69,7 +69,7 @@ static inline void hkl_axis_init_copy_real(HklParameter *self, const HklParamete
 	HklAxis *axis_src = container_of(src, HklAxis, parameter);
 
 	*axis_self = *axis_src;
-	self->changed = HKL_TRUE;
+	self->changed = TRUE;
 }
 
 static inline unsigned int hkl_axis_set_value_real(
@@ -79,11 +79,11 @@ static inline unsigned int hkl_axis_set_value_real(
 	HklAxis *axis = container_of(self, HklAxis, parameter);
 
 	if(!hkl_parameter_value_set_real(self, value, error))
-		return HKL_FALSE;
+		return FALSE;
 
 	hkl_axis_update(axis);
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 static inline unsigned int hkl_axis_set_value_unit_real(
@@ -93,11 +93,11 @@ static inline unsigned int hkl_axis_set_value_unit_real(
 	HklAxis *axis = container_of(self, HklAxis, parameter);
 
 	if(!hkl_parameter_value_unit_set_real(self, value, error))
-		return HKL_FALSE;
+		return FALSE;
 
 	hkl_axis_update(axis);
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 static inline void hkl_axis_set_value_smallest_in_range_real(HklParameter *self)
@@ -184,21 +184,21 @@ static inline double hkl_axis_get_value_closest_real(const HklParameter *self,
 static inline int hkl_axis_is_valid_real(const HklParameter *self)
 {
 	double value = self->_value;
-	int res = HKL_FALSE;
+	int res = FALSE;
 	HklInterval range = self->range;
 
 	if(hkl_interval_length(&range) > 2*M_PI)
-		res = HKL_TRUE;
+		res = TRUE;
 	else{
 		hkl_interval_angle_restrict_symm(&range);
 		value = gsl_sf_angle_restrict_symm(value);
 
 		if(range.min <= range.max){
 			if(range.min <= value && range.max >= value)
-				res = HKL_TRUE;
+				res = TRUE;
 		}else{
 			if(value <= range.max || value >= range.min)
-				res = HKL_TRUE;
+				res = TRUE;
 		}
 	}
 	return res;

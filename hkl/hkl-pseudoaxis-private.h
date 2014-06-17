@@ -194,12 +194,12 @@ static int hkl_mode_init_real(HklMode *mode,
 			      GError **error)
 {
 	if (!self || !mode || !geometry || !detector || !sample)
-		return HKL_FALSE;
+		return FALSE;
 
 	/* update the geometry internals */
 	hkl_geometry_update(geometry);
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 static int hkl_mode_get_real(HklMode *self,
@@ -209,7 +209,7 @@ static int hkl_mode_get_real(HklMode *self,
 			     HklSample *sample,
 			     GError **error)
 {
-	return HKL_TRUE;
+	return TRUE;
 }
 
 static int hkl_mode_set_real(HklMode *self,
@@ -219,7 +219,7 @@ static int hkl_mode_set_real(HklMode *self,
 			     HklSample *sample,
 			     GError **error)
 {
-	return HKL_TRUE;
+	return TRUE;
 }
 
 static inline int hkl_mode_init(
@@ -231,7 +231,7 @@ static inline int hkl_mode_init(
 
 	/* ensure part */
 	if (!self)
-		return HKL_FALSE;
+		return FALSE;
 
 	self->info = info;
 	self->ops = ops;
@@ -247,7 +247,7 @@ static inline int hkl_mode_init(
 		darray_append(self->parameters_names, parameter->name);
 	}
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 static inline HklMode *hkl_mode_new(

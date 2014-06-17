@@ -91,7 +91,7 @@ void hkl_vector_fprintf(FILE *file, const HklVector *self)
  * compare two #HklVector. this comparison use HKL_EPSILON
  * to do the comparison.
  *
- * Returns: HKL_FALSE if both are equals, HKL_TRUE otherwise.
+ * Returns: FALSE if both are equals, TRUE otherwise.
  **/
 int hkl_vector_cmp(const HklVector *self, const HklVector *vector)
 {
@@ -99,8 +99,8 @@ int hkl_vector_cmp(const HklVector *self, const HklVector *vector)
 
 	for (i=0; i<3; i++)
 		if ( fabs(self->data[i] - vector->data[i]) > HKL_EPSILON )
-			return HKL_TRUE;
-	return HKL_FALSE;
+			return TRUE;
+	return FALSE;
 }
 
 /**
@@ -110,7 +110,7 @@ int hkl_vector_cmp(const HklVector *self, const HklVector *vector)
  *
  * Check if two vectors are oposite.
  *
- * Returns: HKL_TRUE is vector are oposite vectors.
+ * Returns: TRUE is vector are oposite vectors.
  **/
 int hkl_vector_is_opposite(const HklVector *self, const HklVector *vector)
 {
@@ -118,8 +118,8 @@ int hkl_vector_is_opposite(const HklVector *self, const HklVector *vector)
 
 	for (i=0; i<3; i++)
 		if ( fabs(self->data[i] + vector->data[i]) > HKL_EPSILON )
-			return HKL_FALSE;
-	return HKL_TRUE;
+			return FALSE;
+	return TRUE;
 }
 
 /**
@@ -365,17 +365,17 @@ double hkl_vector_oriented_angle_points(const HklVector *self,
  *
  * normalize a hkl_vector
  *
- * Returns: HKL_TRUE if the #HklVector can be normalized, HKL_FALSE otherwise
+ * Returns: TRUE if the #HklVector can be normalized, FALSE otherwise
  **/
 int hkl_vector_normalize(HklVector *self)
 {
 	double norm = hkl_vector_norm2(self);
 	if ( norm <= HKL_EPSILON )
-		return HKL_FALSE;
+		return FALSE;
 
 	hkl_vector_div_double(self, norm);
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 /**
@@ -385,7 +385,7 @@ int hkl_vector_normalize(HklVector *self)
  *
  * check if two #HklVector are colinears
  *
- * Returns: HKL_TRUE if both are colinear.
+ * Returns: TRUE if both are colinear.
  **/
 int hkl_vector_is_colinear(const HklVector *self, const HklVector *vector)
 {
@@ -572,8 +572,8 @@ int hkl_vector_is_null(const HklVector *self)
 	unsigned int i;
 	for (i=0; i<3; i++)
 		if ( fabs(self->data[i]) > HKL_EPSILON )
-			return HKL_FALSE;
-	return HKL_TRUE;
+			return FALSE;
+	return TRUE;
 }
 
 /**

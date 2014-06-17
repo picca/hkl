@@ -93,7 +93,7 @@ static void update(void)
 	axis1 = container_of(hkl_geometry_get_axis_by_name(g, "B"), HklAxis, parameter);
 	hkl_parameter_value_set(&axis1->parameter, M_PI_2, NULL);
 	/* now axis1 is dirty */
-	ok(HKL_TRUE == axis1->parameter.changed, __func__);
+	ok(TRUE == axis1->parameter.changed, __func__);
 
 	hkl_geometry_update(g);
 	holder = darray_item(g->holders, 0);
@@ -102,7 +102,7 @@ static void update(void)
 	is_double(.0, holder->q.data[2], HKL_EPSILON, __func__);
 	is_double(.0, holder->q.data[3], HKL_EPSILON, __func__);
 	/* now axis1 is clean */
-	ok(HKL_FALSE == axis1->parameter.changed, __func__);
+	ok(FALSE == axis1->parameter.changed, __func__);
 
 	hkl_geometry_free(g);
 }
@@ -179,14 +179,14 @@ static void is_valid(void)
 	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
 
 	hkl_geometry_set_values_v(geom, 3, 0., 0., 0.);
-	ok(HKL_TRUE == hkl_geometry_is_valid(geom), __func__);
+	ok(TRUE == hkl_geometry_is_valid(geom), __func__);
 
 	hkl_geometry_set_values_v(geom, 3, -181. * HKL_DEGTORAD, 0., 0.);
-	ok(HKL_TRUE == hkl_geometry_is_valid(geom), __func__);
+	ok(TRUE == hkl_geometry_is_valid(geom), __func__);
 
 	hkl_parameter_min_max_set(darray_item(geom->axes, 0),
 				-100 * HKL_DEGTORAD, 100 * HKL_DEGTORAD);
-	ok(HKL_FALSE == hkl_geometry_is_valid(geom), __func__);
+	ok(FALSE == hkl_geometry_is_valid(geom), __func__);
 
 	hkl_geometry_free(geom);
 }

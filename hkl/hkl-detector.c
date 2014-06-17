@@ -123,9 +123,9 @@ int hkl_detector_compute_kf(HklDetector const *self, HklGeometry *g,
 	if (holder) {
 		hkl_vector_init(kf, HKL_TAU / g->source.wave_length, 0, 0);
 		hkl_vector_rotated_quaternion(kf, &holder->q);
-		return HKL_TRUE;
+		return TRUE;
 	} else
-		return HKL_FALSE;
+		return FALSE;
 }
 
 /**

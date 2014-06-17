@@ -51,8 +51,8 @@ static void is_opposite(void)
 	HklVector v1 = {{1, 2, 3}};
 	HklVector v2 = {{0, -1, -2}};
 
-	ok(HKL_FALSE == hkl_vector_is_opposite(&v_ref, &v1), __func__);
-	ok(HKL_TRUE == hkl_vector_is_opposite(&v_ref, &v2), __func__);
+	ok(FALSE == hkl_vector_is_opposite(&v_ref, &v1), __func__);
+	ok(TRUE == hkl_vector_is_opposite(&v_ref, &v2), __func__);
 }
 
 static void norm2(void)

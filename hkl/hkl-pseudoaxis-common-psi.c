@@ -143,14 +143,14 @@ static int hkl_mode_init_psi_real(HklMode *base,
 	HklModePsi *self = container_of(base, HklModePsi, parent);
 	HklHolder *sample_holder;
 
-	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
+	hkl_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
 	if (!hkl_mode_init_real(base, engine, geometry, detector, sample, error)){
 		g_set_error(error,
 			    HKL_MODE_PSI_ERROR,
 			    HKL_MODE_PSI_ERROR_INIT,
 			    "internal error");
-		return HKL_FALSE;
+		return FALSE;
 	}
 	hkl_assert(error == NULL || *error == NULL);
 
@@ -173,12 +173,12 @@ static int hkl_mode_init_psi_real(HklMode *base,
 			    HKL_MODE_PSI_ERROR_INIT,
 			    "can not initialize the \"%s\" engine when hkl is null",
 			    engine->info->name);
-		return HKL_FALSE;
+		return FALSE;
 	}else
 		/* compute hkl0 */
 		hkl_matrix_solve(&RUB, &self->hkl0, &self->Q0);
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 static int hkl_mode_get_psi_real(HklMode *base,
@@ -199,7 +199,7 @@ static int hkl_mode_get_psi_real(HklMode *base,
 			    HKL_MODE_PSI_ERROR,
 			    HKL_MODE_PSI_ERROR_GET,
 			    "internal error");
-		return HKL_FALSE;
+		return FALSE;
 	}
 
 	/* get kf, ki and Q */
@@ -212,7 +212,7 @@ static int hkl_mode_get_psi_real(HklMode *base,
 			    HKL_MODE_PSI_ERROR,
 			    HKL_MODE_PSI_ERROR_GET,
 			    "can not compute psi when hkl is null (kf == ki)");
-		return HKL_FALSE;
+		return FALSE;
 	}else{
 		/* needed for a problem of precision */
 		hkl_vector_normalize(&Q);
@@ -239,7 +239,7 @@ static int hkl_mode_get_psi_real(HklMode *base,
 				    HKL_MODE_PSI_ERROR,
 				    HKL_MODE_PSI_ERROR_GET,
 				    "can not compute psi when Q and the ref vector are colinear");
-			return HKL_FALSE;
+			return FALSE;
 		}else{
 			HklEnginePsi *psi_engine = container_of(engine, HklEnginePsi, engine);
 
@@ -248,7 +248,7 @@ static int hkl_mode_get_psi_real(HklMode *base,
 		}
 	}
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 HklMode *hkl_mode_psi_new(const HklModeAutoInfo *info)

@@ -25,7 +25,7 @@
 
 static void degenerated(void)
 {
-	int res = HKL_TRUE;
+	int res = TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
 	const darray_string *modes;
@@ -84,7 +84,7 @@ static void degenerated(void)
 		}
 	}
 
-	ok(res == HKL_TRUE, "degenerated");
+	ok(res == TRUE, "degenerated");
 
 	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);
@@ -94,7 +94,7 @@ static void degenerated(void)
 
 static void eulerians(void)
 {
-	int res = HKL_TRUE;
+	int res = TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
 	const darray_string *modes;
@@ -159,7 +159,7 @@ static void eulerians(void)
 		}
 	}
 
-	ok(res == HKL_TRUE, "eulerians");
+	ok(res == TRUE, "eulerians");
 
 	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);
@@ -169,7 +169,7 @@ static void eulerians(void)
 
 static void q(void)
 {
-	int res = HKL_TRUE;
+	int res = TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
 	const darray_string *modes;
@@ -218,7 +218,7 @@ static void q(void)
 		}
 	}
 
-	ok(res == HKL_TRUE, "q");
+	ok(res == TRUE, "q");
 
 	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);

@@ -37,8 +37,8 @@ static void new(void)
 	is_double(-M_PI, axis->range.min, HKL_EPSILON, __func__);
 	is_double(M_PI, axis->range.max, HKL_EPSILON, __func__);
 	is_double(0., hkl_parameter_value_get(axis), HKL_EPSILON, __func__);
-	ok(HKL_TRUE == axis->fit, __func__);
-	ok(HKL_TRUE == axis->changed, __func__);
+	ok(TRUE == axis->fit, __func__);
+	ok(TRUE == axis->changed, __func__);
 
 	hkl_parameter_free(axis);
 }
@@ -81,8 +81,8 @@ static void copy(void)
 	is_double(-M_PI, copy->parameter.range.min, HKL_EPSILON, __func__);
 	is_double(M_PI, copy->parameter.range.max, HKL_EPSILON, __func__);
 	is_double(-M_PI_2, hkl_parameter_value_get(&copy->parameter), HKL_EPSILON, __func__);
-	ok(HKL_TRUE == copy->parameter.fit, __func__);
-	ok(HKL_TRUE == copy->parameter.changed, __func__);
+	ok(TRUE == copy->parameter.fit, __func__);
+	ok(TRUE == copy->parameter.changed, __func__);
 	is_double(1./sqrt(2.), copy->q.data[0], HKL_EPSILON, __func__);
 	is_double(-1./sqrt(2.), copy->q.data[1], HKL_EPSILON, __func__);
 	is_double(0., copy->q.data[2], HKL_EPSILON, __func__);
@@ -101,26 +101,26 @@ static void is_valid(void)
 			     HklAxis, parameter);
 
 	hkl_parameter_value_unit_set(&axis1->parameter, 45, NULL);
-	ok(HKL_TRUE == hkl_parameter_is_valid(&axis1->parameter), __func__);
+	ok(TRUE == hkl_parameter_is_valid(&axis1->parameter), __func__);
 
 	/* change the range of axis1 */
 	hkl_parameter_min_max_unit_set(&axis1->parameter, -270, 0);
-	ok(HKL_FALSE == hkl_parameter_is_valid(&axis1->parameter), __func__);
+	ok(FALSE == hkl_parameter_is_valid(&axis1->parameter), __func__);
 
 	hkl_parameter_value_unit_set(&axis1->parameter, -45, NULL);
-	ok(HKL_TRUE == hkl_parameter_is_valid(&axis1->parameter), __func__);
+	ok(TRUE == hkl_parameter_is_valid(&axis1->parameter), __func__);
 
 	hkl_parameter_min_max_unit_set(&axis1->parameter, 350, 450);
 	hkl_parameter_value_unit_set(&axis1->parameter, 45, NULL);
-	ok(HKL_TRUE == hkl_parameter_is_valid(&axis1->parameter), __func__);
+	ok(TRUE == hkl_parameter_is_valid(&axis1->parameter), __func__);
 	hkl_parameter_value_unit_set(&axis1->parameter, -45, NULL);
-	ok(HKL_FALSE == hkl_parameter_is_valid(&axis1->parameter), __func__);
+	ok(FALSE == hkl_parameter_is_valid(&axis1->parameter), __func__);
 
 	hkl_parameter_min_max_unit_set(&axis1->parameter, -10, 90);
 	hkl_parameter_value_unit_set(&axis1->parameter, 405, NULL);
-	ok(HKL_TRUE == hkl_parameter_is_valid(&axis1->parameter), __func__);
+	ok(TRUE == hkl_parameter_is_valid(&axis1->parameter), __func__);
 	hkl_parameter_value_unit_set(&axis1->parameter, -405, NULL);
-	ok(HKL_FALSE == hkl_parameter_is_valid(&axis1->parameter), __func__);
+	ok(FALSE == hkl_parameter_is_valid(&axis1->parameter), __func__);
 
 	hkl_parameter_free(&axis1->parameter);
 }

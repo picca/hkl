@@ -181,7 +181,7 @@ static int fit_slits_orientation(HklSlitsFit *params)
 	gsl_vector *x;
 	double *x_data;
 	int status;
-	int res = HKL_FALSE;
+	int res = FALSE;
 	int iter;
 
 	/* now solve the system */
@@ -229,7 +229,7 @@ static int fit_slits_orientation(HklSlitsFit *params)
 	hkl_geometry_fprintf(stdout, params.geometry);
 #endif
 	if(status != GSL_CONTINUE){
-		res = HKL_TRUE;
+		res = TRUE;
 		/* put the axes in the -pi, pi range. */
 		gsl_sf_angle_restrict_pos_e(&params->axis->_value);
 	}
@@ -276,7 +276,7 @@ void hkl_geometry_list_multiply_soleil_sixs_med_2_3(HklGeometryList *self,
 	/* we just need to fit the slits orientation */
 	/* save it's value before */
 	slits_position = hkl_parameter_value_get(params.axis);
-	if (fit_slits_orientation(&params) != HKL_TRUE)
+	if (fit_slits_orientation(&params) != TRUE)
 		hkl_parameter_value_set(params.axis, slits_position, NULL);
 }
 

@@ -30,7 +30,7 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 {
 	uint i;
 	int unreachable = 0;
-	int ko = HKL_FALSE;
+	int ko = FALSE;
 	const char **mode;
 	const HklGeometryList *geometries = hkl_engine_list_geometries_get(engine_list);
 	HklGeometry *geometry = hkl_engine_list_geometry_get(engine_list);
@@ -120,7 +120,7 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 
 static int test_engines(HklEngineList *engine_list, int n)
 {
-	int res = HKL_TRUE;
+	int res = TRUE;
 	HklEngine **engine;
 	darray_engine *engines = hkl_engine_list_engines_get(engine_list);
 
@@ -136,7 +136,7 @@ static int test_engines(HklEngineList *engine_list, int n)
 
 static void factories(void)
 {
-	int res = HKL_TRUE;
+	int res = TRUE;
 	uint i, n;
 	HklEngineList *engines;
 	HklFactory **factories;
@@ -147,7 +147,7 @@ static void factories(void)
 		hkl_engine_list_free(engines);
 	}
 
-	ok(res == HKL_TRUE, "factories");
+	ok(res == TRUE, "factories");
 }
 
 static void set(int nb_iter)
@@ -158,7 +158,7 @@ static void set(int nb_iter)
 	HklDetector *detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	HklSample *sample = hkl_sample_new("test");
 	HklEngineList *engines;
-	int res = HKL_TRUE;
+	int res = TRUE;
 
 	/* attach to the second holder */
 	hkl_detector_idx_set(detector, 1);
@@ -176,7 +176,7 @@ static void set(int nb_iter)
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
 
-	ok(res == HKL_TRUE, "set");
+	ok(res == TRUE, "set");
 }
 
 int main(int argc, char** argv)

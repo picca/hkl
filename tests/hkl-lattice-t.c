@@ -100,7 +100,7 @@ static void  reciprocal(void )
 	hkl_lattice_set(lattice, 1.54, 1.54, 1.54,
 			90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD);
 
-	ok(HKL_TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
+	ok(TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
 
 	is_double(HKL_TAU / 1.54, hkl_parameter_value_get(hkl_lattice_a_get(reciprocal)), HKL_EPSILON, __func__);
 	is_double(HKL_TAU / 1.54, hkl_parameter_value_get(hkl_lattice_b_get(reciprocal)), HKL_EPSILON, __func__);
@@ -111,7 +111,7 @@ static void  reciprocal(void )
 
 	/* orthorombic */
 	hkl_lattice_set(lattice, 1., 3., 4., 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD);
-	ok(HKL_TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
+	ok(TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
 
 	is_double(HKL_TAU / 1., hkl_parameter_value_get(hkl_lattice_a_get(reciprocal)), HKL_EPSILON, __func__);
 	is_double(HKL_TAU / 3., hkl_parameter_value_get(hkl_lattice_b_get(reciprocal)), HKL_EPSILON, __func__);
@@ -122,7 +122,7 @@ static void  reciprocal(void )
 
 	/* hexagonal1 */
 	hkl_lattice_set(lattice, 1., 2., 1., 90 * HKL_DEGTORAD, 120 * HKL_DEGTORAD, 90 * HKL_DEGTORAD);
-	ok(HKL_TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
+	ok(TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
 
 	is_double(HKL_TAU * 2. / sqrt(3.), hkl_parameter_value_get(hkl_lattice_a_get(reciprocal)), HKL_EPSILON, __func__);
 	is_double(HKL_TAU / 2., hkl_parameter_value_get(hkl_lattice_b_get(reciprocal)), HKL_EPSILON, __func__);
@@ -133,7 +133,7 @@ static void  reciprocal(void )
 
 	/* hexagonal2 */
 	hkl_lattice_set(lattice, 2., 1., 1., 120 * HKL_DEGTORAD, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD);
-	ok(HKL_TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
+	ok(TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
 
 	is_double(HKL_TAU / 2., hkl_parameter_value_get(hkl_lattice_a_get(reciprocal)), HKL_EPSILON, __func__);
 	is_double(HKL_TAU * 2. / sqrt(3.), hkl_parameter_value_get(hkl_lattice_b_get(reciprocal)), HKL_EPSILON, __func__);
@@ -144,7 +144,7 @@ static void  reciprocal(void )
 
 	/* triclinic1 */
 	hkl_lattice_set(lattice, 9.32, 8.24, 13.78, 91.23 * HKL_DEGTORAD, 93.64 * HKL_DEGTORAD, 122.21 * HKL_DEGTORAD);
-	ok(HKL_TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
+	ok(TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
 
 	is_double(HKL_TAU * 0.1273130168, hkl_parameter_value_get(hkl_lattice_a_get(reciprocal)), HKL_EPSILON, __func__);
 	is_double(HKL_TAU * 0.1437422974, hkl_parameter_value_get(hkl_lattice_b_get(reciprocal)), HKL_EPSILON, __func__);
@@ -155,7 +155,7 @@ static void  reciprocal(void )
 
 	/* triclinic2 */
 	hkl_lattice_set(lattice, 18.423, 18.417, 18.457, 89.99 * HKL_DEGTORAD, 89.963 * HKL_DEGTORAD, 119.99 * HKL_DEGTORAD);
-	ok(HKL_TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
+	ok(TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
 
 	is_double(HKL_TAU * 0.0626708259, hkl_parameter_value_get(hkl_lattice_a_get(reciprocal)), HKL_EPSILON, __func__);
 	is_double(HKL_TAU * 0.0626912310, hkl_parameter_value_get(hkl_lattice_b_get(reciprocal)), HKL_EPSILON, __func__);
@@ -180,7 +180,7 @@ static void  get_B(void )
 	lattice = hkl_lattice_new(1.54, 1.54, 1.54, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD);
 
 	hkl_lattice_get_B(lattice, B);
-	ok(HKL_TRUE == hkl_matrix_cmp(B_ref, B), __func__);
+	ok(TRUE == hkl_matrix_cmp(B_ref, B), __func__);
 
 	hkl_lattice_free(lattice);
 	hkl_matrix_free(B);
@@ -205,7 +205,7 @@ static void  get_1_B(void )
 
 	/* B times B^-1 = Identity */
 	hkl_matrix_times_matrix(I, B_1);
-	ok(HKL_TRUE == hkl_matrix_cmp(I_ref, I), __func__);
+	ok(TRUE == hkl_matrix_cmp(I_ref, I), __func__);
 
 	hkl_lattice_free(lattice);
 	hkl_matrix_free(B_1);

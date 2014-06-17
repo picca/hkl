@@ -64,14 +64,14 @@ static int kappa_to_eulerian(const double angles[],
 		*phi = kphi + p - M_PI_2;
 	}
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 static int eulerian_to_kappa(const double omega, const double chi, const double phi,
 			     double angles[],
 			     double alpha, double solution)
 {
-	int status = HKL_TRUE;
+	int status = TRUE;
 	double *komega = &angles[0];
 	double *kappa = &angles[1];
 	double *kphi = &angles[2];
@@ -89,7 +89,7 @@ static int eulerian_to_kappa(const double omega, const double chi, const double 
 			*kphi = phi + p + M_PI_2;
 		}
 	}else
-		status = HKL_FALSE;
+		status = FALSE;
 
 	return status;
 }
@@ -129,7 +129,7 @@ static int hkl_mode_get_eulerians_real(HklMode *self,
 			  &eulerians->phi->_value,
 			  50 * HKL_DEGTORAD, solution);
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 static int hkl_mode_set_eulerians_real(HklMode *self,
@@ -154,11 +154,11 @@ static int hkl_mode_set_eulerians_real(HklMode *self,
 			    HKL_MODE_EULERIANS_ERROR,
 			    HKL_MODE_EULERIANS_ERROR_SET,
 			    "unreachable solution : 0° < chi < 50°");
-		return HKL_FALSE;
+		return FALSE;
 	}else
 		hkl_engine_add_geometry(engine, angles);
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 
