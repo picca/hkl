@@ -63,37 +63,50 @@ static inline void hkl_axis_update(HklAxis *self)
 					       &self->axis_v);
 }
 
-static inline void hkl_axis_init_copy_real(HklParameter *self, const HklParameter *src)
+static inline int hkl_axis_init_copy_real(HklParameter *self, const HklParameter *src,
+					  GError **error)
 {
 	HklAxis *axis_self = container_of(self, HklAxis, parameter);
 	HklAxis *axis_src = container_of(src, HklAxis, parameter);
 
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
 	*axis_self = *axis_src;
 	self->changed = TRUE;
+
+	return TRUE;
 }
 
-static inline unsigned int hkl_axis_set_value_real(
-	HklParameter *self, double value,
-	GError **error)
+static inline int hkl_axis_set_value_real(HklParameter *self, double value,
+					  GError **error)
 {
 	HklAxis *axis = container_of(self, HklAxis, parameter);
 
-	if(!hkl_parameter_value_set_real(self, value, error))
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
+	if(!hkl_parameter_value_set_real(self, value, error)){
+		g_assert (error == NULL || *error != NULL);
 		return FALSE;
+	}
+	g_assert (error == NULL || *error == NULL);
 
 	hkl_axis_update(axis);
 
 	return TRUE;
 }
 
-static inline unsigned int hkl_axis_set_value_unit_real(
-	HklParameter *self, double value,
-	GError **error)
+static inline int hkl_axis_set_value_unit_real(HklParameter *self, double value,
+					       GError **error)
 {
 	HklAxis *axis = container_of(self, HklAxis, parameter);
 
-	if(!hkl_parameter_value_unit_set_real(self, value, error))
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
+	if(!hkl_parameter_value_unit_set_real(self, value, error)){
+		g_assert (error == NULL || *error != NULL);
 		return FALSE;
+	}
+	g_assert (error == NULL || *error == NULL);
 
 	hkl_axis_update(axis);
 

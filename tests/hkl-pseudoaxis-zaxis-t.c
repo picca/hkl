@@ -38,16 +38,17 @@ static void solution(void)
 	HklMatrix *U;
 
 	/* get the geometry and set the source */
-	factory = hkl_factory_get_by_name("ZAXIS");
+	factory = hkl_factory_get_by_name("ZAXIS", NULL);
 	geometry = hkl_factory_create_new_geometry(factory);
-	hkl_geometry_wavelength_set(geometry, 0.842);
+	hkl_geometry_wavelength_set(geometry, 0.842, NULL);
 
 	/* set up the sample */
 	sample = hkl_sample_new("test");
 	lattice = hkl_lattice_new(5.432, 5.432, 5.432,
 				  90 * HKL_DEGTORAD,
 				  90 * HKL_DEGTORAD,
-				  90 * HKL_DEGTORAD);
+				  90 * HKL_DEGTORAD,
+				  NULL);
 	hkl_sample_lattice_set(sample, lattice);
 	U = hkl_matrix_new_euler(-90*HKL_DEGTORAD, 0, 0);
 	hkl_sample_U_set(sample, U);
@@ -62,10 +63,10 @@ static void solution(void)
 	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geometry, detector, sample);
 	geometries = hkl_engine_list_geometries_get(engines);
-	engine = hkl_engine_list_engine_get_by_name(engines, "hkl");
+	engine = hkl_engine_list_engine_get_by_name(engines, "hkl", NULL);
 
 	/* the init part must succed */
-	hkl_geometry_set_values_unit_v(geometry, 1., 0., 0., 0.);
+	hkl_geometry_set_values_unit_v(geometry, NULL, 1., 0., 0., 0.);
 
 	/* compute the 1 1 0 */
 	hkl_engine_pseudo_axes_values_set(engine, hkl, ARRAY_SIZE(hkl), NULL);

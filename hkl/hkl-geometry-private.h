@@ -60,6 +60,18 @@ struct _HklGeometry
 	darray_holder holders;
 };
 
+#define HKL_GEOMETRY_ERROR hkl_geometry_error_quark ()
+
+static GQuark hkl_geometry_error_quark (void)
+{
+	return g_quark_from_static_string ("hkl-geometry-error-quark");
+}
+
+typedef enum {
+	HKL_GEOMETRY_ERROR_AXIS_GET, /* can not get the axis */
+	HKL_GEOMETRY_ERROR_AXIS_SET, /* can not set the axis */
+} HklGeometryError;
+
 struct _HklGeometryList
 {
 	HklGeometryListMultiplyFunction multiply;
@@ -88,8 +100,8 @@ extern HklGeometry *hkl_geometry_new(const HklFactory *factory);
 
 extern HklGeometry *hkl_geometry_new_copy(const HklGeometry *self);
 
-extern void hkl_geometry_init_geometry(HklGeometry *self,
-				       const HklGeometry *src);
+extern int hkl_geometry_init_geometry(HklGeometry *self,
+				      const HklGeometry *src);
 
 extern HklHolder *hkl_geometry_add_holder(HklGeometry *self);
 
@@ -98,6 +110,7 @@ extern void hkl_geometry_update(HklGeometry *self);
 extern int hkl_geometry_get_axis_idx_by_name(const HklGeometry *self,
 					     const char *name);
 
+/* internally require do not use the hkl_geometry_axis_get */
 extern HklParameter *hkl_geometry_get_axis_by_name(HklGeometry *self,
 						   const char *name);
 

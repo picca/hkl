@@ -61,6 +61,17 @@ struct _HklSampleReflection {
 	struct list_node list;
 };
 
+#define HKL_SAMPLE_REFLECTION_ERROR hkl_sample_reflection_error_quark ()
+
+static GQuark hkl_sample_reflection_error_quark (void)
+{
+	return g_quark_from_static_string ("hkl-sample-reflection-error-quark");
+}
+
+typedef enum {
+	HKL_SAMPLE_REFLECTION_ERROR_HKL_SET, /* can not set the hkl part of the reflection */
+} HklSampleReflectionError;
+
 extern HklSampleReflection *hkl_sample_reflection_new_copy(const HklSampleReflection *self);
 
 extern void hkl_sample_reflection_free(HklSampleReflection *self);

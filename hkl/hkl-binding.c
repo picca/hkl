@@ -353,11 +353,21 @@ const GSList *hkl_sample_reflections_get(const HklSample *self)
 HklSampleReflection *hkl_sample_add_reflection_binding(HklSample *self,
 						       const HklGeometry *geometry,
 						       const HklDetector *detector,
-						       double h, double k, double l)
+						       double h, double k, double l,
+						       GError **error)
 {
 	HklSampleReflection *reflection;
 
-	reflection = hkl_sample_reflection_new(geometry, detector, h, k, l);
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
+	reflection = hkl_sample_reflection_new(geometry, detector,
+					       h, k, l, error);
+	if(!reflection){
+		g_assert (error == NULL || *error != NULL);
+		return NULL;
+	}
+	g_assert (error == NULL || *error == NULL);
+
 	hkl_sample_add_reflection(self, reflection);
 
 	return reflection;

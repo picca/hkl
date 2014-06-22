@@ -23,6 +23,9 @@
 #include <tap/basic.h>
 #include <tap/float.h>
 
+/* BEWARE THESE TESTS ARE DEALING WITH HKL INTERNALS WHICH EXPOSE A
+ * NON PUBLIC API WHICH ALLOW TO SHOOT YOURSELF IN YOUR FOOT */
+
 #include "hkl/ccan/container_of/container_of.h"
 #include "hkl-axis-private.h" /* temporary */
 #include "hkl-geometry-private.h"
@@ -54,7 +57,8 @@ static void get_axis(void)
 {
 	HklGeometry *g = NULL;
 	HklHolder *holder = NULL;
-	HklAxis *axis0, *axis1, *axis2;
+	const HklParameter *axis0, *axis1, *axis2;
+	GError *error;
 
 	g = hkl_geometry_new(NULL);
 
@@ -66,10 +70,35 @@ static void get_axis(void)
 	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
 	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
 
+	/* check the private API */
 	ok(0 == !hkl_geometry_get_axis_by_name(g, "A"), __func__);
 	ok(0 == !hkl_geometry_get_axis_by_name(g, "B"), __func__);
 	ok(0 == !hkl_geometry_get_axis_by_name(g, "C"), __func__);
 	ok(1 == !hkl_geometry_get_axis_by_name(g, "D"), __func__);
+
+	/* check the public API */
+	/* get */
+	ok(NULL != hkl_geometry_axis_get(g, "A", NULL), __func__);
+	ok(NULL == hkl_geometry_axis_get(g, "D", NULL), __func__);
+	error = NULL;
+	hkl_geometry_axis_get(g, "A", &error);
+	ok(error == NULL, __func__);
+	hkl_geometry_axis_get(g, "D", &error);
+	ok(error != NULL, __func__);
+	g_clear_error(&error);
+
+	/* set */
+	axis0 = hkl_geometry_axis_get(g, "A", NULL);
+	ok(TRUE == hkl_geometry_axis_set(g, "A", axis0, NULL), __func__);
+	ok(FALSE == hkl_geometry_axis_set(g, "B", axis0, NULL), __func__);
+
+	error = NULL;
+	hkl_geometry_axis_set(g, "A", axis0, &error);
+	ok(error == NULL, __func__);
+
+	ok(FALSE == hkl_geometry_axis_set(g, "B", axis0, &error), __func__);
+	ok(error != NULL, __func__);
+	g_clear_error(&error);
 
 	hkl_geometry_free(g);
 }
@@ -107,6 +136,40 @@ static void update(void)
 	hkl_geometry_free(g);
 }
 
+static void set(void)
+{
+	int res;
+	GError *error;
+	HklGeometry *g;
+	HklGeometry *g1;
+	HklGeometry *g2;
+	HklHolder *holder;
+	HklFactory *fake_factory;
+
+	g = hkl_geometry_new(NULL);
+	holder = hkl_geometry_add_holder(g);
+	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
+	hkl_holder_add_rotation_axis(holder, "B", 1., 0., 0.);
+	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
+
+	g1 = hkl_geometry_new_copy(g);
+
+	/* it is required to use a fake factory, with the public API
+	 * geometry contain always a real factory */
+	fake_factory = (HklFactory *)0x1;
+	g2 = hkl_geometry_new(fake_factory);
+	holder = hkl_geometry_add_holder(g);
+	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
+	hkl_holder_add_rotation_axis(holder, "B", 1., 0., 0.);
+
+	ok(hkl_geometry_set(g, g1), __func__);
+	ok(hkl_geometry_set(g, g2) == FALSE, __func__);
+
+	hkl_geometry_free(g2);
+	hkl_geometry_free(g1);
+	hkl_geometry_free(g);
+}
+
 static void set_values(void)
 {
 	HklGeometry *g;
@@ -137,7 +200,7 @@ static void set_values_unit(void)
 	hkl_holder_add_rotation_axis(holder, "B", 1., 0., 0.);
 	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
 
-	hkl_geometry_set_values_unit_v(g, 10., 10., 10.);
+	hkl_geometry_set_values_unit_v(g, NULL, 10., 10., 10.);
 	is_double(10. * HKL_DEGTORAD, hkl_parameter_value_get(darray_item(g->axes, 0)), HKL_EPSILON, __func__);
 	is_double(10. * HKL_DEGTORAD, hkl_parameter_value_get(darray_item(g->axes, 1)), HKL_EPSILON, __func__);
 	is_double(10. * HKL_DEGTORAD, hkl_parameter_value_get(darray_item(g->axes, 2)), HKL_EPSILON, __func__);
@@ -185,8 +248,23 @@ static void is_valid(void)
 	ok(TRUE == hkl_geometry_is_valid(geom), __func__);
 
 	hkl_parameter_min_max_set(darray_item(geom->axes, 0),
-				-100 * HKL_DEGTORAD, 100 * HKL_DEGTORAD);
+				  -100 * HKL_DEGTORAD, 100 * HKL_DEGTORAD,
+				  NULL);
 	ok(FALSE == hkl_geometry_is_valid(geom), __func__);
+
+	hkl_geometry_free(geom);
+}
+
+static void wavelength(void)
+{
+	HklGeometry *geom = NULL;
+	HklHolder *holder = NULL;
+
+	geom = hkl_geometry_new(NULL);
+
+	is_double(1.54, hkl_geometry_wavelength_get(geom), HKL_EPSILON, __func__);
+	ok(TRUE == hkl_geometry_wavelength_set(geom, 2, NULL), __func__);
+	is_double(2, hkl_geometry_wavelength_get(geom), HKL_EPSILON, __func__);
 
 	hkl_geometry_free(geom);
 }
@@ -209,7 +287,6 @@ static void list(void)
 	list = hkl_geometry_list_new();
 
 	hkl_geometry_set_values_v(g, 3, values[0], 0., 0.);
-	hkl_geometry_fprintf(stderr, g);
 	hkl_geometry_list_add(list, g);
 	is_int(1, hkl_geometry_list_n_items_get(list), __func__);
 
@@ -226,7 +303,6 @@ static void list(void)
 	hkl_geometry_set_values_v(g, 3, values[0], 0., 0.);
 	hkl_geometry_list_sort(list, g);
 
-	hkl_geometry_list_fprintf(stderr, list);
 	HKL_GEOMETRY_LIST_FOREACH(item, list){
 		is_double(values[i++],
 			  hkl_parameter_value_get(darray_item(item->geometry->axes, 0)),
@@ -254,9 +330,9 @@ static void  list_multiply_from_range(void)
 	axisB = hkl_geometry_get_axis_by_name(g, "B");
 	axisC = hkl_geometry_get_axis_by_name(g, "C");
 
-	hkl_parameter_min_max_unit_set(axisA, -190, 190);
-	hkl_parameter_min_max_unit_set(axisB, -190, 190);
-	hkl_parameter_min_max_unit_set(axisC, -190, 190);
+	hkl_parameter_min_max_unit_set(axisA, -190, 190, NULL);
+	hkl_parameter_min_max_unit_set(axisB, -190, 190, NULL);
+	hkl_parameter_min_max_unit_set(axisC, -190, 190, NULL);
 
 	list = hkl_geometry_list_new();
 
@@ -286,9 +362,9 @@ static void  list_remove_invalid(void)
 	axisB = hkl_geometry_get_axis_by_name(g, "B");
 	axisC = hkl_geometry_get_axis_by_name(g, "C");
 
-	hkl_parameter_min_max_unit_set(axisA, -100, 180.);
-	hkl_parameter_min_max_unit_set(axisB, -100., 180.);
-	hkl_parameter_min_max_unit_set(axisC, -100., 180.);
+	hkl_parameter_min_max_unit_set(axisA, -100, 180., NULL);
+	hkl_parameter_min_max_unit_set(axisB, -100., 180., NULL);
+	hkl_parameter_min_max_unit_set(axisC, -100., 180., NULL);
 
 	list = hkl_geometry_list_new();
 
@@ -320,15 +396,17 @@ static void  list_remove_invalid(void)
 
 int main(int argc, char** argv)
 {
-	plan(32);
+	plan(46);
 
 	add_holder();
 	get_axis();
 	update();
+	set();
 	set_values();
 	set_values_unit();
 	distance();
 	is_valid();
+	wavelength();
 
 	list();
 	list_multiply_from_range();

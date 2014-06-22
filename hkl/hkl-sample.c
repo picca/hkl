@@ -186,7 +186,9 @@ static double mono_crystal_fitness(const gsl_vector *x, void *params)
 	return fitness;
 }
 
-static double minimize(HklSample *sample, double (* f) (const gsl_vector * x, void * params), void *params)
+static int minimize(HklSample *sample,
+		    double (* f) (const gsl_vector * x, void * params),
+		    void *params, GError **error)
 {
 	gsl_multimin_fminimizer_type const *T = gsl_multimin_fminimizer_nmsimplex;
 	gsl_multimin_fminimizer *s = NULL;
@@ -196,8 +198,7 @@ static double minimize(HklSample *sample, double (* f) (const gsl_vector * x, vo
 	int status;
 	double size = 0;
 
-	if (!sample)
-		return GSL_NAN;
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
 	/* Starting point */
 	x = gsl_vector_alloc (9);
@@ -243,7 +244,10 @@ static double minimize(HklSample *sample, double (* f) (const gsl_vector * x, vo
 	gsl_multimin_fminimizer_free(s);
 	gsl_set_error_handler (NULL);
 
-	return size;
+	if (status == GSL_CONTINUE)
+		return FALSE;
+
+	return TRUE;
 }
 
 /*************/
@@ -439,31 +443,54 @@ const HklParameter *hkl_sample_uz_get(const HklSample *self)
  * hkl_sample_ux_set:
  * @self: the this ptr
  * @ux: the ux parameter to set
-
+ * @error: return location for a GError, or NULL
+ *
  * set the ux part of the U matrix.
+ *
+ * Returns: TRUE on success, FALSE if an error occurred
  **/
-void hkl_sample_ux_set(HklSample *self,
-		       const HklParameter *ux)
+int hkl_sample_ux_set(HklSample *self,
+		      const HklParameter *ux,
+		      GError **error)
 {
-	hkl_parameter_init_copy(self->ux, ux);
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
+	if(!hkl_parameter_init_copy(self->ux, ux, error)){
+		g_assert (error == NULL || *error != NULL);
+		return FALSE;
+	}
+	g_assert (error == NULL || *error == NULL);
+
 	hkl_matrix_init_from_euler(&self->U,
 				   hkl_parameter_value_get(self->ux),
 				   hkl_parameter_value_get(self->uy),
 				   hkl_parameter_value_get(self->uz));
 	hkl_sample_compute_UB(self);
+
+	return TRUE;
 }
 
 /**
  * hkl_sample_uy_set:
  * @self: the this ptr
  * @uy: the uy parameter to set
-
+ * @error: return location for a GError, or NULL
+ *
  * set the uy part of the U matrix.
+ *
+ * Returns: TRUE on success, FALSE if an error occurred
  **/
-void hkl_sample_uy_set(HklSample *self,
-		       const HklParameter *uy)
+int hkl_sample_uy_set(HklSample *self, const HklParameter *uy,
+		      GError **error)
 {
-	hkl_parameter_init_copy(self->uy, uy);
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
+	if(!hkl_parameter_init_copy(self->uy, uy, error)){
+		g_assert (error == NULL || *error != NULL);
+		return FALSE;
+	}
+	g_assert (error == NULL || *error == NULL);
+
 	hkl_matrix_init_from_euler(&self->U,
 				   hkl_parameter_value_get(self->ux),
 				   hkl_parameter_value_get(self->uy),
@@ -475,13 +502,23 @@ void hkl_sample_uy_set(HklSample *self,
  * hkl_sample_uz_set:
  * @self: the this ptr
  * @uz: the uz parameter to set
-
+ * @error: return location for a GError, or NULL
+ *
  * set the uz part of the U matrix.
+ *
+ * Returns: TRUE on success, FALSE if an error occurred
  **/
-void hkl_sample_uz_set(HklSample *self,
-		       const HklParameter *uz)
+int hkl_sample_uz_set(HklSample *self, const HklParameter *uz,
+		      GError **error)
 {
-	hkl_parameter_init_copy(self->uz, uz);
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
+	if(!hkl_parameter_init_copy(self->uz, uz, error)){
+		g_assert (error == NULL || *error != NULL);
+		return FALSE;
+	}
+	g_assert (error == NULL || *error == NULL);
+
 	hkl_matrix_init_from_euler(&self->U,
 				   hkl_parameter_value_get(self->ux),
 				   hkl_parameter_value_get(self->uy),
@@ -533,14 +570,15 @@ const HklMatrix *hkl_sample_UB_get(const HklSample *self)
  * this operation. We keep the B matrix constant.
  * U * B = UB -> U = UB * B^-1
  **/
-double hkl_sample_UB_set(HklSample *self, const HklMatrix *UB)
+int hkl_sample_UB_set(HklSample *self, const HklMatrix *UB,
+		      GError **error)
 {
 	struct set_UB_t params = {
 		.sample = self,
-		.UB = UB
+ 		.UB = UB
 	};
 
-	return minimize(self, set_UB_fitness, &params);
+	return minimize(self, set_UB_fitness, &params, error);
 }
 
 /**
@@ -615,7 +653,8 @@ void hkl_sample_del_reflection(HklSample *self,
  **/
 int hkl_sample_compute_UB_busing_levy(HklSample *self,
 				      const HklSampleReflection *r1,
-				      const HklSampleReflection *r2)
+				      const HklSampleReflection *r2,
+				      GError **error)
 
 {
 	if (!hkl_vector_is_colinear(&r1->hkl, &r2->hkl)) {
@@ -653,9 +692,9 @@ int hkl_sample_compute_UB_busing_levy(HklSample *self,
  *
  * Returns: the fitness of the affined #HklSample
  **/
-double hkl_sample_affine(HklSample *self)
+int hkl_sample_affine(HklSample *self, GError **error)
 {
-	return minimize(self, mono_crystal_fitness, self);
+	return minimize(self, mono_crystal_fitness, self, error);
 }
 
 /**
@@ -780,7 +819,8 @@ void hkl_sample_fprintf(FILE *f, const HklSample *self)
  **/
 HklSampleReflection *hkl_sample_reflection_new(const HklGeometry *geometry,
 					       const HklDetector *detector,
-					       double h, double k, double l)
+					       double h, double k, double l,
+					       GError **error)
 {
 	HklSampleReflection *self;
 
@@ -860,17 +900,31 @@ void hkl_sample_reflection_hkl_get(const HklSampleReflection *self,
  * @h: the h-coordinate of the #HklSampleReflection
  * @k: the k-coordinate of the #HklSampleReflection
  * @l: the l-coordinate of the #HklSampleReflection
+ * @error: return location for a GError, or NULL
  *
  * set the hkl coordinates of the #HklSampleReflection
+ *
+ * Returns: TRUE on success, FALSE if an error occurred
  **/
-void hkl_sample_reflection_hkl_set(HklSampleReflection *self, double h, double k, double l)
+int hkl_sample_reflection_hkl_set(HklSampleReflection *self,
+				  double h, double k, double l,
+				  GError **error)
 {
-	if((fabs(h) + fabs(k) + fabs(l) < HKL_EPSILON))
-		return;
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
+	if((fabs(h) + fabs(k) + fabs(l) < HKL_EPSILON)){
+		g_set_error(error,
+			    HKL_SAMPLE_REFLECTION_ERROR,
+			    HKL_SAMPLE_REFLECTION_ERROR_HKL_SET,
+			    "it is not allow to set a null hkl reflection\n");
+		return FALSE;
+	}
 
 	self->hkl.data[0] = h;
 	self->hkl.data[1] = k;
 	self->hkl.data[2] = l;
+
+	return TRUE;
 }
 
 /**

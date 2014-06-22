@@ -104,19 +104,19 @@ static void is_valid(void)
 	ok(TRUE == hkl_parameter_is_valid(&axis1->parameter), __func__);
 
 	/* change the range of axis1 */
-	hkl_parameter_min_max_unit_set(&axis1->parameter, -270, 0);
+	hkl_parameter_min_max_unit_set(&axis1->parameter, -270, 0, NULL);
 	ok(FALSE == hkl_parameter_is_valid(&axis1->parameter), __func__);
 
 	hkl_parameter_value_unit_set(&axis1->parameter, -45, NULL);
 	ok(TRUE == hkl_parameter_is_valid(&axis1->parameter), __func__);
 
-	hkl_parameter_min_max_unit_set(&axis1->parameter, 350, 450);
+	hkl_parameter_min_max_unit_set(&axis1->parameter, 350, 450, NULL);
 	hkl_parameter_value_unit_set(&axis1->parameter, 45, NULL);
 	ok(TRUE == hkl_parameter_is_valid(&axis1->parameter), __func__);
 	hkl_parameter_value_unit_set(&axis1->parameter, -45, NULL);
 	ok(FALSE == hkl_parameter_is_valid(&axis1->parameter), __func__);
 
-	hkl_parameter_min_max_unit_set(&axis1->parameter, -10, 90);
+	hkl_parameter_min_max_unit_set(&axis1->parameter, -10, 90, NULL);
 	hkl_parameter_value_unit_set(&axis1->parameter, 405, NULL);
 	ok(TRUE == hkl_parameter_is_valid(&axis1->parameter), __func__);
 	hkl_parameter_value_unit_set(&axis1->parameter, -405, NULL);
@@ -133,7 +133,7 @@ static void set_value_smallest_in_range(void)
 	axis = container_of(hkl_parameter_new_axis("omega", &v),
 			    HklAxis, parameter);
 
-	hkl_parameter_min_max_unit_set(&axis->parameter, -190, 190);
+	hkl_parameter_min_max_unit_set(&axis->parameter, -190, 190, NULL);
 
 	hkl_parameter_value_unit_set(&axis->parameter, 185, NULL);
 	hkl_parameter_value_set_smallest_in_range(&axis->parameter);
@@ -179,7 +179,7 @@ static void get_value_closest(void)
 		  HKL_EPSILON, __func__);
 
 	/* change the range of axis1 */
-	hkl_parameter_min_max_unit_set(&axis1->parameter, -270, 180);
+	hkl_parameter_min_max_unit_set(&axis1->parameter, -270, 180, NULL);
 	hkl_parameter_value_unit_set(&axis1->parameter, 100, NULL);
 
 	hkl_parameter_value_unit_set(&axis2->parameter, -75, NULL);

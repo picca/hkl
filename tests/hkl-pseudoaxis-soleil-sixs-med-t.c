@@ -30,7 +30,7 @@
 		hkl_geometry_axis_get(					\
 			hkl_geometry_list_item_geometry_get(		\
 				hkl_geometry_list_items_first_get((geometries))), \
-			"gamma"))
+			"gamma", NULL))
 
 static void qper_qpar(void)
 {
@@ -46,7 +46,7 @@ static void qper_qpar(void)
 	const HklGeometryList *geometries;
 	HklMatrix *U;
 
-	factory = hkl_factory_get_by_name("SOLEIL SIXS MED2+3");
+	factory = hkl_factory_get_by_name("SOLEIL SIXS MED2+3", NULL);
 	geom = hkl_factory_create_new_geometry(factory);
 
 	sample = hkl_sample_new("test");
@@ -61,10 +61,10 @@ static void qper_qpar(void)
 	hkl_engine_list_init(engines, geom, detector, sample);
 	geometries = hkl_engine_list_geometries_get(engines);
 
-	engine = hkl_engine_list_engine_get_by_name(engines, "qper_qpar");
+	engine = hkl_engine_list_engine_get_by_name(engines, "qper_qpar", NULL);
 
 	/* the init part */
-	hkl_geometry_set_values_unit_v(geom, 0., 0.1, 0., 0., 90., 0.);
+	hkl_geometry_set_values_unit_v(geom, NULL, 0., 0.1, 0., 0., 90., 0.);
 	hkl_engine_initialize(engine, NULL);
 
 	/* gamma must be positif */

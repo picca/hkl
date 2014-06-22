@@ -88,7 +88,8 @@ HKLAPI const GSList *hkl_sample_reflections_get(const HklSample *self);
 HKLAPI HklSampleReflection *hkl_sample_add_reflection_binding(HklSample *self,
 							      const HklGeometry *geometry,
 							      const HklDetector *detector,
-							      double h, double k, double l);
+							      double h, double k, double l,
+							      GError **error);
 
 G_END_DECLS
 

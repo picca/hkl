@@ -275,77 +275,152 @@ void hkl_geometry_free(HklGeometry *self)
 	free(self);
 }
 
-void hkl_geometry_set(HklGeometry *self, const HklGeometry *src)
+/**
+ * hkl_geometry_set: (skip)
+ * @self: the this ptr
+ * @src: the other #HklGeometry to set from
+ *
+ * Set an #HklGeometry from another one.
+ *
+ * Returns: TRUE on success, FALSE if an error occurred
+ **/
+int hkl_geometry_set(HklGeometry *self, const HklGeometry *src)
 {
 	size_t i;
 
-	if(self->factory != src->factory)
-		return;
+	g_return_val_if_fail(self->factory == src->factory, FALSE);
 
-	self->factory = src->factory;
 	self->source = src->source;
 
 	/* copy the axes configuration and mark it as dirty */
 	for(i=0; i<darray_size(self->axes); ++i)
 		hkl_parameter_init_copy(darray_item(self->axes, i),
-					darray_item(src->axes, i));
+					darray_item(src->axes, i), NULL);
 
 	for(i=0; i<darray_size(src->holders); ++i)
 		darray_item(self->holders, i)->q = darray_item(src->holders, i)->q;
+
+	return TRUE;
 }
 
 /**
  * hkl_geometry_axis_get: (skip)
  * @self: the this ptr
  * @name: the name of the axis your are requesting
+ * @error: return location for a GError, or NULL
  *
  * Return value: (allow-none): the parameter corresponding to the axis name.
  **/
 const HklParameter *hkl_geometry_axis_get(const HklGeometry *self,
-					  const char *name)
+					  const char *name,
+					  GError **error)
 {
 	HklParameter **axis;
+
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
 	darray_foreach(axis, self->axes){
 		if (!strcmp((*axis)->name, name))
 			return *axis;
 	}
+
+	g_set_error(error,
+		    HKL_GEOMETRY_ERROR,
+		    HKL_GEOMETRY_ERROR_AXIS_GET,
+		    "this geometry does not contain this axis \"%s\"",
+		    name);
+
 	return NULL;
 }
 
-void hkl_geometry_axis_set(HklGeometry *self, const HklParameter *axis)
+/**
+ * hkl_geometry_axis_set: (skip)
+ * @self: the this ptr
+ * @name: the name of the axis to set
+ * @axis: The #HklParameter to set
+ * @error: return location for a GError, or NULL
+ *
+ * @todo: check if the error is well tested
+ *
+ * Returns: TRUE on success, FALSE if an error occurred
+ **/
+int hkl_geometry_axis_set(HklGeometry *self, const char *name,
+			  const HklParameter *axis,
+			  GError **error)
 {
 	HklParameter **_axis;
+
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
+	if(name != axis->name && strcmp(name, axis->name)){
+		g_set_error(error,
+			    HKL_GEOMETRY_ERROR,
+			    HKL_GEOMETRY_ERROR_AXIS_SET,
+			    "The axis to set \"%s\" is different from the parameter name \"\"\n",
+			    name, axis->name);
+		return FALSE;
+	}
 
 	darray_foreach(_axis, self->axes){
 		if (*_axis == axis)
 			break;
-		if (!strcmp(axis->name, (*_axis)->name))
-			hkl_parameter_init_copy(*_axis, axis);
+		if (!strcmp(axis->name, (*_axis)->name)){
+			hkl_parameter_init_copy(*_axis, axis, NULL);
+			break;
+		}
 	}
 	hkl_geometry_update(self);
+
+	return TRUE;
 }
 
+/**
+ * hkl_geometry_wavelength_get: (skip)
+ * @self: the this ptr
+ *
+ * Get the wavelength of the HklGeometry
+ *
+ * Returns: the wavelength
+ **/
 double hkl_geometry_wavelength_get(const HklGeometry *self)
 {
 	return self->source.wave_length;
 }
 
-void hkl_geometry_wavelength_set(HklGeometry *self, double wavelength)
+
+/**
+ * hkl_geometry_wavelength_set:
+ * @self:
+ * @wavelength:
+ * @error: return location for a GError, or NULL
+ *
+ * Set the wavelength of the geometry
+ * @todo: check the validity of the wavelength
+ *
+ * Returns: TRUE on success, FALSE if an error occurred
+ **/
+int hkl_geometry_wavelength_set(HklGeometry *self, double wavelength,
+				GError **error)
 {
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
 	self->source.wave_length = wavelength;
+
+	return TRUE;
 }
 
 /**
  * hkl_geometry_init_geometry: (skip)
- * @self:
- * @src:
+ * @self: the this ptr
+ * @src: the #HklGeometry to set from
  *
  * initilize an HklGeometry
+ *
+ * Returns: TRUE on success, FALSE if an error occurred
  **/
-void hkl_geometry_init_geometry(HklGeometry *self, const HklGeometry *src)
+int hkl_geometry_init_geometry(HklGeometry *self, const HklGeometry *src)
 {
-	hkl_geometry_set(self, src);
+	return hkl_geometry_set(self, src);
 }
 
 /**
@@ -493,16 +568,25 @@ int hkl_geometry_set_values_v(HklGeometry *self, size_t len, ...)
 	return TRUE;
 }
 
-int hkl_geometry_set_values_unit_v(HklGeometry *self, ...)
+int hkl_geometry_set_values_unit_v(HklGeometry *self, GError **error, ...)
 {
 	va_list ap;
 	HklParameter **axis;
 
-	va_start(ap, self);
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
+	va_start(ap, error);
 	darray_foreach(axis, self->axes){
-		hkl_parameter_value_unit_set(*axis,
-					     va_arg(ap, double), NULL);
+		if(!hkl_parameter_value_unit_set(*axis,
+						 va_arg(ap, double), error)){
+			g_assert (error == NULL || *error != NULL);
+			va_end(ap);
+			hkl_geometry_update(self);
+			return FALSE;
+		}
 	}
+	g_assert (error == NULL || *error == NULL);
+
 	va_end(ap);
 
 	hkl_geometry_update(self);

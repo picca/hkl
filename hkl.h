@@ -135,11 +135,13 @@ HKLAPI int hkl_parameter_value_unit_set(HklParameter *self, double value,
 
 HKLAPI void hkl_parameter_min_max_get(const HklParameter *self, double *min, double *max) HKL_ARG_NONNULL(1, 2, 3);
 
-HKLAPI void hkl_parameter_min_max_set(HklParameter *self, double min, double max) HKL_ARG_NONNULL(1);
+HKLAPI int hkl_parameter_min_max_set(HklParameter *self, double min, double max,
+				     GError **error) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_parameter_min_max_unit_get(const HklParameter *self, double *min, double *max) HKL_ARG_NONNULL(1, 2, 3);
 
-HKLAPI void hkl_parameter_min_max_unit_set(HklParameter *self, double min, double max) HKL_ARG_NONNULL(1);
+HKLAPI int hkl_parameter_min_max_unit_set(HklParameter *self, double min, double max,
+					  GError **error) HKL_ARG_NONNULL(1);
 
 HKLAPI int hkl_parameter_fit_get(const HklParameter *self) HKL_ARG_NONNULL(1);
 
@@ -177,22 +179,26 @@ typedef struct _HklGeometryListItem HklGeometryListItem;
 
 HKLAPI void hkl_geometry_free(HklGeometry *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_geometry_set(HklGeometry *self, const HklGeometry *src) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_geometry_set(HklGeometry *self, const HklGeometry *src) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI const HklParameter *hkl_geometry_axis_get(const HklGeometry *self, const char *name) HKL_ARG_NONNULL(1, 2);
+HKLAPI const HklParameter *hkl_geometry_axis_get(const HklGeometry *self, const char *name,
+						 GError **error) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI void hkl_geometry_axis_set(HklGeometry *self, const HklParameter *axis) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_geometry_axis_set(HklGeometry *self, const char *name,
+				 const HklParameter *axis,
+				 GError **error) HKL_ARG_NONNULL(1, 2, 3);
 
 HKLAPI const char *hkl_geometry_name_get(const HklGeometry *self) HKL_ARG_NONNULL(1);
 
 HKLAPI double hkl_geometry_wavelength_get(const HklGeometry *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_geometry_wavelength_set(HklGeometry *self, double wavelength) HKL_ARG_NONNULL(1);
+HKLAPI int hkl_geometry_wavelength_set(HklGeometry *self, double wavelength,
+				       GError **error) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_geometry_randomize(HklGeometry *self) HKL_ARG_NONNULL(1);
 
 /* TODO after bissecting it seems that this method is slow (to replace) */
-HKLAPI int hkl_geometry_set_values_unit_v(HklGeometry *self, ...) HKL_ARG_NONNULL(1);
+HKLAPI int hkl_geometry_set_values_unit_v(HklGeometry *self, GError **error, ...) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_geometry_fprintf(FILE *file, const HklGeometry *self) HKL_ARG_NONNULL(1, 2);
 
@@ -224,7 +230,8 @@ typedef struct _HklSampleReflection HklSampleReflection;
 /* Lattice */
 
 HKLAPI HklLattice *hkl_lattice_new(double a, double b, double c,
-				   double alpha, double beta, double gamma);
+				   double alpha, double beta, double gamma,
+				   GError **error);
 
 HKLAPI HklLattice *hkl_lattice_new_copy(const HklLattice *self) HKL_ARG_NONNULL(1);
 
@@ -234,31 +241,38 @@ HKLAPI void hkl_lattice_free(HklLattice *self) HKL_ARG_NONNULL(1);
 
 HKLAPI const HklParameter *hkl_lattice_a_get(const HklLattice *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_lattice_a_set(HklLattice *self, const HklParameter *parameter) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_lattice_a_set(HklLattice *self, const HklParameter *parameter,
+			     GError **error) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI const HklParameter *hkl_lattice_b_get(const HklLattice *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_lattice_b_set(HklLattice *self, const HklParameter *parameter) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_lattice_b_set(HklLattice *self, const HklParameter *parameter,
+			     GError **error) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI const HklParameter *hkl_lattice_c_get(const HklLattice *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_lattice_c_set(HklLattice *self, const HklParameter *parameter) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_lattice_c_set(HklLattice *self, const HklParameter *parameter,
+			      GError **error) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI const HklParameter *hkl_lattice_alpha_get(const HklLattice *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_lattice_alpha_set(HklLattice *self, const HklParameter *parameter) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_lattice_alpha_set(HklLattice *self, const HklParameter *parameter,
+				  GError **error) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI const HklParameter *hkl_lattice_beta_get(const HklLattice *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_lattice_beta_set(HklLattice *self, const HklParameter *parameter) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_lattice_beta_set(HklLattice *self, const HklParameter *parameter,
+				 GError **error) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI const HklParameter *hkl_lattice_gamma_get(const HklLattice *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_lattice_gamma_set(HklLattice *self, const HklParameter *parameter) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_lattice_gamma_set(HklLattice *self, const HklParameter *parameter,
+				  GError **error) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI int hkl_lattice_set(HklLattice *self,
 			   double a, double b, double c,
-			   double alpha, double beta, double gamma) HKL_ARG_NONNULL(1);
+			   double alpha, double beta, double gamma,
+			   GError **error) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_lattice_get(const HklLattice *self,
 			    double *a, double *b, double *c,
@@ -288,15 +302,18 @@ HKLAPI void hkl_sample_lattice_set(HklSample *self, const HklLattice *lattice) H
 
 HKLAPI const HklParameter *hkl_sample_ux_get(const HklSample *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_sample_ux_set(HklSample *self, const HklParameter *ux) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_sample_ux_set(HklSample *self, const HklParameter *ux,
+			     GError **error) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI const HklParameter *hkl_sample_uy_get(const HklSample *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_sample_uy_set(HklSample *self, const HklParameter *uy) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_sample_uy_set(HklSample *self, const HklParameter *uy,
+			     GError **error) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI const HklParameter *hkl_sample_uz_get(const HklSample *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_sample_uz_set(HklSample *self, const HklParameter *uz) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_sample_uz_set(HklSample *self, const HklParameter *uz,
+			     GError **error) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI const HklMatrix *hkl_sample_U_get(const HklSample *self) HKL_ARG_NONNULL(1);
 
@@ -304,7 +321,8 @@ HKLAPI void hkl_sample_U_set(HklSample *self, const HklMatrix *U) HKL_ARG_NONNUL
 
 HKLAPI const HklMatrix *hkl_sample_UB_get(const HklSample *self) HKL_ARG_NONNULL(1);
 
-HKLAPI double hkl_sample_UB_set(HklSample *self, const HklMatrix *UB) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_sample_UB_set(HklSample *self, const HklMatrix *UB,
+			     GError **error) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI HklSampleReflection *hkl_sample_first_reflection_get(HklSample *self) HKL_ARG_NONNULL(1);
 
@@ -319,7 +337,8 @@ HKLAPI void hkl_sample_add_reflection(HklSample *self,
 
 HKLAPI int hkl_sample_compute_UB_busing_levy(HklSample *self,
 					     const HklSampleReflection *r1,
-					     const HklSampleReflection *r2) HKL_ARG_NONNULL(1, 2, 3);
+					     const HklSampleReflection *r2,
+					     GError **error) HKL_ARG_NONNULL(1, 2, 3);
 
 HKLAPI double hkl_sample_get_reflection_mesured_angle(const HklSample *self,
 						      const HklSampleReflection *r1,
@@ -329,19 +348,21 @@ HKLAPI double hkl_sample_get_reflection_theoretical_angle(const HklSample *self,
 							  const HklSampleReflection *r1,
 							  const HklSampleReflection *r2) HKL_ARG_NONNULL(1, 2, 3);
 
-HKLAPI double hkl_sample_affine(HklSample *self) HKL_ARG_NONNULL(1);
+HKLAPI int hkl_sample_affine(HklSample *self, GError **error) HKL_ARG_NONNULL(1);
 
 /* hklSampleReflection */
 
 HKLAPI HklSampleReflection *hkl_sample_reflection_new(const HklGeometry *geometry,
 						      const HklDetector *detector,
-						      double h, double k, double l) HKL_ARG_NONNULL(1, 2);
+						      double h, double k, double l,
+						      GError **error) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI void hkl_sample_reflection_hkl_get(const HklSampleReflection *self,
 					  double *h, double *k, double *l) HKL_ARG_NONNULL(1, 2, 3, 4);
 
-HKLAPI void hkl_sample_reflection_hkl_set(HklSampleReflection *self,
-					  double h, double k, double l) HKL_ARG_NONNULL(1);
+HKLAPI int hkl_sample_reflection_hkl_set(HklSampleReflection *self,
+					 double h, double k, double l,
+					 GError **error) HKL_ARG_NONNULL(1);
 
 HKLAPI int hkl_sample_reflection_flag_get(const HklSampleReflection *self) HKL_ARG_NONNULL(1);
 
@@ -374,37 +395,42 @@ HKLAPI const darray_string *hkl_engine_pseudo_axes_names_get(HklEngine *self) HK
 HKLAPI void hkl_engine_pseudo_axes_values_get(HklEngine *self,
 					      double values[], size_t n_values) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI unsigned int hkl_engine_pseudo_axes_values_set(HklEngine *self,
-						      double values[], size_t n_values,
-						      GError **error) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_engine_pseudo_axes_values_set(HklEngine *self,
+					     double values[], size_t n_values,
+					     GError **error) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI void hkl_engine_pseudo_axes_randomize(HklEngine *self) HKL_ARG_NONNULL(1);
 
 HKLAPI const HklParameter *hkl_engine_pseudo_axis_get(const HklEngine *self,
-						      const char *name) HKL_ARG_NONNULL(1, 2);
+						      const char *name,
+						      GError **error) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI unsigned int hkl_engine_pseudo_axis_set(HklEngine *self,
-					       const HklParameter *parameter,
-					       GError **error) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_engine_pseudo_axis_set(HklEngine *self, const char *name,
+				      const HklParameter *parameter,
+				      GError **error) HKL_ARG_NONNULL(1, 2, 3);
 
 HKLAPI const darray_string *hkl_engine_modes_names_get(const HklEngine *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_engine_select_mode(HklEngine *self,
-				   const char *name) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_engine_select_mode(HklEngine *self,
+				  const char *name,
+				  GError **error) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI const darray_string *hkl_engine_parameters_names_get(const HklEngine *self) HKL_ARG_NONNULL(1);
 
-HKLAPI unsigned int hkl_engine_parameters_values_set(HklEngine *self,
-						     double values[], size_t n_values,
-						     GError **error) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_engine_parameters_values_set(HklEngine *self,
+					    double values[], size_t n_values,
+					    GError **error) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI void hkl_engine_parameters_randomize(HklEngine *self) HKL_ARG_NONNULL(1);
 
 HKLAPI const HklParameter *hkl_engine_parameter_get(const HklEngine *self,
-						    const char *name) HKL_ARG_NONNULL(1, 2);
+						    const char *name,
+						    GError **error) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI void hkl_engine_parameter_set(HklEngine *self,
-				     const HklParameter *parameter) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_engine_parameter_set(HklEngine *self,
+				    const char *name,
+				    const HklParameter *parameter,
+				    GError **error) HKL_ARG_NONNULL(1, 2, 3);
 
 HKLAPI HklEngineList *hkl_engine_engines_get(HklEngine *self) HKL_ARG_NONNULL(1);
 
@@ -424,18 +450,20 @@ HKLAPI darray_engine *hkl_engine_list_engines_get(HklEngineList *self) HKL_ARG_N
 
 HKLAPI HklGeometry *hkl_engine_list_geometry_get(HklEngineList *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_engine_list_geometry_set(HklEngineList *self, const HklGeometry *geometry) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_engine_list_geometry_set(HklEngineList *self, const HklGeometry *geometry) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI const HklGeometryList *hkl_engine_list_geometries_get(const HklEngineList *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_engine_list_select_solution(HklEngineList *self,
-					    const HklGeometryListItem *item) HKL_ARG_NONNULL(1);
+HKLAPI int hkl_engine_list_select_solution(HklEngineList *self,
+					   const HklGeometryListItem *item) HKL_ARG_NONNULL(1);
 
 HKLAPI HklEngine *hkl_engine_list_engine_get_by_name(HklEngineList *self,
-					      const char *name) HKL_ARG_NONNULL(1, 2);
+						     const char *name,
+						     GError **error) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI HklParameter *hkl_engine_list_pseudo_axis_get_by_name(const HklEngineList *self,
-							     const char *name) HKL_ARG_NONNULL(1, 2);
+							     const char *name,
+							     GError **error) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI void hkl_engine_list_init(HklEngineList *self,
 				 HklGeometry *geometry,
@@ -455,7 +483,8 @@ typedef struct _HklFactory HklFactory;
 
 HKLAPI HklFactory **hkl_factory_get_all(unsigned int *n) HKL_ARG_NONNULL(1);
 
-HKLAPI HklFactory *hkl_factory_get_by_name(const char *name) HKL_ARG_NONNULL(1);
+HKLAPI HklFactory *hkl_factory_get_by_name(const char *name,
+					   GError **error) HKL_ARG_NONNULL(1);
 
 HKLAPI const char *hkl_factory_name(const HklFactory *self) HKL_ARG_NONNULL(1);
 

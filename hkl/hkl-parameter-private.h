@@ -50,6 +50,16 @@ struct _HklParameter {
 
 #define HKL_PARAMETER_DEFAULTS_ANGLE HKL_PARAMETER_DEFAULTS, .range={.min=-M_PI, .max=M_PI}, .unit = &hkl_unit_angle_rad, .punit = &hkl_unit_angle_deg
 
+#define HKL_PARAMETER_ERROR hkl_parameter_error_quark ()
+
+static GQuark hkl_parameter_error_quark (void)
+{
+	return g_quark_from_static_string ("hkl-parameter-error-quark");
+}
+
+typedef enum {
+	HKL_PARAMETER_ERROR_MIN_MAX_SET, /* can not set the min max */
+} HklParameterError;
 
 /****************/
 /* HklParameter */
@@ -58,12 +68,12 @@ struct _HklParameter {
 struct _HklParameterOperations {
 	HklParameter * (*copy)(const HklParameter *self);
 	void           (*free)(HklParameter *self);
-	void           (*init_copy)(HklParameter *self, const HklParameter *src);
+	int            (*init_copy)(HklParameter *self, const HklParameter *src, GError **error);
 	double         (*get_value_closest)(const HklParameter *self,
 					    const HklParameter *other);
-	unsigned int   (*set_value)(HklParameter *self, double value,
+	int            (*set_value)(HklParameter *self, double value,
 				    GError **error);
-	unsigned int   (*set_value_unit)(HklParameter *self, double value,
+	int            (*set_value_unit)(HklParameter *self, double value,
 					 GError **error);
 	void           (*set_value_smallest_in_range)(HklParameter *self);
 	void           (*randomize)(HklParameter *self);
@@ -97,10 +107,15 @@ static inline void hkl_parameter_free_real(HklParameter *self)
 	free(self);
 }
 
-static inline void hkl_parameter_init_copy_real(HklParameter *self, const HklParameter *src)
+static inline int hkl_parameter_init_copy_real(HklParameter *self, const HklParameter *src,
+					       GError **error)
 {
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
 	*self = *src;
 	self->changed = TRUE;
+
+	return TRUE;
 }
 
 static inline double hkl_parameter_value_get_closest_real(const HklParameter *self,
@@ -109,21 +124,23 @@ static inline double hkl_parameter_value_get_closest_real(const HklParameter *se
 	return self->_value;
 }
 
-static inline unsigned int hkl_parameter_value_set_real(
-	HklParameter *self, double value,
-	GError **error)
+static inline int hkl_parameter_value_set_real(HklParameter *self, double value,
+					       GError **error)
 {
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
 	self->_value = value;
 	self->changed = TRUE;
 
 	return TRUE;
 }
 
-static inline unsigned int hkl_parameter_value_unit_set_real(
-	HklParameter *self, double value,
-	GError **error)
+static inline int hkl_parameter_value_unit_set_real(HklParameter *self, double value,
+						    GError **error)
 {
 	double factor = hkl_unit_factor(self->unit, self->punit);
+
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
 	return hkl_parameter_value_set_real(self, value / factor, error);
 }
@@ -183,7 +200,8 @@ extern HklParameter *hkl_parameter_new(const char *name,
 				       const HklUnit *unit,
 				       const HklUnit *punit);
 
-extern void hkl_parameter_init_copy(HklParameter *self, const HklParameter *src);
+extern int hkl_parameter_init_copy(HklParameter *self, const HklParameter *src,
+				   GError **error);
 
 extern double hkl_parameter_value_get_closest(const HklParameter *self,
 					      const HklParameter *ref);

@@ -51,6 +51,9 @@ struct _HklModeInfo {
 	uint n_parameters;
 };
 
+#define INFO(n, ax) .name = n, .axes=ax, .n_axes=ARRAY_SIZE(ax)
+#define INFO_WITH_PARAMS(name, axes, parameters) INFO(name, axes), .parameters=parameters, .n_parameters=ARRAY_SIZE(parameters)
+
 struct _HklMode
 {
 	const HklModeInfo *info;
@@ -81,20 +84,6 @@ struct _HklEngine
 	darray_string mode_names;
 };
 
-struct _HklEngineList
-{
-	_darray(HklEngine *);
-	HklGeometryList *geometries;
-	HklGeometry *geometry;
-	HklDetector *detector;
-	HklSample *sample;
-};
-
-#define INFO(n, ax) .name = n, .axes=ax, .n_axes=ARRAY_SIZE(ax)
-#define INFO_WITH_PARAMS(name, axes, parameters) INFO(name, axes), .parameters=parameters, .n_parameters=ARRAY_SIZE(parameters)
-
-/* HklEngineError */
-
 #define HKL_ENGINE_ERROR hkl_engine_error_quark ()
 
 static GQuark hkl_engine_error_quark (void)
@@ -105,12 +94,34 @@ static GQuark hkl_engine_error_quark (void)
 typedef enum {
 	HKL_ENGINE_ERROR_PSEUDO_AXES_VALUES_SET, /* can not set the engine pseudo axes values */
 	HKL_ENGINE_ERROR_PSEUDO_AXIS_SET, /* can not set the pseudo axis */
-	HKL_ENGINE_ERROR_PARAMETERS_VALUES_SET, /* can not set the parameters values */
 	HKL_ENGINE_ERROR_INITIALIZE, /* can not initialize the engine */
 	HKL_ENGINE_ERROR_SET, /* can not set the engine */
 	HKL_ENGINE_ERROR_GET, /* can not get the engine */
+	HKL_ENGINE_ERROR_PARAMETER_GET, /* can not get the parameter */
+	HKL_ENGINE_ERROR_PARAMETER_SET, /* can not set the parameter */
+	HKL_ENGINE_ERROR_SELECT_MODE, /* can not select the mode */
 } HklEngineError;
 
+struct _HklEngineList
+{
+	_darray(HklEngine *);
+	HklGeometryList *geometries;
+	HklGeometry *geometry;
+	HklDetector *detector;
+	HklSample *sample;
+};
+
+#define HKL_ENGINE_LIST_ERROR hkl_engine_list_error_quark ()
+
+static GQuark hkl_engine_list_error_quark (void)
+{
+	return g_quark_from_static_string ("hkl-engine-list-error-quark");
+}
+
+typedef enum {
+	HKL_ENGINE_LIST_ERROR_ENGINE_GET_BY_NAME, /* can not set this geometry */
+	HKL_ENGINE_LIST_ERROR_PSEUDO_AXIS_GET_BY_NAME, /* can not set this geometry */
+} HklEngineListError;
 
 /* HklEngine */
 

@@ -36,14 +36,15 @@ static void hkl_test_bench_run_real(HklEngine *engine, HklGeometry *geometry, si
 		const darray_string *parameters;
 		const char **parameter;
 
-		hkl_engine_select_mode(engine, *mode);
+		hkl_engine_select_mode(engine, *mode, NULL);
 		parameters = hkl_engine_parameters_names_get(engine);
 		if (darray_size(*parameters)){
 			HklParameter *p;
+			const char *pname = darray_item(*parameters, 0);
 
-			p = hkl_parameter_new_copy(hkl_engine_parameter_get(engine, darray_item(*parameters, 0)));
+			p = hkl_parameter_new_copy(hkl_engine_parameter_get(engine, pname, NULL));
 			hkl_parameter_value_set(p, 1, NULL);
-			hkl_engine_parameter_set(engine, p);
+			hkl_engine_parameter_set(engine, pname, p, NULL);
 			hkl_parameter_free(p);
 		}
 
@@ -53,7 +54,7 @@ static void hkl_test_bench_run_real(HklEngine *engine, HklGeometry *geometry, si
 			struct timeval debut, fin, dt;
 			double t;
 
-			hkl_geometry_set_values_unit_v(geometry, 0, 0, 0, 0, 10, 10);
+			hkl_geometry_set_values_unit_v(geometry, NULL, 0., 0., 0., 0., 10., 10.);
 			gettimeofday(&debut, NULL);
 			hkl_engine_set(engine, NULL);
 			gettimeofday(&fin, NULL);
@@ -75,7 +76,7 @@ static void hkl_test_bench_run_v(HklEngineList *engines, HklGeometry *geometry,
 {
 	va_list ap;
 	size_t i;
-	HklEngine *engine = hkl_engine_list_engine_get_by_name(engines, name);
+	HklEngine *engine = hkl_engine_list_engine_get_by_name(engines, name, NULL);
 	size_t n_values = darray_size(*hkl_engine_pseudo_axes_names_get(engine));
 	double values[n_values];
 
@@ -100,7 +101,7 @@ static void hkl_test_bench_k6c(int n)
 	size_t i, j;
 	int res;
 
-	factory = hkl_factory_get_by_name("K6C");
+	factory = hkl_factory_get_by_name("K6C", NULL);
 
 	geom = hkl_factory_create_new_geometry(factory);
 
@@ -135,7 +136,7 @@ static void hkl_test_bench_eulerians(void)
 	HklDetector *detector;
 	HklSample *sample;
 
-	factory = hkl_factory_get_by_name("K6C");
+	factory = hkl_factory_get_by_name("K6C", NULL);
 
 	geometry = hkl_factory_create_new_geometry(factory);
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
@@ -145,13 +146,13 @@ static void hkl_test_bench_eulerians(void)
 	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geometry, detector, sample);
 
-	engine = hkl_engine_list_engine_get_by_name(engines, "eulerians");
+	engine = hkl_engine_list_engine_get_by_name(engines, "eulerians", NULL);
 	modes = hkl_engine_modes_names_get(engine);
 
 	darray_foreach(mode, *modes){
 		static double eulerians[] = {0, 90 * HKL_DEGTORAD, 0};
 
-		hkl_engine_select_mode(engine, *mode);
+		hkl_engine_select_mode(engine, *mode, NULL);
 
 		/* studdy this degenerated case */
 		hkl_engine_pseudo_axes_values_set(engine, eulerians, 3, NULL);

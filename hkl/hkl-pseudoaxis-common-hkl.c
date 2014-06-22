@@ -610,7 +610,7 @@ int _psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f
 
 		/* project hkl on the plan of normal Q */
 		hkl_vector_project_on_plan(&hkl, &Q);
-#if DEBUG
+#ifdef DEBUG
 		fprintf(stdout, "\n");
 		hkl_geometry_fprintf(stdout, engine->geometry);
 		fprintf(stdout, "\n");

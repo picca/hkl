@@ -57,7 +57,7 @@ HklFactory **hkl_factory_get_all(unsigned int *n)
 	return autodata_get(factories, n);
 }
 
-HklFactory *hkl_factory_get_by_name(const char *name)
+HklFactory *hkl_factory_get_by_name(const char *name, GError **error)
 {
 	unsigned int i, n;
 	HklFactory **factories;

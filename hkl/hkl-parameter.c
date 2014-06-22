@@ -120,10 +120,14 @@ void hkl_parameter_free(HklParameter *self)
  * hkl_parameter_init_copy: (skip)
  * @self: the this ptr
  * @src: the parameter to copy from
+ * @error: return location for a GError, or NULL
+ *
+ * Returns: TRUE on success, FALSE if an error occurred
  **/
-void hkl_parameter_init_copy(HklParameter *self, const HklParameter *src)
+int hkl_parameter_init_copy(HklParameter *self, const HklParameter *src,
+			    GError **error)
 {
-	self->ops->init_copy(self, src);
+	return self->ops->init_copy(self, src, error);
 }
 
 const char *hkl_parameter_name_get(const HklParameter *self)
@@ -176,11 +180,11 @@ inline double hkl_parameter_value_get_closest(const HklParameter *self,
  * hkl_parameter_value_set: (skip)
  * @self: this ptr
  * @value: the value to set
- * @error: the error set if something goes wrong
+ * @error: return location for a GError, or NULL
  *
  * set the value of an #HklParameter
  *
- * Return value: true if succeed or false otherwise
+ * Returns: TRUE on success, FALSE if an error occurred
  **/
 inline int hkl_parameter_value_set(HklParameter *self, double value,
 				   GError **error)
@@ -192,12 +196,12 @@ inline int hkl_parameter_value_set(HklParameter *self, double value,
  * hkl_parameter_value_unit_set:
  * @self: the this ptr
  * @value: the value to set
- * @error: (allow-none): the error set if something goes wrong
+ * @error: return location for a GError, or NULL
  *
  * set the value of the parameter express in the punit #HklUnit
  * @todo test
  *
- * Return value: true if succeed or false otherwise
+ * Returns: TRUE on success, FALSE if an error occurred
  **/
 inline int hkl_parameter_value_unit_set(HklParameter *self, double value,
 					GError **error)
@@ -246,17 +250,34 @@ void hkl_parameter_min_max_unit_get(const HklParameter *self, double *min, doubl
 
 /**
  * hkl_parameter_min_max_set: (skip)
- * @self:
+ * @self: the this ptr
  * @min:
  * @max:
+ * @error: return location for a GError, or NULL
  *
  * set the #HklParameter range.
- * @todo test
+ * @todo test and set the GError
+ *
+ * Returns: TRUE on success, FALSE if an error occurred
  **/
-void hkl_parameter_min_max_set(HklParameter *self, double min, double max)
+int hkl_parameter_min_max_set(HklParameter *self, double min, double max,
+			      GError **error)
 {
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
+	if (min > max){
+		g_set_error(error,
+			    HKL_PARAMETER_ERROR,
+			    HKL_PARAMETER_ERROR_MIN_MAX_SET,
+			    "can not set this range min > max\n");
+
+		return FALSE;
+	}
+
 	self->range.min = min;
 	self->range.max = max;
+
+	return TRUE;
 }
 
 /**
@@ -264,15 +285,19 @@ void hkl_parameter_min_max_set(HklParameter *self, double min, double max)
  * @self: the this ptr
  * @min: the minimum value to set
  * @max: the maximum value to set
+ * @error: return location for a GError, or NULL
  *
- * set the #HklParameter range express in the punit #HklUnit
- * @todo test
+ * set the #HklParameter range.
+ * @todo test and set the GError
+ *
+ * Returns: TRUE on success, FALSE if an error occurred
  **/
-void hkl_parameter_min_max_unit_set(HklParameter *self, double min, double max)
+int hkl_parameter_min_max_unit_set(HklParameter *self, double min, double max,
+				   GError **error)
 {
 	double factor = hkl_unit_factor(self->unit, self->punit);
-	self->range.min = min / factor;
-	self->range.max = max / factor;
+
+	return hkl_parameter_min_max_set(self, min / factor, max / factor, error);
 }
 
 /**

@@ -172,7 +172,8 @@ void HKLWindow::on_spinbutton_lambda_value_changed(void)
 
 	if(_geometry){
 		hkl_geometry_wavelength_set(this->_geometry,
-					    _spinbutton_lambda->get_value());
+					    _spinbutton_lambda->get_value(),
+					    NULL);
 		this->updatePseudoAxes();
 		this->updatePseudoAxesFrames();
 	}
@@ -198,50 +199,57 @@ void HKLWindow::on_button2_clicked(void)
 					  _spinbutton_c->get_value(),
 					  _spinbutton_alpha->get_value() * HKL_DEGTORAD,
 					  _spinbutton_beta->get_value() * HKL_DEGTORAD,
-					  _spinbutton_gamma->get_value() * HKL_DEGTORAD);
+					  _spinbutton_gamma->get_value() * HKL_DEGTORAD,
+					  NULL);
 
 		/* set min/max a */
 		parameter = hkl_parameter_new_copy(hkl_lattice_a_get(lattice));
 		hkl_parameter_min_max_unit_set(parameter,
 					       _spinbutton_a_min->get_value(),
-					       _spinbutton_a_max->get_value());
-		hkl_lattice_a_set(lattice, parameter);
+					       _spinbutton_a_max->get_value(),
+					       NULL);
+		hkl_lattice_a_set(lattice, parameter, NULL);
 		hkl_parameter_free(parameter);
 
 		/* set min/max b */
 		parameter = hkl_parameter_new_copy(hkl_lattice_b_get(lattice));
 		hkl_parameter_min_max_unit_set(parameter,
 					       _spinbutton_b_min->get_value(),
-					       _spinbutton_b_max->get_value());
-		hkl_lattice_b_set(lattice, parameter);
+					       _spinbutton_b_max->get_value(),
+					       NULL);
+		hkl_lattice_b_set(lattice, parameter, NULL);
 		hkl_parameter_free(parameter);
 
 		parameter = hkl_parameter_new_copy(hkl_lattice_c_get(lattice));
 		hkl_parameter_min_max_unit_set(parameter,
 					       _spinbutton_c_min->get_value(),
-					       _spinbutton_c_max->get_value());
-		hkl_lattice_c_set(lattice, parameter);
+					       _spinbutton_c_max->get_value(),
+					       NULL);
+		hkl_lattice_c_set(lattice, parameter, NULL);
 		hkl_parameter_free(parameter);
 
 		parameter = hkl_parameter_new_copy(hkl_lattice_alpha_get(lattice));
 		hkl_parameter_min_max_unit_set(parameter,
 					       _spinbutton_alpha_min->get_value(),
-					       _spinbutton_alpha_max->get_value());
-		hkl_lattice_alpha_set(lattice, parameter);
+					       _spinbutton_alpha_max->get_value(),
+					       NULL);
+		hkl_lattice_alpha_set(lattice, parameter, NULL);
 		hkl_parameter_free(parameter);
 
 		parameter = hkl_parameter_new_copy(hkl_lattice_beta_get(lattice));
 		hkl_parameter_min_max_unit_set(parameter,
 					       _spinbutton_beta_min->get_value(),
-					       _spinbutton_beta_max->get_value());
-		hkl_lattice_beta_set(lattice, parameter);
+					       _spinbutton_beta_max->get_value(),
+					       NULL);
+		hkl_lattice_beta_set(lattice, parameter, NULL);
 		hkl_parameter_free(parameter);
 
 		parameter = hkl_parameter_new_copy(hkl_lattice_gamma_get(lattice));
 		hkl_parameter_min_max_unit_set(parameter,
 					       _spinbutton_gamma_min->get_value(),
-					       _spinbutton_gamma_max->get_value());
-		hkl_lattice_gamma_set(lattice, parameter);
+					       _spinbutton_gamma_max->get_value(),
+					       NULL);
+		hkl_lattice_gamma_set(lattice, parameter, NULL);
 		hkl_parameter_free(parameter);
 
 
@@ -269,7 +277,7 @@ void HKLWindow::on_button2_clicked(void)
 			HklLattice *lattice = hkl_lattice_new_copy(hkl_sample_lattice_get((sample))); \
 			HklParameter *parameter = hkl_parameter_new_copy(hkl_lattice_##p##_get(lattice)); \
 			hkl_parameter_fit_set(parameter, _checkbutton_##p->get_active()); \
-			hkl_lattice_##p##_set(lattice, parameter);	\
+			hkl_lattice_##p##_set(lattice, parameter, NULL); \
 			hkl_sample_lattice_set((sample), lattice);	\
 			hkl_parameter_free(parameter);			\
 			hkl_lattice_free(lattice);			\
@@ -290,7 +298,7 @@ ON_CHECKBUTTON_LATTICE_PARAMETER_TOGGLE(gamma, _sample);
 		if(_sample){						\
 			HklParameter *parameter = hkl_parameter_new_copy(hkl_sample_##p##_get((sample))); \
 			hkl_parameter_fit_set(parameter, _checkbutton_##p->get_active()); \
-			hkl_sample_##p##_set(sample, parameter);	\
+			hkl_sample_##p##_set(sample, parameter, NULL);	\
 			hkl_parameter_free(parameter);			\
 		}							\
 	}
@@ -313,7 +321,9 @@ void HKLWindow::on_cell_TreeView_axes_read_edited(Glib::ustring const & spath,
 
 	sscanf(newText.c_str(), "%lf", &value);
 	hkl_parameter_value_unit_set(axis, value, NULL);
-	hkl_geometry_axis_set(this->_geometry, axis);
+	hkl_geometry_axis_set(this->_geometry,
+			      hkl_parameter_name_get(axis),
+			      axis, NULL);
 
 	row[_axeModelColumns.read] = value;
 	this->updatePseudoAxes();
@@ -341,7 +351,9 @@ void HKLWindow::on_cell_TreeView_axes_write_edited(Glib::ustring const & spath,
 	double value;
 	sscanf(newText.c_str(), "%lf", &value);
 	hkl_parameter_value_unit_set(axis, value, NULL);
-	hkl_geometry_axis_set(this->_geometry, axis);
+	hkl_geometry_axis_set(this->_geometry,
+			      hkl_parameter_name_get(axis),
+			      axis, NULL);
 
 	row[_axeModelColumns.write] = value;
 	this->updatePseudoAxes();
@@ -373,8 +385,10 @@ void HKLWindow::on_cell_TreeView_axes_min_edited(Glib::ustring const & spath,
 	sscanf(newText.c_str(), "%lf", &value);
 
 	hkl_parameter_min_max_unit_get(axis, &shit, &max);
-	hkl_parameter_min_max_unit_set(axis, value, max);
-	hkl_geometry_axis_set(this->_geometry, axis);
+	hkl_parameter_min_max_unit_set(axis, value, max, NULL);
+	hkl_geometry_axis_set(this->_geometry,
+			      hkl_parameter_name_get(axis),
+			      axis, NULL);
 
 	row[_axeModelColumns.min] = value;
 	this->updatePseudoAxes();
@@ -397,8 +411,10 @@ void HKLWindow::on_cell_TreeView_axes_max_edited(Glib::ustring const & spath,
 	sscanf(newText.c_str(), "%lf", &value);
 
 	hkl_parameter_min_max_unit_get(axis, &min, &shit);
-	hkl_parameter_min_max_unit_set(axis, min, value);
-	hkl_geometry_axis_set(this->_geometry, axis);
+	hkl_parameter_min_max_unit_set(axis, min, value, NULL);
+	hkl_geometry_axis_set(this->_geometry,
+			      hkl_parameter_name_get(axis),
+			      axis, NULL);
 
 	row[_axeModelColumns.max] = value;
 	this->updatePseudoAxes();
@@ -422,13 +438,19 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & s
 
 	engine = row[_pseudoAxeModelColumns.engine];
 	parameter = hkl_parameter_new_copy(hkl_engine_parameter_get(engine,
-								    row[_pseudoAxeModelColumns.name]));
+								    row[_pseudoAxeModelColumns.name],
+								    NULL));
 	sscanf(newText.c_str(), "%lf", &value);
 
 	if(hkl_parameter_value_unit_set(parameter, value, NULL)){
-		hkl_engine_parameter_set(engine, parameter);
+		hkl_engine_parameter_set(engine,
+					 hkl_parameter_name_get(parameter),
+					 parameter, NULL);
 		if(hkl_engine_set(engine, NULL)){
-			hkl_engine_list_select_solution(this->_engines, 0);
+			const HklEngineList *engines = hkl_engine_engines_get(engine);
+			const HklGeometryList *solutions = hkl_engine_list_geometries_get(engines);
+			const HklGeometryListItem *first = hkl_geometry_list_items_first_get(solutions);
+			hkl_engine_list_select_solution(this->_engines, first);
 
 			row[_pseudoAxeModelColumns.write] = value;
 			this->updateAxes();
@@ -465,10 +487,13 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_parameters_value_edited(Glib::ustrin
 	
 	engine = row[_parameterModelColumns.engine];
 	parameter = hkl_parameter_new_copy(hkl_engine_parameter_get(engine,
-								    row[_parameterModelColumns.name]));
+								    row[_parameterModelColumns.name],
+								    NULL));
 	/* TODO error check */
 	hkl_parameter_value_unit_set(parameter, value, NULL);
-	hkl_engine_parameter_set(engine, parameter);
+	hkl_engine_parameter_set(engine,
+				 hkl_parameter_name_get(parameter),
+				 parameter, NULL);
 	hkl_parameter_free(parameter);
 
 	row[_parameterModelColumns.value] = value;
@@ -519,7 +544,7 @@ void HKLWindow::on_cell_TreeView_reflections_h_edited(Glib::ustring const & spat
 
 		hkl_sample_reflection_hkl_get(reflection, &h, &k, &l);
 		sscanf(newText.c_str(), "%lf", &h);
-		hkl_sample_reflection_hkl_set(reflection, h, k, l);
+		hkl_sample_reflection_hkl_set(reflection, h, k, l, NULL);
 		row[_reflectionModelColumns.h] = h;
 
 		row[_reflectionModelColumns.flag] = hkl_sample_reflection_flag_get(reflection);
@@ -549,7 +574,7 @@ void HKLWindow::on_cell_TreeView_reflections_k_edited(Glib::ustring const & spat
 
 		hkl_sample_reflection_hkl_get(reflection, &h, &k, &l);
 		sscanf(newText.c_str(), "%lf", &k);
-		hkl_sample_reflection_hkl_set(reflection, h, k, l);
+		hkl_sample_reflection_hkl_set(reflection, h, k, l, NULL);
 		row[_reflectionModelColumns.k] = k;
 
 		row[_reflectionModelColumns.flag] = hkl_sample_reflection_flag_get(reflection);
@@ -577,7 +602,7 @@ void HKLWindow::on_cell_TreeView_reflections_l_edited(Glib::ustring const & spat
 
 		hkl_sample_reflection_hkl_get(reflection, &h, &k, &l);
 		sscanf(newText.c_str(), "%lf", &l);
-		hkl_sample_reflection_hkl_set(reflection, h, k, l);
+		hkl_sample_reflection_hkl_set(reflection, h, k, l, NULL);
 		row[_reflectionModelColumns.l] = l;
 
 		row[_reflectionModelColumns.flag] = hkl_sample_reflection_flag_get(reflection);
@@ -616,7 +641,7 @@ void HKLWindow::on_toolbutton_add_reflection_clicked(void)
 		double k = 0;
 		double l = 0;
 
-		reflection = hkl_sample_reflection_new(_geometry, _detector, h, k, l);
+		reflection = hkl_sample_reflection_new(_geometry, _detector, h, k, l, NULL);
 		hkl_sample_add_reflection(_sample, reflection);
 
 		this->updateReflections(_sample,
@@ -726,7 +751,7 @@ void HKLWindow::on_toolbutton_setUB_clicked(void)
 			_spinbutton_U32->get_value(),
 			_spinbutton_U33->get_value());
 
-		hkl_sample_UB_set(_sample, UB);
+		hkl_sample_UB_set(_sample, UB, NULL);
 		hkl_matrix_free(UB);
 
 		this->updateLattice();
@@ -749,7 +774,7 @@ void HKLWindow::on_toolbutton_computeUB_clicked(void)
 		const HklSampleReflection *r2 = hkl_sample_next_reflection_get(_sample,
 									       const_cast<HklSampleReflection*>(r1));
 
-		hkl_sample_compute_UB_busing_levy(_sample, r1, r2);
+		hkl_sample_compute_UB_busing_levy(_sample, r1, r2, NULL);
 		this->updateUB();
 		this->updateUxUyUz();
 		this->updatePseudoAxes();
@@ -819,7 +844,7 @@ void HKLWindow::on_toolbutton_affiner_clicked(void)
 	Glib::ustring name;
 	Glib::ustring method;
 	if(_sample)
-		hkl_sample_affine(_sample);
+		hkl_sample_affine(_sample, NULL);
 
 	this->updateCrystalModel(_sample);
 	this->updateLattice();

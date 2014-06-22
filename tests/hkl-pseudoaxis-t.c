@@ -45,7 +45,7 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 	hkl_geometry_randomize(geometry);
 
 	darray_foreach(mode, *modes){
-		hkl_engine_select_mode(engine, *mode);
+		hkl_engine_select_mode(engine, *mode, NULL);
 		/* for now unactive the eulerians check */
 		if(!strcmp(*mode, "eulerians"))
 			continue;

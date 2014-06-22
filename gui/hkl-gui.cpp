@@ -401,7 +401,7 @@ void HKLWindow::set_up_TreeView_axes(void)
 		// this static_cast is wrong but for now it
 		// works. This should be fixed with the C version of
 		// the gui.
-		row[_axeModelColumns.axis] = const_cast<HklParameter *>(hkl_geometry_axis_get(this->_geometry, axes[i]));
+		row[_axeModelColumns.axis] = const_cast<HklParameter *>(hkl_geometry_axis_get(this->_geometry, axes[i], NULL));
 		row[_axeModelColumns.name] = axes[i];
 	}
 
@@ -460,7 +460,7 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 					row = *(model->append());
 					row[_parameterModelColumns.engine] = *engine;
 					row[_parameterModelColumns.name] = *parameter;
-					row[_parameterModelColumns.value] = hkl_parameter_value_unit_get(hkl_engine_parameter_get(*engine, *parameter));
+					row[_parameterModelColumns.value] = hkl_parameter_value_unit_get(hkl_engine_parameter_get(*engine, *parameter, NULL));
 				}
 				_mapPseudoAxeParameterModel.insert(std::pair<std::string, Glib::RefPtr<Gtk::ListStore> >(*pseudo_axis, model));
 			}
@@ -665,7 +665,8 @@ void HKLWindow::updatePseudoAxes(void)
 		Gtk::TreeRow row = *iter;
 
 		parameter = hkl_engine_pseudo_axis_get(row[_pseudoAxeModelColumns.engine],
-						       row[_pseudoAxeModelColumns.name]);
+						       row[_pseudoAxeModelColumns.name],
+						       NULL);
 		row[_pseudoAxeModelColumns.read] = hkl_parameter_value_unit_get(parameter);
 		row[_pseudoAxeModelColumns.write] = hkl_parameter_value_unit_get(parameter);
 		hkl_parameter_min_max_unit_get(parameter, &min, &max);
@@ -689,7 +690,8 @@ void HKLWindow::update_pseudoAxes_parameters(void)
 		while(iter_row != end_row){
 			Gtk::TreeRow row = *iter_row;
 			const HklParameter *parameter = hkl_engine_parameter_get(row[_parameterModelColumns.engine],
-										 row[_parameterModelColumns.name]);
+										 row[_parameterModelColumns.name],
+										 NULL);
 			row[_parameterModelColumns.value] = hkl_parameter_value_unit_get(parameter);
 			++iter_row;
 		}
@@ -1019,7 +1021,7 @@ void HKLWindow::updateSolutions(void)
 		for(j=0; j<axes_length; ++j){
 			const HklParameter *axis;
 
-			axis = hkl_geometry_axis_get(geometry, axes[j]);
+			axis = hkl_geometry_axis_get(geometry, axes[j], NULL);
 			row[_solutionModelColumns->axes[j]] = hkl_parameter_value_unit_get(axis);
 		}
 	}

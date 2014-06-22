@@ -38,6 +38,17 @@ struct _HklLattice
 	HklParameter *gamma;
 };
 
+#define HKL_LATTICE_ERROR hkl_lattice_error_quark ()
+
+static GQuark hkl_lattice_error_quark (void)
+{
+	return g_quark_from_static_string ("hkl-lattice-error-quark");
+}
+
+typedef enum {
+	HKL_LATTICE_CHECK_LATTICE, /* the lattice parameters are not valid */
+} HklLatticeError;
+
 extern void hkl_lattice_lattice_set(HklLattice *self, const HklLattice *lattice);
 
 extern void hkl_lattice_randomize(HklLattice *self);
