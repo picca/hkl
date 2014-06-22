@@ -25,7 +25,7 @@
 
 #include "hkl-axis-private.h" /* temporary */
 
-#define CHECK_AXIS_VALUE(geometry, axis, value) fabs((value) - hkl_parameter_value_get(hkl_geometry_axis_get(geometry, axis, NULL))) < HKL_EPSILON
+#define CHECK_AXIS_VALUE(geometry, axis, value) fabs((value) - hkl_parameter_value_get(hkl_geometry_axis_get(geometry, axis, NULL), HKL_UNIT_DEFAULT)) < HKL_EPSILON
 
 
 static int hkl_geometry_list_check_geometry_unit(const HklGeometryList *self,
@@ -81,23 +81,23 @@ static void getter(void)
 	engine = hkl_engine_list_engine_get_by_name(engines, "hkl", NULL);
 
 	/* geometry -> pseudo */
-	hkl_geometry_set_values_unit_v(geometry, NULL, 0., 30., 0., 0., 0., 60.);
+	hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 0., 30., 0., 0., 0., 60.);
 	hkl_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, 0., 0., 1.);
 
-	hkl_geometry_set_values_unit_v(geometry, NULL, 0., 30., 0., 90., 0., 60.);
+	hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 0., 30., 0., 90., 0., 60.);
 	hkl_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, 1., 0., 0.);
 
-	hkl_geometry_set_values_unit_v(geometry, NULL, 0., 30., 0., -90., 0., 60.);
+	hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 0., 30., 0., -90., 0., 60.);
 	hkl_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, -1., 0., 0.);
 
-	hkl_geometry_set_values_unit_v(geometry, NULL, 0., 30., 0., 180., 0., 60.);
+	hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 0., 30., 0., 180., 0., 60.);
 	hkl_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, 0., 0., -1.);
 
-	hkl_geometry_set_values_unit_v(geometry, NULL, 0., 45., 0., 135., 0., 90.);
+	hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 0., 45., 0., 135., 0., 90.);
 	hkl_engine_get(engine, NULL);
 	res &= check_pseudoaxes_v(engine, 1., 0., -1.);
 
@@ -146,7 +146,7 @@ static void degenerated(void)
 			const char *pname = darray_item(*parameters, 0);
 			HklParameter *p = hkl_parameter_new_copy(hkl_engine_parameter_get(engine,
 											  pname, NULL));
-			hkl_parameter_value_set(p, 0, NULL);
+			hkl_parameter_value_set(p, 0, HKL_UNIT_DEFAULT, NULL);
 			hkl_engine_parameter_set(engine, pname, p, NULL);
 			hkl_parameter_free(p);
 		}
@@ -154,7 +154,7 @@ static void degenerated(void)
 		/* studdy this degenerated case */
 		hkl_engine_pseudo_axes_values_set(engine,
 						  hkl, ARRAY_SIZE(hkl),
-						  NULL);
+						  HKL_UNIT_DEFAULT, NULL);
 		if (hkl_engine_set(engine, NULL)){
 			const HklGeometryListItem *item;
 
@@ -163,7 +163,7 @@ static void degenerated(void)
 
 				hkl_engine_pseudo_axes_values_set(engine,
 								  null, ARRAY_SIZE(null),
-								  NULL);
+								  HKL_UNIT_DEFAULT, NULL);
 				hkl_geometry_set(geometry, hkl_geometry_list_item_geometry_get(item));
 				hkl_engine_get(engine, NULL);
 				res &= check_pseudoaxes(engine, hkl, 3);
@@ -207,7 +207,7 @@ static void q2(void)
 	modes = hkl_engine_modes_names_get(engine);
 
 	/* the init part */
-	hkl_geometry_set_values_unit_v(geometry, NULL, 0., 30., 0., 0., 0., 60.);
+	hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 0., 30., 0., 0., 0., 60.);
 	hkl_engine_initialize(engine, NULL);
 
 
@@ -221,7 +221,7 @@ static void q2(void)
 
 				hkl_engine_pseudo_axes_values_set(engine,
 								  values, ARRAY_SIZE(values),
-								  NULL);
+								  HKL_UNIT_DEFAULT, NULL);
 				if(hkl_engine_set(engine, NULL)){
 					const HklGeometryListItem *item;
 
@@ -230,7 +230,7 @@ static void q2(void)
 
 						hkl_engine_pseudo_axes_values_set(engine,
 										  null, ARRAY_SIZE(null),
-										  NULL);
+										  HKL_UNIT_DEFAULT, NULL);
 						hkl_geometry_set(geometry, hkl_geometry_list_item_geometry_get(item));
 						hkl_engine_get(engine, NULL);
 						res &= check_pseudoaxes(engine, values, 2);
@@ -266,7 +266,7 @@ static void petra3(void)
 
 	factory = hkl_factory_get_by_name("E6C", NULL);
 	geometry = hkl_factory_create_new_geometry(factory);
-	hkl_geometry_wavelength_set(geometry, 2.033, NULL);
+	hkl_geometry_wavelength_set(geometry, 2.033, HKL_UNIT_DEFAULT, NULL);
 
 	sample = hkl_sample_new("test");
 	lattice = hkl_lattice_new(7.813, 7.813, 7.813,
@@ -293,13 +293,13 @@ static void petra3(void)
 	hkl_engine_select_mode(hkl, "psi_constant_vertical", NULL);
 	hkl_engine_set_values_v(hkl, 1, 1, 0);
 	/* set the mode parameters 0, 0, 1, 90. */
-	hkl_engine_parameters_values_set(hkl, hkl_p, ARRAY_SIZE(hkl_p), NULL);
+	hkl_engine_parameters_values_set(hkl, hkl_p, ARRAY_SIZE(hkl_p), HKL_UNIT_DEFAULT, NULL);
 
 	/* set the psi pseudo axis */
 	psi = hkl_engine_list_engine_get_by_name(engines, "psi", NULL);
 	hkl_engine_select_mode(psi, "psi_constant_vertical", NULL);
 	/* set the mode parameters 0, 0, 1 */
-	hkl_engine_parameters_values_set(psi, psi_p, ARRAY_SIZE(psi_p), NULL);
+	hkl_engine_parameters_values_set(psi, psi_p, ARRAY_SIZE(psi_p), HKL_UNIT_DEFAULT, NULL);
 
 	/* Compute the hkl [1, 1, 0] in psi_constant_vertical mode with */
 	/* h2,k2,l2= [0, 0,1] and psi = 90 */
@@ -314,7 +314,7 @@ static void petra3(void)
 					 hkl_geometry_list_item_geometry_get(item));
 			hkl_engine_initialize(psi, NULL);
 			hkl_engine_list_get(engines);
-			hkl_engine_pseudo_axes_values_get(psi, &current, 1);
+			hkl_engine_pseudo_axes_values_get(psi, &current, 1, HKL_UNIT_DEFAULT);
 			res &= fabs(PSI - current) < HKL_EPSILON;
 		}
 	}
@@ -357,7 +357,7 @@ static void petra3_2(void)
 
 	factory = hkl_factory_get_by_name("E6C", NULL);
 	geometry = hkl_factory_create_new_geometry(factory);
-	hkl_geometry_wavelength_set(geometry, 1.0332035, NULL);
+	hkl_geometry_wavelength_set(geometry, 1.0332035, HKL_UNIT_DEFAULT, NULL);
 
 	sample = hkl_sample_new("test");
 	lattice = hkl_lattice_new(5.1, 5.1, 5.1,
@@ -391,12 +391,12 @@ static void petra3_2(void)
 	hkl_p[1] = 1;
 	hkl_p[2] = 0;
 	hkl_p[3] = PSI = 0;
-	hkl_engine_parameters_values_set(hkl, hkl_p, ARRAY_SIZE(hkl_p), NULL);
+	hkl_engine_parameters_values_set(hkl, hkl_p, ARRAY_SIZE(hkl_p), HKL_UNIT_DEFAULT, NULL);
 	/* for psi */
 	psi_p[0] = 0;
 	psi_p[1] = 1;
 	psi_p[2] = 0;
-	hkl_engine_parameters_values_set(psi, psi_p, ARRAY_SIZE(psi_p), NULL);
+	hkl_engine_parameters_values_set(psi, psi_p, ARRAY_SIZE(psi_p), HKL_UNIT_DEFAULT, NULL);
 
 	/* freeze 0; ca 0 0 2 */
 	hkl_engine_set_values_v(hkl, 0., 0., 2.);
@@ -418,14 +418,14 @@ static void petra3_2(void)
 			hkl_geometry_set(geometry, hkl_geometry_list_item_geometry_get(item));
 			hkl_engine_initialize(psi, NULL);
 			hkl_engine_list_get(engines);
-			hkl_engine_pseudo_axes_values_get(psi, &current, 1);
+			hkl_engine_pseudo_axes_values_get(psi, &current, 1, HKL_UNIT_DEFAULT);
 			res &= fabs(PSI - current) < HKL_EPSILON;
 		}
 	}
 
 	/* freeze 45; ca 0 0 2 */
 	hkl_p[3] = PSI = 45.0 * HKL_DEGTORAD;
-	hkl_engine_parameters_values_set(hkl, hkl_p, ARRAY_SIZE(hkl_p), NULL);
+	hkl_engine_parameters_values_set(hkl, hkl_p, ARRAY_SIZE(hkl_p), HKL_UNIT_DEFAULT, NULL);
 	hkl_engine_set_values_v(hkl, 0., 0., 2.);
 
 	/*      del              th               chi              phi */
@@ -445,7 +445,7 @@ static void petra3_2(void)
 			hkl_geometry_set(geometry, hkl_geometry_list_item_geometry_get(item));
 			hkl_engine_initialize(psi, NULL);
 			hkl_engine_list_get(engines);
-			hkl_engine_pseudo_axes_values_get(psi, &current, 1);
+			hkl_engine_pseudo_axes_values_get(psi, &current, 1, HKL_UNIT_DEFAULT);
 			res &= fabs(PSI - current) < HKL_EPSILON;
 		}
 	}
@@ -457,14 +457,14 @@ static void petra3_2(void)
 	hkl_p[2] = 0;
 	hkl_p[3] = PSI = 0;
 	/* for hkl */
-	hkl_engine_parameters_values_set(hkl, hkl_p, ARRAY_SIZE(hkl_p), NULL);
+	hkl_engine_parameters_values_set(hkl, hkl_p, ARRAY_SIZE(hkl_p), HKL_UNIT_DEFAULT, NULL);
 	hkl_engine_set_values_v(hkl, 0., 0., 2.);
 
 	/* for psi */
 	psi_p[0] = 1;
 	psi_p[1] = 1;
 	psi_p[2] = 0;
-	hkl_engine_parameters_values_set(psi, psi_p, ARRAY_SIZE(psi_p), NULL);
+	hkl_engine_parameters_values_set(psi, psi_p, ARRAY_SIZE(psi_p), HKL_UNIT_DEFAULT, NULL);
 
 	/*      del              th               chi              phi */
 	/*      23.37681         11.68839         90               -90 */
@@ -483,7 +483,7 @@ static void petra3_2(void)
 			hkl_geometry_set(geometry, hkl_geometry_list_item_geometry_get(item));
 			hkl_engine_initialize(psi, NULL);
 			hkl_engine_list_get(engines);
-			hkl_engine_pseudo_axes_values_get(psi, &current, 1);
+			hkl_engine_pseudo_axes_values_get(psi, &current, 1, HKL_UNIT_DEFAULT);
 			res &= fabs(PSI - current) < HKL_EPSILON;
 		}
 	}
@@ -491,7 +491,7 @@ static void petra3_2(void)
 	/* freeze 45; ca 0 0 2 */
 	hkl_p[3] = PSI = 45 * HKL_DEGTORAD;
 	/* for hkl */
-	hkl_engine_parameters_values_set(hkl, hkl_p, ARRAY_SIZE(hkl_p), NULL);
+	hkl_engine_parameters_values_set(hkl, hkl_p, ARRAY_SIZE(hkl_p), HKL_UNIT_DEFAULT, NULL);
 	hkl_engine_set_values_v(hkl, 0., 0., 2.);
 
 	/*      del              th               chi              phi */
@@ -511,7 +511,7 @@ static void petra3_2(void)
 			hkl_geometry_set(geometry, hkl_geometry_list_item_geometry_get(item));
 			hkl_engine_initialize(psi, NULL);
 			hkl_engine_list_get(engines);
-			hkl_engine_pseudo_axes_values_get(psi, &current, 1);
+			hkl_engine_pseudo_axes_values_get(psi, &current, 1, HKL_UNIT_DEFAULT);
 			res &= fabs(PSI - current) < HKL_EPSILON;
 		}
 	}

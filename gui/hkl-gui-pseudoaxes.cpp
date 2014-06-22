@@ -130,7 +130,7 @@ void PseudoAxesFrame::on_cell_TreeView_pseudoAxis_value_edited(Glib::ustring con
 		renderer->property_cell_background().set_value("red");
 		/* TODO check the error and change the meaning once
 		   the set method will do the computation */
-		hkl_parameter_value_unit_set(parameter, value, NULL);
+		hkl_parameter_value_set(parameter, value, HKL_UNIT_USER, NULL);
 		row[_pseudoAxis_columns.value] = value;
 	}
 }
@@ -167,7 +167,7 @@ void PseudoAxesFrame::on_cell_treeview2_mode_parameter_value_edited(Glib::ustrin
 	parameter = hkl_parameter_new_copy(hkl_engine_parameter_get(this->_engine,
 								    name, NULL));
 		/* TODO check the error */
-	hkl_parameter_value_unit_set(parameter, value, NULL);
+	hkl_parameter_value_set(parameter, value, HKL_UNIT_USER, NULL);
 	hkl_engine_parameter_set(this->_engine, name, parameter, NULL);
 	hkl_parameter_free(parameter);
 	row[_mode_parameter_columns.value] = value;
@@ -186,8 +186,9 @@ void PseudoAxesFrame::updatePseudoAxis(void)
 	darray_foreach(pseudo_axis, *pseudo_axes){
 		Gtk::TreeRow row = *(_pseudoAxis_ListStore->append());
 		row[_pseudoAxis_columns.name] = *pseudo_axis;
-		row[_pseudoAxis_columns.value] = hkl_parameter_value_unit_get(hkl_engine_pseudo_axis_get(this->_engine,
-													 *pseudo_axis, NULL));
+		row[_pseudoAxis_columns.value] = hkl_parameter_value_get(hkl_engine_pseudo_axis_get(this->_engine,
+												    *pseudo_axis, NULL),
+									 HKL_UNIT_USER);
 	}
 }
 
@@ -214,7 +215,7 @@ void PseudoAxesFrame::updateModeParameters(void)
 		darray_foreach(parameter, *parameters){
 			Gtk::TreeRow row = *(_mode_parameter_ListStore->append());
 			row[_mode_parameter_columns.name] = *parameter;
-			row[_mode_parameter_columns.value] = hkl_parameter_value_unit_get(hkl_engine_parameter_get(this->_engine, *parameter, NULL));
+			row[_mode_parameter_columns.value] = hkl_parameter_value_get(hkl_engine_parameter_get(this->_engine, *parameter, NULL), HKL_UNIT_USER);
 		}
 		_expander1->set_expanded(1);
 		_expander1->show();

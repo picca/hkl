@@ -78,31 +78,13 @@ static inline int hkl_axis_init_copy_real(HklParameter *self, const HklParameter
 }
 
 static inline int hkl_axis_set_value_real(HklParameter *self, double value,
-					  GError **error)
+					  HklUnitEnum unit_type, GError **error)
 {
 	HklAxis *axis = container_of(self, HklAxis, parameter);
 
 	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
-	if(!hkl_parameter_value_set_real(self, value, error)){
-		g_assert (error == NULL || *error != NULL);
-		return FALSE;
-	}
-	g_assert (error == NULL || *error == NULL);
-
-	hkl_axis_update(axis);
-
-	return TRUE;
-}
-
-static inline int hkl_axis_set_value_unit_real(HklParameter *self, double value,
-					       GError **error)
-{
-	HklAxis *axis = container_of(self, HklAxis, parameter);
-
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
-
-	if(!hkl_parameter_value_unit_set_real(self, value, error)){
+	if(!hkl_parameter_value_set_real(self, value, unit_type, error)){
 		g_assert (error == NULL || *error != NULL);
 		return FALSE;
 	}
@@ -123,10 +105,12 @@ static inline void hkl_axis_set_value_smallest_in_range_real(HklParameter *self)
 	if(value < min)
 		hkl_axis_set_value_real(self,
 					value + 2*M_PI*ceil((min - value)/(2*M_PI)),
+					HKL_UNIT_DEFAULT,
 					NULL);
 	else
 		hkl_axis_set_value_real(self,
 					value - 2*M_PI*floor((value - min)/(2*M_PI)),
+					HKL_UNIT_DEFAULT,
 					NULL);
 }
 
@@ -233,7 +217,6 @@ static HklParameterOperations hkl_parameter_operations_axis = {
 	.init_copy = hkl_axis_init_copy_real,
 	.get_value_closest = hkl_axis_get_value_closest_real,
 	.set_value = hkl_axis_set_value_real,
-	.set_value_unit = hkl_axis_set_value_unit_real,
 	.set_value_smallest_in_range = hkl_axis_set_value_smallest_in_range_real,
 	.randomize = hkl_axis_randomize_real,
 	.is_valid = hkl_axis_is_valid_real,

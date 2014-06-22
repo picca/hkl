@@ -26,11 +26,11 @@
 
 #include "hkl-axis-private.h" /* temporary */
 
-#define GET_GAMMA(geometries) hkl_parameter_value_unit_get(		\
+#define GET_GAMMA(geometries) hkl_parameter_value_get(			\
 		hkl_geometry_axis_get(					\
 			hkl_geometry_list_item_geometry_get(		\
 				hkl_geometry_list_items_first_get((geometries))), \
-			"gamma", NULL))
+			"gamma", NULL), HKL_UNIT_USER)
 
 static void qper_qpar(void)
 {
@@ -64,13 +64,14 @@ static void qper_qpar(void)
 	engine = hkl_engine_list_engine_get_by_name(engines, "qper_qpar", NULL);
 
 	/* the init part */
-	hkl_geometry_set_values_unit_v(geom, NULL, 0., 0.1, 0., 0., 90., 0.);
+	hkl_geometry_set_values_v(geom, HKL_UNIT_USER, NULL, 0., 0.1, 0., 0., 90., 0.);
 	hkl_engine_initialize(engine, NULL);
 
 	/* gamma must be positif */
 	qper_qpar[0] = 0.1;
 	qper_qpar[1] = 4.;
-	hkl_engine_pseudo_axes_values_set(engine, qper_qpar, ARRAY_SIZE(qper_qpar), NULL);
+	hkl_engine_pseudo_axes_values_set(engine, qper_qpar, ARRAY_SIZE(qper_qpar),
+					  HKL_UNIT_DEFAULT, NULL);
 	if(hkl_engine_set(engine, NULL) == TRUE){
 		gamma = GET_GAMMA(geometries);
 		is_double(2.61077, gamma, HKL_EPSILON * 10, __func__);
@@ -79,7 +80,8 @@ static void qper_qpar(void)
 	/* gamma must be negatif */
 	qper_qpar[0] = -0.1;
 	qper_qpar[1] = 4.;
-	hkl_engine_pseudo_axes_values_set(engine, qper_qpar, ARRAY_SIZE(qper_qpar), NULL);
+	hkl_engine_pseudo_axes_values_set(engine, qper_qpar, ARRAY_SIZE(qper_qpar),
+					  HKL_UNIT_DEFAULT, NULL);
 	if(hkl_engine_set(engine, NULL) == TRUE){
 		gamma = GET_GAMMA(geometries);
 		is_double(-2.7956354, gamma, HKL_EPSILON * 10, __func__);

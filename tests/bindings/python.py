@@ -44,7 +44,7 @@ class TestAPI(unittest.TestCase):
             self.assertTrue(type(factory) == Hkl.Factory)
 
             # read all the axes names
-            axes = factory.axes_get()
+            axes = factory.axes_names_get()
             self.assertTrue(type(axes) == list)
             for axis in axes:
                 self.assertTrue(type(axis) == str)
@@ -78,15 +78,10 @@ class TestAPI(unittest.TestCase):
         factory = Hkl.factories()['K6C']
         geometry = factory.create_new_geometry()
 
-        # axes names are accessible
-        self.assertTrue(
-            isinstance([axis.name_get() for axis in geometry.axes()],
-                       list))
-
         # set the geometry axes values
         values_w = [0, 30, 0, 0, 0, 60]
-        geometry.set_axes_values_unit(values_w)
-        values_r = geometry.get_axes_values_unit()
+        geometry.axes_values_set(values_w, Hkl.UnitEnum.USER)
+        values_r = geometry.axes_values_get(Hkl.UnitEnum.USER)
 
         # check that the read and write values of the geometry are
         # almost equals
@@ -94,11 +89,11 @@ class TestAPI(unittest.TestCase):
             self.assertAlmostEqual(r, w)
 
         # check that we can access the axes
-        axes = geometry.axes()
-        self.assertTrue(len([axis.name_get() for axis in axes]) != 0)
-        for axis in axes:
-            self.assertTrue(type(axis.name_get()) is str)
-            axis.min_max_unit_set(0, math.radians(180))
+        axes_names = factory.axes_names_get()
+        for name in axes_names:
+            axis = geometry.axis_get(name)
+            axis.min_max_set(0, math.radians(180), Hkl.UnitEnum.USER)
+            geometry.axis_set(name, axis)
 
     def test_engine_api(self):
         """
@@ -111,7 +106,7 @@ class TestAPI(unittest.TestCase):
         factory = Hkl.factories()['K6C']
         geometry = factory.create_new_geometry()
         values_w = [0., 30., 0., 0., 0., 60.]
-        geometry.set_axes_values_unit(values_w)
+        geometry.axes_values_set(values_w, Hkl.UnitEnum.USER)
 
         sample = Hkl.Sample.new("toto")
         lattice = sample.lattice_get()
@@ -128,7 +123,7 @@ class TestAPI(unittest.TestCase):
 
         # get the hkl engine and do a computation
         hkl = engines.engine_get_by_name("hkl")
-        values = hkl.pseudo_axes_values_get()
+        values = hkl.pseudo_axes_values_get(Hkl.UnitEnum.USER)
 
         # check for all modes
         for mode in hkl.modes_names_get():
@@ -137,7 +132,7 @@ class TestAPI(unittest.TestCase):
         # set the hkl engine and get the results
         for _ in range(100):
             try:
-                hkl.set_values_unit(values)
+                hkl.pseudo_axes_values_set(values, Hkl.UnitEnum.USER)
             except GLib.GError, err:
                 print values, err
             solutions = engines.geometries_get()
@@ -155,7 +150,7 @@ class TestAPI(unittest.TestCase):
             self.assertTrue(len(engine.modes_names_get()))
             for mode in engine.modes_names_get():
                 self.assertTrue(type(mode) is str)
-            values = engine.pseudo_axes_values_get()
+            values = engine.pseudo_axes_values_get(Hkl.UnitEnum.USER)
             self.assertTrue(type(values) is list)
             for value in values:
                 self.assertTrue(type(value) is float)
@@ -241,7 +236,7 @@ class TestAPI(unittest.TestCase):
         factory = Hkl.factories()['K6C']
         geometry = factory.create_new_geometry()
         values_w = [0., 30., 0., 0., 0., 60.]
-        geometry.set_axes_values_unit(values_w)
+        geometry.axes_values_set(values_w, Hkl.UnitEnum.USER)
 
         sample = Hkl.Sample.new("toto")
 

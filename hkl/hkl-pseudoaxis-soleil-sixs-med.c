@@ -159,7 +159,7 @@ static int slits_func(const gsl_vector *x, void *params, gsl_vector *f)
 	HklVector n_slits = {{0, 0, 1}};
 	HklSlitsFit *parameters = params;
 
-	hkl_parameter_value_set(parameters->axis, x_data[0], NULL);
+	hkl_parameter_value_set(parameters->axis, x_data[0], HKL_UNIT_DEFAULT, NULL);
 	hkl_geometry_update(parameters->geometry);
 
 	/* compute the orientation of the slits */
@@ -275,9 +275,9 @@ void hkl_geometry_list_multiply_soleil_sixs_med_2_3(HklGeometryList *self,
 
 	/* we just need to fit the slits orientation */
 	/* save it's value before */
-	slits_position = hkl_parameter_value_get(params.axis);
+	slits_position = hkl_parameter_value_get(params.axis, HKL_UNIT_DEFAULT);
 	if (fit_slits_orientation(&params) != TRUE)
-		hkl_parameter_value_set(params.axis, slits_position, NULL);
+		hkl_parameter_value_set(params.axis, slits_position, HKL_UNIT_DEFAULT, NULL);
 }
 
 

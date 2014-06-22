@@ -75,7 +75,8 @@ static int fit_detector_function(const gsl_vector *x, void *params, gsl_vector *
 	/* update the workspace from x; */
 	for(i=0; i<fitp->len; ++i)
 		hkl_parameter_value_set(fitp->axes[i],
-					x->data[i], NULL);
+					x->data[i], 
+					HKL_UNIT_DEFAULT, NULL);
 
 	hkl_geometry_update(fitp->geometry);
 
@@ -164,7 +165,7 @@ static int fit_detector_position(HklMode *mode, HklGeometry *geometry,
 
 		/* initialize x with the right values */
 		for(i=0; i<params.len; ++i)
-			x->data[i] = hkl_parameter_value_get(params.axes[i]);
+			x->data[i] = hkl_parameter_value_get(params.axes[i], HKL_UNIT_DEFAULT);
 
 		f.f = fit_detector_function;
 		f.n = params.len;
@@ -206,11 +207,11 @@ static int fit_detector_position(HklMode *mode, HklGeometry *geometry,
 			for(i=0; i<params.len; ++i){
 				double value;
 
-				value = hkl_parameter_value_get(params.axes[i]);
+				value = hkl_parameter_value_get(params.axes[i], HKL_UNIT_DEFAULT);
 				/* TODO one day deal with the error for real */
 				hkl_parameter_value_set(params.axes[i],
 							gsl_sf_angle_restrict_pos(value),
-							NULL);
+							HKL_UNIT_DEFAULT, NULL);
 			}
 		}
 		/* release memory */
@@ -444,8 +445,8 @@ int hkl_mode_set_hkl_real(HklMode *self,
 			angle = hkl_vector_oriented_angle_points(&q, &op, &kf2, &axis_v);
 			/* TODO parameter list for geometry */
 			if(!hkl_parameter_value_set(&axis->parameter,
-						    hkl_parameter_value_get(&axis->parameter) + angle,
-						    error))
+						    hkl_parameter_value_get(&axis->parameter, HKL_UNIT_DEFAULT) + angle,
+						    HKL_UNIT_DEFAULT, error))
 				return FALSE;
 			hkl_geometry_update(geom);
 #ifdef DEBUG
@@ -704,10 +705,9 @@ int hkl_mode_init_psi_constant_vertical_real(HklMode *self,
 		}else{
 			/* compute the angle beetween hkl and n and
 			 * store in in the fourth parameter */
-			if (!hkl_parameter_value_set(
-				    darray_item(self->parameters, 3),
-				    hkl_vector_oriented_angle(&n, &hkl, &Q),
-				    error))
+			if (!hkl_parameter_value_set(darray_item(self->parameters, 3),
+						     hkl_vector_oriented_angle(&n, &hkl, &Q),
+						     HKL_UNIT_DEFAULT, error))
 				return FALSE;
 		}
 	}

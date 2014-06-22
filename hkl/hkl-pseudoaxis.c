@@ -230,16 +230,19 @@ const darray_string *hkl_engine_pseudo_axes_names_get(HklEngine *self)
  * @self: the this ptr
  * @values: (array length=n_values): the values to get
  * @n_values: the size of the values array.
+ * @unit_type: the unit type (default or user) of the returned value
  *
  * Get the engine pseudo axes values
  **/
 void hkl_engine_pseudo_axes_values_get(HklEngine *self,
-				       double values[], size_t n_values)
+				       double values[], size_t n_values,
+				       HklUnitEnum unit_type)
 {
 	hkl_assert(n_values == self->info->n_pseudo_axes);
 
 	for(size_t i=0; i<n_values; ++i)
-		values[i] = hkl_parameter_value_get(darray_item(self->pseudo_axes, i));
+		values[i] = hkl_parameter_value_get(darray_item(self->pseudo_axes, i),
+						    unit_type);
 }
 
 /**
@@ -247,6 +250,7 @@ void hkl_engine_pseudo_axes_values_get(HklEngine *self,
  * @self: the this ptr
  * @values: (array length=n_values): the values to set
  * @n_values: the size of the values array.
+ * @unit_type: the unit type (default or user) of the returned value
  * @error: return location for a GError, or NULL
  *
  * Set the engine pseudo axes values
@@ -256,7 +260,7 @@ void hkl_engine_pseudo_axes_values_get(HklEngine *self,
  **/
 int hkl_engine_pseudo_axes_values_set(HklEngine *self,
 				      double values[], size_t n_values,
-				      GError **error)
+				      HklUnitEnum unit_type, GError **error)
 {
 	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
@@ -270,7 +274,7 @@ int hkl_engine_pseudo_axes_values_set(HklEngine *self,
 	} else {
 		for(size_t i=0; i<n_values; ++i){
 			if(!hkl_parameter_value_set(darray_item(self->pseudo_axes, i),
-						    values[i], error)){
+						    values[i], unit_type, error)){
 				g_assert (error == NULL || *error != NULL);
 				return FALSE;
 			}
@@ -408,6 +412,7 @@ const darray_string *hkl_engine_parameters_names_get(const HklEngine *self)
  * @self: the this ptr
  * @values: (array length=n_values): the values to set
  * @n_values: the size of the values array.
+ * @unit_type: the unit type (default or user) of the returned value
  * @error: return location for a GError, or NULL
  *
  * Set the engine parameters values
@@ -416,13 +421,13 @@ const darray_string *hkl_engine_parameters_names_get(const HklEngine *self)
  **/
 int hkl_engine_parameters_values_set(HklEngine *self,
 				     double values[], size_t n_values,
-				     GError **error)
+				     HklUnitEnum unit_type, GError **error)
 {
 	g_return_val_if_fail (error == NULL || *error == NULL && n_values == darray_size(self->mode->parameters), FALSE);
 
 	for(size_t i=0; i<n_values; ++i){
 		if(!hkl_parameter_value_set(darray_item(self->mode->parameters, i),
-					    values[i], error)){
+					    values[i], unit_type, error)){
 			g_assert (error == NULL || *error != NULL);
 			return FALSE;
 		}

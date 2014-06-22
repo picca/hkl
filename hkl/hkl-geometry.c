@@ -304,7 +304,7 @@ int hkl_geometry_set(HklGeometry *self, const HklGeometry *src)
 }
 
 /**
- * hkl_geometry_axis_get: (skip)
+ * hkl_geometry_axis_get:
  * @self: the this ptr
  * @name: the name of the axis your are requesting
  * @error: return location for a GError, or NULL
@@ -334,7 +334,7 @@ const HklParameter *hkl_geometry_axis_get(const HklGeometry *self,
 }
 
 /**
- * hkl_geometry_axis_set: (skip)
+ * hkl_geometry_axis_set:
  * @self: the this ptr
  * @name: the name of the axis to set
  * @axis: The #HklParameter to set
@@ -377,13 +377,17 @@ int hkl_geometry_axis_set(HklGeometry *self, const char *name,
 /**
  * hkl_geometry_wavelength_get: (skip)
  * @self: the this ptr
+ * @unit_type: the unit type (default or user) of the returned value
  *
  * Get the wavelength of the HklGeometry
  *
  * Returns: the wavelength
  **/
-double hkl_geometry_wavelength_get(const HklGeometry *self)
+double hkl_geometry_wavelength_get(const HklGeometry *self,
+				   HklUnitEnum unit_type)
 {
+	/* for now there is no unit convertion but the unit_type is
+	 * there */
 	return self->source.wave_length;
 }
 
@@ -392,6 +396,7 @@ double hkl_geometry_wavelength_get(const HklGeometry *self)
  * hkl_geometry_wavelength_set:
  * @self:
  * @wavelength:
+ * @unit_type: the unit type (default or user) of the returned value
  * @error: return location for a GError, or NULL
  *
  * Set the wavelength of the geometry
@@ -400,9 +405,12 @@ double hkl_geometry_wavelength_get(const HklGeometry *self)
  * Returns: TRUE on success, FALSE if an error occurred
  **/
 int hkl_geometry_wavelength_set(HklGeometry *self, double wavelength,
-				GError **error)
+				HklUnitEnum unit_type, GError **error)
 {
 	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
+	/* for now there is no unit convertion but the unit_type is
+	 * there */
 
 	self->source.wave_length = wavelength;
 
@@ -541,34 +549,15 @@ void hkl_geometry_randomize(HklGeometry *self)
 /**
  * hkl_geometry_set_values_v: (skip)
  * @self:
- * @len:
+ * @unit_type: the unit type (default or user) of the returned value
+ * @error:
  * "...:
  *
  * set the axes values
  *
  * Returns:
  **/
-int hkl_geometry_set_values_v(HklGeometry *self, size_t len, ...)
-{
-	va_list ap;
-	HklParameter **axis;
-
-	if (!self || darray_size(self->axes) != len)
-		return FALSE;
-
-	va_start(ap, len);
-	darray_foreach(axis, self->axes){
-		hkl_parameter_value_set(*axis,
-					va_arg(ap, double), NULL);
-	}
-	va_end(ap);
-
-	hkl_geometry_update(self);
-
-	return TRUE;
-}
-
-int hkl_geometry_set_values_unit_v(HklGeometry *self, GError **error, ...)
+int hkl_geometry_set_values_v(HklGeometry *self, HklUnitEnum unit_type, GError **error, ...)
 {
 	va_list ap;
 	HklParameter **axis;
@@ -577,8 +566,9 @@ int hkl_geometry_set_values_unit_v(HklGeometry *self, GError **error, ...)
 
 	va_start(ap, error);
 	darray_foreach(axis, self->axes){
-		if(!hkl_parameter_value_unit_set(*axis,
-						 va_arg(ap, double), error)){
+		if(!hkl_parameter_value_set(*axis,
+					    va_arg(ap, double),
+					    unit_type, error)){
 			g_assert (error == NULL || *error != NULL);
 			va_end(ap);
 			hkl_geometry_update(self);
@@ -703,7 +693,8 @@ int hkl_geometry_closest_from_geometry_with_range(HklGeometry *self,
 	if(!ko){
 		for(i=0;i<len;++i)
 			hkl_parameter_value_set(darray_item(self->axes, i),
-						values[i], NULL);
+						values[i],
+						HKL_UNIT_DEFAULT, NULL);
 		hkl_geometry_update(self);
 	}
 	return ko;
@@ -957,7 +948,7 @@ void hkl_geometry_list_fprintf(FILE *f, const HklGeometryList *self)
 		list_for_each(&self->items, item, list){
 			fprintf(f, "\n%d :", i++);
 			darray_foreach(axis, item->geometry->axes){
-				value = hkl_parameter_value_unit_get(*axis);
+				value = hkl_parameter_value_get(*axis, HKL_UNIT_DEFAULT);
 				if ((*axis)->punit)
 					fprintf(f, " % 18.15f %s", value, (*axis)->punit->repr);
 				else
@@ -966,7 +957,7 @@ void hkl_geometry_list_fprintf(FILE *f, const HklGeometryList *self)
 			}
 			fprintf(f, "\n   ");
 			darray_foreach(axis, item->geometry->axes){
-				value = hkl_parameter_value_get(*axis);
+				value = hkl_parameter_value_get(*axis, HKL_UNIT_DEFAULT);
 				value = gsl_sf_angle_restrict_symm(value);
 				value *= hkl_unit_factor((*axis)->unit,
 							 (*axis)->punit);

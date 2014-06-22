@@ -130,35 +130,58 @@ int hkl_parameter_init_copy(HklParameter *self, const HklParameter *src,
 	return self->ops->init_copy(self, src, error);
 }
 
+/**
+ * hkl_parameter_name_get:
+ * @self: the this ptr
+ *
+ * Returns: the name of the #HklParameter
+ **/
 const char *hkl_parameter_name_get(const HklParameter *self)
 {
 	return self->name;
 }
 
 /**
- * hkl_parameter_value_get:
+ * hkl_parameter_default_unit_get:
  * @self: the this ptr
  *
- * Returns: the value of the #HklParameter
+ * Returns: the default unit of the #HklParameter
  **/
-inline double hkl_parameter_value_get(const HklParameter *self)
+const char *hkl_parameter_default_unit_get(const HklParameter *self)
 {
-	return self->_value;
+	return self->unit->name;
 }
 
 /**
- * hkl_parameter_value_unit_get:
+ * hkl_parameter_user_unit_get:
  * @self: the this ptr
  *
- * Returns: the value of the #HklParameter expressed in the user unit
+ * Returns: the user unit of the #HklParameter
  **/
-inline double hkl_parameter_value_unit_get(const HklParameter *self)
+const char *hkl_parameter_user_unit_get(const HklParameter *self)
 {
-	double factor = hkl_unit_factor(self->unit, self->punit);
-
-	return self->_value * factor;
+	return self->punit->name;
 }
 
+/**
+ * hkl_parameter_value_get:
+ * @self: the this ptr
+ * @unit_type: the unit type (default or user) of the returned value
+ *
+ * Returns: the value of the #HklParameter
+ **/
+inline double hkl_parameter_value_get(const HklParameter *self,
+				      HklUnitEnum unit_type)
+{
+	switch(unit_type){
+	case HKL_UNIT_DEFAULT:
+		return self->_value;
+		break;
+	case HKL_UNIT_USER:
+		return self->_value * hkl_unit_factor(self->unit, self->punit);
+		break;
+	}
+}
 
 /**
  * hkl_parameter_value_get_closest:
@@ -177,9 +200,10 @@ inline double hkl_parameter_value_get_closest(const HklParameter *self,
 }
 
 /**
- * hkl_parameter_value_set: (skip)
+ * hkl_parameter_value_set:
  * @self: this ptr
  * @value: the value to set
+ * @unit_type: the unit type (default or user) of the returned value
  * @error: return location for a GError, or NULL
  *
  * set the value of an #HklParameter
@@ -187,26 +211,9 @@ inline double hkl_parameter_value_get_closest(const HklParameter *self,
  * Returns: TRUE on success, FALSE if an error occurred
  **/
 inline int hkl_parameter_value_set(HklParameter *self, double value,
-				   GError **error)
+				   HklUnitEnum unit_type, GError **error)
 {
-	return self->ops->set_value(self, value, error);
-}
-
-/**
- * hkl_parameter_value_unit_set:
- * @self: the this ptr
- * @value: the value to set
- * @error: return location for a GError, or NULL
- *
- * set the value of the parameter express in the punit #HklUnit
- * @todo test
- *
- * Returns: TRUE on success, FALSE if an error occurred
- **/
-inline int hkl_parameter_value_unit_set(HklParameter *self, double value,
-					GError **error)
-{
-	return self->ops->set_value_unit(self, value, error);
+	return self->ops->set_value(self, value, unit_type, error);
 }
 
 /**
@@ -219,40 +226,39 @@ inline void hkl_parameter_value_set_smallest_in_range(HklParameter *self)
 }
 
 /**
- * hkl_parameter_min_max_get: (skip)
- * @self:
- *
- * get the max value of the #HklParameter
- *
- **/
-void hkl_parameter_min_max_get(const HklParameter *self, double *min, double *max)
-{
-	*min = self->range.min;
-	*max = self->range.max;
-}
-
-/**
- * hkl_parameter_min_max_unit_get: (skip)
- * @self:
- * @min:
- * @max:
- *
- * get the #HklParameter range, min, max
- * @todo test
- **/
-void hkl_parameter_min_max_unit_get(const HklParameter *self, double *min, double *max)
-{
-	double factor = hkl_unit_factor(self->unit, self->punit);
-
-	*min = factor * self->range.min;
-	*max = factor * self->range.max;
-}
-
-/**
- * hkl_parameter_min_max_set: (skip)
+ * hkl_parameter_min_max_get:
  * @self: the this ptr
- * @min:
- * @max:
+ * @min: (out caller-allocates): the returned minimum value
+ * @max: (out caller-allocates): the returned maximum value
+ * @unit_type: the unit type (default or user) of the returned values
+ *
+ * get the min and max value of the #HklParameter
+ *
+ **/
+void hkl_parameter_min_max_get(const HklParameter *self, double *min, double *max,
+			       HklUnitEnum unit_type)
+{
+	double factor;
+
+	switch (unit_type){
+	case HKL_UNIT_DEFAULT:
+		*min = self->range.min;
+		*max = self->range.max;
+		break;
+	case HKL_UNIT_USER:
+		factor = hkl_unit_factor(self->unit, self->punit);
+		*min = factor * self->range.min;
+		*max = factor * self->range.max;
+		break;
+	}
+}
+
+/**
+ * hkl_parameter_min_max_set:
+ * @self: the this ptr
+ * @min: the minimum value to set
+ * @max: the maximum value to set
+ * @unit_type: the unit type (default or user) of the min, max
  * @error: return location for a GError, or NULL
  *
  * set the #HklParameter range.
@@ -261,8 +267,10 @@ void hkl_parameter_min_max_unit_get(const HklParameter *self, double *min, doubl
  * Returns: TRUE on success, FALSE if an error occurred
  **/
 int hkl_parameter_min_max_set(HklParameter *self, double min, double max,
-			      GError **error)
+			      HklUnitEnum unit_type, GError **error)
 {
+	double factor;
+
 	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
 	if (min > max){
@@ -274,30 +282,19 @@ int hkl_parameter_min_max_set(HklParameter *self, double min, double max,
 		return FALSE;
 	}
 
-	self->range.min = min;
-	self->range.max = max;
+	switch (unit_type){
+	case HKL_UNIT_DEFAULT:
+		self->range.min = min;
+		self->range.max = max;
+		break;
+	case HKL_UNIT_USER:
+		factor = hkl_unit_factor(self->unit, self->punit);
+		self->range.min = min / factor;
+		self->range.max = max / factor;
+		break;
+	}
 
 	return TRUE;
-}
-
-/**
- * hkl_parameter_min_max_unit_set:
- * @self: the this ptr
- * @min: the minimum value to set
- * @max: the maximum value to set
- * @error: return location for a GError, or NULL
- *
- * set the #HklParameter range.
- * @todo test and set the GError
- *
- * Returns: TRUE on success, FALSE if an error occurred
- **/
-int hkl_parameter_min_max_unit_set(HklParameter *self, double min, double max,
-				   GError **error)
-{
-	double factor = hkl_unit_factor(self->unit, self->punit);
-
-	return hkl_parameter_min_max_set(self, min / factor, max / factor, error);
 }
 
 /**

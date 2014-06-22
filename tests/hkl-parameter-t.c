@@ -120,7 +120,7 @@ static void is_valid(void)
 			      &hkl_unit_angle_rad, &hkl_unit_angle_deg);
 	ok(TRUE == hkl_parameter_is_valid(p), __func__);
 
-	hkl_parameter_value_set(p, 10, NULL);
+	hkl_parameter_value_set(p, 10, HKL_UNIT_DEFAULT, NULL);
 	ok(FALSE == hkl_parameter_is_valid(p), __func__);
 
 	hkl_parameter_free(p);
@@ -135,21 +135,21 @@ static void min_max(void)
 	p = hkl_parameter_new("toto", 1, 2, 3,
 			      FALSE, TRUE,
 			      &hkl_unit_angle_rad, &hkl_unit_angle_deg);
-	hkl_parameter_min_max_get(p, &min, &max);
+	hkl_parameter_min_max_get(p, &min, &max, HKL_UNIT_DEFAULT);
 	is_double(1, min, HKL_EPSILON, __func__);
 	is_double(3, max, HKL_EPSILON, __func__);
 
-	ok(TRUE == hkl_parameter_min_max_set(p, 1.1, 4, NULL), __func__);
-	hkl_parameter_min_max_get(p, &min, &max);
+	ok(TRUE == hkl_parameter_min_max_set(p, 1.1, 4, HKL_UNIT_DEFAULT, NULL), __func__);
+	hkl_parameter_min_max_get(p, &min, &max, HKL_UNIT_DEFAULT);
 	is_double(1.1, min, HKL_EPSILON, __func__);
 	is_double(4, max, HKL_EPSILON, __func__);
 
 	error = NULL;
-	ok(FALSE == hkl_parameter_min_max_set(p, 4, 1, &error), __func__);
+	ok(FALSE == hkl_parameter_min_max_set(p, 4, 1, HKL_UNIT_DEFAULT, &error), __func__);
 	ok(error != NULL, __func__);
 	g_clear_error(&error);
 	/* nothing should have changed */
-	hkl_parameter_min_max_get(p, &min, &max);
+	hkl_parameter_min_max_get(p, &min, &max, HKL_UNIT_DEFAULT);
 	is_double(1.1, min, HKL_EPSILON, __func__);
 	is_double(4, max, HKL_EPSILON, __func__);
 

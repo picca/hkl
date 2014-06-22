@@ -76,7 +76,7 @@ const char *hkl_factory_name(const HklFactory *self)
 }
 
 /**
- * hkl_factory_axes_get:
+ * hkl_factory_axes_names_get:
  * @self: the this ptr
  * @length: (out caller-allocates): the length of the returned array
  *
@@ -84,8 +84,8 @@ const char *hkl_factory_name(const HklFactory *self)
  *
  * Returns: (array length=length) (transfer none): array of the axes names.
  **/
-const char **hkl_factory_axes_get(const HklFactory *self,
-				  size_t *length)
+const char **hkl_factory_axes_names_get(const HklFactory *self,
+					size_t *length)
 {
 	*length = self->axes_length;
 	return self->axes;
@@ -138,17 +138,17 @@ static void hkl_geometry_list_multiply_k4c_real(HklGeometryList *self,
 	double kphi, kphip;
 
 	geometry = item->geometry;
-	komega = hkl_parameter_value_get(darray_item(geometry->axes, 0));
-	kappa = hkl_parameter_value_get(darray_item(geometry->axes, 1));
-	kphi = hkl_parameter_value_get(darray_item(geometry->axes, 2));
+	komega = hkl_parameter_value_get(darray_item(geometry->axes, 0), HKL_UNIT_DEFAULT);
+	kappa = hkl_parameter_value_get(darray_item(geometry->axes, 1), HKL_UNIT_DEFAULT);
+	kphi = hkl_parameter_value_get(darray_item(geometry->axes, 2), HKL_UNIT_DEFAULT);
 
 	kappa_2_kappap(komega, kappa, kphi, 50 * HKL_DEGTORAD, &komegap, &kappap, &kphip);
 
 	copy = hkl_geometry_new_copy(geometry);
 	/* TODO parameter list for the geometry */
-	hkl_parameter_value_set(darray_item(copy->axes, 0), komegap, NULL);
-	hkl_parameter_value_set(darray_item(copy->axes, 1), kappap, NULL);
-	hkl_parameter_value_set(darray_item(copy->axes, 2), kphip, NULL);
+	hkl_parameter_value_set(darray_item(copy->axes, 0), komegap, HKL_UNIT_DEFAULT, NULL);
+	hkl_parameter_value_set(darray_item(copy->axes, 1), kappap, HKL_UNIT_DEFAULT, NULL);
+	hkl_parameter_value_set(darray_item(copy->axes, 2), kphip, HKL_UNIT_DEFAULT, NULL);
 
 	hkl_geometry_update(copy);
 	hkl_geometry_list_add(self, copy);
@@ -165,17 +165,17 @@ static void hkl_geometry_list_multiply_k6c_real(HklGeometryList *self,
 	double kphi, kphip;
 
 	geometry = item->geometry;
-	komega = hkl_parameter_value_get(darray_item(geometry->axes, 1));
-	kappa = hkl_parameter_value_get(darray_item(geometry->axes, 2));
-	kphi = hkl_parameter_value_get(darray_item(geometry->axes, 3));
+	komega = hkl_parameter_value_get(darray_item(geometry->axes, 1), HKL_UNIT_DEFAULT);
+	kappa = hkl_parameter_value_get(darray_item(geometry->axes, 2), HKL_UNIT_DEFAULT);
+	kphi = hkl_parameter_value_get(darray_item(geometry->axes, 3), HKL_UNIT_DEFAULT);
 
 	kappa_2_kappap(komega, kappa, kphi, 50 * HKL_DEGTORAD, &komegap, &kappap, &kphip);
 
 	copy = hkl_geometry_new_copy(geometry);
 	/* TODO parameter list for the geometry */
-	hkl_parameter_value_set(darray_item(copy->axes, 1), komegap, NULL);
-	hkl_parameter_value_set(darray_item(copy->axes, 2), kappap, NULL);
-	hkl_parameter_value_set(darray_item(copy->axes, 3), kphip, NULL);
+	hkl_parameter_value_set(darray_item(copy->axes, 1), komegap, HKL_UNIT_DEFAULT, NULL);
+	hkl_parameter_value_set(darray_item(copy->axes, 2), kappap, HKL_UNIT_DEFAULT, NULL);
+	hkl_parameter_value_set(darray_item(copy->axes, 3), kphip, HKL_UNIT_DEFAULT, NULL);
 
 	hkl_geometry_update(copy);
 	hkl_geometry_list_add(self, copy);

@@ -40,7 +40,7 @@ static void solution(void)
 	/* get the geometry and set the source */
 	factory = hkl_factory_get_by_name("ZAXIS", NULL);
 	geometry = hkl_factory_create_new_geometry(factory);
-	hkl_geometry_wavelength_set(geometry, 0.842, NULL);
+	hkl_geometry_wavelength_set(geometry, 0.842, HKL_UNIT_DEFAULT, NULL);
 
 	/* set up the sample */
 	sample = hkl_sample_new("test");
@@ -66,17 +66,19 @@ static void solution(void)
 	engine = hkl_engine_list_engine_get_by_name(engines, "hkl", NULL);
 
 	/* the init part must succed */
-	hkl_geometry_set_values_unit_v(geometry, NULL, 1., 0., 0., 0.);
+	hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 1., 0., 0., 0.);
 
 	/* compute the 1 1 0 */
-	hkl_engine_pseudo_axes_values_set(engine, hkl, ARRAY_SIZE(hkl), NULL);
+	hkl_engine_pseudo_axes_values_set(engine, hkl, ARRAY_SIZE(hkl),
+					  HKL_UNIT_DEFAULT, NULL);
 	if (hkl_engine_set(engine, NULL)){
 		const HklGeometryListItem *item;
 
 		HKL_GEOMETRY_LIST_FOREACH(item, geometries){
 			static double null[] = {0, 0, 0};
 
-			hkl_engine_pseudo_axes_values_set(engine, null, ARRAY_SIZE(null), NULL);
+			hkl_engine_pseudo_axes_values_set(engine, null, ARRAY_SIZE(null),
+							  HKL_UNIT_DEFAULT, NULL);
 			hkl_geometry_set(geometry,
 					 hkl_geometry_list_item_geometry_get(item));
 			hkl_engine_get(engine, NULL);

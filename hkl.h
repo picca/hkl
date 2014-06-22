@@ -109,6 +109,16 @@ HKLAPI int hkl_matrix_cmp(const HklMatrix *self, const HklMatrix *m) HKL_ARG_NON
 
 HKLAPI void hkl_matrix_times_matrix(HklMatrix *self, const HklMatrix *m) HKL_ARG_NONNULL(1, 2);
 
+/********/
+/* Unit */
+/********/
+
+typedef enum _HklUnitEnum
+{
+	HKL_UNIT_DEFAULT,
+	HKL_UNIT_USER
+} HklUnitEnum;
+
 /*************/
 /* Parameter */
 /*************/
@@ -123,25 +133,21 @@ HKLAPI void hkl_parameter_free(HklParameter *self) HKL_ARG_NONNULL(1);
 
 HKLAPI const char *hkl_parameter_name_get(const HklParameter *self) HKL_ARG_NONNULL(1);
 
-HKLAPI double hkl_parameter_value_get(const HklParameter *self) HKL_ARG_NONNULL(1);
+HKLAPI const char *hkl_parameter_default_unit_get(const HklParameter *self) HKL_ARG_NONNULL(1);
+
+HKLAPI const char *hkl_parameter_user_unit_get(const HklParameter *self) HKL_ARG_NONNULL(1);
+
+HKLAPI double hkl_parameter_value_get(const HklParameter *self,
+				      HklUnitEnum unit_type) HKL_ARG_NONNULL(1);
 
 HKLAPI int hkl_parameter_value_set(HklParameter *self, double value,
-				   GError **error) HKL_ARG_NONNULL(1);
+				   HklUnitEnum unit_type, GError **error) HKL_ARG_NONNULL(1);
 
-HKLAPI double hkl_parameter_value_unit_get(const HklParameter *self) HKL_ARG_NONNULL(1);
-
-HKLAPI int hkl_parameter_value_unit_set(HklParameter *self, double value,
-					GError **error) HKL_ARG_NONNULL(1);
-
-HKLAPI void hkl_parameter_min_max_get(const HklParameter *self, double *min, double *max) HKL_ARG_NONNULL(1, 2, 3);
+HKLAPI void hkl_parameter_min_max_get(const HklParameter *self, double *min, double *max,
+				      HklUnitEnum unit_type) HKL_ARG_NONNULL(1, 2, 3);
 
 HKLAPI int hkl_parameter_min_max_set(HklParameter *self, double min, double max,
-				     GError **error) HKL_ARG_NONNULL(1);
-
-HKLAPI void hkl_parameter_min_max_unit_get(const HklParameter *self, double *min, double *max) HKL_ARG_NONNULL(1, 2, 3);
-
-HKLAPI int hkl_parameter_min_max_unit_set(HklParameter *self, double min, double max,
-					  GError **error) HKL_ARG_NONNULL(1);
+				     HklUnitEnum unit_type, GError **error) HKL_ARG_NONNULL(1);
 
 HKLAPI int hkl_parameter_fit_get(const HklParameter *self) HKL_ARG_NONNULL(1);
 
@@ -190,15 +196,17 @@ HKLAPI int hkl_geometry_axis_set(HklGeometry *self, const char *name,
 
 HKLAPI const char *hkl_geometry_name_get(const HklGeometry *self) HKL_ARG_NONNULL(1);
 
-HKLAPI double hkl_geometry_wavelength_get(const HklGeometry *self) HKL_ARG_NONNULL(1);
+HKLAPI double hkl_geometry_wavelength_get(const HklGeometry *self,
+					  HklUnitEnum unit_type) HKL_ARG_NONNULL(1);
 
 HKLAPI int hkl_geometry_wavelength_set(HklGeometry *self, double wavelength,
-				       GError **error) HKL_ARG_NONNULL(1);
+				       HklUnitEnum unit_type, GError **error) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_geometry_randomize(HklGeometry *self) HKL_ARG_NONNULL(1);
 
 /* TODO after bissecting it seems that this method is slow (to replace) */
-HKLAPI int hkl_geometry_set_values_unit_v(HklGeometry *self, GError **error, ...) HKL_ARG_NONNULL(1);
+HKLAPI int hkl_geometry_set_values_v(HklGeometry *self, HklUnitEnum unit_type,
+				     GError **error, ...) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_geometry_fprintf(FILE *file, const HklGeometry *self) HKL_ARG_NONNULL(1, 2);
 
@@ -252,22 +260,22 @@ HKLAPI int hkl_lattice_b_set(HklLattice *self, const HklParameter *parameter,
 HKLAPI const HklParameter *hkl_lattice_c_get(const HklLattice *self) HKL_ARG_NONNULL(1);
 
 HKLAPI int hkl_lattice_c_set(HklLattice *self, const HklParameter *parameter,
-			      GError **error) HKL_ARG_NONNULL(1, 2);
+			     GError **error) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI const HklParameter *hkl_lattice_alpha_get(const HklLattice *self) HKL_ARG_NONNULL(1);
 
 HKLAPI int hkl_lattice_alpha_set(HklLattice *self, const HklParameter *parameter,
-				  GError **error) HKL_ARG_NONNULL(1, 2);
+				 GError **error) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI const HklParameter *hkl_lattice_beta_get(const HklLattice *self) HKL_ARG_NONNULL(1);
 
 HKLAPI int hkl_lattice_beta_set(HklLattice *self, const HklParameter *parameter,
-				 GError **error) HKL_ARG_NONNULL(1, 2);
+				GError **error) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI const HklParameter *hkl_lattice_gamma_get(const HklLattice *self) HKL_ARG_NONNULL(1);
 
 HKLAPI int hkl_lattice_gamma_set(HklLattice *self, const HklParameter *parameter,
-				  GError **error) HKL_ARG_NONNULL(1, 2);
+				 GError **error) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI int hkl_lattice_set(HklLattice *self,
 			   double a, double b, double c,
@@ -393,11 +401,12 @@ HKLAPI unsigned int hkl_engine_len(const HklEngine *self) HKL_ARG_NONNULL(1);
 HKLAPI const darray_string *hkl_engine_pseudo_axes_names_get(HklEngine *self) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_engine_pseudo_axes_values_get(HklEngine *self,
-					      double values[], size_t n_values) HKL_ARG_NONNULL(1, 2);
+					      double values[], size_t n_values,
+					      HklUnitEnum unit_type) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI int hkl_engine_pseudo_axes_values_set(HklEngine *self,
 					     double values[], size_t n_values,
-					     GError **error) HKL_ARG_NONNULL(1, 2);
+					     HklUnitEnum unit_type, GError **error) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI void hkl_engine_pseudo_axes_randomize(HklEngine *self) HKL_ARG_NONNULL(1);
 
@@ -419,7 +428,7 @@ HKLAPI const darray_string *hkl_engine_parameters_names_get(const HklEngine *sel
 
 HKLAPI int hkl_engine_parameters_values_set(HklEngine *self,
 					    double values[], size_t n_values,
-					    GError **error) HKL_ARG_NONNULL(1, 2);
+					    HklUnitEnum unit_type, GError **error) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI void hkl_engine_parameters_randomize(HklEngine *self) HKL_ARG_NONNULL(1);
 
@@ -488,8 +497,8 @@ HKLAPI HklFactory *hkl_factory_get_by_name(const char *name,
 
 HKLAPI const char *hkl_factory_name(const HklFactory *self) HKL_ARG_NONNULL(1);
 
-HKLAPI const char **hkl_factory_axes_get(const HklFactory *self,
-					 size_t *length) HKL_ARG_NONNULL(1, 2);
+HKLAPI const char **hkl_factory_axes_names_get(const HklFactory *self,
+					       size_t *length) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI HklGeometry *hkl_factory_create_new_geometry(const HklFactory *self) HKL_ARG_NONNULL(1);
 

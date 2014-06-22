@@ -71,8 +71,9 @@ static void check_collision(Hkl3D *hkl3d)
 
 	/* check the collision and that the right axes are colliding */
 	res = TRUE;
-	hkl_geometry_set_values_unit_v(hkl3d->geometry->geometry,
-				       23., 0., 0., 0., 0., 0.);
+	hkl_geometry_set_values_v(hkl3d->geometry->geometry,
+				  HKL_UNIT_USER, NULL,
+				  23., 0., 0., 0., 0., 0.);
 
 	res &= hkl3d_is_colliding(hkl3d) == TRUE;
 	strcpy(buffer, "");
@@ -105,26 +106,30 @@ static void check_no_collision(Hkl3D *hkl3d)
 
 	/* check that rotating around komega/kappa/kphi do not create collisison */
 	res = TRUE;
-	hkl_geometry_set_values_unit_v(hkl3d->geometry->geometry,
-				       0., 0., 0., 0., 0., 0.);
+	hkl_geometry_set_values_v(hkl3d->geometry->geometry,
+				  HKL_UNIT_USER, NULL,
+				  0., 0., 0., 0., 0., 0.);
 	/* komega */
 	for(i=0; i<=360; i=i+10){
-		hkl_geometry_set_values_unit_v(hkl3d->geometry->geometry,
-					       0., i, 0., 0., 0., 0.);
+		hkl_geometry_set_values_v(hkl3d->geometry->geometry,
+					  HKL_UNIT_USER, NULL,
+					  0., i, 0., 0., 0., 0.);
 		res &= hkl3d_is_colliding(hkl3d) == FALSE;
 	}
 
 	/* kappa */
 	for(i=0; i<=360; i=i+10){
-		hkl_geometry_set_values_unit_v(hkl3d->geometry->geometry,
-					       0., 0., i, 0., 0., 0.);
+		hkl_geometry_set_values_v(hkl3d->geometry->geometry,
+					  HKL_UNIT_USER, NULL,
+					  0., 0., i, 0., 0., 0.);
 		res &= hkl3d_is_colliding(hkl3d) == FALSE;
 	}
 
 	/* kphi */
 	for(i=0; i<=360; i=i+10){
-		hkl_geometry_set_values_unit_v(hkl3d->geometry->geometry,
-					       0., 0., 0., i, 0., 0.);
+		hkl_geometry_set_values_v(hkl3d->geometry->geometry,
+					  HKL_UNIT_USER, NULL,
+					  0., 0., 0., i, 0., 0.);
 		res &= hkl3d_is_colliding(hkl3d) == FALSE;
 	}
 	ok(res == TRUE, "no-collision");
@@ -137,7 +142,7 @@ int main(int argc, char** argv)
 	HklGeometry *geometry;
 	Hkl3D *hkl3d;
 
-	factory = hkl_factory_get_by_name("K6C");
+	factory = hkl_factory_get_by_name("K6C", NULL);
 	geometry = hkl_factory_create_new_geometry(factory);
 
 	/* compute the filename of the diffractometer config file */

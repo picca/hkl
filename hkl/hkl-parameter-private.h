@@ -72,9 +72,7 @@ struct _HklParameterOperations {
 	double         (*get_value_closest)(const HklParameter *self,
 					    const HklParameter *other);
 	int            (*set_value)(HklParameter *self, double value,
-				    GError **error);
-	int            (*set_value_unit)(HklParameter *self, double value,
-					 GError **error);
+				    HklUnitEnum unit_type, GError **error);
 	void           (*set_value_smallest_in_range)(HklParameter *self);
 	void           (*randomize)(HklParameter *self);
 	int            (*is_valid)(const HklParameter *self);
@@ -87,7 +85,6 @@ struct _HklParameterOperations {
 		.init_copy = hkl_parameter_init_copy_real,		\
 		.get_value_closest = hkl_parameter_value_get_closest_real, \
 		.set_value = hkl_parameter_value_set_real,		\
-		.set_value_unit = hkl_parameter_value_unit_set_real,	\
 		.set_value_smallest_in_range = hkl_parameter_value_set_smallest_in_range_real, \
 		.randomize = hkl_parameter_randomize_real,		\
 		.is_valid = hkl_parameter_is_valid_real,		\
@@ -125,24 +122,21 @@ static inline double hkl_parameter_value_get_closest_real(const HklParameter *se
 }
 
 static inline int hkl_parameter_value_set_real(HklParameter *self, double value,
-					       GError **error)
+					       HklUnitEnum unit_type, GError **error)
 {
 	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
-	self->_value = value;
+	switch (unit_type) {
+	case HKL_UNIT_DEFAULT:
+		self->_value = value;
+		break;
+	case HKL_UNIT_USER:
+		self->_value = value / hkl_unit_factor(self->unit, self->punit);
+		break;
+	}
 	self->changed = TRUE;
 
 	return TRUE;
-}
-
-static inline int hkl_parameter_value_unit_set_real(HklParameter *self, double value,
-						    GError **error)
-{
-	double factor = hkl_unit_factor(self->unit, self->punit);
-
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
-
-	return hkl_parameter_value_set_real(self, value / factor, error);
 }
 
 static inline void hkl_parameter_value_set_smallest_in_range_real(HklParameter *self)

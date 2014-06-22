@@ -43,7 +43,7 @@ static void hkl_test_bench_run_real(HklEngine *engine, HklGeometry *geometry, si
 			const char *pname = darray_item(*parameters, 0);
 
 			p = hkl_parameter_new_copy(hkl_engine_parameter_get(engine, pname, NULL));
-			hkl_parameter_value_set(p, 1, NULL);
+			hkl_parameter_value_set(p, 1, HKL_UNIT_DEFAULT, NULL);
 			hkl_engine_parameter_set(engine, pname, p, NULL);
 			hkl_parameter_free(p);
 		}
@@ -54,7 +54,7 @@ static void hkl_test_bench_run_real(HklEngine *engine, HklGeometry *geometry, si
 			struct timeval debut, fin, dt;
 			double t;
 
-			hkl_geometry_set_values_unit_v(geometry, NULL, 0., 0., 0., 0., 10., 10.);
+			hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 0., 0., 0., 0., 10., 10.);
 			gettimeofday(&debut, NULL);
 			hkl_engine_set(engine, NULL);
 			gettimeofday(&fin, NULL);
@@ -85,7 +85,7 @@ static void hkl_test_bench_run_v(HklEngineList *engines, HklGeometry *geometry,
 		values[i] = va_arg(ap, double);
 	va_end(ap);
 
-	hkl_engine_pseudo_axes_values_set(engine, values, n_values, NULL);
+	hkl_engine_pseudo_axes_values_set(engine, values, n_values, HKL_UNIT_DEFAULT, NULL);
 
 	hkl_test_bench_run_real(engine, geometry, n);
 }
@@ -155,7 +155,7 @@ static void hkl_test_bench_eulerians(void)
 		hkl_engine_select_mode(engine, *mode, NULL);
 
 		/* studdy this degenerated case */
-		hkl_engine_pseudo_axes_values_set(engine, eulerians, 3, NULL);
+		hkl_engine_pseudo_axes_values_set(engine, eulerians, 3, HKL_UNIT_DEFAULT, NULL);
 		if (hkl_engine_set(engine, NULL)) {
 			const HklGeometryList *geometries = hkl_engine_list_geometries_get(engines);
 			const HklGeometryListItem *item;
@@ -163,7 +163,7 @@ static void hkl_test_bench_eulerians(void)
 			HKL_GEOMETRY_LIST_FOREACH(item, geometries){
 				static double null[] = {0, 0, 0};
 
-				hkl_engine_pseudo_axes_values_set(engine, null, 3, NULL);
+				hkl_engine_pseudo_axes_values_set(engine, null, 3, HKL_UNIT_DEFAULT, NULL);
 				hkl_geometry_set(geometry,
 						 hkl_geometry_list_item_geometry_get(item));
 				hkl_engine_get(engine, NULL);

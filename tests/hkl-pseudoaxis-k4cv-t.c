@@ -60,14 +60,14 @@ static void degenerated(void)
 			const char *pname = darray_item(*parameters, 0);
 			HklParameter *p = hkl_parameter_new_copy(hkl_engine_parameter_get(engine,
 											  pname, NULL));
-			hkl_parameter_value_set(p, 1, NULL);
+			hkl_parameter_value_set(p, 1, HKL_UNIT_DEFAULT, NULL);
 			hkl_engine_parameter_set(engine, pname, p, NULL);
 			hkl_parameter_free(p);
 		}
 
 		/* studdy this degenerated case */
 		hkl_engine_pseudo_axes_values_set(engine,
-						  hkl, ARRAY_SIZE(hkl), NULL);
+						  hkl, ARRAY_SIZE(hkl), HKL_UNIT_DEFAULT, NULL);
 		if (hkl_engine_set(engine, NULL)){
 			const HklGeometryListItem *item;
 
@@ -75,7 +75,7 @@ static void degenerated(void)
 				static double null[] = {0, 0, 0};
 
 				hkl_engine_pseudo_axes_values_set(engine,
-								  null, ARRAY_SIZE(null),
+								  null, ARRAY_SIZE(null), HKL_UNIT_DEFAULT,
 								  NULL);
 				hkl_geometry_set(geometry,
 						 hkl_geometry_list_item_geometry_get(item));
@@ -130,7 +130,7 @@ static void eulerians(void)
 			const char *pname = darray_item(*parameters, 0);
 			HklParameter *p = hkl_parameter_new_copy(hkl_engine_parameter_get(engine,
 											  pname, NULL));
-			hkl_parameter_value_set(p, 1, NULL);
+			hkl_parameter_value_set(p, 1, HKL_UNIT_DEFAULT, NULL);
 			hkl_engine_parameter_set(engine, pname, p, NULL);
 			hkl_parameter_free(p);
 		}
@@ -138,7 +138,7 @@ static void eulerians(void)
 		/* studdy this degenerated case */
 		hkl_engine_pseudo_axes_values_set(engine,
 						  eulerians, ARRAY_SIZE(eulerians),
-						  NULL);
+						  HKL_UNIT_DEFAULT, NULL);
 		if (hkl_engine_set(engine, NULL)) {
 			const HklGeometryListItem *item;
 
@@ -197,7 +197,7 @@ static void q(void)
 	modes = hkl_engine_modes_names_get(engine);
 
 	/* the init part */
-	hkl_geometry_set_values_unit_v(geometry, NULL, 30., 0., 0., 60.);
+	hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 30., 0., 0., 60.);
 	hkl_engine_initialize(engine, NULL);
 
 	darray_foreach(mode, *modes){

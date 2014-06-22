@@ -120,7 +120,7 @@ static void update(void)
 	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
 
 	axis1 = container_of(hkl_geometry_get_axis_by_name(g, "B"), HklAxis, parameter);
-	hkl_parameter_value_set(&axis1->parameter, M_PI_2, NULL);
+	hkl_parameter_value_set(&axis1->parameter, M_PI_2, HKL_UNIT_DEFAULT, NULL);
 	/* now axis1 is dirty */
 	ok(TRUE == axis1->parameter.changed, __func__);
 
@@ -181,10 +181,10 @@ static void set_values(void)
 	hkl_holder_add_rotation_axis(holder, "B", 1., 0., 0.);
 	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
 
-	hkl_geometry_set_values_v(g, 3, 1., 1., 1.);
-	is_double(1., hkl_parameter_value_get(darray_item(g->axes, 0)), HKL_EPSILON, __func__);
-	is_double(1., hkl_parameter_value_get(darray_item(g->axes, 1)), HKL_EPSILON, __func__);
-	is_double(1., hkl_parameter_value_get(darray_item(g->axes, 2)), HKL_EPSILON, __func__);
+	hkl_geometry_set_values_v(g, HKL_UNIT_DEFAULT, NULL, 1., 1., 1.);
+	is_double(1., hkl_parameter_value_get(darray_item(g->axes, 0), HKL_UNIT_DEFAULT), HKL_EPSILON, __func__);
+	is_double(1., hkl_parameter_value_get(darray_item(g->axes, 1), HKL_UNIT_DEFAULT), HKL_EPSILON, __func__);
+	is_double(1., hkl_parameter_value_get(darray_item(g->axes, 2), HKL_UNIT_DEFAULT), HKL_EPSILON, __func__);
 
 	hkl_geometry_free(g);
 }
@@ -200,10 +200,10 @@ static void set_values_unit(void)
 	hkl_holder_add_rotation_axis(holder, "B", 1., 0., 0.);
 	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
 
-	hkl_geometry_set_values_unit_v(g, NULL, 10., 10., 10.);
-	is_double(10. * HKL_DEGTORAD, hkl_parameter_value_get(darray_item(g->axes, 0)), HKL_EPSILON, __func__);
-	is_double(10. * HKL_DEGTORAD, hkl_parameter_value_get(darray_item(g->axes, 1)), HKL_EPSILON, __func__);
-	is_double(10. * HKL_DEGTORAD, hkl_parameter_value_get(darray_item(g->axes, 2)), HKL_EPSILON, __func__);
+	hkl_geometry_set_values_v(g, HKL_UNIT_USER, NULL, 10., 10., 10.);
+	is_double(10. * HKL_DEGTORAD, hkl_parameter_value_get(darray_item(g->axes, 0), HKL_UNIT_DEFAULT), HKL_EPSILON, __func__);
+	is_double(10. * HKL_DEGTORAD, hkl_parameter_value_get(darray_item(g->axes, 1), HKL_UNIT_DEFAULT), HKL_EPSILON, __func__);
+	is_double(10. * HKL_DEGTORAD, hkl_parameter_value_get(darray_item(g->axes, 2), HKL_UNIT_DEFAULT), HKL_EPSILON, __func__);
 
 	hkl_geometry_free(g);
 }
@@ -222,8 +222,8 @@ static void distance(void)
 
 	g2 = hkl_geometry_new_copy(g1);
 
-	hkl_geometry_set_values_v(g1, 3, 0., 0., 0.);
-	hkl_geometry_set_values_v(g2, 3, 1., 1., 1.);
+	hkl_geometry_set_values_v(g1, HKL_UNIT_DEFAULT, NULL, 0., 0., 0.);
+	hkl_geometry_set_values_v(g2, HKL_UNIT_DEFAULT, NULL, 1., 1., 1.);
 	is_double(3., hkl_geometry_distance(g1, g2), HKL_EPSILON, __func__);
 
 	hkl_geometry_free(g1);
@@ -241,15 +241,15 @@ static void is_valid(void)
 	hkl_holder_add_rotation_axis(holder, "B", 1., 0., 0.);
 	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
 
-	hkl_geometry_set_values_v(geom, 3, 0., 0., 0.);
+	hkl_geometry_set_values_v(geom, HKL_UNIT_DEFAULT, NULL, 0., 0., 0.);
 	ok(TRUE == hkl_geometry_is_valid(geom), __func__);
 
-	hkl_geometry_set_values_v(geom, 3, -181. * HKL_DEGTORAD, 0., 0.);
+	hkl_geometry_set_values_v(geom, HKL_UNIT_DEFAULT, NULL, -181. * HKL_DEGTORAD, 0., 0.);
 	ok(TRUE == hkl_geometry_is_valid(geom), __func__);
 
 	hkl_parameter_min_max_set(darray_item(geom->axes, 0),
 				  -100 * HKL_DEGTORAD, 100 * HKL_DEGTORAD,
-				  NULL);
+				  HKL_UNIT_DEFAULT, NULL);
 	ok(FALSE == hkl_geometry_is_valid(geom), __func__);
 
 	hkl_geometry_free(geom);
@@ -262,9 +262,9 @@ static void wavelength(void)
 
 	geom = hkl_geometry_new(NULL);
 
-	is_double(1.54, hkl_geometry_wavelength_get(geom), HKL_EPSILON, __func__);
-	ok(TRUE == hkl_geometry_wavelength_set(geom, 2, NULL), __func__);
-	is_double(2, hkl_geometry_wavelength_get(geom), HKL_EPSILON, __func__);
+	is_double(1.54, hkl_geometry_wavelength_get(geom, HKL_UNIT_DEFAULT), HKL_EPSILON, __func__);
+	ok(TRUE == hkl_geometry_wavelength_set(geom, 2, HKL_UNIT_DEFAULT, NULL), __func__);
+	is_double(2, hkl_geometry_wavelength_get(geom, HKL_UNIT_DEFAULT), HKL_EPSILON, __func__);
 
 	hkl_geometry_free(geom);
 }
@@ -286,7 +286,7 @@ static void list(void)
 
 	list = hkl_geometry_list_new();
 
-	hkl_geometry_set_values_v(g, 3, values[0], 0., 0.);
+	hkl_geometry_set_values_v(g, HKL_UNIT_DEFAULT, NULL, values[0], 0., 0.);
 	hkl_geometry_list_add(list, g);
 	is_int(1, hkl_geometry_list_n_items_get(list), __func__);
 
@@ -294,18 +294,18 @@ static void list(void)
 	hkl_geometry_list_add(list, g);
 	is_int(1, hkl_geometry_list_n_items_get(list), __func__);
 
-	hkl_geometry_set_values_v(g, 3, values[2], 0., 0.);
+	hkl_geometry_set_values_v(g, HKL_UNIT_DEFAULT, NULL, values[2], 0., 0.);
 	hkl_geometry_list_add(list, g);
-	hkl_geometry_set_values_v(g, 3, values[1], 0., 0.);
+	hkl_geometry_set_values_v(g, HKL_UNIT_DEFAULT, NULL, values[1], 0., 0.);
 	hkl_geometry_list_add(list, g);
 	is_int(3, hkl_geometry_list_n_items_get(list), __func__);
 
-	hkl_geometry_set_values_v(g, 3, values[0], 0., 0.);
+	hkl_geometry_set_values_v(g, HKL_UNIT_DEFAULT, NULL, values[0], 0., 0.);
 	hkl_geometry_list_sort(list, g);
 
 	HKL_GEOMETRY_LIST_FOREACH(item, list){
 		is_double(values[i++],
-			  hkl_parameter_value_get(darray_item(item->geometry->axes, 0)),
+			  hkl_parameter_value_get(darray_item(item->geometry->axes, 0), HKL_UNIT_DEFAULT),
 			  HKL_EPSILON, __func__);
 	}
 
@@ -330,13 +330,14 @@ static void  list_multiply_from_range(void)
 	axisB = hkl_geometry_get_axis_by_name(g, "B");
 	axisC = hkl_geometry_get_axis_by_name(g, "C");
 
-	hkl_parameter_min_max_unit_set(axisA, -190, 190, NULL);
-	hkl_parameter_min_max_unit_set(axisB, -190, 190, NULL);
-	hkl_parameter_min_max_unit_set(axisC, -190, 190, NULL);
+	hkl_parameter_min_max_set(axisA, -190, 190, HKL_UNIT_USER, NULL);
+	hkl_parameter_min_max_set(axisB, -190, 190, HKL_UNIT_USER, NULL);
+	hkl_parameter_min_max_set(axisC, -190, 190, HKL_UNIT_USER, NULL);
 
 	list = hkl_geometry_list_new();
 
-	hkl_geometry_set_values_v(g, 3, 185. * HKL_DEGTORAD, -185. * HKL_DEGTORAD, 190. * HKL_DEGTORAD);
+	hkl_geometry_set_values_v(g, HKL_UNIT_DEFAULT, NULL,
+				  185. * HKL_DEGTORAD, -185. * HKL_DEGTORAD, 190. * HKL_DEGTORAD);
 	hkl_geometry_list_add(list, g);
 
 	hkl_geometry_list_multiply_from_range(list);
@@ -362,25 +363,25 @@ static void  list_remove_invalid(void)
 	axisB = hkl_geometry_get_axis_by_name(g, "B");
 	axisC = hkl_geometry_get_axis_by_name(g, "C");
 
-	hkl_parameter_min_max_unit_set(axisA, -100, 180., NULL);
-	hkl_parameter_min_max_unit_set(axisB, -100., 180., NULL);
-	hkl_parameter_min_max_unit_set(axisC, -100., 180., NULL);
+	hkl_parameter_min_max_set(axisA, -100, 180., HKL_UNIT_USER, NULL);
+	hkl_parameter_min_max_set(axisB, -100., 180., HKL_UNIT_USER, NULL);
+	hkl_parameter_min_max_set(axisC, -100., 180., HKL_UNIT_USER, NULL);
 
 	list = hkl_geometry_list_new();
 
-	hkl_geometry_set_values_v(g, 3,
+	hkl_geometry_set_values_v(g, HKL_UNIT_DEFAULT, NULL,
 				  185. * HKL_DEGTORAD,
 				  -185.* HKL_DEGTORAD,
 				  185. * HKL_DEGTORAD);
 	hkl_geometry_list_add(list, g);
 
-	hkl_geometry_set_values_v(g, 3,
+	hkl_geometry_set_values_v(g, HKL_UNIT_DEFAULT, NULL,
 				  -190. * HKL_DEGTORAD,
 				  -190.* HKL_DEGTORAD,
 				  -190.* HKL_DEGTORAD);
 	hkl_geometry_list_add(list, g);
 
-	hkl_geometry_set_values_v(g, 3,
+	hkl_geometry_set_values_v(g, HKL_UNIT_DEFAULT, NULL,
 				  180. * HKL_DEGTORAD,
 				  180.* HKL_DEGTORAD,
 				  180.* HKL_DEGTORAD);

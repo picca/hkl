@@ -57,7 +57,7 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 
 			/* randomize the pseudoAxes values */
 			hkl_engine_pseudo_axes_randomize(engine);
-			hkl_engine_pseudo_axes_values_get(engine, targets, n_pseudo_axes);
+			hkl_engine_pseudo_axes_values_get(engine, targets, n_pseudo_axes, HKL_UNIT_DEFAULT);
 
 			/* randomize the parameters */
 			hkl_engine_parameters_randomize(engine);
@@ -76,14 +76,15 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 
 					hkl_engine_pseudo_axes_values_set(engine,
 									  garbages, n_pseudo_axes,
-									  NULL);
+									  HKL_UNIT_DEFAULT, NULL);
 
 					hkl_geometry_set(geometry,
 							 hkl_geometry_list_item_geometry_get(item));
 					hkl_engine_get(engine, NULL);
 
 					hkl_engine_pseudo_axes_values_get(engine,
-									  currents, n_pseudo_axes);
+									  currents, n_pseudo_axes,
+									  HKL_UNIT_DEFAULT);
 					for(j=0; j<n_pseudo_axes; ++j)
 						ko |= fabs(targets[j] - currents[j]) >= HKL_EPSILON;
 					if(ko)

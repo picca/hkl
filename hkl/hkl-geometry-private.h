@@ -114,9 +114,6 @@ extern int hkl_geometry_get_axis_idx_by_name(const HklGeometry *self,
 extern HklParameter *hkl_geometry_get_axis_by_name(HklGeometry *self,
 						   const char *name);
 
-extern int hkl_geometry_set_values_v(HklGeometry *self,
-				     size_t len, ...);
-
 extern double hkl_geometry_distance(const HklGeometry *self,
 				    const HklGeometry *ref);
 
