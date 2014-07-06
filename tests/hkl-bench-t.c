@@ -24,7 +24,8 @@
 #include <tap/basic.h>
 #include "hkl.h"
 
-static void hkl_test_bench_run_real(HklEngine *engine, HklGeometry *geometry, size_t n)
+static void hkl_test_bench_run_real(HklEngine *engine, HklGeometry *geometry,
+				    double values[], size_t n_values, size_t n)
 {
 	size_t i;
 	const darray_string *modes = hkl_engine_modes_names_get(engine);
@@ -34,18 +35,21 @@ static void hkl_test_bench_run_real(HklEngine *engine, HklGeometry *geometry, si
 	darray_foreach(mode, *modes){
 		double min, max, mean;
 		const darray_string *parameters;
-		const char **parameter;
+		size_t n_params;
 
-		hkl_engine_select_mode(engine, *mode, NULL);
+		hkl_engine_current_mode_set(engine, *mode, NULL);
 		parameters = hkl_engine_parameters_names_get(engine);
-		if (darray_size(*parameters)){
-			HklParameter *p;
-			const char *pname = darray_item(*parameters, 0);
+		n_params = darray_size(*parameters);
+		if (n_params){
+			double params[n_params];
 
-			p = hkl_parameter_new_copy(hkl_engine_parameter_get(engine, pname, NULL));
-			hkl_parameter_value_set(p, 1, HKL_UNIT_DEFAULT, NULL);
-			hkl_engine_parameter_set(engine, pname, p, NULL);
-			hkl_parameter_free(p);
+			hkl_engine_parameters_values_get(engine,
+							 params, n_params,
+							 HKL_UNIT_DEFAULT);
+			values[0] = 1;
+			hkl_engine_parameters_values_set(engine,
+							 params, n_params,
+							 HKL_UNIT_DEFAULT, NULL);
 		}
 
 		mean = max = 0;
@@ -53,10 +57,13 @@ static void hkl_test_bench_run_real(HklEngine *engine, HklGeometry *geometry, si
 		for(i=0; i<n; ++i){
 			struct timeval debut, fin, dt;
 			double t;
+			HklGeometryList *solutions;
 
 			hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 0., 0., 0., 0., 10., 10.);
 			gettimeofday(&debut, NULL);
-			hkl_engine_set(engine, NULL);
+			solutions = hkl_engine_pseudo_axes_values_set(engine, values, n_values, HKL_UNIT_DEFAULT, NULL);
+			if (NULL != solutions)
+				hkl_geometry_list_free(solutions);
 			gettimeofday(&fin, NULL);
 			timersub(&fin, &debut, &dt);
 			t = dt.tv_sec * 1000. + dt.tv_usec / 1000.;
@@ -85,9 +92,7 @@ static void hkl_test_bench_run_v(HklEngineList *engines, HklGeometry *geometry,
 		values[i] = va_arg(ap, double);
 	va_end(ap);
 
-	hkl_engine_pseudo_axes_values_set(engine, values, n_values, HKL_UNIT_DEFAULT, NULL);
-
-	hkl_test_bench_run_real(engine, geometry, n);
+	hkl_test_bench_run_real(engine, geometry, values, n_values, n);
 }
 
 static void hkl_test_bench_k6c(int n)
@@ -150,23 +155,23 @@ static void hkl_test_bench_eulerians(void)
 	modes = hkl_engine_modes_names_get(engine);
 
 	darray_foreach(mode, *modes){
-		static double eulerians[] = {0, 90 * HKL_DEGTORAD, 0};
+		static double values[3] = {0, 90 * HKL_DEGTORAD, 0};
+		HklGeometryList *solutions;
 
-		hkl_engine_select_mode(engine, *mode, NULL);
+		hkl_engine_current_mode_set(engine, *mode, NULL);
 
 		/* studdy this degenerated case */
-		hkl_engine_pseudo_axes_values_set(engine, eulerians, 3, HKL_UNIT_DEFAULT, NULL);
-		if (hkl_engine_set(engine, NULL)) {
-			const HklGeometryList *geometries = hkl_engine_list_geometries_get(engines);
+		solutions = hkl_engine_pseudo_axes_values_set(engine,
+							       values, ARRAY_SIZE(values),
+							       HKL_UNIT_DEFAULT, NULL);
+		if (solutions) {
 			const HklGeometryListItem *item;
 
-			HKL_GEOMETRY_LIST_FOREACH(item, geometries){
-				static double null[] = {0, 0, 0};
-
-				hkl_engine_pseudo_axes_values_set(engine, null, 3, HKL_UNIT_DEFAULT, NULL);
+			HKL_GEOMETRY_LIST_FOREACH(item, solutions){
 				hkl_geometry_set(geometry,
 						 hkl_geometry_list_item_geometry_get(item));
-				hkl_engine_get(engine, NULL);
+				hkl_engine_pseudo_axes_values_get(engine, values, ARRAY_SIZE(values),
+								   HKL_UNIT_DEFAULT, NULL);
 			}
 		}
 	}

@@ -143,7 +143,7 @@ protected:
 	void updateStatusBar(const GError *error);
 	void updateCrystalModel(HklSample *sample);
 	void updatePseudoAxesFrames(void);
-	void updateSolutions(void);
+	void updateSolutions(const HklGeometryList *geometries);
 
 	void get_widgets_and_objects_from_ui(void);
 	void connect_all_signals(void);

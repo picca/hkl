@@ -78,11 +78,12 @@ static HklMode *zaxis_alpha_fixed()
 	static const char *axes[] = {"omega", "delta", "gamma"};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO("zaxis + alpha-fixed", axes, functions),
+		HKL_MODE_AUTO_INFO("zaxis + alpha-fixed", axes, functions),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_full_mode_operations);
+				 &hkl_full_mode_operations,
+				 TRUE);
 }
 
 static HklMode *zaxis_beta_fixed()
@@ -90,11 +91,12 @@ static HklMode *zaxis_beta_fixed()
 	static const char *axes[] = {"mu", "delta", "gamma"};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO("zaxis + beta-fixed", axes, functions),
+		HKL_MODE_AUTO_INFO("zaxis + beta-fixed", axes, functions),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_full_mode_operations);
+				 &hkl_full_mode_operations,
+				 TRUE);
 }
 
 static HklMode *zaxis_alpha_eq_beta()
@@ -102,11 +104,12 @@ static HklMode *zaxis_alpha_eq_beta()
 	static const char *axes[] = {"mu", "omega", "delta", "gamma"};
 	static const HklFunction *functions[] = {&reflectivity};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO("zaxis + alpha=beta", axes, functions),
+		HKL_MODE_AUTO_INFO("zaxis + alpha=beta", axes, functions),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_full_mode_operations);
+				 &hkl_full_mode_operations,
+				 TRUE);
 }
 
 static HklMode *fourc_bissector_horizontal()
@@ -114,11 +117,12 @@ static HklMode *fourc_bissector_horizontal()
 	static const char *axes[] = {"omega", "chi", "phi", "delta"};
 	static const HklFunction *functions[] = {&bissector_horizontal};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO("4-circles bissecting horizontal", axes, functions),
+		HKL_MODE_AUTO_INFO("4-circles bissecting horizontal", axes, functions),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_full_mode_operations);
+				 &hkl_full_mode_operations,
+				 TRUE);
 }
 
 static HklMode *fourc_constant_omega_horizontal()
@@ -126,11 +130,12 @@ static HklMode *fourc_constant_omega_horizontal()
 	static const char *axes[] = {"chi", "phi", "delta"};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO("4-circles constant omega horizontal", axes, functions),
+		HKL_MODE_AUTO_INFO("4-circles constant omega horizontal", axes, functions),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_full_mode_operations);
+				 &hkl_full_mode_operations,
+				 TRUE);
 }
 
 static HklMode *fourc_constant_chi_horizontal()
@@ -138,11 +143,12 @@ static HklMode *fourc_constant_chi_horizontal()
 	static const char *axes[] = {"omega", "phi", "delta"};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO("4-circles constant chi horizontal", axes, functions),
+		HKL_MODE_AUTO_INFO("4-circles constant chi horizontal", axes, functions),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_full_mode_operations);
+				 &hkl_full_mode_operations,
+				 TRUE);
 }
 
 static HklMode *fourc_constant_phi_horizontal()
@@ -150,11 +156,12 @@ static HklMode *fourc_constant_phi_horizontal()
 	static const char *axes[] = {"omega", "chi", "delta"};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO("4-circles constant phi horizontal", axes, functions),
+		HKL_MODE_AUTO_INFO("4-circles constant phi horizontal", axes, functions),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_full_mode_operations);
+				 &hkl_full_mode_operations,
+				 TRUE);
 }
 
 /**********************/

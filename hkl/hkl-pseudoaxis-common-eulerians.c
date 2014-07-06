@@ -170,23 +170,23 @@ static HklMode *mode_eulerians()
 	HklMode *mode;
 	static const char *axes[] = {"komega", "kappa", "kphi"};
 	static const HklParameter parameters[] = {
-		{ HKL_PARAMETER_DEFAULTS, .name = "solution", .range = {.max = 1}, ._value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name="solutions", .range = {.max = 1}, ._value = 1,},
 	};
 	static const HklModeInfo info = {
-		INFO_WITH_PARAMS("eulerians", axes, parameters),
+		HKL_MODE_INFO_WITH_PARAMS("eulerians", axes, parameters),
 	};
 	static const HklModeOperations operations = {
 		HKL_MODE_OPERATIONS_DEFAULTS,
 		.get = hkl_mode_get_eulerians_real,
 		.set = hkl_mode_set_eulerians_real,
 	};
-
-	return hkl_mode_new(&info, &operations);
+ 
+	return hkl_mode_new(&info, &operations, TRUE);
 };
 
-/***********************/
+/*************/
 /* HklEngine */
-/***********************/
+/*************/
 
 static void hkl_engine_eulerians_free_real(HklEngine *base)
 {

@@ -223,65 +223,6 @@ double *hkl_engine_pseudo_axes_values_get_binding(const HklEngine *self, guint *
 }
 
 /**
- * hkl_engine_pseudo_axes_values_set_binding:
- * @self: the this ptr
- * @values: (array length=len): the values to set
- * @len: the len of the values array
- * @unit_type: the unit type (default or user) of the returned value
- * @error: return location of a GError or NULL
- *
- * compute the #HklGeometry angles for this #HklEngine
- *
- * Rename to: hkl_engine_pseudo_axes_values_set
- *
- * Return value: TRUE on success or FALSE if an error occurred
- **/
-gboolean hkl_engine_pseudo_axes_values_set_binding(HklEngine *self,
-						   double values[], unsigned int len,
-						   HklUnitEnum unit_type, GError **error)
-{
-	HklParameter **pseudo_axis;
-	uint i = 0;
-	GError *err = NULL;
-
-	g_return_val_if_fail(error == NULL ||*error == NULL, FALSE);
-
-	if(len != self->info->n_pseudo_axes)
-		return FALSE;
-
-	darray_foreach(pseudo_axis, self->pseudo_axes){
-		if(!hkl_parameter_value_set(*pseudo_axis, values[i++], unit_type, &err)){
-			g_assert(&err == NULL || err != NULL);
-
-			g_set_error(error,
-				    HKL_ENGINE_ERROR,
-				    HKL_ENGINE_ERROR_SET,
-				    strdup(err->message));
-
-			g_clear_error(&err);
-
-			return FALSE;
-		}
-	}
-
-	if(!hkl_engine_set(self, &err)){
-		g_assert(&err == NULL || err != NULL);
-
-		g_set_error(error,
-			    HKL_ENGINE_ERROR,
-			    HKL_ENGINE_ERROR_SET,
-			    strdup(err->message));
-
-		g_clear_error(&err);
-
-		return FALSE;
-	}
-	g_assert(error != NULL ||*error != NULL);
-
-	return TRUE;
-}
-
-/**
  * hkl_engine_list_engines_get_as_gslist:
  * @self: the this ptr
  *

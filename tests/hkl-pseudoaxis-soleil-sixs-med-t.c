@@ -43,7 +43,7 @@ static void qper_qpar(void)
 	size_t i, f_idx;
 	double qper_qpar[2];
 	double gamma;
-	const HklGeometryList *geometries;
+	HklGeometryList *geometries;
 	HklMatrix *U;
 
 	factory = hkl_factory_get_by_name("SOLEIL SIXS MED2+3", NULL);
@@ -59,32 +59,33 @@ static void qper_qpar(void)
 
 	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geom, detector, sample);
-	geometries = hkl_engine_list_geometries_get(engines);
 
 	engine = hkl_engine_list_engine_get_by_name(engines, "qper_qpar", NULL);
 
 	/* the init part */
 	hkl_geometry_set_values_v(geom, HKL_UNIT_USER, NULL, 0., 0.1, 0., 0., 90., 0.);
-	hkl_engine_initialize(engine, NULL);
+	hkl_engine_initialized_set(engine, TRUE, NULL);
 
 	/* gamma must be positif */
 	qper_qpar[0] = 0.1;
 	qper_qpar[1] = 4.;
-	hkl_engine_pseudo_axes_values_set(engine, qper_qpar, ARRAY_SIZE(qper_qpar),
-					  HKL_UNIT_DEFAULT, NULL);
-	if(hkl_engine_set(engine, NULL) == TRUE){
+	geometries = hkl_engine_pseudo_axes_values_set(engine, qper_qpar, ARRAY_SIZE(qper_qpar),
+							HKL_UNIT_DEFAULT, NULL);
+	if(geometries){
 		gamma = GET_GAMMA(geometries);
 		is_double(2.61077, gamma, HKL_EPSILON * 10, __func__);
+		hkl_geometry_list_free(geometries);
 	}
 
 	/* gamma must be negatif */
 	qper_qpar[0] = -0.1;
 	qper_qpar[1] = 4.;
-	hkl_engine_pseudo_axes_values_set(engine, qper_qpar, ARRAY_SIZE(qper_qpar),
-					  HKL_UNIT_DEFAULT, NULL);
-	if(hkl_engine_set(engine, NULL) == TRUE){
+	geometries = hkl_engine_pseudo_axes_values_set(engine, qper_qpar, ARRAY_SIZE(qper_qpar),
+							HKL_UNIT_DEFAULT, NULL);
+	if(geometries){
 		gamma = GET_GAMMA(geometries);
 		is_double(-2.7956354, gamma, HKL_EPSILON * 10, __func__);
+		hkl_geometry_list_free(geometries);
 	}
 
 	hkl_engine_list_free(engines);

@@ -327,7 +327,7 @@ the file ``src/hkl-pseudoaxis-e6c-hkl.c``::
 		4, "mu", "chi", "phi", "gamma");
 	hkl_engine_add_mode(self, mode);
 
-	hkl_engine_select_mode(self, 0);
+	hkl_engine_current_mode_set(self, 0);
 
 	return self;
     }

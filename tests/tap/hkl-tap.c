@@ -23,6 +23,7 @@
 
 #include "hkl-tap.h"
 #include "hkl/hkl-macros-private.h"
+#include "hkl/hkl-pseudoaxis-private.h"
 
 int check_pseudoaxes_v(HklEngine *engine, ...)
 {
@@ -49,14 +50,17 @@ int check_pseudoaxes(HklEngine *engine,
 
 	hkl_assert(hkl_engine_len(engine) == len);
 
-	hkl_engine_pseudo_axes_values_get(engine, currents, len, HKL_UNIT_DEFAULT);
-	for(i=0; i<len; ++i){
-		res &= fabs(currents[i] - expected[i]) <= HKL_EPSILON;
-		if (!res){
-			fprintf(stderr, "current: %f, expected: %f, epsilon: %f\n",
-				currents[i], expected[i], HKL_EPSILON);
+	if(hkl_engine_pseudo_axes_values_get(engine, currents, len, HKL_UNIT_DEFAULT, NULL)){
+		for(i=0; i<len; ++i){
+			res &= fabs(currents[i] - expected[i]) <= HKL_EPSILON;
+			if (!res){
+				fprintf(stderr, "current: %f, expected: %f, epsilon: %f\n",
+					currents[i], expected[i], HKL_EPSILON);
+			}
 		}
-	}
+	}else
+		res = FALSE;
+
 	return res;
 }
 
@@ -68,7 +72,7 @@ int check_pseudoaxes(HklEngine *engine,
  * set the values of the PseudoAxes with the given values. This method
  * is only available for test as it is sort of brittle.
  **/
-void hkl_engine_set_values_v(HklEngine *self, ...)
+HklGeometryList *hkl_engine_set_values_v(HklEngine *self, ...)
 {
 	uint i;
 	va_list ap;
@@ -80,5 +84,40 @@ void hkl_engine_set_values_v(HklEngine *self, ...)
 		values[i] = va_arg(ap, double);
 		
 	va_end(ap);
-	hkl_engine_pseudo_axes_values_set(self, values, len, HKL_UNIT_DEFAULT, NULL);
+	return hkl_engine_pseudo_axes_values_set(self, values, len,
+						  HKL_UNIT_DEFAULT, NULL);
+}
+
+/**
+ * hkl_tap_engine_pseudo_axes_randomize: (skip)
+ * @self: the this ptr
+ *
+ * randomize all the parameters of the #HklEngine
+ **/
+void hkl_tap_engine_pseudo_axes_randomize(HklEngine *self,
+					  double values[], size_t n_values,
+					  HklUnitEnum unit_type)
+{
+	size_t i;
+
+	for(i=0; i<n_values; ++i){
+		HklParameter *parameter = darray_item(self->pseudo_axes, i);
+		hkl_parameter_randomize(parameter);
+		values[i] = hkl_parameter_value_get(parameter, unit_type);
+	}
+}
+
+/**
+ * hkl_tap_engine_parameters_randomize: (skip)
+ * @self: the this ptr
+ *
+ * randomize all the parameters of the #HklEngine
+ **/
+void hkl_tap_engine_parameters_randomize(HklEngine *self)
+{
+	HklParameter **parameter;
+
+	darray_foreach(parameter, self->mode->parameters){
+		hkl_parameter_randomize(*parameter);
+	}
 }

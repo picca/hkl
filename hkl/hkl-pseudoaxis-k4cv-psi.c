@@ -40,7 +40,7 @@ static HklMode *psi()
 		{HKL_PARAMETER_DEFAULTS, .name = "l1", .range = {.min=-1, .max=1}, ._value=1,},
 	};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, functions, parameters),
 	};
 
 	return hkl_mode_psi_new(&info);

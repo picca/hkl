@@ -132,15 +132,14 @@ class TestAPI(unittest.TestCase):
         # set the hkl engine and get the results
         for _ in range(100):
             try:
-                hkl.pseudo_axes_values_set(values, Hkl.UnitEnum.USER)
+                solutions = hkl.pseudo_axes_values_set(values, Hkl.UnitEnum.USER)
+                self.assertTrue(type(solutions) is Hkl.GeometryList)
+                for item in solutions.items():
+                    self.assertTrue(type(item) is Hkl.GeometryListItem)
+                    self.assertTrue(type(item.geometry()) is Hkl.Geometry)
+                values[1] += .01
             except GLib.GError, err:
                 print values, err
-            solutions = engines.geometries_get()
-            self.assertTrue(type(solutions) is Hkl.GeometryList)
-            for item in solutions.items():
-                self.assertTrue(type(item) is Hkl.GeometryListItem)
-                self.assertTrue(type(item.geometry()) is Hkl.Geometry)
-            values[1] += .01
 
         # check that all the values computed are reachable
         for engine in engines.engines_get():
@@ -158,9 +157,27 @@ class TestAPI(unittest.TestCase):
         # check that all engine parameters are reachables
         for engine in engines.engines_get():
             for mode in engine.modes_names_get():
-                engine.select_mode(mode)
+                engine.current_mode_set(mode)
                 parameters = engine.parameters_names_get()
                 self.assertTrue(type(parameters) is list)
+
+        # check all the capabilities
+        for engine in engines.engines_get():
+            capabilities = engine.capabilities_get()
+            self.assertTrue(capabilities & Hkl.EngineCapabilities.READABLE)
+            self.assertTrue(capabilities & Hkl.EngineCapabilities.WRITABLE)
+            if engine.name_get() == "psi":
+                self.assertTrue(capabilities & Hkl.EngineCapabilities.INITIALIZABLE)
+
+        # check initialized_get/set
+        for engine in engines.engines_get():
+            initialized = engine.initialized_get()
+            capabilities = engine.capabilities_get()
+            if capabilities & Hkl.EngineCapabilities.INITIALIZABLE:
+                engine.initialized_set(False)
+                self.assertTrue(False == engine.initialized_get())
+                engine.initialized_set(True)
+                self.assertTrue(True == engine.initialized_get())
 
     @unittest.skip("for testing figures")
     def test_doc_exemple(self):

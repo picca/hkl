@@ -31,7 +31,13 @@ extern int check_pseudoaxes_v(HklEngine *engine, ...);
 extern int check_pseudoaxes(HklEngine *engine,
 			    double expected[], uint len);
 
-extern void hkl_engine_set_values_v(HklEngine *self, ...);
+extern  void hkl_tap_engine_pseudo_axes_randomize(HklEngine *self,
+						  double values[], size_t n_values,
+						  HklUnitEnum unit_type) HKL_ARG_NONNULL(1, 2);
+
+extern void hkl_tap_engine_parameters_randomize(HklEngine *self) HKL_ARG_NONNULL(1);
+
+extern HklGeometryList *hkl_engine_set_values_v(HklEngine *self, ...);
 
 G_END_DECLS
 

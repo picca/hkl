@@ -637,80 +637,76 @@ static GQuark hkl_mode_psi_constant_vertical_error_quark (void)
 }
 
 typedef enum {
-	HKL_MODE_PSI_CONSTANT_VERTICAL_ERROR_INIT, /* can not init the engine */
+	HKL_MODE_PSI_CONSTANT_VERTICAL_ERROR_INITIALIZED_SET, /* can not init the engine */
 } HklModePsiConstantVerticalError;
 
-int hkl_mode_init_psi_constant_vertical_real(HklMode *self,
-					     HklEngine *engine,
-					     HklGeometry *geometry,
-					     HklDetector *detector,
-					     HklSample *sample,
-					     GError **error)
+int hkl_mode_initialized_set_psi_constant_vertical_real(HklMode *self,
+							HklEngine *engine,
+							HklGeometry *geometry,
+							HklDetector *detector,
+							HklSample *sample,
+							int initialized,
+							GError **error)
 {
 	HklVector hkl;
 	HklVector ki, kf, Q, n;
 
-	if (!self || !engine || !engine->mode || !geometry || !detector || !sample
-	    || !hkl_mode_init_real(self, engine, geometry, detector, sample, error)){
-		g_set_error(error,
-			    HKL_MODE_PSI_CONSTANT_VERTICAL_ERROR,
-			    HKL_MODE_PSI_CONSTANT_VERTICAL_ERROR_INIT,
-			    "internal error");
-		return FALSE;
-	}
+	if(initialized){
+		/* kf - ki = Q */
+		hkl_source_compute_ki(&geometry->source, &ki);
+		hkl_detector_compute_kf(detector, geometry, &kf);
+		Q = kf;
+		hkl_vector_minus_vector(&Q, &ki);
 
-	/* kf - ki = Q */
-	hkl_source_compute_ki(&geometry->source, &ki);
-	hkl_detector_compute_kf(detector, geometry, &kf);
-	Q = kf;
-	hkl_vector_minus_vector(&Q, &ki);
-
-	if (hkl_vector_is_null(&Q)){
-		g_set_error(error,
-			    HKL_MODE_PSI_CONSTANT_VERTICAL_ERROR,
-			    HKL_MODE_PSI_CONSTANT_VERTICAL_ERROR_INIT,
-			    "can not initialize the \"%s\" mode with a null hkl (kf == ki)"
-			    "\nplease select a non-null hkl", engine->mode->info->name);
-		return FALSE;
-	}else{
-		/* needed for a problem of precision */
-		hkl_vector_normalize(&Q);
-
-		/* compute the intersection of the plan P(kf, ki) and PQ (normal Q) */
-		n = kf;
-		hkl_vector_vectorial_product(&n, &ki);
-		hkl_vector_vectorial_product(&n, &Q);
-
-		/* compute hkl in the laboratory referentiel */
-		/* the geometry was already updated in the detector compute kf */
-		/* for now the 0 holder is the sample holder */
-		hkl.data[0] = darray_item(self->parameters, 0)->_value;
-		hkl.data[1] = darray_item(self->parameters, 1)->_value;
-		hkl.data[2] = darray_item(self->parameters, 2)->_value;
-		hkl_matrix_times_vector(&sample->UB, &hkl);
-		hkl_vector_rotated_quaternion(&hkl,
-					      &darray_item(geometry->holders, 0)->q);
-
-		/* project hkl on the plan of normal Q */
-		hkl_vector_project_on_plan(&hkl, &Q);
-
-		if (hkl_vector_is_null(&hkl)){
+		if (hkl_vector_is_null(&Q)){
 			g_set_error(error,
 				    HKL_MODE_PSI_CONSTANT_VERTICAL_ERROR,
-				    HKL_MODE_PSI_CONSTANT_VERTICAL_ERROR_INIT,
-				    "can not initialize the \"%s\" mode"
-				    "\nwhen Q and the <h2, k2, l2> ref vector are colinear."
-				    "\nplease change one or both of them", engine->mode->info->name);
+				    HKL_MODE_PSI_CONSTANT_VERTICAL_ERROR_INITIALIZED_SET,
+				    "can not initialize the \"%s\" mode with a null hkl (kf == ki)"
+				    "\nplease select a non-null hkl", self->info->name);
 			return FALSE;
 		}else{
-			/* compute the angle beetween hkl and n and
-			 * store in in the fourth parameter */
-			if (!hkl_parameter_value_set(darray_item(self->parameters, 3),
-						     hkl_vector_oriented_angle(&n, &hkl, &Q),
-						     HKL_UNIT_DEFAULT, error))
+			/* needed for a problem of precision */
+			hkl_vector_normalize(&Q);
+
+			/* compute the intersection of the plan P(kf, ki) and PQ (normal Q) */
+			n = kf;
+			hkl_vector_vectorial_product(&n, &ki);
+			hkl_vector_vectorial_product(&n, &Q);
+
+			/* compute hkl in the laboratory referentiel */
+			/* the geometry was already updated in the detector compute kf */
+			/* for now the 0 holder is the sample holder */
+			hkl.data[0] = darray_item(self->parameters, 0)->_value;
+			hkl.data[1] = darray_item(self->parameters, 1)->_value;
+			hkl.data[2] = darray_item(self->parameters, 2)->_value;
+			hkl_matrix_times_vector(&sample->UB, &hkl);
+			hkl_vector_rotated_quaternion(&hkl,
+						      &darray_item(geometry->holders, 0)->q);
+
+			/* project hkl on the plan of normal Q */
+			hkl_vector_project_on_plan(&hkl, &Q);
+
+			if (hkl_vector_is_null(&hkl)){
+				g_set_error(error,
+					    HKL_MODE_PSI_CONSTANT_VERTICAL_ERROR,
+					    HKL_MODE_PSI_CONSTANT_VERTICAL_ERROR_INITIALIZED_SET,
+					    "can not initialize the \"%s\" mode"
+					    "\nwhen Q and the <h2, k2, l2> ref vector are colinear."
+					    "\nplease change one or both of them", engine->mode->info->name);
 				return FALSE;
+			}else{
+				/* compute the angle beetween hkl and n and
+				 * store in in the fourth parameter */
+				if (!hkl_parameter_value_set(darray_item(self->parameters, 3),
+							     hkl_vector_oriented_angle(&n, &hkl, &Q),
+							     HKL_UNIT_DEFAULT, error))
+					return FALSE;
+			}
 		}
 	}
+
+	self->initialized = initialized;
 
 	return TRUE;
 }

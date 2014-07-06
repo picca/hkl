@@ -14,7 +14,7 @@ from gi.repository import GLib
 from gi.repository import Hkl
 
 
-def compute_hkl_trajectories(engine, hkl1=None, hkl2=None, n=100):
+def compute_hkl_trajectories(engines, engine, hkl1=None, hkl2=None, n=100):
     """
     compute all the trajectories for a given engine already configured
     """
@@ -31,8 +31,7 @@ def compute_hkl_trajectories(engine, hkl1=None, hkl2=None, n=100):
     trajectories = []
     for hh, kk, ll in zip(h, k, l):
         try:
-            engine.pseudo_axes_values_set([hh, kk, ll], Hkl.UnitEnum.USER)
-            solutions = engine.engines_get().geometries_get()
+            solutions = engine.pseudo_axes_values_set([hh, kk, ll], Hkl.UnitEnum.USER)
             first_solution = solutions.items()[0]
             for i, item in enumerate(solutions.items()):
                 try:
@@ -41,7 +40,7 @@ def compute_hkl_trajectories(engine, hkl1=None, hkl2=None, n=100):
                     trajectories.append([])
                 values = item.geometry().axes_values_get(Hkl.UnitEnum.USER)
                 trajectories[i].append(values)
-            engine.engines_get().select_solution(first_solution)
+            engines.select_solution(first_solution)
         except GLib.GError, err:
             pass
 
@@ -73,8 +72,8 @@ def plot_hkl_trajectory(filename, factory, geometry, engines,
     _plot_legend(axes_names)
     idx = 2
     for mode in hkl.modes_names_get():
-        hkl.select_mode(mode)
-        trajectories = compute_hkl_trajectories(hkl, hkl1=hkl1, hkl2=hkl2, n=n)
+        hkl.current_mode_set(mode)
+        trajectories = compute_hkl_trajectories(engines, hkl, hkl1=hkl1, hkl2=hkl2, n=n)
         print "\"" + filename + "\"", idx, mode, len(trajectories)
 
         plt.subplot(3, 4, idx)

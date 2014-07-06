@@ -30,7 +30,7 @@ static void solution(void)
 	HklEngine *engine;
 	const HklFactory *factory;
 	HklGeometry *geometry;
-	const HklGeometryList *geometries;
+	HklGeometryList *geometries;
 	HklDetector *detector;
 	HklSample *sample;
 	HklLattice *lattice;
@@ -62,28 +62,23 @@ static void solution(void)
 	/* select the hkl pseudo axis */
 	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geometry, detector, sample);
-	geometries = hkl_engine_list_geometries_get(engines);
 	engine = hkl_engine_list_engine_get_by_name(engines, "hkl", NULL);
 
 	/* the init part must succed */
 	hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 1., 0., 0., 0.);
 
 	/* compute the 1 1 0 */
-	hkl_engine_pseudo_axes_values_set(engine, hkl, ARRAY_SIZE(hkl),
-					  HKL_UNIT_DEFAULT, NULL);
-	if (hkl_engine_set(engine, NULL)){
+	geometries = hkl_engine_pseudo_axes_values_set(engine, hkl, ARRAY_SIZE(hkl),
+							HKL_UNIT_DEFAULT, NULL);
+	if (geometries){
 		const HklGeometryListItem *item;
 
 		HKL_GEOMETRY_LIST_FOREACH(item, geometries){
-			static double null[] = {0, 0, 0};
-
-			hkl_engine_pseudo_axes_values_set(engine, null, ARRAY_SIZE(null),
-							  HKL_UNIT_DEFAULT, NULL);
 			hkl_geometry_set(geometry,
 					 hkl_geometry_list_item_geometry_get(item));
-			hkl_engine_get(engine, NULL);
 			res &= check_pseudoaxes(engine, hkl, 3);
 		}
+		hkl_geometry_list_free(geometries);
 	}else
 		res = FALSE;
 	if(!res)

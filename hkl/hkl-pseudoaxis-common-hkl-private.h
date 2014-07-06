@@ -67,12 +67,13 @@ extern int hkl_mode_set_hkl_real(HklMode *self,
 				 HklSample *sample,
 				 GError **error);
 
-extern int hkl_mode_init_psi_constant_vertical_real(HklMode *base,
-						    HklEngine *engine,
-						    HklGeometry *geometry,
-						    HklDetector *detector,
-						    HklSample *sample,
-						    GError **error);
+extern int hkl_mode_initialized_set_psi_constant_vertical_real(HklMode *base,
+							       HklEngine *engine,
+							       HklGeometry *geometry,
+							       HklDetector *detector,
+							       HklSample *sample,
+							       int initialized,
+							       GError **error);
 
 extern HklEngine *hkl_engine_hkl_new(void);
 
@@ -91,7 +92,8 @@ static const HklModeOperations hkl_full_mode_operations = {
 
 static const HklModeOperations psi_constant_vertical_mode_operations = {
 	HKL_MODE_OPERATIONS_HKL_DEFAULTS,
-	.init = hkl_mode_init_psi_constant_vertical_real,
+	.initialized_set = hkl_mode_initialized_set_psi_constant_vertical_real,
+	.set = hkl_mode_set_hkl_real,
 };
 
 static const HklModeOperations constant_incidence_mode_operations = {

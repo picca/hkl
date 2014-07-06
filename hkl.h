@@ -216,6 +216,8 @@ HKLAPI void hkl_geometry_fprintf(FILE *file, const HklGeometry *self) HKL_ARG_NO
 						  (item);		\
 						  (item)=hkl_geometry_list_items_next_get((list), (item)))
 
+HKLAPI void hkl_geometry_list_free(HklGeometryList *self) HKL_ARG_NONNULL(1);
+
 HKLAPI size_t hkl_geometry_list_n_items_get(const HklGeometryList *self) HKL_ARG_NONNULL(1);
 
 HKLAPI const HklGeometryListItem *hkl_geometry_list_items_first_get(const HklGeometryList *self) HKL_ARG_NONNULL(1);
@@ -400,56 +402,60 @@ HKLAPI unsigned int hkl_engine_len(const HklEngine *self) HKL_ARG_NONNULL(1);
 
 HKLAPI const darray_string *hkl_engine_pseudo_axes_names_get(HklEngine *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_engine_pseudo_axes_values_get(HklEngine *self,
-					      double values[], size_t n_values,
-					      HklUnitEnum unit_type) HKL_ARG_NONNULL(1, 2);
-
-HKLAPI int hkl_engine_pseudo_axes_values_set(HklEngine *self,
+HKLAPI int hkl_engine_pseudo_axes_values_get(HklEngine *self,
 					     double values[], size_t n_values,
 					     HklUnitEnum unit_type, GError **error) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI void hkl_engine_pseudo_axes_randomize(HklEngine *self) HKL_ARG_NONNULL(1);
+HKLAPI HklGeometryList *hkl_engine_pseudo_axes_values_set(HklEngine *self,
+							  double values[], size_t n_values,
+							  HklUnitEnum unit_type, GError **error) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI const HklParameter *hkl_engine_pseudo_axis_get(const HklEngine *self,
 						      const char *name,
 						      GError **error) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI int hkl_engine_pseudo_axis_set(HklEngine *self, const char *name,
-				      const HklParameter *parameter,
-				      GError **error) HKL_ARG_NONNULL(1, 2, 3);
+typedef enum _HklEngineCapabilities
+{
+	HKL_ENGINE_CAPABILITIES_READABLE = 1u << 0,
+	HKL_ENGINE_CAPABILITIES_WRITABLE = 1u << 1,
+	HKL_ENGINE_CAPABILITIES_INITIALIZABLE = 1u << 2,
+} HklEngineCapabilities;
+
+HKLAPI unsigned int hkl_engine_capabilities_get(const HklEngine *self) HKL_ARG_NONNULL(1);
+
+HKLAPI int hkl_engine_initialized_get(const HklEngine *self) HKL_ARG_NONNULL(1);
+
+HKLAPI int hkl_engine_initialized_set(HklEngine *self, int initialized,
+				      GError **error) HKL_ARG_NONNULL(1);
+
+HKLAPI void hkl_engine_fprintf(FILE *f, const HklEngine *self) HKL_ARG_NONNULL(1, 2);
+
+/* mode */
 
 HKLAPI const darray_string *hkl_engine_modes_names_get(const HklEngine *self) HKL_ARG_NONNULL(1);
 
-HKLAPI int hkl_engine_select_mode(HklEngine *self,
-				  const char *name,
-				  GError **error) HKL_ARG_NONNULL(1, 2);
+HKLAPI const char *hkl_engine_current_mode_get(const HklEngine *self) HKL_ARG_NONNULL(1);
+
+HKLAPI int hkl_engine_current_mode_set(HklEngine *self, const char *mode, GError **error) HKL_ARG_NONNULL(1, 2);
+
+HKLAPI darray_string *hkl_engine_axes_names_get(const HklEngine *self) HKL_ARG_NONNULL(1);
 
 HKLAPI const darray_string *hkl_engine_parameters_names_get(const HklEngine *self) HKL_ARG_NONNULL(1);
+
+HKLAPI const HklParameter *hkl_engine_parameter_get(const HklEngine *self, const char *name,
+						    GError **error) HKL_ARG_NONNULL(1, 2);
+
+HKLAPI int hkl_engine_parameter_set(HklEngine *self,
+				    const char *name, const HklParameter *parameter,
+				    GError **error) HKL_ARG_NONNULL(1, 2, 3);
+
+HKLAPI void hkl_engine_parameters_values_get(const HklEngine *self,
+					     double values[], size_t n_values,
+					     HklUnitEnum unit_type) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI int hkl_engine_parameters_values_set(HklEngine *self,
 					    double values[], size_t n_values,
 					    HklUnitEnum unit_type, GError **error) HKL_ARG_NONNULL(1, 2);
-
-HKLAPI void hkl_engine_parameters_randomize(HklEngine *self) HKL_ARG_NONNULL(1);
-
-HKLAPI const HklParameter *hkl_engine_parameter_get(const HklEngine *self,
-						    const char *name,
-						    GError **error) HKL_ARG_NONNULL(1, 2);
-
-HKLAPI int hkl_engine_parameter_set(HklEngine *self,
-				    const char *name,
-				    const HklParameter *parameter,
-				    GError **error) HKL_ARG_NONNULL(1, 2, 3);
-
-HKLAPI HklEngineList *hkl_engine_engines_get(HklEngine *self) HKL_ARG_NONNULL(1);
-
-HKLAPI int hkl_engine_initialize(HklEngine *self, GError **error) HKL_ARG_NONNULL(1);
-
-HKLAPI int hkl_engine_set(HklEngine *self, GError **error) HKL_ARG_NONNULL(1);
-
-HKLAPI int hkl_engine_get(HklEngine *self, GError **error) HKL_ARG_NONNULL(1);
-
-HKLAPI void hkl_engine_fprintf(FILE *f, const HklEngine *self) HKL_ARG_NONNULL(1, 2);
 
 /* HklEngineList */
 
@@ -460,8 +466,6 @@ HKLAPI darray_engine *hkl_engine_list_engines_get(HklEngineList *self) HKL_ARG_N
 HKLAPI HklGeometry *hkl_engine_list_geometry_get(HklEngineList *self) HKL_ARG_NONNULL(1);
 
 HKLAPI int hkl_engine_list_geometry_set(HklEngineList *self, const HklGeometry *geometry) HKL_ARG_NONNULL(1, 2);
-
-HKLAPI const HklGeometryList *hkl_engine_list_geometries_get(const HklEngineList *self) HKL_ARG_NONNULL(1);
 
 HKLAPI int hkl_engine_list_select_solution(HklEngineList *self,
 					   const HklGeometryListItem *item) HKL_ARG_NONNULL(1);

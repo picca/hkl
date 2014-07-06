@@ -114,14 +114,14 @@ static HklMode *mode_q(void)
 	static const char *axes[] = {"tth"};
 	static const HklFunction *functions[] = {&q_func};
 	static HklModeAutoInfo info = {
-		INFO_AUTO("q", axes, functions),
+		HKL_MODE_AUTO_INFO("q", axes, functions),
 	};
 	static const HklModeOperations operations = {
 		HKL_MODE_OPERATIONS_AUTO_DEFAULTS,
 		.get = get_q_real,
 	};
 
-	return hkl_mode_auto_new(&info, &operations);
+	return hkl_mode_auto_new(&info, &operations, TRUE);
 }
 
 static void hkl_engine_q_free_real(HklEngine *base)
@@ -237,14 +237,14 @@ static HklMode *mode_q2(void)
 	static const char* axes[] = {"gamma", "delta"};
 	static const HklFunction *functions[] = {&q2_func};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO("q2", axes, functions),
+		HKL_MODE_AUTO_INFO("q2", axes, functions),
 	};
 	static const HklModeOperations operations = {
 		HKL_MODE_OPERATIONS_AUTO_DEFAULTS,
 		.get = get_q2_real,
 	};
 
-	return hkl_mode_auto_new(&info, &operations);
+	return hkl_mode_auto_new(&info, &operations, TRUE);
 }
 
 static const HklPseudoAxis alpha = {
@@ -398,14 +398,14 @@ static HklMode *mode_qper_qpar(void)
 		{HKL_PARAMETER_DEFAULTS, .name = "z", .range = {.min=-1, .max=1}, ._value = 0,},
 	};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO_WITH_PARAMS("qper_qpar", axes, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS("qper_qpar", axes, functions, parameters),
 	};
 	static const HklModeOperations operations = {
 		HKL_MODE_OPERATIONS_AUTO_DEFAULTS,
 		.get = get_qper_qpar_real,
 	};
 
-	return hkl_mode_auto_new(&info, &operations);
+	return hkl_mode_auto_new(&info, &operations, TRUE);
 }
 
 static void hkl_engine_qper_qpar_free_real(HklEngine *base)

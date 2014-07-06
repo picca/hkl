@@ -367,28 +367,30 @@ static int solve_function(HklEngine *self,
 }
 
 /* check that the number of axis of the mode is the right number of variables expected by mode functions */
-static inline void check_validity(const HklModeAutoInfo *info)
+static inline void check_validity(const HklModeAutoInfo *auto_info)
 {
-	for(uint i=0; i<info->n_functions; ++i)
-		hkl_assert(info->functions[i]->size == info->mode.n_axes);
+	for(uint i=0; i<auto_info->n_functions; ++i)
+		hkl_assert(auto_info->functions[i]->size == auto_info->info.n_axes);
 }
 
-HklMode *hkl_mode_auto_new(const HklModeAutoInfo *info,
-			   const HklModeOperations *ops)
+HklMode *hkl_mode_auto_new(const HklModeAutoInfo *auto_info,
+			   const HklModeOperations *ops,
+			   int initialized)
 {
-	check_validity(info);
+	check_validity(auto_info);
 
-	return hkl_mode_new(&info->mode, ops);
+	return hkl_mode_new(&auto_info->info, ops, initialized);
 
 }
 
 void hkl_mode_auto_init(HklMode *self,
-			const HklModeAutoInfo *info,
-			const HklModeOperations *ops)
+			const HklModeAutoInfo *auto_info,
+			const HklModeOperations *ops,
+			int initialized)
 {
-	check_validity(info);
+	check_validity(auto_info);
 
-	hkl_mode_init(self, &info->mode, ops);
+	hkl_mode_init(self, &auto_info->info, ops, initialized);
 
 }
 
@@ -401,7 +403,7 @@ int hkl_mode_auto_set_real(HklMode *self,
 {
 	size_t i;
 	int ok = FALSE;
-	HklModeAutoInfo *info = container_of(self->info, HklModeAutoInfo, mode);
+	HklModeAutoInfo *auto_info = container_of(self->info, HklModeAutoInfo, info);
 
 	hkl_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
@@ -413,8 +415,8 @@ int hkl_mode_auto_set_real(HklMode *self,
 		return FALSE;
 	}
 
-	for(i=0;i<info->n_functions;++i)
-		ok |= solve_function(engine, info->functions[i]);
+	for(i=0;i<auto_info->n_functions;++i)
+		ok |= solve_function(engine, auto_info->functions[i]);
 
 	if(!ok){
 		g_set_error(error,
@@ -431,12 +433,14 @@ int hkl_mode_auto_set_real(HklMode *self,
 	return TRUE;
 }
 
-HklMode *hkl_mode_auto_with_init_new(const HklModeAutoInfo *info,
-				     const HklModeOperations *ops)
+HklMode *hkl_mode_auto_with_init_new(const HklModeAutoInfo *auto_info,
+				     const HklModeOperations *ops,
+				     int initialized)
 {
 	HklModeAutoWithInit *self = HKL_MALLOC(HklModeAutoWithInit);
 
-	hkl_mode_auto_init(&self->mode, info, ops);
+	hkl_mode_auto_init(&self->mode, auto_info, ops, initialized);
+
 	self->geometry = NULL;
 	self->detector = NULL;
 	self->sample = NULL;

@@ -454,13 +454,18 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 			if(darray_size(*parameters)){
 				Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(_parameterModelColumns);
 				const char **parameter;
+				double values[darray_size(*parameters)];
 
-				darray_foreach(parameter, *parameters){
+				hkl_engine_parameters_values_get(*engine,
+								 values, darray_size(*parameters),
+								 HKL_UNIT_USER);
+
+				for(size_t i=0; i<darray_size(*parameters); ++i){
 					Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(_parameterModelColumns);
 					row = *(model->append());
 					row[_parameterModelColumns.engine] = *engine;
-					row[_parameterModelColumns.name] = *parameter;
-					row[_parameterModelColumns.value] = hkl_parameter_value_get(hkl_engine_parameter_get(*engine, *parameter, NULL), HKL_UNIT_USER);
+					row[_parameterModelColumns.name] = darray_item(*parameters, i);
+					row[_parameterModelColumns.value] = values[i];
 				}
 				_mapPseudoAxeParameterModel.insert(std::pair<std::string, Glib::RefPtr<Gtk::ListStore> >(*pseudo_axis, model));
 			}
@@ -522,7 +527,7 @@ void HKLWindow::set_up_TreeView_treeview1(void)
 
 	_treeview1->signal_cursor_changed().connect(mem_fun(*this, &HKLWindow::on_treeview1_cursor_changed));
 
-	this->updateSolutions();
+	this->updateSolutions(NULL);
 }
 
 void HKLWindow::set_up_TreeView_reflections(void)
@@ -1003,13 +1008,15 @@ void HKLWindow::updatePseudoAxesFrames(void)
 		_pseudoAxesFrames[i]->update();
 }
 
-void HKLWindow::updateSolutions(void)
+void HKLWindow::updateSolutions(const HklGeometryList *geometries)
 {
 	LOG;
 
 	size_t i = 0;
-	const HklGeometryList *geometries = hkl_engine_list_geometries_get(this->_engines);
 	const HklGeometryListItem *item;
+
+	if(!geometries)
+		return;
 
 	_solutionModel->clear();
 	Gtk::ListStore::Row row;

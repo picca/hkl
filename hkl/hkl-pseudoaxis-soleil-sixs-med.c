@@ -69,11 +69,12 @@ static HklMode* mu_fixed()
 	static const char* axes[] = {"omega", "gamma", "delta"};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO(__func__, axes, functions),
+		HKL_MODE_AUTO_INFO(__func__, axes, functions),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_full_mode_operations);
+				 &hkl_full_mode_operations,
+				 TRUE);
 }
 
 static HklMode* reflectivity()
@@ -81,11 +82,12 @@ static HklMode* reflectivity()
 	static const char* axes[] = {"mu", "omega", "gamma", "delta"};
 	static const HklFunction *functions[] = {&reflectivity_func};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO(__func__, axes, functions),
+		HKL_MODE_AUTO_INFO(__func__, axes, functions),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_full_mode_operations);
+				 &hkl_full_mode_operations,
+				 TRUE);
 }
 
 /*********************/
@@ -117,11 +119,12 @@ static HklMode* pitch_fixed()
 	static const char* axes[] = {"mu", "gamma", "delta"};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO(__func__, axes, functions),
+		HKL_MODE_AUTO_INFO(__func__, axes, functions),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_full_mode_operations);
+				 &hkl_full_mode_operations,
+				 TRUE);
 }
 
 HklEngine *hkl_engine_soleil_sixs_med_1_2_hkl_new(void)

@@ -33,11 +33,12 @@ static HklMode* lifting_detector_thetah()
 	static const char* axes[] = {"thetah", "delta", "gamma"};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO(__func__, axes, functions),
+		HKL_MODE_AUTO_INFO(__func__, axes, functions),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_full_mode_operations);
+				 &hkl_full_mode_operations,
+				 TRUE);
 }
 
 HklEngine *hkl_engine_soleil_sirius_turret_hkl_new(void)

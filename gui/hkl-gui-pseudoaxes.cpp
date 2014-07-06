@@ -105,7 +105,7 @@ void PseudoAxesFrame::on_combobox1_changed(void)
 {
 	Gtk::TreeModel::iterator iter = _combobox1->get_active();
 	Gtk::ListStore::Row row = *(iter);
-	hkl_engine_select_mode(_engine, row[_mode_columns.name], NULL);
+	hkl_engine_current_mode_set(_engine, row[_mode_columns.name], NULL);
 	this->updateModeParameters();
 	this->_signal_changed();
 }
@@ -137,18 +137,18 @@ void PseudoAxesFrame::on_cell_TreeView_pseudoAxis_value_edited(Glib::ustring con
 
 void PseudoAxesFrame::on_button1_clicked(void)
 {
-	if(hkl_engine_set(_engine, NULL)){
-		HklEngineList *engines = hkl_engine_engines_get(this->_engine);
-		const HklGeometryList *solutions = hkl_engine_list_geometries_get(engines);
-		const HklGeometryListItem *first = hkl_geometry_list_items_first_get(solutions);
-		hkl_engine_list_select_solution(engines, first);
-		this->_signal_changed();
-	}
+	// if(hkl_engine_set(_engine, NULL)){
+	// 	HklEngineList *engines = hkl_engine_engines_get(this->_engine);
+	// 	const HklGeometryList *solutions = hkl_engine_list_geometries_get(engines);
+	// 	const HklGeometryListItem *first = hkl_geometry_list_items_first_get(solutions);
+	// 	hkl_engine_list_select_solution(engines, first);
+	// 	this->_signal_changed();
+	// }
 }
 
 void PseudoAxesFrame::on_button2_clicked(void)
 {
-	if(hkl_engine_initialize(_engine, NULL))
+	if(hkl_engine_initialized_set(_engine, TRUE, NULL))
 		this->updateModeParameters(); //some initialize function modify the parameters
 }
 
@@ -168,7 +168,7 @@ void PseudoAxesFrame::on_cell_treeview2_mode_parameter_value_edited(Glib::ustrin
 								    name, NULL));
 		/* TODO check the error */
 	hkl_parameter_value_set(parameter, value, HKL_UNIT_USER, NULL);
-	hkl_engine_parameter_set(this->_engine, name, parameter, NULL);
+	// hkl_engine_parameter_set(this->_engine, name, parameter, NULL);
 	hkl_parameter_free(parameter);
 	row[_mode_parameter_columns.value] = value;
 }

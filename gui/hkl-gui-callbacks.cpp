@@ -426,8 +426,9 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & s
 {
 	LOG;
 
+	const char *name;
 	double value;
-	HklParameter *parameter;
+	HklParameter *pseudo_axis;
 	HklEngine *engine;
 	int res;
 
@@ -437,18 +438,13 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & s
 	Gtk::ListStore::Row row = *(iter);
 
 	engine = row[_pseudoAxeModelColumns.engine];
-	parameter = hkl_parameter_new_copy(hkl_engine_parameter_get(engine,
-								    row[_pseudoAxeModelColumns.name],
-								    NULL));
+	name = row[_pseudoAxeModelColumns.name];
+	pseudo_axis = hkl_parameter_new_copy(hkl_engine_pseudo_axis_get(engine, name, NULL));
 	sscanf(newText.c_str(), "%lf", &value);
 
-	if(hkl_parameter_value_set(parameter, value, HKL_UNIT_USER, NULL)){
-		hkl_engine_parameter_set(engine,
-					 hkl_parameter_name_get(parameter),
-					 parameter, NULL);
-		if(hkl_engine_set(engine, NULL)){
-			const HklEngineList *engines = hkl_engine_engines_get(engine);
-			const HklGeometryList *solutions = hkl_engine_list_geometries_get(engines);
+	if(hkl_parameter_value_set(pseudo_axis, value, HKL_UNIT_USER, NULL)){
+		HklGeometryList *solutions ;// TODO = hkl_engine_pseudo_axis_set(engine, name, pseudo_axis, NULL);
+		if(solutions){
 			const HklGeometryListItem *first = hkl_geometry_list_items_first_get(solutions);
 			hkl_engine_list_select_solution(this->_engines, first);
 
@@ -456,7 +452,7 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & s
 			this->updateAxes();
 			this->updatePseudoAxes();
 			this->updatePseudoAxesFrames();
-			this->updateSolutions();
+			this->updateSolutions(solutions);
 
 #ifdef HKL3D
 			if(_Scene){
@@ -464,9 +460,10 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & s
 				_Scene->invalidate();
 			}
 #endif
+			hkl_geometry_list_free(solutions);
 		}
 	}
-	hkl_parameter_free(parameter);
+	hkl_parameter_free(pseudo_axis);
 }
 
 //PseudoAxes Parameters
@@ -484,7 +481,7 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_parameters_value_edited(Glib::ustrin
 	Gtk::ListStore::Row row = *(listStore->get_iter(path));
 	sscanf(newText.c_str(), "%lf", &value);
 
-	
+
 	engine = row[_parameterModelColumns.engine];
 	parameter = hkl_parameter_new_copy(hkl_engine_parameter_get(engine,
 								    row[_parameterModelColumns.name],
@@ -921,7 +918,7 @@ void HKLWindow::on_pseudoAxesFrame_changed(void)
 	this->updateAxes();
 	this->updatePseudoAxes();
 	this->updatePseudoAxesFrames();
-	this->updateSolutions();
+	this->updateSolutions(NULL);
 }
 
 void HKLWindow::on_menuitem5_activate(void)

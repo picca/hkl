@@ -70,10 +70,6 @@ HKLAPI const char **hkl_engine_parameters_names_get_binding(const HklEngine *sel
 HKLAPI double *hkl_engine_pseudo_axes_values_get_binding(const HklEngine *self,
 							 guint *len, HklUnitEnum unit_type);
 
-HKLAPI gboolean hkl_engine_pseudo_axes_values_set_binding(HklEngine *self,
-							  double values[], unsigned int len,
-							  HklUnitEnum unit_type, GError **error);
-
 /***************************/
 /* HklPSeudoAxisEngineList */
 /***************************/

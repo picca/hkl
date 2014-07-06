@@ -37,52 +37,6 @@
 /* HklPseudoAxis */
 /*****************/
 
-static inline HklParameter *hkl_pseudo_axis_copy_real(const HklParameter *base)
-{
-	HklPseudoAxis *self = container_of(base, HklPseudoAxis, parameter);
-	HklPseudoAxis *dup = HKL_MALLOC(HklPseudoAxis);
-
-	*dup = *self;
-
-	return &dup->parameter;
-}
-
-static inline void hkl_pseudo_axis_free_real(HklParameter *self)
-{
-	HklPseudoAxis *pseudo_axis = container_of(self, HklPseudoAxis, parameter);
-
-	free(pseudo_axis);
-}
-
-static inline void hkl_pseudo_axis_fprintf_real(FILE *f, const HklParameter *self)
-{
-	HklPseudoAxis *pseudo_axis = container_of(self, HklPseudoAxis, parameter);
-
-	hkl_parameter_fprintf_real(f, self);
-	fprintf(f, " %p", pseudo_axis->engine);
-}
-
-static HklParameterOperations hkl_parameter_operations_pseudo_axis = {
-	HKL_PARAMETER_OPERATIONS_DEFAULTS,
-	.copy = hkl_pseudo_axis_copy_real,
-	.free = hkl_pseudo_axis_free_real,
-	.fprintf = hkl_pseudo_axis_fprintf_real,
-};
-
-HklParameter *hkl_parameter_new_pseudo_axis(
-	const HklParameter *parameter,
-	HklEngine *engine)
-{
-	HklPseudoAxis *self;
-
-	self = HKL_MALLOC(HklPseudoAxis);
-
-	self->parameter = *parameter;
-	self->parameter.ops = &hkl_parameter_operations_pseudo_axis;
-	self->engine = engine;
-
-	return &self->parameter;
-}
 
 /***********/
 /* HklMode */
@@ -101,7 +55,8 @@ void hkl_mode_fprintf(FILE *f, const HklMode *self)
 	HklParameter **parameter;
 
 	fprintf(f, "mode: \"%s\"\n", self->info->name);
-	fprintf(f, "initialize: %p\n", self->ops->init);
+	fprintf(f, "initialized_get: %p\n", self->ops->initialized_get);
+	fprintf(f, "initialized_set: %p\n", self->ops->initialized_set);
 	fprintf(f, "get: %p\n", self->ops->get);
 	fprintf(f, "set: %p\n", self->ops->set);
 
@@ -121,76 +76,6 @@ void hkl_mode_fprintf(FILE *f, const HklMode *self)
 /*************/
 /* HklEngine */
 /*************/
-
-void hkl_engine_init(HklEngine *self,
-		     const HklEngineInfo *info,
-		     const HklEngineOperations *ops)
-{
-	self->info = info;
-	self->ops = ops;
-	darray_init(self->modes);
-	darray_init(self->pseudo_axes);
-	darray_init(self->pseudo_axes_names);
-	darray_init(self->mode_names);
-	self->geometry = NULL;
-	self->detector = NULL;
-	self->sample = NULL;
-}
-
-void unregister_pseudo_axis(HklParameter *pseudo_axis)
-{
-	hkl_parameter_free(pseudo_axis);
-}
-
-HklParameter *register_pseudo_axis(HklEngine *self,
-				   const HklParameter *conf)
-{
-	HklParameter *parameter;
-
-	parameter = hkl_parameter_new_pseudo_axis(conf, self);
-	darray_append(self->pseudo_axes, parameter);
-	darray_append(self->pseudo_axes_names, parameter->name);
-
-	return parameter;
-}
-
-static void hkl_engine_prepare_internal(HklEngine *self)
-{
-	uint i;
-
-	if(!self || !self->engines)
-		return;
-
-	/* set */
-	if(self->geometry)
-		hkl_geometry_free(self->geometry);
-	self->geometry = hkl_geometry_new_copy(self->engines->geometry);
-
-	if(self->detector)
-		hkl_detector_free(self->detector);
-	self->detector = hkl_detector_new_copy(self->engines->detector);
-
-	if(self->sample)
-		hkl_sample_free(self->sample);
-	self->sample = hkl_sample_new_copy(self->engines->sample);
-
-	/* fill the axes member from the function */
-	if(self->mode){
-		darray_free(self->axes);
-		darray_init(self->axes);
-		for(i=0; i<self->mode->info->n_axes; ++i){
-			HklParameter *axis;
-
-			axis = hkl_geometry_get_axis_by_name(self->geometry,
-							     self->mode->info->axes[i]);
-
-			darray_append(self->axes, axis);
-		}
-	}
-
-	/* reset the geometries len */
-	hkl_geometry_list_reset(self->engines->geometries);
-}
 
 /**
  * hkl_engine_name_get:
@@ -233,20 +118,39 @@ const darray_string *hkl_engine_pseudo_axes_names_get(HklEngine *self)
  * @unit_type: the unit type (default or user) of the returned value
  *
  * Get the engine pseudo axes values
+ *
+ * return value: TRUE if succeded or FALSE otherwise.
  **/
-void hkl_engine_pseudo_axes_values_get(HklEngine *self,
+int hkl_engine_pseudo_axes_values_get(HklEngine *self,
 				       double values[], size_t n_values,
-				       HklUnitEnum unit_type)
+				       HklUnitEnum unit_type, GError **error)
 {
-	hkl_assert(n_values == self->info->n_pseudo_axes);
+	g_return_val_if_fail(error == NULL ||*error == NULL, FALSE);
 
-	for(size_t i=0; i<n_values; ++i)
+	if(n_values != self->info->n_pseudo_axes){
+		g_set_error(error,
+			    HKL_ENGINE_ERROR,
+			    HKL_ENGINE_ERROR_PSEUDO_AXES_VALUES_GET,
+			    "cannot get engine pseudo axes, wrong number of parameter (%d) given, (%d) expected\n",
+			    n_values, self->info->n_pseudo_axes);
+		return FALSE;
+	}
+
+	if(!hkl_engine_get(self, error)){
+		g_assert(error == NULL || *error != NULL);
+		return FALSE;
+	}
+	g_assert(error == NULL || *error == NULL);
+
+	for(size_t i=0; i<n_values; ++i){
 		values[i] = hkl_parameter_value_get(darray_item(self->pseudo_axes, i),
 						    unit_type);
+	}
+	return TRUE;
 }
 
 /**
- * hkl_engine_pseudo_axes_values_set: (skip)
+ * hkl_engine_pseudo_axes_values_set:
  * @self: the this ptr
  * @values: (array length=n_values): the values to set
  * @n_values: the size of the values array.
@@ -254,15 +158,15 @@ void hkl_engine_pseudo_axes_values_get(HklEngine *self,
  * @error: return location for a GError, or NULL
  *
  * Set the engine pseudo axes values
- * @todo tests
  *
- * Returns: TRUE on success, FALSE if an error occurred
+ * Return value: #HklGeometryList or NULL if no solution was found,
+ *               use hkl_geometry_list_free to release the memory once done.
  **/
-int hkl_engine_pseudo_axes_values_set(HklEngine *self,
-				      double values[], size_t n_values,
-				      HklUnitEnum unit_type, GError **error)
+HklGeometryList *hkl_engine_pseudo_axes_values_set(HklEngine *self,
+						   double values[], size_t n_values,
+						   HklUnitEnum unit_type, GError **error)
 {
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	g_return_val_if_fail(error == NULL ||*error == NULL, NULL);
 
 	if(n_values != self->info->n_pseudo_axes){
 		g_set_error(error,
@@ -270,34 +174,26 @@ int hkl_engine_pseudo_axes_values_set(HklEngine *self,
 			    HKL_ENGINE_ERROR_PSEUDO_AXES_VALUES_SET,
 			    "cannot set engine pseudo axes, wrong number of parameter (%d) given, (%d) expected\n",
 			    n_values, self->info->n_pseudo_axes);
-		return FALSE;
-	} else {
-		for(size_t i=0; i<n_values; ++i){
-			if(!hkl_parameter_value_set(darray_item(self->pseudo_axes, i),
-						    values[i], unit_type, error)){
-				g_assert (error == NULL || *error != NULL);
-				return FALSE;
-			}
+		return NULL;
+	}
+
+	for(size_t i=0; i<n_values; ++i){
+		if(!hkl_parameter_value_set(darray_item(self->pseudo_axes, i),
+					    values[i],
+					    unit_type, error)){
+			g_assert(error == NULL || *error != NULL);
+			return NULL;
 		}
-		g_assert (error == NULL || *error == NULL);
 	}
+	g_assert (error == NULL || *error == NULL);
 
-	return TRUE;
-}
-
-/**
- * hkl_engine_pseudo_axes_randomize: (skip)
- * @self: the this ptr
- *
- * randomize all the parameters of the #HklEngine
- **/
-void hkl_engine_pseudo_axes_randomize(HklEngine *self)
-{
-	HklParameter **parameter;
-
-	darray_foreach(parameter, self->pseudo_axes){
-		hkl_parameter_randomize(*parameter);
+	if(!hkl_engine_set(self, error)){
+		g_assert(error == NULL || *error != NULL);
+		return NULL;
 	}
+	g_assert(error == NULL || *error == NULL);
+
+	return hkl_geometry_list_new_copy(self->engines->geometries);
 }
 
 /**
@@ -343,23 +239,30 @@ const HklParameter *hkl_engine_pseudo_axis_get(const HklEngine *self,
  * set a parameter of the #HklEngine
  * @todo: tests
  *
- * return value: TRUE if succeded or FALSE otherwise.
+ * Return value: #HklGeometryList or NULL if no solution was found,
+ *               use hkl_geometry_list_free to release the memory once done.
  **/
-int hkl_engine_pseudo_axis_set(HklEngine *self,
-			       const char *name,
-			       const HklParameter *parameter,
-			       GError **error)
+HklGeometryList *hkl_engine_pseudo_axis_set(HklEngine *self,
+					    const char *name,
+					    const HklParameter *parameter,
+					    GError **error)
 {
 	HklParameter **p;
 
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
-	g_return_val_if_fail (strcmp(name, parameter->name) == 0, FALSE);
-
+	g_return_val_if_fail (error == NULL || *error == NULL, NULL);
+	g_return_val_if_fail (strcmp(name, parameter->name) == 0, NULL);
 
 	darray_foreach(p, self->pseudo_axes)
 		if(!strcmp((*p)->name, parameter->name)){
+			/* todo save the previous value to restore this value */
 			hkl_parameter_init_copy(*p, parameter, NULL);
-			return TRUE;
+			if(!hkl_engine_set(self, error)){
+				g_assert(error == NULL || *error != NULL);
+				return NULL;
+			}
+			g_assert(error == NULL || *error == NULL);
+
+			return hkl_geometry_list_new_copy(self->engines->geometries);
 		}
 
 	g_set_error(error,
@@ -368,22 +271,32 @@ int hkl_engine_pseudo_axis_set(HklEngine *self,
 		    "Can not find the pseudo axis \"%s\" in the \"%s\" engine\n",
 		    parameter->name, self->info->name);
 
-	return FALSE;
+	return NULL;
 }
 
 /**
- * hkl_engine_mode_set: (skip)
- * @self: the HklEngine
- * @name: the mode to select
+ * hkl_engine_capabilities_get:
+ * @self: the this ptr
  *
- * This method also populate the self->axes from the mode->axes_names.
- * this is to speed the computation of the numerical axes.
+ * return the capabilities of the engine. Theses capabilities can
+ * change, from on mode to the other. for now there is three kind of
+ * capabilities.
+ *
+ * HKL_ENGINE_CAP_READABLE: pseudo axes values can be read from the HklEngine
+ *
+ * HKL_ENGINE_CAP_WRITABLE: pseudo axes values can be set for this #HklEngine
+ *
+ * HKL_ENGINE_CAP_INITIALISABLE: this pseudo axes must be initialized
+ *                               with hkl_engine_initialize before
+ *                               reading or writing on it.
+ *
+ * Returns: 
  **/
-void hkl_engine_mode_set(HklEngine *self, HklMode *mode)
+unsigned int hkl_engine_capabilities_get(const HklEngine *self)
 {
-	self->mode = mode;
-	hkl_engine_prepare_internal(self);
+	return self->mode->ops->capabilities;
 }
+
 
 /**
  * hkl_engine_modes_names_get:
@@ -405,6 +318,28 @@ const darray_string *hkl_engine_modes_names_get(const HklEngine *self)
 const darray_string *hkl_engine_parameters_names_get(const HklEngine *self)
 {
 	return &self->mode->parameters_names;
+}
+
+/**
+ * hkl_engine_parameters_values_get: (skip)
+ * @self: the this ptr
+ * @values: (array length=n_values): the values to set
+ * @n_values: the size of the values array.
+ * @unit_type: the unit type (default or user) of the returned value
+ *
+ * Get the engine parameters values
+ *
+ * return value: TRUE if succeded or FALSE otherwise.
+ **/
+void hkl_engine_parameters_values_get(const HklEngine *self,
+				     double values[], size_t n_values,
+				     HklUnitEnum unit_type)
+{
+	g_return_if_fail (n_values == darray_size(self->mode->parameters));
+
+	for(size_t i=0; i<n_values; ++i)
+		values[i] = hkl_parameter_value_get(darray_item(self->mode->parameters, i),
+						    unit_type);
 }
 
 /**
@@ -435,21 +370,6 @@ int hkl_engine_parameters_values_set(HklEngine *self,
 	g_assert (error == NULL || *error == NULL);
 
 	return TRUE;
-}
-
-/**
- * hkl_engine_parameters_randomize: (skip)
- * @self: the this ptr
- *
- * randomize all the parameters of the #HklEngine
- **/
-void hkl_engine_parameters_randomize(HklEngine *self)
-{
-	HklParameter **parameter;
-
-	darray_foreach(parameter, self->mode->parameters){
-		hkl_parameter_randomize(*parameter);
-	}
 }
 
 /**
@@ -522,18 +442,18 @@ int hkl_engine_parameter_set(HklEngine *self,
 }
 
 /**
- * hkl_engine_engines_get:
+ * hkl_engine_current_mode_get:
  * @self: the this ptr
  *
- * Return value: (transfer none): the HklEngineList which contain this HklEngine
+ * Returns: the current HklEngine mode
  **/
-HklEngineList *hkl_engine_engines_get(HklEngine *self)
+const char *hkl_engine_current_mode_get(const HklEngine *self)
 {
-	return self->engines;
+	return self->mode->info->name;
 }
 
 /**
- * hkl_engine_select_mode:
+ * hkl_engine_current_mode_set:
  * @self: the HklEngine
  * @name: the mode to select
  * @error: return location for a GError, or NULL
@@ -543,7 +463,7 @@ HklEngineList *hkl_engine_engines_get(HklEngine *self)
  *
  * return value: TRUE if succeded or FALSE otherwise.
  **/
-int hkl_engine_select_mode(HklEngine *self, const char *name,
+int hkl_engine_current_mode_set(HklEngine *self, const char *name,
 			   GError **error)
 {
 	HklMode **mode;
@@ -558,23 +478,29 @@ int hkl_engine_select_mode(HklEngine *self, const char *name,
 
 	g_set_error(error,
 		    HKL_ENGINE_ERROR,
-		    HKL_ENGINE_ERROR_SELECT_MODE,
+		    HKL_ENGINE_ERROR_CURRENT_MODE_SET,
 		    "this engine does not contain this mode \"%s\"\n",
 		    name);
 
 	return FALSE;
 }
 
+int hkl_engine_initialized_get(const HklEngine *self)
+{
+	return hkl_mode_initialized_get(self->mode);
+}
+
 /**
- * hkl_engine_initialize: (skip)
+ * hkl_engine_initialized_set:
  * @self: the HklEngine
+ * @initialized: TRUE or FALSE to activated or deactivate the HklEngine
  * @error: return location for a GError, or NULL
  *
  * initialize the HklEngine
  *
  * return value: TRUE if succeded or FALSE otherwise.
  **/
-int hkl_engine_initialize(HklEngine *self, GError **error)
+int hkl_engine_initialized_set(HklEngine *self, int initialized, GError **error)
 {
 	hkl_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
@@ -587,107 +513,13 @@ int hkl_engine_initialize(HklEngine *self, GError **error)
 		return FALSE;
 	}
 
-	/* a NULL initialize method is valid */
-	if(self->mode->ops->init
-	   && !self->mode->ops->init(self->mode,
-				     self,
-				     self->engines->geometry,
-				     self->engines->detector,
-				     self->engines->sample,
-				     error)){
-		hkl_assert(error == NULL || *error != NULL);
-		return FALSE;
-	}
-
-	hkl_assert(error == NULL || *error == NULL);
-
-	return TRUE;
-}
-
-/**
- * hkl_engine_set: (skip)
- * @self: the HklEngine
- * @error: return location for a GError, or NULL
- *
- * use the HklPseudoaxisEngine values to compute the real axes values.
- *
- * return value: TRUE if succeded or FALSE otherwise.
- **/
-int hkl_engine_set(HklEngine *self, GError **error)
-{
-	hkl_return_val_if_fail (error == NULL || *error == NULL, FALSE);
-
-	if(!self->geometry || !self->detector || !self->sample
-	   || !self->mode || !self->mode->ops->set){
-		g_set_error(error,
-			    HKL_ENGINE_ERROR,
-			    HKL_ENGINE_ERROR_SET,
-			    "Internal error");
-		return FALSE;
-	}
-
-	hkl_engine_prepare_internal(self);
-
-	if (!self->mode->ops->set(self->mode, self,
-				  self->geometry,
-				  self->detector,
-				  self->sample,
-				  error)){
-		hkl_assert(error == NULL || *error != NULL);
-		return FALSE;
-	}
-	hkl_assert(error == NULL || *error == NULL);
-
-	hkl_geometry_list_multiply(self->engines->geometries);
-	hkl_geometry_list_multiply_from_range(self->engines->geometries);
-	hkl_geometry_list_remove_invalid(self->engines->geometries);
-	hkl_geometry_list_sort(self->engines->geometries, self->engines->geometry);
-
-	if(self->engines->geometries->n_items == 0){
-		g_set_error(error,
-			    HKL_ENGINE_ERROR,
-			    HKL_ENGINE_ERROR_SET,
-			    "no remaining solutions");
-		return FALSE;
-	}
-
-	return TRUE;
-}
-
-/**
- * hkl_engine_get: (skip)
- * @self: The HklEngine
- * @error: return location for a GError, or NULL
- *
- * get the values of the pseudo-axes from the real-axes values
- *
- * return value: TRUE if succeded or FALSE otherwise.
- **/
-int hkl_engine_get(HklEngine *self, GError **error)
-{
-	hkl_return_val_if_fail (error == NULL || *error == NULL, FALSE);
-
-	if(!self->engines || !self->engines->geometry || !self->engines->detector
-	   || !self->engines->sample || !self->mode || !self->mode->ops->get){
-		g_set_error(error,
-			    HKL_ENGINE_ERROR,
-			    HKL_ENGINE_ERROR_GET,
-			    "Internal error");
-		return FALSE;
-	}
-
-	if (!self->mode->ops->get(self->mode,
-				  self,
-				  self->engines->geometry,
-				  self->engines->detector,
-				  self->engines->sample,
-				  error)){
-		hkl_assert(error == NULL || *error != NULL);
-		return FALSE;
-	}
-	hkl_assert(error == NULL || *error == NULL);
-
-	return TRUE;
+	return hkl_mode_initialized_set(self->mode,
+					self,
+					self->engines->geometry,
+					self->engines->detector,
+					self->engines->sample,
+					initialized,
+					error);
 }
 
 /**
@@ -733,43 +565,6 @@ void hkl_engine_fprintf(FILE *f, const HklEngine *self)
 /*****************/
 
 /**
- * hkl_engine_list_new: (skip)
- *
- * default constructor
- *
- * Returns:
- **/
-HklEngineList *hkl_engine_list_new(void)
-{
-	HklEngineList *self = NULL;
-
-	self = HKL_MALLOC(HklEngineList);
-
-	darray_init(*self);
-
-	self->geometries = hkl_geometry_list_new();
-
-	self->geometry = NULL;
-	self->detector = NULL;
-	self->sample = NULL;
-
-	return self;
-}
-
-/**
- * hkl_engine_list_new_copy: (skip)
- * @self:
- *
- * dummy copy constructor for the binding
- *
- * Returns: (transfer none): NULL all the time the structure is non-copyable
- **/
-const HklEngineList *hkl_engine_list_new_copy(const HklEngineList *self)
-{
-	return NULL;
-}
-
-/**
  * hkl_engine_list_free: (skip)
  * @self: the #HklEngineList to destroy
  *
@@ -783,29 +578,6 @@ void hkl_engine_list_free(HklEngineList *self)
 }
 
 /**
- * hkl_engine_list_add: (skip)
- * @self: the engine list
- * @engine: the engine to add
- *
- * add an #HklEngine to the #HklEngineList
- *
- * Returns: HKL_SUCCESS or HKL_FAIL
- **/
-int hkl_engine_list_add(HklEngineList *self,
-			HklEngine *engine)
-{
-	if (!engine)
-		return FALSE;
-
-	/* set the engines to access the Geometries list. */
-	engine->engines = self;
-
-	darray_append(*self, engine);
-
-	return TRUE;
-}
-
-/**
  * hkl_engine_list_engines_get: (skip)
  * @self: the this ptr
  *
@@ -814,17 +586,6 @@ int hkl_engine_list_add(HklEngineList *self,
 darray_engine *hkl_engine_list_engines_get(HklEngineList *self)
 {
 	return (darray_engine *)self;
-}
-
-/**
- * hkl_engine_list_geometries_get:
- * @self: the this ptr
- *
- * Return: a pointer on the engine array
- **/
-const HklGeometryList *hkl_engine_list_geometries_get(const HklEngineList *self)
-{
-	return self->geometries;
 }
 
 /**
@@ -928,22 +689,6 @@ HklParameter *hkl_engine_list_pseudo_axis_get_by_name(
 		    name);
 
 	return NULL;
-}
-
-/**
- * hkl_engine_list_clear: (skip)
- * @self: the engine list to clear
- *
- * remove all engine from the engine list
- **/
-void hkl_engine_list_clear(HklEngineList *self)
-{
-	HklEngine **engine;
-
-	darray_foreach(engine, *self){
-		hkl_engine_free(*engine);
-	}
-	darray_free(*self);
 }
 
 /**

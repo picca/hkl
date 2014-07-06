@@ -23,6 +23,7 @@
 #include <string.h>
 #include "hkl.h"
 #include <tap/basic.h>
+#include <tap/hkl-tap.h>
 
 #define with_log 1
 
@@ -32,20 +33,18 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 	int unreachable = 0;
 	int ko = FALSE;
 	const char **mode;
-	const HklGeometryList *geometries = hkl_engine_list_geometries_get(engine_list);
 	HklGeometry *geometry = hkl_engine_list_geometry_get(engine_list);
 	const darray_string *modes = hkl_engine_modes_names_get(engine);
 	const darray_string *pseudo_axes = hkl_engine_pseudo_axes_names_get(engine);
 	const size_t n_pseudo_axes = darray_size(*pseudo_axes);
 	double targets[n_pseudo_axes];
 	double currents[n_pseudo_axes];
-	double garbages[n_pseudo_axes];
 
 	/* randomize the geometry */
 	hkl_geometry_randomize(geometry);
 
 	darray_foreach(mode, *modes){
-		hkl_engine_select_mode(engine, *mode, NULL);
+		hkl_engine_current_mode_set(engine, *mode, NULL);
 		/* for now unactive the eulerians check */
 		if(!strcmp(*mode, "eulerians"))
 			continue;
@@ -54,42 +53,39 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 		for(i=0;i<n && !ko;++i) {
 			size_t j;
 			HklParameter **pseudo_axis;
+			HklGeometryList *solutions;
 
 			/* randomize the pseudoAxes values */
-			hkl_engine_pseudo_axes_randomize(engine);
-			hkl_engine_pseudo_axes_values_get(engine, targets, n_pseudo_axes, HKL_UNIT_DEFAULT);
+			hkl_tap_engine_pseudo_axes_randomize(engine,
+							     targets, n_pseudo_axes,
+							     HKL_UNIT_DEFAULT);
 
 			/* randomize the parameters */
-			hkl_engine_parameters_randomize(engine);
+			hkl_tap_engine_parameters_randomize(engine);
 
 			/* pseudo -> geometry */
-			hkl_engine_initialize(engine, NULL);
+			hkl_engine_initialized_set(engine, TRUE, NULL);
 
 			/* geometry -> pseudo */
-			if(hkl_engine_set(engine, NULL)) {
+			solutions = hkl_engine_pseudo_axes_values_set(engine,
+								       targets, n_pseudo_axes,
+								       HKL_UNIT_DEFAULT, NULL);
+			if(solutions) {
 				const HklGeometryListItem *item;
 
-				HKL_GEOMETRY_LIST_FOREACH(item, geometries){
-					/* first modify the pseudoAxes values */
-					/* to be sure that the result is the */
-					/* computed result. */
-
-					hkl_engine_pseudo_axes_values_set(engine,
-									  garbages, n_pseudo_axes,
-									  HKL_UNIT_DEFAULT, NULL);
-
+				HKL_GEOMETRY_LIST_FOREACH(item, solutions){
 					hkl_geometry_set(geometry,
 							 hkl_geometry_list_item_geometry_get(item));
-					hkl_engine_get(engine, NULL);
 
 					hkl_engine_pseudo_axes_values_get(engine,
-									  currents, n_pseudo_axes,
-									  HKL_UNIT_DEFAULT);
+									   currents, n_pseudo_axes,
+									   HKL_UNIT_DEFAULT, NULL);
 					for(j=0; j<n_pseudo_axes; ++j)
 						ko |= fabs(targets[j] - currents[j]) >= HKL_EPSILON;
 					if(ko)
 						break;
 				}
+				hkl_geometry_list_free(solutions);
 			}else
 				unreachable++;
 		}
@@ -180,11 +176,42 @@ static void set(int nb_iter)
 	ok(res == TRUE, "set");
 }
 
+static void capabilities(void)
+{
+	HklFactory **factories;
+	unsigned int i, n;
+	int res = TRUE;
+
+	factories = hkl_factory_get_all(&n);
+	for(i=0; i<n; i++){
+		HklEngineList *list;
+		HklEngine **engine;
+		darray_engine *engines;
+
+		list = hkl_factory_create_new_engine_list(factories[i]);
+		engines = hkl_engine_list_engines_get(list);
+		darray_foreach(engine, *engines){
+			const unsigned long capabilities = hkl_engine_capabilities_get(*engine);
+
+			/* all motors must have the read/write capabilities */
+			res &= (capabilities & HKL_ENGINE_CAPABILITIES_READABLE) != 0;
+			res &= (capabilities & HKL_ENGINE_CAPABILITIES_WRITABLE) != 0;
+
+			/* all psi engines must be initialisable */
+			if(!strcmp("psi", hkl_engine_name_get(*engine)))
+				res &= (capabilities & HKL_ENGINE_CAPABILITIES_INITIALIZABLE) != 0;
+		}
+		hkl_engine_list_free(list);
+	}
+
+	ok(res == TRUE, __func__);
+}
+
 int main(int argc, char** argv)
 {
 	double n;
 
-	plan(2);
+	plan(3);
 
 	if (argc > 1)
 		n = atoi(argv[1]);
@@ -193,6 +220,7 @@ int main(int argc, char** argv)
 
 	factories();
 	set(n);
+	capabilities();
 
 	return 0;
 }
