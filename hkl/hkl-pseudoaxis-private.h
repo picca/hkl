@@ -36,6 +36,7 @@
 
 G_BEGIN_DECLS
 
+typedef struct _HklPseudoAxis HklPseudoAxis;
 typedef struct _HklModeOperations HklModeOperations;
 typedef struct _HklModeInfo HklModeInfo;
 typedef struct _HklMode HklMode;

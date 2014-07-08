@@ -387,7 +387,6 @@ HKLAPI void hkl_sample_reflection_geometry_set(HklSampleReflection *self,
 /* PseudoAxis */
 /**************/
 
-typedef struct _HklPseudoAxis HklPseudoAxis;
 typedef struct _HklEngine HklEngine;
 typedef struct _HklEngineList HklEngineList;
 
