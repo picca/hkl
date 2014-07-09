@@ -48,11 +48,14 @@ static void add_reflection(void)
 
 	sample = hkl_sample_new("test");
 
+	ok(hkl_sample_n_reflections_get(sample) == 0, __func__);
 	ref = hkl_sample_reflection_new(geometry, detector, 1, 0, 0, NULL);
 	hkl_sample_add_reflection(sample, ref);
+	ok(hkl_sample_n_reflections_get(sample) == 1, __func__);
 
 	/* we can not add two times the same reflection */
 	hkl_sample_add_reflection(sample, ref);
+	ok(hkl_sample_n_reflections_get(sample) == 1, __func__);
 
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);
@@ -78,10 +81,10 @@ static void get_reflection(void)
 
 	ref = hkl_sample_reflection_new(geometry, detector, 1, 0, 0, NULL);
 	hkl_sample_add_reflection(sample, ref);
-	ref2 = hkl_sample_first_reflection_get(sample);
+	ref2 = hkl_sample_reflections_first_get(sample);
 	ok(0 == !ref, __func__);
 	ok(ref == ref2, __func__);
-	ok(NULL == hkl_sample_next_reflection_get(sample, ref2), __func__);
+	ok(NULL == hkl_sample_reflections_next_get(sample, ref2), __func__);
 
 	ref = hkl_sample_reflection_new(geometry, detector, -1, 0, 0, NULL);
 	hkl_sample_add_reflection(sample, ref);
@@ -111,8 +114,10 @@ static void del_reflection(void)
 
 	ref = hkl_sample_reflection_new(geometry, detector, 1, 0, 0, NULL);
 	hkl_sample_add_reflection(sample, ref);
+	ok(hkl_sample_n_reflections_get(sample) == 1, __func__);
 	hkl_sample_del_reflection(sample, ref);
-	ok (NULL == hkl_sample_first_reflection_get(sample), __func__);
+	ok(hkl_sample_n_reflections_get(sample) == 0, __func__);
+	ok (NULL == hkl_sample_reflections_first_get(sample), __func__);
 
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);
@@ -436,7 +441,7 @@ static void reflection_set_geometry(void)
 
 int main(int argc, char** argv)
 {
-	plan(40);
+	plan(45);
 
 	new();
 	add_reflection();

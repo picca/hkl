@@ -345,10 +345,16 @@ HKLAPI const HklMatrix *hkl_sample_UB_get(const HklSample *self) HKL_ARG_NONNULL
 HKLAPI int hkl_sample_UB_set(HklSample *self, const HklMatrix *UB,
 			     GError **error) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI HklSampleReflection *hkl_sample_first_reflection_get(HklSample *self) HKL_ARG_NONNULL(1);
+HKLAPI size_t hkl_sample_n_reflections_get(const HklSample *self) HKL_ARG_NONNULL(1);
 
-HKLAPI HklSampleReflection *hkl_sample_next_reflection_get(HklSample *self,
-							   HklSampleReflection *reflection) HKL_ARG_NONNULL(1, 2);
+#define HKL_SAMPLE_REFLECTIONS_FOREACH(_item, _list) for((_item)=hkl_sample_reflections_first_get((_list)); \
+							 (_item);	\
+							 (_item)=hkl_sample_reflections_next_get((_list), (_item)))
+
+HKLAPI HklSampleReflection *hkl_sample_reflections_first_get(HklSample *self) HKL_ARG_NONNULL(1);
+
+HKLAPI HklSampleReflection *hkl_sample_reflections_next_get(HklSample *self,
+							    HklSampleReflection *reflection) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI void hkl_sample_del_reflection(HklSample *self,
 				      HklSampleReflection *reflection) HKL_ARG_NONNULL(1, 2);
@@ -371,7 +377,7 @@ HKLAPI double hkl_sample_get_reflection_theoretical_angle(const HklSample *self,
 
 HKLAPI int hkl_sample_affine(HklSample *self, GError **error) HKL_ARG_NONNULL(1);
 
-/* hklSampleReflection */
+/* HklSampleReflection */
 
 HKLAPI HklSampleReflection *hkl_sample_reflection_new(const HklGeometry *geometry,
 						      const HklDetector *detector,

@@ -43,6 +43,7 @@ struct _HklSample {
 	HklParameter *uy;
 	HklParameter *uz;
 	struct list_head reflections;
+	size_t n_reflections;
 };
 
 extern void hkl_sample_fprintf(FILE *f, const HklSample *self);

@@ -292,6 +292,7 @@ HklSample* hkl_sample_new(const char *name)
 
 	hkl_sample_compute_UB(self);
 	list_head_init(&self->reflections);
+	self->n_reflections = 0;
 
 	return self;
 }
@@ -329,6 +330,7 @@ HklSample *hkl_sample_new_copy(const HklSample *self)
 		list_add_tail(&dup->reflections,
 			      &hkl_sample_reflection_new_copy(reflection)->list);
 	}
+	dup->n_reflections = self->n_reflections;
 
 	return dup;
 }
@@ -582,25 +584,38 @@ int hkl_sample_UB_set(HklSample *self, const HklMatrix *UB,
 }
 
 /**
- * hkl_sample_first_reflection_get: (skip)
+ * hkl_sample_n_reflections_get: (skip)
+ * @self: the this ptr
+ *
+ * return the number of reflections of the sample
+ *
+ * Returns: 
+ **/
+size_t hkl_sample_n_reflections_get(const HklSample *self)
+{
+	return self->n_reflections;
+}
+
+/**
+ * hkl_sample_reflections_first_get: (skip)
  * @self: the this ptr
  *
  * Return value: the first HklSampleReflection of the sample.
  **/
-HklSampleReflection *hkl_sample_first_reflection_get(HklSample *self)
+HklSampleReflection *hkl_sample_reflections_first_get(HklSample *self)
 {
 	return list_top(&self->reflections, HklSampleReflection, list);
 }
 
 /**
- * hkl_sample_next_reflection_get: (skip)
+ * hkl_sample_reflections_next_get: (skip)
  * @self: the this ptr
  * @reflection: the current reflection
  *
  * Return value: (allow-none): the next reflection or NULL if no more reflection
  **/
-HklSampleReflection *hkl_sample_next_reflection_get(HklSample *self,
-						    HklSampleReflection *reflection)
+HklSampleReflection *hkl_sample_reflections_next_get(HklSample *self,
+						     HklSampleReflection *reflection)
 {
 	return list_next(&self->reflections, reflection, list);
 }
@@ -624,6 +639,7 @@ void hkl_sample_add_reflection(HklSample *self,
 	}
 
 	list_add_tail(&self->reflections, &reflection->list);
+	self->n_reflections++;
 }
 
 /**
@@ -638,6 +654,7 @@ void hkl_sample_del_reflection(HklSample *self,
 {
 	list_del(&reflection->list);
 	hkl_sample_reflection_free(reflection);
+	self->n_reflections--;
 }
 
 /**

@@ -767,8 +767,8 @@ void HKLWindow::on_toolbutton_computeUB_clicked(void)
 	LOG;
 
 	if(_sample){
-		const HklSampleReflection *r1 = hkl_sample_first_reflection_get(_sample);
-		const HklSampleReflection *r2 = hkl_sample_next_reflection_get(_sample,
+		const HklSampleReflection *r1 = hkl_sample_reflections_first_get(_sample);
+		const HklSampleReflection *r2 = hkl_sample_reflections_next_get(_sample,
 									       const_cast<HklSampleReflection*>(r1));
 
 		hkl_sample_compute_UB_busing_levy(_sample, r1, r2, NULL);
