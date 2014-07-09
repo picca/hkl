@@ -194,6 +194,15 @@ HKLAPI int hkl_geometry_axis_set(HklGeometry *self, const char *name,
 				 const HklParameter *axis,
 				 GError **error) HKL_ARG_NONNULL(1, 2, 3);
 
+HKLAPI void hkl_geometry_axes_values_get(const HklGeometry *self,
+					 double values[], size_t n_values,
+					 HklUnitEnum unit_type) HKL_ARG_NONNULL(1, 2);
+
+HKLAPI int hkl_geometry_axes_values_set(HklGeometry *self,
+					double values[], size_t n_values,
+					HklUnitEnum unit_type,
+					GError **error) HKL_ARG_NONNULL(1, 2);
+
 HKLAPI const char *hkl_geometry_name_get(const HklGeometry *self) HKL_ARG_NONNULL(1);
 
 HKLAPI double hkl_geometry_wavelength_get(const HklGeometry *self,

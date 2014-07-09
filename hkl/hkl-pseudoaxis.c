@@ -327,7 +327,7 @@ const darray_string *hkl_engine_parameters_names_get(const HklEngine *self)
 /**
  * hkl_engine_parameters_values_get: (skip)
  * @self: the this ptr
- * @values: (array length=n_values): the values to set
+ * @values: (array length=n_values): the values to get
  * @n_values: the size of the values array.
  * @unit_type: the unit type (default or user) of the returned value
  *
@@ -336,8 +336,8 @@ const darray_string *hkl_engine_parameters_names_get(const HklEngine *self)
  * return value: TRUE if succeded or FALSE otherwise.
  **/
 void hkl_engine_parameters_values_get(const HklEngine *self,
-				     double values[], size_t n_values,
-				     HklUnitEnum unit_type)
+				      double values[], size_t n_values,
+				      HklUnitEnum unit_type)
 {
 	g_return_if_fail (n_values == darray_size(self->mode->parameters));
 

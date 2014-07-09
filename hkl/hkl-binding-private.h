@@ -38,24 +38,20 @@ HKLAPI GHashTable *hkl_factories(void);
 /* HklGeometry */
 /***************/
 
-HKLAPI double* hkl_geometry_axes_values_get(const HklGeometry *self, unsigned int *len,
-					    HklUnitEnum unit_type);
-
-HKLAPI void hkl_geometry_axes_values_set(HklGeometry *self,
-					 double *values, unsigned int len,
-					 HklUnitEnum unit_type);
+HKLAPI double* hkl_geometry_axes_values_get_binding(const HklGeometry *self, unsigned int *len,
+						    HklUnitEnum unit_type) HKL_ARG_NONNULL(1, 2);
 
 /*******************/
 /* HklGeometryList */
 /*******************/
 
-HKLAPI GSList* hkl_geometry_list_items(HklGeometryList *self);
+HKLAPI GSList* hkl_geometry_list_items(HklGeometryList *self) HKL_ARG_NONNULL(1);
 
 /***********************/
 /* HklGeometryListItem */
 /***********************/
 
-HKLAPI const HklGeometry *hkl_geometry_list_item_geometry(const HklGeometryListItem *self);
+HKLAPI const HklGeometry *hkl_geometry_list_item_geometry(const HklGeometryListItem *self) HKL_ARG_NONNULL(1);
 
 /*************/
 /* HklEngine */

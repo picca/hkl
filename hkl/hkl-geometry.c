@@ -531,6 +531,64 @@ HklParameter *hkl_geometry_get_axis_by_name(HklGeometry *self, const char *name)
 }
 
 /**
+ * hkl_geometry_axes_values_get:
+ * @self: the this ptr
+ * @values: (array length=n_values): the values to get
+ * @n_values: the size of the values array.
+ * @unit_type: the unit type (default or user) of the returned value
+ *
+ * fill the values array with the #HklGeometry axes.
+ **/
+void hkl_geometry_axes_values_get(const HklGeometry *self,
+				  double values[], size_t n_values,
+				  HklUnitEnum unit_type)
+{
+	size_t i = 0;
+	HklParameter **axis;
+
+	g_return_if_fail (n_values == darray_size(self->axes));
+
+	darray_foreach(axis, self->axes){
+		values[i++] = hkl_parameter_value_get(*axis, unit_type);
+	}
+}
+
+/**
+ * hkl_geometry_axes_values_set:
+ * @self: the this ptr
+ * @values: (array length=n_values): the values to set.
+ * @n_values: the length of the values array.
+ * @unit_type: the unit type (default or user) of the returned value
+ * @error: return location for a GError, or NULL
+ *
+ * Set the #HklGeometry axes values
+ *
+ * Returns: TRUE on success, FALSE if an error occurred
+ **/
+int hkl_geometry_axes_values_set(HklGeometry *self,
+				 double values[], size_t n_values,
+				 HklUnitEnum unit_type,
+				 GError **error)
+{
+	uint i = 0;
+	HklParameter **axis;
+
+	g_return_val_if_fail (error == NULL || *error == NULL && n_values == darray_size(self->axes), FALSE);
+
+	darray_foreach(axis, self->axes){
+		if(!hkl_parameter_value_set(*axis, values[i++], unit_type, error)){
+			g_assert (error == NULL || *error != NULL);
+			return FALSE;
+		}
+	}
+	g_assert (error == NULL || *error == NULL);
+
+	hkl_geometry_update(self);
+
+	return TRUE;
+}
+
+/**
  * hkl_geometry_randomize: (skip)
  * @self:
  *

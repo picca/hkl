@@ -170,10 +170,11 @@ static void set(void)
 	hkl_geometry_free(g);
 }
 
-static void set_values(void)
+static void get_set_values(void)
 {
 	HklGeometry *g;
 	HklHolder *holder;
+	double values[3];
 
 	g = hkl_geometry_new(NULL);
 	holder = hkl_geometry_add_holder(g);
@@ -181,29 +182,30 @@ static void set_values(void)
 	hkl_holder_add_rotation_axis(holder, "B", 1., 0., 0.);
 	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
 
+	/* check set DEFAULT unit */
 	hkl_geometry_set_values_v(g, HKL_UNIT_DEFAULT, NULL, 1., 1., 1.);
 	is_double(1., hkl_parameter_value_get(darray_item(g->axes, 0), HKL_UNIT_DEFAULT), HKL_EPSILON, __func__);
 	is_double(1., hkl_parameter_value_get(darray_item(g->axes, 1), HKL_UNIT_DEFAULT), HKL_EPSILON, __func__);
 	is_double(1., hkl_parameter_value_get(darray_item(g->axes, 2), HKL_UNIT_DEFAULT), HKL_EPSILON, __func__);
 
-	hkl_geometry_free(g);
-}
+	/* check get DEFAULT unit */
+	hkl_geometry_axes_values_get(g, values, 3, HKL_UNIT_DEFAULT);
+	is_double(1., values[0], HKL_EPSILON, __func__);
+	is_double(1., values[1], HKL_EPSILON, __func__);
+	is_double(1., values[2], HKL_EPSILON, __func__);
 
-static void set_values_unit(void)
-{
-	HklGeometry *g;
-	HklHolder *holder;
 
-	g = hkl_geometry_new(NULL);
-	holder = hkl_geometry_add_holder(g);
-	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
-	hkl_holder_add_rotation_axis(holder, "B", 1., 0., 0.);
-	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
-
+	/* check set USER unit */
 	hkl_geometry_set_values_v(g, HKL_UNIT_USER, NULL, 10., 10., 10.);
 	is_double(10. * HKL_DEGTORAD, hkl_parameter_value_get(darray_item(g->axes, 0), HKL_UNIT_DEFAULT), HKL_EPSILON, __func__);
 	is_double(10. * HKL_DEGTORAD, hkl_parameter_value_get(darray_item(g->axes, 1), HKL_UNIT_DEFAULT), HKL_EPSILON, __func__);
 	is_double(10. * HKL_DEGTORAD, hkl_parameter_value_get(darray_item(g->axes, 2), HKL_UNIT_DEFAULT), HKL_EPSILON, __func__);
+
+	/* check get USER unit */
+	hkl_geometry_axes_values_get(g, values, 3, HKL_UNIT_USER);
+	is_double(10., values[0], HKL_EPSILON, __func__);
+	is_double(10., values[1], HKL_EPSILON, __func__);
+	is_double(10., values[2], HKL_EPSILON, __func__);
 
 	hkl_geometry_free(g);
 }
@@ -397,14 +399,13 @@ static void  list_remove_invalid(void)
 
 int main(int argc, char** argv)
 {
-	plan(46);
+	plan(52);
 
 	add_holder();
 	get_axis();
 	update();
 	set();
-	set_values();
-	set_values_unit();
+	get_set_values();
 	distance();
 	is_valid();
 	wavelength();

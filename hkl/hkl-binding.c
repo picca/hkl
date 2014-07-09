@@ -67,16 +67,18 @@ GHashTable *hkl_factories(void)
 /************/
 
 /**
- * hkl_geometry_axes_values_get:
+ * hkl_geometry_axes_values_get_binding:
  * @self: the this ptr
  * @len: (out caller-allocates): the length of the returned array
  * @unit_type: the unit type (default or user) of the returned value
  *
+ * Rename to: hkl_geometry_axes_values_get
+ *
  * Return value: (array length=len) (transfer container): list of axes values,
  *          free the list with free when done.
  **/
-double *hkl_geometry_axes_values_get(const HklGeometry *self, guint *len,
-				     HklUnitEnum unit_type)
+double *hkl_geometry_axes_values_get_binding(const HklGeometry *self, guint *len,
+					     HklUnitEnum unit_type)
 {
 	double *values;
 	uint i = 0;
@@ -93,31 +95,6 @@ double *hkl_geometry_axes_values_get(const HklGeometry *self, guint *len,
 	}
 
 	return values;
-}
-
-/**
- * hkl_geometry_axes_values_set:
- * @self: the this ptr
- * @values: (array length=len): the values to set.
- * @len: the length of the values array.
- * @unit_type: the unit type (default or user) of the returned value
- **/
-void hkl_geometry_axes_values_set(HklGeometry *self, double *values, unsigned int len,
-				  HklUnitEnum unit_type)
-{
-	uint i = 0;
-	HklParameter **axis;
-
-	if (!self || !values || len != darray_size(self->axes))
-		return;
-
-	darray_foreach(axis, self->axes){
-		hkl_parameter_value_set(*axis,
-					values[i++],
-					unit_type, NULL);
-	}
-
-	hkl_geometry_update(self);
 }
 
 /*******************/
