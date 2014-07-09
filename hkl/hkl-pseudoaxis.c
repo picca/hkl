@@ -531,7 +531,7 @@ int hkl_engine_initialized_get(const HklEngine *self)
  **/
 int hkl_engine_initialized_set(HklEngine *self, int initialized, GError **error)
 {
-	hkl_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
 	if(!self->geometry || !self->detector || !self->sample
 	   || !self->mode) {

@@ -568,7 +568,7 @@ static inline int hkl_engine_get(HklEngine *self,
  **/
 static inline int hkl_engine_get(HklEngine *self, GError **error)
 {
-	hkl_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
 	if(!self->engines || !self->engines->geometry || !self->engines->detector
 	   || !self->engines->sample || !self->mode || !self->mode->ops->get){
@@ -605,7 +605,7 @@ static inline int hkl_engine_get(HklEngine *self, GError **error)
  **/
 static inline int hkl_engine_set(HklEngine *self, GError **error)
 {
-	hkl_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
 	if(!self->geometry || !self->detector || !self->sample
 	   || !self->mode || !self->mode->ops->set){

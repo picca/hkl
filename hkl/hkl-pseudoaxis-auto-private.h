@@ -138,7 +138,7 @@ static int hkl_mode_auto_with_init_initialized_set_real(HklMode *mode,
 {
 	HklModeAutoWithInit *self = container_of(mode, HklModeAutoWithInit, mode);
 
-	hkl_return_val_if_fail(error == NULL || *error == NULL, FALSE);
+	g_return_val_if_fail(error == NULL || *error == NULL, FALSE);
 
 	if(initialized){
 		if(geometry){
