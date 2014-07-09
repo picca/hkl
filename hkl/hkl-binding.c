@@ -62,6 +62,27 @@ GHashTable *hkl_factories(void)
 	return table;
 }
 
+/**
+ * hkl_factory_axes_names_get_binding:
+ * @self: the this ptr
+ * @length: (out caller-allocates): the length of the returned array
+ *
+ * get all the axes of the given geometry.
+ *
+ * Rename to: hkl_factory_axes_names_get
+ *
+ * Returns: (array length=length) (transfer none): array of the axes names.
+ **/
+const char **hkl_factory_axes_names_get_binding(const HklFactory *self,
+						size_t *length)
+{
+	const darray_string *axes = hkl_factory_axes_names_get(self);
+
+	*length = darray_size(*axes);
+
+	return &darray_item(*axes, 0);
+}
+
 /************/
 /* Geometry */
 /************/

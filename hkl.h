@@ -524,8 +524,7 @@ HKLAPI HklFactory *hkl_factory_get_by_name(const char *name,
 
 HKLAPI const char *hkl_factory_name_get(const HklFactory *self) HKL_ARG_NONNULL(1);
 
-HKLAPI const char **hkl_factory_axes_names_get(const HklFactory *self,
-					       size_t *length) HKL_ARG_NONNULL(1, 2);
+HKLAPI const darray_string *hkl_factory_axes_names_get(const HklFactory *self) HKL_ARG_NONNULL(1);
 
 HKLAPI HklGeometry *hkl_factory_create_new_geometry(const HklFactory *self) HKL_ARG_NONNULL(1);
 

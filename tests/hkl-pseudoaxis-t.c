@@ -207,14 +207,15 @@ static void capabilities(void)
 	ok(res == TRUE, __func__);
 }
 
-static int _check_axes(const darray_string *axes, const char **refs, size_t len)
+static int _check_axes(const darray_string *axes, const darray_string *refs)
 {
 	int ko = TRUE;
 	const char **axis;
+	const char **ref;
 
 	darray_foreach(axis, *axes){
-		for(size_t i=0; i<len; ++i){
-			if(!strcmp(*axis, refs[i]))
+		darray_foreach(ref, *refs){
+			if(!strcmp(*axis, *ref))
 				ko = FALSE;
 		}
 		if(ko)
@@ -235,12 +236,11 @@ static void axes_names_get(void)
 		HklEngineList *list;
 		HklEngine **engine;
 		darray_engine *engines;
-		const char **all_axes;
-		size_t len;
+		const darray_string *all_axes;
 
 		list = hkl_factory_create_new_engine_list(factories[i]);
 		engines = hkl_engine_list_engines_get(list);
-		all_axes = hkl_factory_axes_names_get(factories[i], &len);
+		all_axes = hkl_factory_axes_names_get(factories[i]);
 
 		/* check consistency of the engines, all axes should
 		 * be in the list of the geometry axes */
@@ -254,8 +254,8 @@ static void axes_names_get(void)
 
 			res &= axes_r != NULL;
 			res &= axes_w != NULL;
-			res &= _check_axes(axes_r, all_axes, len);
-			res &= _check_axes(axes_w, all_axes, len);
+			res &= _check_axes(axes_r, all_axes);
+			res &= _check_axes(axes_w, all_axes);
 		}
 		hkl_engine_list_free(list);
 	}

@@ -46,8 +46,7 @@ struct _HklFactory
 {
 	const char *name;
 	const char *description;
-	const char **axes;
-	size_t axes_length;
+	const darray_string axes;
 	HklFactoryGeometryFunction create_new_geometry;
 	HklFactoryEngineListFunction create_new_engine_list;
 };
@@ -78,17 +77,14 @@ const char *hkl_factory_name_get(const HklFactory *self)
 /**
  * hkl_factory_axes_names_get:
  * @self: the this ptr
- * @length: (out caller-allocates): the length of the returned array
  *
- * get all the axes of the given geometry.
+ * get all the axes of the given factory
  *
- * Returns: (array length=length) (transfer none): array of the axes names.
+ * Returns: (type gpointer): array of the axes names.
  **/
-const char **hkl_factory_axes_names_get(const HklFactory *self,
-					size_t *length)
+const darray_string *hkl_factory_axes_names_get(const HklFactory *self)
 {
-	*length = self->axes_length;
-	return self->axes;
+	return &self->axes;
 }
 
 HklGeometry *hkl_factory_create_new_geometry(const HklFactory *self)
@@ -102,12 +98,12 @@ HklEngineList *hkl_factory_create_new_engine_list(const HklFactory *self)
 }
 
 #define REGISTER_DIFFRACTOMETER(name_, real_name_, description_)	\
-	static HklFactory name_ = {.name = real_name_,			\
-				   .description = description_,		\
-				   .axes = hkl_geometry_ ## name_ ## _axes, \
-				   .axes_length = ARRAY_SIZE(hkl_geometry_ ## name_ ## _axes), \
-				   .create_new_geometry = &hkl_geometry_new_ ## name_, \
-				   .create_new_engine_list = &hkl_engine_list_new_ ## name_ \
+	static HklFactory name_ = {					\
+		.name = real_name_,					\
+		.description = description_,				\
+		.axes = DARRAY(hkl_geometry_ ## name_ ## _axes),	\
+		.create_new_geometry = &hkl_geometry_new_ ## name_,	\
+		.create_new_engine_list = &hkl_engine_list_new_ ## name_ \
 	};								\
 	AUTODATA(factories, &name_)
 

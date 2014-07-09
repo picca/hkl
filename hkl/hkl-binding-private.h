@@ -34,6 +34,9 @@ G_BEGIN_DECLS
 
 HKLAPI GHashTable *hkl_factories(void);
 
+HKLAPI const char **hkl_factory_axes_names_get_binding(const HklFactory *self,
+						       size_t *length) HKL_ARG_NONNULL(1, 2);
+
 /***************/
 /* HklGeometry */
 /***************/

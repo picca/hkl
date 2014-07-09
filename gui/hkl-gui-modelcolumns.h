@@ -135,14 +135,14 @@ public:
 
 	SolutionModelColumns(HklFactory *factory)
 		{
-			const char **axes;
-			size_t i, axes_length;
+			const darray_string *axes;
+			const char **axis;
 
 			this->add(this->index);
 			this->add(this->item);
 
-			axes = hkl_factory_axes_names_get(factory, &axes_length);
-			for(i=0; i<axes_length; ++i){
+			axes = hkl_factory_axes_names_get(factory);
+			darray_foreach(axis, *axes){
 				this->axes.push_back(Gtk::TreeModelColumn<gdouble>());
 				this->add(this->axes.back());
 			}
