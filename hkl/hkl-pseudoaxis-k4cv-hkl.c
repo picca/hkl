@@ -226,7 +226,7 @@ static HklMode *bissector(void)
 	static const char* axes[] = {"komega", "kappa", "kphi", "tth"};
 	static const HklFunction *functions[] = {&bissector_f1, &bissector_f2};
 	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO(__func__, axes, functions),
+		HKL_MODE_AUTO_INFO(__func__, axes, axes, functions),
 	};
 
 	return hkl_mode_auto_new(&info,
@@ -242,7 +242,7 @@ static HklMode *constant_omega(void)
 		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "omega"},
 	};
 	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes, functions, parameters),
 	};
 
 	return hkl_mode_auto_new(&info,
@@ -258,7 +258,7 @@ static HklMode *constant_chi(void)
 		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "chi"},
 	};
 	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes, functions, parameters),
 	};
 
 	return hkl_mode_auto_new(&info,
@@ -274,7 +274,7 @@ static HklMode *constant_phi(void)
 		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "phi"},
 	};
 	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes, functions, parameters),
 	};
 
 	return hkl_mode_auto_new(&info,
@@ -292,7 +292,7 @@ static HklMode *double_diffraction(void)
 		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, ._value = 1,},
 	};
 	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes, functions, parameters),
 	};
 
 	return hkl_mode_auto_new(&info,
@@ -311,7 +311,7 @@ static HklMode *psi_constant(void)
 		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "psi"},
 	};
 	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes, functions, parameters),
 	};
 
 	return hkl_mode_auto_new(&info,

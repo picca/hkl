@@ -58,10 +58,11 @@ static const HklFunction reflectivity_func = {
 
 static HklMode* zaxis()
 {
-	static const char* axes[] = {"omega", "delta", "gamma"};
+	static const char *axes_r[] = {"mu", "omega", "delta", "gamma"};
+	static const char* axes_w[] = {"omega", "delta", "gamma"};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO(__func__, axes, functions),
+		HKL_MODE_AUTO_INFO(__func__, axes_r, axes_w, functions),
 	};
 
 	return hkl_mode_auto_new(&info,
@@ -74,7 +75,7 @@ static HklMode* reflectivity()
 	static const char* axes[] = {"mu", "omega", "delta", "gamma"};
 	static const HklFunction *functions[] = {&reflectivity_func};
 	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO(__func__, axes, functions),
+		HKL_MODE_AUTO_INFO(__func__, axes, axes, functions),
 	};
 
 	return hkl_mode_auto_new(&info,

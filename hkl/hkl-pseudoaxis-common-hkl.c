@@ -107,7 +107,7 @@ static int fit_detector_function(const gsl_vector *x, void *params, gsl_vector *
 static int fit_detector_position(HklMode *mode, HklGeometry *geometry,
 				 HklDetector *detector, HklVector *kf)
 {
-	size_t i;
+	const char **axis_name;
 	HklDetectorFit params;
 	gsl_multiroot_fsolver_type const *T;
 	gsl_multiroot_fsolver *s;
@@ -131,11 +131,11 @@ static int fit_detector_position(HklMode *mode, HklGeometry *geometry,
 	params.axes = malloc(sizeof(*params.axes) * detector_holder->config->len);
 	params.len = 0;
 	/* for each axis of the mode */
-	for(i=0; i<mode->info->n_axes; ++i){
+	darray_foreach(axis_name, mode->info->axes_w){
 		size_t k;
 		size_t tmp;
 
-		tmp = hkl_geometry_get_axis_idx_by_name(params.geometry, mode->info->axes[i]);
+		tmp = hkl_geometry_get_axis_idx_by_name(params.geometry, *axis_name);
 		/* check that this axis is in the detector's holder */
 		for(k=0; k<detector_holder->config->len; ++k)
 			if(tmp == detector_holder->config->idx[k]){
@@ -157,6 +157,8 @@ static int fit_detector_position(HklMode *mode, HklGeometry *geometry,
 	/* if no detector axis found ???? abort */
 	/* maybe put this at the begining of the method */
 	if (params.len > 0){
+		size_t i;
+
 		/* now solve the system */
 		/* Initialize method  */
 		T = gsl_multiroot_fsolver_hybrid;
@@ -227,22 +229,22 @@ static int fit_detector_position(HklMode *mode, HklGeometry *geometry,
 /* BEWARE, NOT the axis index in the geometry->axes */
 /* which is part of the axes_names of the mode */
 /* return -1 if there is no axes of the mode in the sample part of the geometry */
-static int get_last_axis_idx(HklGeometry *geometry, int holder_idx, char const **axes_names, int len)
+static int get_last_axis_idx(HklGeometry *geometry, int holder_idx, const darray_string *axes)
 {
 	int last = -1;
-	int i;
+	const char **axis_name;
 	HklHolder *holder;
 
 	holder = darray_item(geometry->holders, holder_idx);
-	for(i=0; i<len; ++i){
-		size_t j;
+	darray_foreach(axis_name, *axes){
+		size_t i;
 		size_t idx;
 
 		/* FIXME for now the sample holder is the first one */
-		idx = hkl_geometry_get_axis_idx_by_name(geometry, axes_names[i]);
-		for(j=0; j<holder->config->len; ++j)
-			if(idx == holder->config->idx[j]){
-				last = last > (int)j ? last : (int)j;
+		idx = hkl_geometry_get_axis_idx_by_name(geometry, *axis_name);
+		for(i=0; i<holder->config->len; ++i)
+			if(idx == holder->config->idx[i]){
+				last = last > (int)i ? last : (int)i;
 				break;
 			}
 	}
@@ -372,7 +374,7 @@ int hkl_mode_set_hkl_real(HklMode *self,
 
 	/* check that the mode allow to move a sample axis */
 	/* FIXME for now the sample holder is the first one */
-	last_axis = get_last_axis_idx(geometry, 0, self->info->axes, self->info->n_axes);
+	last_axis = get_last_axis_idx(geometry, 0, &self->info->axes_w);
 	if(last_axis >= 0){
 		uint i;
 		const HklGeometryListItem *item;

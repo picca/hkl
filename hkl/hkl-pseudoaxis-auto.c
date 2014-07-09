@@ -121,7 +121,7 @@ static int find_first_geometry(HklEngine *self,
 	gsl_multiroot_fsolver_type const *T;
 	gsl_multiroot_fsolver *s;
 	gsl_vector *x;
-	size_t len = self->mode->info->n_axes;
+	size_t len = darray_size(self->mode->info->axes_w);
 	double *x_data;
 	double *x_data0 = alloca(len * sizeof(*x_data0));
 	size_t iter = 0;
@@ -369,8 +369,9 @@ static int solve_function(HklEngine *self,
 /* check that the number of axis of the mode is the right number of variables expected by mode functions */
 static inline void check_validity(const HklModeAutoInfo *auto_info)
 {
-	for(uint i=0; i<auto_info->n_functions; ++i)
-		hkl_assert(auto_info->functions[i]->size == auto_info->info.n_axes);
+	const HklFunction **function;
+	darray_foreach(function, auto_info->functions)
+		hkl_assert((*function)->size == darray_size(auto_info->info.axes_w));
 }
 
 HklMode *hkl_mode_auto_new(const HklModeAutoInfo *auto_info,
@@ -401,9 +402,9 @@ int hkl_mode_auto_set_real(HklMode *self,
 			   HklSample *sample,
 			   GError **error)
 {
-	size_t i;
 	int ok = FALSE;
 	HklModeAutoInfo *auto_info = container_of(self->info, HklModeAutoInfo, info);
+	const HklFunction **function;
 
 	hkl_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
@@ -415,8 +416,8 @@ int hkl_mode_auto_set_real(HklMode *self,
 		return FALSE;
 	}
 
-	for(i=0;i<auto_info->n_functions;++i)
-		ok |= solve_function(engine, auto_info->functions[i]);
+	darray_foreach(function, auto_info->functions)
+		ok |= solve_function(engine, *function);
 
 	if(!ok){
 		g_set_error(error,

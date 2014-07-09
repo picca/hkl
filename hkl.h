@@ -437,7 +437,14 @@ HKLAPI const char *hkl_engine_current_mode_get(const HklEngine *self) HKL_ARG_NO
 
 HKLAPI int hkl_engine_current_mode_set(HklEngine *self, const char *mode, GError **error) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI darray_string *hkl_engine_axes_names_get(const HklEngine *self) HKL_ARG_NONNULL(1);
+typedef enum _HklEngineAxesNamesGet
+{
+	HKL_ENGINE_AXES_NAMES_GET_READ,
+	HKL_ENGINE_AXES_NAMES_GET_WRITE,
+} HklEngineAxesNamesGet;
+
+HKLAPI const darray_string *hkl_engine_axes_names_get(const HklEngine *self,
+						      HklEngineAxesNamesGet mode) HKL_ARG_NONNULL(1);
 
 HKLAPI const darray_string *hkl_engine_parameters_names_get(const HklEngine *self) HKL_ARG_NONNULL(1);
 

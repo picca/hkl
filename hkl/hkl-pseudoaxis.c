@@ -53,6 +53,7 @@ void hkl_mode_fprintf(FILE *f, const HklMode *self)
 {
 	unsigned int i;
 	HklParameter **parameter;
+	const char **axis;
 
 	fprintf(f, "mode: \"%s\"\n", self->info->name);
 	fprintf(f, "initialized_get: %p\n", self->ops->initialized_get);
@@ -65,12 +66,15 @@ void hkl_mode_fprintf(FILE *f, const HklMode *self)
 		hkl_parameter_fprintf(f, *parameter);
 	}
 
-	if(self->info->axes){
-		fprintf(f, "axes names:");
-		for(i=0; i<self->info->n_axes; ++i)
-			fprintf(f, " %s", self->info->axes[i]);
-		fprintf(f, "\n");
-	}
+	fprintf(f, "axes (read) names:");
+	darray_foreach(axis, self->info->axes_r)
+		fprintf(f, " %s", *axis);
+	fprintf(f, "\n");
+
+	fprintf(f, "axes (write) names:");
+	darray_foreach(axis, self->info->axes_w)
+		fprintf(f, " %s", *axis);
+	fprintf(f, "\n");
 }
 
 /*************/
@@ -464,7 +468,7 @@ const char *hkl_engine_current_mode_get(const HklEngine *self)
  * return value: TRUE if succeded or FALSE otherwise.
  **/
 int hkl_engine_current_mode_set(HklEngine *self, const char *name,
-			   GError **error)
+				GError **error)
 {
 	HklMode **mode;
 
@@ -483,6 +487,31 @@ int hkl_engine_current_mode_set(HklEngine *self, const char *name,
 		    name);
 
 	return FALSE;
+}
+
+/**
+ * hkl_engine_axes_names_get:
+ * @self: the this ptr
+ * @mode: 
+ *
+ * return a list of axes relevant when reading or writing on the
+ * #HklEngine.
+ *
+ * exemple, for a K6C diffractometer in "lifting detector" mode, your
+ * Engine control only 3 motors when writing, but the hkl values
+ * depends on the 6 motors when reading.
+ *
+ * Returns: (type gpointer): 
+ **/
+const darray_string *hkl_engine_axes_names_get(const HklEngine *self,
+					       HklEngineAxesNamesGet mode)
+{
+	switch(mode){
+	case HKL_ENGINE_AXES_NAMES_GET_READ:
+		return &self->mode->info->axes_r;
+	case HKL_ENGINE_AXES_NAMES_GET_WRITE:
+		return &self->mode->info->axes_w;
+	}
 }
 
 int hkl_engine_initialized_get(const HklEngine *self)

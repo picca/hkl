@@ -111,16 +111,15 @@ static inline HklParameter *hkl_parameter_new_pseudo_axis(const HklParameter *pa
 
 struct _HklModeInfo {
 	const char *name;
-	const char **axes;
-	uint n_axes;
-	const HklParameter *parameters;
-	uint n_parameters;
+	const darray_string axes_r;
+	const darray_string axes_w;
+	const darray(const HklParameter) parameters;
 };
 
-#define HKL_MODE_INFO(_name, _axes) .name=_name, .axes=_axes, .n_axes=ARRAY_SIZE(_axes)
+#define HKL_MODE_INFO(_name, _axes_r, _axes_w) .name=_name, .axes_r=DARRAY(_axes_r), .axes_w=DARRAY(_axes_w)
 
-#define HKL_MODE_INFO_WITH_PARAMS(_name, _axes, _parameters) \
-	HKL_MODE_INFO(_name, _axes), .parameters=_parameters, .n_parameters=ARRAY_SIZE(_parameters)
+#define HKL_MODE_INFO_WITH_PARAMS(_name, _axes_r, _axes_w, _parameters)	\
+	HKL_MODE_INFO(_name, _axes_r, _axes_w), .parameters=DARRAY(_parameters)
 
 struct _HklModeOperations
 {
@@ -252,6 +251,7 @@ static inline int hkl_mode_init(HklMode *self,
 				int initialized)
 {
 	size_t i;
+	const HklParameter *parameter;
 
 	/* ensure part */
 	if (!self)
@@ -263,11 +263,8 @@ static inline int hkl_mode_init(HklMode *self,
 	/* parameters */
 	darray_init(self->parameters);
 	darray_init(self->parameters_names);
-	for(i=0; i<self->info->n_parameters; ++i){
-		HklParameter *parameter;
-
-		parameter = hkl_parameter_new_copy(&self->info->parameters[i]);
-		darray_append(self->parameters, parameter);
+	darray_foreach(parameter, self->info->parameters){
+		darray_append(self->parameters, hkl_parameter_new_copy(parameter));
 		darray_append(self->parameters_names, parameter->name);
 	}
 
@@ -528,14 +525,13 @@ static inline void hkl_engine_prepare_internal(HklEngine *self)
 
 	/* fill the axes member from the function */
 	if(self->mode){
+		const char **axis_name;
+
 		darray_free(self->axes);
 		darray_init(self->axes);
-		for(i=0; i<self->mode->info->n_axes; ++i){
-			HklParameter *axis;
-
-			axis = hkl_geometry_get_axis_by_name(self->geometry,
-							     self->mode->info->axes[i]);
-
+		darray_foreach(axis_name, self->mode->info->axes_w){
+			HklParameter *axis = hkl_geometry_get_axis_by_name(self->geometry,
+									   *axis_name);
 			darray_append(self->axes, axis);
 		}
 	}

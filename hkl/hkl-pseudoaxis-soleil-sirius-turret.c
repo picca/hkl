@@ -30,10 +30,11 @@
 
 static HklMode* lifting_detector_thetah()
 {
-	static const char* axes[] = {"thetah", "delta", "gamma"};
+	static const char *axes_r[] = {"thetah", "alphay", "alphax", "delta", "gamma"};
+	static const char* axes_w[] = {"thetah", "delta", "gamma"};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO(__func__, axes, functions),
+		HKL_MODE_AUTO_INFO(__func__, axes_r, axes_w, functions),
 	};
 
 	return hkl_mode_auto_new(&info,

@@ -75,6 +75,8 @@
 
 #define hkl_return_val_if_fail(expr, val) if (expr) { } else return val
 
+#define DARRAY(_items) {.item=_items, .size=ARRAY_SIZE(_items), .alloc=ARRAY_SIZE(_items)}
+
 G_BEGIN_DECLS
 
 extern void hkl_printbt(void);

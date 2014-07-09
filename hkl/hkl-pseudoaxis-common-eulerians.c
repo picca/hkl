@@ -173,7 +173,7 @@ static HklMode *mode_eulerians()
 		{HKL_PARAMETER_DEFAULTS, .name="solutions", .range = {.max = 1}, ._value = 1,},
 	};
 	static const HklModeInfo info = {
-		HKL_MODE_INFO_WITH_PARAMS("eulerians", axes, parameters),
+		HKL_MODE_INFO_WITH_PARAMS("eulerians", axes, axes, parameters),
 	};
 	static const HklModeOperations operations = {
 		HKL_MODE_OPERATIONS_DEFAULTS,

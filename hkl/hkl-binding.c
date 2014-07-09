@@ -192,6 +192,27 @@ const char **hkl_engine_parameters_names_get_binding(const HklEngine *self, size
 }
 
 /**
+ * hkl_engine_axes_names_get_binding:
+ * @self: the this ptr
+ * @mode: the #HklEngineAxesNamesGet
+ * @length: (out caller-allocates): return the length of the returned array.
+ *
+ * Rename to: hkl_engine_axes_names_get
+ *
+ * Return value: (array length=length) (transfer none): axes of the #HklEngine for the given mode.
+ **/
+const char **hkl_engine_axes_names_get_binding(const HklEngine *self,
+					       HklEngineAxesNamesGet mode,
+					       size_t *length)
+{
+	const darray_string *axes = hkl_engine_axes_names_get(self, mode);
+
+	*length = darray_size(*axes);
+
+	return &darray_item(*axes, 0);
+}
+
+/**
  * hkl_engine_pseudo_axes_values_get_binding:
  * @self: the this ptr
  * @len: (out caller-allocates): the length of the returned array

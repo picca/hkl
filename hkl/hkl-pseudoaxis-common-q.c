@@ -114,7 +114,7 @@ static HklMode *mode_q(void)
 	static const char *axes[] = {"tth"};
 	static const HklFunction *functions[] = {&q_func};
 	static HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO("q", axes, functions),
+		HKL_MODE_AUTO_INFO("q", axes, axes, functions),
 	};
 	static const HklModeOperations operations = {
 		HKL_MODE_OPERATIONS_AUTO_DEFAULTS,
@@ -237,7 +237,7 @@ static HklMode *mode_q2(void)
 	static const char* axes[] = {"gamma", "delta"};
 	static const HklFunction *functions[] = {&q2_func};
 	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO("q2", axes, functions),
+		HKL_MODE_AUTO_INFO("q2", axes, axes, functions),
 	};
 	static const HklModeOperations operations = {
 		HKL_MODE_OPERATIONS_AUTO_DEFAULTS,
@@ -398,7 +398,7 @@ static HklMode *mode_qper_qpar(void)
 		{HKL_PARAMETER_DEFAULTS, .name = "z", .range = {.min=-1, .max=1}, ._value = 0,},
 	};
 	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO_WITH_PARAMS("qper_qpar", axes, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS("qper_qpar", axes, axes, functions, parameters),
 	};
 	static const HklModeOperations operations = {
 		HKL_MODE_OPERATIONS_AUTO_DEFAULTS,

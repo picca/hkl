@@ -257,7 +257,7 @@ HklMode *hkl_mode_psi_new(const HklModeAutoInfo *auto_info)
 	};
 	HklModePsi *self;
 
-	if (auto_info->info.n_axes != 4){
+	if (darray_size(auto_info->info.axes_w) != 4){
 		fprintf(stderr, "This generic HklModePsi need exactly 4 axes");
 		exit(128);
 	}

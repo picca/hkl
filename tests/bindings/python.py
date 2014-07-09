@@ -154,12 +154,16 @@ class TestAPI(unittest.TestCase):
             for value in values:
                 self.assertTrue(type(value) is float)
 
-        # check that all engine parameters are reachables
+        # check that all engine parameters and axes are reachables
         for engine in engines.engines_get():
             for mode in engine.modes_names_get():
                 engine.current_mode_set(mode)
                 parameters = engine.parameters_names_get()
                 self.assertTrue(type(parameters) is list)
+                axes_r = engine.axes_names_get(Hkl.EngineAxesNamesGet.READ)
+                self.assertTrue(type(axes_r) is list)
+                axes_w = engine.axes_names_get(Hkl.EngineAxesNamesGet.WRITE)
+                self.assertTrue(type(axes_w) is list)
 
         # check all the capabilities
         for engine in engines.engines_get():

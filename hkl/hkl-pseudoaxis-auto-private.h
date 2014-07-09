@@ -49,10 +49,11 @@ struct _HklFunction
 	int (* function) (const gsl_vector *x, void *params, gsl_vector *f);
 };
 
+typedef darray(const HklFunction*) darray_function;
+
 struct _HklModeAutoInfo {
 	const HklModeInfo info;
-	const HklFunction **functions;
-	const uint n_functions;
+	darray_function functions;
 };
 
 #define HKL_MODE_OPERATIONS_AUTO_DEFAULTS	\
@@ -65,9 +66,9 @@ struct _HklModeAutoInfo {
 				return GSL_ENOMEM;	\
 	}while(0)
 
-#define HKL_MODE_AUTO_INFO(_name, _axes, _fn) .info={HKL_MODE_INFO(_name, _axes),}, .functions=_fn, .n_functions=ARRAY_SIZE(_fn)
+#define HKL_MODE_AUTO_INFO(_name, _axes_r, _axes_w, _fn) .info={HKL_MODE_INFO(_name, _axes_r, _axes_w),}, .functions=DARRAY(_fn)
 
-#define HKL_MODE_AUTO_INFO_WITH_PARAMS(_name, _axes, _fn, _parameters) .info={HKL_MODE_INFO_WITH_PARAMS(_name, _axes, _parameters)}, .functions=_fn, .n_functions=ARRAY_SIZE(_fn)
+#define HKL_MODE_AUTO_INFO_WITH_PARAMS(_name, _axes_r, _axes_w, _fn, _parameters) .info={HKL_MODE_INFO_WITH_PARAMS(_name, _axes_r, _axes_w, _parameters)}, .functions=DARRAY(_fn)
 
 extern HklMode *hkl_mode_auto_new(const HklModeAutoInfo *auto_info,
 				  const HklModeOperations *ops,
