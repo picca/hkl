@@ -739,8 +739,7 @@ HklEngine *hkl_engine_hkl_new(void)
 	static const HklPseudoAxis *pseudo_axes[] = {&h, &k, &l};
 	static HklEngineInfo info = {
 		.name = "hkl",
-		.pseudo_axes = pseudo_axes,
-		.n_pseudo_axes = ARRAY_SIZE(pseudo_axes),
+		.pseudo_axes = DARRAY(pseudo_axes),
 	};
 	static HklEngineOperations operations = {
 		HKL_ENGINE_OPERATIONS_DEFAULTS,

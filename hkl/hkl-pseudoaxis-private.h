@@ -306,8 +306,7 @@ static inline void hkl_mode_free(HklMode *self)
 
 struct _HklEngineInfo {
 	const char *name;
-	const HklPseudoAxis **pseudo_axes;
-	uint n_pseudo_axes;
+	const darray(const HklPseudoAxis *) pseudo_axes;
 };
 
 

@@ -100,7 +100,7 @@ const char *hkl_engine_name_get(const HklEngine *self)
  **/
 unsigned int hkl_engine_len(const HklEngine *self)
 {
-	return self->info->n_pseudo_axes;
+	return darray_size(self->info->pseudo_axes);
 }
 
 /**
@@ -131,12 +131,12 @@ int hkl_engine_pseudo_axes_values_get(HklEngine *self,
 {
 	g_return_val_if_fail(error == NULL ||*error == NULL, FALSE);
 
-	if(n_values != self->info->n_pseudo_axes){
+	if(n_values != darray_size(self->info->pseudo_axes)){
 		g_set_error(error,
 			    HKL_ENGINE_ERROR,
 			    HKL_ENGINE_ERROR_PSEUDO_AXES_VALUES_GET,
 			    "cannot get engine pseudo axes, wrong number of parameter (%d) given, (%d) expected\n",
-			    n_values, self->info->n_pseudo_axes);
+			    n_values, darray_size(self->info->pseudo_axes));
 		return FALSE;
 	}
 
@@ -172,12 +172,12 @@ HklGeometryList *hkl_engine_pseudo_axes_values_set(HklEngine *self,
 {
 	g_return_val_if_fail(error == NULL ||*error == NULL, NULL);
 
-	if(n_values != self->info->n_pseudo_axes){
+	if(n_values != darray_size(self->info->pseudo_axes)){
 		g_set_error(error,
 			    HKL_ENGINE_ERROR,
 			    HKL_ENGINE_ERROR_PSEUDO_AXES_VALUES_SET,
 			    "cannot set engine pseudo axes, wrong number of parameter (%d) given, (%d) expected\n",
-			    n_values, self->info->n_pseudo_axes);
+			    n_values,  darray_size(self->info->pseudo_axes));
 		return NULL;
 	}
 

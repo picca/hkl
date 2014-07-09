@@ -143,7 +143,6 @@ static int hkl_mode_set_eulerians_real(HklMode *self,
 				       GError **error)
 {
 	double solution;
-	uint n_values = engine->info->n_pseudo_axes;
 	HklEngineEulerians *engine_eulerians;
 	double angles[3];
 
@@ -213,8 +212,7 @@ HklEngine *hkl_engine_eulerians_new(void)
 	static const HklPseudoAxis *pseudo_axes[] = {&omega, &chi, &phi};
 	static HklEngineInfo info = {
 		.name = "eulerians",
-		.pseudo_axes = pseudo_axes,
-		.n_pseudo_axes = ARRAY_SIZE(pseudo_axes),
+		.pseudo_axes = DARRAY(pseudo_axes),
 	};
 	static HklEngineOperations operations = {
 		HKL_ENGINE_OPERATIONS_DEFAULTS,

@@ -138,8 +138,7 @@ HklEngine *hkl_engine_q_new(void)
 	static const HklPseudoAxis *pseudo_axes[] = {&q};
 	static const HklEngineInfo info = {
 		.name = "q",
-		.pseudo_axes = pseudo_axes,
-		.n_pseudo_axes = ARRAY_SIZE(pseudo_axes),
+		.pseudo_axes = DARRAY(pseudo_axes),
 	};
 	static const HklEngineOperations operations = {
 		HKL_ENGINE_OPERATIONS_DEFAULTS,
@@ -265,8 +264,7 @@ HklEngine *hkl_engine_q2_new(void)
 	static const HklPseudoAxis *pseudo_axes[] = {&q, &alpha};
 	static const HklEngineInfo info = {
 		.name = "q2",
-		.pseudo_axes = pseudo_axes,
-		.n_pseudo_axes = ARRAY_SIZE(pseudo_axes),
+		.pseudo_axes = DARRAY(pseudo_axes),
 	};
 	static const HklEngineOperations operations = {
 		HKL_ENGINE_OPERATIONS_DEFAULTS,
@@ -426,8 +424,7 @@ HklEngine *hkl_engine_qper_qpar_new(void)
 	static const HklPseudoAxis *pseudo_axes[] = {&qper, &qpar};
 	static const HklEngineInfo info = {
 		.name = "qper_qpar",
-		.pseudo_axes = pseudo_axes,
-		.n_pseudo_axes = ARRAY_SIZE(pseudo_axes),
+		.pseudo_axes = DARRAY(pseudo_axes),
 	};
 	static const HklEngineOperations operations = {
 		HKL_ENGINE_OPERATIONS_DEFAULTS,
