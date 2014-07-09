@@ -165,13 +165,15 @@ typedef enum _HklDetectorType
 	HKL_DETECTOR_TYPE_0D
 } HklDetectorType;
 
+HKLAPI HklDetector *hkl_detector_factory_new(HklDetectorType type);
+
+HKLAPI HklDetector *hkl_detector_new_copy(const HklDetector *src) HKL_ARG_NONNULL(1);
+
 HKLAPI void hkl_detector_free(HklDetector *self) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_detector_idx_set(HklDetector *self, int idx) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_detector_fprintf(FILE *f, const HklDetector *self) HKL_ARG_NONNULL(1, 2);
-
-HKLAPI HklDetector *hkl_detector_factory_new(HklDetectorType type);
 
 /************/
 /* Geometry */

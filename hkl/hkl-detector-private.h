@@ -37,8 +37,6 @@ struct _HklDetector
 
 extern HklDetector *hkl_detector_new(void);
 
-extern HklDetector *hkl_detector_new_copy(HklDetector const *src) HKL_ARG_NONNULL(1);
-
 extern void hkl_detector_attach_to_holder(HklDetector *self,
 					  HklHolder const *holder) HKL_ARG_NONNULL(1, 2);
 
