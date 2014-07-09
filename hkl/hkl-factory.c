@@ -70,7 +70,7 @@ HklFactory *hkl_factory_get_by_name(const char *name, GError **error)
 	return NULL;
 }
 
-const char *hkl_factory_name(const HklFactory *self)
+const char *hkl_factory_name_get(const HklFactory *self)
 {
 	return self->name;
 }

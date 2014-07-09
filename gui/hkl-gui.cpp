@@ -347,7 +347,7 @@ void HKLWindow::set_up_diffractometer_model(void)
 		Gtk::ListStore::Row row;
 
 		row = *(_diffractometerModel->append());
-		row[_diffractometerModelColumns->name] = hkl_factory_name(factories[i]);
+		row[_diffractometerModelColumns->name] = hkl_factory_name_get(factories[i]);
 	}
 }
 

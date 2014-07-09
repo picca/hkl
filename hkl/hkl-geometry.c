@@ -481,7 +481,7 @@ void hkl_geometry_update(HklGeometry *self)
 
 const char *hkl_geometry_name_get(const HklGeometry *self)
 {
-	return hkl_factory_name(self->factory);
+	return hkl_factory_name_get(self->factory);
 }
 
 /**

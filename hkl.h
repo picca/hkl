@@ -522,7 +522,7 @@ HKLAPI HklFactory **hkl_factory_get_all(unsigned int *n) HKL_ARG_NONNULL(1);
 HKLAPI HklFactory *hkl_factory_get_by_name(const char *name,
 					   GError **error) HKL_ARG_NONNULL(1);
 
-HKLAPI const char *hkl_factory_name(const HklFactory *self) HKL_ARG_NONNULL(1);
+HKLAPI const char *hkl_factory_name_get(const HklFactory *self) HKL_ARG_NONNULL(1);
 
 HKLAPI const char **hkl_factory_axes_names_get(const HklFactory *self,
 					       size_t *length) HKL_ARG_NONNULL(1, 2);

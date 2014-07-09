@@ -55,7 +55,7 @@ GHashTable *hkl_factories(void)
 	factories = autodata_get(factories, &n);
 	for(i=0; i<n; ++i){
 		g_hash_table_insert(table,
-				    (gpointer)hkl_factory_name(factories[i]),
+				    (gpointer)hkl_factory_name_get(factories[i]),
 				    factories[i]);
 	}
 
