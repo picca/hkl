@@ -98,8 +98,6 @@ extern HklParameter *hkl_holder_add_rotation_axis(HklHolder *self,
 
 extern HklGeometry *hkl_geometry_new(const HklFactory *factory);
 
-extern HklGeometry *hkl_geometry_new_copy(const HklGeometry *self);
-
 extern int hkl_geometry_init_geometry(HklGeometry *self,
 				      const HklGeometry *src);
 

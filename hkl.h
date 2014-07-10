@@ -185,6 +185,8 @@ typedef struct _HklGeometryListItem HklGeometryListItem;
 
 /* HklGeometry */
 
+HKLAPI HklGeometry *hkl_geometry_new_copy(const HklGeometry *self) HKL_ARG_NONNULL(1);
+
 HKLAPI void hkl_geometry_free(HklGeometry *self) HKL_ARG_NONNULL(1);
 
 HKLAPI int hkl_geometry_set(HklGeometry *self, const HklGeometry *src) HKL_ARG_NONNULL(1, 2);
