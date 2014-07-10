@@ -686,41 +686,6 @@ HklEngine *hkl_engine_list_engine_get_by_name(HklEngineList *self,
 }
 
 /**
- * hkl_engine_list_pseudo_axis_get_by_name:
- * @self: the engine list
- * @name: the name of the requested #HklPseudoAxis
- * @error: return location for a GError, or NULL
- *
- * Todo: test
- *
- * Returns: (transfer none) (allow-none): the requested #HklPseudoAxis
- **/
-HklParameter *hkl_engine_list_pseudo_axis_get_by_name(
-	const HklEngineList *self, const char *name,
-	GError **error)
-{
-	HklEngine **engine;
-	HklParameter **parameter;
-
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
-
-	darray_foreach(engine, *self){
-		darray_foreach(parameter, (*engine)->pseudo_axes){
-			if (!strcmp((*parameter)->name, name))
-				return *parameter;
-		}
-	}
-
-	g_set_error(error,
-		    HKL_ENGINE_LIST_ERROR,
-		    HKL_ENGINE_LIST_ERROR_ENGINE_GET_BY_NAME,
-		    "this engine list does not contain this pseudo axis \"%s\"",
-		    name);
-
-	return NULL;
-}
-
-/**
  * hkl_engine_list_init:
  * @self: the engine list
  * @geometry: the associated #HklGeometry

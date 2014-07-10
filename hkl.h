@@ -500,10 +500,6 @@ HKLAPI HklEngine *hkl_engine_list_engine_get_by_name(HklEngineList *self,
 						     const char *name,
 						     GError **error) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI HklParameter *hkl_engine_list_pseudo_axis_get_by_name(const HklEngineList *self,
-							     const char *name,
-							     GError **error) HKL_ARG_NONNULL(1, 2);
-
 HKLAPI void hkl_engine_list_init(HklEngineList *self,
 				 HklGeometry *geometry,
 				 HklDetector *detector,
