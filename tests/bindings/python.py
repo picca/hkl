@@ -110,10 +110,7 @@ class TestAPI(unittest.TestCase):
 
         sample = Hkl.Sample.new("toto")
         lattice = sample.lattice_get()
-        lattice.set(1.54, 1.54, 1.54,
-                    math.radians(90.0),
-                    math.radians(90.0),
-                    math.radians(90.0))
+        lattice.set(1.54, 1.54, 1.54, 90, 90, 90, Hkl.UnitEnum.USER)
         sample.lattice_set(lattice)
 
         # compute all the pseudo axes managed by all engines
@@ -132,7 +129,8 @@ class TestAPI(unittest.TestCase):
         # set the hkl engine and get the results
         for _ in range(100):
             try:
-                solutions = hkl.pseudo_axes_values_set(values, Hkl.UnitEnum.USER)
+                solutions = hkl.pseudo_axes_values_set(values,
+                                                       Hkl.UnitEnum.USER)
                 self.assertTrue(type(solutions) is Hkl.GeometryList)
                 for item in solutions.items():
                     self.assertTrue(type(item) is Hkl.GeometryListItem)
@@ -218,19 +216,19 @@ class TestAPI(unittest.TestCase):
 
         # change the lattice parameter by expanding the tuple from
         # the get method. the lattice should not change.
-        lattice.set(*lattice.get())
+        a, b, c, alpha, beta, gamma = lattice.get(Hkl.UnitEnum.DEFAULT)
+        lattice.set(a, b, c, alpha, beta, gamma, Hkl.UnitEnum.DEFAULT)
 
         # this new lattice is identical to the one from the sample
-        self.assertTrue(lattice.get() == sample.lattice_get().get())
+        v = lattice.get(Hkl.UnitEnum.DEFAULT)
+        self.assertTrue(v == sample.lattice_get().get(Hkl.UnitEnum.DEFAULT))
 
         # now change the lattice parameter
-        lattice.set(1, 2, 3,
-                    math.radians(90),
-                    math.radians(90),
-                    math.radians(90))
+        lattice.set(1, 2, 3, 90, 90, 90, Hkl.UnitEnum.USER)
 
         # this new lattice is different from the one in the sample
-        self.assertTrue(lattice.get() != sample.lattice_get().get())
+        v = lattice.get(Hkl.UnitEnum.DEFAULT)
+        self.assertTrue(v != sample.lattice_get().get(Hkl.UnitEnum.DEFAULT))
 
         # gives access to the ux, uy, uz part
         ux = sample.ux_get()

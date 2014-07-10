@@ -32,6 +32,16 @@
 
 /* private */
 
+static double convert_to_default(const HklParameter *p, double value, HklUnitEnum unit_type)
+{
+	switch(unit_type){
+	case HKL_UNIT_DEFAULT:
+		return value;
+	case HKL_UNIT_USER:
+		return value / hkl_unit_factor(p->unit, p->punit);
+	}
+}
+
 static int check_lattice_param(double a, double b, double c,
 			       double alpha, double beta, double gamma,
 			       GError **error)
@@ -351,22 +361,32 @@ void hkl_lattice_lattice_set(HklLattice *self, const HklLattice *lattice)
 int hkl_lattice_set(HklLattice *self,
 		    double a, double b, double c,
 		    double alpha, double beta, double gamma,
-		    GError **error)
+		    HklUnitEnum unit_type, GError **error)
 {
 	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
-	if(!check_lattice_param(a, b, c, alpha, beta, gamma, error)){
+	double _a, _b, _c, _alpha, _beta, _gamma;
+
+	_a = convert_to_default(self->a, a, unit_type);
+	_b = convert_to_default(self->b, b, unit_type);
+	_c = convert_to_default(self->c, c, unit_type);
+	_alpha = convert_to_default(self->alpha, alpha, unit_type);
+	_beta = convert_to_default(self->beta, beta, unit_type);
+	_gamma = convert_to_default(self->gamma, gamma, unit_type);
+
+	/* need to do the conversion before the check */
+	if(!check_lattice_param(_a, _b, _c, _alpha, _beta, _gamma, error)){
 		g_assert (error == NULL || *error != NULL);
 		return FALSE;
 	}
 	g_assert (error == NULL || *error == NULL);
 
-	hkl_parameter_value_set(self->a, a, HKL_UNIT_DEFAULT, NULL);
-	hkl_parameter_value_set(self->b, b, HKL_UNIT_DEFAULT, NULL);
-	hkl_parameter_value_set(self->c, c, HKL_UNIT_DEFAULT, NULL);
-	hkl_parameter_value_set(self->alpha, alpha, HKL_UNIT_DEFAULT, NULL);
-	hkl_parameter_value_set(self->beta, beta, HKL_UNIT_DEFAULT, NULL);
-	hkl_parameter_value_set(self->gamma, gamma, HKL_UNIT_DEFAULT, NULL);
+	hkl_parameter_value_set(self->a, _a, HKL_UNIT_DEFAULT, NULL);
+	hkl_parameter_value_set(self->b, _b, HKL_UNIT_DEFAULT, NULL);
+	hkl_parameter_value_set(self->c, _c, HKL_UNIT_DEFAULT, NULL);
+	hkl_parameter_value_set(self->alpha, _alpha, HKL_UNIT_DEFAULT, NULL);
+	hkl_parameter_value_set(self->beta, _beta, HKL_UNIT_DEFAULT, NULL);
+	hkl_parameter_value_set(self->gamma, _gamma, HKL_UNIT_DEFAULT, NULL);
 
 	return TRUE;
 }
@@ -386,14 +406,15 @@ int hkl_lattice_set(HklLattice *self,
  **/
 void hkl_lattice_get(const HklLattice *self,
 		     double *a, double *b, double *c,
-		     double *alpha, double *beta, double *gamma)
+		     double *alpha, double *beta, double *gamma,
+		     HklUnitEnum unit_type)
 {
-	*a = hkl_parameter_value_get(self->a, HKL_UNIT_DEFAULT);
-	*b = hkl_parameter_value_get(self->b, HKL_UNIT_DEFAULT);
-	*c = hkl_parameter_value_get(self->c, HKL_UNIT_DEFAULT);
-	*alpha = hkl_parameter_value_get(self->alpha, HKL_UNIT_DEFAULT);
-	*beta = hkl_parameter_value_get(self->beta, HKL_UNIT_DEFAULT);
-	*gamma = hkl_parameter_value_get(self->gamma, HKL_UNIT_DEFAULT);
+	*a = hkl_parameter_value_get(self->a, unit_type);
+	*b = hkl_parameter_value_get(self->b, unit_type);
+	*c = hkl_parameter_value_get(self->c, unit_type);
+	*alpha = hkl_parameter_value_get(self->alpha, unit_type);
+	*beta = hkl_parameter_value_get(self->beta, unit_type);
+	*gamma = hkl_parameter_value_get(self->gamma, unit_type);
 }
 
 /**
@@ -556,7 +577,7 @@ int hkl_lattice_reciprocal(const HklLattice *self, HklLattice *reciprocal)
 			atan2(s_beta1, c_beta1),
 			atan2(s_beta2, c_beta2),
 			atan2(s_beta3, c_beta3),
-			NULL);
+			HKL_UNIT_DEFAULT, NULL);
 
 	return TRUE;
 }

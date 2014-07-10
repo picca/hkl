@@ -31,7 +31,8 @@ def compute_hkl_trajectories(engines, engine, hkl1=None, hkl2=None, n=100):
     trajectories = []
     for hh, kk, ll in zip(h, k, l):
         try:
-            solutions = engine.pseudo_axes_values_set([hh, kk, ll], Hkl.UnitEnum.USER)
+            solutions = engine.pseudo_axes_values_set([hh, kk, ll],
+                                                      Hkl.UnitEnum.USER)
             first_solution = solutions.items()[0]
             for i, item in enumerate(solutions.items()):
                 try:
@@ -112,11 +113,10 @@ rcParams['font.size'] = 6
 
 def main():
     sample = Hkl.Sample.new("toto")
-    lattice = sample.lattice_get()
-    lattice.set(1.54, 1.54, 1.54,
-                math.radians(90.0),
-                math.radians(90.0),
-                math.radians(90.))
+    lattice = Hkl.Lattice.new(1.54, 1.54, 1.54,
+                              math.radians(90.),
+                              math.radians(90.),
+                              math.radians(90.))
     sample.lattice_set(lattice)
 
     detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))

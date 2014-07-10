@@ -274,7 +274,7 @@ static void affine(void)
 	hkl_sample_affine(sample, NULL);
 
 	hkl_lattice_get(hkl_sample_lattice_get(sample),
-			&a, &b, &c, &alpha, &beta, &gamma);
+			&a, &b, &c, &alpha, &beta, &gamma, HKL_UNIT_DEFAULT);
 
 	ok(TRUE == hkl_matrix_cmp(m_ref, hkl_sample_U_get(sample)), __func__);
 	is_double(1.54, a, HKL_EPSILON, __func__);
@@ -414,7 +414,8 @@ static void reflection_set_geometry(void)
 
 	hkl_sample_affine(sample, NULL);
 	hkl_lattice_get(hkl_sample_lattice_get(sample),
-			&a, &b, &c, &alpha, &beta, &gamma);
+			&a, &b, &c, &alpha, &beta, &gamma,
+			HKL_UNIT_DEFAULT);
 
 	ok(TRUE == hkl_matrix_cmp(m_ref, hkl_sample_U_get(sample)), __func__);
 	is_double(1.54, a, HKL_EPSILON, __func__);

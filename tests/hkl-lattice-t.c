@@ -23,31 +23,19 @@
 #include <tap/basic.h>
 #include <tap/float.h>
 
-#define CHECK_LATTICE(lattice, a, b, c, alpha, beta, gamma) do {	\
-	is_double((a),							\
-		  hkl_parameter_value_get(hkl_lattice_a_get((lattice)),	\
+#define CHECK_PARAM(_lattice, _param, _value)				\
+	is_double(_value,						\
+		  hkl_parameter_value_get(hkl_lattice_## _param ##_get(_lattice), \
 					  HKL_UNIT_DEFAULT),		\
-		  HKL_EPSILON, __func__);				\
-	is_double((b),							\
-		  hkl_parameter_value_get(hkl_lattice_b_get((lattice)),	\
-					  HKL_UNIT_DEFAULT),		\
-		  HKL_EPSILON, __func__);				\
-	is_double((c),							\
-		  hkl_parameter_value_get(hkl_lattice_c_get((lattice)),	\
-					  HKL_UNIT_DEFAULT),		\
-		  HKL_EPSILON, __func__);				\
-	is_double((alpha),						\
-		  hkl_parameter_value_get(hkl_lattice_alpha_get((lattice)), \
-					  HKL_UNIT_DEFAULT),		\
-		  HKL_EPSILON, __func__);				\
-	is_double((beta),						\
-		  hkl_parameter_value_get(hkl_lattice_beta_get((lattice)), \
-					  HKL_UNIT_DEFAULT),		\
-		  HKL_EPSILON, __func__);				\
-	is_double((gamma),						\
-		  hkl_parameter_value_get(hkl_lattice_gamma_get((lattice)), \
-					  HKL_UNIT_DEFAULT),		\
-		  HKL_EPSILON, __func__);				\
+		  HKL_EPSILON, __func__);
+
+#define CHECK_LATTICE(_lattice, _a, _b, _c, _alpha, _beta, _gamma) do {	\
+		CHECK_PARAM(_lattice, a, _a);				\
+		CHECK_PARAM(_lattice, b, _b);				\
+		CHECK_PARAM(_lattice, c, _c);				\
+		CHECK_PARAM(_lattice, alpha, _alpha);			\
+		CHECK_PARAM(_lattice, beta, _beta);			\
+		CHECK_PARAM(_lattice, gamma, _gamma);			\
 	}while(0)
 
 static void new(void)
@@ -125,12 +113,18 @@ static void set(void)
 	hkl_lattice_set(lattice,
 			1.54, 1.54, 1.54,
 			90*HKL_DEGTORAD, 91*HKL_DEGTORAD, 92*HKL_DEGTORAD,
-			NULL);
+			HKL_UNIT_DEFAULT, NULL);
 
 	CHECK_LATTICE(lattice,
 		      1.54, 1.54, 1.54,
 		      90*HKL_DEGTORAD, 91*HKL_DEGTORAD, 92*HKL_DEGTORAD);
 
+	hkl_lattice_set(lattice, 1.54, 1.54, 1.54, 90, 91, 92,
+			HKL_UNIT_USER, NULL);
+
+	CHECK_LATTICE(lattice,
+		      1.54, 1.54, 1.54,
+		      90*HKL_DEGTORAD, 91*HKL_DEGTORAD, 92*HKL_DEGTORAD);
 	hkl_lattice_free(lattice);
 }
 
@@ -145,7 +139,7 @@ static void  reciprocal(void )
 	/* cubic */
 	hkl_lattice_set(lattice, 1.54, 1.54, 1.54,
 			90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD,
-			NULL);
+			HKL_UNIT_DEFAULT, NULL);
 
 	ok(TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
 
@@ -156,7 +150,8 @@ static void  reciprocal(void )
 	/* orthorombic */
 	hkl_lattice_set(lattice,
 			1., 3., 4.,
-			90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD, NULL);
+			90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD,
+			HKL_UNIT_DEFAULT, NULL);
 	ok(TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
 
 	CHECK_LATTICE(reciprocal,
@@ -166,7 +161,8 @@ static void  reciprocal(void )
 	/* hexagonal1 */
 	hkl_lattice_set(lattice,
 			1., 2., 1.,
-			90 * HKL_DEGTORAD, 120 * HKL_DEGTORAD, 90 * HKL_DEGTORAD, NULL);
+			90 * HKL_DEGTORAD, 120 * HKL_DEGTORAD, 90 * HKL_DEGTORAD,
+			HKL_UNIT_DEFAULT, NULL);
 	ok(TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
 
 	CHECK_LATTICE(reciprocal,
@@ -174,7 +170,9 @@ static void  reciprocal(void )
 		      90. * HKL_DEGTORAD, 60. * HKL_DEGTORAD, 90. * HKL_DEGTORAD);
 
 	/* hexagonal2 */
-	hkl_lattice_set(lattice, 2., 1., 1., 120 * HKL_DEGTORAD, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD, NULL);
+	hkl_lattice_set(lattice, 2., 1., 1.,
+			120 * HKL_DEGTORAD, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD,
+			HKL_UNIT_DEFAULT, NULL);
 	ok(TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
 
 	CHECK_LATTICE(reciprocal,
@@ -182,7 +180,9 @@ static void  reciprocal(void )
 		      60. * HKL_DEGTORAD, 90. * HKL_DEGTORAD, 90. * HKL_DEGTORAD);
 
 	/* triclinic1 */
-	hkl_lattice_set(lattice, 9.32, 8.24, 13.78, 91.23 * HKL_DEGTORAD, 93.64 * HKL_DEGTORAD, 122.21 * HKL_DEGTORAD, NULL);
+	hkl_lattice_set(lattice, 9.32, 8.24, 13.78,
+			91.23 * HKL_DEGTORAD, 93.64 * HKL_DEGTORAD, 122.21 * HKL_DEGTORAD,
+			HKL_UNIT_DEFAULT, NULL);
 	ok(TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
 
 	CHECK_LATTICE(reciprocal,
@@ -190,7 +190,9 @@ static void  reciprocal(void )
 		      1.5052513337, 1.482101482, 1.0055896011);
 
 	/* triclinic2 */
-	hkl_lattice_set(lattice, 18.423, 18.417, 18.457, 89.99 * HKL_DEGTORAD, 89.963 * HKL_DEGTORAD, 119.99 * HKL_DEGTORAD, NULL);
+	hkl_lattice_set(lattice, 18.423, 18.417,
+			18.457, 89.99 * HKL_DEGTORAD, 89.963 * HKL_DEGTORAD, 119.99 * HKL_DEGTORAD,
+			HKL_UNIT_DEFAULT, NULL);
 	ok(TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
 
 	CHECK_LATTICE(reciprocal,
@@ -210,7 +212,9 @@ static void get_B(void )
 	HklMatrix *B = hkl_matrix_new();
 
 	/* cubic */
-	lattice = hkl_lattice_new(1.54, 1.54, 1.54, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD, NULL);
+	lattice = hkl_lattice_new(1.54, 1.54, 1.54,
+				  90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD,
+				  NULL);
 
 	hkl_lattice_get_B(lattice, B);
 	ok(TRUE == hkl_matrix_cmp(B_ref, B), __func__);
@@ -249,7 +253,7 @@ static void  get_1_B(void )
 
 int main(int argc, char** argv)
 {
-	plan(74);
+	plan(80);
 
 	new();
 	new_copy();

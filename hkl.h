@@ -293,11 +293,12 @@ HKLAPI int hkl_lattice_gamma_set(HklLattice *self, const HklParameter *parameter
 HKLAPI int hkl_lattice_set(HklLattice *self,
 			   double a, double b, double c,
 			   double alpha, double beta, double gamma,
-			   GError **error) HKL_ARG_NONNULL(1);
+			   HklUnitEnum unit_type, GError **error) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_lattice_get(const HklLattice *self,
 			    double *a, double *b, double *c,
-			    double *alpha, double *beta, double *gamma) HKL_ARG_NONNULL(1, 2, 3, 4, 5, 6, 7);
+			    double *alpha, double *beta, double *gamma,
+			    HklUnitEnum unit_type) HKL_ARG_NONNULL(1, 2, 3, 4, 5, 6, 7);
 
 HKLAPI int hkl_lattice_get_B(const HklLattice *self, HklMatrix *B) HKL_ARG_NONNULL(1, 2);
 
