@@ -94,11 +94,78 @@ static void qper_qpar(void)
 	hkl_geometry_free(geom);
 }
 
+static void med_2_3(void)
+{
+	int res = TRUE;
+	HklEngineList *engines;
+	HklEngine *hkl;
+	const HklFactory *factory;
+	const HklGeometryListItem *item;
+	HklGeometry *geometry;
+	HklGeometryList *geometries;
+	HklDetector *detector;
+	HklSample *sample;
+	HklLattice *lattice;
+	HklMatrix *U;
+	static double positions[] = {0, 1, -14.27, 99.62, 60.98, 0};
+	static double hkl_p[] = {1.95, 2, 6};
+
+	/* Wavelength 1.54980 */
+	/* Mode       mu_fixed */
+	/* Ux -90.59 Uy -9.97 Uz 176.35  */
+	/* A 4.759 B 4.759 C 12.992  */
+	/* Alpha 90 Beta 90 Gamma 120  */
+
+	factory = hkl_factory_get_by_name("SOLEIL SIXS MED2+3", NULL);
+	geometry = hkl_factory_create_new_geometry(factory);
+
+	hkl_geometry_axes_values_set(geometry,
+				     positions, ARRAY_SIZE(positions), HKL_UNIT_USER,
+				     NULL);
+	hkl_geometry_wavelength_set(geometry, 1.54980, HKL_UNIT_DEFAULT, NULL);
+
+	sample = hkl_sample_new("test");
+	lattice = hkl_lattice_new(4.759, 4.759, 12.992,
+				  90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 120*HKL_DEGTORAD,
+				  NULL);
+	hkl_sample_lattice_set(sample, lattice);
+	hkl_lattice_free(lattice);
+	U = hkl_matrix_new_euler(-90.59 * HKL_DEGTORAD,
+				 -9.97 * HKL_DEGTORAD,
+				 176.35 * HKL_DEGTORAD);
+	hkl_sample_U_set(sample, U);
+	hkl_matrix_free(U);
+
+	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
+	hkl_detector_idx_set(detector, 1);
+
+	engines = hkl_factory_create_new_engine_list(factory);
+	hkl_engine_list_init(engines, geometry, detector, sample);
+
+	hkl = hkl_engine_list_engine_get_by_name(engines, "hkl", NULL);
+	hkl_engine_current_mode_set(hkl, "mu_fixed", NULL);
+
+	/* hkl 1.95, 2, 6 (should not fail) */
+	geometries = hkl_engine_pseudo_axes_values_set(hkl,
+						       hkl_p, ARRAY_SIZE(hkl_p),
+						       HKL_UNIT_DEFAULT, NULL);
+	res &= (geometries != NULL);
+	hkl_geometry_list_free(geometries);
+
+	ok(res == TRUE, __func__);
+
+	hkl_engine_list_free(engines);
+	hkl_detector_free(detector);
+	hkl_sample_free(sample);
+	hkl_geometry_free(geometry);
+}
+
 int main(int argc, char** argv)
 {
-	plan(2);
+	plan(3);
 
 	qper_qpar();
+	med_2_3();
 
 	return 0;
 }

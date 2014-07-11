@@ -38,6 +38,8 @@
 #include "hkl/ccan/container_of/container_of.h"  // for container_of
 #include "hkl/ccan/darray/darray.h"     // for darray_item
 
+/* #define DEBUG */
+
 /*********************/
 /* MED 2+2 HklEngine */
 /*********************/
@@ -214,17 +216,17 @@ static int fit_slits_orientation(HklSlitsFit *params)
 
 #ifdef DEBUG
 	fprintf(stdout, "\n  fitting the detector position using thoses axes :");
-	for(i=0; i<params.len; ++i)
-		fprintf(stdout, " \"%s\"", ((HklParameter *)params.axes[i])->name);
+	for(i=0; i<params->len; ++i)
+		fprintf(stdout, " \"%s\"", params->axis->name);
 	fprintf(stdout, " status : %d iter : %d", status, iter);
 	fprintf(stdout, " x: [");
-	for(i=0; i<params.len; ++i)
+	for(i=0; i<params->len; ++i)
 		fprintf(stdout, " %.7f", s->x->data[i]);
 	fprintf(stdout, "] f: [");
-	for(i=0; i<params.len; ++i)
+	for(i=0; i<params->len; ++i)
 		fprintf(stdout, " %.7f", s->f->data[i]);
 	fprintf(stdout, "]\n");
-	hkl_geometry_fprintf(stdout, params.geometry);
+	hkl_geometry_fprintf(stdout, params->geometry);
 #endif
 	if(status != GSL_CONTINUE){
 		res = TRUE;

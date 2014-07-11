@@ -63,7 +63,7 @@ struct _HklModeAutoInfo {
 #define CHECK_NAN(x, len) do{				\
 		for(uint i=0; i<len; ++i)		\
 			if(gsl_isnan(x[i]))		\
-				return GSL_ENOMEM;	\
+				return GSL_EINVAL;	\
 	}while(0)
 
 #define HKL_MODE_AUTO_INFO(_name, _axes_r, _axes_w, _fn) .info={HKL_MODE_INFO(_name, _axes_r, _axes_w),}, .functions=DARRAY(_fn)

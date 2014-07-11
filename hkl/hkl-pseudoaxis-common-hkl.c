@@ -265,9 +265,7 @@ int _RUBh_minus_Q_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	CHECK_NAN(x->data, x->size);
 
-	RUBh_minus_Q(x->data, params, f->data);
-
-	return  GSL_SUCCESS;
+	return RUBh_minus_Q(x->data, params, f->data);
 }
 
 /**
