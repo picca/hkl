@@ -587,7 +587,8 @@ int hkl_geometry_axes_values_set(HklGeometry *self,
 	uint i = 0;
 	HklParameter **axis;
 
-	g_return_val_if_fail (error == NULL || *error == NULL && n_values == darray_size(self->axes), FALSE);
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	g_assert(n_values == darray_size(self->axes));
 
 	darray_foreach(axis, self->axes){
 		if(!hkl_parameter_value_set(*axis, values[i++], unit_type, error)){
