@@ -57,13 +57,13 @@ def _plot_legend(axes):
     plt.legend()
 
 
-def plot_hkl_trajectory(filename, factory, geometry, engines,
+def plot_hkl_trajectory(filename, geometry, engines,
                         hkl1=None, hkl2=None, n=100):
     """
     plot the trajectory for a engine. It is possible to limit the
     number of trajectory using the max_traj keyword
     """
-    axes_names = factory.axes_names_get()
+    axes_names = geometry.axes_names_get()
 
     hkl = engines.engine_get_by_name("hkl")
     page = 1
@@ -128,7 +128,7 @@ def main():
 
         # here we set the detector arm with only positiv values for
         # now tth or delta arm
-        for axis in factory.axes_names_get():
+        for axis in geometry.axes_names_get():
             if axis in ["tth", "delta"]:
                 tmp = geometry.axis_get(axis)
                 tmp.min_max_set(0, 180., Hkl.UnitEnum.USER)
@@ -138,7 +138,7 @@ def main():
 
         engines_names = [engine.name_get() for engine in engines.engines_get()]
         if 'hkl' in engines_names:
-            plot_hkl_trajectory(key, factory, geometry, engines,
+            plot_hkl_trajectory(key, geometry, engines,
                                 hkl1=[0, 0, 1], hkl2=[0, 1, 1], n=100)
     pp.close()
 

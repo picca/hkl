@@ -133,7 +133,7 @@ public:
 	Gtk::TreeModelColumn<const HklGeometryListItem *> item;
 	std::vector<Gtk::TreeModelColumn<gdouble> > axes;
 
-	SolutionModelColumns(HklFactory *factory)
+	SolutionModelColumns(HklGeometry *geometry)
 		{
 			const darray_string *axes;
 			const char **axis;
@@ -141,7 +141,7 @@ public:
 			this->add(this->index);
 			this->add(this->item);
 
-			axes = hkl_factory_axes_names_get(factory);
+			axes = hkl_geometry_axes_names_get(geometry);
 			darray_foreach(axis, *axes){
 				this->axes.push_back(Gtk::TreeModelColumn<gdouble>());
 				this->add(this->axes.back());

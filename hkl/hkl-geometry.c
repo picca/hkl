@@ -29,6 +29,7 @@
 #include <stdlib.h>                     // for free, exit, realloc
 #include <string.h>                     // for NULL, strcmp, memcpy
 #include <sys/types.h>                  // for uint
+#include "hkl-factory-private.h"
 #include "hkl-axis-private.h"           // for HklAxis, etc
 #include "hkl-geometry-private.h"       // for _HklGeometry, etc
 #include "hkl-interval-private.h"       // for HklInterval
@@ -301,6 +302,19 @@ int hkl_geometry_set(HklGeometry *self, const HklGeometry *src)
 		darray_item(self->holders, i)->q = darray_item(src->holders, i)->q;
 
 	return TRUE;
+}
+
+/**
+ * hkl_geometry_axes_names_get:
+ * @self: the this ptr
+ *
+ * get all the axes of the given #HklGeometry
+ *
+ * Returns: (type gpointer): array of the axes names.
+ **/
+const darray_string *hkl_geometry_axes_names_get(const HklGeometry *self)
+{
+	return &self->factory->axes;
 }
 
 /**

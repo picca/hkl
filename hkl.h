@@ -82,6 +82,8 @@
 
 G_BEGIN_DECLS
 
+typedef darray(const char *) darray_string;
+
 /**********/
 /* Matrix */
 /**********/
@@ -190,6 +192,8 @@ HKLAPI HklGeometry *hkl_geometry_new_copy(const HklGeometry *self) HKL_ARG_NONNU
 HKLAPI void hkl_geometry_free(HklGeometry *self) HKL_ARG_NONNULL(1);
 
 HKLAPI int hkl_geometry_set(HklGeometry *self, const HklGeometry *src) HKL_ARG_NONNULL(1, 2);
+
+HKLAPI const darray_string *hkl_geometry_axes_names_get(const HklGeometry *self) HKL_ARG_NONNULL(1);
 
 HKLAPI const HklParameter *hkl_geometry_axis_get(const HklGeometry *self, const char *name,
 						 GError **error) HKL_ARG_NONNULL(1, 2);
@@ -410,7 +414,6 @@ HKLAPI void hkl_sample_reflection_geometry_set(HklSampleReflection *self,
 typedef struct _HklEngine HklEngine;
 typedef struct _HklEngineList HklEngineList;
 
-typedef darray(const char *) darray_string;
 typedef darray(HklEngine *) darray_engine;
 
 /* HklEngine */
@@ -522,8 +525,6 @@ HKLAPI HklFactory *hkl_factory_get_by_name(const char *name,
 					   GError **error) HKL_ARG_NONNULL(1);
 
 HKLAPI const char *hkl_factory_name_get(const HklFactory *self) HKL_ARG_NONNULL(1);
-
-HKLAPI const darray_string *hkl_factory_axes_names_get(const HklFactory *self) HKL_ARG_NONNULL(1);
 
 HKLAPI HklGeometry *hkl_factory_create_new_geometry(const HklFactory *self) HKL_ARG_NONNULL(1);
 

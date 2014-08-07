@@ -233,14 +233,16 @@ static void axes_names_get(void)
 
 	factories = hkl_factory_get_all(&n);
 	for(i=0; i<n; i++){
+		HklGeometry *geometry;
 		HklEngineList *list;
 		HklEngine **engine;
 		darray_engine *engines;
 		const darray_string *all_axes;
 
+		geometry = hkl_factory_create_new_geometry(factories[i]);
 		list = hkl_factory_create_new_engine_list(factories[i]);
 		engines = hkl_engine_list_engines_get(list);
-		all_axes = hkl_factory_axes_names_get(factories[i]);
+		all_axes = hkl_geometry_axes_names_get(geometry);
 
 		/* check consistency of the engines, all axes should
 		 * be in the list of the geometry axes */
@@ -258,6 +260,7 @@ static void axes_names_get(void)
 			res &= _check_axes(axes_w, all_axes);
 		}
 		hkl_engine_list_free(list);
+		hkl_geometry_free(geometry);
 	}
 
 	ok(res == TRUE, __func__);

@@ -394,7 +394,7 @@ void HKLWindow::set_up_TreeView_axes(void)
 		sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_axes_max_edited));
 
 	//Fill the models from the diffractometerAxes
-	axes = hkl_factory_axes_names_get(this->_factory);
+	axes = hkl_geometry_axes_names_get(this->_geometry);
 	darray_foreach(axis, *axes){
 		Gtk::ListStore::Row row = *(_axeModel->append());
 		// this static_cast is wrong but for now it
@@ -510,11 +510,11 @@ void HKLWindow::set_up_TreeView_treeview1(void)
 	//Create the Columns
 	if(_solutionModelColumns)
 		delete _solutionModelColumns;
-	_solutionModelColumns = new SolutionModelColumns(this->_factory);
+	_solutionModelColumns = new SolutionModelColumns(this->_geometry);
 
 	/* add the columns */
 	_treeview1->remove_all_columns();
-	axes = hkl_factory_axes_names_get(this->_factory);
+	axes = hkl_geometry_axes_names_get(this->_geometry);
 	i=0;
 	darray_foreach(axis, *axes){
 		_treeview1->append_column_numeric(*axis,
@@ -1033,7 +1033,7 @@ void HKLWindow::updateSolutions(const HklGeometryList *geometries)
 		row[_solutionModelColumns->item] = item;
 
 		geometry = hkl_geometry_list_item_geometry_get(item);
-		axes = hkl_factory_axes_names_get(this->_factory);
+		axes = hkl_geometry_axes_names_get(geometry);
 		j=0;
 		darray_foreach(axis_name, *axes){
 			const HklParameter *axis;

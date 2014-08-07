@@ -39,18 +39,6 @@
 #include "hkl/ccan/autodata/autodata.h"  // for AUTODATA, autodata_get
 #include "hkl/ccan/darray/darray.h"     // for darray_item
 
-typedef HklGeometry* (* HklFactoryGeometryFunction) (const HklFactory *factory);
-typedef HklEngineList* (* HklFactoryEngineListFunction) (const HklFactory *factory);
-
-struct _HklFactory
-{
-	const char *name;
-	const char *description;
-	const darray_string axes;
-	HklFactoryGeometryFunction create_new_geometry;
-	HklFactoryEngineListFunction create_new_engine_list;
-};
-
 HklFactory **hkl_factory_get_all(unsigned int *n)
 {
 	return autodata_get(factories, n);
@@ -72,19 +60,6 @@ HklFactory *hkl_factory_get_by_name(const char *name, GError **error)
 const char *hkl_factory_name_get(const HklFactory *self)
 {
 	return self->name;
-}
-
-/**
- * hkl_factory_axes_names_get:
- * @self: the this ptr
- *
- * get all the axes of the given factory
- *
- * Returns: (type gpointer): array of the axes names.
- **/
-const darray_string *hkl_factory_axes_names_get(const HklFactory *self)
-{
-	return &self->axes;
 }
 
 HklGeometry *hkl_factory_create_new_geometry(const HklFactory *self)

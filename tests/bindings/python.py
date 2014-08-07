@@ -43,12 +43,6 @@ class TestAPI(unittest.TestCase):
             self.assertTrue(type(key) == str)
             self.assertTrue(type(factory) == Hkl.Factory)
 
-            # read all the axes names
-            axes = factory.axes_names_get()
-            self.assertTrue(type(axes) == list)
-            for axis in axes:
-                self.assertTrue(type(axis) == str)
-
             # create all the geometry and engines
             geometry = factory.create_new_geometry()
             self.assertTrue(type(geometry) == Hkl.Geometry)
@@ -89,7 +83,7 @@ class TestAPI(unittest.TestCase):
             self.assertAlmostEqual(r, w)
 
         # check that we can access the axes
-        axes_names = factory.axes_names_get()
+        axes_names = geometry.axes_names_get()
         for name in axes_names:
             axis = geometry.axis_get(name)
             axis.min_max_set(0, math.radians(180), Hkl.UnitEnum.USER)

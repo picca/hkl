@@ -27,6 +27,18 @@
 
 G_BEGIN_DECLS
 
+typedef HklGeometry* (* HklFactoryGeometryFunction) (const HklFactory *factory);
+typedef HklEngineList* (* HklFactoryEngineListFunction) (const HklFactory *factory);
+
+struct _HklFactory
+{
+	const char *name;
+	const char *description;
+	const darray_string axes;
+	HklFactoryGeometryFunction create_new_geometry;
+	HklFactoryEngineListFunction create_new_engine_list;
+};
+
 AUTODATA_TYPE(factories, HklFactory);
 
 G_END_DECLS
