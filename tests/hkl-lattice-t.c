@@ -102,7 +102,7 @@ static void new(void)
 	hkl_lattice_free(lattice);
 }
 
-static void new_copy(void )
+static void new_copy(void)
 {
 	HklLattice *lattice;
 	HklLattice *copy;
@@ -194,7 +194,7 @@ static void set(void)
 	hkl_lattice_free(lattice);
 }
 
-static void  reciprocal(void )
+static void reciprocal(void)
 {
 	HklLattice *lattice;
 	HklLattice *reciprocal;
@@ -275,7 +275,7 @@ static void  reciprocal(void )
 	hkl_lattice_free(reciprocal);
 }
 
-static void get_B(void )
+static void get_B(void)
 {
 	HklMatrix *B_ref = hkl_matrix_new_full(HKL_TAU / 1.54, 0, 0,
 					       0, HKL_TAU / 1.54, 0,
@@ -296,7 +296,7 @@ static void get_B(void )
 	hkl_matrix_free(B_ref);
 }
 
-static void  get_1_B(void )
+static void get_1_B(void)
 {
 	HklMatrix *I_ref = hkl_matrix_new_full(1, 0, 0,
 					       0, 1, 0,
