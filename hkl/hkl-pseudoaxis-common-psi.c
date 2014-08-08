@@ -144,7 +144,7 @@ static int hkl_mode_initialized_set_psi_real(HklMode *self,
 	HklModePsi *psi_mode = container_of(self, HklModePsi, parent);
 	HklHolder *sample_holder;
 
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	if(initialized){
 		/* update the geometry internals */

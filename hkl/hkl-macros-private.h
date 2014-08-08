@@ -37,6 +37,12 @@
 # define hkl_assert(x)
 #endif
 
+#define hkl_error(expr) do{				\
+		if(!(expr)){				\
+			g_error(__STRING(expr));	\
+		}					\
+	} while(0)
+
 /* use for the printf format methods took from glib */
 #define G_GNUC_PRINTF( format_idx, arg_idx )				\
 	__attribute__((__format__ (__printf__, format_idx, arg_idx)))

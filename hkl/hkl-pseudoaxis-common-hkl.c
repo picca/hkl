@@ -359,7 +359,7 @@ int hkl_mode_set_hkl_real(HklMode *self,
 {
 	int last_axis;
 
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	if(!hkl_mode_auto_set_real(self, engine,
 				   geometry, detector, sample,

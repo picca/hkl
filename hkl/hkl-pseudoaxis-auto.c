@@ -435,7 +435,7 @@ int hkl_mode_auto_set_real(HklMode *self,
 	HklModeAutoInfo *auto_info = container_of(self->info, HklModeAutoInfo, info);
 	const HklFunction **function;
 
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	if(!self || !engine || !geometry || !detector || !sample){
 		g_set_error(error,

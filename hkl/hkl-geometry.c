@@ -289,7 +289,7 @@ int hkl_geometry_set(HklGeometry *self, const HklGeometry *src)
 {
 	size_t i;
 
-	g_return_val_if_fail(self->factory == src->factory, FALSE);
+	hkl_error(self->factory == src->factory);
 
 	self->source = src->source;
 
@@ -331,7 +331,7 @@ const HklParameter *hkl_geometry_axis_get(const HklGeometry *self,
 {
 	HklParameter **axis;
 
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	darray_foreach(axis, self->axes){
 		if (!strcmp((*axis)->name, name))
@@ -364,7 +364,7 @@ int hkl_geometry_axis_set(HklGeometry *self, const char *name,
 {
 	HklParameter **_axis;
 
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	if(name != axis->name && strcmp(name, axis->name)){
 		g_set_error(error,
@@ -421,7 +421,7 @@ double hkl_geometry_wavelength_get(const HklGeometry *self,
 int hkl_geometry_wavelength_set(HklGeometry *self, double wavelength,
 				HklUnitEnum unit_type, GError **error)
 {
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	/* for now there is no unit convertion but the unit_type is
 	 * there */
@@ -587,7 +587,7 @@ int hkl_geometry_axes_values_set(HklGeometry *self,
 	uint i = 0;
 	HklParameter **axis;
 
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 	g_assert(n_values == darray_size(self->axes));
 
 	darray_foreach(axis, self->axes){
@@ -635,7 +635,7 @@ int hkl_geometry_set_values_v(HklGeometry *self, HklUnitEnum unit_type, GError *
 	va_list ap;
 	HklParameter **axis;
 
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	va_start(ap, error);
 	darray_foreach(axis, self->axes){

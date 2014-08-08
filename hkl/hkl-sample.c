@@ -198,7 +198,7 @@ static int minimize(HklSample *sample,
 	int status;
 	double size = 0;
 
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	/* Starting point */
 	x = gsl_vector_alloc (9);
@@ -455,7 +455,7 @@ int hkl_sample_ux_set(HklSample *self,
 		      const HklParameter *ux,
 		      GError **error)
 {
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	if(!hkl_parameter_init_copy(self->ux, ux, error)){
 		g_assert (error == NULL || *error != NULL);
@@ -485,7 +485,7 @@ int hkl_sample_ux_set(HklSample *self,
 int hkl_sample_uy_set(HklSample *self, const HklParameter *uy,
 		      GError **error)
 {
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	if(!hkl_parameter_init_copy(self->uy, uy, error)){
 		g_assert (error == NULL || *error != NULL);
@@ -513,7 +513,7 @@ int hkl_sample_uy_set(HklSample *self, const HklParameter *uy,
 int hkl_sample_uz_set(HklSample *self, const HklParameter *uz,
 		      GError **error)
 {
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	if(!hkl_parameter_init_copy(self->uz, uz, error)){
 		g_assert (error == NULL || *error != NULL);
@@ -927,7 +927,7 @@ int hkl_sample_reflection_hkl_set(HklSampleReflection *self,
 				  double h, double k, double l,
 				  GError **error)
 {
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	if((fabs(h) + fabs(k) + fabs(l) < HKL_EPSILON)){
 		g_set_error(error,

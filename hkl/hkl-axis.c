@@ -69,7 +69,7 @@ static inline int hkl_axis_init_copy_real(HklParameter *self, const HklParameter
 	HklAxis *axis_self = container_of(self, HklAxis, parameter);
 	HklAxis *axis_src = container_of(src, HklAxis, parameter);
 
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	*axis_self = *axis_src;
 	self->changed = TRUE;
@@ -82,7 +82,7 @@ static inline int hkl_axis_set_value_real(HklParameter *self, double value,
 {
 	HklAxis *axis = container_of(self, HklAxis, parameter);
 
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	if(!hkl_parameter_value_set_real(self, value, unit_type, error)){
 		g_assert (error == NULL || *error != NULL);

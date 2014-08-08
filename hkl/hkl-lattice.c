@@ -46,7 +46,7 @@ static int check_lattice_param(double a, double b, double c,
 			       double alpha, double beta, double gamma,
 			       GError **error)
 {
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	double D = 1. - cos(alpha)*cos(alpha) - cos(beta)*cos(beta)
 		- cos(gamma)*cos(gamma) + 2. * cos(alpha)*cos(beta)*cos(gamma);
@@ -83,7 +83,7 @@ HklLattice *hkl_lattice_new(double a, double b, double c,
 {
 	HklLattice *self = NULL;
 
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	if(!check_lattice_param(a, b, c, alpha, beta, gamma, error))
 	{
@@ -196,7 +196,7 @@ const HklParameter *hkl_lattice_a_get(const HklLattice *self)
 int hkl_lattice_a_set(HklLattice *self, const HklParameter *parameter,
 		      GError **error)
 {
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	return hkl_parameter_init_copy(self->a, parameter, error);
 }
@@ -221,7 +221,7 @@ const HklParameter *hkl_lattice_b_get(const HklLattice *self)
 int hkl_lattice_b_set(HklLattice *self, const HklParameter *parameter,
 		      GError **error)
 {
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	return hkl_parameter_init_copy(self->b, parameter, error);
 }
@@ -246,7 +246,7 @@ const HklParameter *hkl_lattice_c_get(const HklLattice *self)
 int hkl_lattice_c_set(HklLattice *self, const HklParameter *parameter,
 		      GError **error)
 {
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	return hkl_parameter_init_copy(self->c, parameter, error);
 }
@@ -271,7 +271,7 @@ const HklParameter *hkl_lattice_alpha_get(const HklLattice *self)
 int hkl_lattice_alpha_set(HklLattice *self, const HklParameter *parameter,
 			  GError **error)
 {
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	return hkl_parameter_init_copy(self->alpha, parameter, error);
 }
@@ -296,7 +296,7 @@ const HklParameter *hkl_lattice_beta_get(const HklLattice *self)
 int hkl_lattice_beta_set(HklLattice *self, const HklParameter *parameter,
 			 GError **error)
 {
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	return hkl_parameter_init_copy(self->beta, parameter, error);
 }
@@ -321,7 +321,7 @@ const HklParameter *hkl_lattice_gamma_get(const HklLattice *self)
 int hkl_lattice_gamma_set(HklLattice *self, const HklParameter *parameter,
 			   GError **error)
 {
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	return hkl_parameter_init_copy(self->gamma, parameter, error);
 }
@@ -363,7 +363,7 @@ int hkl_lattice_set(HklLattice *self,
 		    double alpha, double beta, double gamma,
 		    HklUnitEnum unit_type, GError **error)
 {
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	double _a, _b, _c, _alpha, _beta, _gamma;
 

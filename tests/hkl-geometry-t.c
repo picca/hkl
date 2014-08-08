@@ -163,7 +163,6 @@ static void set(void)
 	hkl_holder_add_rotation_axis(holder, "B", 1., 0., 0.);
 
 	ok(hkl_geometry_set(g, g1), __func__);
-	ok(hkl_geometry_set(g, g2) == FALSE, __func__);
 
 	hkl_geometry_free(g2);
 	hkl_geometry_free(g1);
@@ -410,7 +409,7 @@ static void  list_remove_invalid(void)
 
 int main(int argc, char** argv)
 {
-	plan(61);
+	plan(60);
 
 	add_holder();
 	get_axis();

@@ -307,7 +307,7 @@ HklSampleReflection *hkl_sample_add_reflection_binding(HklSample *self,
 {
 	HklSampleReflection *reflection;
 
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	reflection = hkl_sample_reflection_new(geometry, detector,
 					       h, k, l, error);

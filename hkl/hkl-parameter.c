@@ -271,7 +271,7 @@ int hkl_parameter_min_max_set(HklParameter *self, double min, double max,
 {
 	double factor;
 
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	if (min > max){
 		g_set_error(error,

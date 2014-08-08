@@ -129,7 +129,7 @@ int hkl_engine_pseudo_axes_values_get(HklEngine *self,
 				       double values[], size_t n_values,
 				       HklUnitEnum unit_type, GError **error)
 {
-	g_return_val_if_fail(error == NULL ||*error == NULL, FALSE);
+	hkl_error(error == NULL ||*error == NULL);
 
 	if(n_values != darray_size(self->info->pseudo_axes)){
 		g_set_error(error,
@@ -170,7 +170,7 @@ HklGeometryList *hkl_engine_pseudo_axes_values_set(HklEngine *self,
 						   double values[], size_t n_values,
 						   HklUnitEnum unit_type, GError **error)
 {
-	g_return_val_if_fail(error == NULL ||*error == NULL, NULL);
+	hkl_error(error == NULL ||*error == NULL);
 
 	if(n_values != darray_size(self->info->pseudo_axes)){
 		g_set_error(error,
@@ -218,7 +218,7 @@ const HklParameter *hkl_engine_pseudo_axis_get(const HklEngine *self,
 {
 	HklParameter **parameter;
 
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	darray_foreach(parameter, self->pseudo_axes)
 		if(!strcmp((*parameter)->name, name))
@@ -253,8 +253,8 @@ HklGeometryList *hkl_engine_pseudo_axis_set(HklEngine *self,
 {
 	HklParameter **p;
 
-	g_return_val_if_fail (error == NULL || *error == NULL, NULL);
-	g_return_val_if_fail (strcmp(name, parameter->name) == 0, NULL);
+	hkl_error (error == NULL || *error == NULL);
+	hkl_error (strcmp(name, parameter->name) == 0);
 
 	darray_foreach(p, self->pseudo_axes)
 		if(!strcmp((*p)->name, parameter->name)){
@@ -362,7 +362,7 @@ int hkl_engine_parameters_values_set(HklEngine *self,
 				     double values[], size_t n_values,
 				     HklUnitEnum unit_type, GError **error)
 {
-	g_return_val_if_fail (error == NULL || *error == NULL && n_values == darray_size(self->mode->parameters), FALSE);
+	hkl_error (error == NULL || *error == NULL && n_values == darray_size(self->mode->parameters));
 
 	for(size_t i=0; i<n_values; ++i){
 		if(!hkl_parameter_value_set(darray_item(self->mode->parameters, i),
@@ -393,7 +393,7 @@ const HklParameter *hkl_engine_parameter_get(const HklEngine *self,
 {
 	HklParameter **parameter;
 
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	darray_foreach(parameter, self->mode->parameters)
 		if(!strcmp((*parameter)->name, name))
@@ -427,8 +427,8 @@ int hkl_engine_parameter_set(HklEngine *self,
 {
 	HklParameter **p;
 
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
-	g_return_val_if_fail (strcmp(name, parameter->name) == 0, FALSE);
+	hkl_error (error == NULL || *error == NULL);
+	hkl_error (strcmp(name, parameter->name) == 0);
 
 	darray_foreach(p, self->mode->parameters)
 		if(!strcmp((*p)->name, parameter->name)){
@@ -472,7 +472,7 @@ int hkl_engine_current_mode_set(HklEngine *self, const char *name,
 {
 	HklMode **mode;
 
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	darray_foreach(mode, self->modes)
 		if(!strcmp((*mode)->info->name, name)){
@@ -531,7 +531,7 @@ int hkl_engine_initialized_get(const HklEngine *self)
  **/
 int hkl_engine_initialized_set(HklEngine *self, int initialized, GError **error)
 {
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	if(!self->geometry || !self->detector || !self->sample
 	   || !self->mode) {
@@ -669,7 +669,7 @@ HklEngine *hkl_engine_list_engine_get_by_name(HklEngineList *self,
 {
 	HklEngine **engine;
 
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	darray_foreach(engine, *self){
 		if (!strcmp((*engine)->info->name, name))

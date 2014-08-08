@@ -107,7 +107,7 @@ static inline void hkl_parameter_free_real(HklParameter *self)
 static inline int hkl_parameter_init_copy_real(HklParameter *self, const HklParameter *src,
 					       GError **error)
 {
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	*self = *src;
 	self->changed = TRUE;
@@ -124,7 +124,7 @@ static inline double hkl_parameter_value_get_closest_real(const HklParameter *se
 static inline int hkl_parameter_value_set_real(HklParameter *self, double value,
 					       HklUnitEnum unit_type, GError **error)
 {
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	switch (unit_type) {
 	case HKL_UNIT_DEFAULT:
