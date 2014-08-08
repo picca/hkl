@@ -108,6 +108,7 @@ static inline int hkl_parameter_init_copy_real(HklParameter *self, const HklPara
 					       GError **error)
 {
 	hkl_error (error == NULL || *error == NULL);
+	hkl_error (self->name == src->name || strcmp(self->name, src->name) == 0);
 
 	*self = *src;
 	self->changed = TRUE;

@@ -38,6 +38,26 @@
 		CHECK_PARAM(_lattice, gamma, _gamma);			\
 	}while(0)
 
+#define SET_PARAM(_lattice, _param, _value) do {			\
+		GError *error;						\
+		HklParameter *p = hkl_parameter_new_copy(hkl_lattice_ ## _param ## _get(_lattice)); \
+		hkl_parameter_value_set(p, _value, HKL_UNIT_DEFAULT, NULL); \
+		ok(TRUE == hkl_lattice_ ## _param ## _set(_lattice, p, NULL), __func__); \
+		error = NULL;						\
+		ok(TRUE == hkl_lattice_ ## _param ## _set(_lattice, p, &error), __func__); \
+		ok(error == NULL, __func__);				\
+		hkl_parameter_free(p);					\
+	}while(0)
+				\
+#define SET_LATTICE(_lattice, _a, _b, _c, _alpha, _beta, _gamma) do{	\
+		SET_PARAM(_lattice, a, _a);				\
+		SET_PARAM(_lattice, b, _b);				\
+		SET_PARAM(_lattice, c, _c);				\
+		SET_PARAM(_lattice, alpha, _alpha);			\
+		SET_PARAM(_lattice, beta, _beta);			\
+		SET_PARAM(_lattice, gamma, _gamma);			\
+	}while(0)
+
 static void new(void)
 {
 	HklLattice *lattice;
@@ -82,7 +102,7 @@ static void new(void)
 	hkl_lattice_free(lattice);
 }
 
-static void  new_copy(void )
+static void new_copy(void )
 {
 	HklLattice *lattice;
 	HklLattice *copy;
@@ -105,26 +125,72 @@ static void  new_copy(void )
 static void set(void)
 {
 	HklLattice *lattice;
+	GError *error;
 
-	/* can not set this lattice */
 	lattice = hkl_lattice_new_default();
 
-	/* but can create this one */
-	hkl_lattice_set(lattice,
-			1.54, 1.54, 1.54,
-			90*HKL_DEGTORAD, 91*HKL_DEGTORAD, 92*HKL_DEGTORAD,
-			HKL_UNIT_DEFAULT, NULL);
+	/* can not set this lattice */
+	ok(FALSE == hkl_lattice_set(lattice,
+				    1.54, 1.54, 1.54,
+				    90*HKL_DEGTORAD, 10*HKL_DEGTORAD, 120*HKL_DEGTORAD,
+				    HKL_UNIT_DEFAULT, NULL),
+	   __func__);
 
+	/* can not set this lattice with GError */
+	error = NULL;
+	ok(FALSE == hkl_lattice_set(lattice,
+				    1.54, 1.54, 1.54,
+				    90*HKL_DEGTORAD, 10*HKL_DEGTORAD, 120*HKL_DEGTORAD,
+				    HKL_UNIT_DEFAULT, &error),
+	   __func__);
+	ok(error != NULL, __func__);
+	g_clear_error(&error);
+
+	/* can set this lattice */
+	ok(TRUE == hkl_lattice_set(lattice,
+				   1.54, 1.54, 1.54,
+				   90*HKL_DEGTORAD, 91*HKL_DEGTORAD, 92*HKL_DEGTORAD,
+				   HKL_UNIT_DEFAULT, NULL),
+	   __func__);
 	CHECK_LATTICE(lattice,
 		      1.54, 1.54, 1.54,
 		      90*HKL_DEGTORAD, 91*HKL_DEGTORAD, 92*HKL_DEGTORAD);
 
-	hkl_lattice_set(lattice, 1.54, 1.54, 1.54, 90, 91, 92,
-			HKL_UNIT_USER, NULL);
+	/* can set this lattice with no GError set */
+	ok(TRUE == hkl_lattice_set(lattice,
+				   1.54, 1.54, 1.54,
+				   90*HKL_DEGTORAD, 91*HKL_DEGTORAD, 90*HKL_DEGTORAD,
+				   HKL_UNIT_DEFAULT, &error),
+	   __func__);
+	ok(error == NULL, __func__);
+	CHECK_LATTICE(lattice,
+		      1.54, 1.54, 1.54,
+		      90*HKL_DEGTORAD, 91*HKL_DEGTORAD, 90*HKL_DEGTORAD);
 
+
+
+	/* can set this lattice in HKL_UNIT_USER with no GError set */
+	ok(TRUE == hkl_lattice_set(lattice, 1.54, 1.54, 1.54, 90, 91, 92,
+				   HKL_UNIT_USER, NULL),
+	   __func__);
 	CHECK_LATTICE(lattice,
 		      1.54, 1.54, 1.54,
 		      90*HKL_DEGTORAD, 91*HKL_DEGTORAD, 92*HKL_DEGTORAD);
+
+	/* can set this lattice in HKL_UNIT_USER with no GError set */
+	ok(TRUE == hkl_lattice_set(lattice,
+				   1.54, 1.54, 1.54, 90, 91, 90,
+				   HKL_UNIT_USER, &error),
+	   __func__);
+	ok(error == NULL, __func__);
+	CHECK_LATTICE(lattice,
+		      1.54, 1.54, 1.54,
+		      90*HKL_DEGTORAD, 91*HKL_DEGTORAD, 90*HKL_DEGTORAD);
+
+	/* check individual accessor */
+	SET_LATTICE(lattice, 1.54, 1.54, 1.54, 90*HKL_DEGTORAD, 91 * HKL_DEGTORAD, 91 * HKL_DEGTORAD);
+	CHECK_LATTICE(lattice, 1.54, 1.54, 1.54, 90*HKL_DEGTORAD, 91 * HKL_DEGTORAD, 91 * HKL_DEGTORAD);
+
 	hkl_lattice_free(lattice);
 }
 
@@ -137,9 +203,10 @@ static void  reciprocal(void )
 	reciprocal = hkl_lattice_new_default();
 
 	/* cubic */
-	hkl_lattice_set(lattice, 1.54, 1.54, 1.54,
-			90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD,
-			HKL_UNIT_DEFAULT, NULL);
+	ok(TRUE == hkl_lattice_set(lattice, 1.54, 1.54, 1.54,
+				   90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD,
+				   HKL_UNIT_DEFAULT, NULL),
+	   __func__);
 
 	ok(TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
 
@@ -148,10 +215,11 @@ static void  reciprocal(void )
 		      90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD);
 
 	/* orthorombic */
-	hkl_lattice_set(lattice,
-			1., 3., 4.,
-			90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD,
-			HKL_UNIT_DEFAULT, NULL);
+	ok(TRUE == hkl_lattice_set(lattice,
+				   1., 3., 4.,
+				   90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD,
+				   HKL_UNIT_DEFAULT, NULL),
+	   __func__);
 	ok(TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
 
 	CHECK_LATTICE(reciprocal,
@@ -159,10 +227,11 @@ static void  reciprocal(void )
 		      90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD);
 
 	/* hexagonal1 */
-	hkl_lattice_set(lattice,
-			1., 2., 1.,
-			90 * HKL_DEGTORAD, 120 * HKL_DEGTORAD, 90 * HKL_DEGTORAD,
-			HKL_UNIT_DEFAULT, NULL);
+	ok(TRUE == hkl_lattice_set(lattice,
+				   1., 2., 1.,
+				   90 * HKL_DEGTORAD, 120 * HKL_DEGTORAD, 90 * HKL_DEGTORAD,
+				   HKL_UNIT_DEFAULT, NULL),
+	   __func__);
 	ok(TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
 
 	CHECK_LATTICE(reciprocal,
@@ -170,9 +239,10 @@ static void  reciprocal(void )
 		      90. * HKL_DEGTORAD, 60. * HKL_DEGTORAD, 90. * HKL_DEGTORAD);
 
 	/* hexagonal2 */
-	hkl_lattice_set(lattice, 2., 1., 1.,
-			120 * HKL_DEGTORAD, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD,
-			HKL_UNIT_DEFAULT, NULL);
+	ok(TRUE == hkl_lattice_set(lattice, 2., 1., 1.,
+				   120 * HKL_DEGTORAD, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD,
+				   HKL_UNIT_DEFAULT, NULL),
+	   __func__);
 	ok(TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
 
 	CHECK_LATTICE(reciprocal,
@@ -180,9 +250,10 @@ static void  reciprocal(void )
 		      60. * HKL_DEGTORAD, 90. * HKL_DEGTORAD, 90. * HKL_DEGTORAD);
 
 	/* triclinic1 */
-	hkl_lattice_set(lattice, 9.32, 8.24, 13.78,
-			91.23 * HKL_DEGTORAD, 93.64 * HKL_DEGTORAD, 122.21 * HKL_DEGTORAD,
-			HKL_UNIT_DEFAULT, NULL);
+	ok(TRUE == hkl_lattice_set(lattice, 9.32, 8.24, 13.78,
+				   91.23 * HKL_DEGTORAD, 93.64 * HKL_DEGTORAD, 122.21 * HKL_DEGTORAD,
+				   HKL_UNIT_DEFAULT, NULL),
+	   __func__);
 	ok(TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
 
 	CHECK_LATTICE(reciprocal,
@@ -190,9 +261,10 @@ static void  reciprocal(void )
 		      1.5052513337, 1.482101482, 1.0055896011);
 
 	/* triclinic2 */
-	hkl_lattice_set(lattice, 18.423, 18.417,
-			18.457, 89.99 * HKL_DEGTORAD, 89.963 * HKL_DEGTORAD, 119.99 * HKL_DEGTORAD,
-			HKL_UNIT_DEFAULT, NULL);
+	ok(TRUE == hkl_lattice_set(lattice, 18.423, 18.417,
+				   18.457, 89.99 * HKL_DEGTORAD, 89.963 * HKL_DEGTORAD, 119.99 * HKL_DEGTORAD,
+				   HKL_UNIT_DEFAULT, NULL),
+	   __func__);
 	ok(TRUE == hkl_lattice_reciprocal(lattice, reciprocal), __func__);
 
 	CHECK_LATTICE(reciprocal,
@@ -253,7 +325,7 @@ static void  get_1_B(void )
 
 int main(int argc, char** argv)
 {
-	plan(80);
+	plan(131);
 
 	new();
 	new_copy();
