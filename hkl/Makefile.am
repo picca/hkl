@@ -83,7 +83,8 @@ libhkl_la_SOURCES = $(hkl_c_sources) $(hkl_private_h_sources)
 libhkl_la_LIBADD = ccan/libccan.la
 libhkl_la_CFLAGS = \
 	$(AM_CFLAGS) \
-	-Wno-initializer-overrides # \ do not activate visibility yet.
+	-Wno-initializer-overrides \
+	-Wno-unused-result # \ do not activate visibility yet.
 	-fvisibility=hidden
 
 # introspection
