@@ -42,7 +42,7 @@
 #define SET_PARAM(_lattice, _param, _value) do {			\
 		GError *error;						\
 		HklParameter *p = hkl_parameter_new_copy(hkl_lattice_ ## _param ## _get(_lattice)); \
-		hkl_parameter_value_set(p, _value, HKL_UNIT_DEFAULT, NULL); \
+		ok(hkl_parameter_value_set(p, _value, HKL_UNIT_DEFAULT, NULL), __func__); \
 		ok(TRUE == hkl_lattice_ ## _param ## _set(_lattice, p, NULL), __func__); \
 		error = NULL;						\
 		ok(TRUE == hkl_lattice_ ## _param ## _set(_lattice, p, &error), __func__); \
@@ -326,7 +326,7 @@ static void get_1_B(void)
 
 int main(int argc, char** argv)
 {
-	plan(131);
+	plan(137);
 
 	new();
 	new_copy();
