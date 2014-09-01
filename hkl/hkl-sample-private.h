@@ -46,6 +46,19 @@ struct _HklSample {
 	size_t n_reflections;
 };
 
+#define HKL_SAMPLE_ERROR hkl_sample_error_quark ()
+
+static GQuark hkl_sample_error_quark (void)
+{
+	return g_quark_from_static_string ("hkl-sample-error-quark");
+}
+
+typedef enum {
+	HKL_SAMPLE_ERROR_MINIMIZED, /* can not minimize the sample */
+	HKL_SAMPLE_ERROR_COMPUTE_UB_BUSING_LEVY, /* can not compute UB */
+} HklSampleError;
+
+
 extern void hkl_sample_fprintf(FILE *f, const HklSample *self);
 
 

@@ -21,9 +21,32 @@
  */
 #include <stdarg.h>
 
+#include "basic.h"
 #include "hkl-tap.h"
+#include "hkl/hkl-matrix-private.h"
 #include "hkl/hkl-macros-private.h"
 #include "hkl/hkl-pseudoaxis-private.h"
+
+void is_matrix(const HklMatrix *wanted, const HklMatrix *seen, const char *format, ...)
+{
+	va_list args;
+
+	va_start(args, format);
+	fflush(stderr);
+	if(TRUE == hkl_matrix_cmp(wanted, seen))
+		okv(1, format, args);
+	else{
+		printf("# wanted: %g %g %g\n#       : %g %g %g\n#       : %g %g %g\n",
+		       wanted->data[0][0], wanted->data[0][1], wanted->data[0][2],
+		       wanted->data[1][0], wanted->data[1][1], wanted->data[1][2],
+		       wanted->data[2][0], wanted->data[2][1], wanted->data[2][2]);
+		printf("#   seen: %g %g %g\n#       : %g %g %g\n#       : %g %g %g\n",
+		       seen->data[0][0], seen->data[0][1], seen->data[0][2],
+		       seen->data[1][0], seen->data[1][1], seen->data[1][2],
+		       seen->data[2][0], seen->data[2][1], seen->data[2][2]);
+		okv(0, format, args);
+	}
+}
 
 int check_pseudoaxes_v(HklEngine *engine, ...)
 {

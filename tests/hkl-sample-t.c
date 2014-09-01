@@ -22,6 +22,39 @@
 #include "hkl.h"
 #include <tap/basic.h>
 #include <tap/float.h>
+#include <tap/hkl-tap.h>
+
+#define SET(_sample, _param, _value) do{				\
+		HklParameter *parameter = hkl_parameter_new_copy(hkl_sample_ ## _param ## _get(_sample)); \
+		GError *error;						\
+		ok(TRUE == hkl_parameter_value_set(parameter, _value, HKL_UNIT_DEFAULT, NULL), __func__); \
+		error = NULL;						\
+		ok(TRUE == hkl_parameter_value_set(parameter, _value, HKL_UNIT_DEFAULT, &error), __func__); \
+		ok(error == NULL, __func__);				\
+		ok(TRUE == hkl_sample_ ## _param ## _set(_sample, parameter, NULL), __func__); \
+		ok(TRUE == hkl_sample_ ## _param ## _set(_sample, parameter, &error), __func__); \
+		ok(error == NULL, __func__);				\
+		hkl_parameter_free(parameter);				\
+	}while(0)
+
+#define SET_UX_UY_UZ(_sample, _ux, _uy, _uz) do{	\
+	SET(_sample, ux, _ux);\
+	SET(_sample, uy, _uy);\
+	SET(_sample, uz, _uz);\
+}while(0)
+
+#define CHECK(_sample, _param, _value) do{				\
+		is_double(_value,					\
+			  hkl_parameter_value_get(hkl_sample_## _param ## _get(sample), HKL_UNIT_DEFAULT), \
+			  HKL_EPSILON, __func__);			\
+	}while(0)
+
+#define CHECK_UX_UY_UZ(_sample, _ux, _uy, _uz) do{	\
+		CHECK(_sample, ux, _ux);		\
+		CHECK(_sample, uy, _uy);		\
+		CHECK(_sample, uz, _uz);		\
+	}while(0)
+
 
 static void new(void)
 {
@@ -124,9 +157,23 @@ static void del_reflection(void)
 	hkl_geometry_free(geometry);
 }
 
-static void  set_UB(void )
+static void set_ux_uy_uz(void)
 {
 	HklSample *sample;
+
+	sample = hkl_sample_new("test");
+
+	SET_UX_UY_UZ(sample, 1 * HKL_DEGTORAD, 2 * HKL_DEGTORAD, 3 * HKL_DEGTORAD);
+	CHECK_UX_UY_UZ(sample, 1 * HKL_DEGTORAD, 2 * HKL_DEGTORAD, 3 * HKL_DEGTORAD);
+
+	hkl_sample_free(sample);
+}
+
+static void set_UB(void)
+{
+	GError *error;
+	HklSample *sample;
+	const HklMatrix *_UB;
 	HklMatrix *UB = hkl_matrix_new_full(HKL_TAU/1.54, 0., 0.,
 					    0., 0., HKL_TAU/1.54,
 					    0., -HKL_TAU/1.54, 0.);
@@ -134,28 +181,46 @@ static void  set_UB(void )
 					   0., 0., 1.,
 					   0.,-1., 0.);
 
+	HklMatrix *UB_wrong = hkl_matrix_new_full(0., 0., 0.,
+						  0., 0., 0.,
+						  0., 0., 0.);
+
 	sample = hkl_sample_new("test");
 
+	/* check that reading and writing the current UB works */
+	_UB = hkl_sample_UB_get(sample);
+	ok(TRUE == hkl_sample_UB_set(sample, _UB, NULL), __func__);
+	error = NULL;
+	ok(TRUE == hkl_sample_UB_set(sample, _UB, &error), __func__);
+	ok(error == NULL, __func__);
+
+	CHECK_UX_UY_UZ(sample, 0., 0., 0.);
+
+	/* set a new valid UB matrix */
+	error = NULL;
 	ok(TRUE == hkl_sample_UB_set(sample, UB, NULL), __func__);
-	ok(TRUE == hkl_matrix_cmp(U,
-				      hkl_sample_U_get(sample)), __func__);
-	is_double(-90. * HKL_DEGTORAD,
-		  hkl_parameter_value_get(hkl_sample_ux_get(sample), HKL_UNIT_DEFAULT),
-		  HKL_EPSILON, __func__);
-	is_double(0.,
-		  hkl_parameter_value_get(hkl_sample_uy_get(sample), HKL_UNIT_DEFAULT),
-		  HKL_EPSILON, __func__);
-	is_double(0.,
-		  hkl_parameter_value_get(hkl_sample_uz_get(sample), HKL_UNIT_DEFAULT),
-		  HKL_EPSILON, __func__);
+	ok(TRUE == hkl_sample_UB_set(sample, UB, &error), __func__);
+	ok(error == NULL, __func__);
+	is_matrix(U, hkl_sample_U_get(sample), __func__);
+
+	CHECK_UX_UY_UZ(sample, -90. * HKL_DEGTORAD, 0., 0.);
+
+	/* set a non-valid UB matrix */
+	error = NULL;
+	ok(FALSE == hkl_sample_UB_set(sample, UB_wrong, &error), __func__);
+	ok(error != NULL, __func__);
+	g_clear_error(&error);
+	is_matrix(U, hkl_sample_U_get(sample), __func__);
 
 	hkl_sample_free(sample);
+	hkl_matrix_free(UB_wrong);
 	hkl_matrix_free(U);
 	hkl_matrix_free(UB);
 }
 
 static void compute_UB_busing_levy(void)
 {
+	GError *error;
 	HklDetector *detector;
 	const HklFactory *factory;
 	HklGeometry *geometry;
@@ -176,6 +241,7 @@ static void compute_UB_busing_levy(void)
 
 	sample = hkl_sample_new("test");
 
+	/* first test */
 	ok(TRUE == hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 30., 0., 0., 60.), __func__);
 	r0 = hkl_sample_reflection_new(geometry, detector, 0, 0, 1, NULL);
 	hkl_sample_add_reflection(sample, r0);
@@ -186,16 +252,15 @@ static void compute_UB_busing_levy(void)
 
 	ok(TRUE == hkl_sample_compute_UB_busing_levy(sample, r0, r1, NULL), __func__);
 	ok(TRUE == hkl_matrix_cmp(m_I, hkl_sample_U_get(sample)), __func__);
-	is_double(0.,
-		  hkl_parameter_value_get(hkl_sample_ux_get(sample), HKL_UNIT_DEFAULT),
-		  HKL_EPSILON, __func__);
-	is_double(0.,
-		  hkl_parameter_value_get(hkl_sample_uy_get(sample), HKL_UNIT_DEFAULT),
-		  HKL_EPSILON, __func__);
-	is_double(0.,
-		  hkl_parameter_value_get(hkl_sample_uz_get(sample), HKL_UNIT_DEFAULT),
-		  HKL_EPSILON, __func__);
 
+	error = NULL;
+	ok(TRUE == hkl_sample_compute_UB_busing_levy(sample, r0, r1, &error), __func__);
+	ok(error == NULL, __func__);
+	ok(TRUE == hkl_matrix_cmp(m_I, hkl_sample_U_get(sample)), __func__);
+
+	CHECK_UX_UY_UZ(sample, 0., 0., 0.);
+
+	/* second test */
 	ok(TRUE == hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 30., 0., 90., 60.), __func__);
 	r2 = hkl_sample_reflection_new(geometry, detector, 1, 0, 0, NULL);
 	hkl_sample_add_reflection(sample, r2);
@@ -206,15 +271,22 @@ static void compute_UB_busing_levy(void)
 
 	ok(TRUE == hkl_sample_compute_UB_busing_levy(sample, r2, r3, NULL), __func__);
 	ok(TRUE == hkl_matrix_cmp(m_ref, hkl_sample_U_get(sample)), __func__);
-	is_double(-90. * HKL_DEGTORAD,
-		  hkl_parameter_value_get(hkl_sample_ux_get(sample), HKL_UNIT_DEFAULT),
-		  HKL_EPSILON, __func__);
-	is_double(0.,
-		  hkl_parameter_value_get(hkl_sample_uy_get(sample), HKL_UNIT_DEFAULT),
-		  HKL_EPSILON, __func__);
-	is_double(0.,
-		  hkl_parameter_value_get(hkl_sample_uz_get(sample), HKL_UNIT_DEFAULT),
-		  HKL_EPSILON, __func__);
+
+	error = NULL;
+	ok(TRUE == hkl_sample_compute_UB_busing_levy(sample, r2, r3, &error), __func__);
+	ok(error == NULL, __func__);
+	ok(TRUE == hkl_matrix_cmp(m_ref, hkl_sample_U_get(sample)), __func__);
+
+	CHECK_UX_UY_UZ(sample, -90. * HKL_DEGTORAD, 0., 0.);
+
+	/* failling test */
+	ok(FALSE == hkl_sample_compute_UB_busing_levy(sample, r0, r0, NULL), __func__);
+
+	error = NULL;
+	ok(FALSE == hkl_sample_compute_UB_busing_levy(sample, r0, r0, &error), __func__);
+	ok(error != NULL, __func__);
+	g_clear_error(&error);
+	ok(TRUE == hkl_matrix_cmp(m_ref, hkl_sample_U_get(sample)), __func__);
 
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);
@@ -225,6 +297,7 @@ static void compute_UB_busing_levy(void)
 
 static void affine(void)
 {
+	GError *error;
 	double a, b, c, alpha, beta, gamma;
 	const HklFactory *factory;
 	HklDetector *detector;
@@ -271,7 +344,12 @@ static void affine(void)
 	ref = hkl_sample_reflection_new(geometry, detector, .665975615037, .683012701892, .299950211252, NULL);
 	hkl_sample_add_reflection(sample, ref);
 
+
 	ok(TRUE == hkl_sample_affine(sample, NULL), __func__);
+
+	error = NULL;
+	ok(TRUE == hkl_sample_affine(sample, &error), __func__);
+	ok(error == NULL, __func__);
 
 	hkl_lattice_get(hkl_sample_lattice_get(sample),
 			&a, &b, &c, &alpha, &beta, &gamma, HKL_UNIT_DEFAULT);
@@ -283,15 +361,7 @@ static void affine(void)
 	is_double(90 * HKL_DEGTORAD, alpha, HKL_EPSILON, __func__);
 	is_double(90 * HKL_DEGTORAD, beta, HKL_EPSILON, __func__);
 	is_double(90 * HKL_DEGTORAD, gamma, HKL_EPSILON, __func__);
-	is_double(0.,
-		  hkl_parameter_value_get(hkl_sample_ux_get(sample), HKL_UNIT_DEFAULT),
-		  HKL_EPSILON, __func__);
-	is_double(0.,
-		  hkl_parameter_value_get(hkl_sample_uy_get(sample), HKL_UNIT_DEFAULT),
-		  HKL_EPSILON, __func__);
-	is_double(0.,
-		  hkl_parameter_value_get(hkl_sample_uz_get(sample), HKL_UNIT_DEFAULT),
-		  HKL_EPSILON, __func__);
+	CHECK_UX_UY_UZ(sample, 0., 0., 0.);
 
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);
@@ -424,15 +494,7 @@ static void reflection_set_geometry(void)
 	is_double(90 * HKL_DEGTORAD, alpha, HKL_EPSILON, __func__);
 	is_double(90 * HKL_DEGTORAD, beta, HKL_EPSILON, __func__);
 	is_double(90 * HKL_DEGTORAD, gamma, HKL_EPSILON, __func__);
-	is_double(0.,
-		  hkl_parameter_value_get(hkl_sample_ux_get(sample), HKL_UNIT_DEFAULT),
-		  HKL_EPSILON, __func__);
-	is_double(0.,
-		  hkl_parameter_value_get(hkl_sample_uy_get(sample), HKL_UNIT_DEFAULT),
-		  HKL_EPSILON, __func__);
-	is_double(0.,
-		  hkl_parameter_value_get(hkl_sample_uz_get(sample), HKL_UNIT_DEFAULT),
-		  HKL_EPSILON, __func__);
+	CHECK_UX_UY_UZ(sample, 0., 0., 0.);
 
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);
@@ -442,12 +504,13 @@ static void reflection_set_geometry(void)
 
 int main(int argc, char** argv)
 {
-	plan(70);
+	plan(114);
 
 	new();
 	add_reflection();
 	get_reflection();
 	del_reflection();
+	set_ux_uy_uz();
 	set_UB();
 	compute_UB_busing_levy();
 	affine();

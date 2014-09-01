@@ -46,7 +46,54 @@
 #include "hkl/ccan/darray/darray.h"     // for darray_foreach, darray_item
 #include "hkl/ccan/list/list.h"         // for list_head, list_add_tail, etc
 
+/* #define DEBUG */
+#define ITER_MAX 10000
+
 /* private */
+static void hkl_sample_clear_all_reflections(HklSample *self)
+{
+	HklSampleReflection *reflection;
+	HklSampleReflection *next;
+
+	list_for_each_safe(&self->reflections, reflection, next, list){
+		list_del(&reflection->list);
+		hkl_sample_reflection_free(reflection);
+	}
+}
+
+
+static void hkl_sample_copy_all_reflections(HklSample *self, const  HklSample *src)
+{
+	HklSampleReflection *reflection;
+
+	list_head_init(&self->reflections);
+	list_for_each(&src->reflections, reflection, list){
+		list_add_tail(&self->reflections,
+			      &hkl_sample_reflection_new_copy(reflection)->list);
+	}
+	self->n_reflections = src->n_reflections;
+}
+
+
+static void hkl_sample_sample_set(HklSample *self, const HklSample *src)
+{
+	if(self->name)
+		free(self->name);
+	self->name = strdup(src->name);
+
+	hkl_lattice_lattice_set(self->lattice, src->lattice);
+	self->U = src->U;
+	self->UB = src->UB;
+
+	hkl_parameter_init_copy(self->ux, src->ux, NULL);
+	hkl_parameter_init_copy(self->uy, src->uy, NULL);
+	hkl_parameter_init_copy(self->uz, src->uz, NULL);
+
+	/* copy all the reflections */
+	hkl_sample_clear_all_reflections(self);
+	hkl_sample_copy_all_reflections(self, src);
+}
+
 
 static void hkl_sample_reflection_update(HklSampleReflection *self)
 {
@@ -101,44 +148,66 @@ static int hkl_sample_compute_UB(HklSample *self)
 struct set_UB_t
 {
 	HklSample *sample;
-	const HklMatrix *UB;
+	const HklMatrix UB;
 };
 
-static double set_UB_fitness(const gsl_vector *x, void *params)
+static int hkl_sample_init_from_gsl_vector(HklSample *self, const gsl_vector *x)
 {
-	size_t i, j;
-	double fitness;
-	double euler_x;
-	double euler_y;
-	double euler_z;
-	struct set_UB_t *parameters = params;
-	HklSample *sample = parameters->sample;
-	const HklMatrix *UB = parameters->UB;
+	double euler_x, euler_y, euler_z;
 
 	euler_x = gsl_vector_get(x, 0);
 	euler_y = gsl_vector_get(x, 1);
 	euler_z = gsl_vector_get(x, 2);
 
-	hkl_parameter_value_set(sample->ux, euler_x, HKL_UNIT_DEFAULT, NULL);
-	hkl_parameter_value_set(sample->uy, euler_y, HKL_UNIT_DEFAULT, NULL);
-	hkl_parameter_value_set(sample->uz, euler_z, HKL_UNIT_DEFAULT, NULL);
-	hkl_parameter_value_set(sample->lattice->a, gsl_vector_get(x, 3), HKL_UNIT_DEFAULT, NULL);
-	hkl_parameter_value_set(sample->lattice->b, gsl_vector_get(x, 4), HKL_UNIT_DEFAULT, NULL);
-	hkl_parameter_value_set(sample->lattice->c, gsl_vector_get(x, 5), HKL_UNIT_DEFAULT, NULL);
-	hkl_parameter_value_set(sample->lattice->alpha, gsl_vector_get(x, 6), HKL_UNIT_DEFAULT, NULL);
-	hkl_parameter_value_set(sample->lattice->beta, gsl_vector_get(x, 7), HKL_UNIT_DEFAULT, NULL);
-	hkl_parameter_value_set(sample->lattice->gamma, gsl_vector_get(x, 8), HKL_UNIT_DEFAULT, NULL);
+	hkl_parameter_value_set(self->ux, euler_x, HKL_UNIT_DEFAULT, NULL);
+	hkl_parameter_value_set(self->uy, euler_y, HKL_UNIT_DEFAULT, NULL);
+	hkl_parameter_value_set(self->uz, euler_z, HKL_UNIT_DEFAULT, NULL);
+	hkl_parameter_value_set(self->lattice->a, gsl_vector_get(x, 3), HKL_UNIT_DEFAULT, NULL);
+	hkl_parameter_value_set(self->lattice->b, gsl_vector_get(x, 4), HKL_UNIT_DEFAULT, NULL);
+	hkl_parameter_value_set(self->lattice->c, gsl_vector_get(x, 5), HKL_UNIT_DEFAULT, NULL);
+	hkl_parameter_value_set(self->lattice->alpha, gsl_vector_get(x, 6), HKL_UNIT_DEFAULT, NULL);
+	hkl_parameter_value_set(self->lattice->beta, gsl_vector_get(x, 7), HKL_UNIT_DEFAULT, NULL);
+	hkl_parameter_value_set(self->lattice->gamma, gsl_vector_get(x, 8), HKL_UNIT_DEFAULT, NULL);
 
-	hkl_matrix_init_from_euler(&sample->U, euler_x, euler_y, euler_z);
-	if (!hkl_sample_compute_UB(sample))
+	hkl_matrix_init_from_euler(&self->U, euler_x, euler_y, euler_z);
+	if (!hkl_sample_compute_UB(self))
+		return FALSE;
+
+	return TRUE;
+}
+
+static void hkl_sample_to_gsl_vector(HklSample *self, gsl_vector *x)
+{
+	gsl_vector_set (x, 0, hkl_parameter_value_get(self->ux, HKL_UNIT_DEFAULT));
+	gsl_vector_set (x, 1, hkl_parameter_value_get(self->uy, HKL_UNIT_DEFAULT));
+	gsl_vector_set (x, 2, hkl_parameter_value_get(self->uz, HKL_UNIT_DEFAULT));
+	gsl_vector_set (x, 3, hkl_parameter_value_get(self->lattice->a, HKL_UNIT_DEFAULT));
+	gsl_vector_set (x, 4, hkl_parameter_value_get(self->lattice->b, HKL_UNIT_DEFAULT));
+	gsl_vector_set (x, 5, hkl_parameter_value_get(self->lattice->c, HKL_UNIT_DEFAULT));
+	gsl_vector_set (x, 6, hkl_parameter_value_get(self->lattice->alpha, HKL_UNIT_DEFAULT));
+	gsl_vector_set (x, 7, hkl_parameter_value_get(self->lattice->beta, HKL_UNIT_DEFAULT));
+	gsl_vector_set (x, 8, hkl_parameter_value_get(self->lattice->gamma, HKL_UNIT_DEFAULT));
+
+}
+
+static double set_UB_fitness(const gsl_vector *x, void *params)
+{
+	size_t i, j;
+	double fitness = 0.;
+	struct set_UB_t *parameters = params;
+	HklSample *sample = parameters->sample;
+
+	if (!hkl_sample_init_from_gsl_vector(sample, x))
 		return GSL_NAN;
 
-	fitness = 0.;
 	for(i=0; i<3; ++i)
 		for(j=0; j<3; ++j){
-			double tmp = UB->data[i][j] - sample->UB.data[i][j];
+			double tmp = parameters->UB.data[i][j] - sample->UB.data[i][j];
 			fitness += tmp * tmp;
 		}
+#ifdef DEBUG
+	fprintf(stderr, "fitness: %f\n", fitness);
+#endif
 	return fitness;
 }
 
@@ -146,27 +215,10 @@ static double mono_crystal_fitness(const gsl_vector *x, void *params)
 {
 	size_t i, j;
 	double fitness;
-	double euler_x;
-	double euler_y;
-	double euler_z;
 	HklSample *sample = params;
 	HklSampleReflection *reflection;
 
-	euler_x = gsl_vector_get(x, 0);
-	euler_y = gsl_vector_get(x, 1);
-	euler_z = gsl_vector_get(x, 2);
-
-	hkl_parameter_value_set(sample->ux, euler_x, HKL_UNIT_DEFAULT, NULL);
-	hkl_parameter_value_set(sample->uy, euler_y, HKL_UNIT_DEFAULT, NULL);
-	hkl_parameter_value_set(sample->uz, euler_z, HKL_UNIT_DEFAULT, NULL);
-	hkl_parameter_value_set(sample->lattice->a, gsl_vector_get(x, 3), HKL_UNIT_DEFAULT, NULL);
-	hkl_parameter_value_set(sample->lattice->b, gsl_vector_get(x, 4), HKL_UNIT_DEFAULT, NULL);
-	hkl_parameter_value_set(sample->lattice->c, gsl_vector_get(x, 5), HKL_UNIT_DEFAULT, NULL);
-	hkl_parameter_value_set(sample->lattice->alpha, gsl_vector_get(x, 6), HKL_UNIT_DEFAULT, NULL);
-	hkl_parameter_value_set(sample->lattice->beta, gsl_vector_get(x, 7), HKL_UNIT_DEFAULT, NULL);
-	hkl_parameter_value_set(sample->lattice->gamma, gsl_vector_get(x, 8), HKL_UNIT_DEFAULT, NULL);
-	hkl_matrix_init_from_euler(&sample->U, euler_x, euler_y, euler_z);
-	if (!hkl_sample_compute_UB(sample))
+	if (!hkl_sample_init_from_gsl_vector(sample, x))
 		return GSL_NAN;
 
 	fitness = 0.;
@@ -190,6 +242,7 @@ static int minimize(HklSample *sample,
 		    double (* f) (const gsl_vector * x, void * params),
 		    void *params, GError **error)
 {
+	HklSample *saved;
 	gsl_multimin_fminimizer_type const *T = gsl_multimin_fminimizer_nmsimplex;
 	gsl_multimin_fminimizer *s = NULL;
 	gsl_vector *ss, *x;
@@ -197,20 +250,16 @@ static int minimize(HklSample *sample,
 	size_t iter = 0;
 	int status;
 	double size = 0;
+	int res = TRUE;
 
 	hkl_error (error == NULL || *error == NULL);
 
+	/* save the sample state */
+	saved = hkl_sample_new_copy(sample);
+
 	/* Starting point */
 	x = gsl_vector_alloc (9);
-	gsl_vector_set (x, 0, hkl_parameter_value_get(sample->ux, HKL_UNIT_DEFAULT));
-	gsl_vector_set (x, 1, hkl_parameter_value_get(sample->uy, HKL_UNIT_DEFAULT));
-	gsl_vector_set (x, 2, hkl_parameter_value_get(sample->uz, HKL_UNIT_DEFAULT));
-	gsl_vector_set (x, 3, hkl_parameter_value_get(sample->lattice->a, HKL_UNIT_DEFAULT));
-	gsl_vector_set (x, 4, hkl_parameter_value_get(sample->lattice->b, HKL_UNIT_DEFAULT));
-	gsl_vector_set (x, 5, hkl_parameter_value_get(sample->lattice->c, HKL_UNIT_DEFAULT));
-	gsl_vector_set (x, 6, hkl_parameter_value_get(sample->lattice->alpha, HKL_UNIT_DEFAULT));
-	gsl_vector_set (x, 7, hkl_parameter_value_get(sample->lattice->beta, HKL_UNIT_DEFAULT));
-	gsl_vector_set (x, 8, hkl_parameter_value_get(sample->lattice->gamma, HKL_UNIT_DEFAULT));
+	hkl_sample_to_gsl_vector(sample, x);
 
 	/* Set initial step sizes to 1 */
 	ss = gsl_vector_alloc (9);
@@ -234,20 +283,39 @@ static int minimize(HklSample *sample,
 	do {
 		++iter;
 		status = gsl_multimin_fminimizer_iterate(s);
+#ifdef DEBUG
+		fprintf(stderr, "status iterate: %d (%d): %s\n", status, iter, gsl_strerror(status));
+#endif
 		if (status)
 			break;
 		size = gsl_multimin_fminimizer_size (s);
 		status = gsl_multimin_test_size (size, HKL_EPSILON / 2.);
-	} while (status == GSL_CONTINUE && iter < 10000);
+#ifdef DEBUG
+		fprintf(stderr, "status test: %d size: %f :%s\n", status, size, gsl_strerror(status));
+		fprintf(stderr, " x:");
+		for(int i=0; i<9; ++i)
+			fprintf(stderr, " %f", gsl_vector_get(s->x, i));
+		fprintf(stderr, "\n");
+#endif
+	} while (status == GSL_CONTINUE && iter < ITER_MAX);
 	gsl_vector_free(x);
 	gsl_vector_free(ss);
 	gsl_multimin_fminimizer_free(s);
 	gsl_set_error_handler (NULL);
 
-	if (status == GSL_CONTINUE)
-		return FALSE;
+	if (status == GSL_CONTINUE){
+		hkl_sample_sample_set(sample, saved); /* restore the saved sample */
+		g_set_error(error,
+			    HKL_SAMPLE_ERROR,
+			    HKL_SAMPLE_ERROR_MINIMIZED,
+			    "Minimization failed after %d iterations.",
+			    ITER_MAX);
+		res = FALSE;
+	}
 
-	return TRUE;
+	hkl_sample_free(saved);
+
+	return res;
 }
 
 /*************/
@@ -308,7 +376,6 @@ HklSample* hkl_sample_new(const char *name)
 HklSample *hkl_sample_new_copy(const HklSample *self)
 {
 	HklSample *dup = NULL;
-	HklSampleReflection *reflection;
 
 	/* check parameters */
 	if(!self)
@@ -324,13 +391,7 @@ HklSample *hkl_sample_new_copy(const HklSample *self)
 	dup->uy = hkl_parameter_new_copy(self->uy);
 	dup->uz = hkl_parameter_new_copy(self->uz);
 
-	/* copy the reflections */
-	list_head_init(&dup->reflections);
-	list_for_each(&self->reflections, reflection, list){
-		list_add_tail(&dup->reflections,
-			      &hkl_sample_reflection_new_copy(reflection)->list);
-	}
-	dup->n_reflections = self->n_reflections;
+	hkl_sample_copy_all_reflections(dup, self);
 
 	return dup;
 }
@@ -343,9 +404,6 @@ HklSample *hkl_sample_new_copy(const HklSample *self)
  **/
 void hkl_sample_free(HklSample *self)
 {
-	HklSampleReflection *reflection;
-	HklSampleReflection *next;
-
 	if (!self)
 		return;
 
@@ -354,10 +412,7 @@ void hkl_sample_free(HklSample *self)
 	hkl_parameter_free(self->ux);
 	hkl_parameter_free(self->uy);
 	hkl_parameter_free(self->uz);
-	list_for_each_safe(&self->reflections, reflection, next, list){
-		list_del(&reflection->list);
-		hkl_sample_reflection_free(reflection);
-	}
+	hkl_sample_clear_all_reflections(self);
 	free(self);
 }
 
@@ -577,7 +632,7 @@ int hkl_sample_UB_set(HklSample *self, const HklMatrix *UB,
 {
 	struct set_UB_t params = {
 		.sample = self,
- 		.UB = UB
+		.UB = *UB
 	};
 
 	return minimize(self, set_UB_fitness, &params, error);
@@ -589,7 +644,7 @@ int hkl_sample_UB_set(HklSample *self, const HklMatrix *UB,
  *
  * return the number of reflections of the sample
  *
- * Returns: 
+ * Returns:
  **/
 size_t hkl_sample_n_reflections_get(const HklSample *self)
 {
@@ -674,6 +729,8 @@ int hkl_sample_compute_UB_busing_levy(HklSample *self,
 				      GError **error)
 
 {
+	hkl_error (error == NULL || *error == NULL);
+
 	if (!hkl_vector_is_colinear(&r1->hkl, &r2->hkl)) {
 		HklVector h1c;
 		HklVector h2c;
@@ -695,8 +752,15 @@ int hkl_sample_compute_UB_busing_levy(HklSample *self,
 		hkl_matrix_times_matrix(&self->U, &Tc);
 		hkl_sample_compute_UxUyUz(self);
 		hkl_sample_compute_UB(self);
-	} else
+	}else{
+		g_set_error(error,
+			    HKL_SAMPLE_ERROR,
+			    HKL_SAMPLE_ERROR_COMPUTE_UB_BUSING_LEVY,
+			    "It is not possible to compute the UB matrix when the given reflections are colinear");
+
 		return FALSE;
+	}
+	g_assert (error == NULL || *error == NULL);
 
 	return TRUE;
 }
