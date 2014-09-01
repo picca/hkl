@@ -22,6 +22,7 @@
 #include "hkl.h"
 #include <tap/basic.h>
 #include <tap/float.h>
+#include <tap/hkl-tap.h>
 
 #define CHECK_PARAM(_lattice, _param, _value)				\
 	is_double(_value,						\
@@ -289,7 +290,7 @@ static void get_B(void)
 				  NULL);
 
 	hkl_lattice_get_B(lattice, B);
-	ok(TRUE == hkl_matrix_cmp(B_ref, B), __func__);
+	is_matrix(B_ref, B, __func__);
 
 	hkl_lattice_free(lattice);
 	hkl_matrix_free(B);
@@ -315,7 +316,7 @@ static void get_1_B(void)
 
 	/* B times B^-1 = Identity */
 	hkl_matrix_times_matrix(I, B_1);
-	ok(TRUE == hkl_matrix_cmp(I_ref, I), __func__);
+	is_matrix(I_ref, I, __func__);
 
 	hkl_lattice_free(lattice);
 	hkl_matrix_free(B_1);

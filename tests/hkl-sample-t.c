@@ -251,12 +251,12 @@ static void compute_UB_busing_levy(void)
 	hkl_sample_add_reflection(sample, r1);
 
 	ok(TRUE == hkl_sample_compute_UB_busing_levy(sample, r0, r1, NULL), __func__);
-	ok(TRUE == hkl_matrix_cmp(m_I, hkl_sample_U_get(sample)), __func__);
+	is_matrix(m_I, hkl_sample_U_get(sample), __func__);
 
 	error = NULL;
 	ok(TRUE == hkl_sample_compute_UB_busing_levy(sample, r0, r1, &error), __func__);
 	ok(error == NULL, __func__);
-	ok(TRUE == hkl_matrix_cmp(m_I, hkl_sample_U_get(sample)), __func__);
+	is_matrix(m_I, hkl_sample_U_get(sample), __func__);
 
 	CHECK_UX_UY_UZ(sample, 0., 0., 0.);
 
@@ -270,12 +270,12 @@ static void compute_UB_busing_levy(void)
 	hkl_sample_add_reflection(sample, r3);
 
 	ok(TRUE == hkl_sample_compute_UB_busing_levy(sample, r2, r3, NULL), __func__);
-	ok(TRUE == hkl_matrix_cmp(m_ref, hkl_sample_U_get(sample)), __func__);
+	is_matrix(m_ref, hkl_sample_U_get(sample), __func__);
 
 	error = NULL;
 	ok(TRUE == hkl_sample_compute_UB_busing_levy(sample, r2, r3, &error), __func__);
 	ok(error == NULL, __func__);
-	ok(TRUE == hkl_matrix_cmp(m_ref, hkl_sample_U_get(sample)), __func__);
+	is_matrix(m_ref, hkl_sample_U_get(sample), __func__);
 
 	CHECK_UX_UY_UZ(sample, -90. * HKL_DEGTORAD, 0., 0.);
 
@@ -286,7 +286,7 @@ static void compute_UB_busing_levy(void)
 	ok(FALSE == hkl_sample_compute_UB_busing_levy(sample, r0, r0, &error), __func__);
 	ok(error != NULL, __func__);
 	g_clear_error(&error);
-	ok(TRUE == hkl_matrix_cmp(m_ref, hkl_sample_U_get(sample)), __func__);
+	is_matrix(m_ref, hkl_sample_U_get(sample), __func__);
 
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);
@@ -354,7 +354,7 @@ static void affine(void)
 	hkl_lattice_get(hkl_sample_lattice_get(sample),
 			&a, &b, &c, &alpha, &beta, &gamma, HKL_UNIT_DEFAULT);
 
-	ok(TRUE == hkl_matrix_cmp(m_ref, hkl_sample_U_get(sample)), __func__);
+	is_matrix(m_ref, hkl_sample_U_get(sample), __func__);
 	is_double(1.54, a, HKL_EPSILON, __func__);
 	is_double(1.54, b, HKL_EPSILON, __func__);
 	is_double(1.54, c, HKL_EPSILON, __func__);
@@ -487,7 +487,7 @@ static void reflection_set_geometry(void)
 			&a, &b, &c, &alpha, &beta, &gamma,
 			HKL_UNIT_DEFAULT);
 
-	ok(TRUE == hkl_matrix_cmp(m_ref, hkl_sample_U_get(sample)), __func__);
+	is_matrix(m_ref, hkl_sample_U_get(sample), __func__);
 	is_double(1.54, a, HKL_EPSILON, __func__);
 	is_double(1.54, b, HKL_EPSILON, __func__);
 	is_double(1.54, c, HKL_EPSILON, __func__);

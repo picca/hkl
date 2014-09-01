@@ -1,0 +1,14 @@
+// use is_matrix when possible
+
+@i@
+@@
+
+#include <tap/hkl-tap.h>
+
+@depends on i@
+identifier M, __func__;
+expression E;
+@@
+
+-ok(TRUE == hkl_matrix_cmp(M, E), __func__);
++is_matrix(M, E, __func__);

@@ -22,6 +22,7 @@
 #include "hkl.h"
 #include <tap/basic.h>
 #include <tap/float.h>
+#include <tap/hkl-tap.h>
 
 #include "hkl-quaternion-private.h"
 
@@ -108,7 +109,7 @@ static void to_matrix(void)
 	HklMatrix *m = hkl_matrix_new();
 
 	hkl_quaternion_to_matrix(&q_ref, m);
-	ok(TRUE == hkl_matrix_cmp(m_ref, m), __func__);
+	is_matrix(m_ref, m, __func__);
 
 	hkl_matrix_free(m_ref);
 	hkl_matrix_free(m);
