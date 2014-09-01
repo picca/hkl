@@ -27,9 +27,129 @@
 
 #define with_log 1
 
-static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
+typedef int (* test_func) (HklEngine *engine, HklEngineList *engine_list, unsigned int n);
+
+static int _test(int nb_iter, test_func f)
+{
+	HklFactory **factories;
+	unsigned int i, n;
+	HklGeometry *geometry = NULL;
+	HklDetector *detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
+	HklSample *sample = hkl_sample_new("test");
+	HklEngineList *engines;
+	int res = TRUE;
+
+	/* attach to the second holder */
+	hkl_detector_idx_set(detector, 1);
+
+	factories = hkl_factory_get_all(&n);
+	for(i=0; i<n; i++){
+		HklEngine **engine;
+
+		geometry = hkl_factory_create_new_geometry(factories[i]);
+		engines = hkl_factory_create_new_engine_list(factories[i]);
+		hkl_engine_list_init(engines, geometry, detector, sample);
+		darray_foreach(engine, *hkl_engine_list_engines_get(engines)){
+			res &= f(*engine, engines, nb_iter);
+#if with_log
+			fprintf(stderr, "\n");
+#endif
+		}
+		hkl_geometry_free(geometry);
+		hkl_engine_list_free(engines);
+	}
+
+	hkl_detector_free(detector);
+	hkl_sample_free(sample);
+
+	return res;
+}
+
+static void factories(void)
+{
+	int res = TRUE;
+	uint i, n;
+	HklEngineList *engines;
+	HklFactory **factories;
+
+	factories = hkl_factory_get_all(&n);
+	for(i=0;i<n; i++){
+		engines = hkl_factory_create_new_engine_list(factories[i]);
+		hkl_engine_list_free(engines);
+	}
+
+	ok(res == TRUE, "factories");
+}
+
+static int _get(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
 {
 	uint i;
+	GError *error;
+	int ko = FALSE;
+	const char **mode;
+	HklGeometry *geometry = hkl_engine_list_geometry_get(engine_list);
+	const darray_string *modes = hkl_engine_modes_names_get(engine);
+	const darray_string *pseudo_axes = hkl_engine_pseudo_axes_names_get(engine);
+	const size_t n_pseudo_axes = darray_size(*pseudo_axes);
+	double targets[n_pseudo_axes];
+	double currents[n_pseudo_axes];
+
+	darray_foreach(mode, *modes){
+		if(!hkl_engine_current_mode_set(engine, *mode, NULL))
+			continue;
+
+		for(i=0;i<n && !ko;++i) {
+			int res;
+			uint j;
+
+
+			/* randomize the geometry */
+			hkl_geometry_randomize(geometry);
+
+			/* randomize the pseudoAxes values */
+			hkl_tap_engine_pseudo_axes_randomize(engine,
+							     targets, n_pseudo_axes,
+							     HKL_UNIT_DEFAULT);
+
+			/* randomize the parameters */
+			hkl_tap_engine_parameters_randomize(engine);
+
+			/* pseudo -> geometry */
+			if(!hkl_engine_initialized_set(engine, TRUE, NULL))
+				continue;
+
+
+			if(!hkl_engine_pseudo_axes_values_get(engine, currents, n_pseudo_axes,
+							      HKL_UNIT_DEFAULT, NULL))
+				continue;
+
+			/* idem with error management */
+			error = NULL;
+			res = hkl_engine_pseudo_axes_values_get(engine, currents, n_pseudo_axes,
+								HKL_UNIT_DEFAULT, &error);
+
+			if(!res)
+				ko |= error == NULL;
+			else{
+				ko |= error != NULL; /* no error */
+				for(j=0; j<n_pseudo_axes; ++j)
+					ko |= targets[j] == currents[j]; /* TODO this test is almost true, need a real check */
+			}
+		}
+	}
+
+	return !ko;
+}
+
+static void get()
+{
+	ok(TRUE == _test(1, _get), __func__);
+}
+
+static int _set(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
+{
+	uint i;
+	GError *error;
 	int unreachable = 0;
 	int ko = FALSE;
 	const char **mode;
@@ -44,7 +164,13 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 	hkl_geometry_randomize(geometry);
 
 	darray_foreach(mode, *modes){
-		hkl_engine_current_mode_set(engine, *mode, NULL);
+		error = NULL;
+		if(!hkl_engine_current_mode_set(engine, *mode, &error)){
+			ko |= error == NULL;
+			g_clear_error(&error);
+		}else
+			ko |= error != NULL;
+
 		/* for now unactive the eulerians check */
 		if(!strcmp(*mode, "eulerians"))
 			continue;
@@ -64,30 +190,47 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 			hkl_tap_engine_parameters_randomize(engine);
 
 			/* pseudo -> geometry */
-			hkl_engine_initialized_set(engine, TRUE, NULL);
+			error = NULL;
+			if(!hkl_engine_initialized_set(engine, TRUE, &error)){
+				ko |= error == NULL;
+				g_clear_error(&error);
+			}else
+				ko |= error != NULL;
 
 			/* geometry -> pseudo */
+			error = NULL;
 			solutions = hkl_engine_pseudo_axes_values_set(engine,
-								       targets, n_pseudo_axes,
-								       HKL_UNIT_DEFAULT, NULL);
+								      targets, n_pseudo_axes,
+								      HKL_UNIT_DEFAULT, &error);
 			if(solutions) {
+				ko |= error != NULL;
+
 				const HklGeometryListItem *item;
 
 				HKL_GEOMETRY_LIST_FOREACH(item, solutions){
 					hkl_geometry_set(geometry,
 							 hkl_geometry_list_item_geometry_get(item));
 
-					hkl_engine_pseudo_axes_values_get(engine,
-									   currents, n_pseudo_axes,
-									   HKL_UNIT_DEFAULT, NULL);
-					for(j=0; j<n_pseudo_axes; ++j)
-						ko |= fabs(targets[j] - currents[j]) >= HKL_EPSILON;
-					if(ko)
-						break;
+					error = NULL;
+					if(!hkl_engine_pseudo_axes_values_get(engine,
+									      currents, n_pseudo_axes,
+									      HKL_UNIT_DEFAULT, &error)){
+						ko |= error == NULL;
+						g_clear_error(&error);
+					}else{
+						for(j=0; j<n_pseudo_axes; ++j)
+							ko |= fabs(targets[j] - currents[j]) >= HKL_EPSILON;
+						if(ko)
+							break;
+					}
 				}
 				hkl_geometry_list_free(solutions);
-			}else
+			}else{
+				ko |= error == NULL;
+				g_clear_error(&error);
+
 				unreachable++;
+			}
 		}
 #if with_log
 		fprintf(stderr, "\n\"%s\" \"%s\" \"%s\"",
@@ -115,66 +258,12 @@ static int test_engine(HklEngine *engine, HklEngineList *engine_list, unsigned i
 	return !ko;
 }
 
-static int test_engines(HklEngineList *engine_list, int n)
-{
-	int res = TRUE;
-	HklEngine **engine;
-	darray_engine *engines = hkl_engine_list_engines_get(engine_list);
-
-	darray_foreach(engine, *engines){
-		res &= test_engine(*engine, engine_list, n);
-	}
-
-#if with_log
-	fprintf(stderr, "\n");
-#endif
-	return res;
-}
-
-static void factories(void)
-{
-	int res = TRUE;
-	uint i, n;
-	HklEngineList *engines;
-	HklFactory **factories;
-
-	factories = hkl_factory_get_all(&n);
-	for(i=0;i<n; i++){
-		engines = hkl_factory_create_new_engine_list(factories[i]);
-		hkl_engine_list_free(engines);
-	}
-
-	ok(res == TRUE, "factories");
-}
 
 static void set(int nb_iter)
 {
-	HklFactory **factories;
-	unsigned int i, n;
-	HklGeometry *geometry = NULL;
-	HklDetector *detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
-	HklSample *sample = hkl_sample_new("test");
-	HklEngineList *engines;
-	int res = TRUE;
-
-	/* attach to the second holder */
-	hkl_detector_idx_set(detector, 1);
-
-	factories = hkl_factory_get_all(&n);
-	for(i=0; i<n; i++){
-		geometry = hkl_factory_create_new_geometry(factories[i]);
-		engines = hkl_factory_create_new_engine_list(factories[i]);
-		hkl_engine_list_init(engines, geometry, detector, sample);
-		res &= test_engines(engines, nb_iter);
-		hkl_geometry_free(geometry);
-		hkl_engine_list_free(engines);
-	}
-
-	hkl_detector_free(detector);
-	hkl_sample_free(sample);
-
-	ok(res == TRUE, "set");
+	ok(TRUE == _test(nb_iter, _set), __func__);
 }
+
 
 static void capabilities(void)
 {
@@ -270,7 +359,7 @@ int main(int argc, char** argv)
 {
 	double n;
 
-	plan(4);
+	plan(5);
 
 	if (argc > 1)
 		n = atoi(argv[1]);
@@ -278,6 +367,7 @@ int main(int argc, char** argv)
 		n = 10;
 
 	factories();
+	get();
 	set(n);
 	capabilities();
 	axes_names_get();
