@@ -265,6 +265,43 @@ static void set(int nb_iter)
 }
 
 
+static int _pseudo_axis_get(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
+{
+	static const char *bad = "_bad_name_";
+	const darray_string *pseudo_axes_names = hkl_engine_pseudo_axes_names_get(engine);
+	const char **pseudo_axis_name;
+	const HklParameter *pseudo_axis;
+	int res = TRUE;
+	GError *error;
+
+	darray_foreach(pseudo_axis_name, *pseudo_axes_names){
+		pseudo_axis = hkl_engine_pseudo_axis_get(engine, *pseudo_axis_name, NULL);
+		res &= NULL != pseudo_axis;
+
+		error = NULL;
+		pseudo_axis = hkl_engine_pseudo_axis_get(engine, *pseudo_axis_name, &error);
+		res &= NULL != pseudo_axis;
+		res &= NULL == error;
+	}
+
+	/* error */
+	pseudo_axis = hkl_engine_pseudo_axis_get(engine, bad, NULL);
+	res &= NULL == pseudo_axis;
+
+	error = NULL;
+	pseudo_axis = hkl_engine_pseudo_axis_get(engine, bad, &error);
+	res &= NULL == pseudo_axis;
+	res &= error != NULL;
+	g_clear_error(&error);
+
+	return res;
+}
+
+static void pseudo_axis_get(void)
+{
+	ok(TRUE == _test(1, _pseudo_axis_get), __func__);
+}
+
 static void capabilities(void)
 {
 	HklFactory **factories;
@@ -359,7 +396,7 @@ int main(int argc, char** argv)
 {
 	double n;
 
-	plan(5);
+	plan(6);
 
 	if (argc > 1)
 		n = atoi(argv[1]);
@@ -369,6 +406,7 @@ int main(int argc, char** argv)
 	factories();
 	get();
 	set(n);
+	pseudo_axis_get();
 	capabilities();
 	axes_names_get();
 
