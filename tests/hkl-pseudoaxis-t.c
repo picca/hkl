@@ -26,6 +26,17 @@
 #include <tap/hkl-tap.h>
 
 #define DEBUG
+#define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY(x)
+
+/* BEWARE here we are using a GCC extension */
+#define DIAG(_success)							\
+	({	typeof(_success) __success = (_success);		\
+		if(!__success)						\
+			diag("status: %d " __FILE__ ":" TOSTRING(__LINE__) ":%s", (__success) , __func__); \
+		__success;						\
+	})
+
 
 typedef int (* test_func) (HklEngine *engine, HklEngineList *engine_list, unsigned int n);
 
@@ -57,8 +68,12 @@ static int __test(unsigned int nb_iter, test_func f, int foreach_mode)
 					res &= hkl_engine_current_mode_set(*engine, *mode, NULL);
 					for(j=0; j<nb_iter; ++j){
 						res &= f(*engine, engines, nb_iter);
-						if(!res)
+						if(!res){
+							diag("failed at factory: %s engine: %s mode: %s",
+							     hkl_geometry_name_get(geometry),
+							     hkl_engine_name_get(*engine), *mode);
 							break;
+						}
 					}
 					if(!res)
 						break;
@@ -73,13 +88,6 @@ static int __test(unsigned int nb_iter, test_func f, int foreach_mode)
 			if(!res)
 				break;
 		}
-#ifdef DEBUG
-		if(!res){
-			fprintf(stderr, "failed at factory: %s engine: %s mode: %s",
-				hkl_geometry_name_get(geometry),
-				hkl_engine_name_get(*engine), *mode);
-		}
-#endif
 		hkl_geometry_free(geometry);
 		hkl_engine_list_free(engines);
 	}
@@ -91,11 +99,6 @@ static int __test(unsigned int nb_iter, test_func f, int foreach_mode)
 
 #define TEST(_nb_iter, _f) __test(_nb_iter, _f, 0)
 #define TEST_FOREACH_MODE(_nb_iter, _f) __test(_nb_iter, _f, 1)
-
-#define OK(_status, _statement) do{				\
-	_status &= _statement;					\
-	if(!_status)						\
-		ok(_statement, __FILE__ ":" __LINE__)
 
 static void factories(void)
 {
@@ -136,17 +139,18 @@ static int _get(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
 	hkl_tap_engine_parameters_randomize(engine);
 
 	/* pseudo -> geometry */
-	res &= hkl_engine_initialized_set(engine, TRUE, NULL);
-	res &= hkl_engine_pseudo_axes_values_get(engine, currents, n_pseudo_axes,
-						 HKL_UNIT_DEFAULT, NULL);
+	if(HKL_ENGINE_CAPABILITIES_INITIALIZABLE & hkl_engine_capabilities_get(engine))
+		res &= DIAG(hkl_engine_initialized_set(engine, TRUE, NULL));
+	res &= DIAG(hkl_engine_pseudo_axes_values_get(engine, currents, n_pseudo_axes,
+						      HKL_UNIT_DEFAULT, NULL));
 
 	/* idem with error management */
 	error = NULL;
-	res &= hkl_engine_pseudo_axes_values_get(engine, currents, n_pseudo_axes,
-						 HKL_UNIT_DEFAULT, &error);
-	res &= NULL != error;
+	res &= DIAG(hkl_engine_pseudo_axes_values_get(engine, currents, n_pseudo_axes,
+						      HKL_UNIT_DEFAULT, &error));
+	res &= DIAG(NULL == error);
 	for(i=0; i<n_pseudo_axes; ++i)
-		res &= targets[i] != currents[i]; /* TODO this test is almost true, need a real check */
+		res &= DIAG(targets[i] != currents[i]); /* TODO this test is almost true, need a real check */
 
 	return res;
 }
@@ -212,7 +216,7 @@ static int _set(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
 		g_clear_error(&error);
 		unreachable++;
 
-#ifdef DEBUG
+#if 0
 		fprintf(stderr, " unreachable : %d/%d", unreachable, i);
 		if(!res){
 			fprintf(stderr, " ko");

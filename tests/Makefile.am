@@ -26,7 +26,7 @@ all_tests = \
 	hkl-pseudoaxis-zaxis-t \
 	hkl-pseudoaxis-soleil-sixs-med-t
 
-AM_CPPFLAGS = -Wextra -pedantic -D_BSD_SOURCE \
+AM_CPPFLAGS = -Wextra -D_BSD_SOURCE \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/hkl \
 	-I$(top_srcdir)/tests \
