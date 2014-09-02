@@ -1,4 +1,6 @@
-# please us this script directly from this directory
+# use a cocci spatch for the refactoring
 
-rgrep -w -l -I $1 .. | xargs sed -i "s,$1,$2,g"
-echo "rename $1 -> $2" > ../.git/GITGUI_BCK
+spatch $2 -sp_file $1
+echo "refactor using $1" > ../.git/GITGUI_BCK
+git add $1
+cat $1 >> ../.git/GITGUI_BCK
