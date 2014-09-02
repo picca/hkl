@@ -25,7 +25,7 @@
 #include <tap/basic.h>
 #include <tap/hkl-tap.h>
 
-#define with_log 1
+#define with_log 0
 
 typedef int (* test_func) (HklEngine *engine, HklEngineList *engine_list, unsigned int n);
 
@@ -323,6 +323,55 @@ static void capabilities(void)
 	ok(TRUE == _test(1, _capabilities), __func__);
 }
 
+static int _initialized(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
+{
+	int res = TRUE;
+	GError *error = NULL;
+	const unsigned long capabilities = hkl_engine_capabilities_get(engine);
+
+	/* all psi engines must be initialisable */
+	if(!strcmp("psi", hkl_engine_name_get(engine))){
+		/* res &= (capabilities & HKL_ENGINE_CAPABILITIES_INITIALIZABLE) != 0; */
+		/* /\* first it must not be initialized *\/ */
+		/* res &= FALSE == hkl_engine_initialized_get(engine); */
+
+		/* res &= TRUE == hkl_engine_initialized_set(engine, FALSE, NULL); */
+		/* res &= FALSE == hkl_engine_initialized_get(engine); */
+		/* res &= TRUE == hkl_engine_initialized_set(engine, TRUE, NULL); */
+		/* res &= TRUE == hkl_engine_initialized_get(engine);		 */
+
+		/* res &= TRUE == hkl_engine_initialized_set(engine, FALSE, &error); */
+		/* res &= FALSE == hkl_engine_initialized_get(engine); */
+		/* res &= NULL == error; */
+		/* res &= TRUE == hkl_engine_initialized_set(engine, TRUE, &error); */
+		/* res &= TRUE == hkl_engine_initialized_get(engine);		 */
+		/* res &= NULL == error; */
+	}else{
+		/* non-initializable engine should not produce an error */
+		res &= TRUE == hkl_engine_initialized_set(engine, TRUE, NULL);
+		res &= TRUE == hkl_engine_initialized_get(engine);
+		res &= TRUE == hkl_engine_initialized_set(engine, FALSE, NULL);
+		res &= TRUE == hkl_engine_initialized_get(engine);
+
+		res &= TRUE == hkl_engine_initialized_set(engine, TRUE, &error);
+		res &= TRUE == hkl_engine_initialized_get(engine);
+		res &= NULL == error;
+		res &= TRUE == hkl_engine_initialized_set(engine, FALSE, &error);
+		res &= TRUE == hkl_engine_initialized_get(engine);
+		res &= NULL == error;
+	}
+
+	return res;
+}
+
+static void initialized(void)
+{
+	ok(TRUE == _test(1, _initialized), __func__);
+}
+
+HKLAPI int hkl_engine_initialized_set(HklEngine *self, int initialized,
+				      GError **error) HKL_ARG_NONNULL(1) HKL_WARN_UNUSED_RESULT;
+
 static int _check_axes(const darray_string *axes, const darray_string *refs)
 {
 	int ko = TRUE;
@@ -386,7 +435,7 @@ int main(int argc, char** argv)
 {
 	double n;
 
-	plan(6);
+	plan(7);
 
 	if (argc > 1)
 		n = atoi(argv[1]);
@@ -398,6 +447,7 @@ int main(int argc, char** argv)
 	set(n);
 	pseudo_axis_get();
 	capabilities();
+	initialized();
 	axes_names_get();
 
 	return 0;
