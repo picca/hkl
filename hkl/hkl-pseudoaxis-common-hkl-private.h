@@ -92,6 +92,7 @@ static const HklModeOperations hkl_full_mode_operations = {
 
 static const HklModeOperations psi_constant_vertical_mode_operations = {
 	HKL_MODE_OPERATIONS_HKL_DEFAULTS,
+	.capabilities = HKL_ENGINE_CAPABILITIES_READABLE | HKL_ENGINE_CAPABILITIES_WRITABLE | HKL_ENGINE_CAPABILITIES_INITIALIZABLE,
 	.initialized_set = hkl_mode_initialized_set_psi_constant_vertical_real,
 	.set = hkl_mode_set_hkl_real,
 };

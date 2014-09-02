@@ -65,11 +65,11 @@ static int __test(unsigned int nb_iter, test_func f, int foreach_mode)
 			const darray_string *modes = hkl_engine_modes_names_get(*engine);
 			if (foreach_mode){
 				darray_foreach(mode, *modes){
-					res &= hkl_engine_current_mode_set(*engine, *mode, NULL);
+					res &= DIAG(hkl_engine_current_mode_set(*engine, *mode, NULL));
 					for(j=0; j<nb_iter; ++j){
-						res &= f(*engine, engines, nb_iter);
+						res &= DIAG(f(*engine, engines, nb_iter));
 						if(!res){
-							diag("failed at factory: %s engine: %s mode: %s",
+							diag("failed at factory: \"%s\" engine: \"%s\" mode: \"%s\"",
 							     hkl_geometry_name_get(geometry),
 							     hkl_engine_name_get(*engine), *mode);
 							break;
@@ -80,7 +80,7 @@ static int __test(unsigned int nb_iter, test_func f, int foreach_mode)
 				}
 			}else{
 				for(j=0; j<nb_iter; ++j){
-					res &= f(*engine, engines, nb_iter);
+					res &= DIAG(f(*engine, engines, nb_iter));
 					if(!res)
 						break;
 				}
@@ -192,7 +192,7 @@ static int _set(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
 	hkl_tap_engine_parameters_randomize(engine);
 
 	/* pseudo -> geometry */
-	res &= hkl_engine_initialized_set(engine, TRUE, &error);
+	res &= DIAG(hkl_engine_initialized_set(engine, TRUE, &error));
 
 	/* geometry -> pseudo */
 	solutions = hkl_engine_pseudo_axes_values_set(engine,
@@ -205,14 +205,12 @@ static int _set(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
 			hkl_geometry_set(geometry,
 					 hkl_geometry_list_item_geometry_get(item));
 
-			res &= hkl_engine_pseudo_axes_values_get(engine,
-								 currents, n_pseudo_axes,
-								 HKL_UNIT_DEFAULT, &error);
+			res &= DIAG(hkl_engine_pseudo_axes_values_get(engine, currents, n_pseudo_axes, HKL_UNIT_DEFAULT, &error));
 			for(j=0; j<n_pseudo_axes; ++j)
-				res &= fabs(targets[j] - currents[j]) < HKL_EPSILON;
+				res &= DIAG(fabs(targets[j] - currents[j]) < HKL_EPSILON);
 		}
 	}else{
-		res &= error != NULL;
+		res &= DIAG(error != NULL);
 		g_clear_error(&error);
 		unreachable++;
 
@@ -255,22 +253,22 @@ static int _pseudo_axis_get(HklEngine *engine, HklEngineList *engine_list, unsig
 
 	darray_foreach(pseudo_axis_name, *pseudo_axes_names){
 		pseudo_axis = hkl_engine_pseudo_axis_get(engine, *pseudo_axis_name, NULL);
-		res &= NULL != pseudo_axis;
+		res &= DIAG(NULL != pseudo_axis);
 
 		error = NULL;
 		pseudo_axis = hkl_engine_pseudo_axis_get(engine, *pseudo_axis_name, &error);
-		res &= NULL != pseudo_axis;
-		res &= NULL == error;
+		res &= DIAG(NULL != pseudo_axis);
+		res &= DIAG(NULL == error);
 	}
 
 	/* error */
 	pseudo_axis = hkl_engine_pseudo_axis_get(engine, bad, NULL);
-	res &= NULL == pseudo_axis;
+	res &= DIAG(NULL == pseudo_axis);
 
 	error = NULL;
 	pseudo_axis = hkl_engine_pseudo_axis_get(engine, bad, &error);
-	res &= NULL == pseudo_axis;
-	res &= error != NULL;
+	res &= DIAG(NULL == pseudo_axis);
+	res &= DIAG(error != NULL);
 	g_clear_error(&error);
 
 	return res;
@@ -287,12 +285,12 @@ static int _capabilities(HklEngine *engine, HklEngineList *engine_list, unsigned
 	const unsigned long capabilities = hkl_engine_capabilities_get(engine);
 
 	/* all motors must have the read/write capabilities */
-	res &= (capabilities & HKL_ENGINE_CAPABILITIES_READABLE) != 0;
-	res &= (capabilities & HKL_ENGINE_CAPABILITIES_WRITABLE) != 0;
+	res &= DIAG((capabilities & HKL_ENGINE_CAPABILITIES_READABLE) != 0);
+	res &= DIAG((capabilities & HKL_ENGINE_CAPABILITIES_WRITABLE) != 0);
 
 	/* all psi engines must be initialisable */
 	if(!strcmp("psi", hkl_engine_name_get(engine)))
-		res &= (capabilities & HKL_ENGINE_CAPABILITIES_INITIALIZABLE) != 0;
+		res &= DIAG((capabilities & HKL_ENGINE_CAPABILITIES_INITIALIZABLE) != 0);
 
 	return res;
 }
@@ -308,36 +306,39 @@ static int _initialized(HklEngine *engine, HklEngineList *engine_list, unsigned 
 	GError *error = NULL;
 	const unsigned long capabilities = hkl_engine_capabilities_get(engine);
 
-	/* all psi engines must be initialisable */
-	if(!strcmp("psi", hkl_engine_name_get(engine))){
-		/* res &= (capabilities & HKL_ENGINE_CAPABILITIES_INITIALIZABLE) != 0; */
-		/* /\* first it must not be initialized *\/ */
-		/* res &= FALSE == hkl_engine_initialized_get(engine); */
+	if(HKL_ENGINE_CAPABILITIES_INITIALIZABLE & capabilities){
+		int tmp;
 
-		/* res &= TRUE == hkl_engine_initialized_set(engine, FALSE, NULL); */
-		/* res &= FALSE == hkl_engine_initialized_get(engine); */
-		/* res &= TRUE == hkl_engine_initialized_set(engine, TRUE, NULL); */
-		/* res &= TRUE == hkl_engine_initialized_get(engine);		 */
+		res &= DIAG(TRUE == hkl_engine_initialized_set(engine, FALSE, NULL));
+		res &= DIAG(FALSE == hkl_engine_initialized_get(engine));
+		tmp = hkl_engine_initialized_set(engine, TRUE, NULL);
+		res &= DIAG(tmp == hkl_engine_initialized_get(engine));
 
-		/* res &= TRUE == hkl_engine_initialized_set(engine, FALSE, &error); */
-		/* res &= FALSE == hkl_engine_initialized_get(engine); */
-		/* res &= NULL == error; */
-		/* res &= TRUE == hkl_engine_initialized_set(engine, TRUE, &error); */
-		/* res &= TRUE == hkl_engine_initialized_get(engine);		 */
-		/* res &= NULL == error; */
+		res &= DIAG(TRUE == hkl_engine_initialized_set(engine, FALSE, &error));
+		res &= DIAG(FALSE == hkl_engine_initialized_get(engine));
+		res &= DIAG(NULL == error);
+		tmp = hkl_engine_initialized_set(engine, TRUE, &error);
+		res &= DIAG(tmp == hkl_engine_initialized_get(engine));
+		if(tmp)
+			res &= DIAG(NULL == error);
+		else{
+			res &= DIAG(NULL != error);
+			g_clear_error(&error);
+		}
 	}else{
 		/* non-initializable engine should not produce an error */
-		res &= TRUE == hkl_engine_initialized_set(engine, TRUE, NULL);
-		res &= TRUE == hkl_engine_initialized_get(engine);
-		res &= TRUE == hkl_engine_initialized_set(engine, FALSE, NULL);
-		res &= TRUE == hkl_engine_initialized_get(engine);
+		res &= DIAG(TRUE == hkl_engine_initialized_get(engine));
+		res &= DIAG(TRUE == hkl_engine_initialized_set(engine, TRUE, NULL));
+		res &= DIAG(TRUE == hkl_engine_initialized_get(engine));
+		res &= DIAG(TRUE == hkl_engine_initialized_set(engine, FALSE, NULL));
+		res &= DIAG(TRUE == hkl_engine_initialized_get(engine));
 
-		res &= TRUE == hkl_engine_initialized_set(engine, TRUE, &error);
-		res &= TRUE == hkl_engine_initialized_get(engine);
-		res &= NULL == error;
-		res &= TRUE == hkl_engine_initialized_set(engine, FALSE, &error);
-		res &= TRUE == hkl_engine_initialized_get(engine);
-		res &= NULL == error;
+		res &= DIAG(TRUE == hkl_engine_initialized_set(engine, TRUE, &error));
+		res &= DIAG(TRUE == hkl_engine_initialized_get(engine));
+		res &= DIAG(NULL == error);
+		res &= DIAG(TRUE == hkl_engine_initialized_set(engine, FALSE, &error));
+		res &= DIAG(TRUE == hkl_engine_initialized_get(engine));
+		res &= DIAG(NULL == error);
 	}
 
 	return res;
@@ -398,10 +399,10 @@ static void axes_names_get(void)
 			const darray_string *axes_w = hkl_engine_axes_names_get(*engine,
 										HKL_ENGINE_AXES_NAMES_GET_WRITE);
 
-			res &= axes_r != NULL;
-			res &= axes_w != NULL;
-			res &= _check_axes(axes_r, all_axes);
-			res &= _check_axes(axes_w, all_axes);
+			res &= DIAG(axes_r != NULL);
+			res &= DIAG(axes_w != NULL);
+			res &= DIAG(_check_axes(axes_r, all_axes));
+			res &= DIAG(_check_axes(axes_w, all_axes));
 		}
 		hkl_engine_list_free(list);
 		hkl_geometry_free(geometry);

@@ -1,6 +1,7 @@
 # use a cocci spatch for the refactoring
 
-spatch $2 -sp_file $1
+spatch $3 -sp_file $1 $2
+echo $1, $2, $3
 echo "refactor using $1" > ../.git/GITGUI_BCK
 git add $1
 cat $1 >> ../.git/GITGUI_BCK

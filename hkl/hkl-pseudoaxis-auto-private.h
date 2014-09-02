@@ -110,6 +110,7 @@ typedef enum {
 
 #define HKL_MODE_OPERATIONS_AUTO_WITH_INIT_DEFAULTS			\
 	HKL_MODE_OPERATIONS_AUTO_DEFAULTS,				\
+		.capabilities = HKL_ENGINE_CAPABILITIES_READABLE | HKL_ENGINE_CAPABILITIES_WRITABLE | HKL_ENGINE_CAPABILITIES_INITIALIZABLE, \
 		.free = hkl_mode_auto_with_init_free_real,		\
 		.initialized_set = hkl_mode_auto_with_init_initialized_set_real
 
