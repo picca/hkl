@@ -302,35 +302,25 @@ static void pseudo_axis_get(void)
 	ok(TRUE == _test(1, _pseudo_axis_get), __func__);
 }
 
+static int _capabilities(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
+{
+	int res = TRUE;
+	const unsigned long capabilities = hkl_engine_capabilities_get(engine);
+
+	/* all motors must have the read/write capabilities */
+	res &= (capabilities & HKL_ENGINE_CAPABILITIES_READABLE) != 0;
+	res &= (capabilities & HKL_ENGINE_CAPABILITIES_WRITABLE) != 0;
+
+	/* all psi engines must be initialisable */
+	if(!strcmp("psi", hkl_engine_name_get(engine)))
+		res &= (capabilities & HKL_ENGINE_CAPABILITIES_INITIALIZABLE) != 0;
+
+	return res;
+}
+
 static void capabilities(void)
 {
-	HklFactory **factories;
-	unsigned int i, n;
-	int res = TRUE;
-
-	factories = hkl_factory_get_all(&n);
-	for(i=0; i<n; i++){
-		HklEngineList *list;
-		HklEngine **engine;
-		darray_engine *engines;
-
-		list = hkl_factory_create_new_engine_list(factories[i]);
-		engines = hkl_engine_list_engines_get(list);
-		darray_foreach(engine, *engines){
-			const unsigned long capabilities = hkl_engine_capabilities_get(*engine);
-
-			/* all motors must have the read/write capabilities */
-			res &= (capabilities & HKL_ENGINE_CAPABILITIES_READABLE) != 0;
-			res &= (capabilities & HKL_ENGINE_CAPABILITIES_WRITABLE) != 0;
-
-			/* all psi engines must be initialisable */
-			if(!strcmp("psi", hkl_engine_name_get(*engine)))
-				res &= (capabilities & HKL_ENGINE_CAPABILITIES_INITIALIZABLE) != 0;
-		}
-		hkl_engine_list_free(list);
-	}
-
-	ok(res == TRUE, __func__);
+	ok(TRUE == _test(1, _capabilities), __func__);
 }
 
 static int _check_axes(const darray_string *axes, const darray_string *refs)
