@@ -445,11 +445,71 @@ static void axes_names_get(void)
 	ok(res == TRUE, __func__);
 }
 
+
+static int _parameters(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
+{
+	static const char *bad = "__bad_parameer_name__";
+	int res = TRUE;
+	GError *error = NULL;
+	const char **parameter;
+	const darray_string *parameters = hkl_engine_parameters_names_get(engine);
+	const HklParameter *param;
+	int n_values = darray_size(*parameters);
+	double values[n_values];
+
+	/* can not get a bad parameter */
+	param = hkl_engine_parameter_get(engine, bad, NULL);
+	res &= DIAG(NULL == param);
+
+	param = hkl_engine_parameter_get(engine, bad, &error);
+	res &= DIAG(NULL == param);
+	res &= DIAG(NULL != error);
+	g_clear_error(&error);
+
+	/* it is possible to get and set all the parameters */
+	darray_foreach(parameter, *parameters){
+		/* get */
+		param = hkl_engine_parameter_get(engine, *parameter, NULL);
+		res &= DIAG(NULL != param);
+
+		param = hkl_engine_parameter_get(engine, *parameter, &error);
+		res &= DIAG(NULL != param);
+		res &= DIAG(NULL == error);
+
+		/* set */
+		res &= DIAG(TRUE == hkl_engine_parameter_set(engine, *parameter, param, NULL));
+		res &= DIAG(TRUE == hkl_engine_parameter_set(engine, *parameter, param, &error));
+		res &= DIAG(NULL == error);
+
+		res &= DIAG(FALSE == hkl_engine_parameter_set(engine, bad, param, &error));
+		res &= DIAG(NULL != error);
+		g_clear_error(&error);
+	}
+
+	hkl_engine_parameters_values_get(engine, values, n_values, HKL_UNIT_USER);
+
+	res &= DIAG(TRUE == hkl_engine_parameters_values_set(engine, values, n_values, HKL_UNIT_DEFAULT, NULL));
+	res &= DIAG(TRUE == hkl_engine_parameters_values_set(engine, values, n_values, HKL_UNIT_DEFAULT, &error));
+	res &= DIAG(NULL == error);
+
+	res &= DIAG(TRUE == hkl_engine_parameters_values_set(engine, values, n_values, HKL_UNIT_USER, NULL));
+	res &= DIAG(TRUE == hkl_engine_parameters_values_set(engine, values, n_values, HKL_UNIT_USER, &error));
+	res &= DIAG(NULL == error);
+
+	return res;
+}
+
+static void parameters(void)
+{
+	ok(TRUE == TEST_FOREACH_MODE(1, _parameters), __func__);
+}
+
+
 int main(int argc, char** argv)
 {
 	double n;
 
-	plan(8);
+	plan(9);
 
 	if (argc > 1)
 		n = atoi(argv[1]);
@@ -464,6 +524,7 @@ int main(int argc, char** argv)
 	initialized();
 	modes();
 	axes_names_get();
+	parameters();
 
 	return 0;
 }

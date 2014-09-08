@@ -428,11 +428,13 @@ int hkl_engine_parameter_set(HklEngine *self,
 	HklParameter **p;
 
 	hkl_error (error == NULL || *error == NULL);
-	hkl_error (strcmp(name, parameter->name) == 0);
 
 	darray_foreach(p, self->mode->parameters)
-		if(!strcmp((*p)->name, parameter->name)){
+		if(!strcmp(name, (*p)->name)){
 			hkl_parameter_init_copy(*p, parameter, NULL);
+			/* we do not check if the name is identical so force the right name */
+			/* TODO rethink this HklParameter assignement */
+			(*p)->name = name;
 			return TRUE;
 		}
 
