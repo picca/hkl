@@ -26,16 +26,6 @@
 #include <tap/hkl-tap.h>
 
 #define DEBUG
-#define STRINGIFY(x) #x
-#define TOSTRING(x) STRINGIFY(x)
-
-/* BEWARE here we are using a GCC extension */
-#define DIAG(_success)							\
-	({	typeof(_success) __success = (_success);		\
-		if(!__success)						\
-			diag("status: %d " __FILE__ ":" TOSTRING(__LINE__) ":%s", (__success) , __func__); \
-		__success;						\
-	})
 
 
 typedef int (* test_func) (HklEngine *engine, HklEngineList *engine_list, unsigned int n);

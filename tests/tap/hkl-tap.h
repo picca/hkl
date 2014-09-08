@@ -24,6 +24,17 @@
 
 #include "hkl.h"
 
+#define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY(x)
+
+/* BEWARE here we are using a GCC extension */
+#define DIAG(_success)							\
+	({	typeof(_success) __success = (_success);		\
+		if(!__success)						\
+			diag("status: %d " __FILE__ ":" TOSTRING(__LINE__) ":%s", (__success) , __func__); \
+		__success;						\
+	})
+
 G_BEGIN_DECLS
 
 extern void is_matrix(const HklMatrix *wanted, const HklMatrix *seen, const char *format, ...)
