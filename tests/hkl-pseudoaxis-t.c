@@ -404,46 +404,36 @@ static int _check_axes(const darray_string *axes, const darray_string *refs)
 	return ko;
 }
 
-static void axes_names_get(void)
+static int _axes_names(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
 {
-	HklFactory **factories;
-	unsigned int i, n;
-	int res = TRUE;
+	int res  = TRUE;
+	HklGeometry *geometry;
+	const darray_string *all_axes;
+	const darray_string *axes_r;
+	const darray_string *axes_w;
 
-	factories = hkl_factory_get_all(&n);
-	for(i=0; i<n; i++){
-		HklGeometry *geometry;
-		HklEngineList *list;
-		HklEngine **engine;
-		darray_engine *engines;
-		const darray_string *all_axes;
+	geometry = hkl_engine_list_geometry_get(engine_list);
+	all_axes = hkl_geometry_axes_names_get(geometry);
 
-		geometry = hkl_factory_create_new_geometry(factories[i]);
-		list = hkl_factory_create_new_engine_list(factories[i]);
-		engines = hkl_engine_list_engines_get(list);
-		all_axes = hkl_geometry_axes_names_get(geometry);
+	/* check consistency of the engines, all axes should be in the
+	 * list of the geometry axes */
+	axes_r = hkl_engine_axes_names_get(engine,
+					   HKL_ENGINE_AXES_NAMES_GET_READ);
 
-		/* check consistency of the engines, all axes should
-		 * be in the list of the geometry axes */
-		darray_foreach(engine, *engines){
-			const char **axis;
-			const darray_string *axes_r = hkl_engine_axes_names_get(*engine,
-										HKL_ENGINE_AXES_NAMES_GET_READ);
+	axes_w = hkl_engine_axes_names_get(engine,
+					   HKL_ENGINE_AXES_NAMES_GET_WRITE);
 
-			const darray_string *axes_w = hkl_engine_axes_names_get(*engine,
-										HKL_ENGINE_AXES_NAMES_GET_WRITE);
-
-			res &= DIAG(axes_r != NULL);
-			res &= DIAG(axes_w != NULL);
-			res &= DIAG(_check_axes(axes_r, all_axes));
-			res &= DIAG(_check_axes(axes_w, all_axes));
-		}
-		hkl_engine_list_free(list);
-		hkl_geometry_free(geometry);
-	}
-
-	ok(res == TRUE, __func__);
+	res &= DIAG(axes_r != NULL);
+	res &= DIAG(axes_w != NULL);
+	res &= DIAG(_check_axes(axes_r, all_axes));
+	res &= DIAG(_check_axes(axes_w, all_axes));
 }
+
+static void axes_names(void)
+{
+	ok(TRUE == TEST_FOREACH_MODE(1, _axes_names), __func__);
+}
+
 
 
 static int _parameters(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
@@ -523,7 +513,7 @@ int main(int argc, char** argv)
 	capabilities();
 	initialized();
 	modes();
-	axes_names_get();
+	axes_names();
 	parameters();
 
 	return 0;
