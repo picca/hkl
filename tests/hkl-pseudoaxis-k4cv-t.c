@@ -75,7 +75,7 @@ static void degenerated(void)
 			HKL_GEOMETRY_LIST_FOREACH(item, geometries){
 				hkl_geometry_set(geometry,
 						 hkl_geometry_list_item_geometry_get(item));
-				res &= check_pseudoaxes(engine, hkl, 3);
+				res &= DIAG(check_pseudoaxes(engine, hkl, 3));
 			}
 			hkl_geometry_list_free(geometries);
 		}
@@ -142,16 +142,16 @@ static void eulerians(void)
 			item = hkl_geometry_list_items_first_get(geometries);
 			hkl_geometry_set(geometry,
 					 hkl_geometry_list_item_geometry_get(item));
-			res &= check_pseudoaxes_v(engine, -180. * HKL_DEGTORAD, -90 * HKL_DEGTORAD, 180. * HKL_DEGTORAD);
+			res &= DIAG(check_pseudoaxes_v(engine, -180. * HKL_DEGTORAD, -90 * HKL_DEGTORAD, 180. * HKL_DEGTORAD));
 
 			/* second solution = 0, 90, 0 */
 			item = hkl_geometry_list_items_next_get(geometries,item);
 			hkl_geometry_set(geometry,
 					 hkl_geometry_list_item_geometry_get(item));
-			res &= check_pseudoaxes_v(engine, 0., 90 * HKL_DEGTORAD, 0.);
+			res &= DIAG(check_pseudoaxes_v(engine, 0., 90 * HKL_DEGTORAD, 0.));
 
 			/* no more solution */
-			res &= hkl_geometry_list_items_next_get(geometries, item) == NULL;
+			res &= DIAG(hkl_geometry_list_items_next_get(geometries, item) == NULL);
 
 			hkl_geometry_list_free(geometries);
 		}
@@ -209,7 +209,7 @@ static void q(void)
 					hkl_engine_set_values_v(engine, 0.);
 					hkl_geometry_set(geometry,
 							 hkl_geometry_list_item_geometry_get(item));
-					res &= check_pseudoaxes_v(engine, q);
+					res &= DIAG(check_pseudoaxes_v(engine, q));
 				}
 				hkl_geometry_list_free(geometries);
 			}

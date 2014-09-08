@@ -48,19 +48,19 @@ static void getter(void)
 
 	/* geometry -> pseudo */
 	hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 30., 0., 0., 60.);
-	res &= check_pseudoaxes_v(engine, 0., 1., 0.);
+	res &= DIAG(check_pseudoaxes_v(engine, 0., 1., 0.));
 
 	hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 30., 0., 90., 60.);
-	res &= check_pseudoaxes_v(engine, 1., 0., 0.);
+	res &= DIAG(check_pseudoaxes_v(engine, 1., 0., 0.));
 
 	hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 30., 0., -90., 60.);
-	res &= check_pseudoaxes_v(engine, -1., 0., 0.);
+	res &= DIAG(check_pseudoaxes_v(engine, -1., 0., 0.));
 
 	hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 30., 0., 180., 60.);
-	res &= check_pseudoaxes_v(engine, 0., -1., 0.);
+	res &= DIAG(check_pseudoaxes_v(engine, 0., -1., 0.));
 
 	hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 45., 0., 135., 90.);
-	res &= check_pseudoaxes_v(engine, 1., -1., 0.);
+	res &= DIAG(check_pseudoaxes_v(engine, 1., -1., 0.));
 
 	ok(res == TRUE, "getter");
 
@@ -121,7 +121,7 @@ static void degenerated(void)
 			HKL_GEOMETRY_LIST_FOREACH(item, geometries){
 				hkl_geometry_set(geometry,
 						 hkl_geometry_list_item_geometry_get(item));
-				res &= check_pseudoaxes(engine, values, 3);
+				res &= DIAG(check_pseudoaxes(engine, values, 3));
 			}
 			hkl_geometry_list_free(geometries);
 		}
@@ -165,29 +165,29 @@ static void psi_getter(void)
 	hkl[0] = 1, hkl[1] = 0, hkl[2] = 0;
 	hkl_engine_parameters_values_set(engine, hkl, ARRAY_SIZE(hkl),
 					 HKL_UNIT_DEFAULT, NULL);
-	res &= check_pseudoaxes_v(engine, 0.);
+	res &= DIAG(check_pseudoaxes_v(engine, 0.));
 
 	/* here Q and <h, k, l>_ref are colinear must FAIL */
 	hkl[0] = 0, hkl[1] = 1, hkl[2] = 0;
 	hkl_engine_parameters_values_set(engine, hkl, ARRAY_SIZE(hkl),
 					 HKL_UNIT_DEFAULT, NULL);
-	res &= !check_pseudoaxes_v(engine, 0.);
+	res &= DIAG(!check_pseudoaxes_v(engine, 0.));
 
 	hkl[0] = -1, hkl[1] = 0, hkl[2] = 0;
 	hkl_engine_parameters_values_set(engine, hkl, ARRAY_SIZE(hkl),
 					 HKL_UNIT_DEFAULT, NULL);
-	res &= check_pseudoaxes_v(engine, 180. * HKL_DEGTORAD);
+	res &= DIAG(check_pseudoaxes_v(engine, 180. * HKL_DEGTORAD));
 
 	hkl[0] = 0, hkl[1] = 0, hkl[2] = -1;
 	hkl_engine_parameters_values_set(engine, hkl, ARRAY_SIZE(hkl),
 					 HKL_UNIT_DEFAULT, NULL);
-	res &= check_pseudoaxes_v(engine, 90. * HKL_DEGTORAD);
+	res &= DIAG(check_pseudoaxes_v(engine, 90. * HKL_DEGTORAD));
 
 	/* Q and <h, k, l>_ref are colinear so must FAIL */
 	hkl[0] = 0, hkl[1] = -1, hkl[2] = 0;
 	hkl_engine_parameters_values_set(engine, hkl, ARRAY_SIZE(hkl),
 					 HKL_UNIT_DEFAULT, NULL);
-	res &= !check_pseudoaxes_v(engine, 0.);
+	res &= DIAG(!check_pseudoaxes_v(engine, 0.));
 
 	ok(res == TRUE, "psi getter");
 
@@ -244,7 +244,7 @@ static void psi_setter(void)
 				HKL_GEOMETRY_LIST_FOREACH(item, geometries){
 					hkl_geometry_set(geometry,
 							 hkl_geometry_list_item_geometry_get(item));
-					res &= check_pseudoaxes_v(engine, psi);
+					res &= DIAG(check_pseudoaxes_v(engine, psi));
 				}
 				hkl_geometry_list_free(geometries);
 			}
@@ -305,7 +305,7 @@ static void q(void)
 				HKL_GEOMETRY_LIST_FOREACH(item, geometries){
 					hkl_geometry_set(geometry,
 							 hkl_geometry_list_item_geometry_get(item));
-					res &= check_pseudoaxes(engine, &q, 1);
+					res &= DIAG(check_pseudoaxes(engine, &q, 1));
 				}
 				hkl_geometry_list_free(geometries);
 			}
@@ -362,7 +362,7 @@ static void hkl_psi_constant_horizontal(void)
 		HKL_GEOMETRY_LIST_FOREACH(item, geometries){
 			hkl_geometry_set(geometry,
 					 hkl_geometry_list_item_geometry_get(item));
-			res &= check_pseudoaxes(engine, hkl, ARRAY_SIZE(hkl));
+			res &= DIAG(check_pseudoaxes(engine, hkl, ARRAY_SIZE(hkl)));
 		}
 		hkl_geometry_list_free(geometries);
 	}

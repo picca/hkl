@@ -149,7 +149,7 @@ static void med_2_3(void)
 	geometries = hkl_engine_pseudo_axes_values_set(hkl,
 						       hkl_p, ARRAY_SIZE(hkl_p),
 						       HKL_UNIT_DEFAULT, NULL);
-	res &= (geometries != NULL);
+	res &= DIAG((geometries != NULL));
 	hkl_geometry_list_free(geometries);
 
 	ok(res == TRUE, __func__);

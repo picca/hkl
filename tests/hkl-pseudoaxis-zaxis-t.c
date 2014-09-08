@@ -76,7 +76,7 @@ static void solution(void)
 		HKL_GEOMETRY_LIST_FOREACH(item, geometries){
 			hkl_geometry_set(geometry,
 					 hkl_geometry_list_item_geometry_get(item));
-			res &= check_pseudoaxes(engine, hkl, 3);
+			res &= DIAG(check_pseudoaxes(engine, hkl, 3));
 		}
 		hkl_geometry_list_free(geometries);
 	}else

@@ -89,7 +89,7 @@ static void degenerated(void)
 
 			HKL_GEOMETRY_LIST_FOREACH(item, geometries){
 				hkl_geometry_set(geometry, hkl_geometry_list_item_geometry_get(item));
-				res &= check_pseudoaxes(engine, hkl, ARRAY_SIZE(hkl));
+				res &= DIAG(check_pseudoaxes(engine, hkl, ARRAY_SIZE(hkl)));
 			}
 			hkl_geometry_list_free(geometries);
 		}
@@ -153,22 +153,22 @@ static void eulerians(void)
 		/* studdy this degenerated case */
 		geometries = hkl_engine_set_values_v(engine, 0., 90. * HKL_DEGTORAD, 0.);
 		if (geometries) {
-			res &= hkl_geometry_list_n_items_get(geometries) == 2;
+			res &= DIAG(hkl_geometry_list_n_items_get(geometries) == 2);
 
 			/* first solution = -180, -90, 180 */
 			item = hkl_geometry_list_items_first_get(geometries);
 			hkl_geometry_set(geometry,
 					 hkl_geometry_list_item_geometry_get(item));
-			res &= check_pseudoaxes_v(engine, -180. * HKL_DEGTORAD, -90. * HKL_DEGTORAD, 180. * HKL_DEGTORAD);
+			res &= DIAG(check_pseudoaxes_v(engine, -180. * HKL_DEGTORAD, -90. * HKL_DEGTORAD, 180. * HKL_DEGTORAD));
 
 			/* second solution = 0, 90, 0 */
 			item = hkl_geometry_list_items_next_get(geometries, item);
 			hkl_geometry_set(geometry,
 					 hkl_geometry_list_item_geometry_get(item));
-			res &= check_pseudoaxes_v(engine, 0., 90. * HKL_DEGTORAD, 0.);
+			res &= DIAG(check_pseudoaxes_v(engine, 0., 90. * HKL_DEGTORAD, 0.));
 
 			/* no more solution */
-			res &= hkl_geometry_list_items_next_get(geometries, item) == NULL;
+			res &= DIAG(hkl_geometry_list_items_next_get(geometries, item) == NULL);
 
 			hkl_geometry_list_free(geometries);
 		}
@@ -229,7 +229,7 @@ static void q2(void)
 					HKL_GEOMETRY_LIST_FOREACH(item, geometries){
 						hkl_geometry_set(geometry,
 								 hkl_geometry_list_item_geometry_get(item));
-						res &= check_pseudoaxes(engine, values, 2);
+						res &= DIAG(check_pseudoaxes(engine, values, 2));
 					}
 					hkl_geometry_list_free(geometries);
 				}
@@ -269,7 +269,7 @@ static void m15110(void)
 
 	/* the init part must succed */
 	hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 0., 62.95, 134.75, 0., 0., 60.);
-	res &= hkl_engine_initialized_set(engine, TRUE, NULL);
+	res &= DIAG(hkl_engine_initialized_set(engine, TRUE, NULL));
 
 	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);

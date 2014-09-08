@@ -24,6 +24,7 @@
 
 #include "hkl3d.h"
 #include "tap/basic.h"
+#include "tap/hkl-tap.h"
 
 #define MODEL_FILENAME "data/diffabs.yaml"
 
@@ -38,8 +39,8 @@ static void check_model_validity(Hkl3D *hkl3d)
 	res = TRUE;
 
 	/* imported 1 config files with 7 Hkl3DObjects */
-	res &= hkl3d->config->len == 1;
-	res &= hkl3d->config->models[0]->len == 7;
+	res &= DIAG(hkl3d->config->len == 1);
+	res &= DIAG(hkl3d->config->models[0]->len == 7);
 
 	/* all Hkl3DObjects must have a different axis_name */
 	len = hkl3d->config->models[0]->len;
@@ -48,7 +49,7 @@ static void check_model_validity(Hkl3D *hkl3d)
 		for (j=1; j<len-i; ++j){
 			objj = hkl3d->config->models[0]->objects[i+j];
 			if(!(strcmp(obji->axis_name, objj->axis_name))){
-				res &= FALSE;
+				res &= DIAG(FALSE);
 				break;
 			}
 		}
@@ -57,7 +58,7 @@ static void check_model_validity(Hkl3D *hkl3d)
 
 	/* check the _movingObjects validity, all Hkl3DAxis must have a size of 1 */
 	for(i=0; i<6; ++i)
-		res &= hkl3d->geometry->axes[i]->len == 1;
+		res &= DIAG(hkl3d->geometry->axes[i]->len == 1);
 
 	ok(res == TRUE, "no identical objects");
 }
@@ -75,7 +76,7 @@ static void check_collision(Hkl3D *hkl3d)
 				  HKL_UNIT_USER, NULL,
 				  23., 0., 0., 0., 0., 0.);
 
-	res &= hkl3d_is_colliding(hkl3d) == TRUE;
+	res &= DIAG(hkl3d_is_colliding(hkl3d) == TRUE);
 	strcpy(buffer, "");
 
 	/* now check that only delta and mu are colliding */
@@ -92,9 +93,9 @@ static void check_collision(Hkl3D *hkl3d)
 		}
 
 		if(!strcmp(name, "mu") || !strcmp(name, "delta"))
-			res &= tmp == TRUE;
+			res &= DIAG(tmp == TRUE);
 		else
-			res &= tmp == FALSE;
+			res &= DIAG(tmp == FALSE);
 	}
 	ok(res == TRUE,  "collision [%s]", buffer);
 }
@@ -114,7 +115,7 @@ static void check_no_collision(Hkl3D *hkl3d)
 		hkl_geometry_set_values_v(hkl3d->geometry->geometry,
 					  HKL_UNIT_USER, NULL,
 					  0., i, 0., 0., 0., 0.);
-		res &= hkl3d_is_colliding(hkl3d) == FALSE;
+		res &= DIAG(hkl3d_is_colliding(hkl3d) == FALSE);
 	}
 
 	/* kappa */
@@ -122,7 +123,7 @@ static void check_no_collision(Hkl3D *hkl3d)
 		hkl_geometry_set_values_v(hkl3d->geometry->geometry,
 					  HKL_UNIT_USER, NULL,
 					  0., 0., i, 0., 0., 0.);
-		res &= hkl3d_is_colliding(hkl3d) == FALSE;
+		res &= DIAG(hkl3d_is_colliding(hkl3d) == FALSE);
 	}
 
 	/* kphi */
@@ -130,7 +131,7 @@ static void check_no_collision(Hkl3D *hkl3d)
 		hkl_geometry_set_values_v(hkl3d->geometry->geometry,
 					  HKL_UNIT_USER, NULL,
 					  0., 0., 0., i, 0., 0.);
-		res &= hkl3d_is_colliding(hkl3d) == FALSE;
+		res &= DIAG(hkl3d_is_colliding(hkl3d) == FALSE);
 	}
 	ok(res == TRUE, "no-collision");
 }

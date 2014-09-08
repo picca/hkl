@@ -22,6 +22,7 @@
 #include "hkl.h"
 #include <tap/basic.h>
 #include <tap/float.h>
+#include <tap/hkl-tap.h>
 
 #include "hkl-unit-private.h"
 
@@ -32,10 +33,10 @@ static void compatible(void)
 	const HklUnit *unit;
 	const HklUnit *punit;
 
-	res &= hkl_unit_compatible(&hkl_unit_angle_deg, &hkl_unit_angle_rad);
-	res &= !hkl_unit_compatible(&hkl_unit_angle_deg, &hkl_unit_length_nm);
-	res &= !hkl_unit_compatible(&hkl_unit_angle_rad, &hkl_unit_length_nm);
-	res &= hkl_unit_compatible(NULL, NULL);
+	res &= DIAG(hkl_unit_compatible(&hkl_unit_angle_deg, &hkl_unit_angle_rad));
+	res &= DIAG(!hkl_unit_compatible(&hkl_unit_angle_deg, &hkl_unit_length_nm));
+	res &= DIAG(!hkl_unit_compatible(&hkl_unit_angle_rad, &hkl_unit_length_nm));
+	res &= DIAG(hkl_unit_compatible(NULL, NULL));
 
 	ok(res == TRUE, __func__);
 }
