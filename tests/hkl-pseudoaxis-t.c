@@ -342,6 +342,50 @@ static void initialized(void)
 HKLAPI int hkl_engine_initialized_set(HklEngine *self, int initialized,
 				      GError **error) HKL_ARG_NONNULL(1) HKL_WARN_UNUSED_RESULT;
 
+static int _modes(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
+{
+	static const char *bad = "__bad_mode_name__";
+	int res = TRUE;
+	int ok;
+	const darray_string *modes;
+	const char **mode;
+	const char *current_mode;
+	GError *error = NULL;
+
+	modes = hkl_engine_modes_names_get(engine);
+
+	/* check that the current mode is available in the mode list. */
+	current_mode = hkl_engine_current_mode_get(engine);
+	ok = FALSE;
+	darray_foreach(mode, *modes){
+		if(!strcmp(current_mode, *mode))
+			ok = TRUE;
+	}
+	res &= DIAG(TRUE == ok);
+
+	/* check that all modes can be set */
+	darray_foreach(mode, *modes){
+		res &= DIAG(TRUE == hkl_engine_current_mode_set(engine, *mode, NULL));
+
+		res &= DIAG(TRUE == hkl_engine_current_mode_set(engine, *mode, &error));
+		res &= DIAG(NULL == error);
+	}
+
+	/* check for bad mode name */
+	res &= DIAG(FALSE == hkl_engine_current_mode_set(engine, bad, NULL));
+
+	res &= DIAG(FALSE == hkl_engine_current_mode_set(engine, bad, &error));
+	res &= DIAG(NULL != error);
+	g_clear_error(&error);
+
+	return res;
+}
+
+static void modes(void)
+{
+	ok(TRUE == TEST(1, _modes), __func__);
+}
+
 static int _check_axes(const darray_string *axes, const darray_string *refs)
 {
 	int ko = TRUE;
@@ -405,7 +449,7 @@ int main(int argc, char** argv)
 {
 	double n;
 
-	plan(7);
+	plan(8);
 
 	if (argc > 1)
 		n = atoi(argv[1]);
@@ -418,6 +462,7 @@ int main(int argc, char** argv)
 	pseudo_axis_get();
 	capabilities();
 	initialized();
+	modes();
 	axes_names_get();
 
 	return 0;
