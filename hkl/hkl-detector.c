@@ -42,7 +42,7 @@ HklDetector *hkl_detector_new(void)
 
 	self = HKL_MALLOC(HklDetector);
 
-	self->idx = 0;
+	self->idx = 1;
 	self->holder = NULL;
 
 	return self;
@@ -76,18 +76,6 @@ HklDetector *hkl_detector_new_copy(const HklDetector *src)
 void hkl_detector_free(HklDetector *self)
 {
 	free(self);
-}
-
-/**
- * hkl_detector_idx_set:
- * @self: the this ptr
- * @idx: the index of the holder
- *
- * Attach a detector to a given holder
- **/
-void hkl_detector_idx_set(HklDetector *self, int idx)
-{
-	self->idx = idx;
 }
 
 /**

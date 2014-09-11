@@ -120,7 +120,6 @@ def main():
     sample.lattice_set(lattice)
 
     detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))
-    detector.idx_set(1)
 
     for key, factory in Hkl.factories().iteritems():
         geometry = factory.create_new_geometry()

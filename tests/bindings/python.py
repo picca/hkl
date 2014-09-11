@@ -58,10 +58,6 @@ class TestAPI(unittest.TestCase):
         detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))
         self.assertTrue(type(detector) is Hkl.Detector)
 
-        # mount the detector on the 2nd holder of the geometry
-        # yes numbering follow the C convention !
-        detector.idx_set(1)
-
     def test_geometry_api(self):
         """
         enforce the geometry API
@@ -95,7 +91,6 @@ class TestAPI(unittest.TestCase):
         """
 
         detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))
-        detector.idx_set(1)
 
         factory = Hkl.factories()['K6C']
         geometry = factory.create_new_geometry()
@@ -244,7 +239,6 @@ class TestAPI(unittest.TestCase):
     def test_reflection_api(self):
 
         detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))
-        detector.idx_set(1)
 
         factory = Hkl.factories()['K6C']
         geometry = factory.create_new_geometry()

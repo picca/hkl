@@ -111,7 +111,6 @@ static void hkl_test_bench_k6c(int n)
 	geom = hkl_factory_create_new_geometry(factory);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
-	hkl_detector_idx_set(detector, 1);
 
 	sample = hkl_sample_new("test");
 
@@ -145,7 +144,6 @@ static void hkl_test_bench_eulerians(void)
 
 	geometry = hkl_factory_create_new_geometry(factory);
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
-	hkl_detector_idx_set(detector, 1);
 
 	sample = hkl_sample_new("test");
 	engines = hkl_factory_create_new_engine_list(factory);

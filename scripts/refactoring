@@ -4,6 +4,6 @@ SP_FILE=$1
 shift
 spatch -in-place -sp_file $SP_FILE $*
 echo $1, $2
-echo "refactor using $1" > ../.git/GITGUI_BCK
-git add $1
-cat $1 >> ../.git/GITGUI_BCK
+echo "refactor using $SP_FILE" > ../.git/GITGUI_BCK
+git add $SP_FILE
+cat $SP_FILE >> ../.git/GITGUI_BCK

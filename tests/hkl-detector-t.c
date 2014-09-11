@@ -31,7 +31,7 @@ static void new(void)
 	HklDetector *detector2;
 
 	detector1 = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
-	ok(0 == detector1->idx, __func__);
+	ok(1 == detector1->idx, __func__);
 	ok(NULL == detector1->holder, __func__);
 
 	detector2 = hkl_detector_new_copy(detector1);
@@ -54,7 +54,7 @@ static void attach_to_holder(void)
 	holder = hkl_geometry_add_holder(geometry);
 	hkl_detector_attach_to_holder(detector, holder);
 
-	ok(0 == detector->idx, __func__);
+	ok(1 == detector->idx, __func__);
 	ok(holder == detector->holder, __func__);
 
 	hkl_geometry_free(geometry);
@@ -73,6 +73,11 @@ static void compute_kf(void)
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	geometry = hkl_geometry_new(NULL);
+	/* add a fake first holder */
+	holder = hkl_geometry_add_holder(geometry);
+	/* for now all detectors MUST be connected to the second
+	 * holder. We will decide about a better API to connect
+	 * geometry and detector */
 	holder = hkl_geometry_add_holder(geometry);
 	hkl_holder_add_rotation_axis(holder, "a", 1, 0, 0);
 	hkl_holder_add_rotation_axis(holder, "b", 0, 1, 0);

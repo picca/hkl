@@ -41,9 +41,6 @@ static int __test(unsigned int nb_iter, test_func f, int foreach_mode)
 	int res = TRUE;
 	const char **mode;
 
-	/* attach to the second holder */
-	hkl_detector_idx_set(detector, 1);
-
 	factories = hkl_factory_get_all(&n);
 	for(i=0; i<n && TRUE == res; i++){
 		HklEngine **engine;

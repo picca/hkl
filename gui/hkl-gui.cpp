@@ -33,7 +33,6 @@ HKLWindow::HKLWindow(void)
 	_engines = NULL;
 
 	_detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
-	hkl_detector_idx_set(_detector, 1);
 
 	// add a default crystal
 	_sample = hkl_sample_new("test");
