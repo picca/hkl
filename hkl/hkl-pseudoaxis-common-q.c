@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -86,7 +86,7 @@ static int get_q_real(HklMode *self,
 		      HklGeometry *geometry,
 		      HklDetector *detector,
 		      HklSample *sample,
-		      HklError **error)
+		      GError **error)
 {
 	double wavelength;
 	double theta;
@@ -106,7 +106,7 @@ static int get_q_real(HklMode *self,
 	/* update q */
 	engine->q->_value = qmax(wavelength) * sin(theta);
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 /* not declared in the constructor as it is used also in the q2 pseudo
@@ -120,14 +120,14 @@ static HklMode *mode_q(void)
 	static const char *axes[] = {"tth"};
 	static const HklFunction *functions[] = {&q_func};
 	static HklModeAutoInfo info = {
-		INFO_AUTO("q", axes, functions),
+		HKL_MODE_AUTO_INFO("q", axes, axes, functions),
 	};
 	static const HklModeOperations operations = {
 		HKL_MODE_OPERATIONS_AUTO_DEFAULTS,
 		.get = get_q_real,
 	};
 
-	return hkl_mode_auto_new(&info, &operations);
+	return hkl_mode_auto_new(&info, &operations, TRUE);
 }
 
 static void hkl_engine_q_free_real(HklEngine *base)
@@ -144,8 +144,7 @@ HklEngine *hkl_engine_q_new(void)
 	static const HklPseudoAxis *pseudo_axes[] = {&q};
 	static const HklEngineInfo info = {
 		.name = "q",
-		.pseudo_axes = pseudo_axes,
-		.n_pseudo_axes = ARRAY_SIZE(pseudo_axes),
+		.pseudo_axes = DARRAY(pseudo_axes),
 	};
 	static const HklEngineOperations operations = {
 		HKL_ENGINE_OPERATIONS_DEFAULTS,
@@ -160,7 +159,7 @@ HklEngine *hkl_engine_q_new(void)
 	/* q [default] */
 	mode = mode_q();
 	hkl_engine_add_mode(&self->engine, mode);
-	hkl_engine_select_mode(&self->engine, mode);
+	hkl_engine_mode_set(&self->engine, mode);
 
 	return &self->engine;
 }
@@ -229,13 +228,13 @@ static int get_q2_real(HklMode *self,
 		       HklGeometry *geometry,
 		       HklDetector *detector,
 		       HklSample *sample,
-		       HklError **error)
+		       GError **error)
 {
 	HklEngineQ2 *engine_q2 = container_of(engine, HklEngineQ2, engine);
 
 	_q2(geometry, detector, &engine_q2->q->_value, &engine_q2->alpha->_value);
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 static HklMode *mode_q2(void)
@@ -243,14 +242,14 @@ static HklMode *mode_q2(void)
 	static const char* axes[] = {"gamma", "delta"};
 	static const HklFunction *functions[] = {&q2_func};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO("q2", axes, functions),
+		HKL_MODE_AUTO_INFO("q2", axes, axes, functions),
 	};
 	static const HklModeOperations operations = {
 		HKL_MODE_OPERATIONS_AUTO_DEFAULTS,
 		.get = get_q2_real,
 	};
 
-	return hkl_mode_auto_new(&info, &operations);
+	return hkl_mode_auto_new(&info, &operations, TRUE);
 }
 
 static const HklPseudoAxis alpha = {
@@ -271,8 +270,7 @@ HklEngine *hkl_engine_q2_new(void)
 	static const HklPseudoAxis *pseudo_axes[] = {&q, &alpha};
 	static const HklEngineInfo info = {
 		.name = "q2",
-		.pseudo_axes = pseudo_axes,
-		.n_pseudo_axes = ARRAY_SIZE(pseudo_axes),
+		.pseudo_axes = DARRAY(pseudo_axes),
 	};
 	static const HklEngineOperations operations = {
 		HKL_ENGINE_OPERATIONS_DEFAULTS,
@@ -288,7 +286,7 @@ HklEngine *hkl_engine_q2_new(void)
 	/* q2 [default] */
 	mode = mode_q2();
 	hkl_engine_add_mode(&self->engine, mode);
-	hkl_engine_select_mode(&self->engine, mode);
+	hkl_engine_mode_set(&self->engine, mode);
 
 	return &self->engine;
 }
@@ -383,7 +381,7 @@ static int get_qper_qpar_real(HklMode *self,
 			      HklGeometry *geometry,
 			      HklDetector *detector,
 			      HklSample *sample,
-			      HklError **error)
+			      GError **error)
 {
 	HklEngineQperQpar *engine_qper_qpar = container_of(engine, HklEngineQperQpar, engine);
 
@@ -391,7 +389,7 @@ static int get_qper_qpar_real(HklMode *self,
 		   &engine_qper_qpar->qper->_value,
 		   &engine_qper_qpar->qpar->_value);
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 static HklMode *mode_qper_qpar(void)
@@ -404,14 +402,14 @@ static HklMode *mode_qper_qpar(void)
 		{HKL_PARAMETER_DEFAULTS, .name = "z", .range = {.min=-1, .max=1}, ._value = 0,},
 	};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO_WITH_PARAMS("qper_qpar", axes, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS("qper_qpar", axes, axes, functions, parameters),
 	};
 	static const HklModeOperations operations = {
 		HKL_MODE_OPERATIONS_AUTO_DEFAULTS,
 		.get = get_qper_qpar_real,
 	};
 
-	return hkl_mode_auto_new(&info, &operations);
+	return hkl_mode_auto_new(&info, &operations, TRUE);
 }
 
 static void hkl_engine_qper_qpar_free_real(HklEngine *base)
@@ -432,8 +430,7 @@ HklEngine *hkl_engine_qper_qpar_new(void)
 	static const HklPseudoAxis *pseudo_axes[] = {&qper, &qpar};
 	static const HklEngineInfo info = {
 		.name = "qper_qpar",
-		.pseudo_axes = pseudo_axes,
-		.n_pseudo_axes = ARRAY_SIZE(pseudo_axes),
+		.pseudo_axes = DARRAY(pseudo_axes),
 	};
 	static const HklEngineOperations operations = {
 		HKL_ENGINE_OPERATIONS_DEFAULTS,
@@ -451,7 +448,7 @@ HklEngine *hkl_engine_qper_qpar_new(void)
 	/* qper_qpar [default] */
 	mode = mode_qper_qpar();
 	hkl_engine_add_mode(&self->engine, mode);
-	hkl_engine_select_mode(&self->engine, mode);
+	hkl_engine_mode_set(&self->engine, mode);
 
 	return &self->engine;
 }

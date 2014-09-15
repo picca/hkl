@@ -13,35 +13,23 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2011-2013 Synchrotron SOLEIL
+ * Copyright (C) 2011-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
+#include <glib-object.h>
 #include "hkl-types.h"
 #include "glib/gthread.h"               // for g_once_init_enter, etc
 #include "glibconfig.h"                 // for gsize
 #include "hkl-detector-private.h"       // for hkl_detector_new_copy
-#include "hkl-error-private.h"          // for hkl_error_free, etc
 #include "hkl-geometry-private.h"       // for hkl_geometry_list_free, etc
 #include "hkl-matrix-private.h"         // for hkl_matrix_dup
 #include "hkl-pseudoaxis-private.h"     // for hkl_engine_list_new_copy
 #include "hkl-sample-private.h"         // for hkl_sample_reflection_free, etc
 #include "hkl-unit-private.h"           // for hkl_unit_dup, hkl_unit_free
 #include "hkl-vector-private.h"         // for hkl_vector_dup, etc
-
-GType hkl_error_get_type (void) {
-        static volatile gsize hkl_error_type_id__volatile = 0;
-        if (g_once_init_enter (&hkl_error_type_id__volatile)) {
-                GType hkl_error_type_id;
-                hkl_error_type_id = g_boxed_type_register_static ("HklError",
-								  (GBoxedCopyFunc) hkl_error_new_copy,
-								  (GBoxedFreeFunc) hkl_error_free);
-                g_once_init_leave (&hkl_error_type_id__volatile, hkl_error_type_id);
-        }
-        return hkl_error_type_id__volatile;
-}
 
 GType hkl_vector_get_type (void) {
         static volatile gsize hkl_vector_type_id__volatile = 0;

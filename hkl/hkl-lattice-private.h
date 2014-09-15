@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -26,7 +26,7 @@
 
 #include "hkl.h"
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
 
 struct _HklLattice
 {
@@ -38,12 +38,23 @@ struct _HklLattice
 	HklParameter *gamma;
 };
 
+#define HKL_LATTICE_ERROR hkl_lattice_error_quark ()
+
+static GQuark hkl_lattice_error_quark (void)
+{
+	return g_quark_from_static_string ("hkl-lattice-error-quark");
+}
+
+typedef enum {
+	HKL_LATTICE_CHECK_LATTICE, /* the lattice parameters are not valid */
+} HklLatticeError;
+
 extern void hkl_lattice_lattice_set(HklLattice *self, const HklLattice *lattice);
 
 extern void hkl_lattice_randomize(HklLattice *self);
 
 extern void hkl_lattice_fprintf(FILE *f, const HklLattice *self);
 
-HKL_END_DECLS
+G_END_DECLS
 
 #endif /* __HKL_LATTICE_PRIVATE_H__ */

@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -25,10 +25,22 @@
 #include "hkl.h"
 #include "hkl/ccan/autodata/autodata.h"
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
+
+typedef HklGeometry* (* HklFactoryGeometryFunction) (const HklFactory *factory);
+typedef HklEngineList* (* HklFactoryEngineListFunction) (const HklFactory *factory);
+
+struct _HklFactory
+{
+	const char *name;
+	const char *description;
+	const darray_string axes;
+	HklFactoryGeometryFunction create_new_geometry;
+	HklFactoryEngineListFunction create_new_engine_list;
+};
 
 AUTODATA_TYPE(factories, HklFactory);
 
-HKL_END_DECLS
+G_END_DECLS
 
 #endif /* __HKL_FACTORY_H__ */

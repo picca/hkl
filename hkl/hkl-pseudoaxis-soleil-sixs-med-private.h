@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2011-2013 Synchrotron SOLEIL
+ * Copyright (C) 2011-2014 Synchrotron SOLEIL
  *                    L'Orme des Merisiers Saint-Aubin
  *                    BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -22,9 +22,9 @@
 #ifndef __HKL_PSEUDOAXIS_SOLEIL_SIXS_MED_H__
 #define __HKL_PSEUDOAXIS_SOLEIL_SIXS_MED_H__
 
-#include "hkl.h"                        // for HklEngine, HKL_BEGIN_DECLS, etc
+#include "hkl.h"                        // for HklEngine, G_BEGIN_DECLS, etc
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
 
 extern HklEngine *hkl_engine_soleil_sixs_med_2_2_hkl_new(void);
 extern HklEngine *hkl_engine_soleil_sixs_med_1_2_hkl_new(void);
@@ -33,6 +33,6 @@ extern HklEngine *hkl_engine_soleil_sixs_med_2_3_hkl_new(void);
 extern void hkl_geometry_list_multiply_soleil_sixs_med_2_3(HklGeometryList *self,
 							   HklGeometryListItem *item);
 
-HKL_END_DECLS
+G_END_DECLS
 
 #endif /* __HKL_PSEUDOAXIS_SOLEIL_SIXS_MED_H__ */

@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -51,8 +51,8 @@ static void cmp(void)
 			 {3.0, 4.0, 5.0},
 			 {6.0, 7.0, 8.0}}};
 
-	ok(HKL_TRUE == hkl_matrix_cmp(&m1, &m1), __func__);
-	ok(HKL_FALSE == hkl_matrix_cmp(&m1, &m2), __func__);
+	ok(TRUE == hkl_matrix_cmp(&m1, &m1), __func__);
+	ok(FALSE == hkl_matrix_cmp(&m1, &m2), __func__);
 }
 
 static void assignement(void)
@@ -63,7 +63,7 @@ static void assignement(void)
 	HklMatrix m;
 
 	m = m1;
-	ok(HKL_TRUE == hkl_matrix_cmp(&m1, &m), __func__);
+	ok(TRUE == hkl_matrix_cmp(&m1, &m), __func__);
 }
 
 static void init_from_euler(void)
@@ -74,7 +74,7 @@ static void init_from_euler(void)
 	HklMatrix m;
 
 	hkl_matrix_init_from_euler(&m, 45.*HKL_DEGTORAD, 45.*HKL_DEGTORAD, 45.*HKL_DEGTORAD);
-	ok(HKL_TRUE == hkl_matrix_cmp(&m_ref, &m), __func__);
+	ok(TRUE == hkl_matrix_cmp(&m_ref, &m), __func__);
 }
 
 static void init_from_two_vector(void)
@@ -88,7 +88,7 @@ static void init_from_two_vector(void)
 	HklMatrix m;
 
 	hkl_matrix_init_from_two_vector(&m, &v1, &v2);
-	ok(HKL_TRUE == hkl_matrix_cmp(&m_ref, &m), __func__);
+	ok(TRUE == hkl_matrix_cmp(&m_ref, &m), __func__);
 }
 
 static void times_vector(void)
@@ -117,7 +117,7 @@ static void times_matrix(void)
 	};
 
 	hkl_matrix_times_matrix(&m, &m);
-	ok(HKL_TRUE == hkl_matrix_cmp(&m_ref, &m), __func__);
+	ok(TRUE == hkl_matrix_cmp(&m_ref, &m), __func__);
 }
 
 static void transpose(void)
@@ -133,7 +133,7 @@ static void transpose(void)
 	};
 
 	hkl_matrix_transpose(&m);
-	ok(HKL_TRUE == hkl_matrix_cmp(&m_ref, &m), __func__);
+	ok(TRUE == hkl_matrix_cmp(&m_ref, &m), __func__);
 }
 
 int main(int argc, char** argv)

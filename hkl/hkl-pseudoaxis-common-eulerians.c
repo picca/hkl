@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -24,7 +24,6 @@
 #include <math.h>                       // for sin, asin, M_PI_2, tan, etc
 #include <stdlib.h>                     // for free
 #include <sys/types.h>                  // for uint
-#include "hkl-error-private.h"          // for hkl_error_set
 #include "hkl-geometry-private.h"
 #include "hkl-macros-private.h"         // for HKL_MALLOC
 #include "hkl-parameter-private.h"      // for _HklParameter, etc
@@ -34,6 +33,17 @@
 #include "hkl/ccan/array_size/array_size.h"  // for ARRAY_SIZE
 #include "hkl/ccan/container_of/container_of.h"  // for container_of
 #include "hkl/ccan/darray/darray.h"     // for darray_item
+
+#define HKL_MODE_EULERIANS_ERROR hkl_mode_eulerians_error_quark ()
+
+static GQuark hkl_mode_eulerians_error_quark (void)
+{
+	return g_quark_from_static_string ("hkl-mode-eulerians-error-quark");
+}
+
+typedef enum {
+	HKL_MODE_EULERIANS_ERROR_SET, /* can not set the engine */
+} HklModeEuleriansError;
 
 static int kappa_to_eulerian(const double angles[],
 			     double *omega, double *chi, double *phi,
@@ -54,14 +64,14 @@ static int kappa_to_eulerian(const double angles[],
 		*phi = kphi + p - M_PI_2;
 	}
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 static int eulerian_to_kappa(const double omega, const double chi, const double phi,
 			     double angles[],
 			     double alpha, double solution)
 {
-	int status = HKL_TRUE;
+	int status = TRUE;
 	double *komega = &angles[0];
 	double *kappa = &angles[1];
 	double *kphi = &angles[2];
@@ -79,30 +89,33 @@ static int eulerian_to_kappa(const double omega, const double chi, const double 
 			*kphi = phi + p + M_PI_2;
 		}
 	}else
-		status = HKL_FALSE;
+		status = FALSE;
 
 	return status;
 }
 
-/***************************/
+/***********/
 /* HklMode */
-/***************************/
+/***********/
 
 static int hkl_mode_get_eulerians_real(HklMode *self,
 				       HklEngine *engine,
 				       HklGeometry *geometry,
 				       HklDetector *detector,
 				       HklSample *sample,
-				       HklError **error)
+				       GError **error)
 {
 	HklEngineEulerians *eulerians;
 	const double angles[] = {
 		hkl_parameter_value_get(
-			hkl_geometry_get_axis_by_name(geometry, "komega")),
+			hkl_geometry_get_axis_by_name(geometry, "komega"),
+			HKL_UNIT_DEFAULT),
 		hkl_parameter_value_get(
-			hkl_geometry_get_axis_by_name(geometry, "kappa")),
+			hkl_geometry_get_axis_by_name(geometry, "kappa"),
+			HKL_UNIT_DEFAULT),
 		hkl_parameter_value_get(
-			hkl_geometry_get_axis_by_name(geometry, "kphi")),
+			hkl_geometry_get_axis_by_name(geometry, "kphi"),
+			HKL_UNIT_DEFAULT),
 	};
 	double values[3];
 	double solution;
@@ -119,7 +132,7 @@ static int hkl_mode_get_eulerians_real(HklMode *self,
 			  &eulerians->phi->_value,
 			  50 * HKL_DEGTORAD, solution);
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 static int hkl_mode_set_eulerians_real(HklMode *self,
@@ -127,10 +140,9 @@ static int hkl_mode_set_eulerians_real(HklMode *self,
 				       HklGeometry *geometry,
 				       HklDetector *detector,
 				       HklSample *sample,
-				       HklError **error)
+				       GError **error)
 {
 	double solution;
-	uint n_values = engine->info->n_pseudo_axes;
 	HklEngineEulerians *engine_eulerians;
 	double angles[3];
 
@@ -140,12 +152,15 @@ static int hkl_mode_set_eulerians_real(HklMode *self,
 			      engine_eulerians->chi->_value,
 			      engine_eulerians->phi->_value,
 			      angles, 50 * HKL_DEGTORAD, solution)){
-		hkl_error_set(error, "unreachable solution : 0° < chi < 50°");
-		return HKL_FALSE;
+		g_set_error(error,
+			    HKL_MODE_EULERIANS_ERROR,
+			    HKL_MODE_EULERIANS_ERROR_SET,
+			    "unreachable solution : 0° < chi < 50°");
+		return FALSE;
 	}else
 		hkl_engine_add_geometry(engine, angles);
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 
@@ -154,23 +169,23 @@ static HklMode *mode_eulerians()
 	HklMode *mode;
 	static const char *axes[] = {"komega", "kappa", "kphi"};
 	static const HklParameter parameters[] = {
-		{ HKL_PARAMETER_DEFAULTS, .name = "solution", .range = {.max = 1}, ._value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name="solutions", .range = {.max = 1}, ._value = 1,},
 	};
 	static const HklModeInfo info = {
-		INFO_WITH_PARAMS("eulerians", axes, parameters),
+		HKL_MODE_INFO_WITH_PARAMS("eulerians", axes, axes, parameters),
 	};
 	static const HklModeOperations operations = {
 		HKL_MODE_OPERATIONS_DEFAULTS,
 		.get = hkl_mode_get_eulerians_real,
 		.set = hkl_mode_set_eulerians_real,
 	};
-
-	return hkl_mode_new(&info, &operations);
+ 
+	return hkl_mode_new(&info, &operations, TRUE);
 };
 
-/***********************/
+/*************/
 /* HklEngine */
-/***********************/
+/*************/
 
 static void hkl_engine_eulerians_free_real(HklEngine *base)
 {
@@ -197,8 +212,7 @@ HklEngine *hkl_engine_eulerians_new(void)
 	static const HklPseudoAxis *pseudo_axes[] = {&omega, &chi, &phi};
 	static HklEngineInfo info = {
 		.name = "eulerians",
-		.pseudo_axes = pseudo_axes,
-		.n_pseudo_axes = ARRAY_SIZE(pseudo_axes),
+		.pseudo_axes = DARRAY(pseudo_axes),
 	};
 	static HklEngineOperations operations = {
 		HKL_ENGINE_OPERATIONS_DEFAULTS,
@@ -216,7 +230,7 @@ HklEngine *hkl_engine_eulerians_new(void)
 	/* eulerians [default] */
 	mode = mode_eulerians();
 	hkl_engine_add_mode(&self->engine, mode);
-	hkl_engine_select_mode(&self->engine, mode);
+	hkl_engine_mode_set(&self->engine, mode);
 
 	return &self->engine;
 }

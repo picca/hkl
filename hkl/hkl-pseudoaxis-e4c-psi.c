@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -36,7 +36,7 @@ static HklMode *psi(void)
 		{HKL_PARAMETER_DEFAULTS, .name = "l1", .range = {.min=-1, .max=1}, ._value=1,},
 	};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes, functions, parameters),
 	};
 
 	return hkl_mode_psi_new(&info);
@@ -51,7 +51,7 @@ HklEngine *hkl_engine_e4c_psi_new(void)
 
 	default_mode = psi();
 	hkl_engine_add_mode(self, default_mode);
-	hkl_engine_select_mode(self, default_mode);
+	hkl_engine_mode_set(self, default_mode);
 
 	return self;
 }

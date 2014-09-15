@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -24,13 +24,15 @@
 
 #include <stddef.h>                     // for size_t
 #include <stdio.h>                      // for FILE
+#include "hkl-parameter-private.h"      // for darray_parameter
 #include "hkl-quaternion-private.h"     // for _HklQuaternion
 #include "hkl-source-private.h"         // for HklSource
 #include "hkl-vector-private.h"         // for HklQuaternion
 #include "hkl.h"                        // for HklGeometry, etc
 #include "hkl/ccan/darray/darray.h"     // for darray
+#include "hkl/ccan/list/list.h"
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
 
 typedef struct _HklHolder HklHolder;
 typedef void (* HklGeometryListMultiplyFunction) (HklGeometryList *self,
@@ -58,14 +60,28 @@ struct _HklGeometry
 	darray_holder holders;
 };
 
+#define HKL_GEOMETRY_ERROR hkl_geometry_error_quark ()
+
+static GQuark hkl_geometry_error_quark (void)
+{
+	return g_quark_from_static_string ("hkl-geometry-error-quark");
+}
+
+typedef enum {
+	HKL_GEOMETRY_ERROR_AXIS_GET, /* can not get the axis */
+	HKL_GEOMETRY_ERROR_AXIS_SET, /* can not set the axis */
+} HklGeometryError;
+
 struct _HklGeometryList
 {
 	HklGeometryListMultiplyFunction multiply;
-	darray_item items;
+	struct list_head items;
+	size_t n_items;
 };
 
 struct _HklGeometryListItem
 {
+	struct list_node list;
 	HklGeometry *geometry;
 };
 
@@ -82,10 +98,8 @@ extern HklParameter *hkl_holder_add_rotation_axis(HklHolder *self,
 
 extern HklGeometry *hkl_geometry_new(const HklFactory *factory);
 
-extern HklGeometry *hkl_geometry_new_copy(const HklGeometry *self);
-
-extern void hkl_geometry_init_geometry(HklGeometry *self,
-				       const HklGeometry *src);
+extern int hkl_geometry_init_geometry(HklGeometry *self,
+				      const HklGeometry *src);
 
 extern HklHolder *hkl_geometry_add_holder(HklGeometry *self);
 
@@ -94,11 +108,9 @@ extern void hkl_geometry_update(HklGeometry *self);
 extern int hkl_geometry_get_axis_idx_by_name(const HklGeometry *self,
 					     const char *name);
 
+/* internally require do not use the hkl_geometry_axis_get */
 extern HklParameter *hkl_geometry_get_axis_by_name(HklGeometry *self,
 						   const char *name);
-
-extern int hkl_geometry_set_values_v(HklGeometry *self,
-				     size_t len, ...);
 
 extern double hkl_geometry_distance(const HklGeometry *self,
 				    const HklGeometry *ref);
@@ -118,8 +130,6 @@ extern int hkl_geometry_is_valid(const HklGeometry *self);
 extern HklGeometryList *hkl_geometry_list_new(void);
 
 extern HklGeometryList *hkl_geometry_list_new_copy(const HklGeometryList *self);
-
-extern void hkl_geometry_list_free(HklGeometryList *self);
 
 extern void hkl_geometry_list_add(HklGeometryList *self, HklGeometry *geometry);
 
@@ -145,6 +155,6 @@ extern HklGeometryListItem *hkl_geometry_list_item_new_copy(const HklGeometryLis
 
 extern void hkl_geometry_list_item_free(HklGeometryListItem *self);
 
-HKL_END_DECLS
+G_END_DECLS
 
 #endif /* __HKL_GEOMETRY_PRIVATE_H__ */

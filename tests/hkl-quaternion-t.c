@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -22,6 +22,7 @@
 #include "hkl.h"
 #include <tap/basic.h>
 #include <tap/float.h>
+#include <tap/hkl-tap.h>
 
 #include "hkl-quaternion-private.h"
 
@@ -42,12 +43,12 @@ static void cmp(void)
 	HklQuaternion q = {{1., 2., 3., 4.}};
 	HklQuaternion q1 = {{1., 1., 3., 4.}};
 
-	ok(HKL_TRUE == hkl_quaternion_cmp(&q_ref, &q), __func__);
-	ok(HKL_FALSE == hkl_quaternion_cmp(&q_ref, &q1), __func__);
+	ok(TRUE == hkl_quaternion_cmp(&q_ref, &q), __func__);
+	ok(FALSE == hkl_quaternion_cmp(&q_ref, &q1), __func__);
 
 	/* test the assignation */
 	q1 = q_ref;
-	ok(HKL_TRUE == hkl_quaternion_cmp(&q_ref, &q1), __func__);
+	ok(TRUE == hkl_quaternion_cmp(&q_ref, &q1), __func__);
 }
 
 static void init_from_vector(void)
@@ -57,7 +58,7 @@ static void init_from_vector(void)
 	HklQuaternion q;
 
 	hkl_quaternion_init_from_vector(&q, &v);
-	ok(HKL_TRUE == hkl_quaternion_cmp(&q_ref, &q), __func__);
+	ok(TRUE == hkl_quaternion_cmp(&q_ref, &q), __func__);
 }
 
 static void init_from_angle_and_axe(void)
@@ -68,10 +69,10 @@ static void init_from_angle_and_axe(void)
 	HklQuaternion q;
 
 	hkl_quaternion_init_from_angle_and_axe(&q, 0, &v_ref2);
-	ok(HKL_TRUE == hkl_quaternion_cmp(&q_ref1, &q), __func__);
+	ok(TRUE == hkl_quaternion_cmp(&q_ref1, &q), __func__);
 
 	hkl_quaternion_init_from_angle_and_axe(&q, 90. * HKL_DEGTORAD, &v_ref2);
-	ok(HKL_TRUE == hkl_quaternion_cmp(&q_ref2, &q), __func__);
+	ok(TRUE == hkl_quaternion_cmp(&q_ref2, &q), __func__);
 }
 
 static void times_quaternion(void)
@@ -80,7 +81,7 @@ static void times_quaternion(void)
 	HklQuaternion q = {{1., 2., 3., 4.}};
 
 	hkl_quaternion_times_quaternion(&q, &q);
-	ok(HKL_TRUE == hkl_quaternion_cmp(&q_ref, &q), __func__);
+	ok(TRUE == hkl_quaternion_cmp(&q_ref, &q), __func__);
 }
 
 static void norm2(void)
@@ -96,7 +97,7 @@ static void conjugate(void)
 	HklQuaternion q = {{1., 2., 3., 4.}};
 
 	hkl_quaternion_conjugate(&q);
-	ok(HKL_TRUE == hkl_quaternion_cmp(&q_ref, &q), __func__);
+	ok(TRUE == hkl_quaternion_cmp(&q_ref, &q), __func__);
 }
 
 static void to_matrix(void)
@@ -108,7 +109,7 @@ static void to_matrix(void)
 	HklMatrix *m = hkl_matrix_new();
 
 	hkl_quaternion_to_matrix(&q_ref, m);
-	ok(HKL_TRUE == hkl_matrix_cmp(m_ref, m), __func__);
+	is_matrix(m_ref, m, __func__);
 
 	hkl_matrix_free(m_ref);
 	hkl_matrix_free(m);

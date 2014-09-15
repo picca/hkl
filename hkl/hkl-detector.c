@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -42,7 +42,7 @@ HklDetector *hkl_detector_new(void)
 
 	self = HKL_MALLOC(HklDetector);
 
-	self->idx = 0;
+	self->idx = 1;
 	self->holder = NULL;
 
 	return self;
@@ -79,18 +79,6 @@ void hkl_detector_free(HklDetector *self)
 }
 
 /**
- * hkl_detector_idx_set:
- * @self: the this ptr
- * @idx: the index of the holder
- *
- * Attach a detector to a given holder
- **/
-void hkl_detector_idx_set(HklDetector *self, int idx)
-{
-	self->idx = idx;
-}
-
-/**
  * hkl_detector_attach_to_holder: (skip)
  * @self:
  * @holder:
@@ -123,9 +111,9 @@ int hkl_detector_compute_kf(HklDetector const *self, HklGeometry *g,
 	if (holder) {
 		hkl_vector_init(kf, HKL_TAU / g->source.wave_length, 0, 0);
 		hkl_vector_rotated_quaternion(kf, &holder->q);
-		return HKL_TRUE;
+		return TRUE;
 	} else
-		return HKL_FALSE;
+		return FALSE;
 }
 
 /**

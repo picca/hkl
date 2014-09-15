@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -31,7 +31,6 @@
 #include <sys/types.h>                  // for uint
 #include "hkl-axis-private.h"           // for HklAxis
 #include "hkl-detector-private.h"       // for hkl_detector_compute_kf
-#include "hkl-error-private.h"          // for hkl_error_set
 #include "hkl-geometry-private.h"       // for HklHolder, _HklGeometry, etc
 #include "hkl-macros-private.h"         // for hkl_assert, HKL_MALLOC, etc
 #include "hkl-matrix-private.h"         // for hkl_matrix_times_vector, etc
@@ -77,7 +76,8 @@ static int fit_detector_function(const gsl_vector *x, void *params, gsl_vector *
 	/* update the workspace from x; */
 	for(i=0; i<fitp->len; ++i)
 		hkl_parameter_value_set(fitp->axes[i],
-					x->data[i], NULL);
+					x->data[i], 
+					HKL_UNIT_DEFAULT, NULL);
 
 	hkl_geometry_update(fitp->geometry);
 
@@ -108,14 +108,14 @@ static int fit_detector_function(const gsl_vector *x, void *params, gsl_vector *
 static int fit_detector_position(HklMode *mode, HklGeometry *geometry,
 				 HklDetector *detector, HklVector *kf)
 {
-	size_t i;
+	const char **axis_name;
 	HklDetectorFit params;
 	gsl_multiroot_fsolver_type const *T;
 	gsl_multiroot_fsolver *s;
 	gsl_multiroot_function f;
 	gsl_vector *x;
 	int status;
-	int res = HKL_FALSE;
+	int res = FALSE;
 	int iter;
 	HklHolder *sample_holder = darray_item(geometry->holders, 0);
 	HklHolder *detector_holder = darray_item(geometry->holders, 1);
@@ -132,11 +132,11 @@ static int fit_detector_position(HklMode *mode, HklGeometry *geometry,
 	params.axes = malloc(sizeof(*params.axes) * detector_holder->config->len);
 	params.len = 0;
 	/* for each axis of the mode */
-	for(i=0; i<mode->info->n_axes; ++i){
+	darray_foreach(axis_name, mode->info->axes_w){
 		size_t k;
 		size_t tmp;
 
-		tmp = hkl_geometry_get_axis_idx_by_name(params.geometry, mode->info->axes[i]);
+		tmp = hkl_geometry_get_axis_idx_by_name(params.geometry, *axis_name);
 		/* check that this axis is in the detector's holder */
 		for(k=0; k<detector_holder->config->len; ++k)
 			if(tmp == detector_holder->config->idx[k]){
@@ -158,6 +158,8 @@ static int fit_detector_position(HklMode *mode, HklGeometry *geometry,
 	/* if no detector axis found ???? abort */
 	/* maybe put this at the begining of the method */
 	if (params.len > 0){
+		size_t i;
+
 		/* now solve the system */
 		/* Initialize method  */
 		T = gsl_multiroot_fsolver_hybrid;
@@ -166,7 +168,7 @@ static int fit_detector_position(HklMode *mode, HklGeometry *geometry,
 
 		/* initialize x with the right values */
 		for(i=0; i<params.len; ++i)
-			x->data[i] = hkl_parameter_value_get(params.axes[i]);
+			x->data[i] = hkl_parameter_value_get(params.axes[i], HKL_UNIT_DEFAULT);
 
 		f.f = fit_detector_function;
 		f.n = params.len;
@@ -203,16 +205,16 @@ static int fit_detector_position(HklMode *mode, HklGeometry *geometry,
 		hkl_geometry_fprintf(stdout, params.geometry);
 #endif
 		if(status != GSL_CONTINUE){
-			res = HKL_TRUE;
+			res = TRUE;
 			/* put the axes in the -pi, pi range. */
 			for(i=0; i<params.len; ++i){
 				double value;
 
-				value = hkl_parameter_value_get(params.axes[i]);
+				value = hkl_parameter_value_get(params.axes[i], HKL_UNIT_DEFAULT);
 				/* TODO one day deal with the error for real */
 				hkl_parameter_value_set(params.axes[i],
 							gsl_sf_angle_restrict_pos(value),
-							NULL);
+							HKL_UNIT_DEFAULT, NULL);
 			}
 		}
 		/* release memory */
@@ -228,22 +230,22 @@ static int fit_detector_position(HklMode *mode, HklGeometry *geometry,
 /* BEWARE, NOT the axis index in the geometry->axes */
 /* which is part of the axes_names of the mode */
 /* return -1 if there is no axes of the mode in the sample part of the geometry */
-static int get_last_axis_idx(HklGeometry *geometry, int holder_idx, char const **axes_names, int len)
+static int get_last_axis_idx(HklGeometry *geometry, int holder_idx, const darray_string *axes)
 {
 	int last = -1;
-	int i;
+	const char **axis_name;
 	HklHolder *holder;
 
 	holder = darray_item(geometry->holders, holder_idx);
-	for(i=0; i<len; ++i){
-		size_t j;
+	darray_foreach(axis_name, *axes){
+		size_t i;
 		size_t idx;
 
 		/* FIXME for now the sample holder is the first one */
-		idx = hkl_geometry_get_axis_idx_by_name(geometry, axes_names[i]);
-		for(j=0; j<holder->config->len; ++j)
-			if(idx == holder->config->idx[j]){
-				last = last > (int)j ? last : (int)j;
+		idx = hkl_geometry_get_axis_idx_by_name(geometry, *axis_name);
+		for(i=0; i<holder->config->len; ++i)
+			if(idx == holder->config->idx[i]){
+				last = last > (int)i ? last : (int)i;
 				break;
 			}
 	}
@@ -251,7 +253,7 @@ static int get_last_axis_idx(HklGeometry *geometry, int holder_idx, char const *
 }
 
 
-static int hkl_is_reachable(HklEngine *engine, double wavelength, HklError **error)
+static int hkl_is_reachable(HklEngine *engine, double wavelength, GError **error)
 {
 	HklEngineHkl *engine_hkl = container_of(engine, HklEngineHkl, engine);
 	HklVector Hkl = {
@@ -264,11 +266,14 @@ static int hkl_is_reachable(HklEngine *engine, double wavelength, HklError **err
 
 	hkl_matrix_times_vector(&engine->sample->UB, &Hkl);
 	if (hkl_vector_norm2(&Hkl) > qmax(wavelength)){
-		hkl_error_set(error, "unreachable hkl, try to change the wavelength");
-		return HKL_FALSE;
+		g_set_error(error,
+			    HKL_ENGINE_ERROR,
+			    HKL_ENGINE_ERROR_SET,
+			    "unreachable hkl, try to change the wavelength");
+		return FALSE;
 	}
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 /**
@@ -285,9 +290,7 @@ int _RUBh_minus_Q_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	CHECK_NAN(x->data, x->size);
 
-	RUBh_minus_Q(x->data, params, f->data);
-
-	return  GSL_SUCCESS;
+	return RUBh_minus_Q(x->data, params, f->data);
 }
 
 /**
@@ -342,7 +345,7 @@ int hkl_mode_get_hkl_real(HklMode *self,
 			  HklGeometry *geometry,
 			  HklDetector *detector,
 			  HklSample *sample,
-			  HklError **error)
+			  GError **error)
 {
 	HklHolder *sample_holder;
 	HklMatrix RUB;
@@ -369,7 +372,7 @@ int hkl_mode_get_hkl_real(HklMode *self,
 	engine_hkl->k->_value = hkl.data[1];
 	engine_hkl->l->_value = hkl.data[2];
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 int hkl_mode_set_hkl_real(HklMode *self,
@@ -377,16 +380,17 @@ int hkl_mode_set_hkl_real(HklMode *self,
 			  HklGeometry *geometry,
 			  HklDetector *detector,
 			  HklSample *sample,
-			  HklError **error)
+			  GError **error)
 {
 	int last_axis;
-	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
+
+	hkl_error (error == NULL || *error == NULL);
 
 	/* check the input parameters */
 	if(!hkl_is_reachable(engine, geometry->source.wave_length,
 			     error)){
 		hkl_assert(error == NULL || *error != NULL);
-		return HKL_FALSE;
+		return FALSE;
 	}
 	hkl_assert(error == NULL || *error == NULL);
 
@@ -395,16 +399,18 @@ int hkl_mode_set_hkl_real(HklMode *self,
 				   geometry, detector, sample,
 				   error)){
 		hkl_assert(error == NULL || *error != NULL);
-		return HKL_FALSE;
+		//fprintf(stdout, "message :%s\n", (*error)->message);
+		return FALSE;
 	}
 	hkl_assert(error == NULL || *error == NULL);
 
 	/* check that the mode allow to move a sample axis */
 	/* FIXME for now the sample holder is the first one */
-	last_axis = get_last_axis_idx(geometry, 0, self->info->axes, self->info->n_axes);
+	last_axis = get_last_axis_idx(geometry, 0, &self->info->axes_w);
 	if(last_axis >= 0){
 		uint i;
-		uint len = darray_size(engine->engines->geometries->items);
+		const HklGeometryListItem *item;
+		uint len = engine->engines->geometries->n_items;
 
 		/* For each solution already found we will generate another one */
 		/* using the Ewalds construction by rotating Q around the last sample */
@@ -425,9 +431,10 @@ int hkl_mode_set_hkl_real(HklMode *self,
 		/* at the end we just need to solve numerically the position of the detector */
 
 		/* we will add solution to the geometries so save its length before */
-		for(i=0; i<len; ++i){
+		for(i=0, item=list_top(&engine->engines->geometries->items, HklGeometryListItem, list);
+		    i<len;
+		    ++i, item=list_next(&engine->engines->geometries->items, item, list)){
 			int j;
-			HklGeometry *geom;
 			HklVector ki;
 			HklVector kf;
 			HklVector kf2;
@@ -438,8 +445,9 @@ int hkl_mode_set_hkl_real(HklMode *self,
 			HklVector cp = {0};
 			HklVector op = {0};
 			double angle;
+			HklGeometry *geom;
 
-			geom = hkl_geometry_new_copy(darray_item(engine->engines->geometries->items, i)->geometry);
+			geom = hkl_geometry_new_copy(item->geometry);
 
 			/* get the Q vector kf - ki */
 			hkl_detector_compute_kf(detector, geom, &q);
@@ -471,9 +479,9 @@ int hkl_mode_set_hkl_real(HklMode *self,
 			angle = hkl_vector_oriented_angle_points(&q, &op, &kf2, &axis_v);
 			/* TODO parameter list for geometry */
 			if(!hkl_parameter_value_set(&axis->parameter,
-						    hkl_parameter_value_get(&axis->parameter) + angle,
-						    error))
-				return HKL_FALSE;
+						    hkl_parameter_value_get(&axis->parameter, HKL_UNIT_DEFAULT) + angle,
+						    HKL_UNIT_DEFAULT, error))
+				return FALSE;
 			hkl_geometry_update(geom);
 #ifdef DEBUG
 			fprintf(stdout, "\n- try to add a solution by rotating Q <%f, %f, %f> around the \"%s\" axis <%f, %f, %f> of %f radian",
@@ -485,14 +493,16 @@ int hkl_mode_set_hkl_real(HklMode *self,
 			fprintf(stdout, "\n   q2: <%f, %f, %f>", kf2.data[0], kf2.data[1], kf2.data[2]);
 #endif
 			hkl_vector_add_vector(&kf2, &ki);
+
 			/* at the end we just need to solve numerically the position of the detector */
 			if(fit_detector_position(self, geom, detector, &kf2))
-				hkl_geometry_list_add(engine->engines->geometries, geom);
+				hkl_geometry_list_add(engine->engines->geometries,
+						      geom);
 
 			hkl_geometry_free(geom);
 		}
 	}
-	return HKL_TRUE;
+	return TRUE;
 }
 
 /***************************************/
@@ -635,7 +645,7 @@ int _psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f
 
 		/* project hkl on the plan of normal Q */
 		hkl_vector_project_on_plan(&hkl, &Q);
-#if DEBUG
+#ifdef DEBUG
 		fprintf(stdout, "\n");
 		hkl_geometry_fprintf(stdout, engine->geometry);
 		fprintf(stdout, "\n");
@@ -653,71 +663,86 @@ int _psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f
 	return  GSL_SUCCESS;
 }
 
-int hkl_mode_init_psi_constant_vertical_real(HklMode *self,
-					     HklEngine *engine,
-					     HklGeometry *geometry,
-					     HklDetector *detector,
-					     HklSample *sample,
-					     HklError **error)
+#define HKL_MODE_PSI_CONSTANT_VERTICAL_ERROR hkl_mode_psi_constant_vertical_error_quark ()
+
+static GQuark hkl_mode_psi_constant_vertical_error_quark (void)
+{
+	return g_quark_from_static_string ("hkl-mode-psi-constant-vertical-error-quark");
+}
+
+typedef enum {
+	HKL_MODE_PSI_CONSTANT_VERTICAL_ERROR_INITIALIZED_SET, /* can not init the engine */
+} HklModePsiConstantVerticalError;
+
+int hkl_mode_initialized_set_psi_constant_vertical_real(HklMode *self,
+							HklEngine *engine,
+							HklGeometry *geometry,
+							HklDetector *detector,
+							HklSample *sample,
+							int initialized,
+							GError **error)
 {
 	HklVector hkl;
 	HklVector ki, kf, Q, n;
 
-	if (!self || !engine || !engine->mode || !geometry || !detector || !sample
-	    || !hkl_mode_init_real(self, engine, geometry, detector, sample, error)){
-		hkl_error_set(error, "internal error");
-		return HKL_FALSE;
-	}
+	if(initialized){
+		/* kf - ki = Q */
+		hkl_source_compute_ki(&geometry->source, &ki);
+		hkl_detector_compute_kf(detector, geometry, &kf);
+		Q = kf;
+		hkl_vector_minus_vector(&Q, &ki);
 
-	/* kf - ki = Q */
-	hkl_source_compute_ki(&geometry->source, &ki);
-	hkl_detector_compute_kf(detector, geometry, &kf);
-	Q = kf;
-	hkl_vector_minus_vector(&Q, &ki);
-
-	if (hkl_vector_is_null(&Q)){
-		hkl_error_set(error, "can not initialize the \"%s\" mode with a null hkl (kf == ki)"
-			      "\nplease select a non-null hkl", engine->mode->info->name);
-		return HKL_FALSE;
-	}else{
-		/* needed for a problem of precision */
-		hkl_vector_normalize(&Q);
-
-		/* compute the intersection of the plan P(kf, ki) and PQ (normal Q) */
-		n = kf;
-		hkl_vector_vectorial_product(&n, &ki);
-		hkl_vector_vectorial_product(&n, &Q);
-
-		/* compute hkl in the laboratory referentiel */
-		/* the geometry was already updated in the detector compute kf */
-		/* for now the 0 holder is the sample holder */
-		hkl.data[0] = darray_item(self->parameters, 0)->_value;
-		hkl.data[1] = darray_item(self->parameters, 1)->_value;
-		hkl.data[2] = darray_item(self->parameters, 2)->_value;
-		hkl_matrix_times_vector(&sample->UB, &hkl);
-		hkl_vector_rotated_quaternion(&hkl,
-					      &darray_item(geometry->holders, 0)->q);
-
-		/* project hkl on the plan of normal Q */
-		hkl_vector_project_on_plan(&hkl, &Q);
-
-		if (hkl_vector_is_null(&hkl)){
-			hkl_error_set(error, "can not initialize the \"%s\" mode"
-				      "\nwhen Q and the <h2, k2, l2> ref vector are colinear."
-				      "\nplease change one or both of them", engine->mode->info->name);
-			return HKL_FALSE;
+		if (hkl_vector_is_null(&Q)){
+			g_set_error(error,
+				    HKL_MODE_PSI_CONSTANT_VERTICAL_ERROR,
+				    HKL_MODE_PSI_CONSTANT_VERTICAL_ERROR_INITIALIZED_SET,
+				    "can not initialize the \"%s\" mode with a null hkl (kf == ki)"
+				    "\nplease select a non-null hkl", self->info->name);
+			return FALSE;
 		}else{
-			/* compute the angle beetween hkl and n and
-			 * store in in the fourth parameter */
-			if (!hkl_parameter_value_set(
-				    darray_item(self->parameters, 3),
-				    hkl_vector_oriented_angle(&n, &hkl, &Q),
-				    error))
-				return HKL_FALSE;
+			/* needed for a problem of precision */
+			hkl_vector_normalize(&Q);
+
+			/* compute the intersection of the plan P(kf, ki) and PQ (normal Q) */
+			n = kf;
+			hkl_vector_vectorial_product(&n, &ki);
+			hkl_vector_vectorial_product(&n, &Q);
+
+			/* compute hkl in the laboratory referentiel */
+			/* the geometry was already updated in the detector compute kf */
+			/* for now the 0 holder is the sample holder */
+			hkl.data[0] = darray_item(self->parameters, 0)->_value;
+			hkl.data[1] = darray_item(self->parameters, 1)->_value;
+			hkl.data[2] = darray_item(self->parameters, 2)->_value;
+			hkl_matrix_times_vector(&sample->UB, &hkl);
+			hkl_vector_rotated_quaternion(&hkl,
+						      &darray_item(geometry->holders, 0)->q);
+
+			/* project hkl on the plan of normal Q */
+			hkl_vector_project_on_plan(&hkl, &Q);
+
+			if (hkl_vector_is_null(&hkl)){
+				g_set_error(error,
+					    HKL_MODE_PSI_CONSTANT_VERTICAL_ERROR,
+					    HKL_MODE_PSI_CONSTANT_VERTICAL_ERROR_INITIALIZED_SET,
+					    "can not initialize the \"%s\" mode"
+					    "\nwhen Q and the <h2, k2, l2> ref vector are colinear."
+					    "\nplease change one or both of them", engine->mode->info->name);
+				return FALSE;
+			}else{
+				/* compute the angle beetween hkl and n and
+				 * store in in the fourth parameter */
+				if (!hkl_parameter_value_set(darray_item(self->parameters, 3),
+							     hkl_vector_oriented_angle(&n, &hkl, &Q),
+							     HKL_UNIT_DEFAULT, error))
+					return FALSE;
+			}
 		}
 	}
 
-	return HKL_TRUE;
+	self->initialized = initialized;
+
+	return TRUE;
 }
 
 /*************/
@@ -746,8 +771,7 @@ HklEngine *hkl_engine_hkl_new(void)
 	static const HklPseudoAxis *pseudo_axes[] = {&h, &k, &l};
 	static HklEngineInfo info = {
 		.name = "hkl",
-		.pseudo_axes = pseudo_axes,
-		.n_pseudo_axes = ARRAY_SIZE(pseudo_axes),
+		.pseudo_axes = DARRAY(pseudo_axes),
 	};
 	static HklEngineOperations operations = {
 		HKL_ENGINE_OPERATIONS_DEFAULTS,

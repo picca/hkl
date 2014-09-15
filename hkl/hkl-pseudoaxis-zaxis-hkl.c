@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -58,14 +58,16 @@ static const HklFunction reflectivity_func = {
 
 static HklMode* zaxis()
 {
-	static const char* axes[] = {"omega", "delta", "gamma"};
+	static const char *axes_r[] = {"mu", "omega", "delta", "gamma"};
+	static const char* axes_w[] = {"omega", "delta", "gamma"};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO(__func__, axes, functions),
+		HKL_MODE_AUTO_INFO(__func__, axes_r, axes_w, functions),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_full_mode_operations);
+				 &hkl_full_mode_operations,
+				 TRUE);
 }
 
 static HklMode* reflectivity()
@@ -73,11 +75,12 @@ static HklMode* reflectivity()
 	static const char* axes[] = {"mu", "omega", "delta", "gamma"};
 	static const HklFunction *functions[] = {&reflectivity_func};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO(__func__, axes, functions),
+		HKL_MODE_AUTO_INFO(__func__, axes, axes, functions),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_full_mode_operations);
+				 &hkl_full_mode_operations,
+				 TRUE);
 }
 
 /**********************/
@@ -93,7 +96,7 @@ HklEngine *hkl_engine_zaxis_hkl_new(void)
 
 	default_mode = zaxis();
 	hkl_engine_add_mode(self, default_mode);
-	hkl_engine_select_mode(self, default_mode);
+	hkl_engine_mode_set(self, default_mode);
 
 	hkl_engine_add_mode(self, reflectivity());
 

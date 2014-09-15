@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -212,10 +212,7 @@ static int _constant_omega_v(const gsl_vector *x, void *params, gsl_vector *f)
 	const double kappa = x->data[1];
 	double omega;
 	HklEngine *engine = params;
-	double omega0;
-	uint shit;
-
-	hkl_parameter_list_values_get(&engine->mode->parameters, &omega0, &shit);
+	double omega0 = darray_item(engine->mode->parameters, 0)->_value;
 
 	CHECK_NAN(x->data, x->size);
 
@@ -237,10 +234,7 @@ static int _constant_chi_v(const gsl_vector *x, void *params, gsl_vector *f)
 	const double kappa = x->data[1];
 	double chi;
 	HklEngine *engine = params;
-	double chi0;
-	uint shit;
-
-	hkl_parameter_list_values_get(&engine->mode->parameters, &chi0, &shit);
+	double chi0 = darray_item(engine->mode->parameters, 0)->_value;
 
 	CHECK_NAN(x->data, x->size);
 
@@ -263,10 +257,7 @@ static int _constant_phi_v(const gsl_vector *x, void *params, gsl_vector *f)
 	const double kphi = x->data[2];
 	double phi;
 	HklEngine *engine = params;
-	double phi0;
-	uint shit;
-
-	hkl_parameter_list_values_get(&engine->mode->parameters, &phi0, &shit);
+	double phi0 = darray_item(engine->mode->parameters, 0)->_value;
 
 	CHECK_NAN(x->data, x->size);
 
@@ -313,8 +304,6 @@ static int _constant_incidence_func(const gsl_vector *x, void *params, gsl_vecto
 	double azimuth;
 	HklEngine *engine = params;
 	HklModeAutoWithInit *mode = container_of(engine->mode, HklModeAutoWithInit, mode);
-	double parameters[5];
-	uint shit;
 	HklVector n;
 	double incidence0;
 	double azimuth0;
@@ -325,13 +314,11 @@ static int _constant_incidence_func(const gsl_vector *x, void *params, gsl_vecto
 	RUBh_minus_Q(x->data, params, f->data);
 
 	/* get the mode parameters */
-	hkl_parameter_list_values_get(&engine->mode->parameters,
-				      parameters, &shit);
-	n.data[0] = parameters[0];
-	n.data[1] = parameters[1];
-	n.data[2] = parameters[2];
-	incidence0 = parameters[3];
-	azimuth0 = parameters[4];
+	n.data[0] = darray_item(engine->mode->parameters, 0)->_value;
+	n.data[1] = darray_item(engine->mode->parameters, 1)->_value;
+	n.data[2] = darray_item(engine->mode->parameters, 2)->_value;
+	incidence0 = darray_item(engine->mode->parameters, 3)->_value;
+	azimuth0 = darray_item(engine->mode->parameters, 4)->_value;
 
 	/* compute the two angles */
 
@@ -371,100 +358,115 @@ static const HklFunction constant_incidence_func = {
 
 static HklMode *bissector_vertical(void)
 {
-	static const char* axes[] = {"komega", "kappa", "kphi", "delta"};
+	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "gamma", "delta"};
+	static const char* axes_w[] = {"komega", "kappa", "kphi", "delta"};
 	static const HklFunction *functions[] = {&bissector_v};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO(__func__, axes, functions),
+		HKL_MODE_AUTO_INFO(__func__, axes_r, axes_w, functions),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_mode_operations);
+				 &hkl_mode_operations,
+				 TRUE);
 }
 
 static HklMode *constant_omega_vertical(void)
 {
-	static const char* axes[] = {"komega", "kappa", "kphi", "delta"};
+	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "gamma", "delta"};
+	static const char* axes_w[] = {"komega", "kappa", "kphi", "delta"};
 	static const HklFunction *functions[] = {&constant_omega_v};
 	static const HklParameter parameters[] = {
 		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "omega"},
 	};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes_r, axes_w, functions, parameters),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_mode_operations);
+				 &hkl_mode_operations,
+				 TRUE);
 }
 
 static HklMode *constant_chi_vertical(void)
 {
-	static const char* axes[] = {"komega", "kappa", "kphi", "delta"};
+	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "gamma", "delta"};
+	static const char* axes_w[] = {"komega", "kappa", "kphi", "delta"};
 	static const HklFunction *functions[] = {&constant_chi_v};
 	static const HklParameter parameters[] = {
 		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "chi"},
 	};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes_r, axes_w, functions, parameters),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_mode_operations);
+				 &hkl_mode_operations,
+				 TRUE);
 }
 
 static HklMode *constant_phi_vertical(void)
 {
-	static const char* axes[] = {"komega", "kappa", "kphi", "delta"};
+	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "gamma", "delta"};
+	static const char* axes_w[] = {"komega", "kappa", "kphi", "delta"};
 	static const HklFunction *functions[] = {&constant_phi_v};
 	static const HklParameter parameters[] = {
 		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "phi"},
 	};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes_r, axes_w, functions, parameters),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_mode_operations);
+				 &hkl_mode_operations,
+				 TRUE);
 }
 
 static HklMode *lifting_detector_kphi(void)
 {
-	static const char* axes[] = {"kphi", "gamma", "delta"};
+	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "gamma", "delta"};
+	static const char* axes_w[] = {"kphi", "gamma", "delta"};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO(__func__, axes, functions),
+		HKL_MODE_AUTO_INFO(__func__, axes_r, axes_w, functions),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_mode_operations);
+				 &hkl_mode_operations,
+				 TRUE);
 }
 
 static HklMode *lifting_detector_komega(void)
 {
-	static const char* axes[] = {"komega", "gamma", "delta"};
+	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "gamma", "delta"};
+	static const char* axes_w[] = {"komega", "gamma", "delta"};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO(__func__, axes, functions),
+		HKL_MODE_AUTO_INFO(__func__, axes_r, axes_w, functions),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_mode_operations);
+				 &hkl_mode_operations,
+				 TRUE);
 }
 
 static HklMode *lifting_detector_mu(void)
 {
-	static const char* axes[] = {"mu", "gamma", "delta"};
+	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "gamma", "delta"};
+	static const char* axes_w[] = {"mu", "gamma", "delta"};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO(__func__, axes, functions),
+		HKL_MODE_AUTO_INFO(__func__, axes_r, axes_w, functions),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_mode_operations);
+				 &hkl_mode_operations,
+				 TRUE);
 }
 
 static HklMode *double_diffraction_vertical(void)
 {
-	static const char* axes[] = {"komega", "kappa", "kphi", "delta"};
+	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "gamma", "delta"};
+	static const char* axes_w[] = {"komega", "kappa", "kphi", "delta"};
 	static const HklFunction *functions[] = {&double_diffraction_func};
 	static const HklParameter parameters[] = {
 		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, ._value = 1,},
@@ -472,55 +474,63 @@ static HklMode *double_diffraction_vertical(void)
 		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, ._value = 1,},
 	};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes_r, axes_w, functions, parameters),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_mode_operations);
+				 &hkl_mode_operations,
+				 TRUE);
 }
 
 static HklMode *bissector_horizontal(void)
 {
-	static const char* axes[] = {"mu", "komega", "kappa", "kphi", "gamma"};
+	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "gamma", "delta"};
+	static const char* axes_w[] = {"mu", "komega", "kappa", "kphi", "gamma"};
 	static const HklFunction *functions[] = {&bissector_h_f1, &bissector_h_f2};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO(__func__, axes, functions),
+		HKL_MODE_AUTO_INFO(__func__, axes_r, axes_w, functions),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_mode_operations);
+				 &hkl_mode_operations,
+				 TRUE);
 }
 
 static HklMode *constant_phi_horizontal(void)
 {
-	static const char* axes[] = {"mu", "komega", "kappa", "kphi", "gamma"};
+	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "gamma", "delta"};
+	static const char* axes_w[] = {"mu", "komega", "kappa", "kphi", "gamma"};
 	static const HklFunction *functions[] = {&constant_phi_h_f1, &constant_phi_h_f2};
 	static const HklParameter parameters[] = {
 		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "phi",},
 	};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes_r, axes_w, functions, parameters),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_mode_operations);
+				 &hkl_mode_operations,
+				 TRUE);
 }
 
 static HklMode *constant_kphi_horizontal(void)
 {
-	static const char* axes[] = {"mu", "komega", "kappa", "gamma"};
+	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "gamma", "delta"};
+	static const char* axes_w[] = {"mu", "komega", "kappa", "gamma"};
 	static const HklFunction *functions[] = {&constant_kphi_h_f1, &constant_kphi_h_f2};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO(__func__, axes, functions),
+		HKL_MODE_AUTO_INFO(__func__, axes_r, axes_w, functions),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_mode_operations);
+				 &hkl_mode_operations,
+				 TRUE);
 }
 
 static HklMode *double_diffraction_horizontal(void)
 {
-	static const char* axes[] = {"mu", "komega", "kappa", "kphi", "gamma"};
+	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "gamma", "delta"};
+	static const char* axes_w[] = {"mu", "komega", "kappa", "kphi", "gamma"};
 	static const HklFunction *functions[] = {&double_diffraction_h};
 	static const HklParameter parameters[] = {
 		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, ._value = 1,},
@@ -528,16 +538,18 @@ static HklMode *double_diffraction_horizontal(void)
 		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, ._value = 1,},
 	};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes_r, axes_w, functions, parameters),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_mode_operations);
+				 &hkl_mode_operations,
+				 TRUE);
 }
 
 static HklMode *psi_constant_vertical(void)
 {
-	static const char* axes[] = {"komega", "kappa", "kphi", "delta"};
+	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "gamma", "delta"};
+	static const char* axes_w[] = {"komega", "kappa", "kphi", "delta"};
 	static const HklFunction *functions[] = {&psi_constant_vertical_func};
 	static const HklParameter parameters[] = {
 		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, ._value = 1,},
@@ -546,30 +558,33 @@ static HklMode *psi_constant_vertical(void)
 		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "psi"},
 	};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes_r, axes_w, functions, parameters),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &psi_constant_vertical_mode_operations);
+				 &psi_constant_vertical_mode_operations,
+				 TRUE);
 }
 
 static HklMode *constant_incidence(void)
 {
-	static const char* axes[] = {"komega", "kappa", "kphi", "gamma", "delta"};
+	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "gamma", "delta"};
+	static const char* axes_w[] = {"komega", "kappa", "kphi", "gamma", "delta"};
 	static const HklFunction *functions[] = {&constant_incidence_func};
 	static const HklParameter parameters[] = {
 		{HKL_PARAMETER_DEFAULTS, .name = "x", .range = {.min=-1, .max=1}, ._value = 1,},
 		{HKL_PARAMETER_DEFAULTS, .name = "y", .range = {.min=-1, .max=1}, ._value = 1,},
 		{HKL_PARAMETER_DEFAULTS, .name = "z", .range = {.min=-1, .max=1}, ._value = 1,},
 		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "incidence"},
-		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "aximuth", ._value = M_PI_2,},
+		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "azimuth", ._value = M_PI_2,},
 	};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes_r, axes_w, functions, parameters),
 	};
 
 	return hkl_mode_auto_with_init_new(&info,
-					   &constant_incidence_mode_operations);
+					   &constant_incidence_mode_operations,
+					   TRUE);
 }
 
 /**********************/
@@ -585,7 +600,7 @@ HklEngine *hkl_engine_k6c_hkl_new(void)
 
 	default_mode = bissector_vertical();
 	hkl_engine_add_mode(self, default_mode);
-	hkl_engine_select_mode(self, default_mode);
+	hkl_engine_mode_set(self, default_mode);
 
 	hkl_engine_add_mode(self, constant_omega_vertical());
 	hkl_engine_add_mode(self, constant_chi_vertical());

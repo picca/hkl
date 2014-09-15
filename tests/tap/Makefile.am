@@ -1,6 +1,8 @@
 AM_CFLAGS = \
 	-I$(top_srcdir) \
-	-I$(abs_top_srcdir)/tests
+	-I$(abs_top_srcdir)/tests \
+	$(GLIB_CFLAGS) \
+	$(GSL_CFLAGS)
 
 check_LIBRARIES = libtap.a
 libtap_a_SOURCES = \

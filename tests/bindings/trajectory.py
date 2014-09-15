@@ -14,7 +14,7 @@ from gi.repository import GLib
 from gi.repository import Hkl
 
 
-def compute_hkl_trajectories(engine, hkl1=None, hkl2=None, n=100):
+def compute_hkl_trajectories(engines, engine, hkl1=None, hkl2=None, n=100):
     """
     compute all the trajectories for a given engine already configured
     """
@@ -31,16 +31,17 @@ def compute_hkl_trajectories(engine, hkl1=None, hkl2=None, n=100):
     trajectories = []
     for hh, kk, ll in zip(h, k, l):
         try:
-            engine.set_values_unit([hh, kk, ll])
-            solutions = engine.engines().geometries()
+            solutions = engine.pseudo_axes_values_set([hh, kk, ll],
+                                                      Hkl.UnitEnum.USER)
+            first_solution = solutions.items()[0]
             for i, item in enumerate(solutions.items()):
                 try:
                     trajectories[i]
                 except IndexError:
                     trajectories.append([])
-                values = item.geometry().get_axes_values_unit()
+                values = item.geometry().axes_values_get(Hkl.UnitEnum.USER)
                 trajectories[i].append(values)
-            engine.engines().select_solution(0)
+            engines.select_solution(first_solution)
         except GLib.GError, err:
             pass
 
@@ -62,22 +63,22 @@ def plot_hkl_trajectory(filename, geometry, engines,
     plot the trajectory for a engine. It is possible to limit the
     number of trajectory using the max_traj keyword
     """
-    axes_names = [axis.name_get() for axis in geometry.axes()]
+    axes_names = geometry.axes_names_get()
 
-    hkl = engines.get_by_name("hkl")
+    hkl = engines.engine_get_by_name("hkl")
     page = 1
     plt.clf()
     plt.suptitle("\"" + filename + "\" " + repr(
         hkl1) + " -> " + repr(hkl2) + " page " + str(page))
     _plot_legend(axes_names)
     idx = 2
-    for mode in hkl.modes():
-        hkl.select_mode(mode)
-        trajectories = compute_hkl_trajectories(hkl, hkl1=hkl1, hkl2=hkl2, n=n)
-        print "\"" + filename + "\"", idx, mode.name(), len(trajectories)
+    for mode in hkl.modes_names_get():
+        hkl.current_mode_set(mode)
+        trajectories = compute_hkl_trajectories(engines, hkl, hkl1=hkl1, hkl2=hkl2, n=n)
+        print "\"" + filename + "\"", idx, mode, len(trajectories)
 
         plt.subplot(3, 4, idx)
-        plt.title("%s" % (mode.name(),))
+        plt.title(mode)
         if not len(trajectories):
             plt.text(0.5, 0.5, "Failed", size=20, rotation=0.,
                      ha="center", va="center",
@@ -112,15 +113,13 @@ rcParams['font.size'] = 6
 
 def main():
     sample = Hkl.Sample.new("toto")
-    lattice = sample.lattice_get()
-    lattice.set(1.54, 1.54, 1.54,
-                math.radians(90.0),
-                math.radians(90.0),
-                math.radians(90.))
+    lattice = Hkl.Lattice.new(1.54, 1.54, 1.54,
+                              math.radians(90.),
+                              math.radians(90.),
+                              math.radians(90.))
     sample.lattice_set(lattice)
 
     detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))
-    detector.idx_set(1)
 
     for key, factory in Hkl.factories().iteritems():
         geometry = factory.create_new_geometry()
@@ -128,13 +127,15 @@ def main():
 
         # here we set the detector arm with only positiv values for
         # now tth or delta arm
-        for axis in geometry.axes():
-            if axis.name_get() in ["tth", "delta"]:
-                axis.min_max_unit_set(0, 180.)
+        for axis in geometry.axes_names_get():
+            if axis in ["tth", "delta"]:
+                tmp = geometry.axis_get(axis)
+                tmp.min_max_set(0, 180., Hkl.UnitEnum.USER)
+                geometry.axis_set(axis, tmp)
 
         engines.init(geometry, detector, sample)
 
-        engines_names = [engine.name() for engine in engines.engines()]
+        engines_names = [engine.name_get() for engine in engines.engines_get()]
         if 'hkl' in engines_names:
             plot_hkl_trajectory(key, geometry, engines,
                                 hkl1=[0, 0, 1], hkl2=[0, 1, 1], n=100)

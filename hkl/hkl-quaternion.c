@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -143,7 +143,7 @@ void hkl_quaternion_init_from_angle_and_axe(HklQuaternion *self,
  *
  * compare two #HklQuaternion.
  *
- * Returns: #HKL_TRUE if both are equal, #HKL_FALSE otherwise.
+ * Returns: #TRUE if both are equal, #FALSE otherwise.
  **/
 int hkl_quaternion_cmp(HklQuaternion const *self, HklQuaternion const *q)
 {
@@ -151,8 +151,8 @@ int hkl_quaternion_cmp(HklQuaternion const *self, HklQuaternion const *q)
 
 	for (i=0;i<4;i++)
 		if ( fabs(self->data[i] - q->data[i]) > HKL_EPSILON )
-			return HKL_FALSE;
-	return HKL_TRUE;
+			return FALSE;
+	return TRUE;
 }
 
 /**

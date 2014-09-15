@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -24,7 +24,7 @@
 #include <stdlib.h>                     // for free, NULL
 #include "hkl-macros-private.h"         // for HKL_MALLOC
 #include "hkl-unit-private.h"           // for HklUnit, etc
-#include "hkl.h"                        // for HKL_FALSE, HKL_DEGTORAD, etc
+#include "hkl.h"                        // for FALSE, HKL_DEGTORAD, etc
 
 /**
  * hkl_unit_dup: (skip)
@@ -65,11 +65,11 @@ void hkl_unit_free(HklUnit *self)
  *
  * check if two units are compatible.
  *
- * Returns: HKL_TRUE or HKL_FALSE
+ * Returns: TRUE or FALSE
  **/
 int hkl_unit_compatible(const HklUnit *self, const HklUnit *unit)
 {
-	int res = HKL_TRUE;
+	int res = TRUE;
 	if (self && unit){
 		switch(self->type){
 		case HKL_UNIT_ANGLE_DEG:
@@ -78,7 +78,7 @@ int hkl_unit_compatible(const HklUnit *self, const HklUnit *unit)
 			case HKL_UNIT_ANGLE_RAD:
 				break;
 			default:
-				res = HKL_FALSE;
+				res = FALSE;
 				break;
 			}
 			break;
@@ -88,7 +88,7 @@ int hkl_unit_compatible(const HklUnit *self, const HklUnit *unit)
 			case HKL_UNIT_ANGLE_RAD:
 				break;
 			default:
-				res = HKL_FALSE;
+				res = FALSE;
 				break;
 			}
 			break;
@@ -97,7 +97,7 @@ int hkl_unit_compatible(const HklUnit *self, const HklUnit *unit)
 			case HKL_UNIT_LENGTH_NM:
 				break;
 			default:
-				res = HKL_FALSE;
+				res = FALSE;
 				break;
 			}
 		}

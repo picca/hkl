@@ -2,20 +2,24 @@ AM_CFLAGS=-I$(top_srcdir)
 
 noinst_LTLIBRARIES=libccan.la
 libccan_la_SOURCES = \
-	list/list.h \
-	list/list.c \
-	noerr/noerr.c \
-	noerr/noerr.h \
+	str/debug.c \
+	str/str.c \
+	str/str.h \
+	str/str_debug.h \
+	build_assert/build_assert.h \
+	darray/darray.h \
 	ptr_valid/ptr_valid.c \
 	ptr_valid/ptr_valid.h \
-	check_type/check_type.h \
-	compiler/compiler.h \
+	noerr/noerr.h \
+	noerr/noerr.c \
 	autodata/autodata.c \
 	autodata/autodata.h \
-	container_of/container_of.h \
+	check_type/check_type.h \
+	compiler/compiler.h \
 	array_size/array_size.h \
-	darray/darray.h \
-	build_assert/build_assert.h
+	list/list.h \
+	list/list.c \
+	container_of/container_of.h
 
 ccanincludedir=$(includedir)/hkl-@VMAJ@/hkl/ccan
 nobase_ccaninclude_HEADERS= \

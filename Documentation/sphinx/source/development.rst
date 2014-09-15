@@ -25,8 +25,9 @@ then checkout the next branch like this::
 Building hkl
 ************
 
-To build hkl you need `Python 2.3+ <http://www.python.org>`_ and the
-`GNU Scientific Library 1.12 <http://www.gnu.org/software/gsl/>`_::
+To build hkl you need `Python 2.3+ <http://www.python.org>`_ the
+`GNU Scientific Library 1.12 <http://www.gnu.org/software/gsl/>`_
+and `GLib-2.0 >= 2.3.4 <https://developer.gnome.org/glib/>`_::
 
      $ ./configure --disable-ghkl
      $ make
@@ -187,12 +188,12 @@ in the file ``include/hkl/hkl-pseudoaxis-e6c.h`` which contain this::
 
    #include <hkl/hkl-pseudoaxis-auto.h>
 
-   HKL_BEGIN_DECLS
+   G_BEGIN_DECLS
 
    extern HklEngine *hkl_engine_e6c_hkl_new(void);
    extern HklEngine *hkl_engine_e6c_psi_new(void);
 
-   HKL_END_DECLS
+   G_END_DECLS
 
    #endif /* __HKL_PSEUDOAXIS_E6C_H__ */
 
@@ -288,13 +289,13 @@ the file ``src/hkl-pseudoaxis-e6c-hkl.c``::
 	HklParameter l2;
 
 	hkl_parameter_init(&h2, "h2", -1, 1, 1,
-			   HKL_TRUE, HKL_TRUE,
+			   TRUE, TRUE,
 			   NULL, NULL);
 	hkl_parameter_init(&k2, "k2", -1, 1, 1,
-			   HKL_TRUE, HKL_TRUE,
+			   TRUE, TRUE,
 			   NULL, NULL);
 	hkl_parameter_init(&l2, "l2", -1, 1, 1,
-			   HKL_TRUE, HKL_TRUE,
+			   TRUE, TRUE,
 			   NULL, NULL);
 
 	mode = hkl_mode_new(
@@ -326,7 +327,7 @@ the file ``src/hkl-pseudoaxis-e6c-hkl.c``::
 		4, "mu", "chi", "phi", "gamma");
 	hkl_engine_add_mode(self, mode);
 
-	hkl_engine_select_mode(self, 0);
+	hkl_engine_current_mode_set(self, 0);
 
 	return self;
     }
@@ -471,3 +472,4 @@ part::
 This psi method is the equivalent of psi_constant_vertical. So you
 need to factorize the psi calculation in between psi_constant_vertical
 and psi.
+

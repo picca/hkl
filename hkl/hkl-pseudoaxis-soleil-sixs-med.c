@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2011-2013 Synchrotron SOLEIL
+ * Copyright (C) 2011-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -38,9 +38,11 @@
 #include "hkl/ccan/container_of/container_of.h"  // for container_of
 #include "hkl/ccan/darray/darray.h"     // for darray_item
 
-/***********************/
-/* numerical functions */
-/***********************/
+/* #define DEBUG */
+
+/*********************/
+/* MED 2+2 HklEngine */
+/*********************/
 
 static int _reflectivity_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
@@ -60,37 +62,33 @@ static const HklFunction reflectivity_func = {
 	.size = 4,
 };
 
-/***********/
-/* HklMode */
-/***********/
-
-static HklMode* mu_fixed()
+static HklMode* mu_fixed_2_2()
 {
-	static const char* axes[] = {"omega", "gamma", "delta"};
+	static const char* axes_r[] = {"beta", "mu", "omega", "gamma", "delta"};
+	static const char* axes_w[] = {"omega", "gamma", "delta"};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO(__func__, axes, functions),
+		HKL_MODE_AUTO_INFO("mu_fixed", axes_r, axes_w, functions),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_full_mode_operations);
+				 &hkl_full_mode_operations,
+				 TRUE);
 }
 
-static HklMode* reflectivity()
+static HklMode* reflectivity_2_2()
 {
-	static const char* axes[] = {"mu", "omega", "gamma", "delta"};
+	static const char* axes_r[] = {"beta", "mu", "omega", "gamma", "delta"};
+	static const char* axes_w[] = {"mu", "omega", "gamma", "delta"};
 	static const HklFunction *functions[] = {&reflectivity_func};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO(__func__, axes, functions),
+		HKL_MODE_AUTO_INFO("reflectivity", axes_r, axes_w, functions),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_full_mode_operations);
+				 &hkl_full_mode_operations,
+				 TRUE);
 }
-
-/*********************/
-/* MED 2+2 HklEngine */
-/*********************/
 
 HklEngine *hkl_engine_soleil_sixs_med_2_2_hkl_new(void)
 {
@@ -99,11 +97,11 @@ HklEngine *hkl_engine_soleil_sixs_med_2_2_hkl_new(void)
 
 	self = hkl_engine_hkl_new();
 
-	default_mode = mu_fixed();
+	default_mode = mu_fixed_2_2();
 	hkl_engine_add_mode(self, default_mode);
-	hkl_engine_select_mode(self, default_mode);
+	hkl_engine_mode_set(self, default_mode);
 
-	hkl_engine_add_mode(self, reflectivity());
+	hkl_engine_add_mode(self, reflectivity_2_2());
 
 	return self;
 }
@@ -114,14 +112,16 @@ HklEngine *hkl_engine_soleil_sixs_med_2_2_hkl_new(void)
 
 static HklMode* pitch_fixed()
 {
-	static const char* axes[] = {"mu", "gamma", "delta"};
+	static const char *axes_r[] = {"pitch", "mu", "gamma", "delta"};
+	static const char* axes_w[] = {"mu", "gamma", "delta"};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO(__func__, axes, functions),
+		HKL_MODE_AUTO_INFO(__func__, axes_r, axes_w, functions),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_full_mode_operations);
+				 &hkl_full_mode_operations,
+				 TRUE);
 }
 
 HklEngine *hkl_engine_soleil_sixs_med_1_2_hkl_new(void)
@@ -133,7 +133,7 @@ HklEngine *hkl_engine_soleil_sixs_med_1_2_hkl_new(void)
 
 	default_mode = pitch_fixed();
 	hkl_engine_add_mode(self, default_mode);
-	hkl_engine_select_mode(self, default_mode);
+	hkl_engine_mode_set(self, default_mode);
 
 	return self;
 }
@@ -159,7 +159,7 @@ static int slits_func(const gsl_vector *x, void *params, gsl_vector *f)
 	HklVector n_slits = {{0, 0, 1}};
 	HklSlitsFit *parameters = params;
 
-	hkl_parameter_value_set(parameters->axis, x_data[0], NULL);
+	hkl_parameter_value_set(parameters->axis, x_data[0], HKL_UNIT_DEFAULT, NULL);
 	hkl_geometry_update(parameters->geometry);
 
 	/* compute the orientation of the slits */
@@ -181,7 +181,7 @@ static int fit_slits_orientation(HklSlitsFit *params)
 	gsl_vector *x;
 	double *x_data;
 	int status;
-	int res = HKL_FALSE;
+	int res = FALSE;
 	int iter;
 
 	/* now solve the system */
@@ -216,20 +216,20 @@ static int fit_slits_orientation(HklSlitsFit *params)
 
 #ifdef DEBUG
 	fprintf(stdout, "\n  fitting the detector position using thoses axes :");
-	for(i=0; i<params.len; ++i)
-		fprintf(stdout, " \"%s\"", ((HklParameter *)params.axes[i])->name);
+	for(i=0; i<params->len; ++i)
+		fprintf(stdout, " \"%s\"", params->axis->name);
 	fprintf(stdout, " status : %d iter : %d", status, iter);
 	fprintf(stdout, " x: [");
-	for(i=0; i<params.len; ++i)
+	for(i=0; i<params->len; ++i)
 		fprintf(stdout, " %.7f", s->x->data[i]);
 	fprintf(stdout, "] f: [");
-	for(i=0; i<params.len; ++i)
+	for(i=0; i<params->len; ++i)
 		fprintf(stdout, " %.7f", s->f->data[i]);
 	fprintf(stdout, "]\n");
-	hkl_geometry_fprintf(stdout, params.geometry);
+	hkl_geometry_fprintf(stdout, params->geometry);
 #endif
 	if(status != GSL_CONTINUE){
-		res = HKL_TRUE;
+		res = TRUE;
 		/* put the axes in the -pi, pi range. */
 		gsl_sf_angle_restrict_pos_e(&params->axis->_value);
 	}
@@ -275,11 +275,24 @@ void hkl_geometry_list_multiply_soleil_sixs_med_2_3(HklGeometryList *self,
 
 	/* we just need to fit the slits orientation */
 	/* save it's value before */
-	slits_position = hkl_parameter_value_get(params.axis);
-	if (fit_slits_orientation(&params) != HKL_TRUE)
-		hkl_parameter_value_set(params.axis, slits_position, NULL);
+	slits_position = hkl_parameter_value_get(params.axis, HKL_UNIT_DEFAULT);
+	if (fit_slits_orientation(&params) != TRUE)
+		hkl_parameter_value_set(params.axis, slits_position, HKL_UNIT_DEFAULT, NULL);
 }
 
+static HklMode* mu_fixed_2_3()
+{
+	static const char *axes_r[] = {"beta", "mu", "omega", "gamma", "delta", "eta_a"};
+	static const char* axes_w[] = {"omega", "gamma", "delta"};
+	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO("mu_fixed", axes_r, axes_w, functions),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_full_mode_operations,
+				 TRUE);
+}
 
 HklEngine *hkl_engine_soleil_sixs_med_2_3_hkl_new(void)
 {
@@ -288,9 +301,9 @@ HklEngine *hkl_engine_soleil_sixs_med_2_3_hkl_new(void)
 
 	self = hkl_engine_hkl_new();
 
-	default_mode = mu_fixed();
+	default_mode = mu_fixed_2_3();
 	hkl_engine_add_mode(self, default_mode);
-	hkl_engine_select_mode(self, default_mode);
+	hkl_engine_mode_set(self, default_mode);
 
 	return self;
 }

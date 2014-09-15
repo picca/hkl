@@ -147,21 +147,29 @@ update_pseudo_axis (HklGuiEngine* self)
 {
 	HklGuiEnginePrivate *priv = HKL_GUI_ENGINE_GET_PRIVATE(self);
 	GtkTreeIter iter = {0};
-	darray_parameter *parameters;
-	HklParameter **parameter;
+	const darray_string *parameters = hkl_engine_pseudo_axes_names_get (priv->engine);
+	unsigned int n_values = darray_size(*parameters);
+	double values[n_values];
+	GError *error = NULL;
+	unsigned int i;
 
 	g_return_if_fail (self != NULL);
 
 	gtk_list_store_clear (priv->store_pseudo);
-	parameters = hkl_engine_pseudo_axes (priv->engine);
-	darray_foreach(parameter, *parameters){
+	if(!hkl_engine_pseudo_axes_values_get(priv->engine, values, n_values, HKL_UNIT_USER, &error)){
+		/* TODO check for the error */
+		g_clear_error(&error);
+		return;
+	}
+
+	for(i=0; i<n_values; ++i){
 		gtk_list_store_append (priv->store_pseudo,
 				       &iter);
 		gtk_list_store_set (priv->store_pseudo,
 				    &iter,
-				    PSEUDO_COL_NAME, hkl_parameter_name_get (*parameter),
-				    PSEUDO_COL_VALUE, hkl_parameter_value_unit_get (*parameter),
-				    PSEUDO_COL_PSEUDO, *parameter,
+				    PSEUDO_COL_NAME, darray_item(*parameters, i),
+				    PSEUDO_COL_IDX, i,
+				    PSEUDO_COL_VALUE, values[i],
 				    -1);
 	}
 }
@@ -173,21 +181,21 @@ update_mode (HklGuiEngine* self)
 	HklGuiEnginePrivate *priv = HKL_GUI_ENGINE_GET_PRIVATE(self);
 	GtkTreeIter iter = {0};
 	GtkTreeIter current = {0};
-	darray_mode *modes;
-	HklMode **mode;
+	const darray_string *modes;
+	const char **mode;
 
 	g_return_if_fail (self != NULL);
 
-	modes = hkl_engine_modes(priv->engine);
+	modes = hkl_engine_modes_names_get(priv->engine);
 	gtk_list_store_clear (priv->store_mode);
 	darray_foreach(mode, *modes){
 		gtk_list_store_append (priv->store_mode,
 				       &iter);
 		gtk_list_store_set (priv->store_mode,
 				    &iter,
-				    MODE_COL_NAME, hkl_mode_name(*mode),
+				    MODE_COL_NAME, *mode,
 				    -1);
-		if(*mode == hkl_engine_mode(priv->engine))
+		if(*mode == hkl_engine_current_mode_get(priv->engine))
 			current = iter;
 	}
 
@@ -200,32 +208,27 @@ static void
 update_mode_parameters (HklGuiEngine* self)
 {
 	HklGuiEnginePrivate *priv = HKL_GUI_ENGINE_GET_PRIVATE(self);
-	HklMode *mode;
+	const darray_string *parameters = hkl_engine_parameters_names_get(priv->engine);
+	unsigned int n_values = darray_size(*parameters);
+	double values[n_values];
+	unsigned int i;
 
-	g_return_if_fail (self != NULL);
+	if(n_values){
+		GtkTreeIter iter = {0};
 
-	mode = hkl_engine_mode (priv->engine);
-	if (mode){
-		darray_parameter *parameters;
-		HklParameter **parameter;
-
-		parameters = hkl_mode_parameters(mode);
-		if(darray_size (*parameters)){
-			GtkTreeIter iter = {0};
-
-			gtk_list_store_clear (priv->store_mode_parameter);
-			darray_foreach (parameter, *parameters){
-				gtk_list_store_append (priv->store_mode_parameter, &iter);
-				gtk_list_store_set (priv->store_mode_parameter,
-						    &iter,
-						    PSEUDO_COL_NAME, hkl_parameter_name_get (*parameter),
-						    PSEUDO_COL_VALUE, hkl_parameter_value_unit_get (*parameter),
-						    -1);
-			}
-			gtk_expander_set_expanded (priv->expander1, TRUE);
-			gtk_widget_show (GTK_WIDGET (priv->expander1));
-		}else
-			gtk_widget_hide (GTK_WIDGET (priv->expander1));
+		gtk_list_store_clear (priv->store_mode_parameter);
+		hkl_engine_parameters_values_get(priv->engine, values, n_values, HKL_UNIT_USER);
+		for(i=0; i<n_values; ++i){
+			gtk_list_store_append (priv->store_mode_parameter, &iter);
+			gtk_list_store_set (priv->store_mode_parameter,
+					    &iter,
+					    PSEUDO_COL_NAME, darray_item(*parameters, i),
+					    PSEUDO_COL_IDX, i,
+					    PSEUDO_COL_VALUE, values[i],
+					    -1);
+		}
+		gtk_expander_set_expanded (priv->expander1, TRUE);
+		gtk_widget_show (GTK_WIDGET (priv->expander1));
 	}else
 		gtk_widget_hide (GTK_WIDGET (priv->expander1));
 }
@@ -260,7 +263,7 @@ void hkl_gui_engine_set_engine (HklGuiEngine *self,
 	priv->engine = engine;
 
 	gtk_label_set_label (priv->label2,
-			     hkl_engine_name(priv->engine));
+			     hkl_engine_name_get(priv->engine));
 
 	update_pseudo_axis (self);
 	update_mode (self);
@@ -284,25 +287,28 @@ combobox1_changed_cb (GtkComboBox* combobox, HklGuiEngine* self)
 				   &iter,
 				   MODE_COL_NAME, &mode,
 				   -1);
-		hkl_engine_select_mode_by_name(priv->engine, mode);
+		if(!hkl_engine_current_mode_set(priv->engine, mode, NULL))
+			return;
 		update_mode_parameters(self);
 	}
 }
 
 static gboolean
 _set_pseudo(GtkTreeModel *model,
-			    GtkTreePath *path,
-			    GtkTreeIter *iter,
-			    gpointer data)
+	    GtkTreePath *path,
+	    GtkTreeIter *iter,
+	    gpointer data)
 {
-	HklParameter *parameter;
+	double *values = data;
+	unsigned int idx;
 	double value;
 
 	gtk_tree_model_get (model, iter,
-			    PSEUDO_COL_PSEUDO, &parameter,
+			    PSEUDO_COL_IDX, &idx,
 			    PSEUDO_COL_VALUE, &value,
 			    -1);
-	hkl_parameter_value_unit_set(parameter, value, NULL);
+
+	values[idx] = value;
 
 	return FALSE;
 }
@@ -311,15 +317,22 @@ static void
 button1_clicked_cb (GtkButton* button, HklGuiEngine* self)
 {
 	HklGuiEnginePrivate *priv = HKL_GUI_ENGINE_GET_PRIVATE(self);
-
-	g_return_if_fail (self != NULL);
-	g_return_if_fail (button != NULL);
+	unsigned int n_values = darray_size(*hkl_engine_pseudo_axes_names_get(priv->engine));
+	double values[n_values];
+	GError *error = NULL;
+	HklGeometryList *solutions;
 
 	gtk_tree_model_foreach(GTK_TREE_MODEL(priv->store_pseudo),
 			       _set_pseudo,
-			       self);
+			       values);
 
-	g_signal_emit(self, signals[CHANGED], 0);
+	solutions = hkl_engine_pseudo_axes_values_set(priv->engine, values, n_values, HKL_UNIT_USER, &error);
+	if(!solutions){
+		/* TODO check for the error */
+		g_clear_error(&error);
+	}else{
+		g_signal_emit(self, signals[CHANGED], 0, solutions);
+	}
 }
 
 
@@ -328,12 +341,11 @@ button2_clicked_cb (GtkButton* button, HklGuiEngine* self)
 {
 	HklGuiEnginePrivate *priv = HKL_GUI_ENGINE_GET_PRIVATE(self);
 
-	g_return_if_fail (self != NULL);
-	g_return_if_fail (button != NULL);
-
-	if(hkl_engine_initialize(priv->engine, NULL)){
-		/* some init method update the parameters */
-		update_mode_parameters(self);
+	if (HKL_ENGINE_CAPABILITIES_INITIALIZABLE & hkl_engine_capabilities_get(priv->engine)){
+		if(hkl_engine_initialized_set(priv->engine, TRUE, NULL)){
+			/* some init method update the parameters */
+			update_mode_parameters(self);
+		}
 	}
 }
 
@@ -348,28 +360,16 @@ cell_tree_view_pseudo_axis_value_edited_cb (GtkCellRendererText* renderer,
 	GtkTreeIter iter = {0};
 	GtkListStore* model = NULL;
 
-	g_return_if_fail (self != NULL);
-	g_return_if_fail (renderer != NULL);
-	g_return_if_fail (path != NULL);
-	g_return_if_fail (new_text != NULL);
-
 	if (gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(priv->store_pseudo),
 						 &iter, path)) {
 		gdouble value = 0.0;
-		HklPseudoAxis* pseudo = NULL;
 
 		value = atof(new_text);
-		gtk_tree_model_get (GTK_TREE_MODEL(priv->store_pseudo),
+		g_object_set (G_OBJECT(renderer), "background", "red", NULL, NULL);
+		gtk_list_store_set (priv->store_pseudo,
 				    &iter,
-				    PSEUDO_COL_PSEUDO, &pseudo, -1);
-
-		if (pseudo) {
-			g_object_set (G_OBJECT(renderer), "background", "red", NULL, NULL);
-			gtk_list_store_set (priv->store_pseudo,
-					    &iter,
-					    PSEUDO_COL_VALUE, value,
-					    -1);
-		}
+				    PSEUDO_COL_VALUE, value,
+				    -1);
 	}
 }
 
@@ -405,9 +405,10 @@ static void hkl_gui_engine_class_init (HklGuiEngineClass * class)
 			      0, /* class offset */
 			      NULL, /* accumulator */
 			      NULL, /* accu_data */
-			      g_cclosure_marshal_VOID__VOID,
+			      g_cclosure_marshal_VOID__POINTER,
 			      G_TYPE_NONE, /* return_type */
-			      0);
+			      1,
+			      G_TYPE_POINTER);
 }
 
 

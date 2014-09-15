@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -22,14 +22,10 @@
 #ifndef __HKL_GLIB_H__
 #define __HKL_GLIB_H__
 
-#include <glib.h>                       // for G_GNUC_CONST, G_BEGIN_DECLS, etc
 #include <glib-object.h>               // for GType
 #include "hkl.h"                        // for HKLAPI
 
 G_BEGIN_DECLS
-
-#define TYPE_HKL_ERROR (hkl_error_get_type ())
-HKLAPI GType hkl_error_get_type (void) G_GNUC_CONST;
 
 #define TYPE_HKL_VECTOR (hkl_vector_get_type ())
 HKLAPI GType hkl_vector_get_type (void) G_GNUC_CONST;

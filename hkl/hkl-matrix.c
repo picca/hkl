@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -290,7 +290,7 @@ void hkl_matrix_to_euler(const HklMatrix *self,
  *
  * compare two #HklMatrix.
  *
- * Returns: return HKL_TRUE if | self - m | > HKL_EPSILON
+ * Returns: return TRUE if | self - m | > HKL_EPSILON
  **/
 int hkl_matrix_cmp(const HklMatrix *self, const HklMatrix *m)
 {
@@ -299,8 +299,8 @@ int hkl_matrix_cmp(const HklMatrix *self, const HklMatrix *m)
 	for(i=0;i<3;i++)
 		for(j=0;j<3;j++)
 			if( fabs(self->data[i][j] - m->data[i][j]) > HKL_EPSILON )
-				return HKL_FALSE;
-	return HKL_TRUE;
+				return FALSE;
+	return TRUE;
 }
 
 
@@ -439,7 +439,7 @@ int hkl_matrix_solve(const HklMatrix *self, HklVector *x, const HklVector *b)
  *
  * is all #hklMatrix elementes bellow #HKL_EPSILON
  *
- * Returns: HKL_TRUE if the self #HklMatrix is null
+ * Returns: TRUE if the self #HklMatrix is null
  * Todo: test
  **/
 int hkl_matrix_is_null(const HklMatrix *self)
@@ -449,6 +449,6 @@ int hkl_matrix_is_null(const HklMatrix *self)
 	for (i=0;i<3;i++)
 		for (j=0;j<3;j++)
 			if ( fabs(self->data[i][j]) > HKL_EPSILON )
-				return HKL_FALSE;
-	return HKL_TRUE;
+				return FALSE;
+	return TRUE;
 }

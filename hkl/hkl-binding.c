@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2012-2013 Synchrotron SOLEIL
+ * Copyright (C) 2012-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -23,8 +23,6 @@
 #include <stdlib.h>                     // for malloc
 #include <string.h>                     // for NULL, strdup
 #include <sys/types.h>                  // for uint
-#include <glib.h>                       // for g_set_error, GError etc
-#include "hkl-error-private.h"          // for hkl_error_clear, _HklError
 #include "hkl-factory-private.h"        // for __start_xautodata_factories, etc
 #include "hkl-geometry-private.h"       // for _HklGeometry, etc
 #include "hkl-parameter-private.h"
@@ -57,82 +55,11 @@ GHashTable *hkl_factories(void)
 	factories = autodata_get(factories, &n);
 	for(i=0; i<n; ++i){
 		g_hash_table_insert(table,
-				    hkl_factory_name(factories[i]),
+				    (gpointer)hkl_factory_name_get(factories[i]),
 				    factories[i]);
 	}
 
 	return table;
-}
-
-/********************/
-/* HklParameterList */
-/********************/
-
-#define HKL_PARAMETER_LIST_ERROR hkl_parameter_list_error_quark ()
-
-GQuark hkl_parameter_list_error_quark (void)
-{
-	return g_quark_from_static_string ("hkl-parameter-list-error-quark");
-}
-
-typedef enum {
-	HKL_PARAMETER_LIST_ERROR_VALUES_SET /* can not set the parameter list values */
-} HklParameterListError;
-
-/**
- * hkl_parameter_list_values_unit_set_binding:
- * @self: the this ptr
- * @values: (array length=len): the values to set
- * @len: the length of the values
- * @error: error set if something goes wrong
- *
- * set the parameter list with the given values
- *
- * Rename to: hkl_parameter_list_values_unit_set
- *
- * Return value: true if succeed or false otherwise
- **/
-gboolean hkl_parameter_list_values_unit_set_binding(HklParameterList *self,
-						    double values[], uint len,
-						    GError **error)
-{
-	HklError *err = NULL;
-
-	g_return_val_if_fail(error == NULL ||*error == NULL, FALSE);
-
-	if(!hkl_parameter_list_values_unit_set(self,
-					       values, len, &err)){
-		g_assert(&err == NULL || err != NULL);
-
-		g_set_error(error,
-			    HKL_PARAMETER_LIST_ERROR,
-			    HKL_PARAMETER_LIST_ERROR_VALUES_SET,
-			    strdup(err->message));
-
-		hkl_error_clear(&err);
-
-		return FALSE;
-	}
-	return TRUE;
-}
-
-/**
- * hkl_parameter_list_parameters:
- * @self: the this ptr
- *
- * Return value: (element-type HklParameter) (transfer container): list of parameters
- *               free the list with g_slist_free when done.
- **/
-GSList* hkl_parameter_list_parameters(HklParameterList *self)
-{
-	GSList *list = NULL;
-	HklParameter **parameter;
-
-	darray_foreach(parameter, *self){
-		list = g_slist_append(list, *parameter);
-	}
-
-	return list;
 }
 
 /************/
@@ -140,34 +67,39 @@ GSList* hkl_parameter_list_parameters(HklParameterList *self)
 /************/
 
 /**
- * hkl_geometry_axes:
+ * hkl_geometry_axes_names_get_binding:
  * @self: the this ptr
+ * @length: (out caller-allocates): the length of the returned array
  *
- * Returns: (element-type HklParameter) (transfer container): list of HklParameter,
- *          free the list with g_slist_free when done.
+ * get all the axes of the given geometry.
+ *
+ * Rename to: hkl_geometry_axes_names_get
+ *
+ * Returns: (array length=length) (transfer none): array of the axes names.
  **/
-GSList *hkl_geometry_axes(HklGeometry *self)
+const char **hkl_geometry_axes_names_get_binding(const HklGeometry *self,
+						 size_t *length)
 {
-	GSList *list = NULL;
-	HklParameter **axis;
+	const darray_string *axes = hkl_geometry_axes_names_get(self);
 
-	darray_foreach(axis, self->axes){
-		list = g_slist_append(list, *axis);
-	}
+	*length = darray_size(*axes);
 
-	return list;
+	return &darray_item(*axes, 0);
 }
 
-
 /**
- * hkl_geometry_get_axes_values_unit:
+ * hkl_geometry_axes_values_get_binding:
  * @self: the this ptr
  * @len: (out caller-allocates): the length of the returned array
+ * @unit_type: the unit type (default or user) of the returned value
+ *
+ * Rename to: hkl_geometry_axes_values_get
  *
  * Return value: (array length=len) (transfer container): list of axes values,
  *          free the list with free when done.
  **/
-double *hkl_geometry_get_axes_values_unit(const HklGeometry *self, guint *len)
+double *hkl_geometry_axes_values_get_binding(const HklGeometry *self, guint *len,
+					     HklUnitEnum unit_type)
 {
 	double *values;
 	uint i = 0;
@@ -180,33 +112,10 @@ double *hkl_geometry_get_axes_values_unit(const HklGeometry *self, guint *len)
 	values = malloc(darray_size(self->axes) * sizeof(*values));
 
 	darray_foreach(axis, self->axes){
-		values[i++] = hkl_parameter_value_unit_get(*axis);
+		values[i++] = hkl_parameter_value_get(*axis, unit_type);
 	}
 
 	return values;
-}
-
-/**
- * hkl_geometry_set_axes_values_unit:
- * @self: the this ptr
- * @values: (array length=len): the values to set.
- * @len: the length of the values array.
- **/
-void hkl_geometry_set_axes_values_unit(HklGeometry *self, double *values, unsigned int len)
-{
-	uint i = 0;
-	HklParameter **axis;
-
-	if (!self || !values || len != darray_size(self->axes))
-		return;
-
-	darray_foreach(axis, self->axes){
-		hkl_parameter_value_unit_set(*axis,
-					     values[i++],
-					     NULL);
-	}
-
-	hkl_geometry_update(self);
 }
 
 /*******************/
@@ -223,11 +132,10 @@ void hkl_geometry_set_axes_values_unit(HklGeometry *self, double *values, unsign
 GSList* hkl_geometry_list_items(HklGeometryList *self)
 {
 	GSList *list = NULL;
-	HklGeometryListItem **item;
+	HklGeometryListItem *item;
 
-	darray_foreach(item, self->items){
-		list = g_slist_append(list, *item);
-	}
+	list_for_each(&self->items, item, list)
+		list = g_slist_append(list, item);
 
 	return list;
 }
@@ -251,104 +159,98 @@ const HklGeometry *hkl_geometry_list_item_geometry(const HklGeometryListItem *se
 /* HklEngine */
 /*************/
 
-#define HKL_ENGINE_ERROR hkl_engine_error_quark ()
-
-GQuark hkl_engine_error_quark (void)
-{
-	return g_quark_from_static_string ("hkl-pseudo-axis-engine-error-quark");
-}
-
-typedef enum {
-	HKL_ENGINE_ERROR_SET /* can not set the pseudo axis engine */
-} HklEngineError;
-
-
 /**
- * hkl_engine_modes_as_gslist:
+ * hkl_engine_modes_names_get_binding:
  * @self: the this ptr
+ * @length: (out caller-allocates): return the length of the returned array.
  *
- * Return value: (element-type HklMode) (transfer container): list of mdoe,
- *               free the list with g_slist_free when done.
+ * Rename to: hkl_engine_modes_names_get
  *
- * Rename to: hkl_engine_modes
+ * Return value: (array length=length) (transfer none): All the modes supported by the #HklEngine
  **/
-GSList* hkl_engine_modes_as_gslist(HklEngine *self)
+const char **hkl_engine_modes_names_get_binding(const HklEngine *self, size_t *length)
 {
-	GSList *list = NULL;
-	HklMode **mode;
-
-	darray_foreach(mode, self->modes){
-		list = g_slist_append(list, *mode);
-	}
-
-	return list;
+	*length = darray_size(self->mode_names);
+	return &darray_item(self->mode_names, 0);
 }
 
 /**
- * hkl_engine_set_values_unit:
+ * hkl_engine_parameters_names_get_binding:
  * @self: the this ptr
- * @values: (array length=len): the values to set
- * @len: the len of the values array
- * @error: return location of a GError or NULL
+ * @length: (out caller-allocates): return the length of the returned array.
  *
- * compute the #HklGeometry angles for this #HklEngine
+ * Rename to: hkl_engine_parameters_names_get
  *
- * Return value: TRUE on success or FALSE if an error occurred
+ * Return value: (array length=length) (transfer none): All the parameters of #HklEngine.
  **/
-gboolean hkl_engine_set_values_unit(HklEngine *self,
-				    double values[], unsigned int len,
-				    GError **error)
+const char **hkl_engine_parameters_names_get_binding(const HklEngine *self, size_t *length)
 {
-	HklParameter *parameter;
+	*length = darray_size(self->mode->parameters_names);
+	return &darray_item(self->mode->parameters_names, 0);
+}
+
+/**
+ * hkl_engine_axes_names_get_binding:
+ * @self: the this ptr
+ * @mode: the #HklEngineAxesNamesGet
+ * @length: (out caller-allocates): return the length of the returned array.
+ *
+ * Rename to: hkl_engine_axes_names_get
+ *
+ * Return value: (array length=length) (transfer none): axes of the #HklEngine for the given mode.
+ **/
+const char **hkl_engine_axes_names_get_binding(const HklEngine *self,
+					       HklEngineAxesNamesGet mode,
+					       size_t *length)
+{
+	const darray_string *axes = hkl_engine_axes_names_get(self, mode);
+
+	*length = darray_size(*axes);
+
+	return &darray_item(*axes, 0);
+}
+
+/**
+ * hkl_engine_pseudo_axes_values_get_binding:
+ * @self: the this ptr
+ * @len: (out caller-allocates): the length of the returned array
+ * @unit_type: the unit type (default or user) of the returned value
+ *
+ * Rename to: hkl_engine_pseudo_axes_values_get
+ *
+ * Return value: (array length=len) (transfer container): list of pseudo axes values,
+ *          free the list with free when done.
+ **/
+double *hkl_engine_pseudo_axes_values_get_binding(const HklEngine *self, guint *len,
+						  HklUnitEnum unit_type)
+{
+	double *values;
 	uint i = 0;
-	HklError *err = NULL;
+	HklParameter **axis;
 
-	g_return_val_if_fail(error == NULL ||*error == NULL, FALSE);
+	if(!self || !len || darray_size(self->pseudo_axes) == 0)
+		return NULL;
 
-	if(len != self->info->n_pseudo_axes)
-		return FALSE;
+	*len = darray_size(self->pseudo_axes);
+	values = malloc(darray_size(self->pseudo_axes) * sizeof(*values));
 
-	if(!hkl_parameter_list_values_unit_set(&self->pseudo_axes,
-					       values, len, &err)){
-		g_assert(&err == NULL || err != NULL);
-
-		g_set_error(error,
-			    HKL_ENGINE_ERROR,
-			    HKL_ENGINE_ERROR_SET,
-			    strdup(err->message));
-
-		hkl_error_clear(&err);
-
-		return FALSE;
+	darray_foreach(axis, self->pseudo_axes){
+		values[i++] = hkl_parameter_value_get(*axis, unit_type);
 	}
 
-	if(!hkl_engine_set(self, &err)){
-		g_assert(&err == NULL || err != NULL);
-
-		g_set_error(error,
-			    HKL_ENGINE_ERROR,
-			    HKL_ENGINE_ERROR_SET,
-			    strdup(err->message));
-
-		hkl_error_clear(&err);
-
-		return FALSE;
-	}
-	g_assert(error != NULL ||*error != NULL);
-
-	return TRUE;
+	return values;
 }
 
 /**
- * hkl_engine_list_engines_as_gslist:
+ * hkl_engine_list_engines_get_as_gslist:
  * @self: the this ptr
  *
  * Return value: (element-type HklEngine) (transfer container): list of engines,
  *               free the list with g_slist_free when done.
  *
- * Rename to: hkl_engine_list_engines
+ * Rename to: hkl_engine_list_engines_get
  **/
-GSList* hkl_engine_list_engines_as_gslist(HklEngineList *self)
+GSList* hkl_engine_list_engines_get_as_gslist(HklEngineList *self)
 {
 	GSList *list = NULL;
 	HklEngine **engine;
@@ -400,62 +302,22 @@ const GSList *hkl_sample_reflections_get(const HklSample *self)
 HklSampleReflection *hkl_sample_add_reflection_binding(HklSample *self,
 						       const HklGeometry *geometry,
 						       const HklDetector *detector,
-						       double h, double k, double l)
+						       double h, double k, double l,
+						       GError **error)
 {
 	HklSampleReflection *reflection;
 
-	reflection = hkl_sample_reflection_new(geometry, detector, h, k, l);
+	hkl_error (error == NULL || *error == NULL);
+
+	reflection = hkl_sample_reflection_new(geometry, detector,
+					       h, k, l, error);
+	if(!reflection){
+		g_assert (error == NULL || *error != NULL);
+		return NULL;
+	}
+	g_assert (error == NULL || *error == NULL);
+
 	hkl_sample_add_reflection(self, reflection);
 
 	return reflection;
-}
-
-#define HKL_SAMPLE_ERROR hkl_sample_error_quark ()
-
-GQuark hkl_sample_error_quark (void)
-{
-	return g_quark_from_static_string ("hkl-sample-error-quark");
-}
-
-typedef enum {
-	HKL_SAMPLE_ERROR_UB_SET /* can not set the UB list values */
-} HklSampleError;
-
-
-/**
- * hkl_sample_UB_set_binding:
- * @self: the sample to modify
- * @UB: the UB matrix to set
- * @error: error set in case of impossibility
- *
- * Set the UB matrix using an external UB matrix. In fact you give
- * the UB matrix but only the U matrix of the sample is affected by
- * this operation. We keep the B matrix constant.
- * U * B = UB -> U = UB * B^-1
- *
- * Rename to: hkl_sample_UB_set
- *
- * Return value: the fitness of the UB affinement.
- **/
-gdouble hkl_sample_UB_set_binding(HklSample *self,
-				  const HklMatrix *UB,
-				  GError **error)
-{
-	HklError *err = NULL;
-	gdouble fitness;
-
-	g_return_val_if_fail(error == NULL ||*error == NULL, FALSE);
-
-	fitness = hkl_sample_UB_set(self, UB, &err);
-
-	if(err != NULL){
-		g_set_error(error,
-			    HKL_SAMPLE_ERROR,
-			    HKL_SAMPLE_ERROR_UB_SET,
-			    strdup(err->message));
-
-		hkl_error_clear(&err);
-		return NAN;
-	}
-	return fitness;
 }

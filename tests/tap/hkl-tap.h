@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -24,15 +24,35 @@
 
 #include "hkl.h"
 
-HKL_BEGIN_DECLS
+#define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY(x)
+
+/* BEWARE here we are using a GCC extension */
+#define DIAG(_success)							\
+	({	typeof(_success) __success = (_success);		\
+		if(!__success)						\
+			diag("status: %d " __FILE__ ":" TOSTRING(__LINE__) ":%s", (__success) , __func__); \
+		__success;						\
+	})
+
+G_BEGIN_DECLS
+
+extern void is_matrix(const HklMatrix *wanted, const HklMatrix *seen, const char *format, ...)
+	__attribute__((__format__(printf, 3, 4)));
 
 extern int check_pseudoaxes_v(HklEngine *engine, ...);
 
 extern int check_pseudoaxes(HklEngine *engine,
 			    double expected[], uint len);
 
-extern void hkl_engine_set_values_v(HklEngine *self, ...);
+extern  void hkl_tap_engine_pseudo_axes_randomize(HklEngine *self,
+						  double values[], size_t n_values,
+						  HklUnitEnum unit_type) HKL_ARG_NONNULL(1, 2);
 
-HKL_END_DECLS
+extern void hkl_tap_engine_parameters_randomize(HklEngine *self) HKL_ARG_NONNULL(1);
+
+extern HklGeometryList *hkl_engine_set_values_v(HklEngine *self, ...);
+
+G_END_DECLS
 
 #endif /* __HKL_TAP_H__ */

@@ -65,7 +65,7 @@ typedef enum  {
 } AxisCol;
 
 typedef enum  {
-	PSEUDO_AXIS_COL_PARAMETER = 0,
+	PSEUDO_AXIS_COL_IDX = 0,
 	PSEUDO_AXIS_COL_ENGINE,
 	PSEUDO_AXIS_COL_NAME,
 	PSEUDO_AXIS_COL_READ,
@@ -94,6 +94,7 @@ typedef enum  {
 
 typedef enum  {
 	SOLUTION_COL_INDEX = 0,
+	SOLUTION_COL_HKL_GEOMETRY_LIST_ITEM,
 	SOLUTION_COL_N_COLUMNS
 } SolutionCol;
 
@@ -112,6 +113,7 @@ struct diffractometer_t {
 	HklGeometry *geometry;
 	HklDetector *detector;
 	HklEngineList *engines;
+	HklGeometryList *solutions;
 };
 
 
@@ -125,7 +127,7 @@ create_diffractometer(HklFactory *factory)
 	self->geometry = hkl_factory_create_new_geometry (factory);
 	self->engines = hkl_factory_create_new_engine_list (factory);
 	self->detector = hkl_detector_factory_new (HKL_DETECTOR_TYPE_0D);
-	hkl_detector_idx_set (self->detector, 1);
+	self->solutions = NULL;
 
 	return self;
 }
@@ -136,6 +138,8 @@ delete_diffractometer(struct diffractometer_t *self)
 	hkl_geometry_free(self->geometry);
 	hkl_engine_list_free(self->engines);
 	hkl_detector_free(self->detector);
+	if(self->solutions)
+		hkl_geometry_list_free(self->solutions);
 }
 
 
@@ -163,9 +167,41 @@ diffractometer_set_wavelength(struct diffractometer_t *self,
 			      double wavelength)
 {
 	hkl_geometry_wavelength_set(self->geometry,
-				    wavelength);
+				    wavelength, HKL_UNIT_USER, NULL);
 	hkl_engine_list_get(self->engines);
 }
+
+static gboolean
+diffractometer_set_solutions(struct diffractometer_t *self, HklGeometryList *solutions)
+{
+	if(self->solutions)
+		hkl_geometry_list_free(self->solutions);
+
+	self->solutions = solutions;
+
+	return NULL != self->solutions;
+}
+
+static gboolean
+diffractometer_pseudo_axes_values_set(struct diffractometer_t *self,
+				      HklEngine *engine, gdouble values[], guint n_values,
+				      GError **error)
+{
+	HklGeometryList *solutions;
+
+
+	solutions = hkl_engine_pseudo_axes_values_set(engine, values, n_values, HKL_UNIT_USER, error);
+
+	return diffractometer_set_solutions(self, solutions);
+}
+
+static void
+diffractometer_set_solution(struct diffractometer_t *self,
+			    const HklGeometryListItem *item)
+{
+	hkl_engine_list_select_solution(self->engines, item);
+}
+
 
 /****************/
 /* HklGuiWindow */
@@ -326,7 +362,11 @@ HklGuiWindow* hkl_gui_window_new (void)
 }
 
 
-#define get_object(builder, type, priv, name) priv->_ ## name = type(gtk_builder_get_object(builder, #name))
+#define get_object(builder, type, priv, name) do{			\
+		priv->_ ## name = type(gtk_builder_get_object(builder, #name));	\
+		if(priv->_ ## name == NULL)				\
+			fprintf(stdout, "%s is NULL ???", #name);	\
+	}while(0);
 
 static void
 hkl_gui_window_get_widgets_and_objects_from_ui (HklGuiWindow* self)
@@ -460,25 +500,24 @@ update_pseudo_axes_frames (HklGuiWindow* self)
 }
 
 static void
-raise_error(HklGuiWindow *self, HklError **error)
+raise_error(HklGuiWindow *self, GError **error)
 {
 	HklGuiWindowPrivate *priv =  HKL_GUI_WINDOW_GET_PRIVATE(self);
 
-	g_return_if_fail (self != NULL);
 	g_return_if_fail (error != NULL);
 
 	/* show an error message */
 	gtk_label_set_text (GTK_LABEL (priv->info_message),
-			    hkl_error_message_get(*error));
+			    (*error)->message);
 	gtk_info_bar_set_message_type (priv->info_bar,
 				       GTK_MESSAGE_ERROR);
 	gtk_widget_show (GTK_WIDGET(priv->info_bar));
 
-	hkl_error_clear(error);
+	g_clear_error(error);
 }
 
 static void
-clear_error(HklGuiWindow *self, HklError **error)
+clear_error(HklGuiWindow *self, GError **error)
 {
 	HklGuiWindowPrivate *priv =  HKL_GUI_WINDOW_GET_PRIVATE(self);
 
@@ -491,15 +530,18 @@ static gboolean
 _update_axis (GtkTreeModel *model, GtkTreePath *path,
 	      GtkTreeIter *iter, gpointer data)
 {
-	HklParameter *parameter;
+	HklGuiWindowPrivate *priv =  HKL_GUI_WINDOW_GET_PRIVATE(data);
+	const char *name;
+	const HklParameter *axis;
 	gdouble value, min, max;
 
 	gtk_tree_model_get (model, iter,
-			    AXIS_COL_AXIS, &parameter,
+			    AXIS_COL_NAME, &name,
 			    -1);
 
-	hkl_parameter_min_max_unit_get(parameter, &min, &max);
-	value = hkl_parameter_value_unit_get(parameter);
+	axis = hkl_geometry_axis_get(priv->diffractometer->geometry, name, NULL);
+	hkl_parameter_min_max_get(axis, &min, &max, HKL_UNIT_USER);
+	value = hkl_parameter_value_get(axis, HKL_UNIT_USER);
 
 	gtk_list_store_set(GTK_LIST_STORE(model), iter,
 			   AXIS_COL_READ, value,
@@ -526,15 +568,20 @@ static gboolean
 _update_pseudo_axes (GtkTreeModel *model, GtkTreePath *path,
 		     GtkTreeIter *iter, gpointer data)
 {
-	HklParameter *parameter;
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(data);
+	const char *name;
+	const HklEngine *engine;
+	const HklParameter *pseudo_axis;
 	gdouble value, min, max;
 
 	gtk_tree_model_get (model, iter,
-			    PSEUDO_AXIS_COL_PARAMETER, &parameter,
+			    PSEUDO_AXIS_COL_ENGINE, &engine,
+			    PSEUDO_AXIS_COL_NAME, &name,
 			    -1);
 
-	hkl_parameter_min_max_unit_get(parameter, &min, &max);
-	value = hkl_parameter_value_unit_get(parameter);
+	pseudo_axis = hkl_engine_pseudo_axis_get(engine, name, NULL);
+	hkl_parameter_min_max_get(pseudo_axis, &min, &max, HKL_UNIT_USER);
+	value = hkl_parameter_value_get(pseudo_axis, HKL_UNIT_USER);
 
 	gtk_list_store_set(GTK_LIST_STORE(model), iter,
 			   PSEUDO_AXIS_COL_READ, value,
@@ -559,55 +606,49 @@ static void
 update_solutions (HklGuiWindow* self)
 {
 	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
-	const HklGeometryList *geometries;
-	const darray_item *items;
 	GtkTreeIter iter = {0};
 
 	g_return_if_fail (self != NULL);
+	g_return_if_fail (priv->diffractometer->solutions != NULL);
 
-	if(priv->diffractometer){
-		geometries = hkl_engine_list_geometries(priv->diffractometer->engines);
+	const HklGeometryListItem *item;
+	gtk_list_store_clear(priv->_liststore_solutions);
 
-		gtk_list_store_clear(priv->_liststore_solutions);
-		items = hkl_geometry_list_items_get(geometries);
-		if (darray_size(*items)){
-			gint n_values = gtk_tree_model_get_n_columns (GTK_TREE_MODEL(priv->_liststore_solutions));
-			GValue *values = g_new0(GValue, n_values);
-			gint *columns = g_new0(gint, n_values);
-			gint i;
+	gint n_values = gtk_tree_model_get_n_columns (GTK_TREE_MODEL(priv->_liststore_solutions));
+	GValue *values = g_new0(GValue, n_values);
+	gint *columns = g_new0(gint, n_values);
+	gint i;
 
-			/* prepare the GValue before using them */
-			g_value_init(&values[0], G_TYPE_INT);
-			for(i=1; i<n_values; ++i)
-				g_value_init(&values[i], G_TYPE_DOUBLE);
+	/* prepare the GValue before using them */
+	g_value_init(&values[SOLUTION_COL_INDEX], G_TYPE_INT);
+	g_value_init(&values[SOLUTION_COL_HKL_GEOMETRY_LIST_ITEM], G_TYPE_POINTER);
+	for(i=SOLUTION_COL_N_COLUMNS; i<n_values; ++i)
+		g_value_init(&values[i], G_TYPE_DOUBLE);
 
-			for(i=0; i<darray_size(*items);++i){
-				gint column = 0;
-				const HklGeometry *geometry;
-				HklParameter **parameter;
-				const darray_parameter *parameters;
+	i=0;
+	HKL_GEOMETRY_LIST_FOREACH(item, priv->diffractometer->solutions){
+		const HklGeometry *geometry = hkl_geometry_list_item_geometry_get(item);
+		unsigned int n_v = darray_size(*hkl_geometry_axes_names_get(geometry));
+		double v[n_v];
 
-				geometry = hkl_geometry_list_item_geometry_get(darray_item(*items, i));
-				parameters = hkl_geometry_axes_get(geometry);
+		hkl_geometry_axes_values_get(geometry, v, n_v, HKL_UNIT_USER);
 
-				g_value_set_int(&values[column], i);
-				columns[0] = column;
+		g_value_set_int(&values[SOLUTION_COL_INDEX], i);
+		g_value_set_pointer(&values[SOLUTION_COL_HKL_GEOMETRY_LIST_ITEM], (gpointer)item);
+		columns[SOLUTION_COL_INDEX] = SOLUTION_COL_INDEX;
+		columns[SOLUTION_COL_HKL_GEOMETRY_LIST_ITEM] = SOLUTION_COL_HKL_GEOMETRY_LIST_ITEM;
 
-				darray_foreach(parameter, *parameters){
-					double value = hkl_parameter_value_unit_get(*parameter);
-
-					column = column + 1;
-					g_value_set_double(&values[column], value);
-					columns[column] = column;
-				}
-				gtk_list_store_insert_with_valuesv(priv->_liststore_solutions,
-								   &iter, i,
-								   columns, values, n_values);
-			}
-			g_free(columns);
-			g_free(values);
+		for(unsigned int j=0; j<n_v; ++j){
+			g_value_set_double(&values[SOLUTION_COL_N_COLUMNS + j], v[j]);
+			columns[SOLUTION_COL_N_COLUMNS + j] = SOLUTION_COL_N_COLUMNS + j;
 		}
+		gtk_list_store_insert_with_valuesv(priv->_liststore_solutions,
+						   &iter, i,
+						   columns, values, n_values);
+		i++;
 	}
+	g_free(columns);
+	g_free(values);
 }
 
 static void
@@ -618,7 +659,8 @@ update_source (HklGuiWindow* self)
 	g_return_if_fail (self != NULL);
 
 	gtk_spin_button_set_value (priv->_spinbutton_lambda,
-				   hkl_geometry_wavelength_get(priv->diffractometer->geometry));
+				   hkl_geometry_wavelength_get(priv->diffractometer->geometry,
+							       HKL_UNIT_USER));
 }
 
 static void
@@ -629,11 +671,10 @@ update_reflections (HklGuiWindow *self)
 	gtk_list_store_clear (priv->_liststore_reflections);
 
 	if(priv->sample){
-		HklSampleReflection* reflection = NULL;
+		HklSampleReflection* reflection;
 		guint index = 0;
 
-		reflection = hkl_sample_first_reflection_get(priv->sample);
-		while(reflection){
+		HKL_SAMPLE_REFLECTIONS_FOREACH(reflection, priv->sample){
 			GtkTreeIter iter = {0};
 			gdouble h, k, l;
 			gboolean flag;
@@ -652,51 +693,24 @@ update_reflections (HklGuiWindow *self)
 					    REFLECTION_COL_FLAG, flag,
 					    REFLECTION_COL_REFLECTION, reflection,
 					    -1);
-			reflection = hkl_sample_next_reflection_get(priv->sample,
-								    reflection);
 		}
 	}
 }
 
-static gboolean
-hkl_engine_to_axes(HklGuiWindow *self, HklEngine *engine)
+static void
+pseudo_axes_frame_changed_cb (HklGuiEngine *gui_engine, gpointer _solutions, HklGuiWindow *self)
 {
 	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
-	HklError *error = NULL;
-	gboolean res = TRUE;
+	HklGeometryList *solutions = _solutions;
 
-	g_return_val_if_fail (self != NULL, FALSE);
-	g_return_val_if_fail (engine != NULL, FALSE);
+	diffractometer_set_solutions(priv->diffractometer, solutions);
+	diffractometer_set_solution(priv->diffractometer,
+				    hkl_geometry_list_items_first_get(solutions));
 
-	if(hkl_engine_set(engine, &error)){
-		clear_error(self, &error);
-		hkl_engine_list_select_solution(priv->diffractometer->engines, 0);
-		hkl_engine_list_get(priv->diffractometer->engines);
-
-		update_axes (self);
-		update_pseudo_axes (self);
-		update_pseudo_axes_frames (self);
-	}else{
-		raise_error(self, &error);
-		dump_diffractometer(priv->diffractometer);
-		res = FALSE;
-	}
+	update_axes (self);
+	update_pseudo_axes (self);
+	update_pseudo_axes_frames (self);
 	update_solutions (self);
-	return res;
-}
-
-static void
-pseudo_axes_frame_changed_cb (HklGuiEngine *gui_engine, HklGuiWindow *self)
-{
-	HklEngine *engine;
-
-	g_return_if_fail (self != NULL);
-
-	g_object_get(G_OBJECT(gui_engine),
-		     "engine", &engine,
-		     NULL);
-
-	hkl_engine_to_axes(self, engine);
 }
 
 static void
@@ -717,7 +731,7 @@ set_up_pseudo_axes_frames (HklGuiWindow* self)
 	}
 	darray_size (priv->pseudo_frames) = 0;
 
-	engines = hkl_engine_list_engines (priv->diffractometer->engines);
+	engines = hkl_engine_list_engines_get (priv->diffractometer->engines);
 	darray_foreach (engine, *engines){
 		HklGuiEngine *pseudo;
 
@@ -750,9 +764,8 @@ set_up_diffractometer_model (HklGuiWindow* self)
 		GtkTreeIter iter = {0};
 
 		gtk_list_store_append (priv->_liststore_diffractometer, &iter);
-		gtk_list_store_set (priv->_liststore_diffractometer,
-				    &iter,
-				    DIFFRACTOMETER_COL_NAME, hkl_factory_name(factories[i]),
+		gtk_list_store_set (priv->_liststore_diffractometer, &iter,
+				    DIFFRACTOMETER_COL_NAME, hkl_factory_name_get(factories[i]),
 				    DIFFRACTOMETER_COL_FACTORY, factories[i],
 				    DIFFRACTOMETER_COL_DIFFRACTOMETER, NULL,
 				    -1);
@@ -763,24 +776,20 @@ static void
 set_up_tree_view_axes (HklGuiWindow* self)
 {
 	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
-	HklParameter **parameter;
-	const darray_parameter *parameters;
+	const darray_string *axes;
+	const char **axis;
 	GtkCellRenderer* renderer = NULL;
 	GtkTreeViewColumn* column = NULL;
 	GList* columns;
-
-	g_return_if_fail (self != NULL);
+	GtkTreeIter iter = {0};
 
 	gtk_list_store_clear (priv->_liststore_axis);
 
-	parameters = hkl_geometry_axes_get(priv->diffractometer->geometry);
-	darray_foreach (parameter, *parameters){
-		GtkTreeIter iter = {0};
-
+	axes = hkl_geometry_axes_names_get(priv->diffractometer->geometry);
+	darray_foreach (axis, *axes){
 		gtk_list_store_append (priv->_liststore_axis, &iter);
 		gtk_list_store_set (priv->_liststore_axis, &iter,
-				    AXIS_COL_AXIS, *parameter,
-				    AXIS_COL_NAME, hkl_parameter_name_get(*parameter),
+				    AXIS_COL_NAME, *axis,
 				    -1);
 	}
 
@@ -792,29 +801,23 @@ set_up_tree_view_pseudo_axes (HklGuiWindow* self)
 {
 	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
 	HklParameter **parameter;
-	const darray_parameter *parameters;
 	HklEngine **engine;
 	const darray_engine *engines;
 
-	GtkCellRendererText* renderer = NULL;
-	GtkTreeViewColumn* column = NULL;
-	GList* columns;
-
-	g_return_if_fail (self != NULL);
-
 	gtk_list_store_clear(priv->_liststore_pseudo_axes);
 
-	engines = hkl_engine_list_engines(priv->diffractometer->engines);
+	engines = hkl_engine_list_engines_get(priv->diffractometer->engines);
 	darray_foreach(engine, *engines){
-		parameters = hkl_engine_pseudo_axes(*engine);
-		darray_foreach(parameter, *parameters){
-			GtkTreeIter iter = {0};
+		const darray_string *pseudo_axes = hkl_engine_pseudo_axes_names_get(*engine);
+		GtkTreeIter iter = {0};
+		guint idx;
 
+		for(idx=0; idx<darray_size(*pseudo_axes); ++idx){
 			gtk_list_store_append (priv->_liststore_pseudo_axes, &iter);
 			gtk_list_store_set (priv->_liststore_pseudo_axes, &iter,
-					    PSEUDO_AXIS_COL_PARAMETER, *parameter,
+					    PSEUDO_AXIS_COL_IDX, idx,
 					    PSEUDO_AXIS_COL_ENGINE, *engine,
-					    PSEUDO_AXIS_COL_NAME, hkl_parameter_name_get(*parameter),
+					    PSEUDO_AXIS_COL_NAME, darray_item(*pseudo_axes, idx),
 					    -1);
 		}
 	}
@@ -834,7 +837,7 @@ static void
 set_up_tree_view_solutions (HklGuiWindow* self)
 {
 	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
-	const darray_parameter *parameters;
+	const darray_string *axes;
 	int i;
 	GtkCellRenderer* renderer = NULL;
 	GtkTreeViewColumn* column = NULL;
@@ -842,11 +845,9 @@ set_up_tree_view_solutions (HklGuiWindow* self)
 	GType* types;
 	gint n_columns;
 
-	g_return_if_fail (self != NULL);
+	axes = hkl_geometry_axes_names_get(priv->diffractometer->geometry);
 
-	parameters = hkl_geometry_axes_get(priv->diffractometer->geometry);
-
-	n_columns = SOLUTION_COL_N_COLUMNS + darray_size(*parameters);
+	n_columns = SOLUTION_COL_N_COLUMNS + darray_size(*axes);
 
 	/* prepare types for the liststore */
 	types = g_new0 (GType, n_columns);
@@ -863,15 +864,17 @@ set_up_tree_view_solutions (HklGuiWindow* self)
 							   SOLUTION_COL_INDEX, NULL);
 
 	gtk_tree_view_append_column (priv->_treeview_solutions, column);
+
 	types[0] = G_TYPE_INT;
+	types[1] = G_TYPE_POINTER;
 
 	/* add the axes column */
-	for(i=1; i<n_columns; ++i){
-		HklParameter *parameter;
+	for(i=SOLUTION_COL_N_COLUMNS; i<n_columns; ++i){
+		const char *axis;
 
-		parameter = darray_item(*parameters, i - SOLUTION_COL_N_COLUMNS);
+		axis = darray_item(*axes, i - SOLUTION_COL_N_COLUMNS);
 		renderer = gtk_cell_renderer_text_new ();
-		column = gtk_tree_view_column_new_with_attributes (hkl_parameter_name_get(parameter),
+		column = gtk_tree_view_column_new_with_attributes (axis,
 								   renderer, "text",
 								   i, NULL);
 
@@ -932,7 +935,8 @@ set_up_lambda(HklGuiWindow *self)
 		     NULL);
 
 	gtk_spin_button_set_value(priv->_spinbutton_lambda,
-				  hkl_geometry_wavelength_get(priv->diffractometer->geometry));
+				  hkl_geometry_wavelength_get(priv->diffractometer->geometry,
+							      HKL_UNIT_USER));
 }
 
 /* select diffractometer */
@@ -990,7 +994,8 @@ hkl_gui_window_cellrendererspin1_edited_cb(GtkCellRendererText *renderer,
 	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
 	GtkTreeIter iter = {0};
 	gdouble value = 0.0;
-	HklParameter* parameter = NULL;
+	const char *axis;
+	HklParameter *parameter;
 
 	g_return_if_fail (renderer != NULL);
 	g_return_if_fail (path != NULL);
@@ -1001,13 +1006,18 @@ hkl_gui_window_cellrendererspin1_edited_cb(GtkCellRendererText *renderer,
 					     &iter,
 					     path);
 	gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_axis), &iter,
-					   AXIS_COL_AXIS, &parameter,
+					   AXIS_COL_NAME, &axis,
 					   -1);
 
 	value = atof(new_text); /* TODO need to check for the right conversion */
-	hkl_parameter_value_unit_set (parameter, value, NULL);
+
+	/* set the axis value */
+	parameter = hkl_parameter_new_copy(hkl_geometry_axis_get(priv->diffractometer->geometry,
+								 axis, NULL));
+	hkl_parameter_value_set (parameter, value, HKL_UNIT_USER, NULL);
 	hkl_geometry_axis_set(priv->diffractometer->geometry,
-			      parameter);
+			      axis, parameter, NULL);
+	hkl_parameter_free(parameter);
 
 	hkl_engine_list_get(priv->diffractometer->engines);
 
@@ -1033,6 +1043,7 @@ hkl_gui_window_cellrendererspin3_edited_cb(GtkCellRendererText *renderer,
 	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
 	GtkTreeIter iter = {0};
 	gdouble value = 0.0;
+	const char *axis;
 	HklParameter* parameter = NULL;
 	gdouble shit, max;
 
@@ -1045,12 +1056,18 @@ hkl_gui_window_cellrendererspin3_edited_cb(GtkCellRendererText *renderer,
 					     &iter,
 					     path);
 	gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_axis), &iter,
-					   AXIS_COL_AXIS, &parameter,
+					   AXIS_COL_NAME, &axis,
 					   -1);
 
 	value = atof(new_text); /* TODO need to check for the right conversion */
-	hkl_parameter_min_max_unit_get (parameter, &shit, &max);
-	hkl_parameter_min_max_unit_set (parameter, value, max);
+
+	parameter = hkl_parameter_new_copy(hkl_geometry_axis_get(priv->diffractometer->geometry,
+								 axis, NULL));
+	hkl_parameter_min_max_get (parameter, &shit, &max, HKL_UNIT_USER);
+	hkl_parameter_min_max_set (parameter, value, max, HKL_UNIT_USER, NULL); /* TODO error */
+	hkl_geometry_axis_set(priv->diffractometer->geometry,
+			      axis, parameter, NULL);
+	hkl_parameter_free(parameter);
 
 	gtk_list_store_set (priv->_liststore_axis, &iter,
 			    AXIS_COL_MIN, value,
@@ -1071,6 +1088,7 @@ hkl_gui_window_cellrendererspin4_edited_cb(GtkCellRendererText *renderer,
 	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
 	GtkTreeIter iter = {0};
 	gdouble value = 0.0;
+	const char *axis;
 	HklParameter* parameter = NULL;
 	gdouble shit, min;
 
@@ -1083,12 +1101,20 @@ hkl_gui_window_cellrendererspin4_edited_cb(GtkCellRendererText *renderer,
 					     &iter,
 					     path);
 	gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_axis), &iter,
-					   AXIS_COL_AXIS, &parameter,
+					   AXIS_COL_NAME, &axis,
 					   -1);
 
 	value = atof(new_text); /* TODO need to check for the right conversion */
-	hkl_parameter_min_max_unit_get (parameter, &min, &shit);
-	hkl_parameter_min_max_unit_set (parameter, min, value);
+
+
+	parameter = hkl_parameter_new_copy(hkl_geometry_axis_get(priv->diffractometer->geometry,
+								 axis, NULL));
+	hkl_parameter_min_max_get (parameter, &min, &shit, HKL_UNIT_USER);
+	hkl_parameter_min_max_set (parameter, min, value, HKL_UNIT_USER, NULL);
+	hkl_geometry_axis_set(priv->diffractometer->geometry,
+			      axis, parameter, NULL);
+	hkl_parameter_free(parameter);
+
 
 	gtk_list_store_set (priv->_liststore_axis, &iter,
 			    AXIS_COL_MAX, value,
@@ -1110,39 +1136,60 @@ hkl_gui_window_cellrenderertext5_edited_cb(GtkCellRendererText *renderer,
 	GtkTreeIter iter = {0};
 	gdouble value = 0.0;
 	gdouble old_value;
-	HklParameter* parameter = NULL;
+	unsigned int idx;
 	HklEngine *engine = NULL;
-	HklError *error = NULL;
-
-	g_return_if_fail (renderer != NULL);
-	g_return_if_fail (path != NULL);
-	g_return_if_fail (new_text != NULL);
-	g_return_if_fail (user_data != NULL);
+	gboolean valid;
+	GtkTreeIter it = {0};
+	guint n_values;
+	GError *error = NULL;
 
 	gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(priv->_liststore_pseudo_axes),
 					     &iter,
 					     path);
 	gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_pseudo_axes), &iter,
-			    PSEUDO_AXIS_COL_PARAMETER, &parameter,
+			    PSEUDO_AXIS_COL_IDX, &idx,
 			    PSEUDO_AXIS_COL_ENGINE, &engine,
+			    PSEUDO_AXIS_COL_WRITE, &old_value,
 			    -1);
 
-	value = atof(new_text); /* TODO need to check for the right conversion */
-	old_value = hkl_parameter_value_unit_get(parameter);
+	n_values = darray_size(*hkl_engine_pseudo_axes_names_get(engine));
+	gdouble values[n_values];
 
-	g_assert(error != NULL || error == NULL);
-	hkl_parameter_value_unit_set (parameter, value, &error);
-	if(error != NULL){
-		raise_error(self, &error);
+	/* extract all the values from the listore */
+
+	valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(priv->_liststore_pseudo_axes), &it);
+	while(valid){
+		guint it_idx;
+		HklEngine *it_engine;
+		gdouble it_value;
+
+		gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_pseudo_axes), &it,
+				    PSEUDO_AXIS_COL_IDX, &it_idx,
+				    PSEUDO_AXIS_COL_ENGINE, &it_engine,
+				    PSEUDO_AXIS_COL_WRITE, &it_value,
+				    -1);
+
+		if(engine == it_engine)
+			values[it_idx] = it_value;
+
+		valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(priv->_liststore_pseudo_axes), &it);
 	}
 
-	if (hkl_engine_to_axes(self, engine)){
+	/* replace with the new value */
+	value = atof(new_text); /* TODO need to check for the right conversion */
+	values[idx] = value;
+
+	if(diffractometer_pseudo_axes_values_set(priv->diffractometer, engine,
+						 values, n_values, &error)){
 		gtk_list_store_set (priv->_liststore_pseudo_axes,
 				    &iter,
 				    PSEUDO_AXIS_COL_WRITE, value,
 				    -1);
-	}else{
-		hkl_parameter_value_unit_set(parameter, old_value, NULL);
+
+		update_axes (self);
+		update_pseudo_axes (self);
+		update_pseudo_axes_frames (self);
+		update_solutions (self);
 	}
 }
 
@@ -1157,19 +1204,15 @@ hkl_gui_window_treeview_solutions_cursor_changed_cb (GtkTreeView *tree_view,
 	GtkTreePath* path = NULL;
 	GtkTreeViewColumn* focus_column = NULL;
 	GtkTreeIter iter = {0};
-	gsize index = 0UL;
-
-	g_return_if_fail (tree_view != NULL);
-	g_return_if_fail (user_data != NULL);
+	const HklGeometryListItem *solution;
 
 	gtk_tree_view_get_cursor (tree_view, &path, &focus_column);
 	gtk_tree_model_get_iter (GTK_TREE_MODEL(priv->_liststore_solutions), &iter, path);
 	gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_solutions), &iter,
-			    SOLUTION_COL_INDEX, &index,
+			    SOLUTION_COL_HKL_GEOMETRY_LIST_ITEM, &solution,
 			    -1);
 
-	hkl_engine_list_select_solution (priv->diffractometer->engines, index);
-	hkl_engine_list_get (priv->diffractometer->engines);
+	diffractometer_set_solution(priv->diffractometer, solution);
 
 	update_axes (self);
 	update_pseudo_axes (self);
@@ -1205,7 +1248,7 @@ hkl_gui_window_cellrenderertext7_edited_cb(GtkCellRendererText* _sender, const g
 
 		hkl_sample_reflection_hkl_get (reflection, &h, &k, &l);
 		h = atof(new_text);
-		hkl_sample_reflection_hkl_set (reflection, h, k, l);
+		hkl_sample_reflection_hkl_set (reflection, h, k, l, NULL); /* TODO error */
 		gtk_list_store_set (priv->_liststore_reflections,
 				    &iter,
 				    REFLECTION_COL_H, h,
@@ -1240,7 +1283,7 @@ hkl_gui_window_cellrenderertext8_edited_cb (GtkCellRendererText* _sender, const 
 
 		hkl_sample_reflection_hkl_get (reflection, &h, &k, &l);
 		k = atof(new_text);
-		hkl_sample_reflection_hkl_set (reflection, h, k, l);
+		hkl_sample_reflection_hkl_set (reflection, h, k, l, NULL); /* TODO error */
 		gtk_list_store_set (priv->_liststore_reflections,
 				    &iter,
 				    REFLECTION_COL_K, k,
@@ -1275,7 +1318,7 @@ hkl_gui_window_cellrenderertext9_edited_cb (GtkCellRendererText* _sender, const 
 
 		hkl_sample_reflection_hkl_get (reflection, &h, &k, &l);
 		l = atof(new_text);
-		hkl_sample_reflection_hkl_set (reflection, h, k, l);
+		hkl_sample_reflection_hkl_set (reflection, h, k, l, NULL); /* TODO error */
 		gtk_list_store_set (priv->_liststore_reflections,
 				    &iter,
 				    REFLECTION_COL_L, l,
@@ -1338,24 +1381,29 @@ hkl_gui_window_toolbutton_add_reflection_clicked_cb(GtkToolButton* _sender,
 		GtkTreeIter iter = {0};
 		gboolean flag;
 		gint n_rows;
+		GError *error = NULL;
 
 		reflection = hkl_sample_reflection_new(priv->diffractometer->geometry,
 						       priv->diffractometer->detector,
-						       0, 0, 0);
-		hkl_sample_add_reflection(priv->sample, reflection);
-		flag = hkl_sample_reflection_flag_get(reflection);
+						       0, 0, 0, &error);
+		if(!reflection)
+			raise_error(self, &error);
+		else{
+			hkl_sample_add_reflection(priv->sample, reflection);
+			flag = hkl_sample_reflection_flag_get(reflection);
 
-		n_rows = gtk_tree_model_iter_n_children(GTK_TREE_MODEL(priv->_liststore_reflections),
+			n_rows = gtk_tree_model_iter_n_children(GTK_TREE_MODEL(priv->_liststore_reflections),
 							NULL);
-		gtk_list_store_insert_with_values (priv->_liststore_reflections,
-						   &iter, -1,
-						   REFLECTION_COL_INDEX, n_rows,
-						   REFLECTION_COL_H, 0.,
-						   REFLECTION_COL_K, 0.,
-						   REFLECTION_COL_L, 0.,
-						   REFLECTION_COL_FLAG, flag,
-						   REFLECTION_COL_REFLECTION, reflection,
-						   -1);
+			gtk_list_store_insert_with_values (priv->_liststore_reflections,
+							   &iter, -1,
+							   REFLECTION_COL_INDEX, n_rows,
+							   REFLECTION_COL_H, 0.,
+							   REFLECTION_COL_K, 0.,
+							   REFLECTION_COL_L, 0.,
+							   REFLECTION_COL_FLAG, flag,
+							   REFLECTION_COL_REFLECTION, reflection,
+							   -1);
+		}
 	}
 }
 
@@ -1532,13 +1580,13 @@ hkl_gui_window_cellrenderertext10_edited_cb(GtkCellRendererText* _sender, const 
 		gdouble min, max, value;				\
 		gboolean fit;						\
 		p = hkl_lattice_## parameter ##_get((lattice));		\
-			value = hkl_parameter_value_unit_get(p);	\
-			hkl_parameter_min_max_unit_get(p, &min, &max);	\
-			fit = hkl_parameter_fit_get(p);			\
-			gtk_spin_button_set_value(priv->_spinbutton_## parameter, value); \
-			gtk_spin_button_set_value(priv->_spinbutton_## parameter ##_min, min); \
-			gtk_spin_button_set_value(priv->_spinbutton_## parameter ##_max, max); \
-			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(priv->_checkbutton_ ## parameter), fit); \
+		value = hkl_parameter_value_get(p, HKL_UNIT_USER);	\
+		hkl_parameter_min_max_get(p, &min, &max, HKL_UNIT_USER); \
+		fit = hkl_parameter_fit_get(p);				\
+		gtk_spin_button_set_value(priv->_spinbutton_## parameter, value); \
+		gtk_spin_button_set_value(priv->_spinbutton_## parameter ##_min, min); \
+		gtk_spin_button_set_value(priv->_spinbutton_## parameter ##_max, max); \
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(priv->_checkbutton_ ## parameter), fit); \
 	}while(0)
 
 static void
@@ -1564,8 +1612,8 @@ update_lattice (HklGuiWindow* self)
 		const HklParameter *p;					\
 		gdouble value;						\
 		p = hkl_lattice_## parameter ##_get((lattice));		\
-			value = hkl_parameter_value_unit_get(p);	\
-			gtk_spin_button_set_value(priv->_spinbutton_## parameter ##_star, value); \
+		value = hkl_parameter_value_get(p, HKL_UNIT_USER);	\
+		gtk_spin_button_set_value(priv->_spinbutton_## parameter ##_star, value); \
 	}while(0)
 
 static void
@@ -1591,10 +1639,10 @@ update_reciprocal_lattice (HklGuiWindow* self)
 #define set_ux_uy_uz(sample, parameter) do {				\
 		const HklParameter *p;					\
 		p = hkl_sample_## parameter ##_get((sample));		\
-			gboolean fit = hkl_parameter_fit_get(p);	\
-			gtk_spin_button_set_value(priv->_spinbutton_## parameter, \
-						  hkl_parameter_value_unit_get(p)); \
-			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(priv->_checkbutton_## parameter), fit); \
+		gboolean fit = hkl_parameter_fit_get(p);		\
+		gtk_spin_button_set_value(priv->_spinbutton_## parameter, \
+					  hkl_parameter_value_get(p, HKL_UNIT_USER)); \
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(priv->_checkbutton_## parameter), fit); \
 	}while(0)
 
 static void
@@ -1702,12 +1750,15 @@ _add_sample(HklGuiWindow *self, HklSample *sample)
 	g_return_val_if_fail (self != NULL, iter);
 
 	lattice = hkl_sample_lattice_get(sample);
-	a = hkl_parameter_value_unit_get(hkl_lattice_a_get(lattice));
-	b = hkl_parameter_value_unit_get(hkl_lattice_b_get(lattice));
-	c = hkl_parameter_value_unit_get(hkl_lattice_c_get(lattice));
-	alpha = hkl_parameter_value_unit_get(hkl_lattice_alpha_get(lattice));
-	beta = hkl_parameter_value_unit_get(hkl_lattice_beta_get(lattice));
-	gamma = hkl_parameter_value_unit_get(hkl_lattice_gamma_get(lattice));
+	a = hkl_parameter_value_get(hkl_lattice_a_get(lattice), HKL_UNIT_USER);
+	b = hkl_parameter_value_get(hkl_lattice_b_get(lattice), HKL_UNIT_USER);
+	c = hkl_parameter_value_get(hkl_lattice_c_get(lattice), HKL_UNIT_USER);
+	alpha = hkl_parameter_value_get(hkl_lattice_alpha_get(lattice),
+					HKL_UNIT_USER);
+	beta = hkl_parameter_value_get(hkl_lattice_beta_get(lattice),
+				       HKL_UNIT_USER);
+	gamma = hkl_parameter_value_get(hkl_lattice_gamma_get(lattice),
+					HKL_UNIT_USER);
 
 	gtk_list_store_insert_with_values(priv->_liststore_crystals,
 					  &iter, -1,
@@ -1832,25 +1883,44 @@ hkl_gui_window_toolbutton_del_crystal_clicked_cb (GtkToolButton* _sender, gpoint
 	}
 }
 
-#define get_lattice_parameter(lattice, parameter) do{			\
+#define get_lattice_parameter(lattice, parameter, _error) do{		\
 		HklParameter *p = hkl_parameter_new_copy(hkl_lattice_## parameter ##_get(lattice)); \
-		hkl_parameter_min_max_unit_set(p,			\
-					       gtk_spin_button_get_value(priv->_spinbutton_## parameter ##_min), \
-					       gtk_spin_button_get_value(priv->_spinbutton_## parameter ##_max)); \
-		hkl_parameter_fit_set(p, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(priv->_checkbutton_## parameter))); \
-		hkl_lattice_## parameter ##_set(lattice, p);		\
+		if(!hkl_parameter_min_max_set(p,			\
+					      gtk_spin_button_get_value(priv->_spinbutton_## parameter ##_min), \
+					      gtk_spin_button_get_value(priv->_spinbutton_## parameter ##_max),	\
+					      HKL_UNIT_USER, _error)){	\
+			raise_error(self, _error);			\
+			hkl_parameter_free(p);				\
+			return;						\
+		}else{							\
+			hkl_parameter_fit_set(p, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(priv->_checkbutton_## parameter))); \
+			if(!hkl_lattice_ ## parameter ## _set(lattice, p, _error)){ \
+				raise_error(self, _error);		\
+				hkl_parameter_free(p);			\
+				return;					\
+			}						\
+		}							\
 		hkl_parameter_free(p);					\
 	} while(0)
 
-#define get_ux_uy_uz(sample, parameter) do {				\
+#define get_ux_uy_uz(sample, parameter, _error) do {			\
 		HklParameter *p;					\
 		p = hkl_parameter_new_copy(hkl_sample_## parameter ##_get(sample)); \
-		hkl_parameter_value_unit_set(p,				\
-					     gtk_spin_button_get_value (priv->_spinbutton_## parameter), \
-					     NULL);			\
-		hkl_parameter_fit_set(p,				\
-				      gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(priv->_checkbutton_## parameter))); \
-		hkl_sample_## parameter ##_set(sample, p);	\
+		if(!hkl_parameter_value_set(p,				\
+					    gtk_spin_button_get_value (priv->_spinbutton_## parameter), \
+					    HKL_UNIT_USER, _error)){	\
+			raise_error(self, _error);			\
+			hkl_parameter_free(p);				\
+			return;						\
+		}else{							\
+			hkl_parameter_fit_set(p,			\
+					      gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(priv->_checkbutton_## parameter))); \
+			if(!hkl_sample_ ## parameter ## _set(sample, p, _error)){ \
+				raise_error(self, _error);		\
+				hkl_parameter_free(p);			\
+				return;					\
+			}						\
+		}							\
 		hkl_parameter_free(p);					\
 	}while(0)
 
@@ -1873,12 +1943,18 @@ _update_crystal_model(GtkTreeModel *model,
 		gdouble a, b, c, alpha, beta, gamma;
 
 		lattice = hkl_sample_lattice_get(sample);
-		a = hkl_parameter_value_unit_get(hkl_lattice_a_get(lattice));
-		b = hkl_parameter_value_unit_get(hkl_lattice_b_get(lattice));
-		c = hkl_parameter_value_unit_get(hkl_lattice_c_get(lattice));
-		alpha = hkl_parameter_value_unit_get(hkl_lattice_alpha_get(lattice));
-		beta = hkl_parameter_value_unit_get(hkl_lattice_beta_get(lattice));
-		gamma = hkl_parameter_value_unit_get(hkl_lattice_gamma_get(lattice));
+		a = hkl_parameter_value_get(hkl_lattice_a_get(lattice),
+					    HKL_UNIT_USER);
+		b = hkl_parameter_value_get(hkl_lattice_b_get(lattice),
+					    HKL_UNIT_USER);
+		c = hkl_parameter_value_get(hkl_lattice_c_get(lattice),
+					    HKL_UNIT_USER);
+		alpha = hkl_parameter_value_get(hkl_lattice_alpha_get(lattice),
+						HKL_UNIT_USER);
+		beta = hkl_parameter_value_get(hkl_lattice_beta_get(lattice),
+					       HKL_UNIT_USER);
+		gamma = hkl_parameter_value_get(hkl_lattice_gamma_get(lattice),
+						HKL_UNIT_USER);
 
 		gtk_list_store_set(priv->_liststore_crystals,
 				   iter,
@@ -1919,6 +1995,7 @@ hkl_gui_window_button2_clicked_cb (GtkButton* _sender, gpointer user_data)
 		gdouble ux, uy, uz;
 		HklLattice *lattice;
 		HklParameter *p;
+		GError *error = NULL;
 
 		fprintf(stderr, "%s\n", __func__);
 		/* lattice parameters */
@@ -1932,33 +2009,37 @@ hkl_gui_window_button2_clicked_cb (GtkButton* _sender, gpointer user_data)
 		lattice = hkl_lattice_new(a, b, c,
 					  alpha * HKL_DEGTORAD,
 					  beta * HKL_DEGTORAD,
-					  gamma * HKL_DEGTORAD);
+					  gamma * HKL_DEGTORAD, &error);
+		if(!lattice)
+			raise_error(self, &error);
+		else{
 
-		get_lattice_parameter(lattice, a);
-		get_lattice_parameter(lattice, b);
-		get_lattice_parameter(lattice, c);
-		get_lattice_parameter(lattice, alpha);
-		get_lattice_parameter(lattice, beta);
-		get_lattice_parameter(lattice, gamma);
+			get_lattice_parameter(lattice, a, &error);
+			get_lattice_parameter(lattice, b, &error);
+			get_lattice_parameter(lattice, c, &error);
+			get_lattice_parameter(lattice, alpha, &error);
+			get_lattice_parameter(lattice, beta, &error);
+			get_lattice_parameter(lattice, gamma, &error);
 
-		hkl_sample_lattice_set(priv->sample, lattice);
+			hkl_sample_lattice_set(priv->sample, lattice);
 
-		hkl_lattice_free(lattice);
+			hkl_lattice_free(lattice);
 
-		/* UB */
-		get_ux_uy_uz(priv->sample, ux);
-		get_ux_uy_uz(priv->sample, uy);
-		get_ux_uy_uz(priv->sample, uz);
+			/* UB */
+			get_ux_uy_uz(priv->sample, ux, &error);
+			get_ux_uy_uz(priv->sample, uy, &error);
+			get_ux_uy_uz(priv->sample, uz, &error);
 
-		if(priv->diffractometer)
-			diffractometer_set_sample(priv->diffractometer,
-						  priv->sample);
+			if(priv->diffractometer)
+				diffractometer_set_sample(priv->diffractometer,
+							  priv->sample);
 
-		update_crystal_model (self);
-		update_reciprocal_lattice (self);
-		update_UB (self);
-		update_pseudo_axes (self);
-		update_pseudo_axes_frames (self);
+			update_crystal_model (self);
+			update_reciprocal_lattice (self);
+			update_UB (self);
+			update_pseudo_axes (self);
+			update_pseudo_axes_frames (self);
+		}
 	}
 }
 
@@ -1979,8 +2060,9 @@ hkl_gui_window_spinbutton_ux_value_changed_cb (GtkSpinButton *_senser, gpointer 
 {
 	HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
 	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
+	GError *error = NULL;
 
-	get_ux_uy_uz(priv->sample, ux);
+	get_ux_uy_uz(priv->sample, ux, &error);
 
 	if(priv->diffractometer)
 		diffractometer_set_sample(priv->diffractometer,
@@ -1996,8 +2078,9 @@ hkl_gui_window_spinbutton_uy_value_changed_cb (GtkSpinButton *_senser, gpointer 
 {
 	HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
 	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
+	GError *error = NULL;
 
-	get_ux_uy_uz(priv->sample, uy);
+	get_ux_uy_uz(priv->sample, uy, &error);
 
 	if(priv->diffractometer)
 		diffractometer_set_sample(priv->diffractometer,
@@ -2013,8 +2096,9 @@ hkl_gui_window_spinbutton_uz_value_changed_cb (GtkSpinButton *_senser, gpointer 
 {
 	HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
 	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
+	GError *error = NULL;
 
-	get_ux_uy_uz(priv->sample, uz);
+	get_ux_uy_uz(priv->sample, uz, &error);
 
 	if(priv->diffractometer)
 		diffractometer_set_sample(priv->diffractometer,
@@ -2075,6 +2159,7 @@ hkl_gui_window_toolbutton_computeUB_clicked_cb (GtkToolButton* _sender, gpointer
 		GtkTreeIter iter = {0};
 		GtkTreePath *path;
 		HklSampleReflection *ref1, *ref2;
+		GError *error = NULL;
 
 		model = GTK_TREE_MODEL(priv->_liststore_reflections);
 		list = gtk_tree_selection_get_selected_rows (selection, &model);
@@ -2097,18 +2182,19 @@ hkl_gui_window_toolbutton_computeUB_clicked_cb (GtkToolButton* _sender, gpointer
 				    REFLECTION_COL_REFLECTION, &ref2,
 				    -1);
 
-		hkl_sample_compute_UB_busing_levy(priv->sample,
-						  ref1, ref2);
+		if(!hkl_sample_compute_UB_busing_levy(priv->sample,
+						      ref1, ref2, &error)){
+			raise_error(self, &error);
+		}else{
+			if(priv->diffractometer)
+				diffractometer_set_sample(priv->diffractometer,
+							  priv->sample);
 
-		if(priv->diffractometer)
-			diffractometer_set_sample(priv->diffractometer,
-						  priv->sample);
-
-		update_UB (self);
-		update_ux_uy_uz (self);
-		update_pseudo_axes (self);
-		update_pseudo_axes_frames (self);
-
+			update_UB (self);
+			update_ux_uy_uz (self);
+			update_pseudo_axes (self);
+			update_pseudo_axes_frames (self);
+		}
 		g_list_free_full (list, (GDestroyNotify) gtk_tree_path_free);
 	} else {
 		gtk_statusbar_push (priv->_statusbar, 0,
@@ -2121,104 +2207,74 @@ hkl_gui_window_toolbutton_affiner_clicked_cb (GtkToolButton* _sender, gpointer u
 {
 	HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
 	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
+	GError *error = NULL;
 
-	hkl_sample_affine (priv->sample);
-	if(priv->diffractometer)
-		diffractometer_set_sample(priv->diffractometer,
-					  priv->sample);
+	if(!hkl_sample_affine (priv->sample, &error)){
+		raise_error(self, &error);
+	}else{
+		if(priv->diffractometer)
+			diffractometer_set_sample(priv->diffractometer,
+						  priv->sample);
 
-	update_lattice (self);
-	update_crystal_model (self);
-	update_reciprocal_lattice (self);
-	update_UB (self);
-	update_ux_uy_uz (self);
-	update_pseudo_axes (self);
-	update_pseudo_axes_frames (self);
+		update_lattice (self);
+		update_crystal_model (self);
+		update_reciprocal_lattice (self);
+		update_UB (self);
+		update_ux_uy_uz (self);
+		update_pseudo_axes (self);
+		update_pseudo_axes_frames (self);
+	}
 }
 
-#define toggle_lattice(parameter) do{					\
+#define TOGGLE_LATTICE_CB(_parameter)					\
+	void hkl_gui_window_checkbutton_ ## _parameter ## _toggled_cb(GtkCheckButton *checkbutton, \
+								      gpointer user_data) \
+	{								\
+		HklGuiWindow *self = HKL_GUI_WINDOW(user_data);		\
 		HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data); \
 		HklLattice *lattice;					\
-		HklParameter *p;				\
+		HklParameter *p;					\
+		GError *error = NULL;					\
 		lattice = hkl_lattice_new_copy(hkl_sample_lattice_get(priv->sample)); \
-		p = hkl_parameter_new_copy(hkl_lattice_## parameter ##_get(lattice)); \
-		hkl_parameter_fit_set(p,			\
+		p = hkl_parameter_new_copy(hkl_lattice_## _parameter ##_get(lattice)); \
+		hkl_parameter_fit_set(p,				\
 				      gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(checkbutton))); \
-		hkl_lattice_## parameter ##_set(lattice, p);			\
-		hkl_sample_lattice_set(priv->sample, lattice);		\
-	}while(0)
+		if(!hkl_lattice_## _parameter ##_set(lattice, p, &error)){ \
+			raise_error(self, &error);			\
+		}else{							\
+			hkl_sample_lattice_set(priv->sample, lattice);	\
+		}							\
+		hkl_parameter_free(p);					\
+		hkl_lattice_free(lattice);				\
+	}
 
-void
-hkl_gui_window_checkbutton_a_toggled_cb(GtkCheckButton *checkbutton,
-					gpointer user_data)
-{
-	toggle_lattice(a);
-}
+TOGGLE_LATTICE_CB(a);
+TOGGLE_LATTICE_CB(b);
+TOGGLE_LATTICE_CB(c);
+TOGGLE_LATTICE_CB(alpha);
+TOGGLE_LATTICE_CB(beta);
+TOGGLE_LATTICE_CB(gamma);
 
-void
-hkl_gui_window_checkbutton_b_toggled_cb(GtkCheckButton *checkbutton,
-					gpointer user_data)
-{
-	toggle_lattice(b);
-}
-
-void
-hkl_gui_window_checkbutton_c_toggled_cb(GtkCheckButton *checkbutton,
-					gpointer user_data)
-{
-	toggle_lattice(c);
-}
-
-void
-hkl_gui_window_checkbutton_alpha_toggled_cb(GtkCheckButton *checkbutton,
-					    gpointer user_data)
-{
-	toggle_lattice(alpha);
-}
-
-void
-hkl_gui_window_checkbutton_beta_toggled_cb(GtkCheckButton *checkbutton,
-					   gpointer user_data)
-{
-	toggle_lattice(beta);
-}
-
-void
-hkl_gui_window_checkbutton_gamma_toggled_cb(GtkCheckButton *checkbutton,
-					    gpointer user_data)
-{
-	toggle_lattice(gamma);
-}
-
-#define toggle_ux_uy_uz(parameter) do{					\
+#define TOGGLE_UX_UY_UZ(_parameter)					\
+	void hkl_gui_window_checkbutton_ ## _parameter ## _toggled_cb(GtkCheckButton *checkbutton, \
+								      gpointer user_data) \
+	{								\
+		HklGuiWindow *self = HKL_GUI_WINDOW(user_data);		\
 		HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data); \
 		HklParameter *p;					\
-		p = hkl_parameter_new_copy(hkl_sample_## parameter ##_get(priv->sample)); \
-		hkl_parameter_fit_set(p,			\
+		GError *error = NULL;					\
+		p = hkl_parameter_new_copy(hkl_sample_ ## _parameter ## _get(priv->sample)); \
+		hkl_parameter_fit_set(p,				\
 				      gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(checkbutton))); \
-		hkl_sample_## parameter ##_set(priv->sample, p);	\
-	}while(0)
+		if(!hkl_sample_ ## _parameter ## _set(priv->sample, p, &error)){ \
+			raise_error(self, &error);			\
+		}							\
+		hkl_parameter_free(p);					\
+	}
 
-void
-hkl_gui_window_checkbutton_ux_toggled_cb(GtkCheckButton *checkbutton,
-					 gpointer user_data)
-{
-	toggle_ux_uy_uz(ux);
-}
-
-void
-hkl_gui_window_checkbutton_uy_toggled_cb(GtkCheckButton *checkbutton,
-					 gpointer user_data)
-{
-	toggle_ux_uy_uz(uy);
-}
-
-void
-hkl_gui_window_checkbutton_uz_toggled_cb(GtkCheckButton *checkbutton,
-					 gpointer user_data)
-{
-	toggle_ux_uy_uz(uz);
-}
+TOGGLE_UX_UY_UZ(ux);
+TOGGLE_UX_UY_UZ(uy);
+TOGGLE_UX_UY_UZ(uz);
 
 /*
 

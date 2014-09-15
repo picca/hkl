@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -26,7 +26,6 @@
 #include <stdlib.h>                     // for NULL, exit, free
 #include <sys/types.h>                  // for uint
 #include "hkl-detector-private.h"       // for hkl_detector_compute_kf
-#include "hkl-error-private.h"          // for hkl_error_set
 #include "hkl-geometry-private.h"       // for HklHolder, _HklGeometry, etc
 #include "hkl-macros-private.h"         // for HKL_MALLOC, hkl_assert, etc
 #include "hkl-matrix-private.h"         // for hkl_matrix_solve, etc
@@ -42,6 +41,18 @@
 #include "hkl/ccan/array_size/array_size.h"  // for ARRAY_SIZE
 #include "hkl/ccan/container_of/container_of.h"  // for container_of
 #include "hkl/ccan/darray/darray.h"     // for darray_item
+
+#define HKL_MODE_PSI_ERROR hkl_mode_psi_error_quark ()
+
+static GQuark hkl_mode_psi_error_quark (void)
+{
+	return g_quark_from_static_string ("hkl-mode-psi-error-quark");
+}
+
+typedef enum {
+	HKL_MODE_PSI_ERROR_INIT, /* can not init the engine */
+	HKL_MODE_PSI_ERROR_GET, /* can not get the engine */
+} HklModePsiError;
 
 /***********************/
 /* numerical functions */
@@ -74,8 +85,6 @@ int _psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 		f->data[2] = 1;
 		f->data[3] = 1;
 	}else{
-		uint len;
-
 		/* R * UB */
 		/* for now the 0 holder is the sample holder. */
 		sample_holder = darray_item(engine->geometry->holders, 0);
@@ -98,7 +107,9 @@ int _psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 
 		/* compute hkl1 in the laboratory referentiel */
 		/* for now the 0 holder is the sample holder. */
-		hkl_parameter_list_values_get(&engine->mode->parameters, hkl1.data, &len);
+		for(unsigned int i=0; i<3; ++i)
+			hkl1.data[i] = darray_item(engine->mode->parameters, i)->_value;
+
 		hkl_matrix_times_vector(&engine->sample->UB, &hkl1);
 		hkl_vector_rotated_quaternion(&hkl1, &sample_holder->q);
 
@@ -120,48 +131,50 @@ int _psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 	return GSL_SUCCESS;
 }
 
-static int hkl_mode_init_psi_real(HklMode *base,
-				  HklEngine *engine,
-				  HklGeometry *geometry,
-				  HklDetector *detector,
-				  HklSample *sample,
-				  HklError **error)
+static int hkl_mode_initialized_set_psi_real(HklMode *self,
+					     HklEngine *engine,
+					     HklGeometry *geometry,
+					     HklDetector *detector,
+					     HklSample *sample,
+					     int initialized,
+					     GError **error)
 {
 	HklVector ki;
 	HklMatrix RUB;
-	HklModePsi *self = container_of(base, HklModePsi, parent);
+	HklModePsi *psi_mode = container_of(self, HklModePsi, parent);
 	HklHolder *sample_holder;
 
-	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
-	if (!hkl_mode_init_real(base, engine, geometry, detector, sample, error)){
-		hkl_error_set(error, "internal error");
-		return HKL_FALSE;
+	if(initialized){
+		/* update the geometry internals */
+		hkl_geometry_update(geometry);
+
+		/* R * UB */
+		/* for now the 0 holder is the sample holder. */
+		sample_holder = darray_item(geometry->holders, 0);
+		hkl_quaternion_to_matrix(&sample_holder->q, &RUB);
+		hkl_matrix_times_matrix(&RUB, &sample->UB);
+
+		/* kf - ki = Q0 */
+		hkl_source_compute_ki(&geometry->source, &ki);
+		hkl_detector_compute_kf(detector, geometry, &psi_mode->Q0);
+		hkl_vector_minus_vector(&psi_mode->Q0, &ki);
+		if (hkl_vector_is_null(&psi_mode->Q0)){
+			g_set_error(error,
+				    HKL_MODE_PSI_ERROR,
+				    HKL_MODE_PSI_ERROR_INIT,
+				    "can not initialize the \"%s\" engine when hkl is null",
+				    engine->info->name);
+			return FALSE;
+		}else
+			/* compute hkl0 */
+			hkl_matrix_solve(&RUB, &psi_mode->hkl0, &psi_mode->Q0);
 	}
-	hkl_assert(error == NULL || *error == NULL);
 
-	/* update the geometry internals */
-	hkl_geometry_update(geometry);
+	self->initialized = initialized;
 
-	/* R * UB */
-	/* for now the 0 holder is the sample holder. */
-	sample_holder = darray_item(geometry->holders, 0);
-	hkl_quaternion_to_matrix(&sample_holder->q, &RUB);
-	hkl_matrix_times_matrix(&RUB, &sample->UB);
-
-	/* kf - ki = Q0 */
-	hkl_source_compute_ki(&geometry->source, &ki);
-	hkl_detector_compute_kf(detector, geometry, &self->Q0);
-	hkl_vector_minus_vector(&self->Q0, &ki);
-	if (hkl_vector_is_null(&self->Q0)){
-		hkl_error_set(error, "can not initialize the \"%s\" engine when hkl is null",
-			      engine->info->name);
-		return HKL_FALSE;
-	}else
-		/* compute hkl0 */
-		hkl_matrix_solve(&RUB, &self->hkl0, &self->Q0);
-
-	return HKL_TRUE;
+	return TRUE;
 }
 
 static int hkl_mode_get_psi_real(HklMode *base,
@@ -169,7 +182,7 @@ static int hkl_mode_get_psi_real(HklMode *base,
 				 HklGeometry *geometry,
 				 HklDetector *detector,
 				 HklSample *sample,
-				 HklError **error)
+				 GError **error)
 {
 	HklVector ki;
 	HklVector kf;
@@ -178,8 +191,11 @@ static int hkl_mode_get_psi_real(HklMode *base,
 	HklVector n;
 
 	if (!base || !engine || !engine->mode || !geometry || !detector || !sample){
-		hkl_error_set(error, "internal error");
-		return HKL_FALSE;
+		g_set_error(error,
+			    HKL_MODE_PSI_ERROR,
+			    HKL_MODE_PSI_ERROR_GET,
+			    "internal error");
+		return FALSE;
 	}
 
 	/* get kf, ki and Q */
@@ -188,11 +204,12 @@ static int hkl_mode_get_psi_real(HklMode *base,
 	Q = kf;
 	hkl_vector_minus_vector(&Q, &ki);
 	if (hkl_vector_is_null(&Q)){
-		hkl_error_set(error, "can not compute psi when hkl is null (kf == ki)");
-		return HKL_FALSE;
+		g_set_error(error,
+			    HKL_MODE_PSI_ERROR,
+			    HKL_MODE_PSI_ERROR_GET,
+			    "can not compute psi when hkl is null (kf == ki)");
+		return FALSE;
 	}else{
-		uint shit;
-
 		/* needed for a problem of precision */
 		hkl_vector_normalize(&Q);
 
@@ -204,7 +221,9 @@ static int hkl_mode_get_psi_real(HklMode *base,
 		/* compute hkl1 in the laboratory referentiel */
 		/* the geometry was already updated in the detector compute kf */
 		/* for now the 0 holder is the sample holder. */
-		hkl_parameter_list_values_get(&base->parameters, hkl1.data, &shit);
+		for(unsigned int i=0; i<3; ++i)
+			hkl1.data[i] = darray_item(base->parameters, i)->_value;
+
 		hkl_matrix_times_vector(&sample->UB, &hkl1);
 		hkl_vector_rotated_quaternion(&hkl1, &darray_item(geometry->holders, 0)->q);
 
@@ -212,8 +231,11 @@ static int hkl_mode_get_psi_real(HklMode *base,
 		hkl_vector_project_on_plan(&hkl1, &Q);
 
 		if (hkl_vector_is_null(&hkl1)){
-			hkl_error_set(error, "can not compute psi when Q and the ref vector are colinear");
-			return HKL_FALSE;
+			g_set_error(error,
+				    HKL_MODE_PSI_ERROR,
+				    HKL_MODE_PSI_ERROR_GET,
+				    "can not compute psi when Q and the ref vector are colinear");
+			return FALSE;
 		}else{
 			HklEnginePsi *psi_engine = container_of(engine, HklEnginePsi, engine);
 
@@ -222,19 +244,20 @@ static int hkl_mode_get_psi_real(HklMode *base,
 		}
 	}
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
-HklMode *hkl_mode_psi_new(const HklModeAutoInfo *info)
+HklMode *hkl_mode_psi_new(const HklModeAutoInfo *auto_info)
 {
 	static const HklModeOperations operations = {
 		HKL_MODE_OPERATIONS_AUTO_DEFAULTS,
-		.init = hkl_mode_init_psi_real,
+		.capabilities = HKL_ENGINE_CAPABILITIES_READABLE | HKL_ENGINE_CAPABILITIES_WRITABLE | HKL_ENGINE_CAPABILITIES_INITIALIZABLE,
+		.initialized_set = hkl_mode_initialized_set_psi_real,
 		.get = hkl_mode_get_psi_real,
 	};
 	HklModePsi *self;
 
-	if (info->mode.n_axes != 4){
+	if (darray_size(auto_info->info.axes_w) != 4){
 		fprintf(stderr, "This generic HklModePsi need exactly 4 axes");
 		exit(128);
 	}
@@ -243,15 +266,15 @@ HklMode *hkl_mode_psi_new(const HklModeAutoInfo *info)
 
 	/* the base constructor; */
 	hkl_mode_auto_init(&self->parent,
-			   info,
-			   &operations);
+			   auto_info,
+			   &operations, FALSE);
 
 	return &self->parent;
 }
 
-/***********************/
+/*************/
 /* HklEngine */
-/***********************/
+/*************/
 
 static void hkl_engine_psi_free_real(HklEngine *base)
 {
@@ -269,8 +292,7 @@ HklEngine *hkl_engine_psi_new(void)
 	static const HklPseudoAxis *pseudo_axes[] = {&psi};
 	static const HklEngineInfo info = {
 		.name = "psi",
-		.pseudo_axes = pseudo_axes,
-		.n_pseudo_axes = ARRAY_SIZE(pseudo_axes),
+		.pseudo_axes = DARRAY(pseudo_axes),
 	};
 	static const HklEngineOperations operations = {
 		HKL_ENGINE_OPERATIONS_DEFAULTS,

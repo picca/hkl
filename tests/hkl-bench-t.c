@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -24,31 +24,46 @@
 #include <tap/basic.h>
 #include "hkl.h"
 
-static void hkl_test_bench_run_real(HklEngine *engine, HklGeometry *geometry, size_t n)
+static void hkl_test_bench_run_real(HklEngine *engine, HklGeometry *geometry,
+				    double values[], size_t n_values, size_t n)
 {
 	size_t i;
-	HklMode **mode;
-	darray_mode *modes = hkl_engine_modes(engine);
+	const darray_string *modes = hkl_engine_modes_names_get(engine);
+	const char **mode;
 
 	/* pseudo -> geometry */
 	darray_foreach(mode, *modes){
 		double min, max, mean;
-		darray_parameter *parameters;
+		const darray_string *parameters;
+		size_t n_params;
 
-		hkl_engine_select_mode(engine, *mode);
-		parameters = hkl_mode_parameters(*mode);
-		if (darray_size(*parameters))
-			hkl_parameter_value_set(darray_item(*parameters, 0), 1, NULL);
+		hkl_engine_current_mode_set(engine, *mode, NULL);
+		parameters = hkl_engine_parameters_names_get(engine);
+		n_params = darray_size(*parameters);
+		if (n_params){
+			double params[n_params];
+
+			hkl_engine_parameters_values_get(engine,
+							 params, n_params,
+							 HKL_UNIT_DEFAULT);
+			values[0] = 1;
+			hkl_engine_parameters_values_set(engine,
+							 params, n_params,
+							 HKL_UNIT_DEFAULT, NULL);
+		}
 
 		mean = max = 0;
 		min = 1000; /* arbitrary value always greater than the real min */
 		for(i=0; i<n; ++i){
 			struct timeval debut, fin, dt;
 			double t;
+			HklGeometryList *solutions;
 
-			hkl_geometry_set_values_unit_v(geometry, 0, 0, 0, 0, 10, 10);
+			hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 0., 0., 0., 0., 10., 10.);
 			gettimeofday(&debut, NULL);
-			hkl_engine_set(engine, NULL);
+			solutions = hkl_engine_pseudo_axes_values_set(engine, values, n_values, HKL_UNIT_DEFAULT, NULL);
+			if (NULL != solutions)
+				hkl_geometry_list_free(solutions);
 			gettimeofday(&fin, NULL);
 			timersub(&fin, &debut, &dt);
 			t = dt.tv_sec * 1000. + dt.tv_usec / 1000.;
@@ -58,28 +73,26 @@ static void hkl_test_bench_run_real(HklEngine *engine, HklGeometry *geometry, si
 		}
 		fprintf(stdout, "\"%s\" \"%s\" \"%s\" (%d/%d) iterations %f / %f / %f [min/mean/max] ms each\n",
 			hkl_geometry_name_get(geometry),
-			hkl_engine_name(engine),
-			hkl_mode_name(*mode), n, i, min, mean/n, max);
+			hkl_engine_name_get(engine),
+			*mode, n, i, min, mean/n, max);
 	}
 }
 
 static void hkl_test_bench_run_v(HklEngineList *engines, HklGeometry *geometry,
-				 char const *name, int n, ...)
+				 char const *name, unsigned int n, ...)
 {
 	va_list ap;
-	HklEngine *engine = hkl_engine_list_get_by_name(engines, name);
-	HklParameter **pseudo_axis;
-	darray_parameter *pseudo_axes = (darray_parameter *)hkl_engine_pseudo_axes(engine);
+	size_t i;
+	HklEngine *engine = hkl_engine_list_engine_get_by_name(engines, name, NULL);
+	size_t n_values = darray_size(*hkl_engine_pseudo_axes_names_get(engine));
+	double values[n_values];
 
 	va_start(ap, n);
-	/* TODO replace with a specialise HklParameterList */
-	darray_foreach(pseudo_axis, *pseudo_axes){
-		hkl_parameter_value_set(*pseudo_axis,
-					va_arg(ap, double), NULL);
-	}
+	for(i=0; i<n_values; ++i)
+		values[i] = va_arg(ap, double);
 	va_end(ap);
 
-	hkl_test_bench_run_real(engine, geometry, n);
+	hkl_test_bench_run_real(engine, geometry, values, n_values, n);
 }
 
 static void hkl_test_bench_k6c(int n)
@@ -93,12 +106,11 @@ static void hkl_test_bench_k6c(int n)
 	size_t i, j;
 	int res;
 
-	factory = hkl_factory_get_by_name("K6C");
+	factory = hkl_factory_get_by_name("K6C", NULL);
 
 	geom = hkl_factory_create_new_geometry(factory);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
-	hkl_detector_idx_set(detector, 1);
 
 	sample = hkl_sample_new("test");
 
@@ -121,46 +133,43 @@ static void hkl_test_bench_eulerians(void)
 {
 	HklEngineList *engines;
 	HklEngine *engine;
-	HklMode **mode;
-	darray_mode *modes;
+	const char **mode;
+	const darray_string *modes;
 	const HklFactory *factory;
 	HklGeometry *geometry;
 	HklDetector *detector;
 	HklSample *sample;
 
-	factory = hkl_factory_get_by_name("K6C");
+	factory = hkl_factory_get_by_name("K6C", NULL);
 
 	geometry = hkl_factory_create_new_geometry(factory);
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
-	hkl_detector_idx_set(detector, 1);
 
 	sample = hkl_sample_new("test");
 	engines = hkl_factory_create_new_engine_list(factory);
 	hkl_engine_list_init(engines, geometry, detector, sample);
 
-	engine = hkl_engine_list_get_by_name(engines, "eulerians");
-	modes = hkl_engine_modes(engine);
+	engine = hkl_engine_list_engine_get_by_name(engines, "eulerians", NULL);
+	modes = hkl_engine_modes_names_get(engine);
 
 	darray_foreach(mode, *modes){
-		static double eulerians[] = {0, 90 * HKL_DEGTORAD, 0};
-		HklParameterList *pseudo_axes = hkl_engine_pseudo_axes(engine);
+		static double values[3] = {0, 90 * HKL_DEGTORAD, 0};
+		HklGeometryList *solutions;
 
-		hkl_engine_select_mode(engine, *mode);
+		hkl_engine_current_mode_set(engine, *mode, NULL);
 
 		/* studdy this degenerated case */
-		hkl_parameter_list_values_set(pseudo_axes, eulerians, 3, NULL);
-		if (hkl_engine_set(engine, NULL)) {
-			const HklGeometryList *geometries = hkl_engine_list_geometries(engines);
-			const darray_item *items = hkl_geometry_list_items_get(geometries);
-			HklGeometryListItem **item;
+		solutions = hkl_engine_pseudo_axes_values_set(engine,
+							       values, ARRAY_SIZE(values),
+							       HKL_UNIT_DEFAULT, NULL);
+		if (solutions) {
+			const HklGeometryListItem *item;
 
-			darray_foreach(item, *items){
-				static double null[] = {0, 0, 0};
-
-				hkl_parameter_list_values_set(pseudo_axes, null, 3, NULL);
+			HKL_GEOMETRY_LIST_FOREACH(item, solutions){
 				hkl_geometry_set(geometry,
-						 hkl_geometry_list_item_geometry_get(*item));
-				hkl_engine_get(engine, NULL);
+						 hkl_geometry_list_item_geometry_get(item));
+				hkl_engine_pseudo_axes_values_get(engine, values, ARRAY_SIZE(values),
+								   HKL_UNIT_DEFAULT, NULL);
 			}
 		}
 	}
@@ -185,7 +194,7 @@ int main(int argc, char **argv)
 	hkl_test_bench_k6c(n);
 	hkl_test_bench_eulerians();
 
-	ok(HKL_TRUE == HKL_TRUE, __func__);
+	ok(TRUE == TRUE, __func__);
 
 	return 0;
 }

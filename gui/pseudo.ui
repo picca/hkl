@@ -51,7 +51,7 @@
                         <property name="editable">True</property>
                       </object>
                       <attributes>
-                        <attribute name="text">1</attribute>
+                        <attribute name="text">2</attribute>
                       </attributes>
                     </child>
                   </object>
@@ -174,7 +174,7 @@
                             <property name="editable">True</property>
                           </object>
                           <attributes>
-                            <attribute name="text">1</attribute>
+                            <attribute name="text">2</attribute>
                           </attributes>
                         </child>
                       </object>
@@ -222,20 +222,20 @@
     <columns>
       <!-- column-name name -->
       <column type="gchararray"/>
+      <!-- column-name idx -->
+      <column type="guint"/>
       <!-- column-name value -->
       <column type="gdouble"/>
-      <!-- column-name pseudo -->
-      <column type="gpointer"/>
     </columns>
   </object>
   <object class="GtkListStore" id="liststore3">
     <columns>
       <!-- column-name name -->
       <column type="gchararray"/>
+      <!-- column-name idx -->
+      <column type="guint"/>
       <!-- column-name value -->
       <column type="gdouble"/>
-      <!-- column-name parameter -->
-      <column type="gpointer"/>
     </columns>
   </object>
 </interface>

@@ -13,9 +13,9 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2013 Synchrotron SOLEIL
- *                    L'Orme des Merisiers Saint-Aubin
- *                    BP 48 91192 GIF-sur-YVETTE CEDEX
+ * Copyright (C) 2013-2014 Synchrotron SOLEIL
+ *                         L'Orme des Merisiers Saint-Aubin
+ *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
@@ -30,14 +30,16 @@
 
 static HklMode* lifting_detector_thetah()
 {
-	static const char* axes[] = {"thetah", "delta", "gamma"};
+	static const char *axes_r[] = {"thetah", "alphay", "alphax", "delta", "gamma"};
+	static const char* axes_w[] = {"thetah", "delta", "gamma"};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO(__func__, axes, functions),
+		HKL_MODE_AUTO_INFO(__func__, axes_r, axes_w, functions),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_full_mode_operations);
+				 &hkl_full_mode_operations,
+				 TRUE);
 }
 
 HklEngine *hkl_engine_soleil_sirius_turret_hkl_new(void)
@@ -49,7 +51,7 @@ HklEngine *hkl_engine_soleil_sirius_turret_hkl_new(void)
 
 	default_mode = lifting_detector_thetah();
 	hkl_engine_add_mode(self, default_mode);
-	hkl_engine_select_mode(self, default_mode);
+	hkl_engine_mode_set(self, default_mode);
 
 	return self;
 }

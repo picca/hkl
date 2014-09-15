@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -31,7 +31,7 @@
 #include "hkl-parameter-private.h"      // for _HklParameter, etc
 #include "hkl-quaternion-private.h"     // for hkl_quaternion_fprintf, etc
 #include "hkl-vector-private.h"         // for hkl_vector_fprintf, etc
-#include "hkl.h"                        // for HklParameter, HKL_TRUE, etc
+#include "hkl.h"                        // for HklParameter, TRUE, etc
 #include "hkl/ccan/container_of/container_of.h"  // for container_of
 
 /***********/
@@ -63,41 +63,36 @@ static inline void hkl_axis_update(HklAxis *self)
 					       &self->axis_v);
 }
 
-static inline void hkl_axis_init_copy_real(HklParameter *self, const HklParameter *src)
+static inline int hkl_axis_init_copy_real(HklParameter *self, const HklParameter *src,
+					  GError **error)
 {
 	HklAxis *axis_self = container_of(self, HklAxis, parameter);
 	HklAxis *axis_src = container_of(src, HklAxis, parameter);
 
+	hkl_error (error == NULL || *error == NULL);
+
 	*axis_self = *axis_src;
-	self->changed = HKL_TRUE;
+	self->changed = TRUE;
+
+	return TRUE;
 }
 
-static inline unsigned int hkl_axis_set_value_real(
-	HklParameter *self, double value,
-	HklError **error)
+static inline int hkl_axis_set_value_real(HklParameter *self, double value,
+					  HklUnitEnum unit_type, GError **error)
 {
 	HklAxis *axis = container_of(self, HklAxis, parameter);
 
-	if(!hkl_parameter_value_set_real(self, value, error))
-		return HKL_FALSE;
+	hkl_error (error == NULL || *error == NULL);
+
+	if(!hkl_parameter_value_set_real(self, value, unit_type, error)){
+		g_assert (error == NULL || *error != NULL);
+		return FALSE;
+	}
+	g_assert (error == NULL || *error == NULL);
 
 	hkl_axis_update(axis);
 
-	return HKL_TRUE;
-}
-
-static inline unsigned int hkl_axis_set_value_unit_real(
-	HklParameter *self, double value,
-	HklError **error)
-{
-	HklAxis *axis = container_of(self, HklAxis, parameter);
-
-	if(!hkl_parameter_value_unit_set_real(self, value, error))
-		return HKL_FALSE;
-
-	hkl_axis_update(axis);
-
-	return HKL_TRUE;
+	return TRUE;
 }
 
 static inline void hkl_axis_set_value_smallest_in_range_real(HklParameter *self)
@@ -110,10 +105,12 @@ static inline void hkl_axis_set_value_smallest_in_range_real(HklParameter *self)
 	if(value < min)
 		hkl_axis_set_value_real(self,
 					value + 2*M_PI*ceil((min - value)/(2*M_PI)),
+					HKL_UNIT_DEFAULT,
 					NULL);
 	else
 		hkl_axis_set_value_real(self,
 					value - 2*M_PI*floor((value - min)/(2*M_PI)),
+					HKL_UNIT_DEFAULT,
 					NULL);
 }
 
@@ -184,21 +181,21 @@ static inline double hkl_axis_get_value_closest_real(const HklParameter *self,
 static inline int hkl_axis_is_valid_real(const HklParameter *self)
 {
 	double value = self->_value;
-	int res = HKL_FALSE;
+	int res = FALSE;
 	HklInterval range = self->range;
 
 	if(hkl_interval_length(&range) > 2*M_PI)
-		res = HKL_TRUE;
+		res = TRUE;
 	else{
 		hkl_interval_angle_restrict_symm(&range);
 		value = gsl_sf_angle_restrict_symm(value);
 
 		if(range.min <= range.max){
 			if(range.min <= value && range.max >= value)
-				res = HKL_TRUE;
+				res = TRUE;
 		}else{
 			if(value <= range.max || value >= range.min)
-				res = HKL_TRUE;
+				res = TRUE;
 		}
 	}
 	return res;
@@ -220,7 +217,6 @@ static HklParameterOperations hkl_parameter_operations_axis = {
 	.init_copy = hkl_axis_init_copy_real,
 	.get_value_closest = hkl_axis_get_value_closest_real,
 	.set_value = hkl_axis_set_value_real,
-	.set_value_unit = hkl_axis_set_value_unit_real,
 	.set_value_smallest_in_range = hkl_axis_set_value_smallest_in_range_real,
 	.randomize = hkl_axis_randomize_real,
 	.is_valid = hkl_axis_is_valid_real,

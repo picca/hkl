@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -52,9 +52,9 @@ static int hkl_parameter_init(HklParameter *self, const char *name,
 		self->changed = changed;
 		self->ops = &hkl_parameter_operations_defaults;
 	} else
-		return HKL_FALSE;
+		return FALSE;
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
 /**
@@ -120,41 +120,68 @@ void hkl_parameter_free(HklParameter *self)
  * hkl_parameter_init_copy: (skip)
  * @self: the this ptr
  * @src: the parameter to copy from
+ * @error: return location for a GError, or NULL
+ *
+ * Returns: TRUE on success, FALSE if an error occurred
  **/
-void hkl_parameter_init_copy(HklParameter *self, const HklParameter *src)
+int hkl_parameter_init_copy(HklParameter *self, const HklParameter *src,
+			    GError **error)
 {
-	self->ops->init_copy(self, src);
+	return self->ops->init_copy(self, src, error);
 }
 
+/**
+ * hkl_parameter_name_get:
+ * @self: the this ptr
+ *
+ * Returns: the name of the #HklParameter
+ **/
 const char *hkl_parameter_name_get(const HklParameter *self)
 {
 	return self->name;
 }
 
 /**
- * hkl_parameter_value_get:
+ * hkl_parameter_default_unit_get:
  * @self: the this ptr
  *
- * Returns: the value of the #HklParameter
+ * Returns: the default unit of the #HklParameter
  **/
-inline double hkl_parameter_value_get(const HklParameter *self)
+const char *hkl_parameter_default_unit_get(const HklParameter *self)
 {
-	return self->_value;
+	return self->unit->name;
 }
 
 /**
- * hkl_parameter_value_unit_get:
+ * hkl_parameter_user_unit_get:
  * @self: the this ptr
  *
- * Returns: the value of the #HklParameter expressed in the user unit
+ * Returns: the user unit of the #HklParameter
  **/
-inline double hkl_parameter_value_unit_get(const HklParameter *self)
+const char *hkl_parameter_user_unit_get(const HklParameter *self)
 {
-	double factor = hkl_unit_factor(self->unit, self->punit);
-
-	return self->_value * factor;
+	return self->punit->name;
 }
 
+/**
+ * hkl_parameter_value_get:
+ * @self: the this ptr
+ * @unit_type: the unit type (default or user) of the returned value
+ *
+ * Returns: the value of the #HklParameter
+ **/
+inline double hkl_parameter_value_get(const HklParameter *self,
+				      HklUnitEnum unit_type)
+{
+	switch(unit_type){
+	case HKL_UNIT_DEFAULT:
+		return self->_value;
+		break;
+	case HKL_UNIT_USER:
+		return self->_value * hkl_unit_factor(self->unit, self->punit);
+		break;
+	}
+}
 
 /**
  * hkl_parameter_value_get_closest:
@@ -173,36 +200,20 @@ inline double hkl_parameter_value_get_closest(const HklParameter *self,
 }
 
 /**
- * hkl_parameter_value_set: (skip)
+ * hkl_parameter_value_set:
  * @self: this ptr
  * @value: the value to set
- * @error: the error set if something goes wrong
+ * @unit_type: the unit type (default or user) of the returned value
+ * @error: return location for a GError, or NULL
  *
  * set the value of an #HklParameter
  *
- * Return value: true if succeed or false otherwise
+ * Returns: TRUE on success, FALSE if an error occurred
  **/
 inline int hkl_parameter_value_set(HklParameter *self, double value,
-				   HklError **error)
+				   HklUnitEnum unit_type, GError **error)
 {
-	return self->ops->set_value(self, value, error);
-}
-
-/**
- * hkl_parameter_value_unit_set:
- * @self: the this ptr
- * @value: the value to set
- * @error: (allow-none): the error set if something goes wrong
- *
- * set the value of the parameter express in the punit #HklUnit
- * @todo test
- *
- * Return value: true if succeed or false otherwise
- **/
-inline int hkl_parameter_value_unit_set(HklParameter *self, double value,
-					HklError **error)
-{
-	return self->ops->set_value_unit(self, value, error);
+	return self->ops->set_value(self, value, unit_type, error);
 }
 
 /**
@@ -215,64 +226,75 @@ inline void hkl_parameter_value_set_smallest_in_range(HklParameter *self)
 }
 
 /**
- * hkl_parameter_min_max_get: (skip)
- * @self:
+ * hkl_parameter_min_max_get:
+ * @self: the this ptr
+ * @min: (out caller-allocates): the returned minimum value
+ * @max: (out caller-allocates): the returned maximum value
+ * @unit_type: the unit type (default or user) of the returned values
  *
- * get the max value of the #HklParameter
+ * get the min and max value of the #HklParameter
  *
  **/
-void hkl_parameter_min_max_get(const HklParameter *self, double *min, double *max)
+void hkl_parameter_min_max_get(const HklParameter *self, double *min, double *max,
+			       HklUnitEnum unit_type)
 {
-	*min = self->range.min;
-	*max = self->range.max;
+	double factor;
+
+	switch (unit_type){
+	case HKL_UNIT_DEFAULT:
+		*min = self->range.min;
+		*max = self->range.max;
+		break;
+	case HKL_UNIT_USER:
+		factor = hkl_unit_factor(self->unit, self->punit);
+		*min = factor * self->range.min;
+		*max = factor * self->range.max;
+		break;
+	}
 }
 
 /**
- * hkl_parameter_min_max_unit_get: (skip)
- * @self:
- * @min:
- * @max:
- *
- * get the #HklParameter range, min, max
- * @todo test
- **/
-void hkl_parameter_min_max_unit_get(const HklParameter *self, double *min, double *max)
-{
-	double factor = hkl_unit_factor(self->unit, self->punit);
-
-	*min = factor * self->range.min;
-	*max = factor * self->range.max;
-}
-
-/**
- * hkl_parameter_min_max_set: (skip)
- * @self:
- * @min:
- * @max:
- *
- * set the #HklParameter range.
- * @todo test
- **/
-void hkl_parameter_min_max_set(HklParameter *self, double min, double max)
-{
-	self->range.min = min;
-	self->range.max = max;
-}
-
-/**
- * hkl_parameter_min_max_unit_set:
+ * hkl_parameter_min_max_set:
  * @self: the this ptr
  * @min: the minimum value to set
  * @max: the maximum value to set
+ * @unit_type: the unit type (default or user) of the min, max
+ * @error: return location for a GError, or NULL
  *
- * set the #HklParameter range express in the punit #HklUnit
- * @todo test
+ * set the #HklParameter range.
+ * @todo test and set the GError
+ *
+ * Returns: TRUE on success, FALSE if an error occurred
  **/
-void hkl_parameter_min_max_unit_set(HklParameter *self, double min, double max)
+int hkl_parameter_min_max_set(HklParameter *self, double min, double max,
+			      HklUnitEnum unit_type, GError **error)
 {
-	double factor = hkl_unit_factor(self->unit, self->punit);
-	self->range.min = min / factor;
-	self->range.max = max / factor;
+	double factor;
+
+	hkl_error (error == NULL || *error == NULL);
+
+	if (min > max){
+		g_set_error(error,
+			    HKL_PARAMETER_ERROR,
+			    HKL_PARAMETER_ERROR_MIN_MAX_SET,
+			    "can not set this range min > max\n");
+
+		return FALSE;
+	}
+
+	switch (unit_type){
+	case HKL_UNIT_DEFAULT:
+		self->range.min = min;
+		self->range.max = max;
+		break;
+	case HKL_UNIT_USER:
+		factor = hkl_unit_factor(self->unit, self->punit);
+		self->range.min = min / factor;
+		self->range.max = max / factor;
+		break;
+	}
+
+	return TRUE;
 }
 
 /**
@@ -349,129 +371,4 @@ void hkl_parameter_fprintf(FILE *f, HklParameter *self)
 			self->range.min * factor,
 			self->range.max * factor,
 			self->fit);
-}
-
-/********************/
-/* HklParameterList */
-/********************/
-
-/**
- * hkl_parameter_list_values_get: (skip)
- * @self: the this ptr
- * @values: (array length=len): list of the paremetersc values.
- * @len: (out caller-allocates): the len of the returned list.
- *
- * get a list of all the #HklParameter values
- **/
-void hkl_parameter_list_values_get(const HklParameterList *self,
-				   double values[], unsigned int *len)
-{
-	for(unsigned int i; i<darray_size(*self); ++i)
-		values[i] = darray_item(*self, i)->_value;
-
-	*len = darray_size(*self);
-}
-
-/**
- * hkl_parameter_list_values_set:
- * @self: the this ptr
- * @values: (array length=len): the values to set
- * @len: the length of the values
- * @error: error set if something goes wrong
- *
- * set the parameter list with the given values
- *
- * Return value: true if succeed or false otherwise
- **/
-unsigned int hkl_parameter_list_values_set(HklParameterList *self,
-					   double values[], unsigned int len,
-					   HklError **error)
-{
-	unsigned int n = len < darray_size(*self) ? len : darray_size(*self);
-
-	for(unsigned int i=0; i<n; ++i)
-		if(!hkl_parameter_value_set(darray_item(*self, i),
-					    values[i], error))
-			return HKL_FALSE;
-
-	return HKL_TRUE;
-}
-
-/**
- * hkl_parameter_list_values_unit_get:
- * @self: the this ptr
- * @len: (out caller-allocates): the length of the returned array
- *
- * Return value: (array length=len) (transfer full): list of pseudo axes values with unit
- *               free the array with free when done
- **/
-double *hkl_parameter_list_values_unit_get(const HklParameterList *self,
-					   unsigned int *len)
-{
-	const unsigned int _len =  darray_size(*self);
-	double *values = (double *)malloc(sizeof(*values) * _len);
-
-	for(unsigned int i=0; i<_len; ++i)
-		values[i] = hkl_parameter_value_unit_get(darray_item(*self, i));
-	*len = _len;
-
-	return values;
-}
-
-/**
- * hkl_parameter_list_values_unit_set: (skip)
- * @self: the this ptr
- * @values: (array length=len): the values to set
- * @len: the length of the values
- * @error: error set if something goes wrong
- *
- * set the parameter list with the given values
- *
- * Return value: true if succeed or false otherwise
- **/
-unsigned int hkl_parameter_list_values_unit_set(HklParameterList *self,
-						double values[], unsigned int len,
-						HklError **error)
-{
-	for(unsigned int i=0; i<darray_size(*self); ++i)
-		if(!hkl_parameter_value_unit_set(
-			   darray_item(*self, i), values[i], error))
-			return HKL_FALSE;
-
-	return HKL_TRUE;
-}
-
-void hkl_parameter_list_free(HklParameterList *self)
-{
-	HklParameter **parameter;
-
-	darray_foreach(parameter, *self){
-		hkl_parameter_free(*parameter);
-	}
-	darray_free(*self);
-}
-
-void hkl_parameter_list_fprintf(FILE *f, const HklParameterList *self)
-{
-	HklParameter **parameter;
-
-	darray_foreach(parameter, *self){
-		fprintf(f, "\n     ");
-		hkl_parameter_fprintf(f, *parameter);
-	}
-}
-
-/**
- * hkl_parameter_list_randomize: (skip)
- * @self: the this ptr
- *
- * randomize all parameters of the list
- **/
-void hkl_parameter_list_randomize(HklParameterList *self)
-{
-	HklParameter **parameter;
-
-	darray_foreach(parameter, *self){
-		hkl_parameter_randomize(*parameter);
-	}
 }

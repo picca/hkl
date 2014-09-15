@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -24,7 +24,7 @@
 
 #include "hkl.h"
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
 
 typedef struct _HklEngineQ HklEngineQ;
 typedef struct _HklEngineQ2 HklEngineQ2;
@@ -36,6 +36,6 @@ extern HklEngine *hkl_engine_q_new(void);
 extern HklEngine *hkl_engine_q2_new(void);
 extern HklEngine *hkl_engine_qper_qpar_new(void);
 
-HKL_END_DECLS
+G_END_DECLS
 
 #endif

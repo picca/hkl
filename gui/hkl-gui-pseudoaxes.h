@@ -48,8 +48,8 @@ typedef enum  {
 
 typedef enum  {
 	PSEUDO_COL_NAME = 0,
+	PSEUDO_COL_IDX,
 	PSEUDO_COL_VALUE,
-	PSEUDO_COL_PSEUDO,
 	PSEUDO_COL_NUM_COLS
 } PseudoCol;
 

@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -28,7 +28,7 @@
 #include "hkl-vector-private.h"         // for HklVector
 #include "hkl.h"                        // for HklParameter, etc
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
 
 /*************/
 /* HklSample */
@@ -43,7 +43,21 @@ struct _HklSample {
 	HklParameter *uy;
 	HklParameter *uz;
 	struct list_head reflections;
+	size_t n_reflections;
 };
+
+#define HKL_SAMPLE_ERROR hkl_sample_error_quark ()
+
+static GQuark hkl_sample_error_quark (void)
+{
+	return g_quark_from_static_string ("hkl-sample-error-quark");
+}
+
+typedef enum {
+	HKL_SAMPLE_ERROR_MINIMIZED, /* can not minimize the sample */
+	HKL_SAMPLE_ERROR_COMPUTE_UB_BUSING_LEVY, /* can not compute UB */
+} HklSampleError;
+
 
 extern void hkl_sample_fprintf(FILE *f, const HklSample *self);
 
@@ -61,10 +75,21 @@ struct _HklSampleReflection {
 	struct list_node list;
 };
 
+#define HKL_SAMPLE_REFLECTION_ERROR hkl_sample_reflection_error_quark ()
+
+static GQuark hkl_sample_reflection_error_quark (void)
+{
+	return g_quark_from_static_string ("hkl-sample-reflection-error-quark");
+}
+
+typedef enum {
+	HKL_SAMPLE_REFLECTION_ERROR_HKL_SET, /* can not set the hkl part of the reflection */
+} HklSampleReflectionError;
+
 extern HklSampleReflection *hkl_sample_reflection_new_copy(const HklSampleReflection *self);
 
 extern void hkl_sample_reflection_free(HklSampleReflection *self);
 
-HKL_END_DECLS
+G_END_DECLS
 
 #endif

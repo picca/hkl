@@ -36,7 +36,7 @@ static int test_engine(struct hkl_test *test,
 	hkl_geometry_randomize(geometry);
 	
 	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->modes); ++f_idx) {
-		hkl_engine_select_mode(engine, f_idx);
+		hkl_engine_current_mode_set(engine, f_idx);
 		/* for now unactive the eulerians check */
 		if(!strcmp(engine->mode->name, "eulerians"))
 			continue;
@@ -241,6 +241,15 @@ test_all()
 	/* test all SOLEIL SIRIUS TURRET engines */
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_SOLEIL_SIRIUS_TURRET);
 	geometry = hkl_geometry_factory_new(config);
+	engines = hkl_pseudo_axis_engine_list_factory(config);
+	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
+	test_engines(test, engines);
+	hkl_geometry_free(geometry);
+	hkl_pseudo_axis_engine_list_free(engines);
+
+	/* test all SOLEIL SIRIUS KAPPA engines */
+	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_SOLEIL_SIRIUS_KAPPA);
+	geometry = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
 	test_engines(test, engines);

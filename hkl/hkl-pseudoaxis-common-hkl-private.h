@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -58,21 +58,22 @@ extern int hkl_mode_get_hkl_real(HklMode *self,
 				 HklGeometry *geometry,
 				 HklDetector *detector,
 				 HklSample *sample,
-				 HklError **error);
+				 GError **error);
 
 extern int hkl_mode_set_hkl_real(HklMode *self,
 				 HklEngine *engine,
 				 HklGeometry *geometry,
 				 HklDetector *detector,
 				 HklSample *sample,
-				 HklError **error);
+				 GError **error);
 
-extern int hkl_mode_init_psi_constant_vertical_real(HklMode *base,
-						    HklEngine *engine,
-						    HklGeometry *geometry,
-						    HklDetector *detector,
-						    HklSample *sample,
-						    HklError **error);
+extern int hkl_mode_initialized_set_psi_constant_vertical_real(HklMode *base,
+							       HklEngine *engine,
+							       HklGeometry *geometry,
+							       HklDetector *detector,
+							       HklSample *sample,
+							       int initialized,
+							       GError **error);
 
 extern HklEngine *hkl_engine_hkl_new(void);
 
@@ -91,7 +92,9 @@ static const HklModeOperations hkl_full_mode_operations = {
 
 static const HklModeOperations psi_constant_vertical_mode_operations = {
 	HKL_MODE_OPERATIONS_HKL_DEFAULTS,
-	.init = hkl_mode_init_psi_constant_vertical_real,
+	.capabilities = HKL_ENGINE_CAPABILITIES_READABLE | HKL_ENGINE_CAPABILITIES_WRITABLE | HKL_ENGINE_CAPABILITIES_INITIALIZABLE,
+	.initialized_set = hkl_mode_initialized_set_psi_constant_vertical_real,
+	.set = hkl_mode_set_hkl_real,
 };
 
 static const HklModeOperations constant_incidence_mode_operations = {

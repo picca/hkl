@@ -57,6 +57,7 @@ AC_SUBST(VMAJ)
 
 # Checks for libraries.
 AX_PATH_GSL
+AM_PATH_GLIB_2_0
 
 # Checks for header files.
 AC_HEADER_STDC
@@ -320,8 +321,7 @@ dnl *********************
 GOBJECT_INTROSPECTION_CHECK([0.6.7])
 
 AM_COND_IF([HAVE_INTROSPECTION],
-	[PKG_CHECK_MODULES([GOBJECT], [gobject-2.0])
-	AM_PATH_GLIB_2_0])
+	[PKG_CHECK_MODULES([GOBJECT], [gobject-2.0])])
 
 
 dnl ************

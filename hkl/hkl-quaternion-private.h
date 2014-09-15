@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -24,9 +24,9 @@
 
 #include <stdio.h>                      // for FILE
 #include "hkl-vector-private.h"         // for HklQuaternion, HklVector
-#include "hkl.h"                        // for HKL_BEGIN_DECLS, etc
+#include "hkl.h"                        // for G_BEGIN_DECLS, etc
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
 
 struct _HklQuaternion
 {
@@ -64,6 +64,6 @@ extern void hkl_quaternion_to_matrix(const HklQuaternion *self, HklMatrix *m);
 extern void hkl_quaternion_to_angle_and_axe(const HklQuaternion *self,
 					    double *angle, HklVector *v);
 
-HKL_END_DECLS
+G_END_DECLS
 
 #endif

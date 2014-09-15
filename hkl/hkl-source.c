@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -25,7 +25,7 @@
 #include "hkl-macros-private.h"         // for HKL_MALLOC
 #include "hkl-source-private.h"         // for HklSource
 #include "hkl-vector-private.h"         // for hkl_vector_div_double, etc
-#include "hkl.h"                        // for HKL_EPSILON, HKL_FALSE, etc
+#include "hkl.h"                        // for HKL_EPSILON, FALSE, etc
 
 /**
  * hkl_source_dup:
@@ -82,9 +82,9 @@ int hkl_source_init(HklSource *self,
 		self->wave_length = wave_length;
 		hkl_vector_init(&self->direction, x, y, z);
 		hkl_vector_div_double(&self->direction, norm);
-		return HKL_TRUE;
+		return TRUE;
 	} else
-		return HKL_FALSE;
+		return FALSE;
 }
 
 /**

@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -30,7 +30,6 @@
 #include <stdlib.h>                     // for rand, RAND_MAX
 #include <string.h>                     // for NULL, memset, memcpy
 #include <sys/types.h>                  // for uint
-#include "hkl-error-private.h"          // for hkl_error_set
 #include "hkl-geometry-private.h"       // for hkl_geometry_update
 #include "hkl-macros-private.h"         // for HKL_MALLOC, hkl_assert, etc
 #include "hkl-parameter-private.h"      // for _HklParameter
@@ -41,6 +40,17 @@
 #include "hkl/ccan/darray/darray.h"     // for darray_foreach
 
 /* #define DEBUG */
+
+#define HKL_MODE_AUTO_ERROR hkl_mode_auto_error_quark ()
+
+static GQuark hkl_mode_auto_error_quark (void)
+{
+	return g_quark_from_static_string ("hkl-mode-auto-error-quark");
+}
+
+typedef enum {
+	HKL_MODE_AUTO_ERROR_SET, /* can not set the engine */
+} HklModeAutoError;
 
 /*********************************************/
 /* methods use to solve numerical pseudoAxes */
@@ -102,7 +112,7 @@ static void find_degenerated_axes(HklEngine *self,
  * If a solution was found it also check for degenerated axes.
  * A degenerated axes is an Axes with no effect on the function.
  * @see find_degenerated
- * @return HKL_TRUE or HKL_FALSE.
+ * @return TRUE or FALSE.
  */
 static int find_first_geometry(HklEngine *self,
 			       gsl_multiroot_function *f,
@@ -111,12 +121,12 @@ static int find_first_geometry(HklEngine *self,
 	gsl_multiroot_fsolver_type const *T;
 	gsl_multiroot_fsolver *s;
 	gsl_vector *x;
-	size_t len = self->mode->info->n_axes;
+	size_t len = darray_size(self->mode->info->axes_w);
 	double *x_data;
 	double *x_data0 = alloca(len * sizeof(*x_data0));
 	size_t iter = 0;
 	int status;
-	int res = HKL_FALSE;
+	int res = FALSE;
 	size_t i;
 	HklParameter **axis;
 
@@ -137,18 +147,47 @@ static int find_first_geometry(HklEngine *self,
 	s = gsl_multiroot_fsolver_alloc (T, len);
 	gsl_multiroot_fsolver_set (s, f, x);
 
+#ifdef DEBUG
+			fprintf(stdout, "Initial starting point: \n");
+			fprintf(stdout, "x: ");
+			for(i=0; i<len; ++i)
+				fprintf(stdout, " %.7f", s->x->data[i]);
+			fprintf(stdout, "\nf: ");
+			for(i=0; i<len; ++i)
+				fprintf(stdout, " %.7f", s->f->data[i]);
+#endif
+
 	/* iterate to find the solution */
 	do {
 		++iter;
 		status = gsl_multiroot_fsolver_iterate(s);
-		if (status || iter % 300 == 0) {
+#ifdef DEBUG
+		fprintf(stdout, "\nstatus : %d iter : %d\n", status, iter);
+#endif
+		if (status || (iter % 300) == 0) {
 			/* Restart from another point. */
 			for(i=0; i<len; ++i)
-				x_data[i] = (double)rand() / RAND_MAX * 180. / M_PI;
+				x_data[i] = (double)rand() / RAND_MAX / 180. * M_PI;
 			gsl_multiroot_fsolver_set(s, f, x);
 			gsl_multiroot_fsolver_iterate(s);
+#ifdef DEBUG
+			fprintf(stdout, "randomize the starting point: \n");
+			fprintf(stdout, "x: ");
+			for(i=0; i<len; ++i)
+				fprintf(stdout, " %.7f", s->x->data[i]);
+			fprintf(stdout, "\nf: ");
+			for(i=0; i<len; ++i)
+				fprintf(stdout, " %.7f", s->f->data[i]);
+#endif
 		}
-		status = gsl_multiroot_test_residual (s->f, HKL_EPSILON);
+		status = gsl_multiroot_test_residual (s->f, HKL_EPSILON / 10.);
+#ifdef DEBUG
+	fprintf(stdout, "\nstatus : %d iter : %d", status, iter);
+	for(i=0; i<len; ++i)
+		fprintf(stdout, " %.7f", s->f->data[i]);
+	fprintf(stdout, "\n");
+#endif
+
 	} while (status == GSL_CONTINUE && iter < 2000);
 
 #ifdef DEBUG
@@ -178,12 +217,13 @@ static int find_first_geometry(HklEngine *self,
 		darray_foreach(axis, self->axes){
 			hkl_parameter_value_set(*axis,
 						degenerated[i] ? x_data0[i] : x_data[i],
+						HKL_UNIT_DEFAULT,
 						NULL);
 			++i;
 		}
 
 		hkl_geometry_update(self->geometry);
-		res = HKL_TRUE;
+		res = TRUE;
 	}
 
 	/* release memory */
@@ -240,7 +280,7 @@ static int test_sector(gsl_vector const *x,
 		       gsl_multiroot_function *function,
 		       gsl_vector *f)
 {
-	int res = HKL_TRUE;
+	int res = TRUE;
 	size_t i;
 	double *f_data = f->data;
 
@@ -248,7 +288,7 @@ static int test_sector(gsl_vector const *x,
 
 	for(i=0; i<f->size; ++i)
 		if (fabs(f_data[i]) > HKL_EPSILON){
-			res = HKL_FALSE;
+			res = FALSE;
 			break;
 		}
 
@@ -262,7 +302,7 @@ static int test_sector(gsl_vector const *x,
 	for(i=0; i<f->size; ++i)
 		fprintf(stdout, "\t%f", gsl_sf_angle_restrict_symm(x->data[i]) * HKL_RADTODEG);
 
-	if(res == HKL_FALSE)
+	if(res == FALSE)
 		fprintf(stdout, "\t FAIL");
 	else
 		fprintf(stdout, "\t SUCCESS");
@@ -307,7 +347,7 @@ static void perm_r(size_t axes_len, size_t op_len[], int p[], size_t axes_idx,
  * @param self the current HklEngine
  * @param function The mode function
  *
- * @return HKL_TRUE or HKL_FALSE
+ * @return TRUE or FALSE
  *
  * This method find a first solution with a numerical method from the
  * GSL library (the multi root solver hybrid). Then it multiplicates the
@@ -356,28 +396,31 @@ static int solve_function(HklEngine *self,
 }
 
 /* check that the number of axis of the mode is the right number of variables expected by mode functions */
-static inline void check_validity(const HklModeAutoInfo *info)
+static inline void check_validity(const HklModeAutoInfo *auto_info)
 {
-	for(uint i=0; i<info->n_functions; ++i)
-		hkl_assert(info->functions[i]->size == info->mode.n_axes);
+	const HklFunction **function;
+	darray_foreach(function, auto_info->functions)
+		hkl_assert((*function)->size == darray_size(auto_info->info.axes_w));
 }
 
-HklMode *hkl_mode_auto_new(const HklModeAutoInfo *info,
-			   const HklModeOperations *ops)
+HklMode *hkl_mode_auto_new(const HklModeAutoInfo *auto_info,
+			   const HklModeOperations *ops,
+			   int initialized)
 {
-	check_validity(info);
+	check_validity(auto_info);
 
-	return hkl_mode_new(&info->mode, ops);
+	return hkl_mode_new(&auto_info->info, ops, initialized);
 
 }
 
 void hkl_mode_auto_init(HklMode *self,
-			const HklModeAutoInfo *info,
-			const HklModeOperations *ops)
+			const HklModeAutoInfo *auto_info,
+			const HklModeOperations *ops,
+			int initialized)
 {
-	check_validity(info);
+	check_validity(auto_info);
 
-	hkl_mode_init(self, &info->mode, ops);
+	hkl_mode_init(self, &auto_info->info, ops, initialized);
 
 }
 
@@ -386,40 +429,48 @@ int hkl_mode_auto_set_real(HklMode *self,
 			   HklGeometry *geometry,
 			   HklDetector *detector,
 			   HklSample *sample,
-			   HklError **error)
+			   GError **error)
 {
-	size_t i;
-	int ok = HKL_FALSE;
-	HklModeAutoInfo *info = container_of(self->info, HklModeAutoInfo, mode);
+	int ok = FALSE;
+	HklModeAutoInfo *auto_info = container_of(self->info, HklModeAutoInfo, info);
+	const HklFunction **function;
 
-	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
+	hkl_error (error == NULL || *error == NULL);
 
 	if(!self || !engine || !geometry || !detector || !sample){
-		hkl_error_set(error, "Internal error");
-		return HKL_FALSE;
+		g_set_error(error,
+			    HKL_MODE_AUTO_ERROR,
+			    HKL_MODE_AUTO_ERROR_SET,
+			    "Internal error");
+		return FALSE;
 	}
 
-	for(i=0;i<info->n_functions;++i)
-		ok |= solve_function(engine, info->functions[i]);
+	darray_foreach(function, auto_info->functions)
+		ok |= solve_function(engine, *function);
 
 	if(!ok){
-		hkl_error_set(error, "none of the functions were solved !!!");
-		return HKL_FALSE;
+		g_set_error(error,
+			    HKL_MODE_AUTO_ERROR,
+			    HKL_MODE_AUTO_ERROR_SET,
+			    "none of the functions were solved !!!");
+		return FALSE;
 	}
 
 #ifdef DEBUG
 	hkl_engine_fprintf(stdout, engine);
 #endif
 
-	return HKL_TRUE;
+	return TRUE;
 }
 
-HklMode *hkl_mode_auto_with_init_new(const HklModeAutoInfo *info,
-				     const HklModeOperations *ops)
+HklMode *hkl_mode_auto_with_init_new(const HklModeAutoInfo *auto_info,
+				     const HklModeOperations *ops,
+				     int initialized)
 {
 	HklModeAutoWithInit *self = HKL_MALLOC(HklModeAutoWithInit);
 
-	hkl_mode_auto_init(&self->mode, info, ops);
+	hkl_mode_auto_init(&self->mode, auto_info, ops, initialized);
+
 	self->geometry = NULL;
 	self->detector = NULL;
 	self->sample = NULL;

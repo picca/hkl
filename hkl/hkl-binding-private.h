@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2012-2013 Synchrotron SOLEIL
+ * Copyright (C) 2012-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -26,7 +26,7 @@
 #include <sys/types.h>                  // for uint
 #include "hkl.h"                        // for HKLAPI, HklGeometry, etc
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
 
 /**************/
 /* HklFactory */
@@ -34,53 +34,51 @@ HKL_BEGIN_DECLS
 
 HKLAPI GHashTable *hkl_factories(void);
 
-/********************/
-/* HklParameterList */
-/********************/
-
-HKLAPI GSList* hkl_parameter_list_parameters(HklParameterList *self);
-
-HKLAPI gboolean hkl_parameter_list_values_unit_set_binding(HklParameterList *self,
-							   double *values, uint len,
-							   GError **error);
 /***************/
 /* HklGeometry */
 /***************/
 
-HKLAPI GSList* hkl_geometry_axes(HklGeometry *self);
+HKLAPI const char **hkl_geometry_axes_names_get_binding(const HklGeometry *self,
+							size_t *length) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI double* hkl_geometry_get_axes_values_unit(const HklGeometry *self, unsigned int *len);
 
-HKLAPI void hkl_geometry_set_axes_values_unit(HklGeometry *self, double *values, unsigned int len);
+HKLAPI double* hkl_geometry_axes_values_get_binding(const HklGeometry *self, unsigned int *len,
+						    HklUnitEnum unit_type) HKL_ARG_NONNULL(1, 2);
 
 /*******************/
 /* HklGeometryList */
 /*******************/
 
-HKLAPI GSList* hkl_geometry_list_items(HklGeometryList *self);
+HKLAPI GSList* hkl_geometry_list_items(HklGeometryList *self) HKL_ARG_NONNULL(1);
 
 /***********************/
 /* HklGeometryListItem */
 /***********************/
 
-HKLAPI const HklGeometry *hkl_geometry_list_item_geometry(const HklGeometryListItem *self);
+HKLAPI const HklGeometry *hkl_geometry_list_item_geometry(const HklGeometryListItem *self) HKL_ARG_NONNULL(1);
 
-/***********************/
+/*************/
 /* HklEngine */
-/***********************/
+/*************/
 
-HKLAPI GSList* hkl_engine_modes_as_gslist(HklEngine *self);
+HKLAPI const char **hkl_engine_modes_names_get_binding(const HklEngine *self,
+						       size_t *length) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI gboolean hkl_engine_set_values_unit(
-	HklEngine *self,
-	double values[], unsigned int len,
-	GError **error);
+HKLAPI const char **hkl_engine_parameters_names_get_binding(const HklEngine *self,
+							    size_t *length) HKL_ARG_NONNULL(1, 2);
+
+HKLAPI const char **hkl_engine_axes_names_get_binding(const HklEngine *self,
+						      HklEngineAxesNamesGet mode,
+						      size_t *length) HKL_ARG_NONNULL(1, 3);
+
+HKLAPI double *hkl_engine_pseudo_axes_values_get_binding(const HklEngine *self,
+							 guint *len, HklUnitEnum unit_type);
 
 /***************************/
 /* HklPSeudoAxisEngineList */
 /***************************/
 
-HKLAPI GSList* hkl_engine_list_engines_as_gslist(HklEngineList *self);
+HKLAPI GSList* hkl_engine_list_engines_get_as_gslist(HklEngineList *self);
 
 /*************/
 /* HklSample */
@@ -91,13 +89,9 @@ HKLAPI const GSList *hkl_sample_reflections_get(const HklSample *self);
 HKLAPI HklSampleReflection *hkl_sample_add_reflection_binding(HklSample *self,
 							      const HklGeometry *geometry,
 							      const HklDetector *detector,
-							      double h, double k, double l);
+							      double h, double k, double l,
+							      GError **error);
 
-HKLAPI gdouble hkl_sample_UB_set_binding(HklSample *self,
-					 const HklMatrix *UB,
-					 GError **error);
-
-
-HKL_END_DECLS
+G_END_DECLS
 
 #endif /* __HKL_BINDING_PRIVATE_H__ */

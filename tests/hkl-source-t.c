@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -33,7 +33,7 @@ static void new_copy(void)
 	c = s;
 
 	is_double(c.wave_length, s.wave_length, HKL_EPSILON, __func__);
-	ok(HKL_FALSE == hkl_vector_cmp(&c.direction, &s.direction), __func__);
+	ok(FALSE == hkl_vector_cmp(&c.direction, &s.direction), __func__);
 }
 
 static void init(void)
@@ -56,8 +56,8 @@ static void cmp(void)
 	hkl_source_init(&s1, 1.54, 1, 0, 0);
 	hkl_source_init(&s2, 1, 1, 0, 0);
 
-	ok(HKL_TRUE == hkl_source_cmp(&ref, &s1), __func__);
-	ok(HKL_FALSE == hkl_source_cmp(&ref, &s2), __func__);
+	ok(TRUE == hkl_source_cmp(&ref, &s1), __func__);
+	ok(FALSE == hkl_source_cmp(&ref, &s2), __func__);
 }
 
 static void compute_ki(void)

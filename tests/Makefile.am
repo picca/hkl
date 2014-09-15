@@ -7,7 +7,6 @@ all_tests = \
 	hkl-unit-t \
 	hkl-bench-t \
 	hkl-axis-t \
-	hkl-error-t \
 	hkl-pseudoaxis-t \
 	hkl-quaternion-t \
 	hkl-interval-t \
@@ -27,16 +26,17 @@ all_tests = \
 	hkl-pseudoaxis-zaxis-t \
 	hkl-pseudoaxis-soleil-sixs-med-t
 
-AM_CPPFLAGS = -Wextra -pedantic -D_BSD_SOURCE \
+AM_CPPFLAGS = -Wextra -D_BSD_SOURCE \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/hkl \
-	-I$(top_srcdir)/tests
+	-I$(top_srcdir)/tests \
+	$(GLIB_CFLAGS) \
+	$(GSL_CFLAGS)
 
 LDADD = $(top_builddir)/hkl/libhkl.la \
 	$(top_builddir)/tests/tap/libtap.a \
+	$(GLIB_LIBS) \
 	$(GSL_LIBS)
-
-AM_LDFLAGS=-static
 
 if HKL3D
 

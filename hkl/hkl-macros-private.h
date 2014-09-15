@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -23,7 +23,7 @@
 #define __HKL_MACROS_PRIVATE_H__
 
 #include <assert.h>                     // for assert
-#include "hkl.h"                        // for HKL_BEGIN_DECLS, etc
+#include "hkl.h"                        // for G_BEGIN_DECLS, etc
 
 /* specific part for the eulerian -> kappa conversion */
 #define HKL_EULERIAN_KAPPA_SOLUTION 1
@@ -36,6 +36,12 @@
 #else
 # define hkl_assert(x)
 #endif
+
+#define hkl_error(expr) do{				\
+		if(!(expr)){				\
+			g_error(__STRING(expr));	\
+		}					\
+	} while(0)
 
 /* use for the printf format methods took from glib */
 #define G_GNUC_PRINTF( format_idx, arg_idx )				\
@@ -73,15 +79,15 @@
 # endif
 #endif
 
-#define hkl_return_val_if_fail(expr, val) if (expr) { } else return val
+#define DARRAY(_items) {.item=_items, .size=ARRAY_SIZE(_items), .alloc=ARRAY_SIZE(_items)}
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
 
 extern void hkl_printbt(void);
 
 void *_hkl_malloc(int size, const char *error);
 
-HKL_END_DECLS
+G_END_DECLS
 
 /* malloc method */
 #define HKL_MALLOC(type) (type *)_hkl_malloc(sizeof(type), "Can not allocate memory for a " #type)

@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -25,16 +25,8 @@
 #include <math.h>                       // for M_PI
 #include <stddef.h>                     // for size_t
 #include <stdio.h>                      // for FILE
+#include <glib.h>                       // for g_set_error, GError etc
 #include <hkl/ccan/darray/darray.h>     // for darray
-
-/* Guard C code in headers, while including them from C++ */
-#ifdef __cplusplus
-# define HKL_BEGIN_DECLS  extern "C" {
-# define HKL_END_DECLS    }
-#else
-# define HKL_BEGIN_DECLS
-# define HKL_END_DECLS
-#endif
 
 /* deprecated */
 #if    __GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 1)
@@ -52,9 +44,6 @@
 #else
 # define HKL_DEPRECATED_FOR(f) HKL_DEPRECATED
 #endif
-
-#define HKL_TRUE 1
-#define HKL_FALSE 0
 
 #define HKL_TINY 1e-7
 #define HKL_EPSILON 1e-6
@@ -77,7 +66,7 @@
 # endif
 #else
 /**
- * @def HKLEAPI
+ * @def HKLAPI
  * @brief Used to export functions(by changing visibility).
  */
 # define HKLAPI
@@ -89,9 +78,18 @@
 # define HKL_ARG_NONNULL(...)
 #endif
 
+# if __GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 4)
+#  define HKL_WARN_UNUSED_RESULT __attribute__ ((__warn_unused_result__))
+# else
+#  define HKL_WARN_UNUSED_RESULT
+# endif
+
+
 #define _darray(type) type *item; size_t size; size_t alloc
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
+
+typedef darray(const char *) darray_string;
 
 /**********/
 /* Matrix */
@@ -120,22 +118,21 @@ HKLAPI int hkl_matrix_cmp(const HklMatrix *self, const HklMatrix *m) HKL_ARG_NON
 
 HKLAPI void hkl_matrix_times_matrix(HklMatrix *self, const HklMatrix *m) HKL_ARG_NONNULL(1, 2);
 
-/*********/
-/* Error */
-/*********/
+/********/
+/* Unit */
+/********/
 
-typedef struct _HklError HklError;
-
-HKLAPI const char *hkl_error_message_get(const HklError *self) HKL_ARG_NONNULL(1);
-HKLAPI void hkl_error_clear (HklError **err) HKL_ARG_NONNULL(1);
+typedef enum _HklUnitEnum
+{
+	HKL_UNIT_DEFAULT,
+	HKL_UNIT_USER
+} HklUnitEnum;
 
 /*************/
 /* Parameter */
 /*************/
 
 typedef struct _HklParameter HklParameter;
-typedef struct _HklParameterList HklParameterList;
-typedef HklParameterList darray_parameter;
 
 /* HklParameter */
 
@@ -145,45 +142,27 @@ HKLAPI void hkl_parameter_free(HklParameter *self) HKL_ARG_NONNULL(1);
 
 HKLAPI const char *hkl_parameter_name_get(const HklParameter *self) HKL_ARG_NONNULL(1);
 
-HKLAPI double hkl_parameter_value_get(const HklParameter *self) HKL_ARG_NONNULL(1);
+HKLAPI const char *hkl_parameter_default_unit_get(const HklParameter *self) HKL_ARG_NONNULL(1);
+
+HKLAPI const char *hkl_parameter_user_unit_get(const HklParameter *self) HKL_ARG_NONNULL(1);
+
+HKLAPI double hkl_parameter_value_get(const HklParameter *self,
+				      HklUnitEnum unit_type) HKL_ARG_NONNULL(1);
 
 HKLAPI int hkl_parameter_value_set(HklParameter *self, double value,
-				   HklError **error) HKL_ARG_NONNULL(1);
+				   HklUnitEnum unit_type, GError **error) HKL_ARG_NONNULL(1) HKL_WARN_UNUSED_RESULT;
 
-HKLAPI double hkl_parameter_value_unit_get(const HklParameter *self) HKL_ARG_NONNULL(1);
+HKLAPI void hkl_parameter_min_max_get(const HklParameter *self, double *min, double *max,
+				      HklUnitEnum unit_type) HKL_ARG_NONNULL(1, 2, 3);
 
-HKLAPI int hkl_parameter_value_unit_set(HklParameter *self, double value,
-					HklError **error) HKL_ARG_NONNULL(1);
-
-HKLAPI void hkl_parameter_min_max_get(const HklParameter *self, double *min, double *max) HKL_ARG_NONNULL(1, 2, 3);
-
-HKLAPI void hkl_parameter_min_max_set(HklParameter *self, double min, double max) HKL_ARG_NONNULL(1);
-
-HKLAPI void hkl_parameter_min_max_unit_get(const HklParameter *self, double *min, double *max) HKL_ARG_NONNULL(1, 2, 3);
-
-HKLAPI void hkl_parameter_min_max_unit_set(HklParameter *self, double min, double max) HKL_ARG_NONNULL(1);
+HKLAPI int hkl_parameter_min_max_set(HklParameter *self, double min, double max,
+				     HklUnitEnum unit_type, GError **error) HKL_ARG_NONNULL(1) HKL_WARN_UNUSED_RESULT;
 
 HKLAPI int hkl_parameter_fit_get(const HklParameter *self) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_parameter_fit_set(HklParameter *self, int fit) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_parameter_randomize(HklParameter *self) HKL_ARG_NONNULL(1);
-
-/* HklParameterList */
-
-struct _HklParameterList {
-	_darray(HklParameter *);
-};
-
-HKLAPI unsigned int hkl_parameter_list_values_set(HklParameterList *self,
-						  double values[], unsigned int len,
-						  HklError **error) HKL_ARG_NONNULL(1);
-
-HKLAPI double *hkl_parameter_list_values_unit_get(const HklParameterList *self,
-						  unsigned int *len) HKL_ARG_NONNULL(1, 2);
-
-/* only use in the test method for now */
-HKLAPI void hkl_parameter_list_randomize(HklParameterList *self) HKL_ARG_NONNULL(1);
 
 /************/
 /* Detector */
@@ -195,13 +174,13 @@ typedef enum _HklDetectorType
 	HKL_DETECTOR_TYPE_0D
 } HklDetectorType;
 
+HKLAPI HklDetector *hkl_detector_factory_new(HklDetectorType type);
+
+HKLAPI HklDetector *hkl_detector_new_copy(const HklDetector *src) HKL_ARG_NONNULL(1);
+
 HKLAPI void hkl_detector_free(HklDetector *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_detector_idx_set(HklDetector *self, int idx) HKL_ARG_NONNULL(1);
-
 HKLAPI void hkl_detector_fprintf(FILE *f, const HklDetector *self) HKL_ARG_NONNULL(1, 2);
-
-HKLAPI HklDetector *hkl_detector_factory_new(HklDetectorType type);
 
 /************/
 /* Geometry */
@@ -211,35 +190,62 @@ typedef struct _HklGeometry HklGeometry;
 typedef struct _HklGeometryList HklGeometryList;
 typedef struct _HklGeometryListItem HklGeometryListItem;
 
-typedef darray(HklGeometryListItem *) darray_item;
-
 /* HklGeometry */
+
+HKLAPI HklGeometry *hkl_geometry_new_copy(const HklGeometry *self) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_geometry_free(HklGeometry *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_geometry_set(HklGeometry *self, const HklGeometry *src) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_geometry_set(HklGeometry *self, const HklGeometry *src) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI const darray_parameter *hkl_geometry_axes_get(const HklGeometry *self) HKL_ARG_NONNULL(1);
+HKLAPI const darray_string *hkl_geometry_axes_names_get(const HklGeometry *self) HKL_ARG_NONNULL(1);
 
-HKLAPI const HklParameter *hkl_geometry_axis_get(const HklGeometry *self, const char *name) HKL_ARG_NONNULL(1, 2);
+HKLAPI const HklParameter *hkl_geometry_axis_get(const HklGeometry *self, const char *name,
+						 GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
 
-HKLAPI void hkl_geometry_axis_set(HklGeometry *self, const HklParameter *axis) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_geometry_axis_set(HklGeometry *self, const char *name,
+				 const HklParameter *axis,
+				 GError **error) HKL_ARG_NONNULL(1, 2, 3) HKL_WARN_UNUSED_RESULT;
+
+HKLAPI void hkl_geometry_axes_values_get(const HklGeometry *self,
+					 double values[], size_t n_values,
+					 HklUnitEnum unit_type) HKL_ARG_NONNULL(1, 2);
+
+HKLAPI int hkl_geometry_axes_values_set(HklGeometry *self,
+					double values[], size_t n_values,
+					HklUnitEnum unit_type,
+					GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
 
 HKLAPI const char *hkl_geometry_name_get(const HklGeometry *self) HKL_ARG_NONNULL(1);
 
-HKLAPI double hkl_geometry_wavelength_get(const HklGeometry *self) HKL_ARG_NONNULL(1);
+HKLAPI double hkl_geometry_wavelength_get(const HklGeometry *self,
+					  HklUnitEnum unit_type) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_geometry_wavelength_set(HklGeometry *self, double wavelength) HKL_ARG_NONNULL(1);
+HKLAPI int hkl_geometry_wavelength_set(HklGeometry *self, double wavelength,
+				       HklUnitEnum unit_type, GError **error) HKL_ARG_NONNULL(1) HKL_WARN_UNUSED_RESULT;
 
 HKLAPI void hkl_geometry_randomize(HklGeometry *self) HKL_ARG_NONNULL(1);
 
-HKLAPI int hkl_geometry_set_values_unit_v(HklGeometry *self, ...) HKL_ARG_NONNULL(1);
+/* TODO after bissecting it seems that this method is slow (to replace) */
+HKLAPI int hkl_geometry_set_values_v(HklGeometry *self, HklUnitEnum unit_type,
+				     GError **error, ...) HKL_ARG_NONNULL(1) HKL_WARN_UNUSED_RESULT;
 
 HKLAPI void hkl_geometry_fprintf(FILE *file, const HklGeometry *self) HKL_ARG_NONNULL(1, 2);
 
 /* HklGeometryList */
 
-HKLAPI const darray_item *hkl_geometry_list_items_get(const HklGeometryList *self) HKL_ARG_NONNULL(1);
+#define HKL_GEOMETRY_LIST_FOREACH(item, list) for((item)=hkl_geometry_list_items_first_get((list)); \
+						  (item);		\
+						  (item)=hkl_geometry_list_items_next_get((list), (item)))
+
+HKLAPI void hkl_geometry_list_free(HklGeometryList *self) HKL_ARG_NONNULL(1);
+
+HKLAPI size_t hkl_geometry_list_n_items_get(const HklGeometryList *self) HKL_ARG_NONNULL(1);
+
+HKLAPI const HklGeometryListItem *hkl_geometry_list_items_first_get(const HklGeometryList *self) HKL_ARG_NONNULL(1);
+
+HKLAPI const HklGeometryListItem *hkl_geometry_list_items_next_get(const HklGeometryList *self,
+								   const HklGeometryListItem *item) HKL_ARG_NONNULL(1, 2);
 
 /* HklGeometryListItem */
 
@@ -256,7 +262,8 @@ typedef struct _HklSampleReflection HklSampleReflection;
 /* Lattice */
 
 HKLAPI HklLattice *hkl_lattice_new(double a, double b, double c,
-				   double alpha, double beta, double gamma);
+				   double alpha, double beta, double gamma,
+				   GError **error) HKL_WARN_UNUSED_RESULT;
 
 HKLAPI HklLattice *hkl_lattice_new_copy(const HklLattice *self) HKL_ARG_NONNULL(1);
 
@@ -266,35 +273,43 @@ HKLAPI void hkl_lattice_free(HklLattice *self) HKL_ARG_NONNULL(1);
 
 HKLAPI const HklParameter *hkl_lattice_a_get(const HklLattice *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_lattice_a_set(HklLattice *self, const HklParameter *parameter) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_lattice_a_set(HklLattice *self, const HklParameter *parameter,
+			     GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
 
 HKLAPI const HklParameter *hkl_lattice_b_get(const HklLattice *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_lattice_b_set(HklLattice *self, const HklParameter *parameter) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_lattice_b_set(HklLattice *self, const HklParameter *parameter,
+			     GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
 
 HKLAPI const HklParameter *hkl_lattice_c_get(const HklLattice *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_lattice_c_set(HklLattice *self, const HklParameter *parameter) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_lattice_c_set(HklLattice *self, const HklParameter *parameter,
+			     GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
 
 HKLAPI const HklParameter *hkl_lattice_alpha_get(const HklLattice *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_lattice_alpha_set(HklLattice *self, const HklParameter *parameter) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_lattice_alpha_set(HklLattice *self, const HklParameter *parameter,
+				 GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
 
 HKLAPI const HklParameter *hkl_lattice_beta_get(const HklLattice *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_lattice_beta_set(HklLattice *self, const HklParameter *parameter) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_lattice_beta_set(HklLattice *self, const HklParameter *parameter,
+				GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
 
 HKLAPI const HklParameter *hkl_lattice_gamma_get(const HklLattice *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_lattice_gamma_set(HklLattice *self, const HklParameter *parameter) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_lattice_gamma_set(HklLattice *self, const HklParameter *parameter,
+				 GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
 
 HKLAPI int hkl_lattice_set(HklLattice *self,
 			   double a, double b, double c,
-			   double alpha, double beta, double gamma) HKL_ARG_NONNULL(1);
+			   double alpha, double beta, double gamma,
+			   HklUnitEnum unit_type, GError **error) HKL_ARG_NONNULL(1) HKL_WARN_UNUSED_RESULT;
 
 HKLAPI void hkl_lattice_get(const HklLattice *self,
 			    double *a, double *b, double *c,
-			    double *alpha, double *beta, double *gamma) HKL_ARG_NONNULL(1, 2, 3, 4, 5, 6, 7);
+			    double *alpha, double *beta, double *gamma,
+			    HklUnitEnum unit_type) HKL_ARG_NONNULL(1, 2, 3, 4, 5, 6, 7);
 
 HKLAPI int hkl_lattice_get_B(const HklLattice *self, HklMatrix *B) HKL_ARG_NONNULL(1, 2);
 
@@ -320,28 +335,38 @@ HKLAPI void hkl_sample_lattice_set(HklSample *self, const HklLattice *lattice) H
 
 HKLAPI const HklParameter *hkl_sample_ux_get(const HklSample *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_sample_ux_set(HklSample *self, const HklParameter *ux) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_sample_ux_set(HklSample *self, const HklParameter *ux,
+			     GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
 
 HKLAPI const HklParameter *hkl_sample_uy_get(const HklSample *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_sample_uy_set(HklSample *self, const HklParameter *uy) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_sample_uy_set(HklSample *self, const HklParameter *uy,
+			     GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
 
 HKLAPI const HklParameter *hkl_sample_uz_get(const HklSample *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_sample_uz_set(HklSample *self, const HklParameter *uz) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_sample_uz_set(HklSample *self, const HklParameter *uz,
+			     GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
 
 HKLAPI const HklMatrix *hkl_sample_U_get(const HklSample *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_sample_U_set(HklSample *self, const HklMatrix *U, HklError **error) HKL_ARG_NONNULL(1);
+HKLAPI void hkl_sample_U_set(HklSample *self, const HklMatrix *U, GError **error) HKL_ARG_NONNULL(1);
 
 HKLAPI const HklMatrix *hkl_sample_UB_get(const HklSample *self) HKL_ARG_NONNULL(1);
 
-HKLAPI double hkl_sample_UB_set(HklSample *self, const HklMatrix *UB, HklError **error) HKL_ARG_NONNULL(1, 2);
+HKLAPI int hkl_sample_UB_set(HklSample *self, const HklMatrix *UB,
+			     GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
 
-HKLAPI HklSampleReflection *hkl_sample_first_reflection_get(HklSample *self) HKL_ARG_NONNULL(1);
+HKLAPI size_t hkl_sample_n_reflections_get(const HklSample *self) HKL_ARG_NONNULL(1);
 
-HKLAPI HklSampleReflection *hkl_sample_next_reflection_get(HklSample *self,
-							   HklSampleReflection *reflection) HKL_ARG_NONNULL(1, 2);
+#define HKL_SAMPLE_REFLECTIONS_FOREACH(_item, _list) for((_item)=hkl_sample_reflections_first_get((_list)); \
+							 (_item);	\
+							 (_item)=hkl_sample_reflections_next_get((_list), (_item)))
+
+HKLAPI HklSampleReflection *hkl_sample_reflections_first_get(HklSample *self) HKL_ARG_NONNULL(1);
+
+HKLAPI HklSampleReflection *hkl_sample_reflections_next_get(HklSample *self,
+							    HklSampleReflection *reflection) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI void hkl_sample_del_reflection(HklSample *self,
 				      HklSampleReflection *reflection) HKL_ARG_NONNULL(1, 2);
@@ -351,7 +376,8 @@ HKLAPI void hkl_sample_add_reflection(HklSample *self,
 
 HKLAPI int hkl_sample_compute_UB_busing_levy(HklSample *self,
 					     const HklSampleReflection *r1,
-					     const HklSampleReflection *r2) HKL_ARG_NONNULL(1, 2, 3);
+					     const HklSampleReflection *r2,
+					     GError **error) HKL_ARG_NONNULL(1, 2, 3) HKL_WARN_UNUSED_RESULT;
 
 HKLAPI double hkl_sample_get_reflection_mesured_angle(const HklSample *self,
 						      const HklSampleReflection *r1,
@@ -361,19 +387,21 @@ HKLAPI double hkl_sample_get_reflection_theoretical_angle(const HklSample *self,
 							  const HklSampleReflection *r1,
 							  const HklSampleReflection *r2) HKL_ARG_NONNULL(1, 2, 3);
 
-HKLAPI double hkl_sample_affine(HklSample *self) HKL_ARG_NONNULL(1);
+HKLAPI int hkl_sample_affine(HklSample *self, GError **error) HKL_ARG_NONNULL(1) HKL_WARN_UNUSED_RESULT;
 
-/* hklSampleReflection */
+/* HklSampleReflection */
 
 HKLAPI HklSampleReflection *hkl_sample_reflection_new(const HklGeometry *geometry,
 						      const HklDetector *detector,
-						      double h, double k, double l) HKL_ARG_NONNULL(1, 2);
+						      double h, double k, double l,
+						      GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
 
 HKLAPI void hkl_sample_reflection_hkl_get(const HklSampleReflection *self,
 					  double *h, double *k, double *l) HKL_ARG_NONNULL(1, 2, 3, 4);
 
-HKLAPI void hkl_sample_reflection_hkl_set(HklSampleReflection *self,
-					  double h, double k, double l) HKL_ARG_NONNULL(1);
+HKLAPI int hkl_sample_reflection_hkl_set(HklSampleReflection *self,
+					 double h, double k, double l,
+					 GError **error) HKL_ARG_NONNULL(1) HKL_WARN_UNUSED_RESULT;
 
 HKLAPI int hkl_sample_reflection_flag_get(const HklSampleReflection *self) HKL_ARG_NONNULL(1);
 
@@ -388,69 +416,97 @@ HKLAPI void hkl_sample_reflection_geometry_set(HklSampleReflection *self,
 /* PseudoAxis */
 /**************/
 
-typedef struct _HklPseudoAxis HklPseudoAxis;
-typedef struct _HklMode HklMode;
 typedef struct _HklEngine HklEngine;
 typedef struct _HklEngineList HklEngineList;
 
-typedef darray(HklMode *) darray_mode;
 typedef darray(HklEngine *) darray_engine;
-
-/* HklMode */
-
-HKLAPI const char * hkl_mode_name(const HklMode *self) HKL_ARG_NONNULL(1);
-
-HKLAPI HklParameterList *hkl_mode_parameters(HklMode *self) HKL_ARG_NONNULL(1);
-
-HKLAPI void hkl_mode_fprintf(FILE *f, const HklMode *self) HKL_ARG_NONNULL(1, 2);
 
 /* HklEngine */
 
-HKLAPI const char *hkl_engine_name(const HklEngine *self) HKL_ARG_NONNULL(1);
+HKLAPI const char *hkl_engine_name_get(const HklEngine *self) HKL_ARG_NONNULL(1);
 
 HKLAPI unsigned int hkl_engine_len(const HklEngine *self) HKL_ARG_NONNULL(1);
 
-HKLAPI HklParameterList *hkl_engine_pseudo_axes(HklEngine *self) HKL_ARG_NONNULL(1);
+HKLAPI const darray_string *hkl_engine_pseudo_axes_names_get(HklEngine *self) HKL_ARG_NONNULL(1);
 
-HKLAPI HklMode *hkl_engine_mode(HklEngine *self) HKL_ARG_NONNULL(1);
+HKLAPI int hkl_engine_pseudo_axes_values_get(HklEngine *self,
+					     double values[], size_t n_values,
+					     HklUnitEnum unit_type, GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
 
-HKLAPI darray_mode *hkl_engine_modes(HklEngine *self) HKL_ARG_NONNULL(1);
+HKLAPI HklGeometryList *hkl_engine_pseudo_axes_values_set(HklEngine *self,
+							  double values[], size_t n_values,
+							  HklUnitEnum unit_type, GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
 
-HKLAPI HklEngineList *hkl_engine_engines(HklEngine *self) HKL_ARG_NONNULL(1);
+HKLAPI const HklParameter *hkl_engine_pseudo_axis_get(const HklEngine *self,
+						      const char *name,
+						      GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
 
-HKLAPI void hkl_engine_select_mode(HklEngine *self,
-				   HklMode *mode) HKL_ARG_NONNULL(1, 2);
+typedef enum _HklEngineCapabilities
+{
+	HKL_ENGINE_CAPABILITIES_READABLE = 1u << 0,
+	HKL_ENGINE_CAPABILITIES_WRITABLE = 1u << 1,
+	HKL_ENGINE_CAPABILITIES_INITIALIZABLE = 1u << 2,
+} HklEngineCapabilities;
 
-HKLAPI void hkl_engine_select_mode_by_name(HklEngine *self,
-					   const char *name) HKL_ARG_NONNULL(1, 2);
+HKLAPI unsigned int hkl_engine_capabilities_get(const HklEngine *self) HKL_ARG_NONNULL(1);
 
-HKLAPI int hkl_engine_initialize(HklEngine *self, HklError **error) HKL_ARG_NONNULL(1);
+HKLAPI int hkl_engine_initialized_get(const HklEngine *self) HKL_ARG_NONNULL(1);
 
-HKLAPI int hkl_engine_set(HklEngine *self, HklError **error) HKL_ARG_NONNULL(1);
-
-HKLAPI int hkl_engine_get(HklEngine *self, HklError **error) HKL_ARG_NONNULL(1);
+HKLAPI int hkl_engine_initialized_set(HklEngine *self, int initialized,
+				      GError **error) HKL_ARG_NONNULL(1) HKL_WARN_UNUSED_RESULT;
 
 HKLAPI void hkl_engine_fprintf(FILE *f, const HklEngine *self) HKL_ARG_NONNULL(1, 2);
+
+/* mode */
+
+HKLAPI const darray_string *hkl_engine_modes_names_get(const HklEngine *self) HKL_ARG_NONNULL(1);
+
+HKLAPI const char *hkl_engine_current_mode_get(const HklEngine *self) HKL_ARG_NONNULL(1);
+
+HKLAPI int hkl_engine_current_mode_set(HklEngine *self, const char *mode, GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
+
+typedef enum _HklEngineAxesNamesGet
+{
+	HKL_ENGINE_AXES_NAMES_GET_READ,
+	HKL_ENGINE_AXES_NAMES_GET_WRITE,
+} HklEngineAxesNamesGet;
+
+HKLAPI const darray_string *hkl_engine_axes_names_get(const HklEngine *self,
+						      HklEngineAxesNamesGet mode) HKL_ARG_NONNULL(1);
+
+HKLAPI const darray_string *hkl_engine_parameters_names_get(const HklEngine *self) HKL_ARG_NONNULL(1);
+
+HKLAPI const HklParameter *hkl_engine_parameter_get(const HklEngine *self, const char *name,
+						    GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
+
+HKLAPI int hkl_engine_parameter_set(HklEngine *self,
+				    const char *name, const HklParameter *parameter,
+				    GError **error) HKL_ARG_NONNULL(1, 2, 3) HKL_WARN_UNUSED_RESULT;
+
+HKLAPI void hkl_engine_parameters_values_get(const HklEngine *self,
+					     double values[], size_t n_values,
+					     HklUnitEnum unit_type) HKL_ARG_NONNULL(1, 2);
+
+HKLAPI int hkl_engine_parameters_values_set(HklEngine *self,
+					    double values[], size_t n_values,
+					    HklUnitEnum unit_type, GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
 
 /* HklEngineList */
 
 HKLAPI void hkl_engine_list_free(HklEngineList *self) HKL_ARG_NONNULL(1);
 
-HKLAPI darray_engine *hkl_engine_list_engines(HklEngineList *self) HKL_ARG_NONNULL(1);
+HKLAPI darray_engine *hkl_engine_list_engines_get(HklEngineList *self) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_engine_list_geometry_set(HklEngineList *self, const HklGeometry *geometry) HKL_ARG_NONNULL(1, 2);
+HKLAPI HklGeometry *hkl_engine_list_geometry_get(HklEngineList *self) HKL_ARG_NONNULL(1);
 
-HKLAPI const HklGeometryList *hkl_engine_list_geometries(const HklEngineList *self) HKL_ARG_NONNULL(1);
+HKLAPI int hkl_engine_list_geometry_set(HklEngineList *self, const HklGeometry *geometry) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI HklGeometry *hkl_engine_list_get_geometry(HklEngineList *self) HKL_ARG_NONNULL(1);
+HKLAPI int hkl_engine_list_select_solution(HklEngineList *self,
+					   const HklGeometryListItem *item) HKL_ARG_NONNULL(1);
 
-HKLAPI void hkl_engine_list_select_solution(HklEngineList *self, unsigned int idx) HKL_ARG_NONNULL(1);
-
-HKLAPI HklEngine *hkl_engine_list_get_by_name(HklEngineList *self,
-					      const char *name) HKL_ARG_NONNULL(1, 2);
-
-HKLAPI HklParameter *hkl_engine_list_get_pseudo_axis_by_name(const HklEngineList *self,
-							     const char *name) HKL_ARG_NONNULL(1, 2);
+HKLAPI HklEngine *hkl_engine_list_engine_get_by_name(HklEngineList *self,
+						     const char *name,
+						     GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
 
 HKLAPI void hkl_engine_list_init(HklEngineList *self,
 				 HklGeometry *geometry,
@@ -470,14 +526,15 @@ typedef struct _HklFactory HklFactory;
 
 HKLAPI HklFactory **hkl_factory_get_all(unsigned int *n) HKL_ARG_NONNULL(1);
 
-HKLAPI HklFactory *hkl_factory_get_by_name(const char *name) HKL_ARG_NONNULL(1);
+HKLAPI HklFactory *hkl_factory_get_by_name(const char *name,
+					   GError **error) HKL_ARG_NONNULL(1) HKL_WARN_UNUSED_RESULT;
 
-HKLAPI const char *hkl_factory_name(const HklFactory *self) HKL_ARG_NONNULL(1);
+HKLAPI const char *hkl_factory_name_get(const HklFactory *self) HKL_ARG_NONNULL(1);
 
 HKLAPI HklGeometry *hkl_factory_create_new_geometry(const HklFactory *self) HKL_ARG_NONNULL(1);
 
 HKLAPI HklEngineList *hkl_factory_create_new_engine_list(const HklFactory *self) HKL_ARG_NONNULL(1);
 
-HKL_END_DECLS
+G_END_DECLS
 
 #endif

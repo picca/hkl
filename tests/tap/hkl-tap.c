@@ -21,8 +21,32 @@
  */
 #include <stdarg.h>
 
+#include "basic.h"
 #include "hkl-tap.h"
+#include "hkl/hkl-matrix-private.h"
 #include "hkl/hkl-macros-private.h"
+#include "hkl/hkl-pseudoaxis-private.h"
+
+void is_matrix(const HklMatrix *wanted, const HklMatrix *seen, const char *format, ...)
+{
+	va_list args;
+
+	va_start(args, format);
+	fflush(stderr);
+	if(TRUE == hkl_matrix_cmp(wanted, seen))
+		okv(1, format, args);
+	else{
+		printf("# wanted: %g %g %g\n#       : %g %g %g\n#       : %g %g %g\n",
+		       wanted->data[0][0], wanted->data[0][1], wanted->data[0][2],
+		       wanted->data[1][0], wanted->data[1][1], wanted->data[1][2],
+		       wanted->data[2][0], wanted->data[2][1], wanted->data[2][2]);
+		printf("#   seen: %g %g %g\n#       : %g %g %g\n#       : %g %g %g\n",
+		       seen->data[0][0], seen->data[0][1], seen->data[0][2],
+		       seen->data[1][0], seen->data[1][1], seen->data[1][2],
+		       seen->data[2][0], seen->data[2][1], seen->data[2][2]);
+		okv(0, format, args);
+	}
+}
 
 int check_pseudoaxes_v(HklEngine *engine, ...)
 {
@@ -43,22 +67,23 @@ int check_pseudoaxes_v(HklEngine *engine, ...)
 int check_pseudoaxes(HklEngine *engine,
 		     double expected[], uint len)
 {
-	int res = HKL_TRUE;
+	int res = TRUE;
 	unsigned int i = 0;
-	HklParameter **pseudo_axis;
-	darray_parameter *pseudo_axes = hkl_engine_pseudo_axes(engine);
+	double currents[len];
 
 	hkl_assert(hkl_engine_len(engine) == len);
 
-	darray_foreach(pseudo_axis, *pseudo_axes){
-		double current = hkl_parameter_value_get(*pseudo_axis);
-		res &= fabs(current - expected[i]) <= HKL_EPSILON;
-		if (!res){
-			fprintf(stderr, "current: %f, expected: %f, epsilon: %f\n",
-				current, expected[i], HKL_EPSILON);
+	if(hkl_engine_pseudo_axes_values_get(engine, currents, len, HKL_UNIT_DEFAULT, NULL)){
+		for(i=0; i<len; ++i){
+			res &= fabs(currents[i] - expected[i]) <= HKL_EPSILON;
+			if (!res){
+				fprintf(stderr, "current: %f, expected: %f, epsilon: %f\n",
+					currents[i], expected[i], HKL_EPSILON);
+			}
 		}
-		++i;
-	}
+	}else
+		res = FALSE;
+
 	return res;
 }
 
@@ -70,12 +95,11 @@ int check_pseudoaxes(HklEngine *engine,
  * set the values of the PseudoAxes with the given values. This method
  * is only available for test as it is sort of brittle.
  **/
-void hkl_engine_set_values_v(HklEngine *self, ...)
+HklGeometryList *hkl_engine_set_values_v(HklEngine *self, ...)
 {
 	uint i;
 	va_list ap;
 	unsigned int len = hkl_engine_len(self);
-	HklParameterList *pseudo_axes = hkl_engine_pseudo_axes(self);
 	double values[len];
 
 	va_start(ap, self);
@@ -83,7 +107,40 @@ void hkl_engine_set_values_v(HklEngine *self, ...)
 		values[i] = va_arg(ap, double);
 		
 	va_end(ap);
-	hkl_parameter_list_values_set(pseudo_axes,
-				      values, len,
-				      NULL);
+	return hkl_engine_pseudo_axes_values_set(self, values, len,
+						  HKL_UNIT_DEFAULT, NULL);
+}
+
+/**
+ * hkl_tap_engine_pseudo_axes_randomize: (skip)
+ * @self: the this ptr
+ *
+ * randomize all the parameters of the #HklEngine
+ **/
+void hkl_tap_engine_pseudo_axes_randomize(HklEngine *self,
+					  double values[], size_t n_values,
+					  HklUnitEnum unit_type)
+{
+	size_t i;
+
+	for(i=0; i<n_values; ++i){
+		HklParameter *parameter = darray_item(self->pseudo_axes, i);
+		hkl_parameter_randomize(parameter);
+		values[i] = hkl_parameter_value_get(parameter, unit_type);
+	}
+}
+
+/**
+ * hkl_tap_engine_parameters_randomize: (skip)
+ * @self: the this ptr
+ *
+ * randomize all the parameters of the #HklEngine
+ **/
+void hkl_tap_engine_parameters_randomize(HklEngine *self)
+{
+	HklParameter **parameter;
+
+	darray_foreach(parameter, self->mode->parameters){
+		hkl_parameter_randomize(*parameter);
+	}
 }

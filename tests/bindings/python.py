@@ -22,7 +22,6 @@ Copyright (C) 2012-2013 Synchrotron SOLEIL
 Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
 """
 
-import sys
 import math
 import unittest
 from gi.repository import GLib
@@ -30,21 +29,25 @@ from gi.repository import Hkl
 
 
 class TestAPI(unittest.TestCase):
+    """Test all the Hkl API, if something brakes here it means that API
+    has changed !!!
 
-    @unittest.skip("factory not yet ready")
+    """
     def test_factory_api(self):
         """
         enforce the Factory API
         """
         # factories dict <name, Factory>
         factories = Hkl.factories()
-        for key, value in factories.iteritems():
+        for key, factory in factories.iteritems():
             self.assertTrue(type(key) == str)
-            self.assertTrue(type(value) == Hkl.Factory)
+            self.assertTrue(type(factory) == Hkl.Factory)
 
-        kappa6C_factory = factories['Kappa6C']
-        geometry = kappa6C_factory.create_new_geometry()
-        engines = kappa6C_factory.create_new_engine_list()
+            # create all the geometry and engines
+            geometry = factory.create_new_geometry()
+            self.assertTrue(type(geometry) == Hkl.Geometry)
+            engines = factory.create_new_engine_list()
+            self.assertTrue(type(engines) == Hkl.EngineList)
 
     def test_detector_api(self):
         """
@@ -54,10 +57,6 @@ class TestAPI(unittest.TestCase):
         # create an 0D HklDetector
         detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))
         self.assertTrue(type(detector) is Hkl.Detector)
-
-        # mount the detector on the 2nd holder of the geometry
-        # yes numbering follow the C convention !
-        detector.idx_set(1)
 
     def test_geometry_api(self):
         """
@@ -69,15 +68,10 @@ class TestAPI(unittest.TestCase):
         factory = Hkl.factories()['K6C']
         geometry = factory.create_new_geometry()
 
-        # axes names are accessible
-        self.assertTrue(
-            isinstance([axis.name_get() for axis in geometry.axes()],
-                       list))
-
         # set the geometry axes values
         values_w = [0, 30, 0, 0, 0, 60]
-        geometry.set_axes_values_unit(values_w)
-        values_r = geometry.get_axes_values_unit()
+        geometry.axes_values_set(values_w, Hkl.UnitEnum.USER)
+        values_r = geometry.axes_values_get(Hkl.UnitEnum.USER)
 
         # check that the read and write values of the geometry are
         # almost equals
@@ -85,30 +79,11 @@ class TestAPI(unittest.TestCase):
             self.assertAlmostEqual(r, w)
 
         # check that we can access the axes
-        axes = geometry.axes()
-        self.assertTrue(len([axis.name_get() for axis in axes]) != 0)
-        for axis in axes:
-            self.assertTrue(type(axis.name_get()) is str)
-            axis.min_max_unit_set(0, math.radians(180))
-
-    def test_mode_api(self):
-        """
-        enforce the HklMode API
-        """
-        factory = Hkl.factories()['K6C']
-        engines = factory.create_new_engine_list()
-        engine = engines.get_by_name("hkl")
-
-        # check for all modes
-        for mode in engine.modes():
-            self.assertTrue(type(mode) is Hkl.Mode)
-            self.assertTrue(type(mode.name()) is str)
-
-            # check the parameters
-            parameters = mode.parameters()
-            self.assertTrue(type(parameters) is Hkl.ParameterList)
-            for parameter in parameters.parameters():
-                self.assertTrue(type(parameter) is Hkl.Parameter)
+        axes_names = geometry.axes_names_get()
+        for name in axes_names:
+            axis = geometry.axis_get(name)
+            axis.min_max_set(0, math.radians(180), Hkl.UnitEnum.USER)
+            geometry.axis_set(name, axis)
 
     def test_engine_api(self):
         """
@@ -116,19 +91,15 @@ class TestAPI(unittest.TestCase):
         """
 
         detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))
-        detector.idx_set(1)
 
         factory = Hkl.factories()['K6C']
         geometry = factory.create_new_geometry()
         values_w = [0., 30., 0., 0., 0., 60.]
-        geometry.set_axes_values_unit(values_w)
+        geometry.axes_values_set(values_w, Hkl.UnitEnum.USER)
 
         sample = Hkl.Sample.new("toto")
         lattice = sample.lattice_get()
-        lattice.set(1.54, 1.54, 1.54,
-                    math.radians(90.0),
-                    math.radians(90.0),
-                    math.radians(90.0))
+        lattice.set(1.54, 1.54, 1.54, 90, 90, 90, Hkl.UnitEnum.USER)
         sample.lattice_set(lattice)
 
         # compute all the pseudo axes managed by all engines
@@ -137,33 +108,67 @@ class TestAPI(unittest.TestCase):
         engines.get()
 
         # get the hkl engine and do a computation
-        hkl = engines.get_by_name("hkl")
-        values = hkl.pseudo_axes().values_unit_get()
+        hkl = engines.engine_get_by_name("hkl")
+        values = hkl.pseudo_axes_values_get(Hkl.UnitEnum.USER)
 
         # check for all modes
-        for mode in hkl.modes():
-            self.assertTrue(type(mode) is Hkl.Mode)
+        for mode in hkl.modes_names_get():
+            self.assertTrue(type(mode) is str)
 
         # set the hkl engine and get the results
         for _ in range(100):
             try:
-                hkl.set_values_unit(values)
+                solutions = hkl.pseudo_axes_values_set(values,
+                                                       Hkl.UnitEnum.USER)
+                self.assertTrue(type(solutions) is Hkl.GeometryList)
+                for item in solutions.items():
+                    self.assertTrue(type(item) is Hkl.GeometryListItem)
+                    self.assertTrue(type(item.geometry()) is Hkl.Geometry)
+                values[1] += .01
             except GLib.GError, err:
                 print values, err
-            solutions = engines.geometries()
-            self.assertTrue(type(solutions) is Hkl.GeometryList)
-            for item in solutions.items():
-                self.assertTrue(type(item) is Hkl.GeometryListItem)
-                self.assertTrue(type(item.geometry()) is Hkl.Geometry)
-            values[1] += .01
 
         # check that all the values computed are reachable
-        for engine in engines.engines():
+        for engine in engines.engines_get():
             self.assertTrue(type(engine) is Hkl.Engine)
-            self.assertTrue(type(engine.name()) is str)
-            for parameter in engine.pseudo_axes().parameters():
-                self.assertTrue(type(parameter) is Hkl.Parameter)
-                self.assertTrue(type(parameter.value_get()) is float)
+            self.assertTrue(type(engine.name_get()) is str)
+            self.assertTrue(type(engine.modes_names_get()) is list)
+            self.assertTrue(len(engine.modes_names_get()))
+            for mode in engine.modes_names_get():
+                self.assertTrue(type(mode) is str)
+            values = engine.pseudo_axes_values_get(Hkl.UnitEnum.USER)
+            self.assertTrue(type(values) is list)
+            for value in values:
+                self.assertTrue(type(value) is float)
+
+        # check that all engine parameters and axes are reachables
+        for engine in engines.engines_get():
+            for mode in engine.modes_names_get():
+                engine.current_mode_set(mode)
+                parameters = engine.parameters_names_get()
+                self.assertTrue(type(parameters) is list)
+                axes_r = engine.axes_names_get(Hkl.EngineAxesNamesGet.READ)
+                self.assertTrue(type(axes_r) is list)
+                axes_w = engine.axes_names_get(Hkl.EngineAxesNamesGet.WRITE)
+                self.assertTrue(type(axes_w) is list)
+
+        # check all the capabilities
+        for engine in engines.engines_get():
+            capabilities = engine.capabilities_get()
+            self.assertTrue(capabilities & Hkl.EngineCapabilities.READABLE)
+            self.assertTrue(capabilities & Hkl.EngineCapabilities.WRITABLE)
+            if engine.name_get() == "psi":
+                self.assertTrue(capabilities & Hkl.EngineCapabilities.INITIALIZABLE)
+
+        # check initialized_get/set
+        for engine in engines.engines_get():
+            initialized = engine.initialized_get()
+            capabilities = engine.capabilities_get()
+            if capabilities & Hkl.EngineCapabilities.INITIALIZABLE:
+                engine.initialized_set(False)
+                self.assertTrue(False == engine.initialized_get())
+                engine.initialized_set(True)
+                self.assertTrue(True == engine.initialized_get())
 
     @unittest.skip("for testing figures")
     def test_doc_exemple(self):
@@ -200,19 +205,19 @@ class TestAPI(unittest.TestCase):
 
         # change the lattice parameter by expanding the tuple from
         # the get method. the lattice should not change.
-        lattice.set(*lattice.get())
+        a, b, c, alpha, beta, gamma = lattice.get(Hkl.UnitEnum.DEFAULT)
+        lattice.set(a, b, c, alpha, beta, gamma, Hkl.UnitEnum.DEFAULT)
 
         # this new lattice is identical to the one from the sample
-        self.assertTrue(lattice.get() == sample.lattice_get().get())
+        v = lattice.get(Hkl.UnitEnum.DEFAULT)
+        self.assertTrue(v == sample.lattice_get().get(Hkl.UnitEnum.DEFAULT))
 
         # now change the lattice parameter
-        lattice.set(1, 2, 3,
-                    math.radians(90),
-                    math.radians(90),
-                    math.radians(90))
+        lattice.set(1, 2, 3, 90, 90, 90, Hkl.UnitEnum.USER)
 
         # this new lattice is different from the one in the sample
-        self.assertTrue(lattice.get() != sample.lattice_get().get())
+        v = lattice.get(Hkl.UnitEnum.DEFAULT)
+        self.assertTrue(v != sample.lattice_get().get(Hkl.UnitEnum.DEFAULT))
 
         # gives access to the ux, uy, uz part
         ux = sample.ux_get()
@@ -234,12 +239,11 @@ class TestAPI(unittest.TestCase):
     def test_reflection_api(self):
 
         detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))
-        detector.idx_set(1)
 
         factory = Hkl.factories()['K6C']
         geometry = factory.create_new_geometry()
         values_w = [0., 30., 0., 0., 0., 60.]
-        geometry.set_axes_values_unit(values_w)
+        geometry.axes_values_set(values_w, Hkl.UnitEnum.USER)
 
         sample = Hkl.Sample.new("toto")
 

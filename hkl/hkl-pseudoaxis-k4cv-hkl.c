@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -87,10 +87,7 @@ static int _constant_omega_f1(const gsl_vector *x, void *params, gsl_vector *f)
 	double const kappa = x->data[1];
 	double omega;
 	HklEngine *engine = params;
-	double omega0;
-	uint shit;
-
-	hkl_parameter_list_values_get(&engine->mode->parameters, &omega0, &shit);
+	double omega0 = darray_item(engine->mode->parameters, 0)->_value;
 
 	CHECK_NAN(x->data, x->size);
 
@@ -113,10 +110,7 @@ static int _constant_omega_f2(const gsl_vector *x, void *params, gsl_vector *f)
 	const double kappa = x->data[1];
 	double omega;
 	HklEngine *engine = params;
-	double omega0;
-	uint shit;
-
-	hkl_parameter_list_values_get(&engine->mode->parameters, &omega0, &shit);
+	double omega0 = darray_item(engine->mode->parameters, 0)->_value;
 
 	CHECK_NAN(x->data, x->size);
 
@@ -138,10 +132,7 @@ static int _constant_chi_f1(const gsl_vector *x, void *params, gsl_vector *f)
 	const double kappa = x->data[1];
 	double chi;
 	HklEngine *engine = params;
-	double chi0;
-	uint shit;
-
-	hkl_parameter_list_values_get(&engine->mode->parameters, &chi0, &shit);
+	double chi0 = darray_item(engine->mode->parameters, 0)->_value;
 
 	CHECK_NAN(x->data, x->size);
 
@@ -163,10 +154,7 @@ static int _constant_chi_f2(const gsl_vector *x, void *params, gsl_vector *f)
 	const double kappa = x->data[1];
 	double chi;
 	HklEngine *engine = params;
-	double chi0;
-	uint shit;
-
-	hkl_parameter_list_values_get(&engine->mode->parameters, &chi0, &shit);
+	double chi0 = darray_item(engine->mode->parameters, 0)->_value;
 
 	CHECK_NAN(x->data, x->size);
 
@@ -189,10 +177,7 @@ static int _constant_phi_f1(const gsl_vector *x, void *params, gsl_vector *f)
 	const double kphi = x->data[2];
 	double phi;
 	HklEngine *engine = params;
-	double phi0;
-	uint shit;
-
-	hkl_parameter_list_values_get(&engine->mode->parameters, &phi0, &shit);
+	double phi0 = darray_item(engine->mode->parameters, 0)->_value;
 
 	CHECK_NAN(x->data, x->size);
 
@@ -215,10 +200,7 @@ static int _constant_phi_f2(const gsl_vector *x, void *params, gsl_vector *f)
 	const double kphi = x->data[2];
 	double phi;
 	HklEngine *engine = params;
-	double phi0;
-	uint shit;
-
-	hkl_parameter_list_values_get(&engine->mode->parameters, &phi0, &shit);
+	double phi0 = darray_item(engine->mode->parameters, 0)->_value;
 
 	CHECK_NAN(x->data, x->size);
 
@@ -244,11 +226,12 @@ static HklMode *bissector(void)
 	static const char* axes[] = {"komega", "kappa", "kphi", "tth"};
 	static const HklFunction *functions[] = {&bissector_f1, &bissector_f2};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO(__func__, axes, functions),
+		HKL_MODE_AUTO_INFO(__func__, axes, axes, functions),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_mode_operations);
+				 &hkl_mode_operations,
+				 TRUE);
 }
 
 static HklMode *constant_omega(void)
@@ -259,11 +242,12 @@ static HklMode *constant_omega(void)
 		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "omega"},
 	};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes, functions, parameters),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_mode_operations);
+				 &hkl_mode_operations,
+				 TRUE);
 }
 
 static HklMode *constant_chi(void)
@@ -274,11 +258,12 @@ static HklMode *constant_chi(void)
 		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "chi"},
 	};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes, functions, parameters),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_mode_operations);
+				 &hkl_mode_operations,
+				 TRUE);
 }
 
 static HklMode *constant_phi(void)
@@ -289,11 +274,12 @@ static HklMode *constant_phi(void)
 		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "phi"},
 	};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes, functions, parameters),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_mode_operations);
+				 &hkl_mode_operations,
+				 TRUE);
 }
 
 static HklMode *double_diffraction(void)
@@ -306,11 +292,12 @@ static HklMode *double_diffraction(void)
 		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, ._value = 1,},
 	};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes, functions, parameters),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &hkl_mode_operations);
+				 &hkl_mode_operations,
+				 TRUE);
 }
 
 static HklMode *psi_constant(void)
@@ -324,11 +311,12 @@ static HklMode *psi_constant(void)
 		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "psi"},
 	};
 	static const HklModeAutoInfo info = {
-		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes, functions, parameters),
 	};
 
 	return hkl_mode_auto_new(&info,
-				 &psi_constant_vertical_mode_operations);
+				 &psi_constant_vertical_mode_operations,
+				 TRUE);
 }
 
 /**********************/
@@ -344,7 +332,7 @@ HklEngine *hkl_engine_k4cv_hkl_new(void)
 
 	default_mode = bissector();
 	hkl_engine_add_mode(self, default_mode);
-	hkl_engine_select_mode(self, default_mode);
+	hkl_engine_mode_set(self, default_mode);
 
 	hkl_engine_add_mode(self, constant_omega());
 	hkl_engine_add_mode(self, constant_chi());

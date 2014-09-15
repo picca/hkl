@@ -24,6 +24,8 @@ Contents:
    diffractometers/med2_3
    diffractometers/mars
    diffractometers/petra3
+   diffractometers/soleil_sirius_turret
+   diffractometers/soleil_sirius_kappa
    pseudo
    bindings/bindings
    development

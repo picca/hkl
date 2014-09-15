@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2013 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -28,7 +28,7 @@
 #include "hkl-vector-private.h"         // for HklVector
 #include "hkl.h"                        // for HklEngine, HklMode, etc
 
-HKL_BEGIN_DECLS
+G_BEGIN_DECLS
 
 typedef struct _HklModePsi HklModePsi;
 typedef struct _HklEnginePsi HklEnginePsi;
@@ -58,6 +58,6 @@ static const HklFunction psi_func = {
 	.size = 4,
 };
 
-HKL_END_DECLS
+G_END_DECLS
 
 #endif /* __HKL_PSEUDOAXIS_COMMON_PSI_PRIVATE_H__ */
