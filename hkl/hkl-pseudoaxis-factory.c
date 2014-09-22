@@ -130,7 +130,6 @@ HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_factory(const HklGeometryCo
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_qper_qpar_new());
 		break;
 	case HKL_GEOMETRY_TYPE_KAPPA6C:
-	case HKL_GEOMETRY_TYPE_SOLEIL_SIRIUS_KAPPA:
 		self->geometries->multiply = hkl_geometry_list_multiply_k6c_real;
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_k6c_hkl_new());
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_eulerians_new());
@@ -164,6 +163,14 @@ HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_factory(const HklGeometryCo
 		break;
 	case HKL_GEOMETRY_TYPE_SOLEIL_SIRIUS_TURRET:
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_soleil_sirius_turret_hkl_new());
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_q2_new());
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_qper_qpar_new());
+		break;
+	case HKL_GEOMETRY_TYPE_SOLEIL_SIRIUS_KAPPA:
+		self->geometries->multiply = hkl_geometry_list_multiply_k6c_real;
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_soleil_sirius_kappa_hkl_new());
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_eulerians_new());
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_soleil_sirius_kappa_psi_new());
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_q2_new());
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_qper_qpar_new());
 		break;
