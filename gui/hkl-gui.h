@@ -47,6 +47,14 @@ struct _HklGuiWindowClass {
 	GObjectClass parent_class;
 };
 
+/* TODO put in a private common header */
+#define get_object(builder, type, priv, name) do{			\
+		priv->_ ## name = type(gtk_builder_get_object(builder, #name));	\
+		if(priv->_ ## name == NULL)				\
+			fprintf(stdout, "%s is NULL ???", #name);	\
+	}while(0);
+
+
 GType hkl_gui_window_get_type (void) G_GNUC_CONST;
 
 HklGuiWindow* hkl_gui_window_new (void);

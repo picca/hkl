@@ -20,18 +20,23 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 
-#include "hkl-gui.h"
-#include <glib.h>
-#include <glib-object.h>
-#include <gtk/gtk.h>
-#include "hkl.h"
-#include "hkl-gui-pseudoaxes.h"
-#include <gdk/gdk.h>
 #include <stdlib.h>
 #include <string.h>
 #include <float.h>
 #include <math.h>
 #include <stdio.h>
+
+#include <glib.h>
+#include <glib-object.h>
+#include <gtk/gtk.h>
+#include <gdk/gdk.h>
+
+#include "hkl.h"
+#include "hkl-gui.h"
+#if HKL3D
+# include "hkl-gui-3d.h"
+#endif
+#include "hkl-gui-pseudoaxes.h"
 
 #define HKL_GUI_TYPE_WINDOW (hkl_gui_window_get_type ())
 #define HKL_GUI_WINDOW(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), HKL_GUI_TYPE_WINDOW, HklGuiWindow))
@@ -110,6 +115,7 @@ typedef enum  {
 /******************/
 
 struct diffractometer_t {
+	HklFactory *factory;
 	HklGeometry *geometry;
 	HklDetector *detector;
 	HklEngineList *engines;
@@ -124,6 +130,7 @@ create_diffractometer(HklFactory *factory)
 
 	self = malloc(sizeof(*self));
 
+	self->factory = factory;
 	self->geometry = hkl_factory_create_new_geometry (factory);
 	self->engines = hkl_factory_create_new_engine_list (factory);
 	self->detector = hkl_detector_factory_new (HKL_DETECTOR_TYPE_0D);
@@ -166,9 +173,9 @@ static void
 diffractometer_set_wavelength(struct diffractometer_t *self,
 			      double wavelength)
 {
-	hkl_geometry_wavelength_set(self->geometry,
-				    wavelength, HKL_UNIT_USER, NULL);
-	hkl_engine_list_get(self->engines);
+	if(hkl_geometry_wavelength_set(self->geometry,
+				       wavelength, HKL_UNIT_USER, NULL))
+		hkl_engine_list_get(self->engines);
 }
 
 static gboolean
@@ -299,6 +306,9 @@ struct _HklGuiWindowPrivate {
 
 	darray(HklGuiEngine *) pseudo_frames;
 
+#if HKL3D
+	HklGui3D *frame3d;
+#endif
 	struct diffractometer_t *diffractometer; /* unowned */
 	HklSample *sample; /* unowned */
 	HklLattice *reciprocal;
@@ -360,13 +370,6 @@ HklGuiWindow* hkl_gui_window_new (void)
 {
 	return g_object_new (HKL_GUI_TYPE_WINDOW, NULL);
 }
-
-
-#define get_object(builder, type, priv, name) do{			\
-		priv->_ ## name = type(gtk_builder_get_object(builder, #name));	\
-		if(priv->_ ## name == NULL)				\
-			fprintf(stdout, "%s is NULL ???", #name);	\
-	}while(0);
 
 static void
 hkl_gui_window_get_widgets_and_objects_from_ui (HklGuiWindow* self)
@@ -939,6 +942,47 @@ set_up_lambda(HklGuiWindow *self)
 							      HKL_UNIT_USER));
 }
 
+static void
+set_up_3D (HklGuiWindow* self)
+{
+#if HKL3D
+
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
+	const char *filename = NULL;
+	const char *name = hkl_factory_name_get(priv->diffractometer->factory);
+
+	if(!strcmp("K6C", name))
+		filename = "../data/diffabs.yaml";
+	else if (!strcmp("K4CV", name))	
+		filename = "../data/cristal4C.yaml";
+
+	if (filename){
+		if(priv->frame3d)
+			g_object_unref(priv->frame3d);
+		priv->frame3d = hkl_gui_3d_new(filename, priv->diffractometer->geometry);
+
+		gtk_box_pack_start (GTK_BOX(priv->_vbox7),
+				    GTK_WIDGET(hkl_gui_3d_frame_get(priv->frame3d)),
+				    TRUE, TRUE, (guint) 0);
+
+		gtk_widget_show_all (GTK_WIDGET(priv->_vbox7));
+	}
+#endif
+}
+
+static void
+update_3d(HklGuiWindow *self)
+{
+#ifdef HKL3D
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
+
+	if(priv->frame3d){
+		hkl_gui_3d_is_colliding(priv->frame3d);
+		hkl_gui_3d_invalidate(priv->frame3d);
+	}
+#endif
+}
+
 /* select diffractometer */
 void
 hkl_gui_window_combobox1_changed_cb(GtkComboBox *combobox, gpointer *user_data)
@@ -976,9 +1020,7 @@ hkl_gui_window_combobox1_changed_cb(GtkComboBox *combobox, gpointer *user_data)
 		set_up_tree_view_pseudo_axes(self);
 		set_up_tree_view_solutions(self);
 		set_up_info_bar(self);
-#if HKL3D
 		set_up_3D(self);
-#endif
 	}
 }
 
@@ -1029,8 +1071,8 @@ hkl_gui_window_cellrendererspin1_edited_cb(GtkCellRendererText *renderer,
 
 	update_pseudo_axes (self);
 	update_pseudo_axes_frames (self);
+	update_3d(self);
 }
-
 
 /* axis min cb */
 void
@@ -1190,6 +1232,7 @@ hkl_gui_window_cellrenderertext5_edited_cb(GtkCellRendererText *renderer,
 		update_pseudo_axes (self);
 		update_pseudo_axes_frames (self);
 		update_solutions (self);
+		update_3d(self);
 	}
 }
 
@@ -1217,114 +1260,55 @@ hkl_gui_window_treeview_solutions_cursor_changed_cb (GtkTreeView *tree_view,
 	update_axes (self);
 	update_pseudo_axes (self);
 	update_pseudo_axes_frames (self);
+	update_3d(self);
 
 	gtk_tree_path_free (path);
 }
 
-/* reflection h */
-void
-hkl_gui_window_cellrenderertext7_edited_cb(GtkCellRendererText* _sender, const gchar* path,
-					   const gchar* new_text, gpointer self)
-{
-	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
-
-	g_return_if_fail (self != NULL);
-	g_return_if_fail (path != NULL);
-	g_return_if_fail (new_text != NULL);
-
-	if (priv->sample){
-		gdouble h = 0.0;
-		gdouble k = 0.0;
-		gdouble l = 0.0;
-		HklSampleReflection* reflection = NULL;
-		GtkTreeIter iter = {0};
-
-		gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(priv->_liststore_reflections),
-						     &iter, path);
-		gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_reflections),
-				    &iter,
-				    REFLECTION_COL_REFLECTION, &reflection,
-				    -1);
-
-		hkl_sample_reflection_hkl_get (reflection, &h, &k, &l);
-		h = atof(new_text);
-		hkl_sample_reflection_hkl_set (reflection, h, k, l, NULL); /* TODO error */
-		gtk_list_store_set (priv->_liststore_reflections,
-				    &iter,
-				    REFLECTION_COL_H, h,
-				    -1);
+/* reflection h k l */
+#define HKL_GUI_WINDOW_CELLRENDERERTEXT_HKL_EDITED_CB(_number, _hkl, _HKL) \
+	void								\
+	hkl_gui_window_cellrenderertext ## _number ## _edited_cb(GtkCellRendererText* _sender, const gchar* path, \
+								 const gchar* new_text, gpointer user_data) \
+	{								\
+		HklGuiWindow *self = HKL_GUI_WINDOW(user_data);		\
+		HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data); \
+									\
+		g_return_if_fail (self != NULL);			\
+		g_return_if_fail (path != NULL);			\
+		g_return_if_fail (new_text != NULL);			\
+									\
+		if (priv->sample){					\
+			gdouble h = 0.0;				\
+			gdouble k = 0.0;				\
+			gdouble l = 0.0;				\
+			HklSampleReflection* reflection = NULL;		\
+			GtkTreeIter iter = {0};				\
+			GError *error = NULL;				\
+									\
+			gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(priv->_liststore_reflections), \
+							     &iter, path); \
+			gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_reflections), \
+					    &iter,			\
+					    REFLECTION_COL_REFLECTION, &reflection, \
+					    -1);			\
+									\
+			hkl_sample_reflection_hkl_get (reflection, &h, &k, &l);	\
+			_hkl = atof(new_text);				\
+			if(!hkl_sample_reflection_hkl_set (reflection, h, k, l, NULL)) \
+				raise_error(self, &error);		\
+			else						\
+				gtk_list_store_set (priv->_liststore_reflections, \
+						    &iter,		\
+						    REFLECTION_COL_ ## _HKL, _hkl, \
+						    -1);		\
+		}							\
 	}
-}
 
-/* reflection k */
-void
-hkl_gui_window_cellrenderertext8_edited_cb (GtkCellRendererText* _sender, const gchar* path,
-					    const gchar* new_text, gpointer self)
-{
-	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
+HKL_GUI_WINDOW_CELLRENDERERTEXT_HKL_EDITED_CB(7, h, H);
+HKL_GUI_WINDOW_CELLRENDERERTEXT_HKL_EDITED_CB(8, k, K);
+HKL_GUI_WINDOW_CELLRENDERERTEXT_HKL_EDITED_CB(9, l, L);
 
-	g_return_if_fail (self != NULL);
-	g_return_if_fail (path != NULL);
-	g_return_if_fail (new_text != NULL);
-
-	if (priv->sample){
-		gdouble h = 0.0;
-		gdouble k = 0.0;
-		gdouble l = 0.0;
-		HklSampleReflection* reflection = NULL;
-		GtkTreeIter iter = {0};
-
-		gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(priv->_liststore_reflections),
-						     &iter, path);
-		gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_reflections),
-				    &iter,
-				    REFLECTION_COL_REFLECTION, &reflection,
-				    -1);
-
-		hkl_sample_reflection_hkl_get (reflection, &h, &k, &l);
-		k = atof(new_text);
-		hkl_sample_reflection_hkl_set (reflection, h, k, l, NULL); /* TODO error */
-		gtk_list_store_set (priv->_liststore_reflections,
-				    &iter,
-				    REFLECTION_COL_K, k,
-				    -1);
-	}
-}
-
-/* reflection l */
-void
-hkl_gui_window_cellrenderertext9_edited_cb (GtkCellRendererText* _sender, const gchar* path,
-					    const gchar* new_text, gpointer self)
-{
-	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
-
-	g_return_if_fail (self != NULL);
-	g_return_if_fail (path != NULL);
-	g_return_if_fail (new_text != NULL);
-
-	if (priv->sample){
-		gdouble h = 0.0;
-		gdouble k = 0.0;
-		gdouble l = 0.0;
-		HklSampleReflection* reflection = NULL;
-		GtkTreeIter iter = {0};
-
-		gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(priv->_liststore_reflections),
-						     &iter, path);
-		gtk_tree_model_get (GTK_TREE_MODEL(priv->_liststore_reflections),
-				    &iter,
-				    REFLECTION_COL_REFLECTION, &reflection,
-				    -1);
-
-		hkl_sample_reflection_hkl_get (reflection, &h, &k, &l);
-		l = atof(new_text);
-		hkl_sample_reflection_hkl_set (reflection, h, k, l, NULL); /* TODO error */
-		gtk_list_store_set (priv->_liststore_reflections,
-				    &iter,
-				    REFLECTION_COL_L, l,
-				    -1);
-	}
-}
 
 /* reflection flag */
 void
@@ -1448,10 +1432,9 @@ hkl_gui_window_toolbutton_goto_reflection_clicked_cb (GtkToolButton* _sender, gp
 					  hkl_sample_reflection_geometry_get(reflection));
 
 			update_source (self);
-
 			update_axes (self);
-
 			update_pseudo_axes (self);
+			update_3d(self);
 
 			g_list_free_full (list, (GDestroyNotify) gtk_tree_path_free);
 		} else
@@ -2116,6 +2099,7 @@ hkl_gui_window_toolbutton_setUB_clicked_cb(GtkToolButton* _sender, gpointer user
 	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
 
 	HklMatrix *UB;
+	GError *error = NULL;
 
 	UB = hkl_matrix_new_full(gtk_spin_button_get_value(priv->_spinbutton_U11),
 				 gtk_spin_button_get_value(priv->_spinbutton_U12),
@@ -2127,18 +2111,22 @@ hkl_gui_window_toolbutton_setUB_clicked_cb(GtkToolButton* _sender, gpointer user
 				 gtk_spin_button_get_value(priv->_spinbutton_U32),
 				 gtk_spin_button_get_value(priv->_spinbutton_U33));
 
-	hkl_sample_UB_set (priv->sample, UB, NULL);
-	if(priv->diffractometer)
-		diffractometer_set_sample(priv->diffractometer,
-					  priv->sample);
+	if(!hkl_sample_UB_set (priv->sample, UB, &error))
+		raise_error(self, &error);
+	else{
+		if(priv->diffractometer){
+			diffractometer_set_sample(priv->diffractometer,
+						  priv->sample);
 
-	update_lattice (self);
-	update_crystal_model (self);
-	update_reciprocal_lattice (self);
-	update_UB (self);
-	update_ux_uy_uz (self);
-	update_pseudo_axes (self);
-	update_pseudo_axes_frames (self);
+			update_lattice (self);
+			update_crystal_model (self);
+			update_reciprocal_lattice (self);
+			update_UB (self);
+			update_ux_uy_uz (self);
+			update_pseudo_axes (self);
+			update_pseudo_axes_frames (self);
+		}
+	}
 
 	hkl_matrix_free(UB);
 }
@@ -2286,86 +2274,6 @@ static gboolean _hkl_gui_window_on_tree_view_crystals_key_press_event_gtk_widget
 
 }
 
-static void hkl_gui_window_set_up_3D (HklGuiWindow* self) {
-	HklGeometry* _tmp0_;
-	HklGeometryConfig* _tmp1_;
-	HklGeometryType _tmp2_;
-	GtkVBox* _tmp7_;
-	HklGui3DFrame* _tmp8_;
-	GtkFrame* _tmp9_ = NULL;
-	GtkFrame* _tmp10_;
-	GtkVBox* _tmp11_;
-
-	g_return_if_fail (self != NULL);
-
-	_tmp0_ = priv->geometry;
-
-	_tmp1_ = _tmp0_->config;
-
-	_tmp2_ = (*_tmp1_).type;
-
-	switch (_tmp2_) {
-
-	case HKL_GEOMETRY_TYPE_KAPPA6C:
-
-	{
-		HklGeometry* _tmp3_;
-		HklGui3DFrame* _tmp4_;
-
-		_tmp3_ = priv->geometry;
-
-		_tmp4_ = hkl_gui_3d_frame_new ("../data/diffabs.yaml", _tmp3_);
-
-		_g_object_unref0 (priv->Frame3D);
-
-		priv->Frame3D = _tmp4_;
-
-		break;
-
-	}
-
-	case HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL:
-
-	{
-		HklGeometry* _tmp5_;
-		HklGui3DFrame* _tmp6_;
-
-		_tmp5_ = priv->geometry;
-
-		_tmp6_ = hkl_gui_3d_frame_new ("../data/cristal4C.yaml", _tmp5_);
-
-		_g_object_unref0 (priv->Frame3D);
-
-		priv->Frame3D = _tmp6_;
-
-		break;
-
-	}
-	default:
-
-		break;
-
-	}
-
-	_tmp7_ = priv->_vbox7;
-
-	_tmp8_ = priv->Frame3D;
-
-	_tmp9_ = hkl_gui_3d_frame_frame (_tmp8_);
-
-	_tmp10_ = _tmp9_;
-
-	gtk_box_pack_start ((GtkBox*) _tmp7_, (GtkWidget*) _tmp10_, TRUE, TRUE, (guint) 0);
-
-	_g_object_unref0 (_tmp10_);
-
-	_tmp11_ = priv->_vbox7;
-
-	gtk_widget_show_all ((GtkWidget*) _tmp11_);
-
-}
-
-
 static gboolean hkl_gui_window_on_tree_view_crystals_key_press_event (GdkEventKey* event, HklGuiWindow* self) {
 	gboolean result = FALSE;
 
@@ -2416,6 +2324,9 @@ static void hkl_gui_window_init (HklGuiWindow * self)
 int main (int argc, char ** argv)
 {
 	gtk_init (&argc, &argv);
+#ifdef HKL3D
+	hkl_gui_3d_scene_gl_init(&argc, &argv);
+#endif
 
 	hkl_gui_window_new ();
 

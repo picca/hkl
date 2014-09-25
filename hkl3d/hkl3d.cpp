@@ -254,6 +254,19 @@ static void hkl3d_object_set_axis_name(Hkl3DObject *self, const char *name)
 	self->axis_name = strdup(name);
 }
 
+static void matrix_fprintf(FILE *f, const float matrix[])
+{
+	fprintf(f, "transformation : ");
+	for(uint i=0; i<4; ++i){
+		if(i)
+			fprintf(f, "                 ");
+		for(uint j=0; j<4; ++j){
+			fprintf(f, " %6.3f", matrix[4 * i + j]);
+		}
+		fprintf(f, "\n");
+	}
+}
+
 void hkl3d_object_fprintf(FILE *f, const Hkl3DObject *self)
 {
 	GSList *faces;
@@ -264,8 +277,10 @@ void hkl3d_object_fprintf(FILE *f, const Hkl3DObject *self)
 	fprintf(f, "id : %d\n", self->id);
 	fprintf(f, "name : %s (%p)\n", self->axis_name, self->axis_name);
 	fprintf(f, "axis : %p\n", self->axis);
+	matrix_fprintf(f, self->transformation);
 	fprintf(f, "btObject : %p\n", self->btObject);
 	fprintf(f, "g3d : %p\n", self->g3d);
+	matrix_fprintf(f, self->g3d->transformation->matrix);
 	fprintf(f, "btShape : %p\n", self->btShape);
 	fprintf(f, "meshes : %p\n", self->meshes);
 	fprintf(f, "color : %f, %f, %f\n", material->r, material->g, material->b);

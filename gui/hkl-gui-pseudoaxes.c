@@ -141,7 +141,6 @@ hkl_gui_engine_get_frame(HklGuiEngine *self)
 	return priv->frame1;
 }
 
-
 static void
 update_pseudo_axis (HklGuiEngine* self)
 {

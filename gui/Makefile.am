@@ -19,17 +19,17 @@ AM_LDFLAGS = \
 	$(GLIB_LIBS) \
 	$(GTK_LIBS)
 
-AM_VALAFLAGS = --pkg gtk+-2.0 --pkg gee-1.0 --pkg posix -D HKL3D -D PKGDATA=\""$(pkgdatadir)"\" --girdir=$(top_builddir)/hkl
-
-hkl.vapi: $(top_builddir)/hkl/Hkl-@VMAJ@.0.gir
-	vapigen --library hkl $<
-
 ghkl_LDADD = \
 	$(top_builddir)/hkl/libhkl.la
 
 ghkl_SOURCES = \
 	hkl-gui-pseudoaxes.c \
 	hkl-gui.c
+
+dist_pkgdata_DATA = ghkl.ui pseudo.ui
+
+appldir = ${datadir}/applications
+dist_appl_DATA = ghkl.desktop
 
 if HKL3D
 AM_CFLAGS += \
@@ -51,22 +51,11 @@ ghkl_LDADD += \
 	$(top_builddir)/gui/hkl3d/libhkl3d-gui.la
 
 
-ghkl_SOURCES += \
-	gtkglext-1.0.vapi \
-	gl.vapi \
-	hkl3d.vapi \
-	trackball.vapi \
-	g3d.vapi \
-	hkl3d-gui-scene.vala \
-	hkl3d-gui-view.vala \
-	hkl3d-gui-model.vala \
-	hkl-gui-3d.vala
+ghkl_SOURCES += hkl-gui-3d.c
+
+dist_pkgdata_DATA += 3d.ui
+
 endif
-
-dist_pkgdata_DATA = ghkl.ui pseudo.ui
-
-appldir = ${datadir}/applications
-dist_appl_DATA = ghkl.desktop
 
 # Support for GNU Flymake, in Emacs.
 check-syntax: AM_CFLAGS += -fsyntax-only -pipe

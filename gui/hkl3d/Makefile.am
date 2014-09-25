@@ -24,18 +24,20 @@ AM_LDFLAGS = \
 
 noinst_LTLIBRARIES = libhkl3d-gui.la
 libhkl3d_gui_la_SOURCES = \
+	texture.h \
+	texture.c \
+	hkl3d-gui-gl.h \
+	hkl3d-gui-gl.cpp \
+	hkl3d-gui-view.h \
+	hkl3d-gui-view.cpp \
+	hkl3d-gui-model.h \
+	hkl3d-gui-model.cpp \
+	hkl3d-gui-scene.h \
+	hkl3d-gui-scene.cpp \
 	trackball.h \
-	trackball.c
-#	texture.h \
-#	texture.c \
-#	hkl3d-gui-gl.h \
-#	hkl3d-gui-gl.c \
-#	hkl3d-gui-model.h \
-#	hkl3d-gui-model.cpp \
-#	trackball.h \
-#	trackball.c \
-#	GL_ShapeDrawer.h \
-#	GL_ShapeDrawer.cpp
+	trackball.c \
+	GL_ShapeDrawer.h \
+	GL_ShapeDrawer.cpp
 
 # Support for GNU Flymake, in Emacs.
 check-syntax: AM_CXXFLAGS += -fsyntax-only -pipe
