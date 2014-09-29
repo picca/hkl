@@ -820,8 +820,8 @@ hkl_gui_3d_drawingarea1_motion_notify_event_cb(GtkWidget *drawing_area,
 		if(state & GDK_SHIFT_MASK)
 		{
 			/* shift pressed, translate view */
-			priv->renderoptions.offx += (x - priv->mouse.beginx) / (priv->renderoptions.zoom * priv->renderoptions.zoom * priv->renderoptions.zoom);
-			priv->renderoptions.offy -= (y - priv->mouse.beginy) / (priv->renderoptions.zoom * priv->renderoptions.zoom * priv->renderoptions.zoom);
+			priv->renderoptions.offx += (float)(x - priv->mouse.beginx) / alloc.width / priv->renderoptions.zoom;
+			priv->renderoptions.offy -= (float)(y - priv->mouse.beginy) / alloc.height / priv->renderoptions.zoom;
 		}
 		else
 		{
