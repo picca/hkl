@@ -686,7 +686,6 @@ void gl_draw(G3DGLRenderOptions *options, G3DModel *model)
 	G3DVector plane[3] = { 0.0, -20.0, 0.0 };
 	G3DVector normal[3] = { 0.0, -1.0, 0.0 };
 
-
 	if(!options->initialized)
 	{
 		gl_init();
@@ -697,7 +696,7 @@ void gl_draw(G3DGLRenderOptions *options, G3DModel *model)
 	}
 
 	/* prepare viewport */
-	//gl_setup_view(options);
+	gl_setup_view(options);
 
 	/* reset texture */
 	glBindTexture (GL_TEXTURE_2D, 0);
@@ -742,7 +741,6 @@ void gl_draw(G3DGLRenderOptions *options, G3DModel *model)
 			gl_draw_objects(options, model->objects, 0.0, 1.0, TRUE);
 			glEndList();
 		}
-
 	}
 
 	g_return_if_fail(options->state != NULL);
@@ -789,9 +787,7 @@ void gl_draw(G3DGLRenderOptions *options, G3DModel *model)
 	/* execute display list */
 	glCallList(options->state->gl_dlist);
 
-
-/* get time to draw one frame to compare algorithms */
-#ifdef TIMING
+#ifdef TIMING /* get time to draw one frame to compare algorithms */
 	g_timer_stop(timer);
 
 	if(!ignore_timing) {

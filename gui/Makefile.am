@@ -41,7 +41,7 @@ AM_CFLAGS += \
 	$(G3D_CFLAGS) \
 	$(GTKGLEXT_CFLAGS)
 
-AM_LDFLAGS += \
+AM_LDFLAGS += -lstdc++\
 	$(G3D_LIBS) \
 	$(GTKGLEXT_LIBS)
 
@@ -51,7 +51,8 @@ ghkl_LDADD += \
 	$(top_builddir)/gui/hkl3d/libhkl3d-gui.la
 
 
-ghkl_SOURCES += hkl-gui-3d.c
+ghkl_SOURCES += \
+	hkl-gui-3d.c
 
 dist_pkgdata_DATA += 3d.ui
 
