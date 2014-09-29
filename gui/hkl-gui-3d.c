@@ -482,7 +482,7 @@ enum DisplayList {
 	HIGHLIGHT
 };
 
-static void hkl3d_GL_draw_g3dmodel(HklGui3D *self)
+static void hkl_gui_3d_draw_g3dmodel(HklGui3D *self)
 {
 	int i;
 	int j;
@@ -513,6 +513,86 @@ static void hkl3d_GL_draw_g3dmodel(HklGui3D *self)
 	gl_draw(&priv->renderoptions, priv->hkl3d->model);
 }
 
+static void draw_g3dObject(G3DObject *object)
+{
+	GSList *faces;
+	G3DFace *face;
+	float *vertex;
+
+	faces = object->faces;
+	vertex = object->vertex_data;
+
+	glPushMatrix();
+
+	/* apply the transformation of the object */
+	if(object->transformation)
+		glMultMatrixf(object->transformation->matrix);
+
+	/* draw all faces with the current stencil */
+	while(faces){
+		G3DFace * face;
+
+		face = (G3DFace*)faces->data;
+		glBegin(GL_TRIANGLES);
+		glVertex3d(vertex[3*(face->vertex_indices[0])],
+			   vertex[3*(face->vertex_indices[0])+1],
+			   vertex[3*(face->vertex_indices[0])+2]);
+		glVertex3d(vertex[3*(face->vertex_indices[1])],
+			   vertex[3*(face->vertex_indices[1])+1],
+			   vertex[3*(face->vertex_indices[1])+2]);
+		glVertex3d(vertex[3*(face->vertex_indices[2])],
+			   vertex[3*(face->vertex_indices[2])+1],
+			   vertex[3*(face->vertex_indices[2])+2]);
+		glEnd();
+		faces = g_slist_next(faces);
+	}
+
+	glPopMatrix();
+}
+
+void hkl_gui_3d_draw_selected(HklGui3D *self)
+{
+	int i;
+	int j;
+	HklGui3DPrivate *priv = HKL_GUI_3D_GET_PRIVATE(self);
+
+	/* glDisable(GL_LIGHTING); */
+
+	for(i=0; i<priv->hkl3d->config->len; i++)
+		for(j=0; j<priv->hkl3d->config->models[i]->len; j++){
+			if(priv->hkl3d->config->models[i]->objects[j]->selected
+			   && !priv->hkl3d->config->models[i]->objects[j]->hide){
+				// Push the GL attribute bits so that we don't wreck any settings
+				glPushAttrib( GL_ALL_ATTRIB_BITS );
+
+				// Enable polygon offsets, and offset filled polygons forward by 2.5
+				glEnable( GL_POLYGON_OFFSET_FILL );
+				glPolygonOffset( -2.5, -2.5);
+
+				// Set the render mode to be line rendering with a thick line width
+				glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+				glLineWidth( 3.f );
+				// Set the colour to be pink
+				glColor3f( 1.f, .0f, 1.f );
+				// Render the object
+				draw_g3dObject(priv->hkl3d->config->models[i]->objects[j]->g3d);
+				// Set the polygon mode to be filled triangles
+				glLineWidth( 1.f );
+				glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+				// Set the colour to the background
+				glCullFace(GL_FRONT);
+				glColor3f( 0.0f, 0.0f, 0.0f );
+				// Render the object
+				draw_g3dObject(priv->hkl3d->config->models[i]->objects[j]->g3d);
+
+				// Pop the state changes off the attribute
+				// to set things back how they were
+				glPopAttrib();
+			}
+		}
+	/* glEnable(GL_LIGHTING); */
+}
+
 gboolean
 hkl_gui_3d_drawingarea1_expose_cb(GtkWidget *drawing_area, GdkEventExpose *event, gpointer user_data)
 {
@@ -530,7 +610,8 @@ hkl_gui_3d_drawingarea1_expose_cb(GtkWidget *drawing_area, GdkEventExpose *event
 	glViewport(0,0, alloc.width, alloc.height);
 	priv->renderoptions.aspect = (gfloat)alloc.width / (gfloat)alloc.height;
 
-	hkl3d_GL_draw_g3dmodel(self);
+	hkl_gui_3d_draw_g3dmodel(self);
+	hkl_gui_3d_draw_selected(self);
 	/* this->model->draw_bullet(); */
 	/* this->model->draw_collisions(); */
 	/* this->model->draw_AAbbBoxes(); */
