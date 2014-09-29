@@ -593,6 +593,85 @@ void hkl_gui_3d_draw_selected(HklGui3D *self)
 	/* glEnable(GL_LIGHTING); */
 }
 
+static void draw_sphere(float radius, int lats, int longs)
+{
+	int i, j;
+	for(i=0;i<=lats;i++){
+		float lat0 = M_PI * (-0.5 + (float) (i - 1) / lats);
+		float z0  = radius * sin(lat0);
+		float zr0 =  radius * cos(lat0);
+
+		float lat1 = M_PI * (-0.5 + (float) i / lats);
+		float z1 = radius * sin(lat1);
+		float zr1 = radius * cos(lat1);
+
+		glBegin(GL_QUAD_STRIP);
+		for(j=0;j<=longs;j++) {
+			float lng = 2 * M_PI * (float) (j - 1) / longs;
+			float x = cos(lng);
+			float y = sin(lng);
+
+			glNormal3f(x * zr1, y * zr1, z1);
+			glVertex3f(x * zr1, y * zr1, z1);
+			glNormal3f(x * zr0, y * zr0, z0);
+			glVertex3f(x * zr0, y * zr0, z0);
+		}
+		glEnd();
+	}
+}
+
+void hkl_gui_3d_draw_collisions(HklGui3D *self)
+{
+	int i;
+	int numManifolds;
+	gboolean isColliding;
+	float m[16];
+	HklGui3DPrivate *priv = HKL_GUI_3D_GET_PRIVATE(self);
+
+	/* glDisable(GL_LIGHTING); */
+	///one way to draw all the contact points is iterating over contact manifolds / points:
+	numManifolds = hkl3d_get_nb_manifolds(priv->hkl3d);
+	for (i=0; i<numManifolds; i++){
+		int numContacts;
+		int j;
+
+		// now draw the manifolds / points
+		numContacts = hkl3d_get_nb_contacts(priv->hkl3d, i);
+		for (j=0; j<numContacts; j++){
+			double xa, ya, za;
+			double xb, yb, zb;
+
+			hkl3d_get_collision_coordinates(priv->hkl3d, i, j,
+							&xa, &ya, &za, &xb, &yb, &zb);
+
+			glDisable(GL_DEPTH_TEST);
+			glBegin(GL_LINES);
+			glColor4f(0, 0, 0, 1);
+			glVertex3d(xa, ya, za);
+			glVertex3d(xb, yb, zb);
+			glEnd();
+			glColor4f(1, 0, 0, 1);
+			glPushMatrix();
+			glTranslatef (xb, yb, zb);
+			glScaled(0.05,0.05,0.05);
+
+			draw_sphere(1, 10, 10);
+
+			glPopMatrix();
+			glColor4f(1, 1, 0, 1);
+			glPushMatrix();
+			glTranslatef (xa, ya, za);
+			glScaled(0.05,0.05,0.05);
+
+			draw_sphere(1, 10, 10);
+
+			glPopMatrix();
+			glEnable(GL_DEPTH_TEST);
+		}
+	}
+	glFlush();
+}
+
 gboolean
 hkl_gui_3d_drawingarea1_expose_cb(GtkWidget *drawing_area, GdkEventExpose *event, gpointer user_data)
 {
@@ -612,6 +691,8 @@ hkl_gui_3d_drawingarea1_expose_cb(GtkWidget *drawing_area, GdkEventExpose *event
 
 	hkl_gui_3d_draw_g3dmodel(self);
 	hkl_gui_3d_draw_selected(self);
+	hkl_gui_3d_draw_collisions(self);
+
 	/* this->model->draw_bullet(); */
 	/* this->model->draw_collisions(); */
 	/* this->model->draw_AAbbBoxes(); */
@@ -739,12 +820,8 @@ hkl_gui_3d_drawingarea1_motion_notify_event_cb(GtkWidget *drawing_area,
 		if(state & GDK_SHIFT_MASK)
 		{
 			/* shift pressed, translate view */
-			priv->renderoptions.offx +=
-				(gdouble)(x - priv->mouse.beginx) /
-				(gdouble)(priv->renderoptions.zoom * 10);
-			priv->renderoptions.offy -=
-				(gdouble)(y - priv->mouse.beginy) /
-				(gdouble)(priv->renderoptions.zoom * 10);
+			priv->renderoptions.offx += (x - priv->mouse.beginx) / (priv->renderoptions.zoom * priv->renderoptions.zoom * priv->renderoptions.zoom);
+			priv->renderoptions.offy -= (y - priv->mouse.beginy) / (priv->renderoptions.zoom * priv->renderoptions.zoom * priv->renderoptions.zoom);
 		}
 		else
 		{
