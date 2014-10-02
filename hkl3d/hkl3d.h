@@ -85,6 +85,7 @@ extern "C" {
 		float transformation[16];
 	};
 
+	extern void hkl3d_object_aabb_get(const Hkl3DObject *self, float from[3], float to[3]);
 	extern void hkl3d_object_fprintf(FILE *f, const Hkl3DObject *self);
 
 	/**************/

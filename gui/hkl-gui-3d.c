@@ -672,6 +672,87 @@ void hkl_gui_3d_draw_collisions(HklGui3D *self)
 	glFlush();
 }
 
+static void draw_line(const float from[3], const float to[3],
+		      const float fromColor[3], const float toColor[3])
+{
+	glBegin(GL_LINES);
+	glColor3f(fromColor[0], fromColor[1], fromColor[2]);
+	glVertex3d(from[0], from[1], from[2]);
+	glColor3f(toColor[0], toColor[1], toColor[2]);
+	glVertex3d(to[0], to[1], to[2]);
+	glEnd();
+}
+
+static void draw_aabb(const float from[3], const float to[3], const float color[3])
+{
+	float halfExtents[3] = {
+		(to[0] - from[0]) * .5,
+		(to[1] - from[1]) * .5,
+		(to[2] - from[2]) * .5
+	};
+	float center[3] = {
+		(to[0] + from[0]) * .5,
+		(to[1] + from[1]) * .5,
+		(to[2] + from[2]) * .5
+	};
+	int i, j;
+
+	float edgecoord[3] = {1., 1., 1.};
+
+	for (i=0;i<4;i++){
+		for (j=0;j<3;j++){
+			float pa[3] = {
+				edgecoord[0] * halfExtents[0] + center[0],
+				edgecoord[1] * halfExtents[1] + center[1],
+				edgecoord[2] * halfExtents[2] + center[2]
+			};
+
+			int othercoord = j % 3;
+			edgecoord[othercoord] *= -1.f;
+
+			float pb[3] = {
+				edgecoord[0] * halfExtents[0] + center[0],
+				edgecoord[1] * halfExtents[1] + center[1],
+				edgecoord[2] * halfExtents[2] + center[2]
+			};
+			draw_line(pa, pb, color, color);
+		}
+		edgecoord[0] = -1;
+		edgecoord[1] = -1;
+		edgecoord[2] = -1;
+		if (i < 3)
+			edgecoord[i] *= -1;
+	}
+}
+
+static void
+hkl_gui_3d_draw_aabb_object(const Hkl3DObject *self)
+{
+	GLfloat from[3];
+	GLfloat to[3];
+	GLfloat color[3] = {1, 0, 0};
+
+	if(self->hide)
+		return;
+
+	hkl3d_object_aabb_get(self, from, to);
+	draw_aabb(from, to, color);
+}
+
+void
+hkl_gui_3d_draw_aabb(const HklGui3D *self)
+{
+	int i;
+	int j;
+	HklGui3DPrivate *priv = HKL_GUI_3D_GET_PRIVATE(self);
+
+	/* glDisable(GL_LIGHTING); */
+	for(i=0; i<priv->hkl3d->config->len; i++)
+		for(j=0; j<priv->hkl3d->config->models[i]->len; j++)
+			hkl_gui_3d_draw_aabb_object(priv->hkl3d->config->models[i]->objects[j]);
+	glFlush();
+}
+
 gboolean
 hkl_gui_3d_drawingarea1_expose_cb(GtkWidget *drawing_area, GdkEventExpose *event, gpointer user_data)
 {
@@ -692,6 +773,7 @@ hkl_gui_3d_drawingarea1_expose_cb(GtkWidget *drawing_area, GdkEventExpose *event
 	hkl_gui_3d_draw_g3dmodel(self);
 	hkl_gui_3d_draw_selected(self);
 	hkl_gui_3d_draw_collisions(self);
+	hkl_gui_3d_draw_aabb(self);
 
 	/* this->model->draw_bullet(); */
 	/* this->model->draw_collisions(); */

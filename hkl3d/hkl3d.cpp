@@ -267,6 +267,20 @@ static void matrix_fprintf(FILE *f, const float matrix[])
 	}
 }
 
+void hkl3d_object_aabb_get(const Hkl3DObject *self, float from[3], float to[3])
+{
+	btVector3 min, max;
+
+	self->btShape->getAabb(self->btObject->getWorldTransform(), min, max);
+
+	from[0] = min.getX();
+	from[1] = min.getY();
+	from[2] = min.getZ();
+	to[0] = max.getX();
+	to[1] = max.getY();
+	to[2] = max.getZ();
+}
+
 void hkl3d_object_fprintf(FILE *f, const Hkl3DObject *self)
 {
 	GSList *faces;
