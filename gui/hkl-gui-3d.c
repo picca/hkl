@@ -94,6 +94,7 @@ struct _HklGui3DPrivate {
 	GtkTreeView *_treeview1;
 	GtkToolButton *_toolbutton1;
 	GtkToolButton *_toolbutton2;
+	GtkToolButton *_toolbutton3;
 	GtkFileChooserDialog *_filechooserdialog1;
 	GtkButton *_button1;
 	GtkButton *_button2;
@@ -109,6 +110,7 @@ struct _HklGui3DPrivate {
 		gint32 beginx;
 		gint32 beginy;
 	} mouse;
+	gboolean aabb;
 };
 
 G_DEFINE_TYPE (HklGui3D, hkl_gui_3d, G_TYPE_OBJECT);
@@ -133,7 +135,7 @@ static void hkl_gui_3d_update_hkl3d_objects_TreeStore(HklGui3D *self)
 				   HKL_GUI_3D_COL_MODEL, priv->hkl3d->config->models[i],
 				   HKL_GUI_3D_COL_OBJECT, NULL,
 				   -1);
-		
+
 		for(j=0; j<priv->hkl3d->config->models[i]->len; ++j){
 			GtkTreeIter citer = {0};
 
@@ -353,7 +355,7 @@ void hkl_gui_3d_cellrenderertext2_toggled_cb(GtkCellRendererToggle* renderer,
 						    &children,
 						    HKL_GUI_3D_COL_HIDE, hide,
 						    -1);
-				
+
 				valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(priv->_treestore1), &children);
 			}
 			hkl_gui_3d_is_colliding(self);
@@ -428,6 +430,57 @@ void hkl_gui_3d_toolbutton2_clicked_cb(GtkToolButton *toolbutton,
 		hkl_gui_3d_update_hkl3d_objects_TreeStore(self);
 		hkl_gui_3d_invalidate(self);
 	}
+}
+
+static void
+reset_3d(G3DGLRenderOptions *renderoptions)
+{
+	/* renderoptions */
+	renderoptions->updated = TRUE;
+	renderoptions->initialized = FALSE;
+        renderoptions->zoom = 7;
+        renderoptions->bgcolor[0] = 0.9;
+        renderoptions->bgcolor[1] = 0.8;
+        renderoptions->bgcolor[2] = 0.6;
+        renderoptions->bgcolor[3] = 1.0;
+	renderoptions->glflags =
+//		G3D_FLAG_GL_ISOMETRIC |
+		G3D_FLAG_GL_SPECULAR |
+		G3D_FLAG_GL_SHININESS |
+		G3D_FLAG_GL_TEXTURES |
+		G3D_FLAG_GL_COLORS|
+		G3D_FLAG_GL_COORD_AXES;
+
+        g3d_quat_trackball(renderoptions->quat, 0.0, 0.0, 0.0, 0.0, 0.8);
+
+	/* rotate a little bit */
+	gfloat q1[4], q2[4];
+	gfloat a1[3] = { 0.0, 1.0, 0.0 }, a2[3] = {1.0, 0.0, 1.0};
+
+	g3d_quat_rotate(q1, a1, - 45.0 * G_PI / 180.0);
+	g3d_quat_rotate(q2, a2, - 45.0 * G_PI / 180.0);
+	g3d_quat_add(renderoptions->quat, q1, q2);
+}
+
+/* re-initialize the 3d view */
+void hkl_gui_3d_toolbutton3_clicked_cb(GtkToolButton *toolbutton,
+				       gpointer user_data)
+{
+	HklGui3D *self = user_data;
+	HklGui3DPrivate *priv = HKL_GUI_3D_GET_PRIVATE(user_data);
+
+	reset_3d(&priv->renderoptions);
+	hkl_gui_3d_invalidate(self);
+}
+
+void hkl_gui_3d_toolbutton4_toggled_cb(GtkToggleToolButton *toggle_tool_button,
+				       gpointer user_data)
+{
+	HklGui3D *self = user_data;
+	HklGui3DPrivate *priv = HKL_GUI_3D_GET_PRIVATE(user_data);
+
+	priv->aabb = gtk_toggle_tool_button_get_active(toggle_tool_button);
+	hkl_gui_3d_invalidate(self);
 }
 
 void hkl_gui_3d_button1_clicked_cb(GtkButton *button,
@@ -746,12 +799,53 @@ hkl_gui_3d_draw_aabb(const HklGui3D *self)
 	int j;
 	HklGui3DPrivate *priv = HKL_GUI_3D_GET_PRIVATE(self);
 
-	/* glDisable(GL_LIGHTING); */
 	for(i=0; i<priv->hkl3d->config->len; i++)
 		for(j=0; j<priv->hkl3d->config->models[i]->len; j++)
 			hkl_gui_3d_draw_aabb_object(priv->hkl3d->config->models[i]->objects[j]);
 	glFlush();
 }
+
+
+/* void hkl_gui_3d_draw_bullet_object(const Hkl3DObject *self) */
+/* { */
+/* 	int i; */
+/* 	int j; */
+/* 	btScalar m[16]; */
+/* 	btVector3 worldBoundsMin; */
+/* 	btVector3 worldBoundsMax; */
+/* 	btVector3 aabbMin,aabbMax; */
+
+/* 	/\* get the bounding box from bullet *\/ */
+/* 	hkl3d_get_bounding_boxes(_hkl3d, &worldBoundsMin, &worldBoundsMax); */
+
+/* 	object = _hkl3d->config->models[i]->objects[j]; */
+/* 	if(!object->hide){ */
+/* 		btCollisionObject *btObject; */
+
+/* 		btObject = object->btObject; */
+/* 		btObject->getWorldTransform().getOpenGLMatrix( m ); */
+/* 		m_shapeDrawer.drawOpenGL(m, */
+/* 					 btObject->getCollisionShape(), */
+/* 					 *object->color, */
+/* 					 0, /\* debug mode *\/ */
+/* 					 worldBoundsMin, */
+/* 					 worldBoundsMax); */
+/* 	} */
+/* 	glFlush(); */
+/* } */
+
+/* void */
+/* hkl_gui_3d_draw_bullet(const HklGui3D *self) */
+/* { */
+/* 	int i; */
+/* 	int j; */
+/* 	HklGui3DPrivate *priv = HKL_GUI_3D_GET_PRIVATE(self); */
+
+/* 	for(i=0; i<priv->hkl3d->config->len; i++) */
+/* 		for(j=0; j<priv->hkl3d->config->models[i]->len; j++) */
+/* 			hkl_gui_3d_draw_bullet_object(priv->hkl3d->config->models[i]->objects[j]); */
+/* 	glFlush(); */
+/* } */
 
 gboolean
 hkl_gui_3d_drawingarea1_expose_cb(GtkWidget *drawing_area, GdkEventExpose *event, gpointer user_data)
@@ -773,13 +867,10 @@ hkl_gui_3d_drawingarea1_expose_cb(GtkWidget *drawing_area, GdkEventExpose *event
 	hkl_gui_3d_draw_g3dmodel(self);
 	hkl_gui_3d_draw_selected(self);
 	hkl_gui_3d_draw_collisions(self);
-	hkl_gui_3d_draw_aabb(self);
+	if(priv->aabb)
+		hkl_gui_3d_draw_aabb(self);
+	/* hkl_gui_3d_draw_bullet(self); */
 
-	/* this->model->draw_bullet(); */
-	/* this->model->draw_collisions(); */
-	/* this->model->draw_AAbbBoxes(); */
-	/* this->model->draw_selected(); */
-	
 	/* swap buffer if we're using double-buffering */
 	if (gdk_gl_drawable_is_double_buffered(gl_drawable))
 		gdk_gl_drawable_swap_buffers(gl_drawable);
@@ -1013,6 +1104,7 @@ static void hkl_gui_3d_init (HklGui3D * self)
 	get_object(builder, GTK_TREE_VIEW, priv, treeview1);
 	get_object(builder, GTK_TOOL_BUTTON, priv, toolbutton1);
 	get_object(builder, GTK_TOOL_BUTTON, priv, toolbutton2);
+	get_object(builder, GTK_TOOL_BUTTON, priv, toolbutton3);
 	get_object(builder, GTK_FILE_CHOOSER_DIALOG, priv, filechooserdialog1);
 	get_object(builder, GTK_BUTTON, priv, button1);
 	get_object(builder, GTK_BUTTON, priv, button2);
@@ -1024,32 +1116,8 @@ static void hkl_gui_3d_init (HklGui3D * self)
 	/* OPENGL */
 
 	/* renderoptions */
-	renderoptions.updated = TRUE;
-	renderoptions.initialized = FALSE;
-        renderoptions.zoom = 7;
-        renderoptions.bgcolor[0] = 0.9;
-        renderoptions.bgcolor[1] = 0.8;
-        renderoptions.bgcolor[2] = 0.6;
-        renderoptions.bgcolor[3] = 1.0;
-	renderoptions.glflags =
-//		G3D_FLAG_GL_ISOMETRIC |
-		G3D_FLAG_GL_SPECULAR |
-		G3D_FLAG_GL_SHININESS |
-		G3D_FLAG_GL_TEXTURES |
-		G3D_FLAG_GL_COLORS|
-		G3D_FLAG_GL_COORD_AXES;
-
-        g3d_quat_trackball(renderoptions.quat, 0.0, 0.0, 0.0, 0.0, 0.8);
-
-	/* rotate a little bit */
-	gfloat q1[4], q2[4];
-	gfloat a1[3] = { 0.0, 1.0, 0.0 }, a2[3] = {1.0, 0.0, 1.0};
-	
-	g3d_quat_rotate(q1, a1, - 45.0 * G_PI / 180.0);
-	g3d_quat_rotate(q2, a2, - 45.0 * G_PI / 180.0);
-	g3d_quat_add(renderoptions.quat, q1, q2);
-
-	priv->renderoptions = renderoptions;
+	reset_3d(&priv->renderoptions);
+	priv->aabb = FALSE;
 
 	/* gtk_gl_init(NULL, NULL); */
 
