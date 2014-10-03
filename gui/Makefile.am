@@ -1,7 +1,3 @@
-if HKL3D
-SUBDIRS = hkl3d
-endif
-
 bin_PROGRAMS = ghkl
 
 AM_CFLAGS = \
@@ -24,7 +20,9 @@ ghkl_LDADD = \
 
 ghkl_SOURCES = \
 	hkl-gui-pseudoaxes.c \
-	hkl-gui.c
+	hkl-gui-pseudoaxes.h \
+	hkl-gui.c \
+	hkl-gui.h
 
 dist_pkgdata_DATA = ghkl.ui pseudo.ui
 
@@ -35,8 +33,6 @@ if HKL3D
 AM_CFLAGS += \
 	-I$(top_srcdir)/hkl3d \
 	-I$(top_srcdir)/hkl3d/bullet/src \
-	-I$(top_srcdir)/gui/hkl3d \
-	-I$(top_srcdir)/gui/OpenGL \
 	-DHKL3D \
 	$(G3D_CFLAGS) \
 	$(GTKGLEXT_CFLAGS)
@@ -47,12 +43,14 @@ AM_LDFLAGS += -lstdc++\
 
 ghkl_LDADD += \
 	$(top_builddir)/hkl3d/libhkl3d.la \
-	$(top_builddir)/hkl3d/bullet/src/libbulletdynamics.la \
-	$(top_builddir)/gui/hkl3d/libhkl3d-gui.la
+	$(top_builddir)/hkl3d/bullet/src/libbulletdynamics.la
 
 
 ghkl_SOURCES += \
-	hkl-gui-3d.c
+	hkl-gui-3d-gl.c \
+	hkl-gui-3d-gl.h \
+	hkl-gui-3d.c \
+	hkl-gui-3d.h
 
 dist_pkgdata_DATA += 3d.ui
 

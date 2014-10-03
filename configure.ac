@@ -234,11 +234,9 @@ AC_ARG_ENABLE([gui],
 AM_CONDITIONAL([GUI], [test x$enable_gui = xyes])
 AM_COND_IF([GUI],
 	[PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.0])
-	PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.18])
 	AM_COND_IF([HKL3D],
 		   [PKG_CHECK_MODULES([GLU], [glu >= 7.7.1])
 		    PKG_CHECK_MODULES([GTKGLEXT], [gtkglext-1.0 >= 1.2.0])
-	 	    PKG_CHECK_MODULES([GTKGLEXTMM], [gtkglextmm-1.2])
 	])
 ])
 
@@ -358,7 +356,6 @@ AC_CONFIG_FILES([Makefile
 		 Documentation/sphinx/Makefile
 		 Documentation/sphinx/source/conf.py
 		 gui/Makefile
-		 gui/hkl3d/Makefile
 		 data/Makefile
 ])
 

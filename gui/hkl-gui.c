@@ -34,6 +34,7 @@
 #include "hkl.h"
 #include "hkl-gui.h"
 #if HKL3D
+# include <gtk/gtkgl.h>
 # include "hkl-gui-3d.h"
 #endif
 #include "hkl-gui-pseudoaxes.h"
@@ -956,9 +957,13 @@ set_up_3D (HklGuiWindow* self)
 	else if (!strcmp("K4CV", name))	
 		filename = "../data/cristal4C.yaml";
 
+	if(priv->frame3d){
+		gtk_widget_destroy(GTK_WIDGET(hkl_gui_3d_frame_get(priv->frame3d)));
+		g_object_unref(priv->frame3d);
+		priv->frame3d = NULL;
+	}
+
 	if (filename){
-		if(priv->frame3d)
-			g_object_unref(priv->frame3d);
 		priv->frame3d = hkl_gui_3d_new(filename, priv->diffractometer->geometry);
 
 		gtk_box_pack_start (GTK_BOX(priv->_vbox7),
@@ -2325,9 +2330,8 @@ int main (int argc, char ** argv)
 {
 	gtk_init (&argc, &argv);
 #ifdef HKL3D
-	hkl_gui_3d_scene_gl_init(&argc, &argv);
+	gtk_gl_init(&argc, &argv);
 #endif
-
 	hkl_gui_window_new ();
 
 	gtk_main ();

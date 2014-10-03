@@ -24,9 +24,10 @@
 #include <GL/gl.h>
 #include <g3d/quat.h>
 
+#include "hkl3d.h"
 #include "hkl-gui.h"
 #include "hkl-gui-3d.h"
-#include "hkl3d-gui-gl.h"
+#include "hkl-gui-3d-gl.h"
 
 /*
  * updates glarea widget (redraw)
@@ -102,7 +103,6 @@ struct _HklGui3DPrivate {
 	GtkDrawingArea *_drawingarea1;
 
 	Hkl3D *hkl3d;
-	HklGui3DScene *scene;
 
 	/* opengl connected to the drawingarea1 */
 	G3DGLRenderOptions renderoptions;
@@ -254,12 +254,12 @@ finalize (GObject* object)
 {
 	HklGui3DPrivate *priv = HKL_GUI_3D_GET_PRIVATE(object);
 
+
+	g_free(priv->filename);
+
 	g_object_unref(priv->builder);
 
 	hkl3d_free(priv->hkl3d);
-	hkl_gui_3d_scene_free(priv->scene);
-
-	g_free(priv->filename);
 
 	G_OBJECT_CLASS (hkl_gui_3d_parent_class)->finalize (object);
 }
@@ -292,8 +292,6 @@ void hkl_gui_3d_invalidate(HklGui3D *self)
 {
 	HklGui3DPrivate *priv = HKL_GUI_3D_GET_PRIVATE(self);
 
-	if(priv->scene)
-		hkl_gui_3d_scene_invalidate(priv->scene);
 	priv->renderoptions.updated = TRUE;
 	glarea_update(GTK_WIDGET(priv->_drawingarea1));
 }
@@ -1118,8 +1116,6 @@ static void hkl_gui_3d_init (HklGui3D * self)
 	/* renderoptions */
 	reset_3d(&priv->renderoptions);
 	priv->aabb = FALSE;
-
-	/* gtk_gl_init(NULL, NULL); */
 
 	/* attache GL capability to drawingarea1 */
 	GdkGLConfig *gl_config = gdk_gl_config_new_by_mode(GDK_GL_MODE_RGBA |

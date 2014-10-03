@@ -24,20 +24,7 @@
 
 #include <gtk/gtk.h>
 
-#include "hkl3d.h"
-
 G_BEGIN_DECLS
-
-/* HklGui3DScene forward declaration */
-
-typedef struct _HklGui3DScene HklGui3DScene;
-
-HklGui3DScene *hkl_gui_3d_scene_new(Hkl3D *hkl3d,
-				    gboolean enableBulletDraw, gboolean enableWireframe,
-				    gboolean enableAAbbBoxDraw, gboolean enableOrthoView);
-void hkl_gui_3d_scene_free(HklGui3DScene *self);
-void hkl_gui_3d_scene_invalidate(HklGui3DScene *self);
-void hkl_gui_3d_scene_gl_init(int *argc, char *** argv);
 
 /* HklGui3D */
 
@@ -61,49 +48,5 @@ void hkl_gui_3d_is_colliding(HklGui3D *self);
 void hkl_gui_3d_invalidate(HklGui3D *self);
 
 GtkFrame *hkl_gui_3d_frame_get(HklGui3D *self);
-
-/* class Hkl3DFrame */
-/* { */
-/* public: */
-/* 	Hkl3DFrame(const char *filename, HklGeometry *geometry); */
-/* 	virtual ~Hkl3DFrame(void); */
-
-/* 	Gtk::Frame &frame(void) {return *_frame1;} */
-/* 	void is_colliding(void); */
-/* 	void invalidate(void); */
-
-/* // callback */
-/* protected: */
-/* 	void on_cell_treeview1_toggled(Glib::ustring const & path); */
-/* 	void on_treeview1_cursor_changed(void); */
-/* 	void on_toolbutton1_clicked(void); */
-/* 	void on_toolbutton2_clicked(void); */
-/* 	void on_button1_clicked(void); */
-/* 	void on_button2_clicked(void); */
-
-/* // non callback */
-/* protected: */
-/* 	void update_hkl3d_objects_TreeStore(void); */
-
-/* // members */
-/* protected: */
-/* 	Hkl3D *_hkl3d; */
-/* 	Hkl3dGui::Scene *_Scene; */
-
-/* 	/\* widgets *\/ */
-/* 	Gtk::Frame *_frame1; */
-/* 	Gtk::VBox *_vbox1; */
-/* 	Gtk::TreeView *_treeview1; */
-/* 	Gtk::ToolButton *_toolbutton1; */
-/* 	Gtk::ToolButton *_toolbutton2; */
-/* 	Gtk::FileChooserDialog *_filechooserdialog1; */
-/* 	Gtk::Button *_button1; */
-/* 	Gtk::Button *_button2; */
-
-/* 	/\* objects *\/ */
-/* 	Glib::RefPtr<Gtk::TreeStore> _treestore1; /\* use to fill the hkl3d objects properties *\/ */
-/* 	Hkl3DObjectsModelColumns _hkl3d_objects_columns; */
-/* 	Glib::RefPtr<Gtk::Builder> _refGlade; */
-/* }; */
 
 #endif // __HKL_GUI_3D_H__

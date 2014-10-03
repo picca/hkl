@@ -35,7 +35,7 @@
 #include <g3d/vector.h>
 #include <g3d/face.h>
 
-#include "hkl3d-gui-gl.h"
+#include "hkl-gui-3d-gl.h"
 
 struct _G3DGLRenderState {
 	gint32 gl_dlist, gl_dlist_shadow;
