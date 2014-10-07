@@ -1238,7 +1238,8 @@ hkl_gui_window_cellrenderertext5_edited_cb(GtkCellRendererText *renderer,
 		update_pseudo_axes_frames (self);
 		update_solutions (self);
 		update_3d(self);
-	}
+	}else
+		raise_error(self, &error);
 }
 
 
