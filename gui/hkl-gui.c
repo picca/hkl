@@ -702,20 +702,66 @@ update_reflections (HklGuiWindow *self)
 }
 
 static void
-pseudo_axes_frame_changed_cb (HklGuiEngine *gui_engine, gpointer _solutions, HklGuiWindow *self)
+update_3d(HklGuiWindow *self)
+{
+#ifdef HKL3D
+	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
+
+	if(priv->frame3d){
+		hkl_gui_3d_is_colliding(priv->frame3d);
+		hkl_gui_3d_invalidate(priv->frame3d);
+	}
+#endif
+}
+
+static void
+pseudo_axes_frame_changed_cb (HklGuiEngine *gui_engine, HklGuiWindow *self)
 {
 	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
-	HklGeometryList *solutions = _solutions;
+	HklEngine *engine;
+	GtkListStore *liststore;
+	guint n_values;
+	GtkTreeIter iter = {0};
+	gboolean valid;
+	GError *error = NULL;
 
-	diffractometer_set_solutions(priv->diffractometer, solutions);
-	diffractometer_set_solution(priv->diffractometer,
-				    hkl_geometry_list_items_first_get(solutions));
+	g_object_get(gui_engine,
+		     "engine", &engine,
+		     "liststore", &liststore,
+		     NULL);
 
-	update_axes (self);
-	update_pseudo_axes (self);
-	update_pseudo_axes_frames (self);
-	update_solutions (self);
+	n_values = darray_size(*hkl_engine_pseudo_axes_names_get(engine));
+	gdouble values[n_values];
+
+	/* extract all the values from the listore */
+	valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(liststore), &iter);
+	while(valid){
+		guint it_idx;
+		gdouble it_value;
+
+		gtk_tree_model_get (GTK_TREE_MODEL(liststore), &iter,
+				    PSEUDO_COL_IDX, &it_idx,
+				    PSEUDO_COL_VALUE, &it_value,
+				    -1);
+
+		values[it_idx] = it_value;
+
+		valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(liststore), &iter);
+	}
+
+	if(diffractometer_pseudo_axes_values_set(priv->diffractometer, engine,
+						 values, n_values, &error)){
+		update_axes (self);
+		update_pseudo_axes (self);
+		update_pseudo_axes_frames (self);
+		update_solutions (self);
+		update_3d(self);
+	}else
+		raise_error(self, &error);
+
+	g_object_unref(liststore);
 }
+
 
 static void
 set_up_pseudo_axes_frames (HklGuiWindow* self)
@@ -971,19 +1017,6 @@ set_up_3D (HklGuiWindow* self)
 				    TRUE, TRUE, (guint) 0);
 
 		gtk_widget_show_all (GTK_WIDGET(priv->_vbox7));
-	}
-#endif
-}
-
-static void
-update_3d(HklGuiWindow *self)
-{
-#ifdef HKL3D
-	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
-
-	if(priv->frame3d){
-		hkl_gui_3d_is_colliding(priv->frame3d);
-		hkl_gui_3d_invalidate(priv->frame3d);
 	}
 #endif
 }

@@ -73,6 +73,8 @@ void hkl_gui_engine_set_engine (HklGuiEngine *gui_engine,
 
 HklEngine* hkl_gui_engine_get_engine (HklGuiEngine *gui_engine);
 
+GtkListStore* hkl_gui_engine_get_liststore (HklGuiEngine *gui_engine);
+
 GtkFrame *hkl_gui_engine_get_frame(HklGuiEngine *self);
 
 void hkl_gui_engine_update (HklGuiEngine* self);

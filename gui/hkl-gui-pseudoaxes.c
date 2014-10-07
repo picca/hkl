@@ -34,6 +34,7 @@ enum {
   PROP_0,
 
   PROP_ENGINE,
+  PROP_LISTSTORE,
 
   N_PROPERTIES
 };
@@ -98,6 +99,9 @@ get_property (GObject *object, guint prop_id,
 	case PROP_ENGINE:
 		g_value_set_pointer (value, hkl_gui_engine_get_engine (self));
 		break;
+	case PROP_LISTSTORE:
+		g_value_set_object(value, hkl_gui_engine_get_liststore (self));
+		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 		break;
@@ -132,6 +136,14 @@ hkl_gui_engine_get_engine (HklGuiEngine *self)
 	return priv->engine;
 }
 
+
+GtkListStore*
+hkl_gui_engine_get_liststore (HklGuiEngine *self)
+{
+	HklGuiEnginePrivate *priv = HKL_GUI_ENGINE_GET_PRIVATE(self);
+
+	return priv->store_pseudo;
+}
 
 GtkFrame*
 hkl_gui_engine_get_frame(HklGuiEngine *self)
@@ -292,46 +304,10 @@ combobox1_changed_cb (GtkComboBox* combobox, HklGuiEngine* self)
 	}
 }
 
-static gboolean
-_set_pseudo(GtkTreeModel *model,
-	    GtkTreePath *path,
-	    GtkTreeIter *iter,
-	    gpointer data)
-{
-	double *values = data;
-	unsigned int idx;
-	double value;
-
-	gtk_tree_model_get (model, iter,
-			    PSEUDO_COL_IDX, &idx,
-			    PSEUDO_COL_VALUE, &value,
-			    -1);
-
-	values[idx] = value;
-
-	return FALSE;
-}
-
 static void
 button1_clicked_cb (GtkButton* button, HklGuiEngine* self)
 {
-	HklGuiEnginePrivate *priv = HKL_GUI_ENGINE_GET_PRIVATE(self);
-	unsigned int n_values = darray_size(*hkl_engine_pseudo_axes_names_get(priv->engine));
-	double values[n_values];
-	GError *error = NULL;
-	HklGeometryList *solutions;
-
-	gtk_tree_model_foreach(GTK_TREE_MODEL(priv->store_pseudo),
-			       _set_pseudo,
-			       values);
-
-	solutions = hkl_engine_pseudo_axes_values_set(priv->engine, values, n_values, HKL_UNIT_USER, &error);
-	if(!solutions){
-		/* TODO check for the error */
-		g_clear_error(&error);
-	}else{
-		g_signal_emit(self, signals[CHANGED], 0, solutions);
-	}
+	g_signal_emit(self, signals[CHANGED], 0);
 }
 
 
@@ -392,6 +368,14 @@ static void hkl_gui_engine_class_init (HklGuiEngineClass * class)
 				      G_PARAM_READWRITE |
 				      G_PARAM_STATIC_STRINGS);
 
+	obj_properties[PROP_LISTSTORE] =
+		g_param_spec_object ("liststore",
+				     "Liststore",
+				     "The liststore contaning all the pseudo axes values",
+				     GTK_TYPE_LIST_STORE,
+				     G_PARAM_READABLE |
+				     G_PARAM_STATIC_STRINGS);
+
 	g_object_class_install_properties (gobject_class,
 					   N_PROPERTIES,
 					   obj_properties);
@@ -404,10 +388,9 @@ static void hkl_gui_engine_class_init (HklGuiEngineClass * class)
 			      0, /* class offset */
 			      NULL, /* accumulator */
 			      NULL, /* accu_data */
-			      g_cclosure_marshal_VOID__POINTER,
+			      g_cclosure_marshal_VOID__VOID,
 			      G_TYPE_NONE, /* return_type */
-			      1,
-			      G_TYPE_POINTER);
+			      0);
 }
 
 
