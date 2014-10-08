@@ -29,6 +29,9 @@ G_BEGIN_DECLS
 extern HklEngine *hkl_engine_k6c_hkl_new(void);
 extern HklEngine *hkl_engine_k6c_psi_new(void);
 
+extern HklEngine *hkl_engine_soleil_sirius_kappa_hkl_new(void);
+extern HklEngine *hkl_engine_soleil_sirius_kappa_psi_new(void);
+
 G_END_DECLS
 
 #endif /* __HKL_PSEUDOAXIS_K6C_H__ */

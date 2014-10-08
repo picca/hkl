@@ -618,3 +618,268 @@ HklEngine *hkl_engine_k6c_hkl_new(void)
 
 	return self;
 }
+
+/***********************/
+/* SOLEIL sirius kappa */
+/***********************/
+
+/* mode */
+
+static HklMode *bissector_vertical_soleil_sirius_kappa(void)
+{
+	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "delta", "gamma"};
+	static const char* axes_w[] = {"komega", "kappa", "kphi", "gamma"};
+	static const HklFunction *functions[] = {&bissector_v};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO("bissector_vertical", axes_r, axes_w, functions),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_mode_operations,
+				 TRUE);
+}
+
+static HklMode *constant_omega_vertical_soleil_sirius_kappa(void)
+{
+	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "delta", "gamma"};
+	static const char* axes_w[] = {"komega", "kappa", "kphi", "gamma"};
+	static const HklFunction *functions[] = {&constant_omega_v};
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "omega"},
+	};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO_WITH_PARAMS("constant_omega_vertical", axes_r, axes_w, functions, parameters),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_mode_operations,
+				 TRUE);
+}
+
+static HklMode *constant_chi_vertical_soleil_sirius_kappa(void)
+{
+	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "delta", "gamma"};
+	static const char* axes_w[] = {"komega", "kappa", "kphi", "gamma"};
+	static const HklFunction *functions[] = {&constant_chi_v};
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "chi"},
+	};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO_WITH_PARAMS("constant_chi_vertical", axes_r, axes_w, functions, parameters),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_mode_operations,
+				 TRUE);
+}
+
+static HklMode *constant_phi_vertical_soleil_sirius_kappa(void)
+{
+	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "delta", "gamma"};
+	static const char* axes_w[] = {"komega", "kappa", "kphi", "gamma"};
+	static const HklFunction *functions[] = {&constant_phi_v};
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "phi"},
+	};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO_WITH_PARAMS("constant_phi_vertical", axes_r, axes_w, functions, parameters),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_mode_operations,
+				 TRUE);
+}
+
+static HklMode *lifting_detector_kphi_soleil_sirius_kappa(void)
+{
+	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "delta", "gamma"};
+	static const char* axes_w[] = {"kphi", "delta", "gamma"};
+	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO("lifting_detector_kphi", axes_r, axes_w, functions),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_mode_operations,
+				 TRUE);
+}
+
+static HklMode *lifting_detector_komega_soleil_sirius_kappa(void)
+{
+	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "delta", "gamma"};
+	static const char* axes_w[] = {"komega", "delta", "gamma"};
+	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO("lifting_detector_komega", axes_r, axes_w, functions),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_mode_operations,
+				 TRUE);
+}
+
+static HklMode *lifting_detector_mu_soleil_sirius_kappa(void)
+{
+	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "delta", "gamma"};
+	static const char* axes_w[] = {"mu", "delta", "gamma"};
+	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO("lifting_detector_mu", axes_r, axes_w, functions),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_mode_operations,
+				 TRUE);
+}
+
+static HklMode *double_diffraction_vertical_soleil_sirius_kappa(void)
+{
+	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "delta", "gamma"};
+	static const char* axes_w[] = {"komega", "kappa", "kphi", "gamma"};
+	static const HklFunction *functions[] = {&double_diffraction_func};
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, ._value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, ._value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, ._value = 1,},
+	};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO_WITH_PARAMS("double_diffraction_vertical", axes_r, axes_w, functions, parameters),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_mode_operations,
+				 TRUE);
+}
+
+static HklMode *bissector_horizontal_soleil_sirius_kappa(void)
+{
+	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "delta", "gamma"};
+	static const char* axes_w[] = {"mu", "komega", "kappa", "kphi", "delta"};
+	static const HklFunction *functions[] = {&bissector_h_f1, &bissector_h_f2};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO("bissector_horizontal", axes_r, axes_w, functions),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_mode_operations,
+				 TRUE);
+}
+
+static HklMode *constant_phi_horizontal_soleil_sirius_kappa(void)
+{
+	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "delta", "gamma"};
+	static const char* axes_w[] = {"mu", "komega", "kappa", "kphi", "delta"};
+	static const HklFunction *functions[] = {&constant_phi_h_f1, &constant_phi_h_f2};
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "phi",},
+	};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO_WITH_PARAMS("constant_phi_horizontal", axes_r, axes_w, functions, parameters),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_mode_operations,
+				 TRUE);
+}
+
+static HklMode *constant_kphi_horizontal_soleil_sirius_kappa(void)
+{
+	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "delta", "gamma"};
+	static const char* axes_w[] = {"mu", "komega", "kappa", "delta"};
+	static const HklFunction *functions[] = {&constant_kphi_h_f1, &constant_kphi_h_f2};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO("constant_kphi_horizontal", axes_r, axes_w, functions),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_mode_operations,
+				 TRUE);
+}
+
+static HklMode *double_diffraction_horizontal_soleil_sirius_kappa(void)
+{
+	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "delta", "gamma"};
+	static const char* axes_w[] = {"mu", "komega", "kappa", "kphi", "delta"};
+	static const HklFunction *functions[] = {&double_diffraction_h};
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, ._value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, ._value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, ._value = 1,},
+	};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO_WITH_PARAMS("double_diffraction_horizontal", axes_r, axes_w, functions, parameters),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_mode_operations,
+				 TRUE);
+}
+
+static HklMode *psi_constant_vertical_soleil_sirius_kappa(void)
+{
+	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "delta", "gamma"};
+	static const char* axes_w[] = {"komega", "kappa", "kphi", "gamma"};
+	static const HklFunction *functions[] = {&psi_constant_vertical_func};
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, ._value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, ._value = 0,},
+		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, ._value = 0,},
+		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "psi"},
+	};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO_WITH_PARAMS("psi_constant_vertical", axes_r, axes_w, functions, parameters),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &psi_constant_vertical_mode_operations,
+				 TRUE);
+}
+
+static HklMode *constant_incidence_soleil_sirius_kappa(void)
+{
+	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "delta", "gamma"};
+	static const char* axes_w[] = {"komega", "kappa", "kphi", "delta", "gamma"};
+	static const HklFunction *functions[] = {&constant_incidence_func};
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS, .name = "x", .range = {.min=-1, .max=1}, ._value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "y", .range = {.min=-1, .max=1}, ._value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "z", .range = {.min=-1, .max=1}, ._value = 1,},
+		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "incidence"},
+		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "azimuth", ._value = M_PI_2,},
+	};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO_WITH_PARAMS("constant_incidence", axes_r, axes_w, functions, parameters),
+	};
+
+	return hkl_mode_auto_with_init_new(&info,
+					   &constant_incidence_mode_operations,
+					   TRUE);
+}
+
+HklEngine *hkl_engine_soleil_sirius_kappa_hkl_new(void)
+{
+	HklEngine *self;
+	HklMode *default_mode;
+
+	self = hkl_engine_hkl_new();
+
+	default_mode = bissector_vertical_soleil_sirius_kappa();
+	hkl_engine_add_mode(self, default_mode);
+	hkl_engine_mode_set(self, default_mode);
+
+	hkl_engine_add_mode(self, constant_omega_vertical_soleil_sirius_kappa());
+	hkl_engine_add_mode(self, constant_chi_vertical_soleil_sirius_kappa());
+	hkl_engine_add_mode(self, constant_phi_vertical_soleil_sirius_kappa());
+	hkl_engine_add_mode(self, lifting_detector_kphi_soleil_sirius_kappa());
+	hkl_engine_add_mode(self, lifting_detector_komega_soleil_sirius_kappa());
+	hkl_engine_add_mode(self, lifting_detector_mu_soleil_sirius_kappa());
+	hkl_engine_add_mode(self, double_diffraction_vertical_soleil_sirius_kappa());
+	hkl_engine_add_mode(self, bissector_horizontal_soleil_sirius_kappa());
+	hkl_engine_add_mode(self, constant_phi_horizontal_soleil_sirius_kappa());
+	hkl_engine_add_mode(self, constant_kphi_horizontal_soleil_sirius_kappa());
+	hkl_engine_add_mode(self, double_diffraction_horizontal_soleil_sirius_kappa());
+	hkl_engine_add_mode(self, psi_constant_vertical_soleil_sirius_kappa());
+	hkl_engine_add_mode(self, constant_incidence_soleil_sirius_kappa());
+
+	return self;
+}
