@@ -6,6 +6,7 @@ AM_LDFLAGS = \
 	$(GLIB_LIBS) \
 	$(GSL_LIBS)
 AM_CFLAGS = \
+	-DG_LOG_DOMAIN=\"Hkl\" \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
 	$(GLIB_CFLAGS) \

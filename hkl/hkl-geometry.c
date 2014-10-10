@@ -782,11 +782,11 @@ int hkl_geometry_closest_from_geometry_with_range(HklGeometry *self,
  **/
 void hkl_geometry_fprintf(FILE *file, const HklGeometry *self)
 {
-	uint i;
-
-	for(i=0; i<darray_size(self->axes); ++i){
-		if(i)
-			fprintf(file, "\n");
+	fprintf(file, " HklGeometry type: \"%s\" wavelength: %f",
+		self->factory->name,
+		self->source.wave_length);
+	for(unsigned int i=0; i<darray_size(self->axes); ++i){
+		fprintf(file, " ");
 		hkl_parameter_fprintf(file, darray_item(self->axes, i));
 	}
 }

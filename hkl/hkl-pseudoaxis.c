@@ -29,6 +29,7 @@
 #include "hkl-macros-private.h"         // for hkl_assert, HKL_MALLOC, etc
 #include "hkl-parameter-private.h"      // for hkl_parameter_list_fprintf, etc
 #include "hkl-pseudoaxis-private.h"     // for _HklEngine, _HklEngineList, etc
+#include "hkl-sample-private.h"
 #include "hkl.h"                        // for HklEngine, HklEngineList, etc
 #include "hkl/ccan/container_of/container_of.h"  // for container_of
 #include "hkl/ccan/darray/darray.h"     // for darray_foreach, darray_init, etc
@@ -170,6 +171,11 @@ HklGeometryList *hkl_engine_pseudo_axes_values_set(HklEngine *self,
 						   double values[], size_t n_values,
 						   HklUnitEnum unit_type, GError **error)
 {
+	char *msg;
+	size_t msg_size;
+	FILE *stream;
+	HklGeometryList *solutions = NULL;
+
 	hkl_error(error == NULL ||*error == NULL);
 
 	if(n_values != darray_size(self->info->pseudo_axes)){
@@ -178,26 +184,46 @@ HklGeometryList *hkl_engine_pseudo_axes_values_set(HklEngine *self,
 			    HKL_ENGINE_ERROR_PSEUDO_AXES_VALUES_SET,
 			    "cannot set engine pseudo axes, wrong number of parameter (%d) given, (%d) expected\n",
 			    n_values,  darray_size(self->info->pseudo_axes));
-		return NULL;
+		goto out;
 	}
+
+	/* /\* logging test start *\/ */
+	/* stream = open_memstream(&msg, &msg_size); */
+
+	/* fprintf(stream, "%s(", __func__); */
+	/* fprintf(stream, "self: %s, values: [", hkl_engine_name_get(self)); */
+	/* for(size_t i=0; i<n_values; ++i) */
+	/* 	fprintf(stream, " %f", values[i]); */
+	/* fprintf(stream, "], n_values: %d unit_type: %d, error: %p)", n_values, unit_type, error); */
+
+	/* hkl_geometry_fprintf(stream, self->geometry); */
+	/* hkl_sample_fprintf(stream, self->sample); */
+	/* hkl_engine_fprintf(stream, self); */
+	/* /\* logging test end *\/ */
 
 	for(size_t i=0; i<n_values; ++i){
 		if(!hkl_parameter_value_set(darray_item(self->pseudo_axes, i),
 					    values[i],
 					    unit_type, error)){
-			g_assert(error == NULL || *error != NULL);
-			return NULL;
+			goto clean_stream_out;
 		}
 	}
-	g_assert (error == NULL || *error == NULL);
 
 	if(!hkl_engine_set(self, error)){
-		g_assert(error == NULL || *error != NULL);
-		return NULL;
+		/* fflush(stream); */
+		/* g_message(msg); */
+		/* if(error && *error != NULL) */
+		/* 	g_warning("%s", (*error)->message); */
+		goto clean_stream_out;
 	}
-	g_assert(error == NULL || *error == NULL);
 
-	return hkl_geometry_list_new_copy(self->engines->geometries);
+	solutions = hkl_geometry_list_new_copy(self->engines->geometries);
+
+clean_stream_out:
+	/* fclose(stream); */
+	/* free(msg); */
+out:
+	return solutions;
 }
 
 /**

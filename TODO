@@ -43,3 +43,4 @@ Roadmap
 	  sample values
 ** TODO [hkl3d] add a method to find the 3D models in the right directories.
 ** TODO [packaging] add a .spec file for rpm generation.
+** TODO evaluate augeas/elektra for the plugin configure part.
