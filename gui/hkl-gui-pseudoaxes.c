@@ -20,6 +20,7 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 
+#include "hkl-gui-macros.h"
 #include "hkl-gui-pseudoaxes.h"
 #include "hkl.h"
 #include <gtk/gtk.h>
@@ -415,19 +416,19 @@ static void hkl_gui_engine_init (HklGuiEngine * self)
 	priv->engine = NULL;
 	priv->builder = builder = gtk_builder_new ();
 
-	gtk_builder_add_from_file (builder, "pseudo.ui", NULL);
+	get_ui(builder, "pseudo.ui");
 
-	priv->frame1 = GTK_FRAME(gtk_builder_get_object(builder, "frame1"));
-	priv->label2 = GTK_LABEL(gtk_builder_get_object(builder, "label2"));
-	priv->combobox1 = GTK_COMBO_BOX(gtk_builder_get_object(builder, "combobox1"));
-	priv->expander1 = GTK_EXPANDER(gtk_builder_get_object(builder, "expander1"));
-	priv->treeview1 = GTK_TREE_VIEW(gtk_builder_get_object(builder, "treeview1"));
-	priv->button1 = GTK_BUTTON(gtk_builder_get_object(builder, "button1"));
-	priv->button2 = GTK_BUTTON(gtk_builder_get_object(builder, "button2"));
+	get_object(builder, GTK_FRAME, priv, frame1);
+	get_object(builder, GTK_LABEL, priv, label2);
+	get_object(builder, GTK_COMBO_BOX, priv, combobox1);
+	get_object(builder, GTK_EXPANDER, priv, expander1);
+	get_object(builder, GTK_TREE_VIEW, priv, treeview1);
+	get_object(builder, GTK_BUTTON, priv, button1);
+	get_object(builder, GTK_BUTTON, priv, button2);
 
-	priv->store_mode = GTK_LIST_STORE(gtk_builder_get_object (builder, "liststore1"));
-	priv->store_pseudo = GTK_LIST_STORE(gtk_builder_get_object (builder, "liststore2"));
-	priv->store_mode_parameter = GTK_LIST_STORE(gtk_builder_get_object (builder, "liststore3"));
+	get_object(builder, GTK_LIST_STORE, priv, store_mode);
+	get_object(builder, GTK_LIST_STORE, priv, store_pseudo);
+	get_object(builder, GTK_LIST_STORE, priv, store_mode_parameter);
 
 	gtk_builder_connect_signals (builder, self);
 

@@ -24,7 +24,7 @@
               <object class="GtkTreeView" id="treeview1">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="model">liststore2</property>
+                <property name="model">store_pseudo</property>
                 <property name="headers_clickable">False</property>
                 <property name="search_column">0</property>
                 <property name="enable_grid_lines">both</property>
@@ -84,7 +84,7 @@
                   <object class="GtkComboBox" id="combobox1">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="model">liststore1</property>
+                    <property name="model">store_mode</property>
                     <property name="add_tearoffs">True</property>
                     <child>
                       <object class="GtkCellRendererText" id="cellrenderertext2"/>
@@ -147,7 +147,7 @@
                   <object class="GtkTreeView" id="treeview2">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="model">liststore3</property>
+                    <property name="model">store_mode_parameter</property>
                     <property name="headers_visible">False</property>
                     <property name="headers_clickable">False</property>
                     <property name="rules_hint">True</property>
@@ -210,7 +210,7 @@
       </object>
     </child>
   </object>
-  <object class="GtkListStore" id="liststore1">
+  <object class="GtkListStore" id="store_mode">
     <columns>
       <!-- column-name name -->
       <column type="gchararray"/>
@@ -218,7 +218,7 @@
       <column type="gpointer"/>
     </columns>
   </object>
-  <object class="GtkListStore" id="liststore2">
+  <object class="GtkListStore" id="store_pseudo">
     <columns>
       <!-- column-name name -->
       <column type="gchararray"/>
@@ -228,7 +228,7 @@
       <column type="gdouble"/>
     </columns>
   </object>
-  <object class="GtkListStore" id="liststore3">
+  <object class="GtkListStore" id="store_mode_parameter">
     <columns>
       <!-- column-name name -->
       <column type="gchararray"/>

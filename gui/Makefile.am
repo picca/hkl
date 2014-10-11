@@ -19,6 +19,7 @@ ghkl_LDADD = \
 	$(top_builddir)/hkl/libhkl.la
 
 ghkl_SOURCES = \
+	hkl-gui-macros.h \
 	hkl-gui-pseudoaxes.c \
 	hkl-gui-pseudoaxes.h \
 	hkl-gui.c \

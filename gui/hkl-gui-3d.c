@@ -26,6 +26,7 @@
 
 #include "hkl3d.h"
 #include "hkl-gui.h"
+#include "hkl-gui-macros.h"
 #include "hkl-gui-3d.h"
 #include "hkl-gui-3d-gl.h"
 
@@ -90,17 +91,17 @@ struct _HklGui3DPrivate {
 
 	GtkBuilder *builder;
 
-	GtkFrame *_frame1;
-	GtkVBox *_vbox1;
-	GtkTreeView *_treeview1;
-	GtkToolButton *_toolbutton1;
-	GtkToolButton *_toolbutton2;
-	GtkToolButton *_toolbutton3;
-	GtkFileChooserDialog *_filechooserdialog1;
-	GtkButton *_button1;
-	GtkButton *_button2;
-	GtkTreeStore *_treestore1;
-	GtkDrawingArea *_drawingarea1;
+	GtkFrame *frame1;
+	GtkVBox *vbox1;
+	GtkTreeView *treeview1;
+	GtkToolButton *toolbutton1;
+	GtkToolButton *toolbutton2;
+	GtkToolButton *toolbutton3;
+	GtkFileChooserDialog *filechooserdialog1;
+	GtkButton *button1;
+	GtkButton *button2;
+	GtkTreeStore *treestore1;
+	GtkDrawingArea *drawingarea1;
 
 	Hkl3D *hkl3d;
 
@@ -124,13 +125,13 @@ static void hkl_gui_3d_update_hkl3d_objects_TreeStore(HklGui3D *self)
 	size_t i;
 	size_t j;
 
-	gtk_tree_store_clear(priv->_treestore1);
+	gtk_tree_store_clear(priv->treestore1);
 
 	for(i=0; i<priv->hkl3d->config->len; ++i){
 		GtkTreeIter iter = {0};
 
-		gtk_tree_store_append(priv->_treestore1, &iter, NULL);
-		gtk_tree_store_set(priv->_treestore1, &iter,
+		gtk_tree_store_append(priv->treestore1, &iter, NULL);
+		gtk_tree_store_set(priv->treestore1, &iter,
 				   HKL_GUI_3D_COL_NAME, priv->hkl3d->config->models[i]->filename,
 				   HKL_GUI_3D_COL_MODEL, priv->hkl3d->config->models[i],
 				   HKL_GUI_3D_COL_OBJECT, NULL,
@@ -139,8 +140,8 @@ static void hkl_gui_3d_update_hkl3d_objects_TreeStore(HklGui3D *self)
 		for(j=0; j<priv->hkl3d->config->models[i]->len; ++j){
 			GtkTreeIter citer = {0};
 
-			gtk_tree_store_append(priv->_treestore1, &citer, &iter);
-			gtk_tree_store_set(priv->_treestore1, &citer,
+			gtk_tree_store_append(priv->treestore1, &citer, &iter);
+			gtk_tree_store_set(priv->treestore1, &citer,
 					   HKL_GUI_3D_COL_NAME, priv->hkl3d->config->models[i]->objects[j]->axis_name,
 					   HKL_GUI_3D_COL_HIDE, priv->hkl3d->config->models[i]->objects[j]->hide,
 					   HKL_GUI_3D_COL_MODEL, priv->hkl3d->config->models[i],
@@ -179,10 +180,10 @@ void _filename_and_geometry(HklGui3D *self)
 			/* priv->scene = hkl_gui_3d_scene_new(priv->hkl3d, FALSE, FALSE, FALSE, FALSE); */
 
 			hkl_gui_3d_update_hkl3d_objects_TreeStore(self);
-			/* gtk_box_pack_start(GTK_BOX(priv->_vbox1), */
+			/* gtk_box_pack_start(GTK_BOX(priv->vbox1), */
 			/* 		   GTK_WIDGET(priv->scene), */
 			/* 		   TRUE, TRUE, 0); */
-			/* gtk_widget_show_all(GTK_WIDGET(priv->_vbox1)); */
+			/* gtk_widget_show_all(GTK_WIDGET(priv->vbox1)); */
 		}
 	}
 }
@@ -277,7 +278,7 @@ GtkFrame *hkl_gui_3d_frame_get(HklGui3D *self)
 {
 	HklGui3DPrivate *priv = HKL_GUI_3D_GET_PRIVATE(self);
 
-	return priv->_frame1;
+	return priv->frame1;
 }
 
 void hkl_gui_3d_is_colliding(HklGui3D *self)
@@ -293,7 +294,7 @@ void hkl_gui_3d_invalidate(HklGui3D *self)
 	HklGui3DPrivate *priv = HKL_GUI_3D_GET_PRIVATE(self);
 
 	priv->renderoptions.updated = TRUE;
-	glarea_update(GTK_WIDGET(priv->_drawingarea1));
+	glarea_update(GTK_WIDGET(priv->drawingarea1));
 }
 
 /************/
@@ -310,9 +311,9 @@ void hkl_gui_3d_cellrenderertext2_toggled_cb(GtkCellRendererToggle* renderer,
 	GtkTreeIter iter = {0};
 
 
-	gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(priv->_treestore1),
+	gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(priv->treestore1),
 					     &iter, path);
-	gtk_tree_model_get (GTK_TREE_MODEL(priv->_treestore1),
+	gtk_tree_model_get (GTK_TREE_MODEL(priv->treestore1),
 			    &iter,
 			    HKL_GUI_3D_COL_OBJECT, &object,
 			    -1);
@@ -321,7 +322,7 @@ void hkl_gui_3d_cellrenderertext2_toggled_cb(GtkCellRendererToggle* renderer,
 
 	if(object){
 		hkl3d_hide_object(priv->hkl3d, object, hide);
-		gtk_tree_store_set (priv->_treestore1,
+		gtk_tree_store_set (priv->treestore1,
 				    &iter,
 				    HKL_GUI_3D_COL_HIDE, hide,
 				    -1);
@@ -330,7 +331,7 @@ void hkl_gui_3d_cellrenderertext2_toggled_cb(GtkCellRendererToggle* renderer,
 	}else{
 		Hkl3DModel *model;
 
-		gtk_tree_model_get (GTK_TREE_MODEL(priv->_treestore1),
+		gtk_tree_model_get (GTK_TREE_MODEL(priv->treestore1),
 				    &iter,
 				    HKL_GUI_3D_COL_MODEL, &model,
 				    -1);
@@ -339,22 +340,22 @@ void hkl_gui_3d_cellrenderertext2_toggled_cb(GtkCellRendererToggle* renderer,
 			gboolean valid;
 			size_t i = 0;
 
-			gtk_tree_store_set (priv->_treestore1,
+			gtk_tree_store_set (priv->treestore1,
 					    &iter,
 					    HKL_GUI_3D_COL_HIDE, hide,
 					    -1);
 
 			/* set all the children rows */
-			valid = gtk_tree_model_iter_children(GTK_TREE_MODEL(priv->_treestore1),
+			valid = gtk_tree_model_iter_children(GTK_TREE_MODEL(priv->treestore1),
 							     &children, &iter);
 			while(valid){
 				hkl3d_hide_object(priv->hkl3d, model->objects[i++], hide);
-				gtk_tree_store_set (priv->_treestore1,
+				gtk_tree_store_set (priv->treestore1,
 						    &children,
 						    HKL_GUI_3D_COL_HIDE, hide,
 						    -1);
 
-				valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(priv->_treestore1), &children);
+				valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(priv->treestore1), &children);
 			}
 			hkl_gui_3d_is_colliding(self);
 			hkl_gui_3d_invalidate(self);
@@ -374,8 +375,8 @@ void hkl_gui_3d_treeview1_cursor_changed_cb(GtkTreeView *tree_view,
 	GtkTreePath *path;
 	GtkTreeViewColumn * column;
 
-	gtk_tree_view_get_cursor(priv->_treeview1, &path, &column);
-	gtk_tree_model_get_iter(GTK_TREE_MODEL(priv->_treestore1), &iter, path);
+	gtk_tree_view_get_cursor(priv->treeview1, &path, &column);
+	gtk_tree_model_get_iter(GTK_TREE_MODEL(priv->treestore1), &iter, path);
 	gtk_tree_path_free(path);
 
 	/* need to unselect of objects of all 3d models */
@@ -384,7 +385,7 @@ void hkl_gui_3d_treeview1_cursor_changed_cb(GtkTreeView *tree_view,
 			priv->hkl3d->config->models[i]->objects[j]->selected = FALSE;
 
 	/* now select the right object */
-	gtk_tree_model_get (GTK_TREE_MODEL(priv->_treestore1),
+	gtk_tree_model_get (GTK_TREE_MODEL(priv->treestore1),
 			    &iter,
 			    HKL_GUI_3D_COL_OBJECT, &object,
 			    -1);
@@ -399,7 +400,7 @@ void hkl_gui_3d_toolbutton1_clicked_cb(GtkToolButton *toolbutton,
 {
 	HklGui3DPrivate *priv = HKL_GUI_3D_GET_PRIVATE(user_data);
 
-	gtk_widget_show(GTK_WIDGET(priv->_filechooserdialog1));
+	gtk_widget_show(GTK_WIDGET(priv->filechooserdialog1));
 }
 
 /* remove an object from the model */
@@ -415,11 +416,11 @@ void hkl_gui_3d_toolbutton2_clicked_cb(GtkToolButton *toolbutton,
 	int i;
 	int j;
 
-	gtk_tree_view_get_cursor(priv->_treeview1, &path, &column);
-	gtk_tree_model_get_iter(GTK_TREE_MODEL(priv->_treestore1), &iter, path);
+	gtk_tree_view_get_cursor(priv->treeview1, &path, &column);
+	gtk_tree_model_get_iter(GTK_TREE_MODEL(priv->treestore1), &iter, path);
 	gtk_tree_path_free(path);
 
-	gtk_tree_model_get (GTK_TREE_MODEL(priv->_treestore1),
+	gtk_tree_model_get (GTK_TREE_MODEL(priv->treestore1),
 			    &iter,
 			    HKL_GUI_3D_COL_OBJECT, &object,
 			    -1);
@@ -490,7 +491,7 @@ void hkl_gui_3d_button1_clicked_cb(GtkButton *button,
 	GSList *filenames;
 	GSList *filename;
 
-	filenames = gtk_file_chooser_get_files(GTK_FILE_CHOOSER(priv->_filechooserdialog1));
+	filenames = gtk_file_chooser_get_files(GTK_FILE_CHOOSER(priv->filechooserdialog1));
 	filename = filenames;
 	while(filename){
 		GFile *file = filename->data;
@@ -509,7 +510,7 @@ void hkl_gui_3d_button1_clicked_cb(GtkButton *button,
 	};
 
 	hkl_gui_3d_update_hkl3d_objects_TreeStore(self);
-	gtk_widget_hide(GTK_WIDGET(priv->_filechooserdialog1));
+	gtk_widget_hide(GTK_WIDGET(priv->filechooserdialog1));
 	g_slist_free(filenames);
 }
 
@@ -518,7 +519,7 @@ void hkl_gui_3d_button2_clicked_cb(GtkButton *button,
 {
 	HklGui3DPrivate *priv = HKL_GUI_3D_GET_PRIVATE(user_data);
 
-	gtk_widget_hide(GTK_WIDGET(priv->_filechooserdialog1));
+	gtk_widget_hide(GTK_WIDGET(priv->filechooserdialog1));
 }
 
 /***************/
@@ -1021,7 +1022,7 @@ hkl_gui_3d_drawingarea1_motion_notify_event_cb(GtkWidget *drawing_area,
 			/* g_free(text); */
 		}
 
-		glarea_update(GTK_WIDGET(priv->_drawingarea1));
+		glarea_update(GTK_WIDGET(priv->drawingarea1));
 	}
 
 	/* middle mouse button */
@@ -1034,7 +1035,7 @@ hkl_gui_3d_drawingarea1_motion_notify_event_cb(GtkWidget *drawing_area,
 		if(priv->renderoptions.zoom > 120)
 			priv->renderoptions.zoom = 120;
 
-		glarea_update(GTK_WIDGET(priv->_drawingarea1));
+		glarea_update(GTK_WIDGET(priv->drawingarea1));
 	}
 	priv->mouse.beginx = x;
 	priv->mouse.beginy = y;
@@ -1094,7 +1095,7 @@ static void hkl_gui_3d_init (HklGui3D * self)
 
 	priv->builder = builder = gtk_builder_new ();
 
-	gtk_builder_add_from_file (builder, "3d.ui", NULL);
+	get_ui(builder, "3d.ui");
 
 	// widgets
 	get_object(builder, GTK_FRAME, priv, frame1);
@@ -1123,12 +1124,12 @@ static void hkl_gui_3d_init (HklGui3D * self)
 							   GDK_GL_MODE_DOUBLE);
 	if (!gl_config)
 		g_assert_not_reached();
-	if (!gtk_widget_set_gl_capability(GTK_WIDGET(priv->_drawingarea1), gl_config, NULL, TRUE,
+	if (!gtk_widget_set_gl_capability(GTK_WIDGET(priv->drawingarea1), gl_config, NULL, TRUE,
 					  GDK_GL_RGBA_TYPE))
 		g_assert_not_reached();
 
-	gtk_widget_set_can_focus(GTK_WIDGET(priv->_drawingarea1), TRUE);
-	gtk_widget_add_events(GTK_WIDGET(priv->_drawingarea1),
+	gtk_widget_set_can_focus(GTK_WIDGET(priv->drawingarea1), TRUE);
+	gtk_widget_add_events(GTK_WIDGET(priv->drawingarea1),
 			      GDK_BUTTON1_MOTION_MASK |
 			      GDK_BUTTON2_MOTION_MASK |
 			      GDK_BUTTON_PRESS_MASK |
@@ -1136,11 +1137,11 @@ static void hkl_gui_3d_init (HklGui3D * self)
 
 	/* connect the GL callbacks */
 	const gdouble TIMEOUT_PERIOD = 1000 / 60;
-	g_timeout_add(TIMEOUT_PERIOD, hkl_gui_3d_idle_cb, priv->_drawingarea1);
-	g_signal_connect(priv->_drawingarea1, "expose-event",
+	g_timeout_add(TIMEOUT_PERIOD, hkl_gui_3d_idle_cb, priv->drawingarea1);
+	g_signal_connect(priv->drawingarea1, "expose-event",
 			 G_CALLBACK(hkl_gui_3d_drawingarea1_expose_cb), self);
-	g_signal_connect(priv->_drawingarea1, "button-press-event",
+	g_signal_connect(priv->drawingarea1, "button-press-event",
 			 G_CALLBACK(hkl_gui_3d_drawingarea1_button_press_event_cb), self);
-	g_signal_connect(priv->_drawingarea1, "motion-notify-event",
+	g_signal_connect(priv->drawingarea1, "motion-notify-event",
 			 G_CALLBACK(hkl_gui_3d_drawingarea1_motion_notify_event_cb), self);
 }

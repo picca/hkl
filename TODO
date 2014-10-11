@@ -43,4 +43,6 @@ Roadmap
 	  sample values
 ** TODO [hkl3d] add a method to find the 3D models in the right directories.
 ** TODO [packaging] add a .spec file for rpm generation.
-** TODO evaluate augeas/elektra for the plugin configure part.
+** TODO evaluate third-party
+*** augeas/elektra for the plugin configure part.
+*** REPL https://github.com/jonathanslenders/python-prompt-toolkit/tree/master/examples/tutorial
