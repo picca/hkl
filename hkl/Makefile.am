@@ -37,7 +37,7 @@ hkl_c_sources = \
 	hkl-engine-petra3.c \
 	hkl-engine-soleil-sirius-turret.c \
 	hkl-engine-soleil-sixs-med.c \
-	hkl-pseudoaxis-zaxis-hkl.c \
+	hkl-engine-zaxis.c \
 	hkl-quaternion.c \
 	hkl-sample.c \
 	hkl-source.c \
@@ -62,7 +62,6 @@ hkl_private_h_sources = \
 	hkl-pseudoaxis-common-hkl-private.h \
 	hkl-pseudoaxis-common-q-private.h \
 	hkl-pseudoaxis-common-psi-private.h \
-	hkl-pseudoaxis-zaxis-private.h \
 	hkl-quaternion-private.h \
 	hkl-sample-private.h \
 	hkl-source-private.h \

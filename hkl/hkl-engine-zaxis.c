@@ -19,14 +19,10 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <gsl/gsl_errno.h>              // for ::GSL_SUCCESS
 #include <gsl/gsl_sys.h>                // for gsl_isnan
-#include <gsl/gsl_vector_double.h>      // for gsl_vector
-#include "hkl-pseudoaxis-auto-private.h"  // for HklFunction, etc
+#include "hkl-factory-private.h"        // for autodata_factories_, etc
+#include "hkl-pseudoaxis-common-q-private.h"  // for hkl_engine_q2_new, etc
 #include "hkl-pseudoaxis-common-hkl-private.h"  // for RUBh_minus_Q, etc
-#include "hkl-pseudoaxis-private.h"     // for hkl_engine_add_mode
-#include "hkl/ccan/array_size/array_size.h"  // for ARRAY_SIZE
-#include "hkl.h"                        // for HklMode, HklEngine, etc
 
 /* #define DEBUG */
 
@@ -56,13 +52,13 @@ static const HklFunction reflectivity_func = {
 /* mode */
 /********/
 
-static HklMode* zaxis()
+static HklMode* _zaxis()
 {
 	static const char *axes_r[] = {"mu", "omega", "delta", "gamma"};
 	static const char* axes_w[] = {"omega", "delta", "gamma"};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO(__func__, axes_r, axes_w, functions),
+		HKL_MODE_AUTO_INFO("zaxis", axes_r, axes_w, functions),
 	};
 
 	return hkl_mode_auto_new(&info,
@@ -94,7 +90,7 @@ HklEngine *hkl_engine_zaxis_hkl_new(void)
 
 	self = hkl_engine_hkl_new();
 
-	default_mode = zaxis();
+	default_mode = _zaxis();
 	hkl_engine_add_mode(self, default_mode);
 	hkl_engine_mode_set(self, default_mode);
 
@@ -102,3 +98,54 @@ HklEngine *hkl_engine_zaxis_hkl_new(void)
 
 	return self;
 }
+
+/*********/
+/* ZAXIS */
+/*********/
+
+#define HKL_GEOMETRY_TYPE_ZAXIS_DESCRIPTION				\
+	"For this geometry the **mu** axis is common to the sample and the detector.\n" \
+	"\n"								\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 2 axes for the sample\n"					\
+	"\n"								\
+	"  + **mu** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **omega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"\n"								\
+	"+ 3 axis for the detector\n"					\
+	"\n"								\
+	"  + **mu** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n"
+
+static const char* hkl_geometry_zaxis_axes[] = {"mu", "omega", "delta", "gamma"};
+
+static HklGeometry *hkl_geometry_new_zaxis(const HklFactory *factory)
+{
+	HklGeometry *self = hkl_geometry_new(factory);
+	HklHolder *h;
+
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, "omega", 0, -1, 0);
+
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1);
+
+	return self;
+}
+
+static HklEngineList *hkl_engine_list_new_zaxis(const HklFactory *factory)
+{
+	HklEngineList *self = hkl_engine_list_new();
+
+	hkl_engine_list_add(self, hkl_engine_zaxis_hkl_new());
+	hkl_engine_list_add(self, hkl_engine_q2_new());
+	hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
+
+	return self;
+}
+
+REGISTER_DIFFRACTOMETER(zaxis, "ZAXIS", HKL_GEOMETRY_TYPE_ZAXIS_DESCRIPTION);
