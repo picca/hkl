@@ -26,7 +26,6 @@
 #include "hkl-geometry-private.h"
 #include "hkl-pseudoaxis-common-eulerians-private.h"
 #include "hkl-pseudoaxis-common-q-private.h"  // for hkl_engine_q2_new, etc
-#include "hkl-pseudoaxis-e4c-private.h"  // for hkl_engine_e4c_hkl_new, etc
 #include "hkl-pseudoaxis-e6c-private.h"  // for hkl_engine_e6c_hkl_new, etc
 #include "hkl-pseudoaxis-k4cv-private.h"  // for hkl_engine_k4cv_hkl_new, etc
 #include "hkl-pseudoaxis-k6c-private.h"  // for hkl_engine_k6c_hkl_new, etc
@@ -144,52 +143,6 @@ static void hkl_geometry_list_multiply_k6c_real(HklGeometryList *self,
 }
 
 
-/********/
-/* E4CV */
-/********/
-
-#define HKL_GEOMETRY_EULERIAN4C_VERTICAL_DESCRIPTION			\
-	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
-	"+ 3 axes for the sample\n"					\
-	"\n"								\
-	"  + **omega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"  + **chi** : rotating around the :math:`\\vec{x}` direction (1, 0, 0)\n" \
-	"  + **phi** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"\n"								\
-	"+ 1 axis for the detector\n"					\
-	"\n"								\
-	"  + **tth** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
-
-static const char* hkl_geometry_eulerian4C_vertical_axes[] = {"omega", "chi", "phi", "tth"};
-
-static HklGeometry *hkl_geometry_new_eulerian4C_vertical(const HklFactory *factory)
-{
-	HklGeometry *self = hkl_geometry_new(factory);
-	HklHolder *h;
-
-	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "omega", 0, -1, 0);
-	hkl_holder_add_rotation_axis(h, "chi", 1, 0, 0);
-	hkl_holder_add_rotation_axis(h, "phi", 0, -1, 0);
-
-	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "tth", 0, -1, 0);
-
-	return self;
-}
-
-static HklEngineList *hkl_engine_list_new_eulerian4C_vertical(const HklFactory *factory)
-{
-	HklEngineList *self = hkl_engine_list_new();
-
-	hkl_engine_list_add(self, hkl_engine_e4c_hkl_new());
-	hkl_engine_list_add(self, hkl_engine_e4c_psi_new());
-	hkl_engine_list_add(self, hkl_engine_q_new());
-
-	return self;
-}
-
-REGISTER_DIFFRACTOMETER(eulerian4C_vertical, "E4CV", HKL_GEOMETRY_EULERIAN4C_VERTICAL_DESCRIPTION);
 
 /********/
 /* K4CV */
@@ -456,53 +409,6 @@ static HklEngineList *hkl_engine_list_new_soleil_sixs_med_2_2(const HklFactory *
 
 REGISTER_DIFFRACTOMETER(soleil_sixs_med_2_2,"SOLEIL SIXS MED2+2", HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_2_DESCRIPTION);
 
-/***************/
-/* SOLEIL MARS */
-/***************/
-
-#define HKL_GEOMETRY_TYPE_SOLEIL_MARS_DESCRIPTION			\
-	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
-	"+ 3 axes for the sample\n"					\
-	"\n"								\
-	"  + **omega** : rotating around the :math:`\\vec{z}` direction (0, -1, 0)\n" \
-	"  + **chi** : rotating around the :math:`\\vec{x}` direction (-1, 0, 0)\n" \
-	"  + **phi** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
-	"\n"								\
-	"+ 1 axis for the detector\n"					\
-	"\n"								\
-	"  + **tth** : rotation around the :math:`\\vec{z}` direction (0, -1, 0)\n"
-
-static const char* hkl_geometry_soleil_mars_axes[] = {"omega", "chi", "phi", "tth"};
-
-static HklGeometry *hkl_geometry_new_soleil_mars(const HklFactory *factory)
-{
-	HklGeometry *self = hkl_geometry_new(factory);
-	HklHolder *h;
-
-	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "omega", 0, -1, 0);
-	hkl_holder_add_rotation_axis(h, "chi", -1, 0, 0);
-	hkl_holder_add_rotation_axis(h, "phi", 0, 0, 1);
-
-	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "tth", 0, -1, 0);
-
-	return self;
-}
-
-static HklEngineList *hkl_engine_list_new_soleil_mars(const HklFactory *factory)
-{
-	HklEngineList *self = hkl_engine_list_new();
-
-	hkl_engine_list_add(self, hkl_engine_e4c_hkl_new());
-	hkl_engine_list_add(self, hkl_engine_e4c_psi_new());
-	hkl_engine_list_add(self, hkl_engine_q_new());
-
-	return self;
-}
-
-REGISTER_DIFFRACTOMETER(soleil_mars, "SOLEIL MARS", HKL_GEOMETRY_TYPE_SOLEIL_MARS_DESCRIPTION);
-
 /***********************/
 /* SOLEIL SIXS MED 1+2 */
 /***********************/
@@ -656,53 +562,6 @@ static HklEngineList *hkl_engine_list_new_soleil_sixs_med_2_3(const HklFactory *
 }
 
 REGISTER_DIFFRACTOMETER(soleil_sixs_med_2_3, "SOLEIL SIXS MED2+3", HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_3_DESCRIPTION);
-
-/********/
-/* E4CH */
-/********/
-
-#define HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL_DESCRIPTION		\
-	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
-	"+ 3 axes for the sample\n"					\
-	"\n"								\
-	"  + **omega** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
-	"  + **chi** : rotating around the :math:`\\vec{x}` direction (1, 0, 0)\n" \
-	"  + **phi** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
-	"\n"								\
-	"+ 1 axis for the detector\n"					\
-	"\n"								\
-	"  + **tth** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n"
-
-static const char* hkl_geometry_eulerian4C_horizontal_axes[] = {"omega", "chi", "phi", "tth"};
-
-static HklGeometry *hkl_geometry_new_eulerian4C_horizontal(const HklFactory *factory)
-{
-	HklGeometry *self = hkl_geometry_new(factory);
-	HklHolder *h;
-
-	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "omega", 0, 0, 1);
-	hkl_holder_add_rotation_axis(h, "chi", 1, 0, 0);
-	hkl_holder_add_rotation_axis(h, "phi", 0, 0, 1);
-
-	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "tth", 0, 0, 1);
-
-	return self;
-}
-
-static HklEngineList *hkl_engine_list_new_eulerian4C_horizontal(const HklFactory *factory)
-{
-	HklEngineList *self = hkl_engine_list_new();
-
-	hkl_engine_list_add(self, hkl_engine_e4c_hkl_new());
-	hkl_engine_list_add(self, hkl_engine_e4c_psi_new());
-	hkl_engine_list_add(self, hkl_engine_q_new());
-
-	return self;
-}
-
-REGISTER_DIFFRACTOMETER(eulerian4C_horizontal, "E4CH", HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL_DESCRIPTION);
 
 /************************/
 /* SOLEIL SIRIUS TURRET */
