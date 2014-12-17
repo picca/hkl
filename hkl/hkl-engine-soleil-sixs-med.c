@@ -13,30 +13,17 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2011-2014 Synchrotron SOLEIL
+ * Copyright (C) 2003-2014 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <gsl/gsl_errno.h>              // for ::GSL_CONTINUE, etc
 #include <gsl/gsl_multiroots.h>
-#include <gsl/gsl_sf_trig.h>            // for gsl_sf_angle_restrict_pos_e
-#include <gsl/gsl_vector_double.h>      // for gsl_vector, gsl_vector_ptr, etc
-#include <math.h>                       // for M_PI
-#include <stddef.h>                     // for size_t, NULL
-#include <stdlib.h>                     // for rand, RAND_MAX
+#include "hkl-factory-private.h"        // for autodata_factories_, etc
 #include "hkl-axis-private.h"           // for HklAxis
-#include "hkl-geometry-private.h"       // for HklHolder, HklHolderConfig, etc
-#include "hkl-parameter-private.h"      // for _HklParameter
-#include "hkl-pseudoaxis-auto-private.h"  // for HklFunction, etc
+#include "hkl-pseudoaxis-common-q-private.h"  // for hkl_engine_q2_new, etc
 #include "hkl-pseudoaxis-common-hkl-private.h"  // for hkl_engine_hkl_new, etc
-#include "hkl-pseudoaxis-private.h"     // for hkl_engine_add_mode
-#include "hkl-vector-private.h"
-#include "hkl.h"                        // for HklGeometry, HklEngine, etc
-#include "hkl/ccan/array_size/array_size.h"  // for ARRAY_SIZE
-#include "hkl/ccan/container_of/container_of.h"  // for container_of
-#include "hkl/ccan/darray/darray.h"     // for darray_item
 
 /* #define DEBUG */
 
@@ -307,3 +294,158 @@ HklEngine *hkl_engine_soleil_sixs_med_2_3_hkl_new(void)
 
 	return self;
 }
+
+/***********************/
+/* SOLEIL SIXS MED 2+2 */
+/***********************/
+
+#define HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_2_DESCRIPTION		\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 3 axes for the sample\n"					\
+	"\n"								\
+	"  + **beta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **mu** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **omega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"\n"								\
+	"+ 3 axis for the detector\n"					\
+	"\n"								\
+	"  + **beta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
+
+static const char* hkl_geometry_soleil_sixs_med_2_2_axes[] = {"beta", "mu", "omega", "gamma", "delta"};
+
+static HklGeometry *hkl_geometry_new_soleil_sixs_med_2_2(const HklFactory *factory)
+{
+	HklGeometry *self = hkl_geometry_new(factory);
+	HklHolder *h;
+
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "beta", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, "omega", 0, -1, 0);
+
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "beta", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
+
+	return self;
+}
+
+static HklEngineList *hkl_engine_list_new_soleil_sixs_med_2_2(const HklFactory *factory)
+{
+	HklEngineList *self = hkl_engine_list_new();
+
+	hkl_engine_list_add(self, hkl_engine_soleil_sixs_med_2_2_hkl_new());
+	hkl_engine_list_add(self, hkl_engine_q2_new());
+	hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
+
+	return self;
+}
+
+REGISTER_DIFFRACTOMETER(soleil_sixs_med_2_2,"SOLEIL SIXS MED2+2", HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_2_DESCRIPTION);
+
+/***********************/
+/* SOLEIL SIXS MED 1+2 */
+/***********************/
+
+#define HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2_DESCRIPTION		\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 2 axes for the sample\n"					\
+	"\n"								\
+	"  + **pitch** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **mu** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"\n"								\
+	"+ 3 axis for the detector\n"					\
+	"\n"								\
+	"  + **pitch** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
+
+static const char* hkl_geometry_soleil_sixs_med_1_2_axes[] = {"pitch", "mu", "gamma", "delta"};
+
+static HklGeometry *hkl_geometry_new_soleil_sixs_med_1_2(const HklFactory *factory)
+{
+	HklGeometry *self = hkl_geometry_new(factory);
+	HklHolder *h;
+
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "pitch", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
+
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "pitch", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
+
+	return self;
+}
+
+static HklEngineList *hkl_engine_list_new_soleil_sixs_med_1_2(const HklFactory *factory)
+{
+	HklEngineList *self = hkl_engine_list_new();
+
+	hkl_engine_list_add(self, hkl_engine_soleil_sixs_med_1_2_hkl_new());
+	hkl_engine_list_add(self, hkl_engine_q2_new());
+	hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
+
+	return self;
+}
+
+REGISTER_DIFFRACTOMETER(soleil_sixs_med_1_2, "SOLEIL SIXS MED1+2", HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2_DESCRIPTION);
+
+
+/***********************/
+/* SOLEIL SIXS MED 2+3 */
+/***********************/
+
+#define HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_3_DESCRIPTION		\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 3 axes for the sample\n"					\
+	"\n"								\
+	"  + **beta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **mu** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **omega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"\n"								\
+	"+ 4 axis for the detector\n"					\
+	"\n"								\
+	"  + **beta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **eta_a** : rotation around the :math:`-\\vec{x}` direction (-1, 0, 0)\n"
+
+static const char* hkl_geometry_soleil_sixs_med_2_3_axes[] = {"beta", "mu", "omega", "gamma", "delta", "eta_a"};
+
+static HklGeometry *hkl_geometry_new_soleil_sixs_med_2_3(const HklFactory *factory)
+{
+	HklGeometry *self = hkl_geometry_new(factory);
+	HklHolder *h;
+
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "beta", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, "omega", 0, -1, 0);
+
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "beta", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, "eta_a", -1, 0, 0);
+
+	return self;
+}
+
+static HklEngineList *hkl_engine_list_new_soleil_sixs_med_2_3(const HklFactory *factory)
+{
+	HklEngineList *self = hkl_engine_list_new();
+
+	self->geometries->multiply = hkl_geometry_list_multiply_soleil_sixs_med_2_3;
+	hkl_engine_list_add(self, hkl_engine_soleil_sixs_med_2_3_hkl_new());
+	hkl_engine_list_add(self, hkl_engine_q2_new());
+	hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
+
+	return self;
+}
+
+REGISTER_DIFFRACTOMETER(soleil_sixs_med_2_3, "SOLEIL SIXS MED2+3", HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_3_DESCRIPTION);
