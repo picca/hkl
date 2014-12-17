@@ -29,6 +29,7 @@ hkl_c_sources = \
 	hkl-pseudoaxis-common-hkl.c \
 	hkl-pseudoaxis-common-psi.c \
 	hkl-pseudoaxis-common-q.c \
+	hkl-engine-2c.c \
 	hkl-pseudoaxis-e4c-hkl.c \
 	hkl-pseudoaxis-e4c-psi.c \
 	hkl-pseudoaxis-e6c-hkl.c \

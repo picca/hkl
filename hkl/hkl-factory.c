@@ -72,16 +72,6 @@ HklEngineList *hkl_factory_create_new_engine_list(const HklFactory *self)
 	return self->create_new_engine_list(self);
 }
 
-#define REGISTER_DIFFRACTOMETER(name_, real_name_, description_)	\
-	static HklFactory name_ = {					\
-		.name = real_name_,					\
-		.description = description_,				\
-		.axes = DARRAY(hkl_geometry_ ## name_ ## _axes),	\
-		.create_new_geometry = &hkl_geometry_new_ ## name_,	\
-		.create_new_engine_list = &hkl_engine_list_new_ ## name_ \
-	};								\
-	AUTODATA(factories, &name_)
-
 static void kappa_2_kappap(double komega, double kappa, double kphi, double alpha,
 			   double *komegap, double *kappap, double *kphip)
 {
@@ -155,47 +145,9 @@ static void hkl_geometry_list_multiply_k6c_real(HklGeometryList *self,
 
 
 /********/
-/* TwoC */
-/********/
-
-#define HKL_GEOMETRY_TWOC_DESCRIPTION					\
-	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
-	"+ 1 axes for the sample\n"					\
-	"\n"								\
-	"  + **omega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"\n"								\
-	"+ 1 axis for the detector\n"					\
-	"\n"								\
-	"  + **tth** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
-
-static const char* hkl_geometry_twoC_axes[] = {"omega", "tth"};
-
-static HklGeometry *hkl_geometry_new_twoC(const HklFactory *factory)
-{
-	HklGeometry *self = hkl_geometry_new(factory);
-	HklHolder *h;
-
-	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "omega", 0, -1, 0);
-
-	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "tth", 0, -1, 0);
-
-	return self;
-}
-
-static HklEngineList *hkl_engine_list_new_twoC(const HklFactory *factory)
-{
-	HklEngineList *self = hkl_engine_list_new();
-
-	return self;
-}
-
-REGISTER_DIFFRACTOMETER(twoC, "TwoC", HKL_GEOMETRY_TWOC_DESCRIPTION);
-
-/********/
 /* E4CV */
 /********/
+
 #define HKL_GEOMETRY_EULERIAN4C_VERTICAL_DESCRIPTION			\
 	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
 	"+ 3 axes for the sample\n"					\

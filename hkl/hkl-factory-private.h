@@ -39,6 +39,16 @@ struct _HklFactory
 	HklFactoryEngineListFunction create_new_engine_list;
 };
 
+#define REGISTER_DIFFRACTOMETER(name_, real_name_, description_)	\
+	static HklFactory name_ = {					\
+		.name = real_name_,					\
+		.description = description_,				\
+		.axes = DARRAY(hkl_geometry_ ## name_ ## _axes),	\
+		.create_new_geometry = &hkl_geometry_new_ ## name_,	\
+		.create_new_engine_list = &hkl_engine_list_new_ ## name_ \
+	};								\
+	AUTODATA(factories, &name_)
+
 AUTODATA_TYPE(factories, HklFactory);
 
 G_END_DECLS
