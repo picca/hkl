@@ -18,19 +18,12 @@
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
- *          Maria-Teresa Nunez-Pardo-de-Verra <tnunez@mail.desy.de>
- *          Jens Krüger <Jens.Krueger@frm2.tum.de>
  */
-#include <gsl/gsl_errno.h>              // for ::GSL_SUCCESS
 #include <gsl/gsl_sys.h>                // for gsl_isnan
-#include <gsl/gsl_vector_double.h>      // for gsl_vector
-#include <math.h>                       // for fmod, M_PI
-#include "hkl-parameter-private.h"      // for HKL_PARAMETER_DEFAULTS, etc
-#include "hkl-pseudoaxis-auto-private.h"  // for HklFunction, etc
+#include "hkl-factory-private.h"        // for autodata_factories_, etc
+#include "hkl-pseudoaxis-common-q-private.h"  // for hkl_engine_q2_new, etc
 #include "hkl-pseudoaxis-common-hkl-private.h"  // for hkl_mode_operations, etc
-#include "hkl-pseudoaxis-private.h"     // for hkl_engine_add_mode
-#include "hkl/ccan/array_size/array_size.h"  // for ARRAY_SIZE
-#include "hkl.h"                        // for HklMode, HklParameter, etc
+#include "hkl-pseudoaxis-common-psi-private.h"  // for hkl_engine_psi_new, etc
 
 /***********************/
 /* numerical functions */
@@ -312,3 +305,95 @@ HklEngine *hkl_engine_e6c_hkl_new(void)
 
 	return self;
 }
+
+/********/
+/* mode */
+/********/
+
+static HklMode* psi_vertical()
+{
+	static const char *axes_r[] = {"mu", "omega", "chi", "phi", "gamma", "delta"};
+	static const char *axes_w[] = {"omega", "chi", "phi", "delta"};
+	static const HklFunction *functions[] = {&psi_func};
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS, .name = "h1", .range = {.min=-1, .max=1}, ._value=1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "k1", .range = {.min=-1, .max=1}, ._value=1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "l1", .range = {.min=-1, .max=1}, ._value=1,},
+	};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes_r, axes_w, functions, parameters),
+	};
+
+	return hkl_mode_psi_new(&info);
+}
+
+/**********************/
+/* pseudo axis engine */
+/**********************/
+
+HklEngine *hkl_engine_e6c_psi_new(void)
+{
+	HklEngine *self;
+	HklMode *default_mode;
+
+	self = hkl_engine_psi_new();
+
+	default_mode = psi_vertical();
+	hkl_engine_add_mode(self, default_mode);
+	hkl_engine_mode_set(self, default_mode);
+
+	return self;
+}
+
+/*******/
+/* E6C */
+/*******/
+
+#define HKL_GEOMETRY_EULERIAN6C_DESCRIPTION				\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 4 axes for the sample\n"					\
+	"\n"								\
+	"  + **mu** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **omega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **chi** : rotating around the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"  + **phi** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"\n"								\
+	"+ 2 axes for the detector\n"					\
+	"\n"								\
+	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
+
+static const char* hkl_geometry_eulerian6C_axes[] = {"mu", "omega", "chi", "phi", "gamma", "delta"};
+
+static HklGeometry *hkl_geometry_new_eulerian6C(const HklFactory *factory)
+{
+	HklGeometry *self = hkl_geometry_new(factory);
+	HklHolder *h;
+
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, "omega", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, "chi", 1, 0, 0);
+	hkl_holder_add_rotation_axis(h, "phi", 0, -1, 0);
+
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
+
+	return self;
+}
+
+static HklEngineList *hkl_engine_list_new_eulerian6C(const HklFactory *factory)
+{
+	HklEngineList *self = hkl_engine_list_new();
+
+	hkl_engine_list_add(self, hkl_engine_e6c_hkl_new());
+	hkl_engine_list_add(self, hkl_engine_e6c_psi_new());
+	hkl_engine_list_add(self, hkl_engine_q2_new());
+	hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
+
+	return self;
+}
+
+REGISTER_DIFFRACTOMETER(eulerian6C, "E6C", HKL_GEOMETRY_EULERIAN6C_DESCRIPTION);
+

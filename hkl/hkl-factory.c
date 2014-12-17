@@ -26,7 +26,6 @@
 #include "hkl-geometry-private.h"
 #include "hkl-pseudoaxis-common-eulerians-private.h"
 #include "hkl-pseudoaxis-common-q-private.h"  // for hkl_engine_q2_new, etc
-#include "hkl-pseudoaxis-e6c-private.h"  // for hkl_engine_e6c_hkl_new, etc
 #include "hkl-pseudoaxis-k6c-private.h"  // for hkl_engine_k6c_hkl_new, etc
 #include "hkl-pseudoaxis-petra3-private.h"
 #include "hkl-pseudoaxis-private.h"     // for hkl_engine_list_add, etc
@@ -113,58 +112,6 @@ static void hkl_geometry_list_multiply_k6c_real(HklGeometryList *self,
 	hkl_geometry_list_add(self, copy);
 	hkl_geometry_free(copy);
 }
-
-/*******/
-/* E6C */
-/*******/
-
-#define HKL_GEOMETRY_EULERIAN6C_DESCRIPTION				\
-	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
-	"+ 4 axes for the sample\n"					\
-	"\n"								\
-	"  + **mu** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
-	"  + **omega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"  + **chi** : rotating around the :math:`\\vec{x}` direction (1, 0, 0)\n" \
-	"  + **phi** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"\n"								\
-	"+ 2 axes for the detector\n"					\
-	"\n"								\
-	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
-	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
-
-static const char* hkl_geometry_eulerian6C_axes[] = {"mu", "omega", "chi", "phi", "gamma", "delta"};
-
-static HklGeometry *hkl_geometry_new_eulerian6C(const HklFactory *factory)
-{
-	HklGeometry *self = hkl_geometry_new(factory);
-	HklHolder *h;
-
-	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
-	hkl_holder_add_rotation_axis(h, "omega", 0, -1, 0);
-	hkl_holder_add_rotation_axis(h, "chi", 1, 0, 0);
-	hkl_holder_add_rotation_axis(h, "phi", 0, -1, 0);
-
-	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1);
-	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
-
-	return self;
-}
-
-static HklEngineList *hkl_engine_list_new_eulerian6C(const HklFactory *factory)
-{
-	HklEngineList *self = hkl_engine_list_new();
-
-	hkl_engine_list_add(self, hkl_engine_e6c_hkl_new());
-	hkl_engine_list_add(self, hkl_engine_e6c_psi_new());
-	hkl_engine_list_add(self, hkl_engine_q2_new());
-	hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
-
-	return self;
-}
-
-REGISTER_DIFFRACTOMETER(eulerian6C, "E6C", HKL_GEOMETRY_EULERIAN6C_DESCRIPTION);
 
 /*******/
 /* K6C */
