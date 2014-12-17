@@ -27,7 +27,6 @@
 #include "hkl-pseudoaxis-common-eulerians-private.h"
 #include "hkl-pseudoaxis-common-q-private.h"  // for hkl_engine_q2_new, etc
 #include "hkl-pseudoaxis-e6c-private.h"  // for hkl_engine_e6c_hkl_new, etc
-#include "hkl-pseudoaxis-k4cv-private.h"  // for hkl_engine_k4cv_hkl_new, etc
 #include "hkl-pseudoaxis-k6c-private.h"  // for hkl_engine_k6c_hkl_new, etc
 #include "hkl-pseudoaxis-petra3-private.h"
 #include "hkl-pseudoaxis-private.h"     // for hkl_engine_list_add, etc
@@ -88,33 +87,6 @@ static void kappa_2_kappap(double komega, double kappa, double kphi, double alph
 
 }
 
-static void hkl_geometry_list_multiply_k4c_real(HklGeometryList *self,
-						HklGeometryListItem *item)
-{
-	HklGeometry *geometry;
-	HklGeometry *copy;
-	double komega, komegap;
-	double kappa, kappap;
-	double kphi, kphip;
-
-	geometry = item->geometry;
-	komega = hkl_parameter_value_get(darray_item(geometry->axes, 0), HKL_UNIT_DEFAULT);
-	kappa = hkl_parameter_value_get(darray_item(geometry->axes, 1), HKL_UNIT_DEFAULT);
-	kphi = hkl_parameter_value_get(darray_item(geometry->axes, 2), HKL_UNIT_DEFAULT);
-
-	kappa_2_kappap(komega, kappa, kphi, 50 * HKL_DEGTORAD, &komegap, &kappap, &kphip);
-
-	copy = hkl_geometry_new_copy(geometry);
-	/* TODO parameter list for the geometry */
-	hkl_parameter_value_set(darray_item(copy->axes, 0), komegap, HKL_UNIT_DEFAULT, NULL);
-	hkl_parameter_value_set(darray_item(copy->axes, 1), kappap, HKL_UNIT_DEFAULT, NULL);
-	hkl_parameter_value_set(darray_item(copy->axes, 2), kphip, HKL_UNIT_DEFAULT, NULL);
-
-	hkl_geometry_update(copy);
-	hkl_geometry_list_add(self, copy);
-	hkl_geometry_free(copy);
-}
-
 static void hkl_geometry_list_multiply_k6c_real(HklGeometryList *self,
 						HklGeometryListItem *item)
 {
@@ -141,61 +113,6 @@ static void hkl_geometry_list_multiply_k6c_real(HklGeometryList *self,
 	hkl_geometry_list_add(self, copy);
 	hkl_geometry_free(copy);
 }
-
-
-
-/********/
-/* K4CV */
-/********/
-
-#define HKL_GEOMETRY_KAPPA4C_VERTICAL_DESCRIPTION			\
-	"For this geometry there is a special parameters called :math:`\\alpha` which is the\n" \
-	"angle between the kappa rotation axis and the  :math:`\\vec{y}` direction.\n" \
-	"\n"								\
-	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
-	"+ 3 axes for the sample\n"					\
-	"\n"								\
-	"  + **komega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"  + **kappa** : rotating around the :math:`\\vec{x}` direction (0, :math:`-\\cos\\alpha`, :math:`-\\sin\\alpha`)\n" \
-	"  + **kphi** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"\n"								\
-	"+ 1 axis for the detector\n"					\
-	"\n"								\
-	"  + **tth** : rotation around the :math:`-\\\vec{y}` direction (0, -1, 0)\n"
-
-static const char* hkl_geometry_kappa4C_vertical_axes[] = {"komega", "kappa", "kphi", "tth"};
-
-static HklGeometry *hkl_geometry_new_kappa4C_vertical(const HklFactory *factory)
-{
-	HklGeometry *self = hkl_geometry_new(factory);
-	double alpha = 50 * HKL_DEGTORAD;
-	HklHolder *h;
-
-	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "komega", 0, -1, 0);
-	hkl_holder_add_rotation_axis(h, "kappa", 0, -cos(alpha), -sin(alpha));
-	hkl_holder_add_rotation_axis(h, "kphi", 0, -1, 0);
-
-	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "tth", 0, -1, 0);
-
-	return self;
-}
-
-static HklEngineList *hkl_engine_list_new_kappa4C_vertical(const HklFactory *factory)
-{
-	HklEngineList *self = hkl_engine_list_new();
-
-	self->geometries->multiply = hkl_geometry_list_multiply_k4c_real;
-	hkl_engine_list_add(self, hkl_engine_k4cv_hkl_new());
-	hkl_engine_list_add(self, hkl_engine_eulerians_new());
-	hkl_engine_list_add(self, hkl_engine_k4cv_psi_new());
-	hkl_engine_list_add(self, hkl_engine_q_new());
-
-	return self;
-}
-
-REGISTER_DIFFRACTOMETER(kappa4C_vertical, "K4CV", HKL_GEOMETRY_KAPPA4C_VERTICAL_DESCRIPTION);
 
 /*******/
 /* E6C */
