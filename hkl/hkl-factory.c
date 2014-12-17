@@ -26,7 +26,6 @@
 #include "hkl-geometry-private.h"
 #include "hkl-pseudoaxis-common-eulerians-private.h"
 #include "hkl-pseudoaxis-common-q-private.h"  // for hkl_engine_q2_new, etc
-#include "hkl-pseudoaxis-k6c-private.h"  // for hkl_engine_k6c_hkl_new, etc
 #include "hkl-pseudoaxis-petra3-private.h"
 #include "hkl-pseudoaxis-private.h"     // for hkl_engine_list_add, etc
 #include "hkl-pseudoaxis-soleil-sixs-med-private.h"
@@ -68,108 +67,6 @@ HklEngineList *hkl_factory_create_new_engine_list(const HklFactory *self)
 {
 	return self->create_new_engine_list(self);
 }
-
-static void kappa_2_kappap(double komega, double kappa, double kphi, double alpha,
-			   double *komegap, double *kappap, double *kphip)
-{
-	double p;
-	double omega;
-	double phi;
-
-	p = atan(tan(kappa/2.) * cos(alpha));
-	omega = komega + p - M_PI_2;
-	phi = kphi + p + M_PI_2;
-
-	*komegap = gsl_sf_angle_restrict_symm(2*omega - komega);
-	*kappap = -kappa;
-	*kphip = gsl_sf_angle_restrict_symm(2*phi - kphi);
-
-}
-
-static void hkl_geometry_list_multiply_k6c_real(HklGeometryList *self,
-						HklGeometryListItem *item)
-{
-	HklGeometry *geometry;
-	HklGeometry *copy;
-	double komega, komegap;
-	double kappa, kappap;
-	double kphi, kphip;
-
-	geometry = item->geometry;
-	komega = hkl_parameter_value_get(darray_item(geometry->axes, 1), HKL_UNIT_DEFAULT);
-	kappa = hkl_parameter_value_get(darray_item(geometry->axes, 2), HKL_UNIT_DEFAULT);
-	kphi = hkl_parameter_value_get(darray_item(geometry->axes, 3), HKL_UNIT_DEFAULT);
-
-	kappa_2_kappap(komega, kappa, kphi, 50 * HKL_DEGTORAD, &komegap, &kappap, &kphip);
-
-	copy = hkl_geometry_new_copy(geometry);
-	/* TODO parameter list for the geometry */
-	hkl_parameter_value_set(darray_item(copy->axes, 1), komegap, HKL_UNIT_DEFAULT, NULL);
-	hkl_parameter_value_set(darray_item(copy->axes, 2), kappap, HKL_UNIT_DEFAULT, NULL);
-	hkl_parameter_value_set(darray_item(copy->axes, 3), kphip, HKL_UNIT_DEFAULT, NULL);
-
-	hkl_geometry_update(copy);
-	hkl_geometry_list_add(self, copy);
-	hkl_geometry_free(copy);
-}
-
-/*******/
-/* K6C */
-/*******/
-
-#define HKL_GEOMETRY_KAPPA6C_DESCRIPTION				\
-	"For this geometry there is a special parameters called :math:`\\alpha` which is the\n" \
-	"angle between the kappa rotation axis and the  :math:`\\vec{y}` direction.\n" \
-	"\n"								\
-	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
-	"+ 4 axes for the sample\n"					\
-	"\n"								\
-	"  + **mu** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
-	"  + **komega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"  + **kappa** : rotating around the :math:`\\vec{x}` direction (0, :math:`-\\cos\\alpha`, :math:`-\\sin\\alpha`)\n" \
-	"  + **kphi** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"\n"								\
-	"+ 2 axes for the detector\n"					\
-	"\n"								\
-	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
-	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
-
-static const char* hkl_geometry_kappa6C_axes[] = {"mu", "komega", "kappa", "kphi", "gamma", "delta"};
-
-static HklGeometry *hkl_geometry_new_kappa6C(const HklFactory *factory)
-{
-	HklGeometry *self = hkl_geometry_new(factory);
-	double alpha = 50 * HKL_DEGTORAD;
-	HklHolder *h;
-
-	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
-	hkl_holder_add_rotation_axis(h, "komega", 0, -1, 0);
-	hkl_holder_add_rotation_axis(h, "kappa", 0, -cos(alpha), -sin(alpha));
-	hkl_holder_add_rotation_axis(h, "kphi", 0, -1, 0);
-
-	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1);
-	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
-
-	return self;
-}
-
-static HklEngineList *hkl_engine_list_new_kappa6C(const HklFactory *factory)
-{
-	HklEngineList *self = hkl_engine_list_new();
-
-	self->geometries->multiply = hkl_geometry_list_multiply_k6c_real;
-	hkl_engine_list_add(self, hkl_engine_k6c_hkl_new());
-	hkl_engine_list_add(self, hkl_engine_eulerians_new());
-	hkl_engine_list_add(self, hkl_engine_k6c_psi_new());
-	hkl_engine_list_add(self, hkl_engine_q2_new());
-	hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
-
-	return self;
-}
-
-REGISTER_DIFFRACTOMETER(kappa6C, "K6C", HKL_GEOMETRY_KAPPA6C_DESCRIPTION);
 
 /*********/
 /* ZAXIS */
@@ -476,57 +373,3 @@ static HklEngineList *hkl_engine_list_new_soleil_sirius_turret(const HklFactory 
 
 REGISTER_DIFFRACTOMETER(soleil_sirius_turret, "SOLEIL SIRIUS TURRET", HKL_GEOMETRY_TYPE_SOLEIL_SIRIUS_TURRET_DESCRIPTION);
 
-/***********************/
-/* SOLEIL SIRIUS KAPPA */
-/***********************/
-
-#define HKL_GEOMETRY_TYPE_SOLEIL_SIRIUS_KAPPA_DESCRIPTION		\
-	"+ xrays source fix along the :math:`\\vec{x}` direction (1, 0, 0)\n" \
-	"+ 4 axes for the sample\n"					\
-	"\n"								\
-	"  + **mu** : rotating around the :math:`-\\vec{z}` direction (0, 0, -1)\n" \
-	"  + **komega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"  + **kappa** : rotating around the :math:`\\vec{x}` direction (0, :math:`-\\cos\\alpha`, :math:`-\\sin\\alpha`)\n" \
-	"  + **kphi** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"\n"								\
-	"+ 2 axes for the detector\n"					\
-	"\n"								\
-	"  + **delta** : rotation around the :math:`-\\vec{z}` direction (0, 0, -1)\n" \
-	"  + **gamma** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
-
-static const char* hkl_geometry_soleil_sirius_kappa_axes[] = {"mu", "komega", "kappa", "kphi", "delta", "gamma"};
-
-static HklGeometry *hkl_geometry_new_soleil_sirius_kappa(const HklFactory *factory)
-{
-	HklGeometry *self = hkl_geometry_new(factory);
-	double alpha = 50 * HKL_DEGTORAD;
-	HklHolder *h;
-
-	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "mu", 0, 0, -1);
-	hkl_holder_add_rotation_axis(h, "komega", 0, -1, 0);
-	hkl_holder_add_rotation_axis(h, "kappa", 0, -cos(alpha), -sin(alpha));
-	hkl_holder_add_rotation_axis(h, "kphi", 0, -1, 0);
-
-	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "delta", 0, 0, -1);
-	hkl_holder_add_rotation_axis(h, "gamma", 0, -1, 0);
-
-	return self;
-}
-
-static HklEngineList *hkl_engine_list_new_soleil_sirius_kappa(const HklFactory *factory)
-{
-	HklEngineList *self = hkl_engine_list_new();
-
-	self->geometries->multiply = hkl_geometry_list_multiply_k6c_real;
-	hkl_engine_list_add(self, hkl_engine_soleil_sirius_kappa_hkl_new());
-	hkl_engine_list_add(self, hkl_engine_eulerians_new());
-	hkl_engine_list_add(self, hkl_engine_soleil_sirius_kappa_psi_new());
-	hkl_engine_list_add(self, hkl_engine_q2_new());
-	hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
-
-	return self;
-}
-
-REGISTER_DIFFRACTOMETER(soleil_sirius_kappa, "SOLEIL SIRIUS KAPPA", HKL_GEOMETRY_TYPE_SOLEIL_SIRIUS_KAPPA_DESCRIPTION);
