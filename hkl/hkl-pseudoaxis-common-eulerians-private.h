@@ -39,6 +39,9 @@ struct _HklEngineEulerians
 
 extern HklEngine *hkl_engine_eulerians_new(void);
 
+extern void kappa_2_kappap(double komega, double kappa, double kphi, double alpha,
+			   double *komegap, double *kappap, double *kphip);
+
 G_END_DECLS
 
 #endif /* __HKL_PSEUDOAXIS_COMMON_EULERIANS_H__ */

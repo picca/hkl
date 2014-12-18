@@ -94,6 +94,23 @@ static int eulerian_to_kappa(const double omega, const double chi, const double 
 	return status;
 }
 
+void kappa_2_kappap(double komega, double kappa, double kphi, double alpha,
+		    double *komegap, double *kappap, double *kphip)
+{
+	double p;
+	double omega;
+	double phi;
+
+	p = atan(tan(kappa/2.) * cos(alpha));
+	omega = komega + p - M_PI_2;
+	phi = kphi + p + M_PI_2;
+
+	*komegap = gsl_sf_angle_restrict_symm(2*omega - komega);
+	*kappap = -kappa;
+	*kphip = gsl_sf_angle_restrict_symm(2*phi - kphi);
+
+}
+
 /***********/
 /* HklMode */
 /***********/

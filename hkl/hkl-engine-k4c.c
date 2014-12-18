@@ -26,23 +26,6 @@
 #include "hkl-pseudoaxis-common-hkl-private.h"  // for RUBh_minus_Q, etc
 #include "hkl-pseudoaxis-common-psi-private.h"  // for hkl_engine_psi_new, etc
 
-static void kappa_2_kappap(double komega, double kappa, double kphi, double alpha,
-			   double *komegap, double *kappap, double *kphip)
-{
-	double p;
-	double omega;
-	double phi;
-
-	p = atan(tan(kappa/2.) * cos(alpha));
-	omega = komega + p - M_PI_2;
-	phi = kphi + p + M_PI_2;
-
-	*komegap = gsl_sf_angle_restrict_symm(2*omega - komega);
-	*kappap = -kappa;
-	*kphip = gsl_sf_angle_restrict_symm(2*phi - kphi);
-
-}
-
 static void hkl_geometry_list_multiply_k4c_real(HklGeometryList *self,
 						HklGeometryListItem *item)
 {
