@@ -34,7 +34,7 @@ hkl_c_sources = \
 	hkl-engine-k4c.c \
 	hkl-engine-e6c.c \
 	hkl-engine-k6c.c \
-	hkl-engine-petra3.c \
+	hkl-engine-petra3-p09-eh2.c \
 	hkl-engine-soleil-sirius-turret.c \
 	hkl-engine-soleil-sixs-med.c \
 	hkl-engine-zaxis.c \

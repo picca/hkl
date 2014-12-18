@@ -77,7 +77,7 @@ static HklMode* reflectivity_2_2()
 				 TRUE);
 }
 
-HklEngine *hkl_engine_soleil_sixs_med_2_2_hkl_new(void)
+static HklEngine *hkl_engine_soleil_sixs_med_2_2_hkl_new(void)
 {
 	HklEngine *self;
 	HklMode *default_mode;
@@ -111,7 +111,7 @@ static HklMode* pitch_fixed()
 				 TRUE);
 }
 
-HklEngine *hkl_engine_soleil_sixs_med_1_2_hkl_new(void)
+static HklEngine *hkl_engine_soleil_sixs_med_1_2_hkl_new(void)
 {
 	HklEngine *self;
 	HklMode *default_mode;
@@ -227,8 +227,8 @@ static int fit_slits_orientation(HklSlitsFit *params)
 	return res;
 }
 
-void hkl_geometry_list_multiply_soleil_sixs_med_2_3(HklGeometryList *self,
-						    HklGeometryListItem *item)
+static void hkl_geometry_list_multiply_soleil_sixs_med_2_3(HklGeometryList *self,
+							   HklGeometryListItem *item)
 {
 	unsigned int i;
 	unsigned int len;
@@ -281,7 +281,7 @@ static HklMode* mu_fixed_2_3()
 				 TRUE);
 }
 
-HklEngine *hkl_engine_soleil_sixs_med_2_3_hkl_new(void)
+static HklEngine *hkl_engine_soleil_sixs_med_2_3_hkl_new(void)
 {
 	HklEngine *self;
 	HklMode *default_mode;

@@ -41,7 +41,7 @@ static HklMode* lifting_detector_thetah()
 				 TRUE);
 }
 
-HklEngine *hkl_engine_soleil_sirius_turret_hkl_new(void)
+static HklEngine *hkl_engine_soleil_sirius_turret_hkl_new(void)
 {
 	HklEngine *self;
 	HklMode *default_mode;

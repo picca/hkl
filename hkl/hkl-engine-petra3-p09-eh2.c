@@ -23,47 +23,6 @@
 #include "hkl-factory-private.h"        // for autodata_factories_, etc
 #include "hkl-pseudoaxis-common-hkl-private.h"
 
-
-/***********************/
-/* numerical functions */
-/***********************/
-
-static int _reflectivity(const gsl_vector *x, void *params, gsl_vector *f)
-{
-	const double mu = x->data[0];
-	const double gamma = x->data[3];
-
-	CHECK_NAN(x->data, x->size);
-
-	RUBh_minus_Q(x->data, params, f->data);
-	f->data[3] = mu - gamma;
-
-	return  GSL_SUCCESS;
-}
-
-static const HklFunction reflectivity = {
-	.function = _reflectivity,
-	.size = 4,
-};
-
-static int _bissector_horizontal(const gsl_vector *x, void *params, gsl_vector *f)
-{
-	const double omega = x->data[0];
-	const double delta = x->data[3];
-
-	CHECK_NAN(x->data, x->size);
-
-	RUBh_minus_Q(x->data, params, f->data);
-	f->data[3] = delta - 2 * fmod(omega, M_PI);
-
-	return  GSL_SUCCESS;
-}
-
-static const HklFunction bissector_horizontal = {
-	.function = _bissector_horizontal,
-	.size = 4,
-};
-
 /********/
 /* mode */
 /********/
@@ -96,6 +55,27 @@ static HklMode *zaxis_beta_fixed()
 				 TRUE);
 }
 
+/* zaxis + alpha=beta */
+
+static int _reflectivity(const gsl_vector *x, void *params, gsl_vector *f)
+{
+	const double mu = x->data[0];
+	const double gamma = x->data[3];
+
+	CHECK_NAN(x->data, x->size);
+
+	RUBh_minus_Q(x->data, params, f->data);
+	f->data[3] = mu - gamma;
+
+	return  GSL_SUCCESS;
+}
+
+static const HklFunction reflectivity = {
+	.function = _reflectivity,
+	.size = 4,
+};
+
+
 static HklMode *zaxis_alpha_eq_beta()
 {
 	static const char *axes_r[] = {"mu", "omega", "chi", "phi", "delta", "gamma"};
@@ -109,6 +89,26 @@ static HklMode *zaxis_alpha_eq_beta()
 				 &hkl_full_mode_operations,
 				 TRUE);
 }
+
+/* 4-circles bissecting horizontal */
+
+static int _bissector_horizontal(const gsl_vector *x, void *params, gsl_vector *f)
+{
+	const double omega = x->data[0];
+	const double delta = x->data[3];
+
+	CHECK_NAN(x->data, x->size);
+
+	RUBh_minus_Q(x->data, params, f->data);
+	f->data[3] = delta - 2 * fmod(omega, M_PI);
+
+	return  GSL_SUCCESS;
+}
+
+static const HklFunction bissector_horizontal = {
+	.function = _bissector_horizontal,
+	.size = 4,
+};
 
 static HklMode *fourc_bissector_horizontal()
 {
@@ -170,7 +170,7 @@ static HklMode *fourc_constant_phi_horizontal()
 /* pseudo axis engine */
 /**********************/
 
-HklEngine *hkl_engine_petra3_p09_eh2_hkl_new(void)
+static HklEngine *hkl_engine_petra3_p09_eh2_hkl_new(void)
 {
 	HklEngine *self;
 	HklMode *default_mode;

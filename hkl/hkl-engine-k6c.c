@@ -623,7 +623,7 @@ static HklMode *constant_incidence(void)
 /* pseudo axis engine */
 /**********************/
 
-HklEngine *hkl_engine_k6c_hkl_new(void)
+static HklEngine *hkl_engine_k6c_hkl_new(void)
 {
 	HklEngine *self;
 	HklMode *default_mode;
@@ -888,7 +888,7 @@ static HklMode *constant_incidence_soleil_sirius_kappa(void)
 					   TRUE);
 }
 
-HklEngine *hkl_engine_soleil_sirius_kappa_hkl_new(void)
+static HklEngine *hkl_engine_soleil_sirius_kappa_hkl_new(void)
 {
 	HklEngine *self;
 	HklMode *default_mode;
@@ -933,7 +933,7 @@ static HklMode *psi_vertical()
 	return hkl_mode_psi_new(&info);
 }
 
-HklEngine *hkl_engine_k6c_psi_new(void)
+static HklEngine *hkl_engine_k6c_psi_new(void)
 {
 	HklEngine *self;
 	HklMode *default_mode;
@@ -968,7 +968,7 @@ static HklMode *psi_vertical_soleil_sirius_kappa()
 	return hkl_mode_psi_new(&info);
 }
 
-HklEngine *hkl_engine_soleil_sirius_kappa_psi_new(void)
+static HklEngine *hkl_engine_soleil_sirius_kappa_psi_new(void)
 {
 	HklEngine *self;
 	HklMode *default_mode;

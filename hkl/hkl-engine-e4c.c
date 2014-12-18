@@ -25,9 +25,7 @@
 #include "hkl-pseudoaxis-common-hkl-private.h"  // for hkl_mode_operations, etc
 #include "hkl-pseudoaxis-common-psi-private.h"  // for hkl_engine_psi_new, etc
 
-/***********************/
-/* numerical functions */
-/***********************/
+/* bissector */
 
 static int _bissector_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
@@ -46,10 +44,6 @@ static const HklFunction bissector_func = {
 	.function = _bissector_func,
 	.size = 4,
 };
-
-/*********/
-/* modes */
-/*********/
 
 static HklMode *bissector(void)
 {
@@ -149,7 +143,7 @@ static HklMode *psi_constant(void)
 /* pseudo axes engines */
 /***********************/
 
-HklEngine *hkl_engine_e4c_hkl_new(void)
+static HklEngine *hkl_engine_e4c_hkl_new(void)
 {
 	HklEngine *self;
 	HklMode *default_mode;
@@ -185,7 +179,7 @@ static HklMode *psi(void)
 	return hkl_mode_psi_new(&info);
 }
 
-HklEngine *hkl_engine_e4c_psi_new(void)
+static HklEngine *hkl_engine_e4c_psi_new(void)
 {
 	HklEngine *self;
 	HklMode *default_mode;

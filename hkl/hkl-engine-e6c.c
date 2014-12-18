@@ -279,7 +279,7 @@ static HklMode *constant_mu_horizontal(void)
 /* E6C PseudoAxeEngine */
 /***********************/
 
-HklEngine *hkl_engine_e6c_hkl_new(void)
+static HklEngine *hkl_engine_e6c_hkl_new(void)
 {
 	HklEngine *self;
 	HklMode *default_mode;
@@ -331,7 +331,7 @@ static HklMode* psi_vertical()
 /* pseudo axis engine */
 /**********************/
 
-HklEngine *hkl_engine_e6c_psi_new(void)
+static HklEngine *hkl_engine_e6c_psi_new(void)
 {
 	HklEngine *self;
 	HklMode *default_mode;

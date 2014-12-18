@@ -26,9 +26,21 @@
 
 /* #define DEBUG */
 
-/***********************/
-/* numerical functions */
-/***********************/
+static HklMode* _zaxis()
+{
+	static const char *axes_r[] = {"mu", "omega", "delta", "gamma"};
+	static const char *axes_w[] = {"omega", "delta", "gamma"};
+	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO("zaxis", axes_r, axes_w, functions),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_full_mode_operations,
+				 TRUE);
+}
+
+/* reflectivity */
 
 static int _reflectivity_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
@@ -48,24 +60,6 @@ static const HklFunction reflectivity_func = {
 	.size = 4,
 };
 
-/********/
-/* mode */
-/********/
-
-static HklMode* _zaxis()
-{
-	static const char *axes_r[] = {"mu", "omega", "delta", "gamma"};
-	static const char* axes_w[] = {"omega", "delta", "gamma"};
-	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
-	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO("zaxis", axes_r, axes_w, functions),
-	};
-
-	return hkl_mode_auto_new(&info,
-				 &hkl_full_mode_operations,
-				 TRUE);
-}
-
 static HklMode* reflectivity()
 {
 	static const char* axes[] = {"mu", "omega", "delta", "gamma"};
@@ -83,7 +77,7 @@ static HklMode* reflectivity()
 /* pseudo axis engine */
 /**********************/
 
-HklEngine *hkl_engine_zaxis_hkl_new(void)
+static HklEngine *hkl_engine_zaxis_hkl_new(void)
 {
 	HklEngine *self;
 	HklMode *default_mode;

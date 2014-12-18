@@ -70,9 +70,11 @@ static void hkl_geometry_list_multiply_k4c_real(HklGeometryList *self,
 	hkl_geometry_free(copy);
 }
 
-/***********************/
-/* numerical functions */
-/***********************/
+/************/
+/* hkl mode */
+/************/
+
+/* bissector */
 
 static int _bissector_f1(const gsl_vector *x, void *params, gsl_vector *f)
 {
@@ -117,6 +119,21 @@ static const HklFunction bissector_f2 = {
 	.function = _bissector_f2,
 	.size = 4,
 };
+
+static HklMode *bissector(void)
+{
+	static const char* axes[] = {"komega", "kappa", "kphi", "tth"};
+	static const HklFunction *functions[] = {&bissector_f1, &bissector_f2};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO(__func__, axes, axes, functions),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_mode_operations,
+				 TRUE);
+}
+
+/* constant omega */
 
 static int _constant_omega_f1(const gsl_vector *x, void *params, gsl_vector *f)
 {
@@ -164,6 +181,24 @@ static const HklFunction constant_omega_f2 = {
 	.size = 4,
 };
 
+static HklMode *constant_omega(void)
+{
+	static const char* axes[] = {"komega", "kappa", "kphi", "tth"};
+	static const HklFunction *functions[] = {&constant_omega_f1, &constant_omega_f2};
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "omega"},
+	};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes, functions, parameters),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_mode_operations,
+				 TRUE);
+}
+
+/* constant chi */
+
 static int _constant_chi_f1(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	const double kappa = x->data[1];
@@ -207,6 +242,24 @@ static const HklFunction constant_chi_f2 = {
 	.function = _constant_chi_f2,
 	.size = 4,
 };
+
+static HklMode *constant_chi(void)
+{
+	static const char* axes[] = {"komega", "kappa", "kphi", "tth"};
+	static const HklFunction *functions[] = {&constant_chi_f1, &constant_chi_f2};
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "chi"},
+	};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes, functions, parameters),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_mode_operations,
+				 TRUE);
+}
+
+/* constant phi */
 
 static int _constant_phi_f1(const gsl_vector *x, void *params, gsl_vector *f)
 {
@@ -253,55 +306,6 @@ static const HklFunction constant_phi_f2 = {
 	.function = _constant_phi_f2,
 	.size = 4,
 };
-
-/********/
-/* mode */
-/********/
-
-static HklMode *bissector(void)
-{
-	static const char* axes[] = {"komega", "kappa", "kphi", "tth"};
-	static const HklFunction *functions[] = {&bissector_f1, &bissector_f2};
-	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO(__func__, axes, axes, functions),
-	};
-
-	return hkl_mode_auto_new(&info,
-				 &hkl_mode_operations,
-				 TRUE);
-}
-
-static HklMode *constant_omega(void)
-{
-	static const char* axes[] = {"komega", "kappa", "kphi", "tth"};
-	static const HklFunction *functions[] = {&constant_omega_f1, &constant_omega_f2};
-	static const HklParameter parameters[] = {
-		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "omega"},
-	};
-	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes, functions, parameters),
-	};
-
-	return hkl_mode_auto_new(&info,
-				 &hkl_mode_operations,
-				 TRUE);
-}
-
-static HklMode *constant_chi(void)
-{
-	static const char* axes[] = {"komega", "kappa", "kphi", "tth"};
-	static const HklFunction *functions[] = {&constant_chi_f1, &constant_chi_f2};
-	static const HklParameter parameters[] = {
-		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "chi"},
-	};
-	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes, functions, parameters),
-	};
-
-	return hkl_mode_auto_new(&info,
-				 &hkl_mode_operations,
-				 TRUE);
-}
 
 static HklMode *constant_phi(void)
 {
@@ -356,11 +360,7 @@ static HklMode *psi_constant(void)
 				 TRUE);
 }
 
-/**********************/
-/* pseudo axis engine */
-/**********************/
-
-HklEngine *hkl_engine_k4cv_hkl_new(void)
+static HklEngine *hkl_engine_k4cv_hkl_new(void)
 {
 	HklEngine *self;
 	HklMode *default_mode;
@@ -380,10 +380,11 @@ HklEngine *hkl_engine_k4cv_hkl_new(void)
 	return self;
 }
 
-/********/
-/* mode */
-/********/
+/************/
+/* psi mode */
+/************/
 
+/* psi */
 static HklMode *psi()
 {
 	static const char *axes[] = {"komega", "kappa", "kphi", "tth"};
@@ -400,11 +401,7 @@ static HklMode *psi()
 	return hkl_mode_psi_new(&info);
 }
 
-/**********************/
-/* pseudo axis engine */
-/**********************/
-
-HklEngine *hkl_engine_k4cv_psi_new(void)
+static HklEngine *hkl_engine_k4cv_psi_new(void)
 {
 	HklEngine *self;
 	HklMode *default_mode;
@@ -417,8 +414,6 @@ HklEngine *hkl_engine_k4cv_psi_new(void)
 
 	return self;
 }
-
-
 
 /********/
 /* K4CV */
