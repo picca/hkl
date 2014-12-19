@@ -77,6 +77,10 @@ libhkl_la_CFLAGS = \
 	-Wno-unused-result # \ do not activate visibility yet.
 	-fvisibility=hidden
 
+# just compile the template diffractometer to be sure that it is valid
+noinst_LTLIBRARIES = libdummy.la
+libdummy_la_SOURCES = hkl-engine-template.c
+
 # introspection
 
 -include $(INTROSPECTION_MAKEFILE)
