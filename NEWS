@@ -1,19 +1,37 @@
-5.0.0	UNRELEASED
-	* general:
-	  - use the c-tap-hardness library for the test suite.
-	  - add the hkl3d library (anti-collision)
-	  - add a 3D view to ghkl
-	    - add the diffabs (SOLEIL) 3D model.
-	  - add a --disable-hkl3d flag to avoid hkl3d library compilation.
-	  - replace the --enable-ghkl with a --disable-gui
-	  - use the gobject-instrospection to provide bindings.
-	    - python binding (tested)
-	    - all other languages (not tested)
-	* new diffractometers
-	  - E4CH (eulerian 4 circles horizontal) geometry.
-	  - MARS beamline (SOLEIL) eulerian 4 circles vertical geometry.
+# -*- org -*-
 
-4.0.4	UNRELEASED
+* 5.0.0	UNRELEASED
+** General
+   - This version can be co-installed with the 4.x series.
+   - The public API is located inside only one file hkl.h.
+   - There is a clear split between the public and the private API in
+     order to achieve a Long Time Support of the library.
+   - c-tap-hardness library is used for the test suite.
+   - Bindings are provided using the gobject-introspection project.
+   - Now documentation use sphinx and asymptote for the figures.
+   - New diffractometers added
+     - E4CH (eulerian 4 circles horizontal) geometry.
+     - MARS beamline (SOLEIL) eulerian 4 circles vertical geometry.
+     - SOLEIL SIRIUS KAPPA
+     - SOLEIL SIRIUS TURRET
+   - A non-public hkl3d library, used by the gui, for an
+     anti-collision system was added.
+** Buildsystem
+   - add a --disable-hkl3d flag to avoid hkl3d library compilation.
+   - replace the --enable-ghkl with a --disable-gui
+   - use ./configure --help for all the options
+** Gui
+   - use Gtk instead of Gtkmm.
+   - added a 3D view to display diffractometers model.
+   - added the K6C 3D model.
+** Bindings
+   - python binding (tested)
+   - all other languages (not yet tested) look at here for a list of
+     language binding whcih use object-introspection
+   https://wiki.gnome.org/Projects/GObjectIntrospection/Users
+
+
+* 4.0.4	UNRELEASED
 	* add the SOLEIL SIXS MED2+2 diffractometer
 	  - engine: hkl
 	    - mode: reflectivity.
@@ -31,22 +49,22 @@
 	  - engine: qper_qpar
 	* add the sphinx documentation
 
-4.0.3	06-06-2010
+* 4.0.3	06-06-2010
 	* remove the usage.c file to avoid a GPL2-GPL3+ incompatibility
 	* update the documentation
 	* fix warning catched by clang
 
-4.0.2	01-06-2010
+* 4.0.2	01-06-2010
 	* add the ghkl manpage and .desktop file
 	* fix the ghkl quit menuitem bugs
 
-4.0.1	10-05-2010
+* 4.0.1	10-05-2010
 	* fix a few ghkl bugs (.ui files installation)
 	* add a --enable-ghkl=[yes,no] flag to allow compiling the gui interface
 	* do not forgot to link ghkl against gsl.
 	* display by default the preference panel of ghkl.
 
-4.0.0	14-04-2010
+* 4.0.0	14-04-2010
 
 	* add the autotools buildsystem and remove all other systems.
 	* add a GUI ghkl for testing purpose based on gtkmm.
@@ -61,14 +79,14 @@
 		- mode zaxis
 		- mode reflectivity (mu = gamma)
 
-3.0.1	23-10-2009
+* 3.0.1	23-10-2009
 
 	* add the psi_constant mode to the e4cv, e6c, k4cv and k6c geometries. (thanks teresa)
 	* upgrade the user guide to explain how to add a mode.
 	* the horizontal modes are also valid if omega = +-PI. (e6c, k6c)
 	* remove geometries with an invalid range from the list of solutions.
 
-3.0.0	15-07-2009
+* 3.0.0	15-07-2009
 
 	* Rewrote from scratch in C with the GSL library.
 		- now most of pseudo axes modes are numeric.
@@ -122,7 +140,7 @@
 		- PseudoAxisEngien "eulerians": "omega", "chi", "phi"
 			* mode "eulerians"
 
-2.3.0   24-01-2007
+* 2.3.0 24-01-2007
 
     * Refactoring of the sample part.
       - It is now possible to create different kind of samples easily.
@@ -160,8 +178,7 @@
       - Derived Mode can be created from an already existing Mode if the Geometry conversion exist.
       - all Eulerian 4 Circles on the kappa4C, Eulerian6c and Kappa6C diffractometers.
 
-
-2.2.0   19-06-2006
+* 2.2.0 19-06-2006
     
     * Diffractometers:
       - twoC Vertical.
