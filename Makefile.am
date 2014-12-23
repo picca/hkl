@@ -21,7 +21,8 @@ pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = hkl.pc
 
 if HKL3D
-pkgconfig_DATA += hkl3d.pc
+#for not do not install
+noinst_DATA = hkl3d.pc
 endif
 
 ## lcov part
