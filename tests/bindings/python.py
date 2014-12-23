@@ -132,6 +132,7 @@ class TestAPI(unittest.TestCase):
         for engine in engines.engines_get():
             self.assertTrue(type(engine) is Hkl.Engine)
             self.assertTrue(type(engine.name_get()) is str)
+            self.assertTrue(type(engine.pseudo_axes_names_get()) is list)
             self.assertTrue(type(engine.modes_names_get()) is list)
             self.assertTrue(len(engine.modes_names_get()))
             for mode in engine.modes_names_get():
