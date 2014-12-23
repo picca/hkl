@@ -111,92 +111,6 @@ dnl ***********
 
 AC_PATH_PROG([ASY], [asy], [echo])
 
-dnl *********************************************
-dnl *** took from the bullet configure script ***
-dnl *********************************************
-
-AC_CANONICAL_HOST
-case "$host" in
-        *-*-mingw*|*-*-cygwin*)
-                AC_DEFINE(PLATFORM_WIN32, 1, [Platform is Win32])
-                opengl_LIBS="-lunsupported_platform"
-                PLATFORM_STRING="Win32"
-                ;;
-        *-*-linux*)
-                AC_DEFINE(PLATFORM_LINUX, 1, [Platform is Linux])
-                opengl_LIBS="-lGL -lGLU"
-                PLATFORM_STRING="Linux"
-                ;;
-        *-*-darwin*)
-                AC_DEFINE(PLATFORM_APPLE, 1, [Platform is Apple])
-                opengl_LIBS="-framework AGL -framework OpenGL -framework GLUT"
-                PLATFORM_STRING="Apple"
-                ;;
-        *)
-                AC_MSG_WARN([*** Please add $host to configure.ac checks!])
-                ;;
-esac
-AC_SUBST(opengl_LIBS)
-
-case "$host" in
-        i?86-* | k?-* | athlon-* | pentium*-)
-                AC_DEFINE(ARCH_X86, 1, [Architecture is x86])
-                ARCH_SPECIFIC_CFLAGS=""
-                ARCH_STRING="X86"
-                ;;
-        x86_64-*)
-                AC_DEFINE(ARCH_X86_64, 1, [Architecture is x86-64])
-                ARCH_SPECIFIC_CFLAGS="-DUSE_ADDR64"
-                ARCH_STRING="X86-64"
-                ;;
-        ppc-* | powerpc-*)
-                AC_DEFINE(ARCH_PPC, 1, [Architecture is PowerPC])
-                ARCH_SPECIFIC_CFLAGS=""
-                ARCH_STRING="PowerPC"
-                ;;
-        *)
-                AC_MSG_ERROR([Unknown Architecture])
-                ;;
-esac
-AC_C_BIGENDIAN
-
-#----------------------------------------------------------------------------
-# Package configuration switches.
-#----------------------------------------------------------------------------
-AC_ARG_ENABLE([multithreaded],
-	[AS_HELP_STRING([--enable-multithreaded],[build BulletMultiThreaded (default NO)])],
-	[disable_multithreaded=no], [disable_multithreaded=yes])
-AC_MSG_CHECKING([BulletMultiThreaded])
-AS_IF([test "$disable_multithreaded" = yes], [build_multithreaded=no], [build_multithreaded=yes])
-AC_MSG_RESULT([$build_multithreaded])
-AM_CONDITIONAL([CONDITIONAL_BUILD_MULTITHREADED], [test "$build_multithreaded" = yes])
-
-AC_ARG_ENABLE([demos],
-    [AS_HELP_STRING([--disable-demos],
-	    [disable Bullet demos])],
-    [],
-    [enable_demos=yes])
-AM_CONDITIONAL([CONDITIONAL_BUILD_DEMOS], [false])
-if test "x$enable_demos" != xno; then
-    AC_MSG_NOTICE([Building Bullet demos])
-    AM_CONDITIONAL([CONDITIONAL_BUILD_DEMOS],[true])
-fi
-
-
-
-AC_ARG_ENABLE([debug],
-    [AS_HELP_STRING([--enable-debug],[build with debugging information (default NO)])],
-    [], [enable_debug=no])
-
-AC_MSG_CHECKING([build mode])
-AS_IF([test $enable_debug = yes], [build_mode=debug], [build_mode=optimize])
-AC_MSG_RESULT([$build_mode])
-
-CFLAGS="$ARCH_SPECIFIC_CFLAGS $CFLAGS"
-CXXFLAGS="$ARCH_SPECIFIC_CFLAGS $CXXFLAGS $CFLAGS"
-
-### end bullet configure script
-
 dnl *******************************
 dnl *** add an option for hkl3d ***
 dnl *******************************
@@ -209,6 +123,7 @@ AC_ARG_ENABLE([hkl3d],
 AM_CONDITIONAL([HKL3D], [test x$enable_hkl3d != xno])
 AM_COND_IF([HKL3D],
 	   [PKG_CHECK_MODULES([G3D], [libg3d >= 0.0.8])
+	    PKG_CHECK_MODULES([BULLET], [bullet >= 2.82])
 	   dnl check for yaml
 	   AC_SEARCH_LIBS([yaml_get_version], [yaml],
 			  [AC_CHECK_HEADERS([yaml.h], [],
@@ -344,8 +259,6 @@ AC_CONFIG_FILES([Makefile
 		 hkl/ccan/Makefile
 		 hkl.pc
 		 hkl3d/Makefile
-		 hkl3d/bullet/Makefile
-		 hkl3d/bullet/src/Makefile
 		 hkl3d.pc
 		 tests/Makefile
 		 tests/bindings/Makefile

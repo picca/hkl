@@ -39,10 +39,11 @@ you can also build a GUI interfaces which use `gtk <http://www.gtk.org>`_::
   $ make
   $ sudo make install
 
-optionnaly you can build an experimental *libhkl3d* library (no public API
-for now) which is used by the GUI to display and compute
+optionnaly you can build an experimental *libhkl3d* library (no public
+API for now) which is used by the GUI to display and compute
 diffractometer collisions (only the *K6C* model). To build it you need
-also `gtkglext <https://projects.gnome.org/gtkglext/>`_::
+also `gtkglext <https://projects.gnome.org/gtkglext/>`_ and
+`bullet 2.82 <http://bulletphysics.org/wordpress/>`_::
 
   $ ./configure --enable-hkl3d
   $ make

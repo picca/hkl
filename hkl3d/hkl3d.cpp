@@ -1152,11 +1152,11 @@ struct ContactSensorCallback : public btCollisionWorld::ContactResultCallback
 	Hkl3DObject *object;
 
 	virtual btScalar addSingleResult(btManifoldPoint & cp,
-					 const btCollisionObject *colObj0, int partId0, int index0,
-					 const btCollisionObject *colObj1, int partId1, int index1)
+					 const btCollisionObjectWrapper *colObj0, int partId0, int index0,
+					 const btCollisionObjectWrapper *colObj1, int partId1, int index1)
 		{
-			if(colObj0 == collisionObject
-			   || colObj1 == collisionObject)
+			if(colObj0->m_collisionObject == collisionObject
+			   || colObj1->m_collisionObject == collisionObject)
 				object->is_colliding = TRUE;
 			return 0;
 		}

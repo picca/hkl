@@ -36,16 +36,16 @@ AM_CFLAGS += \
 	-I$(top_srcdir)/hkl3d/bullet/src \
 	-DHKL3D \
 	$(G3D_CFLAGS) \
-	$(GTKGLEXT_CFLAGS)
+	$(GTKGLEXT_CFLAGS) \
+	$(BULLET_CFLAGS)
 
 AM_LDFLAGS += -lstdc++\
 	$(G3D_LIBS) \
-	$(GTKGLEXT_LIBS)
+	$(GTKGLEXT_LIBS) \
+	$(BULLET_LIBS)
 
 ghkl_LDADD += \
-	$(top_builddir)/hkl3d/libhkl3d.la \
-	$(top_builddir)/hkl3d/bullet/src/libbulletdynamics.la
-
+	$(top_builddir)/hkl3d/libhkl3d.la
 
 ghkl_SOURCES += \
 	hkl-gui-3d-gl.c \

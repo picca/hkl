@@ -43,9 +43,11 @@ if HKL3D
 all_tests += hkl3d-test-t
 
 AM_CPPFLAGS += -I$(top_srcdir)/hkl3d \
-	$(G3D_CFLAGS)
+	$(G3D_CFLAGS) \
+	$(BULLET_CFLAGS)
 
-LDADD += $(top_builddir)/hkl3d/libhkl3d.la
+LDADD += $(top_builddir)/hkl3d/libhkl3d.la \
+	$(BULLET_LIBS)
 
 endif
 
