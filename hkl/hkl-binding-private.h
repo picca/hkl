@@ -51,12 +51,6 @@ HKLAPI double* hkl_geometry_axes_values_get_binding(const HklGeometry *self, uns
 
 HKLAPI GSList* hkl_geometry_list_items(HklGeometryList *self) HKL_ARG_NONNULL(1);
 
-/***********************/
-/* HklGeometryListItem */
-/***********************/
-
-HKLAPI const HklGeometry *hkl_geometry_list_item_geometry(const HklGeometryListItem *self) HKL_ARG_NONNULL(1);
-
 /*************/
 /* HklEngine */
 /*************/

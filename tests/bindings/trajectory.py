@@ -39,7 +39,7 @@ def compute_hkl_trajectories(engines, engine, hkl1=None, hkl2=None, n=100):
                     trajectories[i]
                 except IndexError:
                     trajectories.append([])
-                values = item.geometry().axes_values_get(Hkl.UnitEnum.USER)
+                values = item.geometry_get().axes_values_get(Hkl.UnitEnum.USER)
                 trajectories[i].append(values)
             engines.select_solution(first_solution)
         except GLib.GError, err:

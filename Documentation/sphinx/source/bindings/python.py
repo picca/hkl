@@ -68,7 +68,7 @@ for _ in range(100):
         print
 
         for i, item in enumerate(solutions.items()):
-            read = item.geometry().axes_values_get(Hkl.UnitEnum.USER)
+            read = item.geometry_get().axes_values_get(Hkl.UnitEnum.USER)
             print("{}".format(repr(i).center(15))),
             for value in read:
                 print("{}".format(repr(value)[:15].center(15))),

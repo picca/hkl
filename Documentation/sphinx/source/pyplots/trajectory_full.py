@@ -47,7 +47,7 @@ for hh, kk, ll in zip(h, k, l):
                 trajectories[i]
             except IndexError:
                 trajectories.append([])
-            values = item.geometry().axes_values_get(Hkl.UnitEnum.USER)
+            values = item.geometry_get().axes_values_get(Hkl.UnitEnum.USER)
             # print values, item.geometry.distance(geometry)
             trajectories[i].append(values)
         engines.select_solution(first_solution)

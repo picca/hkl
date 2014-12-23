@@ -123,7 +123,7 @@ class TestAPI(unittest.TestCase):
                 self.assertTrue(type(solutions) is Hkl.GeometryList)
                 for item in solutions.items():
                     self.assertTrue(type(item) is Hkl.GeometryListItem)
-                    self.assertTrue(type(item.geometry()) is Hkl.Geometry)
+                    self.assertTrue(type(item.geometry_get()) is Hkl.Geometry)
                 values[1] += .01
             except GLib.GError, err:
                 print values, err

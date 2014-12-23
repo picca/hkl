@@ -140,21 +140,6 @@ GSList* hkl_geometry_list_items(HklGeometryList *self)
 	return list;
 }
 
-/***********************/
-/* HklGeometryListItem */
-/***********************/
-
-/**
- * hkl_geometry_list_item_geometry:
- * @self: the this ptr
- *
- * Return value: The geometry contain inside the HklGeometryListItem
- **/
-const HklGeometry *hkl_geometry_list_item_geometry(const HklGeometryListItem *self)
-{
-	return hkl_geometry_list_item_geometry_get(self);
-}
-
 /*************/
 /* HklEngine */
 /*************/

@@ -1235,7 +1235,7 @@ void hkl_geometry_list_item_free(HklGeometryListItem *self)
 }
 
 /**
- * hkl_geometry_list_item_geometry_get: (skip)
+ * hkl_geometry_list_item_geometry_get:
  * @self: the this ptr
  *
  * Return value: The geometry contain inside the HklGeometryListItem
