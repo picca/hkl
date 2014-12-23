@@ -27,23 +27,21 @@ from gi.repository import GLib
 from gi.repository import Hkl
 
 detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))
-detector.idx_set(1)
 
 factory = Hkl.factories()['K6C']
 geometry = factory.create_new_geometry()
 values_w = [0., 30., 0., 0., 0., 60.]
-geometry.set_axes_values_unit(values_w)
-axes_names = [axis.parameter.name for axis in geometry.axes()]
-print config.name, "diffractometer has", geometry.len,\
+geometry.axes_values_set(values_w, Hkl.UnitEnum.USER)
+axes_names = geometry.axes_names_get()
+print geometry.name_get(), "diffractometer has", len(axes_names),\
     "axes : ", axes_names
 print values_w
 
 sample = Hkl.Sample.new("toto")
-lattice = sample.lattice.get()
-lattice.set(1.54, 1.54, 1.54,
-            math.radians(90.0),
-            math.radians(90.0),
-            math.radians(90.))
+lattice = Hkl.Lattice.new(1.54, 1.54, 1.54,
+                          math.radians(90.0),
+                          math.radians(90.0),
+                          math.radians(90.))
 sample.lattice_set(lattice)
 
 # compute all the pseudo axes managed by all engines
@@ -52,24 +50,25 @@ engines.init(geometry, detector, sample)
 engines.get()
 
 # get the hkl engine and do a computation
-hkl = engines.get_by_name("hkl")
-values = hkl.get_values_unit()
+hkl = engines.engine_get_by_name("hkl")
+values = hkl.pseudo_axes_values_get(Hkl.UnitEnum.USER)
 print "read : ", values
 
 # set the hkl engine and get the results
 for _ in range(100):
     try:
         print
-        hkl.set_values_unit(values)
-        print hkl.get_values_unit()
+        solutions = hkl.pseudo_axes_values_set(values,
+                                               Hkl.UnitEnum.USER)
+        print hkl.pseudo_axes_values_get(Hkl.UnitEnum.USER)
 
         print("idx".center(15)),
         for name in axes_names:
             print("{}".format(name.center(15))),
         print
 
-        for i, item in enumerate(engines.geometries.items()):
-            read = item.geometry.get_axes_values_unit()
+        for i, item in enumerate(solutions.items()):
+            read = item.geometry().axes_values_get(Hkl.UnitEnum.USER)
             print("{}".format(repr(i).center(15))),
             for value in read:
                 print("{}".format(repr(value)[:15].center(15))),

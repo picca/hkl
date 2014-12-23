@@ -10,20 +10,19 @@ from gi.repository import GLib
 from gi.repository import Hkl
 
 sample = Hkl.Sample.new("toto")
-lattice = sample.lattice_get()
-lattice.set(1.54, 1.54, 1.54,
-            math.radians(90.0),
-            math.radians(90.0),
-            math.radians(90.))
+lattice = Hkl.Lattice.new(1.54, 1.54, 1.54,
+                          math.radians(90.0),
+                          math.radians(90.0),
+                          math.radians(90.))
 sample.lattice_set(lattice)
 
 detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))
-detector.idx_set(1)
 
 factory = Hkl.factories()['K6C']
 geometry = factory.create_new_geometry()
-axes_names = [axis.name_get() for axis in geometry.axes()]
-geometry.set_axes_values_unit([0., 120, 0., -90., 0., 60.])
+axes_names = geometry.axes_names_get()
+geometry.axes_values_set([0., 120, 0., -90., 0., 60.],
+                         Hkl.UnitEnum.USER)
 
 engines = factory.create_new_engine_list()
 engines.init(geometry, detector, sample)
@@ -34,22 +33,24 @@ k = numpy.linspace(0, 1, n + 1)
 l = numpy.linspace(1, 1, n + 1)
 
 # get the hkl engine
-hkl = engines.get_by_name("hkl")
+hkl = engines.engine_get_by_name("hkl")
 
 # set the hkl engine and get the results
 trajectories = []
 for hh, kk, ll in zip(h, k, l):
     try:
-        hkl.set_values_unit([hh, kk, ll])
-        for i, item in enumerate(engines.geometries().items()):
+        solutions = hkl.pseudo_axes_values_set([hh, kk, ll],
+                                               Hkl.UnitEnum.USER)
+        first_solution = solutions.items()[0]
+        for i, item in enumerate(solutions.items()):
             try:
                 trajectories[i]
             except IndexError:
                 trajectories.append([])
-            values = item.geometry().get_axes_values_unit()
+            values = item.geometry().axes_values_get(Hkl.UnitEnum.USER)
             # print values, item.geometry.distance(geometry)
             trajectories[i].append(values)
-        engines.select_solution(0)
+        engines.select_solution(first_solution)
         # print
     except GLib.GError, err:
         pass

@@ -28,11 +28,61 @@
 #include "hkl-pseudoaxis-common-hkl-private.h"  // for hkl_mode_operations, etc
 #include "hkl-pseudoaxis-common-psi-private.h"  // for hkl_engine_psi_new, etc
 
-/***********************/
-/* numerical functions */
-/***********************/
+/**************/
+/* Axes names */
+/**************/
 
-/* exemple of a lowlevel gsl function use to compute a mode */
+#define MU "mu"
+#define OMEGA "omega"
+#define CHI "chi"
+#define PHI "phi"
+#define GAMMA "gamma"
+#define DELTA "delta"
+
+/************/
+/* Geometry */
+/************/
+
+#define HKL_GEOMETRY_EULERIAN6C_DESCRIPTION				\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 4 axes for the sample\n"					\
+	"\n"								\
+	"  + **"MU"** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **"OMEGA"** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **"CHI"** : rotating around the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"  + **"PHI"** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"\n"								\
+	"+ 2 axes for the detector\n"					\
+	"\n"								\
+	"  + **"GAMMA"** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **"DELTA"** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
+
+static const char* hkl_geometry_eulerian6C_axes[] = {MU, OMEGA, CHI, PHI, GAMMA, DELTA};
+
+static HklGeometry *hkl_geometry_new_eulerian6C(const HklFactory *factory)
+{
+	HklGeometry *self = hkl_geometry_new(factory);
+	HklHolder *h;
+
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, MU, 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, OMEGA, 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, CHI, 1, 0, 0);
+	hkl_holder_add_rotation_axis(h, PHI, 0, -1, 0);
+
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, GAMMA, 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, DELTA, 0, -1, 0);
+
+	return self;
+}
+
+/*********/
+/* Modes */
+/*********/
+
+/* exemple of a lowlevel gsl function use to compute an hkl bissector
+ * vertical mode for an E6C diffractometer */
 static int _bissector_vertical_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	const double omega = x->data[0];
@@ -53,28 +103,26 @@ static int _bissector_vertical_func(const gsl_vector *x, void *params, gsl_vecto
 	return  GSL_SUCCESS;
 }
 
-/* this part is necessary to ensure that the mode which will this
- * function is configured with the right number of axes */
+/* Declare the number of axes expected by the gsl low level
+ * function. So during the HklMode configuration there is a runtime
+ * check which ensure that the right number of axes are given to the
+ * HklMode. */
 static const HklFunction bissector_vertical_func = {
 	.function = _bissector_vertical_func,
 	.size = 4,
 };
-
-/*********/
-/* modes */
-/*********/
 
 /* exemple of a mode with 4 axes. In that case you need the previously
  * defined function */
 static HklMode *bissector_vertical(void)
 {
 	/* axes_r is the axes list requiered to compute the pseudo axes values */
-	static const char* axes_r[] = {"mu", "omega", "chi", "phi", "gamma", "delta"};
+	static const char* axes_r[] = {MU, OMEGA, CHI, PHI, GAMMA, DELTA};
 
 	/* axes_w is the axes list use when you write the pseudo axes
 	 * values. You move only thoses axes when you use this
 	 * mode. */
-	static const char* axes_w[] = {"omega", "chi", "phi", "delta"};
+	static const char* axes_w[] = {OMEGA, CHI, PHI, DELTA};
 
 	/* here a list of functions use to solve the mode */
 	static const HklFunction *functions[] = {&bissector_vertical_func};
@@ -93,11 +141,11 @@ static HklMode *bissector_vertical(void)
 /* here an exemple of a three axes hkl mode, a convenience function is
  * provided to do the computation (RUBh_minus_Q_func). This funtion
  * takes only three axes. So writing a generic hkl mode with only
- * threee axes is really simple */
+ * three axes is really simple */
 static HklMode *constant_omega_vertical(void)
 {
-	static const char* axes_r[] = {"mu", "omega", "chi", "phi", "gamma", "delta"};
-	static const char* axes_w[] = {"chi", "phi", "delta"};
+	static const char* axes_r[] = {MU, OMEGA, CHI, PHI, GAMMA, DELTA};
+	static const char* axes_w[] = {CHI, PHI, DELTA};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO(__func__, axes_r, axes_w, functions),
@@ -108,10 +156,26 @@ static HklMode *constant_omega_vertical(void)
 				 TRUE);
 }
 
+static HklMode* psi_vertical()
+{
+	static const char *axes_r[] = {MU, OMEGA, CHI, PHI, GAMMA, DELTA};
+	static const char *axes_w[] = {OMEGA, CHI, PHI, DELTA};
+	static const HklFunction *functions[] = {&psi_func};
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS, .name = "h1", .range = {.min=-1, .max=1}, ._value=1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "k1", .range = {.min=-1, .max=1}, ._value=1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "l1", .range = {.min=-1, .max=1}, ._value=1,},
+	};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes_r, axes_w, functions, parameters),
+	};
 
-/***********************/
-/* E6C PseudoAxeEngine */
-/***********************/
+	return hkl_mode_psi_new(&info);
+}
+
+/***********/
+/* Engines */
+/***********/
 
 static HklEngine *hkl_engine_e6c_hkl_new(void)
 {
@@ -129,31 +193,6 @@ static HklEngine *hkl_engine_e6c_hkl_new(void)
 	return self;
 }
 
-/********/
-/* mode */
-/********/
-
-static HklMode* psi_vertical()
-{
-	static const char *axes_r[] = {"mu", "omega", "chi", "phi", "gamma", "delta"};
-	static const char *axes_w[] = {"omega", "chi", "phi", "delta"};
-	static const HklFunction *functions[] = {&psi_func};
-	static const HklParameter parameters[] = {
-		{HKL_PARAMETER_DEFAULTS, .name = "h1", .range = {.min=-1, .max=1}, ._value=1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "k1", .range = {.min=-1, .max=1}, ._value=1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "l1", .range = {.min=-1, .max=1}, ._value=1,},
-	};
-	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes_r, axes_w, functions, parameters),
-	};
-
-	return hkl_mode_psi_new(&info);
-}
-
-/**********************/
-/* pseudo axis engine */
-/**********************/
-
 static HklEngine *hkl_engine_e6c_psi_new(void)
 {
 	HklEngine *self;
@@ -168,43 +207,9 @@ static HklEngine *hkl_engine_e6c_psi_new(void)
 	return self;
 }
 
-/*******/
-/* E6C */
-/*******/
-
-#define HKL_GEOMETRY_EULERIAN6C_DESCRIPTION				\
-	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
-	"+ 4 axes for the sample\n"					\
-	"\n"								\
-	"  + **mu** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
-	"  + **omega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"  + **chi** : rotating around the :math:`\\vec{x}` direction (1, 0, 0)\n" \
-	"  + **phi** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"\n"								\
-	"+ 2 axes for the detector\n"					\
-	"\n"								\
-	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
-	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
-
-static const char* hkl_geometry_eulerian6C_axes[] = {"mu", "omega", "chi", "phi", "gamma", "delta"};
-
-static HklGeometry *hkl_geometry_new_eulerian6C(const HklFactory *factory)
-{
-	HklGeometry *self = hkl_geometry_new(factory);
-	HklHolder *h;
-
-	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
-	hkl_holder_add_rotation_axis(h, "omega", 0, -1, 0);
-	hkl_holder_add_rotation_axis(h, "chi", 1, 0, 0);
-	hkl_holder_add_rotation_axis(h, "phi", 0, -1, 0);
-
-	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1);
-	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
-
-	return self;
-}
+/***************/
+/* Engine list */
+/***************/
 
 static HklEngineList *hkl_engine_list_new_eulerian6C(const HklFactory *factory)
 {
@@ -218,5 +223,6 @@ static HklEngineList *hkl_engine_list_new_eulerian6C(const HklFactory *factory)
 	return self;
 }
 
+/* Register the diffractometer into the factory */
 REGISTER_DIFFRACTOMETER(eulerian6C, "E6C", HKL_GEOMETRY_EULERIAN6C_DESCRIPTION);
 

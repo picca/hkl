@@ -10,22 +10,20 @@ from gi.repository import Hkl
 import matplotlib.pyplot as plt
 
 sample = Hkl.Sample.new("toto")
-lattice = sample.lattice_get()
-lattice.set(1.54, 1.54, 1.54,
-            math.radians(90),
-            math.radians(90),
-            math.radians(90))
+lattice = Hkl.Lattice.new(1.54, 1.54, 1.54,
+                          math.radians(90),
+                          math.radians(90),
+                          math.radians(90))
 sample.lattice_set(lattice)
 
 detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))
-detector.idx_set(1)
 
 factory = Hkl.factories()['K6C']
 geometry = factory.create_new_geometry()
-axes_names = [axis.name_get() for axis in geometry.axes()]
+axes_names = geometry.axes_names_get()
 
 # set the initial position
-geometry.set_axes_values_unit([0, 120, 0, -90, 0, 60])
+geometry.axes_values_set([0, 120, 0, -90, 0, 60], Hkl.UnitEnum.USER)
 
 # get all engines for a given configuration
 engines = factory.create_new_engine_list()
@@ -41,19 +39,20 @@ k = numpy.linspace(0, 1, n + 1)
 l = numpy.linspace(1, 1, n + 1)
 
 # get the hkl engine
-hkl = engines.get_by_name("hkl")
-pseudo_axes_names = [parameter.name_get()
-                     for parameter in hkl.pseudo_axes().parameters()]
+hkl = engines.engine_get_by_name("hkl")
+pseudo_axes_names = ["h", "k", "l"]
 
 # compute the trajectory
 motors_positions = []
 for idx, hh, kk, ll in zip(range(n), h, k, l):
     try:
-        hkl.set_values_unit([hh, kk, ll])
+        solutions = hkl.pseudo_axes_values_set([hh, kk, ll],
+                                               Hkl.UnitEnum.USER)
+        first_solution = solutions.items()[0]
         # if no exception raised we have at least one solution
         # move the diffractometer to the solution
-        engines.select_solution(0)
-        motors_positions.append(geometry.get_axes_values_unit())
+        engines.select_solution(first_solution)
+        motors_positions.append(geometry.axes_values_get(Hkl.UnitEnum.USER))
     except GLib.GError, err:
         pass
 
