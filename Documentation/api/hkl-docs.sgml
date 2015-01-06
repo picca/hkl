@@ -26,6 +26,7 @@
     <xi:include href="xml/hkl.xml"/>
     <xi:include href="xml/hkl-axis-private.xml"/>
     <xi:include href="xml/hkl-detector-private.xml"/>
+    <xi:include href="xml/hkl-factory-private.xml"/>
     <xi:include href="xml/hkl-geometry-private.xml"/>
     <xi:include href="xml/hkl-interval-private.xml"/>
     <xi:include href="xml/hkl-lattice-private.xml"/>
@@ -37,15 +38,7 @@
     <xi:include href="xml/hkl-pseudoaxis-common-hkl-private.xml"/>
     <xi:include href="xml/hkl-pseudoaxis-common-psi-private.xml"/>
     <xi:include href="xml/hkl-pseudoaxis-common-q-private.xml"/>
-    <xi:include href="xml/hkl-pseudoaxis-e4c-private.xml"/>
-    <xi:include href="xml/hkl-pseudoaxis-e6c-private.xml"/>
-    <xi:include href="xml/hkl-pseudoaxis-k4cv-private.xml"/>
-    <xi:include href="xml/hkl-pseudoaxis-k6c-private.xml"/>
-    <xi:include href="xml/hkl-pseudoaxis-petra3-private.xml"/>
     <xi:include href="xml/hkl-pseudoaxis-private.xml"/>
-    <xi:include href="xml/hkl-pseudoaxis-soleil-sirius-turret-private.xml"/>
-    <xi:include href="xml/hkl-pseudoaxis-soleil-sixs-med-private.xml"/>
-    <xi:include href="xml/hkl-pseudoaxis-zaxis-private.xml"/>
     <xi:include href="xml/hkl-quaternion-private.xml"/>
     <xi:include href="xml/hkl-sample-private.xml"/>
     <xi:include href="xml/hkl-source-private.xml"/>
@@ -56,6 +49,8 @@
     <xi:include href="xml/list.xml"/>
     <xi:include href="xml/noerr.xml"/>
     <xi:include href="xml/ptr_valid.xml"/>
+    <xi:include href="xml/str.xml"/>
+    <xi:include href="xml/str_debug.xml"/>
 
   </chapter>
   <chapter id="object-tree">
