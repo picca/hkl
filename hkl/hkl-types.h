@@ -27,32 +27,35 @@
 
 G_BEGIN_DECLS
 
-#define TYPE_HKL_VECTOR (hkl_vector_get_type ())
-HKLAPI GType hkl_vector_get_type (void) G_GNUC_CONST;
+#define TYPE_HKL_DETECTOR (hkl_detector_get_type ())
+HKLAPI GType hkl_detector_get_type (void) G_GNUC_CONST;
 
-#define TYPE_HKL_MATRIX (hkl_matrix_get_type ())
-HKLAPI GType hkl_matrix_get_type (void) G_GNUC_CONST;
+#define TYPE_HKL_ENGINE (hkl_engine_get_type ())
+HKLAPI GType hkl_engine_get_type (void) G_GNUC_CONST;
 
-#define TYPE_HKL_UNIT (hkl_unit_get_type ())
-HKLAPI GType hkl_unit_get_type (void) G_GNUC_CONST;
+#define TYPE_HKL_ENGINE_LIST (hkl_engine_list_get_type ())
+HKLAPI GType hkl_engine_list_get_type (void) G_GNUC_CONST;
 
-#define TYPE_HKL_PARAMETER (hkl_parameter_get_type ())
-HKLAPI GType hkl_parameter_get_type (void) G_GNUC_CONST;
+#define TYPE_HKL_FACTORY (hkl_factory_get_type ())
+HKLAPI GType hkl_factory_get_type (void) G_GNUC_CONST;
 
 #define TYPE_HKL_GEOMETRY (hkl_geometry_get_type ())
 HKLAPI GType hkl_geometry_get_type (void) G_GNUC_CONST;
 
-#define TYPE_HKL_GEOMETRY_LIST_ITEM (hkl_geometry_list_item_get_type ())
-HKLAPI GType hkl_geometry_list_item_get_type (void) G_GNUC_CONST;
-
 #define TYPE_HKL_GEOMETRY_LIST (hkl_geometry_list_get_type ())
 HKLAPI GType hkl_geometry_list_get_type (void) G_GNUC_CONST;
 
-#define TYPE_HKL_DETECTOR (hkl_detector_get_type ())
-HKLAPI GType hkl_detector_get_type (void) G_GNUC_CONST;
+#define TYPE_HKL_GEOMETRY_LIST_ITEM (hkl_geometry_list_item_get_type ())
+HKLAPI GType hkl_geometry_list_item_get_type (void) G_GNUC_CONST;
 
 #define TYPE_HKL_LATTICE (hkl_lattice_get_type ())
 HKLAPI GType hkl_lattice_get_type (void) G_GNUC_CONST;
+
+#define TYPE_HKL_MATRIX (hkl_matrix_get_type ())
+HKLAPI GType hkl_matrix_get_type (void) G_GNUC_CONST;
+
+#define TYPE_HKL_PARAMETER (hkl_parameter_get_type ())
+HKLAPI GType hkl_parameter_get_type (void) G_GNUC_CONST;
 
 #define TYPE_HKL_SAMPLE_REFLECTION (hkl_sample_reflection_get_type ())
 HKLAPI GType hkl_sample_reflection_get_type (void) G_GNUC_CONST;
@@ -60,11 +63,11 @@ HKLAPI GType hkl_sample_reflection_get_type (void) G_GNUC_CONST;
 #define TYPE_HKL_SAMPLE (hkl_sample_get_type ())
 HKLAPI GType hkl_sample_get_type (void) G_GNUC_CONST;
 
-#define TYPE_HKL_ENGINE (hkl_engine_get_type ())
-HKLAPI GType hkl_engine_get_type (void) G_GNUC_CONST;
+#define TYPE_HKL_UNIT (hkl_unit_get_type ())
+HKLAPI GType hkl_unit_get_type (void) G_GNUC_CONST;
 
-#define TYPE_HKL_ENGINE_LIST (hkl_engine_list_get_type ())
-HKLAPI GType hkl_engine_list_get_type (void) G_GNUC_CONST;
+#define TYPE_HKL_VECTOR (hkl_vector_get_type ())
+HKLAPI GType hkl_vector_get_type (void) G_GNUC_CONST;
 
 G_END_DECLS
 

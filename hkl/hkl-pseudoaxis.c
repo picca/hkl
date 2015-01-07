@@ -267,7 +267,6 @@ const HklParameter *hkl_engine_pseudo_axis_get(const HklEngine *self,
  * @error: return location for a GError, or NULL
  *
  * set a parameter of the #HklEngine
- * @todo: tests
  *
  * Return value: #HklGeometryList or NULL if no solution was found,
  *               use hkl_geometry_list_free to release the memory once done.

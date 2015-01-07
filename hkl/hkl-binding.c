@@ -47,8 +47,7 @@
 GHashTable *hkl_factories(void)
 {
 	GHashTable *table = NULL;
-	unsigned int i;
-	unsigned int n;
+	size_t i, n;
 	HklFactory **factories;
 
 	table = g_hash_table_new(g_str_hash, g_str_equal);

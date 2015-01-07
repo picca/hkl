@@ -21,14 +21,14 @@
  */
 #include "hkl-factory-private.h"        // for autodata_factories_, etc
 
-HklFactory **hkl_factory_get_all(unsigned int *n)
+HklFactory **hkl_factory_get_all(size_t *n)
 {
 	return autodata_get(factories, n);
 }
 
 HklFactory *hkl_factory_get_by_name(const char *name, GError **error)
 {
-	unsigned int i, n;
+	size_t i, n;
 	HklFactory **factories;
 
 	factories = autodata_get(factories, &n);

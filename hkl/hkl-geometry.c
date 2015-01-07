@@ -354,8 +354,6 @@ const HklParameter *hkl_geometry_axis_get(const HklGeometry *self,
  * @axis: The #HklParameter to set
  * @error: return location for a GError, or NULL
  *
- * @todo: check if the error is well tested
- *
  * Returns: TRUE on success, FALSE if an error occurred
  **/
 int hkl_geometry_axis_set(HklGeometry *self, const char *name,
@@ -414,7 +412,6 @@ double hkl_geometry_wavelength_get(const HklGeometry *self,
  * @error: return location for a GError, or NULL
  *
  * Set the wavelength of the geometry
- * @todo: check the validity of the wavelength
  *
  * Returns: TRUE on success, FALSE if an error occurred
  **/

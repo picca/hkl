@@ -51,6 +51,7 @@ static void hkl_fake_unref(void *src) { return; }
 HKL_TYPE(detector, HklDetector, hkl_detector_new_copy, hkl_detector_free);
 HKL_TYPE(engine, HklEngine, hkl_fake_ref, hkl_fake_unref);
 HKL_TYPE(engine_list, HklEngineList, hkl_engine_list_new_copy, hkl_engine_list_free);
+HKL_TYPE(factory, HklFactory, hkl_fake_ref, hkl_fake_unref);
 HKL_TYPE(geometry, HklGeometry, hkl_geometry_new_copy, hkl_geometry_free);
 HKL_TYPE(geometry_list, HklGeometryList, hkl_geometry_list_new_copy, hkl_geometry_list_free);
 HKL_TYPE(geometry_list_item, HklGeometryListItem, hkl_geometry_list_item_new_copy, hkl_geometry_list_item_free);

@@ -463,7 +463,7 @@ HKLAPI const darray_string *hkl_engine_modes_names_get(const HklEngine *self) HK
 
 HKLAPI const char *hkl_engine_current_mode_get(const HklEngine *self) HKL_ARG_NONNULL(1);
 
-HKLAPI int hkl_engine_current_mode_set(HklEngine *self, const char *mode, GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
+HKLAPI int hkl_engine_current_mode_set(HklEngine *self, const char *name, GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
 
 typedef enum _HklEngineAxesNamesGet
 {
@@ -524,7 +524,7 @@ HKLAPI void hkl_engine_list_fprintf(FILE *f,
 
 typedef struct _HklFactory HklFactory;
 
-HKLAPI HklFactory **hkl_factory_get_all(unsigned int *n) HKL_ARG_NONNULL(1);
+HKLAPI HklFactory **hkl_factory_get_all(size_t *n) HKL_ARG_NONNULL(1);
 
 HKLAPI HklFactory *hkl_factory_get_by_name(const char *name,
 					   GError **error) HKL_ARG_NONNULL(1) HKL_WARN_UNUSED_RESULT;
