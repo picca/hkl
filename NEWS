@@ -2,34 +2,37 @@
 
 * 5.0.0	UNRELEASED
 ** General
-   - This version can be co-installed with the 4.x series.
-   - The public API is located inside only one file hkl.h.
-   - There is a clear split between the public and the private API in
-     order to achieve a Long Time Support of the library.
-   - c-tap-hardness library is used for the test suite.
-   - Bindings are provided using the gobject-introspection project.
-   - Now documentation use sphinx and asymptote for the figures.
+   - 5.x runtime can be co-installed with the 4.x series.
+   - hkl.h contain all the Public API.
+   - A clear separation between the public and private API was
+     achieved, in order to propose a Long Time Support support of the
+     5.x series.
+   - c-tap-hardness library was embeded to provide the unit test
+     framework.
+   - gobject-instrospection provide the binding support. Look at this
+     [[https://wiki.gnome.org/action/show/Projects/GObjectIntrospection][page]] for more informations.
+   - Documentation was generated with sphinx and asymptote for the figures.
    - New diffractometers added
      - E4CH (eulerian 4 circles horizontal) geometry.
      - MARS beamline (SOLEIL) eulerian 4 circles vertical geometry.
      - SOLEIL SIRIUS KAPPA
      - SOLEIL SIRIUS TURRET
-   - A non-public hkl3d library, used by the gui, for an
-     anti-collision system was added.
+   - A not yet public hkl3d library used only by the gui allow to
+     compute (Bullet) and display (OpenGL) collision for model
+     described using the COLLADA file format.
 ** Buildsystem
    - add a --disable-hkl3d flag to avoid hkl3d library compilation.
-   - replace the --enable-ghkl with a --disable-gui
+   - replace the --enable-ghkl with a --disable-gui.
    - use ./configure --help for all the options
 ** Gui
-   - use Gtk instead of Gtkmm.
-   - added a 3D view to display diffractometers model.
-   - added the K6C 3D model.
+   - Rewriten using Gtk instead of Gtkmm, in order to minimise the
+     required dependencies.
+   - Added a 3D view to display diffractometers and collisions.
+   - Added the K6C 3D model.
 ** Bindings
-   - python binding (tested)
-   - all other languages (not yet tested) look at here for a list of
-     language binding whcih use object-introspection
-   https://wiki.gnome.org/Projects/GObjectIntrospection/Users
-
+   - Provide the garantie via unit tests that the python API will be
+     stable during all the 5.x lifetime.
+   - For other languages look at [[https://wiki.gnome.org/Projects/GObjectIntrospection/][here]].
 
 * 4.0.4	UNRELEASED
 	* add the SOLEIL SIXS MED2+2 diffractometer
