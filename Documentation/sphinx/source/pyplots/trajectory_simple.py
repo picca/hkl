@@ -1,13 +1,14 @@
-#!/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 import math
 import numpy
 
+import matplotlib.pyplot as plt
+
 from gi.repository import GLib
 from gi.repository import Hkl
 
-import matplotlib.pyplot as plt
 
 sample = Hkl.Sample.new("toto")
 lattice = Hkl.Lattice.new(1.54, 1.54, 1.54,

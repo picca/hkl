@@ -49,6 +49,8 @@ class TestAPI(unittest.TestCase):
             engines = factory.create_new_engine_list()
             self.assertTrue(type(engines) == Hkl.EngineList)
 
+        del factories
+
     def test_detector_api(self):
         """
         enforce the detector API
@@ -57,6 +59,8 @@ class TestAPI(unittest.TestCase):
         # create an 0D HklDetector
         detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))
         self.assertTrue(type(detector) is Hkl.Detector)
+
+        del detector
 
     def test_geometry_api(self):
         """
@@ -84,6 +88,8 @@ class TestAPI(unittest.TestCase):
             axis = geometry.axis_get(name)
             axis.min_max_set(0, math.radians(180), Hkl.UnitEnum.USER)
             geometry.axis_set(name, axis)
+
+        del geometry
 
     def test_engine_api(self):
         """
@@ -237,6 +243,9 @@ class TestAPI(unittest.TestCase):
         reciprocal = lattice.copy()
         lattice.reciprocal(reciprocal)
 
+        del sample
+        del lattice
+
     def test_reflection_api(self):
 
         detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))
@@ -258,13 +267,16 @@ class TestAPI(unittest.TestCase):
         self.assertTrue(r2.hkl_get() == (1.0, 0.0, 1.0))
 
         # compute the angles
-        print sample.get_reflection_mesured_angle(r1, r2)
-        print sample.get_reflection_theoretical_angle(r1, r2)
+        sample.get_reflection_mesured_angle(r1, r2)
+        sample.get_reflection_theoretical_angle(r1, r2)
 
         # remove all the reflections
         reflections = sample.reflections_get()
         for reflection in reflections:
             sample.del_reflection(reflection)
 
+        del reflections
+        del sample
+
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(verbosity=2)

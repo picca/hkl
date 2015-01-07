@@ -39,12 +39,6 @@ HKLAPI GType hkl_unit_get_type (void) G_GNUC_CONST;
 #define TYPE_HKL_PARAMETER (hkl_parameter_get_type ())
 HKLAPI GType hkl_parameter_get_type (void) G_GNUC_CONST;
 
-#define TYPE_HKL_PARAMETER_LIST (hkl_parameter_list_get_type ())
-HKLAPI GType hkl_parameter_list_get_type (void) G_GNUC_CONST;
-
-#define TYPE_HKL_AXIS (hkl_axis_get_type ())
-HKLAPI GType hkl_axis_get_type (void) G_GNUC_CONST;
-
 #define TYPE_HKL_GEOMETRY (hkl_geometry_get_type ())
 HKLAPI GType hkl_geometry_get_type (void) G_GNUC_CONST;
 
@@ -65,9 +59,6 @@ HKLAPI GType hkl_sample_reflection_get_type (void) G_GNUC_CONST;
 
 #define TYPE_HKL_SAMPLE (hkl_sample_get_type ())
 HKLAPI GType hkl_sample_get_type (void) G_GNUC_CONST;
-
-#define TYPE_HKL_PSEUDO_AXIS (hkl_pseudo_axis_get_type ())
-HKLAPI GType hkl_pseudo_axis_get_type (void) G_GNUC_CONST;
 
 #define TYPE_HKL_ENGINE (hkl_engine_get_type ())
 HKLAPI GType hkl_engine_get_type (void) G_GNUC_CONST;

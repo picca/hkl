@@ -271,10 +271,10 @@ GSList* hkl_engine_list_engines_get_as_gslist(HklEngineList *self)
  * hkl_sample_reflections_get:
  * @self: the this ptr
  *
- * Return value: (element-type HklSampleReflection) (transfer container): list of reflecions,
+ * Return value: (element-type HklSampleReflection) (transfer container): list of reflections,
  *               free the list with g_slist_free when done.
  */
-const GSList *hkl_sample_reflections_get(const HklSample *self)
+GSList *hkl_sample_reflections_get(const HklSample *self)
 {
 	GSList *list = NULL;
 	HklSampleReflection *reflection;
@@ -294,9 +294,9 @@ const GSList *hkl_sample_reflections_get(const HklSample *self)
  * @h: the h coordinate
  * @k: the k coordinate
  * @l: the l coordinate
+ * @error: return location for a GError, or NULL
  *
- * Return value: (element-type HklEngine) (transfer container): list of engines,
- *               free the list with g_slist_free when done.
+ * Return value: (transfer none): the newly created HklSampleReflection
  *
  * Rename to: hkl_sample_add_reflection
  **/

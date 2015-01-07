@@ -681,7 +681,7 @@ HklSampleReflection *hkl_sample_reflections_next_get(HklSample *self,
 }
 
 /**
- * hkl_sample_add_reflection: (skip)
+ * hkl_sample_add_reflection:
  * @self: the this ptr
  * @reflection: The reflection to add
  *

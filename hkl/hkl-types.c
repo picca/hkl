@@ -31,216 +31,33 @@
 #include "hkl-unit-private.h"           // for hkl_unit_dup, hkl_unit_free
 #include "hkl-vector-private.h"         // for hkl_vector_dup, etc
 
-GType hkl_vector_get_type (void) {
-        static volatile gsize hkl_vector_type_id__volatile = 0;
-        if (g_once_init_enter (&hkl_vector_type_id__volatile)) {
-                GType hkl_vector_type_id;
-                hkl_vector_type_id = g_boxed_type_register_static ("HklVector",
-								   (GBoxedCopyFunc) hkl_vector_dup,
-								   (GBoxedFreeFunc) hkl_vector_free);
-                g_once_init_leave (&hkl_vector_type_id__volatile, hkl_vector_type_id);
-        }
-        return hkl_vector_type_id__volatile;
-}
+#define HKL_TYPE(type, camelcase_type, copy, free)			\
+	GType hkl_## type ## _get_type (void) {				\
+		static volatile gsize hkl_type_id__volatile = 0;	\
+		if (g_once_init_enter (&hkl_type_id__volatile)) {	\
+			GType hkl_type_id;			\
+			hkl_type_id = g_boxed_type_register_static (	\
+				#camelcase_type,			\
+				(GBoxedCopyFunc) copy,			\
+				(GBoxedFreeFunc) free);			\
+			g_once_init_leave (&hkl_type_id__volatile, hkl_type_id); \
+		}							\
+		return hkl_type_id__volatile;				\
+	}
 
-GType hkl_matrix_get_type (void) {
-        static volatile gsize hkl_matrix_type_id__volatile = 0;
-        if (g_once_init_enter (&hkl_matrix_type_id__volatile)) {
-                GType hkl_matrix_type_id;
-                hkl_matrix_type_id = g_boxed_type_register_static ("HklMatrix",
-								   (GBoxedCopyFunc) hkl_matrix_dup,
-								   (GBoxedFreeFunc) hkl_matrix_free);
-                g_once_init_leave (&hkl_matrix_type_id__volatile, hkl_matrix_type_id);
-        }
-        return hkl_matrix_type_id__volatile;
-}
+static void * hkl_fake_ref(void *src) { return src; }
+static void hkl_fake_unref(void *src) { return; }
 
-GType hkl_unit_get_type (void) {
-        static volatile gsize hkl_unit_type_id__volatile = 0;
-        if (g_once_init_enter (&hkl_unit_type_id__volatile)) {
-                GType hkl_unit_type_id;
-                hkl_unit_type_id = g_boxed_type_register_static ("HklUnit",
-								 (GBoxedCopyFunc) hkl_unit_dup,
-								 (GBoxedFreeFunc) hkl_unit_free);
-                g_once_init_leave (&hkl_unit_type_id__volatile, hkl_unit_type_id);
-        }
-        return hkl_unit_type_id__volatile;
-}
-
-GType hkl_parameter_get_type (void) {
-        static volatile gsize hkl_parameter_type_id__volatile = 0;
-        if (g_once_init_enter (&hkl_parameter_type_id__volatile)) {
-                GType hkl_parameter_type_id;
-                hkl_parameter_type_id = g_boxed_type_register_static ("HklParameter",
-								      (GBoxedCopyFunc) hkl_parameter_new_copy,
-								      (GBoxedFreeFunc) hkl_parameter_free);
-                g_once_init_leave (&hkl_parameter_type_id__volatile, hkl_parameter_type_id);
-        }
-        return hkl_parameter_type_id__volatile;
-}
-
-static HklEngine* hkl_parameter_list_fake_ref(HklEngine *src)
-{
-	return src;
-}
-
-static void hkl_parameter_list_fake_unref(HklEngine *src)
-{
-	return;
-}
-
-GType hkl_parameter_list_get_type (void) {
-        static volatile gsize hkl_parameter_list_type_id__volatile = 0;
-        if (g_once_init_enter (&hkl_parameter_list_type_id__volatile)) {
-                GType hkl_parameter_list_type_id;
-                hkl_parameter_list_type_id = g_boxed_type_register_static ("HklParameterList",
-									   (GBoxedCopyFunc) hkl_parameter_list_fake_ref,
-									   (GBoxedFreeFunc) hkl_parameter_list_fake_unref);
-                g_once_init_leave (&hkl_parameter_list_type_id__volatile, hkl_parameter_list_type_id);
-        }
-        return hkl_parameter_list_type_id__volatile;
-}
-
-GType hkl_axis_get_type (void) {
-        static volatile gsize hkl_axis_type_id__volatile = 0;
-        if (g_once_init_enter (&hkl_axis_type_id__volatile)) {
-                GType hkl_axis_type_id;
-                hkl_axis_type_id = g_boxed_type_register_static ("HklAxis",
-								 (GBoxedCopyFunc) hkl_parameter_new_copy,
-								 (GBoxedFreeFunc) hkl_parameter_free);
-                g_once_init_leave (&hkl_axis_type_id__volatile, hkl_axis_type_id);
-        }
-        return hkl_axis_type_id__volatile;
-}
-
-GType hkl_geometry_get_type (void) {
-        static volatile gsize hkl_geometry_type_id__volatile = 0;
-        if (g_once_init_enter (&hkl_geometry_type_id__volatile)) {
-                GType hkl_geometry_type_id;
-                hkl_geometry_type_id = g_boxed_type_register_static ("HklGeometry",
-								     (GBoxedCopyFunc) hkl_geometry_new_copy,
-								     (GBoxedFreeFunc) hkl_geometry_free);
-                g_once_init_leave (&hkl_geometry_type_id__volatile, hkl_geometry_type_id);
-        }
-        return hkl_geometry_type_id__volatile;
-}
-
-GType hkl_geometry_list_item_get_type (void) {
-        static volatile gsize hkl_geometry_list_item_type_id__volatile = 0;
-        if (g_once_init_enter (&hkl_geometry_list_item_type_id__volatile)) {
-                GType hkl_geometry_list_item_type_id;
-                hkl_geometry_list_item_type_id = g_boxed_type_register_static ("HklGeometryListItem",
-									       (GBoxedCopyFunc) hkl_geometry_list_item_new_copy,
-									       (GBoxedFreeFunc) hkl_geometry_list_item_free);
-                g_once_init_leave (&hkl_geometry_list_item_type_id__volatile, hkl_geometry_list_item_type_id);
-        }
-        return hkl_geometry_list_item_type_id__volatile;
-}
-
-GType hkl_geometry_list_get_type (void) {
-        static volatile gsize hkl_geometry_list_type_id__volatile = 0;
-        if (g_once_init_enter (&hkl_geometry_list_type_id__volatile)) {
-                GType hkl_geometry_list_type_id;
-                hkl_geometry_list_type_id = g_boxed_type_register_static ("HklGeometryList",
-									  (GBoxedCopyFunc) hkl_geometry_list_new_copy,
-									  (GBoxedFreeFunc) hkl_geometry_list_free);
-                g_once_init_leave (&hkl_geometry_list_type_id__volatile, hkl_geometry_list_type_id);
-        }
-        return hkl_geometry_list_type_id__volatile;
-}
-
-GType hkl_detector_get_type (void) {
-        static volatile gsize hkl_detector_type_id__volatile = 0;
-        if (g_once_init_enter (&hkl_detector_type_id__volatile)) {
-                GType hkl_detector_type_id;
-                hkl_detector_type_id = g_boxed_type_register_static ("HklDetector",
-								     (GBoxedCopyFunc) hkl_detector_new_copy,
-								     (GBoxedFreeFunc) hkl_detector_free);
-                g_once_init_leave (&hkl_detector_type_id__volatile, hkl_detector_type_id);
-        }
-        return hkl_detector_type_id__volatile;
-}
-
-GType hkl_lattice_get_type (void) {
-        static volatile gsize hkl_lattice_type_id__volatile = 0;
-        if (g_once_init_enter (&hkl_lattice_type_id__volatile)) {
-                GType hkl_lattice_type_id;
-                hkl_lattice_type_id = g_boxed_type_register_static ("HklLattice",
-								    (GBoxedCopyFunc) hkl_lattice_new_copy,
-								    (GBoxedFreeFunc) hkl_lattice_free);
-                g_once_init_leave (&hkl_lattice_type_id__volatile, hkl_lattice_type_id);
-        }
-        return hkl_lattice_type_id__volatile;
-}
-
-GType hkl_sample_reflection_get_type (void) {
-        static volatile gsize hkl_sample_reflection_type_id__volatile = 0;
-        if (g_once_init_enter (&hkl_sample_reflection_type_id__volatile)) {
-                GType hkl_sample_reflection_type_id;
-                hkl_sample_reflection_type_id = g_boxed_type_register_static ("HklSampleReflection",
-									      (GBoxedCopyFunc) hkl_sample_reflection_new_copy,
-									      (GBoxedFreeFunc) hkl_sample_reflection_free);
-                g_once_init_leave (&hkl_sample_reflection_type_id__volatile, hkl_sample_reflection_type_id);
-        }
-        return hkl_sample_reflection_type_id__volatile;
-}
-
-GType hkl_sample_get_type (void) {
-        static volatile gsize hkl_sample_type_id__volatile = 0;
-        if (g_once_init_enter (&hkl_sample_type_id__volatile)) {
-                GType hkl_sample_type_id;
-                hkl_sample_type_id = g_boxed_type_register_static ("HklSample",
-								   (GBoxedCopyFunc) hkl_sample_new_copy,
-								   (GBoxedFreeFunc) hkl_sample_free);
-                g_once_init_leave (&hkl_sample_type_id__volatile, hkl_sample_type_id);
-        }
-        return hkl_sample_type_id__volatile;
-}
-
-GType hkl_pseudo_axis_get_type (void) {
-        static volatile gsize hkl_pseudo_axis_type_id__volatile = 0;
-        if (g_once_init_enter (&hkl_pseudo_axis_type_id__volatile)) {
-                GType hkl_pseudo_axis_type_id;
-                hkl_pseudo_axis_type_id = g_boxed_type_register_static ("HklPseudoAxis",
-									(GBoxedCopyFunc) hkl_parameter_new_copy,
-									(GBoxedFreeFunc) hkl_parameter_free);
-                g_once_init_leave (&hkl_pseudo_axis_type_id__volatile, hkl_pseudo_axis_type_id);
-        }
-        return hkl_pseudo_axis_type_id__volatile;
-}
-
-static HklEngine* hkl_engine_fake_ref(HklEngine *src)
-{
-	return src;
-}
-
-static void hkl_engine_fake_unref(HklEngine *src)
-{
-	return;
-}
-
-GType hkl_engine_get_type (void) {
-        static volatile gsize hkl_engine_type_id__volatile = 0;
-        if (g_once_init_enter (&hkl_engine_type_id__volatile)) {
-                GType hkl_engine_type_id;
-                hkl_engine_type_id = g_boxed_type_register_static (
-			"HklEngine",
-			(GBoxedCopyFunc) hkl_engine_fake_ref,
-			(GBoxedFreeFunc) hkl_engine_fake_unref);
-                g_once_init_leave (&hkl_engine_type_id__volatile, hkl_engine_type_id);
-        }
-        return hkl_engine_type_id__volatile;
-}
-
-GType hkl_engine_list_get_type (void) {
-        static volatile gsize hkl_engine_list_type_id__volatile = 0;
-        if (g_once_init_enter (&hkl_engine_list_type_id__volatile)) {
-                GType hkl_engine_list_type_id;
-                hkl_engine_list_type_id = g_boxed_type_register_static (
-			"HklEngineList",
-			(GBoxedCopyFunc) hkl_engine_list_new_copy,
-			(GBoxedFreeFunc) hkl_engine_list_free);
-                g_once_init_leave (&hkl_engine_list_type_id__volatile, hkl_engine_list_type_id);
-        }
-        return hkl_engine_list_type_id__volatile;
-}
+HKL_TYPE(detector, HklDetector, hkl_detector_new_copy, hkl_detector_free);
+HKL_TYPE(engine, HklEngine, hkl_fake_ref, hkl_fake_unref);
+HKL_TYPE(engine_list, HklEngineList, hkl_engine_list_new_copy, hkl_engine_list_free);
+HKL_TYPE(geometry, HklGeometry, hkl_geometry_new_copy, hkl_geometry_free);
+HKL_TYPE(geometry_list, HklGeometryList, hkl_geometry_list_new_copy, hkl_geometry_list_free);
+HKL_TYPE(geometry_list_item, HklGeometryListItem, hkl_geometry_list_item_new_copy, hkl_geometry_list_item_free);
+HKL_TYPE(lattice, HklLattice, hkl_lattice_new_copy, hkl_lattice_free);
+HKL_TYPE(matrix, HklMatrix, hkl_matrix_dup, hkl_matrix_free);
+HKL_TYPE(parameter, HklParameter, hkl_parameter_new_copy, hkl_parameter_free);
+HKL_TYPE(sample, HklSample, hkl_sample_new_copy, hkl_sample_free);
+HKL_TYPE(sample_reflection, HklSampleReflection, hkl_fake_ref, hkl_fake_unref);
+HKL_TYPE(unit, HklUnit, hkl_unit_dup, hkl_unit_free);
+HKL_TYPE(vector, HklVector, hkl_vector_dup, hkl_vector_free);
