@@ -200,7 +200,6 @@ HklGeometryList *hkl_engine_pseudo_axes_values_set(HklEngine *self,
 	hkl_sample_fprintf(stream, self->sample);
 	hkl_engine_fprintf(stream, self);
 #endif
-
 	for(size_t i=0; i<n_values; ++i){
 		if(!hkl_parameter_value_set(darray_item(self->pseudo_axes, i),
 					    values[i],
@@ -210,14 +209,12 @@ HklGeometryList *hkl_engine_pseudo_axes_values_set(HklEngine *self,
 	}
 
 	if(!hkl_engine_set(self, error)){
-
 #if LOGGING
 		fflush(stream);
 		g_message(msg);
 		if(error && *error != NULL)
 			g_warning("%s", (*error)->message);
 #endif
-
 		goto clean_stream_out;
 	}
 
