@@ -187,19 +187,19 @@ HklGeometryList *hkl_engine_pseudo_axes_values_set(HklEngine *self,
 		goto out;
 	}
 
-	/* /\* logging test start *\/ */
-	/* stream = open_memstream(&msg, &msg_size); */
+#if LOGGING
+	stream = open_memstream(&msg, &msg_size);
 
-	/* fprintf(stream, "%s(", __func__); */
-	/* fprintf(stream, "self: %s, values: [", hkl_engine_name_get(self)); */
-	/* for(size_t i=0; i<n_values; ++i) */
-	/* 	fprintf(stream, " %f", values[i]); */
-	/* fprintf(stream, "], n_values: %d unit_type: %d, error: %p)", n_values, unit_type, error); */
+	fprintf(stream, "%s(", __func__);
+	fprintf(stream, "self: %s, values: [", hkl_engine_name_get(self));
+	for(size_t i=0; i<n_values; ++i)
+		fprintf(stream, " %f", values[i]);
+	fprintf(stream, "], n_values: %d unit_type: %d, error: %p)", n_values, unit_type, error);
 
-	/* hkl_geometry_fprintf(stream, self->geometry); */
-	/* hkl_sample_fprintf(stream, self->sample); */
-	/* hkl_engine_fprintf(stream, self); */
-	/* /\* logging test end *\/ */
+	hkl_geometry_fprintf(stream, self->geometry);
+	hkl_sample_fprintf(stream, self->sample);
+	hkl_engine_fprintf(stream, self);
+#endif
 
 	for(size_t i=0; i<n_values; ++i){
 		if(!hkl_parameter_value_set(darray_item(self->pseudo_axes, i),
@@ -210,18 +210,24 @@ HklGeometryList *hkl_engine_pseudo_axes_values_set(HklEngine *self,
 	}
 
 	if(!hkl_engine_set(self, error)){
-		/* fflush(stream); */
-		/* g_message(msg); */
-		/* if(error && *error != NULL) */
-		/* 	g_warning("%s", (*error)->message); */
+
+#if LOGGING
+		fflush(stream);
+		g_message(msg);
+		if(error && *error != NULL)
+			g_warning("%s", (*error)->message);
+#endif
+
 		goto clean_stream_out;
 	}
 
 	solutions = hkl_geometry_list_new_copy(self->engines->geometries);
 
 clean_stream_out:
-	/* fclose(stream); */
-	/* free(msg); */
+#if LOGGING
+	fclose(stream);
+	free(msg);
+#endif
 out:
 	return solutions;
 }

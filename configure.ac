@@ -36,7 +36,6 @@ AC_PROG_LN_S
 AC_PROG_MAKE_SET
 LT_INIT
 AM_SILENT_RULES
-AM_PROG_VALAC([0.8.1])
 
 ##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##
 ##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##
@@ -86,18 +85,42 @@ AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([floor getcwd gettimeofday memmove memset pow select sqrt strchr strdup strstr])
 
 dnl OPTION_DEFAULT_OFF(NAME, HELP-STRING)
-dnl Create a new --with option that defaults to being disabled.
-dnl NAME is the base name of the option.  The shell variable with_NAME
+dnl Create a new --enable option that defaults to being disabled.
+dnl NAME is the base name of the option.  The shell variable enable_NAME
 dnl   will be set to either the user's value (if the option is
-dnl   specified; 'yes' for a plain --with-NAME) or to 'no' (if the
+dnl   specified; 'yes' for a plain --enable-NAME) or to 'no' (if the
 dnl   option is not specified).  Note that the shell variable name is
 dnl   constructed as autoconf does, by replacing non-alphanumeric
 dnl   characters with "_".
 dnl HELP-STRING is the help text for the option.
 AC_DEFUN([OPTION_DEFAULT_OFF], [dnl
-  AC_ARG_WITH([$1],[AS_HELP_STRING([--with-$1],[$2])],[],[dnl
-    m4_bpatsubst([with_$1], [[^0-9a-z]], [_])=no])dnl
+  AC_ARG_ENABLE([$1],[AS_HELP_STRING([--enable-$1],[$2])],[],[dnl
+    m4_bpatsubst([enable_$1], [[^0-9a-z]], [_])=no])dnl
 ])dnl
+
+dnl OPTION_DEFAULT_ON(NAME, HELP-STRING)
+dnl Create a new --enable option that defaults to being enabled.
+dnl NAME is the base name of the option.  The shell variable enable_NAME
+dnl   will be set to either the user's value (if the option is
+dnl   specified; 'no' for a plain --enable-NAME) or to 'yes' (if the
+dnl   option is not specified).  Note that the shell variable name is
+dnl   constructed as autoconf does, by replacing non-alphanumeric
+dnl   characters with "_".
+dnl HELP-STRING is the help text for the option.
+AC_DEFUN([OPTION_DEFAULT_ON], [dnl
+  AC_ARG_ENABLE([$1],[AS_HELP_STRING([--disable-$1],[$2])],[],[dnl
+    m4_bpatsubst([enable_$1], [[^0-9a-z]], [_])=yes])dnl
+])dnl
+
+dnl ***************
+dnl *** logging ***
+dnl ***************
+
+OPTION_DEFAULT_OFF([logging], [enable the glib logging])
+AM_CONDITIONAL([LOGGING], [test x$enable_logging != xno])
+AM_COND_IF([LOGGING],
+	AC_DEFINE([LOGGING], [1], [activate the logging or not])
+	)
 
 dnl ***************
 dnl *** gtk-doc ***
@@ -115,11 +138,8 @@ dnl *******************************
 dnl *** add an option for hkl3d ***
 dnl *******************************
 
-AC_ARG_ENABLE([hkl3d],
-	AS_HELP_STRING([--enable-hkl3d],
-		[compile the hkl3d library]),
-	[],
-	[enable_hkl3d=no])
+OPTION_DEFAULT_OFF([hkl3d], [compile the hkl3d library])
+
 AM_CONDITIONAL([HKL3D], [test x$enable_hkl3d != xno])
 AM_COND_IF([HKL3D],
 	   [PKG_CHECK_MODULES([G3D], [libg3d >= 0.0.8])
@@ -141,11 +161,8 @@ dnl ****************************************
 dnl *** add an option for the ghkl build ***
 dnl ****************************************
 
-AC_ARG_ENABLE([gui],
-	AS_HELP_STRING([--disable-gui],
-		[do not compile the gui interface]),
-	[],
-	[enable_gui=yes])
+OPTION_DEFAULT_ON([gui], [do not compile the gui interface])
+
 AM_CONDITIONAL([GUI], [test x$enable_gui = xyes])
 AM_COND_IF([GUI],
 	[PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.0])
