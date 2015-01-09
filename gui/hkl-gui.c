@@ -183,12 +183,13 @@ diffractometer_set_wavelength(struct diffractometer_t *self,
 static gboolean
 diffractometer_set_solutions(struct diffractometer_t *self, HklGeometryList *solutions)
 {
-	if(self->solutions)
-		hkl_geometry_list_free(self->solutions);
+	if(solutions){
+		if(self->solutions)
+			hkl_geometry_list_free(self->solutions);
+		self->solutions = solutions;
+	}
 
-	self->solutions = solutions;
-
-	return NULL != self->solutions;
+	return NULL != solutions;
 }
 
 static gboolean
