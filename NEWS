@@ -5,7 +5,7 @@
    - 5.x runtime can be co-installed with the 4.x series.
    - hkl.h contain all the Public API.
    - A clear separation between the public and private API was
-     achieved, in order to propose a Long Time Support support of the
+     achieved, in order to propose a Long Time Support of the
      5.x series.
    - c-tap-hardness library was embeded to provide the unit test
      framework.
@@ -17,6 +17,8 @@
      - MARS beamline (SOLEIL) eulerian 4 circles vertical geometry.
      - SOLEIL SIRIUS KAPPA
      - SOLEIL SIRIUS TURRET
+   - New Pseudo Axes engines.
+     - qper_qpar
    - A not yet public hkl3d library used only by the gui allow to
      compute (Bullet) and display (OpenGL) collision for model
      described using the COLLADA file format.

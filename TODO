@@ -1,28 +1,25 @@
-Roadmap
--------
+# -*- org -*-
 
-* 5.0.0 UNRELEASE
-** TODO [hkl] HklEngine "q" -> "qper" and "qpar"
-** TODO [hkl] HklAxis degenerated.
+* hkl
+** TODO HklAxis degenerated.
    an axis is degenerated if its position have no effect
    on the HklPseudoAxis calculus. Add a degenerated member to the axis.
    that way it would be possible to check a posteriori for this degenerescencence.
-** TODO [hkl] HklAxis method to use min/max to check for the validity
-** TODO [hkl] HklGeometryList different method to help select a solution.
+** TODO HklAxis method to use min/max to check for the validity
+** TODO HklGeometryList different method to help select a solution.
    this select solution can depend on the geometry
    for example the kappa axis must be in one side of the plane.
-** TODO [hkl] add a fit on the Hklaxis offsets.
-** TODO [hkl] API to put a detector and a sample on the Geometry.
-** TODO [hkl] HklSample add the cell volum computation.
-** TODO [hkl] HklEngine "zone"
-** TODO [hkl] HklEngine "custom"
+** TODO add a fit on the Hklaxis offsets. 				
+** TODO API to put a detector and a sample on the Geometry. 		
+** TODO HklSample add the cell volum computation. 			
+** TODO HklEngine "zone" 						
+** TODO HklEngine "custom" 						
 		for now this pseudoaxis let you select the axis you
 		want to use for the computation.
-** TODO [hkl] create a macro to help compare two real the right way
+** TODO create a macro to help compare two real the right way 		
    fabs(a-b) < epsilon * max(1, abs(a), abs(b))
-** TODO [hkl] add an hkl_sample_set_lattice_unit()
-** TODO [hkl] use the liboil to speed calculation (in HklVector, HklMatrix and HklQuaternion)
-** TODO [hkl] SOLEIL SIXS
+** TODO add an hkl_sample_set_lattice_unit() 				
+** TODO SOLEIL SIXS 							
 *** DONE find the right solutions. 				      :zaxis:
     The cosinus and sinus properties are not enough to find the solution expected by the users.
     The idea is to use the Ewalds construction to generate a valid solution from the first one
@@ -35,14 +32,40 @@ Roadmap
     This diffractometer is a Newport one based on the kappa 6 circles ones.
     But instead of a kappa head, they use an Hexapod head.
     This head can be put horizontally or vertically.
-** TODO [hkl] generalisation of the z-axis hkl solver
+** TODO generalisation of the z-axis hkl solver 			
    first we need the degenerated member of the Axis. thaht way it could be possible
    to find the last non degenerated axis for the detector fit.
-** TODO [hkl] investigate the prigo geometry.
-** TODO [ghkl] change the color of fitparameter cells if they differ from the current
+** TODO investigate the prigo geometry. 				
+** TODO augeas/elektra for the plugin configure part. 			
+** TODO logging 							
+*** gir logging
+    It would be nice to generate the library logging using the .gir
+    information. So instead of writing the logging code for each
+    method, it would be better to have a generic method for this
+    purpose.
+*** parsable logging information.
+    A parsable logging format would help to setup some re-play unit
+    test. This way it could help during the developpement process
+    (modification of the hkl internals) to be confident that
+    computation are ok.
+ 
+** TODO performances 							
+   Investigate [[http://liboil.freedesktop.org/wiki/][liboil]] to speed calculation (in HklVector, HklMatrix
+   and HklQuaternion)
+
+** TODO rewrite documentation in org-mode
+   - asymptote and python code could be embeded directly into the
+     documentation.
+   - need to check if templates could be generated using the hkl
+     python binding for alldiffractometer geometries.
+* gui
+** TODO change the color of fitparameter cells if they differ from the current
 	  sample values
-** TODO [hkl3d] add a method to find the 3D models in the right directories.
-** TODO [packaging] add a .spec file for rpm generation.
-** TODO evaluate third-party
-*** augeas/elektra for the plugin configure part.
-*** REPL https://github.com/jonathanslenders/python-prompt-toolkit/tree/master/examples/tutorial
+** TODO REPL
+   https://github.com/jonathanslenders/python-prompt-toolkit/tree/master/examples/tutorial
+
+* hkl3d
+** TODO add a method to find the 3D models in the right directories.
+
+* packaging
+** TODO add a .spec file for rpm generation.
