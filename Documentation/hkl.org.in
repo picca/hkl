@@ -1,43 +1,29 @@
-* Welcome to hkl's @VERSION@ documentation!
+#+TITLE: Welcome to hkl's @VERSION@ documentation!
 * Introduction
-
-The purpose of the library is to factorise single crystal diffraction
-angles computation for different kind of diffractometer geometries. It
-is used at the SOLEIL, Desy and Alba synchrotron with the Tango control
-system to pilot diffractometers.
-
+  The purpose of the library is to factorise single crystal
+  diffraction angles computation for different kind of diffractometer
+  geometries. It is used at the SOLEIL, Desy and Alba synchrotron with
+  the Tango control system to pilot diffractometers.
 ** Features
-
--  mode computation (aka PseudoAxis)
-
-   -  item for different diffractometer geometries.
-
--  UB matrix computation.
-
-   -  busing & Levy with 2 reflections
-   -  simplex computation with more than 2 reflections using the GSL
-      library.
-   -  Eulerians angles to pre-orientate your sample.
-
--  Crystal lattice affinement
-
-   -  with more than 2 reflections you can select which parameter must
-      be fitted.
-
--  Pseudoaxes
-
-   -  psi, eulerians, q, ...
-
+   - mode computation (aka PseudoAxis)
+   - item for different diffractometer geometries.
+   - UB matrix computation.
+     - busing & Levy with 2 reflections
+     - simplex computation with more than 2 reflections using the GSL
+       library.
+     - Eulerians angles to pre-orientate your sample.
+   - Crystal lattice affinement
+     - with more than 2 reflections you can select which parameter must
+       be fitted.
+   - Pseudoaxes
+     - psi, eulerians, q, ...
 ** Conventions
-
-In all this document the next convention will be used to describe the
-diffractometers geometries.
-
--  right handed convention for all the angles.
--  direct space orthogonal base.
--  description of the diffractometer geometries is done with all axes
-   values set to zero.
-
+   In all this document the next convention will be used to describe
+   the diffractometers geometries.
+   - right handed convention for all the angles.
+   - direct space orthogonal base.
+   - description of the diffractometer geometries is done with all
+     axes values set to zero.
 ** Diffraction
 *** the crystal
 
@@ -53,8 +39,8 @@ associated to each lattice node. the purpose of diffraction is to study
 the interaction of this crystal (pattern+lattice) with X-rays.
 
 #+CAPTION: Crystal direct lattice.
+[[./figures/crystal.png]]
 
-[[../../figures/crystal.png]]
 this lattice is defined by $\vec{a}$, $\vec{b}$, $\vec{c}$ vectors, and
 the angles $\alpha$, $\beta$, $\gamma$. In general cases this lattice is
 not othonormal.
@@ -66,7 +52,7 @@ lattice defined like this:
 $$\begin{eqnarray*}
  \vec{a}^{\star} & = & \tau\frac{\vec{b}\wedge\vec{c}}{\vec{a}\cdot(\vec{b}\wedge\vec{c})}\\
  \vec{b}^{\star} & = & \tau\frac{\vec{c}\wedge\vec{a}}{\vec{b}\cdot(\vec{c}\wedge\vec{a})}\\
- \vec{c}^{\star} & = & \tau\frac{\vec{a}\wedge\vec{b}}{\vec{c}\cdot(\vec{a}\wedge\vec{b})} 
+ \vec{c}^{\star} & = & \tau\frac{\vec{a}\wedge\vec{b}}{\vec{c}\cdot(\vec{a}\wedge\vec{b})}
 \end{eqnarray*}$$
 
 $\tau=2\pi$ or $\tau=1$ depending on the conventions.
@@ -76,7 +62,7 @@ It is then possible to define thoses orthogonal properties:
 $$\begin{eqnarray*}
  \vec{a}^{\star}\cdot\vec{a}=\tau & \vec{b}^{\star}\cdot\vec{a}=0    & \vec{c}^{\star}\cdot\vec{a}=0\\
  \vec{a}^{\star}\cdot\vec{b}=0    & \vec{b}^{\star}\cdot\vec{b}=\tau & \vec{c}^{\star}\cdot\vec{b}=0\\
- \vec{a}^{\star}\cdot\vec{c}=0    & \vec{b}^{\star}\cdot\vec{c}=0    & \vec{c}^{\star}\cdot\vec{c}=\tau 
+ \vec{a}^{\star}\cdot\vec{c}=0    & \vec{b}^{\star}\cdot\vec{c}=0    & \vec{c}^{\star}\cdot\vec{c}=\tau
 \end{eqnarray*}$$
 
 This reciprocal space lattice allow to write in a simpler form the
@@ -627,20 +613,21 @@ where
 $$p = \arctan\left(\tan\frac{\kappa}{2} \cos\alpha\right)$$
 
 #+CAPTION: $\omega = 0$, $\chi = 0$, $\phi = 0$, 1st solution
+[[./figures/e2k_1.png]]
 
-[[../../figures/e2k_1.png]]
 #+CAPTION: $\omega = 0$, $\chi = 0$, $\phi = 0$, 2nd solution
+[[./figures/e2k_2.png]]
 
-[[../../figures/e2k_2.png]]
 #+CAPTION: $\omega = 0$, $\chi = 90$, $\phi = 0$, 1st solution
+[[./figures/e2k_3.png]]
 
-[[../../figures/e2k_3.png]]
 #+CAPTION: $\omega = 0$, $\chi = 90$, $\phi = 0$, 2nd solution
+[[./figures/e2k_4.png]]
 
-[[../../figures/e2k_4.png]]
 ** Qper and Qpar
+[[
+./figures/qper_qpar.png]]
 
-[[../../figures/qper_qpar.png]]
 this pseudo axis engine compute the perpendicular
 ($\left|\left|\vec{Q_\text{per}}\right|\right|$) and parallel
 ($\left|\left|\vec{Q_\text{par}}\right|\right|$) contribution of
@@ -665,10 +652,8 @@ de diffusion $\vec{Q}$ est dans le plan xOz). Les angles permettant de
 décrire la configuration du diffractomètre sont présentés sur la
 figure~ref{[[cap:3S+1D]]}.
 
-#+CAPTION: Dénomination des angles du diffractomètre 3S+1D
-Eulérien.label{[[cap:3S+1D]]}
-
-[[../../figures/3S+1D.png]]
+#+CAPTION: Dénomination des angles du diffractomètre 3S+1D Eulérien.label{[[cap:3S+1D]]}
+[[./figures/3S+1D.png]]
 ** Eulérien 4S+2D
 
 Nous allons nous inspirer du modèle de You pour notre diffractomètre
@@ -676,10 +661,9 @@ Nous allons nous inspirer du modèle de You pour notre diffractomètre
 rayons-X arrivent suivant le vecteur $vec{x}$ (le repère est différent
 de celui de You).
 
-#+CAPTION: Dénomination des angles du diffractomètre 4S+2D
-Eulérien.label{[[cap:4S+2D]]}
+#+CAPTION: Dénomination des angles du diffractomètre 4S+2D Eulérien.label{[[cap:4S+2D]]}
+[[./figures/4S+2D.png]]
 
-[[../../figures/4S+2D.png]]
 Le principe des calcules de You est d'exprimer dans le repère du
 laboratoire le vecteur diffusion $\vec{Q}$ de deux façons différentes.
 Une première en utilisant les angles du goniomètre 4S puis une à partir
@@ -709,27 +693,24 @@ $\vec{n}$ est dans le plan de diffraction (plan contenant $\vec{Q}$ et
 $\vec{k_{i}}$) (fig~ref{[[cap:Pseudo-Angles-li=0000E9s}d]]).
 
 #+CAPTION: Pseudo angles $\theta$ et $\vartheta$ liés à $\vec{Q}$
+[[./figures/4S+2D_reciprocal.png]]
 
-[[../../figures/4S+2D_reciprocal.png]]
 #+CAPTION: Pseudo angles $\alpha$ et $\phi$ liés à $\vec{n}$
+[[./figures/4S+2D_reciprocal2.png]]
 
-[[../../figures/4S+2D_reciprocal2.png]]
-#+CAPTION: Pseudo angles $\tau$ et $\psi$ liés à $\vec{n}$ relativement
-à $\vec{Q}$ et le plan de diffraction
+#+CAPTION: Pseudo angles $\tau$ et $\psi$ liés à $\vec{n}$ relativement à $\vec{Q}$ et le plan de diffraction
+[[./figures/4S+2D_reciprocal3.png]]
 
-[[../../figures/4S+2D_reciprocal3.png]]
-#+CAPTION: Pseudo Angles liés au vecteur de diffusion $\vec{Q}$ et à
-$\vec{n}$
+#+CAPTION: Pseudo Angles liés au vecteur de diffusion $\vec{Q}$ et à $\vec{n}$
+[[./figures/4S+2D_reciprocal4.png]]
 
-[[../../figures/4S+2D_reciprocal4.png]]
 Il est alors possible d'exprimer ces pseudos angles en fonction des
 angles physique du diffractomètre.
 
 ** Eulerian 4 circles
 
 #+CAPTION: Schematic view of the diffractometer.
-
-[[../../../figures/3S+1D.png]]
+[[../figures/3S+1D.png]]
 *** Geometry
 
 -  xrays source fix allong the $\vec{x}$ direction (1, 0, 0)
@@ -825,8 +806,7 @@ where *q* is $|\vec{Q}| = \frac{2 \tau}{\lambda} \sin{\theta}$
 ** Eulerian 6 circles
 
 #+CAPTION: Schematic view of the diffractometer.
-
-[[../../../figures/4S+2D.png]]
+[[../figures/4S+2D.png]]
 *** Geometry
 
 -  xrays source fix allong the $\vec{x}$ direction (1, 0, 0)
@@ -980,8 +960,8 @@ $\vec{x}$
 ** Kappa 4 circles vertical
 
 #+CAPTION: Schematic view of the diffractometer.
+[[../figures/k4cv.png]]
 
-[[../../../figures/k4cv.png]]
 *** Geometry
 
 For this geometry there is a special parameters called $\alpha$ which is
@@ -1097,8 +1077,7 @@ where *q* is $|\vec{Q}| = \frac{2 \tau}{\lambda} \sin{\theta}$
 ** Kappa 6 circles
 
 #+CAPTION: Schematic view of the diffractometer.
-
-[[../../../figures/k6c.png]]
+[[./figures/k6c.png]]
 *** Geometry
 
 For this geometry there is a special parameters called $\alpha$ which is

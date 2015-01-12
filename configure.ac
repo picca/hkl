@@ -134,6 +134,12 @@ dnl ***********
 
 AC_PATH_PROG([ASY], [asy], [echo])
 
+dnl *************
+dnl *** emacs ***
+dnl *************
+
+AC_PATH_PROG([EMACS], [emacs], [no])
+
 dnl *******************************
 dnl *** add an option for hkl3d ***
 dnl *******************************
