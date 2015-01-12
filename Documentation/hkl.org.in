@@ -1856,22 +1856,22 @@ if you want the latest development version use
 [[http://code.google.com/p/msysgit/downloads/list][msysgit]] on windows
 system and do:
 
-#+BEGIN_EXAMPLE
-    $ git clone git://repo.or.cz/hkl.git
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+git clone git://repo.or.cz/hkl.git
+#+END_SRC
 
 or:
 
-#+BEGIN_EXAMPLE
-    $ git clone http://repo.or.cz/r/hkl.git (slower)
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+    git clone http://repo.or.cz/r/hkl.git (slower)
+#+END_SRC
 
 then checkout the next branch like this:
 
-#+BEGIN_EXAMPLE
-    $ cd hkl
-    $ git checkout -b next origin/next
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+    cd hkl
+    git checkout -b next origin/next
+#+END_SRC
 
 ** Building hkl
 
@@ -1879,20 +1879,20 @@ To build hkl you need [[http://www.python.org][Python 2.3+]] the
 [[http://www.gnu.org/software/gsl/][GNU Scientific Library 1.12]] and
 [[https://developer.gnome.org/glib/][GLib-2.0 >= 2.3.4]]:
 
-#+BEGIN_EXAMPLE
-    $ ./configure --disable-gui
-    $ make
-    $ sudo make install
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+    ./configure --disable-gui
+    make
+    sudo make install
+#+END_SRC
 
 you can also build a GUI interfaces which use
 [[http://www.gtk.org][gtk]]:
 
-#+BEGIN_EXAMPLE
-    $ ./configure
-    $ make
-    $ sudo make install
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+    ./configure
+    make
+    sudo make install
+#+END_SRC
 
 optionnaly you can build an experimental /libhkl3d/ library (no public
 API for now) which is used by the GUI to display and compute
@@ -1900,11 +1900,11 @@ diffractometer collisions (only the /K6C/ model). To build it you need
 also [[https://projects.gnome.org/gtkglext/][gtkglext]] and
 [[http://bulletphysics.org/wordpress/][bullet 2.82]]:
 
-#+BEGIN_EXAMPLE
-    $ ./configure --enable-hkl3d
-    $ make
-    $ sudo make install
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+    ./configure --enable-hkl3d
+    make
+    sudo make install
+#+END_SRC
 
 if you want to work on the documentation you need the extra
 
@@ -1912,11 +1912,11 @@ if you want to work on the documentation you need the extra
 -  [[http://sphinx.pocoo.org/][sphinx]] for the html and latex doc.
 -  [[http://asymptote.sourceforge.net/][asymptote]] for the figures
 
-#+BEGIN_EXAMPLE
-    $ ./configure --enable-gtk-doc
-    $ make
-    $ make html
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+    ./configure --enable-gtk-doc
+    make
+    make html
+#+END_SRC
 
 ** Hacking hkl
 
@@ -1927,9 +1927,9 @@ You can find the bug tracker here
 
 -  Debian/Ubuntu:
 
-   #+BEGIN_EXAMPLE
-       $ reportbug hkl
-   #+END_EXAMPLE
+   #+BEGIN_SRC sh
+       reportbug hkl
+   #+END_SRC
 
 -  Other OS
 
@@ -1955,28 +1955,28 @@ Here a minimalist exemple of the workflow to prepare and send a patch
 for hkl. Suppose you wan to add a new feature to hkl create first a new
 branch from the next one:
 
-#+BEGIN_EXAMPLE
-    $ git checkout -b my-next next
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+    git checkout -b my-next next
+#+END_SRC
 
 hack, hack:
 
-#+BEGIN_EXAMPLE
-    $ git commit -a
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+    git commit -a
+#+END_SRC
 
 more hacks:
 
-#+BEGIN_EXAMPLE
-    $ git commit -a
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+    git commit -a
+#+END_SRC
 
 now that your new feature is ready for a review, you can send by email
 your work using git format-patch:
 
-#+BEGIN_EXAMPLE
-    $ git format-patch origin/next
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+    git format-patch origin/next
+#+END_SRC
 
 and send generated files 0001\_xxx, 0002\_xxx, ... to the author.
 
