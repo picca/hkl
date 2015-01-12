@@ -281,6 +281,7 @@ AC_CONFIG_FILES([Makefile
 		 tests/bindings/Makefile
 		 tests/tap/Makefile
 		 Documentation/Makefile
+		 Documentation/hkl.org
 		 Documentation/api/Makefile
 		 Documentation/figures/Makefile
 		 Documentation/sphinx/Makefile
