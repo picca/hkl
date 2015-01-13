@@ -473,18 +473,20 @@
    vecteur $\vec{z}$. Ce diffractomètre est de type verticale (le vecteur
    de diffusion $\vec{Q}$ est dans le plan xOz). Les angles permettant de
    décrire la configuration du diffractomètre sont présentés sur la
-   figure~ref{[[cap:3S+1D]]}.
+   figure~[[fig:3S+1D]].
 
-   #+CAPTION: Dénomination des angles du diffractomètre 3S+1D Eulérien.label{[[cap:3S+1D]]}
+   #+NAME: fig:3S+1D
+   #+CAPTION: Dénomination des angles du diffractomètre 3S+1D Eulérien.
    [[./figures/3S+1D.png]]
 ** Eulérien 4S+2D
 
    Nous allons nous inspirer du modèle de You pour notre diffractomètre
-   (fig.~ref{[[cap:4S+2D]]}) ici présenté tous les angles mis à zéro. Les
+   (fig:~[[fig:4S+2D]]) ici présenté tous les angles mis à zéro. Les
    rayons-X arrivent suivant le vecteur $vec{x}$ (le repère est différent
    de celui de You).
 
-   #+CAPTION: Dénomination des angles du diffractomètre 4S+2D Eulérien.label{[[cap:4S+2D]]}
+   #+NAME: fig:4S+2D
+   #+CAPTION: Dénomination des angles du diffractomètre 4S+2D Eulérien.
    [[./figures/4S+2D.png]]
 
    Le principe des calcules de You est d'exprimer dans le repère du
@@ -500,30 +502,34 @@
    diffusion $\vec{Q}$ ou un vecteur pointant dans une direction
    particulière du cristal $\vec{n}$. Cette direction peut-être soit lié à
    la cristallographie du cristal soit à sa forme (une normale à une face).
-   La figure~ref{[[cap:Pseudo-Angles-li=0000E9s]]} représente les angles
+   La figure~[[fig:4S+2D_reciprocal]] représente les angles
    liés au vecteur de diffusion et à ce vecteur de référence. Tout d'abord
    $\theta$ (angle entre $\vec{Q}$ et le plan $yz$) et qui correspond à
    l'angle de Bragg. $\vartheta$ qui est l'angle azimutal que fait la
    projection de $\vec{Q}$ sur le plan $yz$ et la direction $+y$
-   (fig~ref{[[cap:Pseudo-Angles-li=0000E9s}a]]). Il y a ensuite les angles
+   (fig~[[fig:4S+2D_reciprocal]]. Il y a ensuite les angles
    $\alpha$ et $\varphi$ définits comme précédemment mais pour le vecteur
-   de référence $\vec{n}$ (fig~ref{[[cap:Pseudo-Angles-li=0000E9s}b]]). Et
+   de référence $\vec{n}$ (fig~[[fig:4S+2D_reciprocal2]]). Et
    finalement les angles $tau$ (angle entre $\vec{Q}$ et $\vec{n}$) et
    $\psi$ qui correspond à la rotation de $\vec{n}$ autour du vecteur de
-   diffusion $\vec{Q}$ (fig~ref{[[cap:Pseudo-Angles-li=0000E9s}c]]).
+   diffusion $\vec{Q}$ (fig~[[fig:4S+2D_reciprocal3]]).
    L'origine de cet angle $psi$ est prise à zéro lorsque le vecteur
    $\vec{n}$ est dans le plan de diffraction (plan contenant $\vec{Q}$ et
-   $\vec{k_{i}}$) (fig~ref{[[cap:Pseudo-Angles-li=0000E9s}d]]).
+   $\vec{k_{i}}$) (fig~[[fig:4S+2D_reciprocal4]]).
 
+   #+NAME: fig:4S+2D_reciprocal
    #+CAPTION: Pseudo angles $\theta$ et $\vartheta$ liés à $\vec{Q}$
    [[./figures/4S+2D_reciprocal.png]]
 
+   #+NAME: fig:4S+2D_reciprocal2
    #+CAPTION: Pseudo angles $\alpha$ et $\phi$ liés à $\vec{n}$
    [[./figures/4S+2D_reciprocal2.png]]
 
+   #+NAME: fig:4S+2D_reciprocal3
    #+CAPTION: Pseudo angles $\tau$ et $\psi$ liés à $\vec{n}$ relativement à $\vec{Q}$ et le plan de diffraction
    [[./figures/4S+2D_reciprocal3.png]]
 
+   #+NAME: fig:4S+2D_reciprocal4
    #+CAPTION: Pseudo Angles liés au vecteur de diffusion $\vec{Q}$ et à $\vec{n}$
    [[./figures/4S+2D_reciprocal4.png]]
 
