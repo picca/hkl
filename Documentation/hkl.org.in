@@ -1,4 +1,9 @@
 #+TITLE: Welcome to hkl's @VERSION@ documentation!
+#+AUTHOR: Picca Frédéric-Emmanuel
+#+EMAIL: picca at synchrotron dash soleil dot fr
+#+LANGUAGE:   en
+#+OPTIONS: tex:dvipng
+
 * Introduction
   The purpose of the library is to factorise single crystal
   diffraction angles computation for different kind of diffractometer
@@ -31,7 +36,9 @@ A periodic crystal is the association of a pattern and a lattice. The
 pattern is located at each points of the lattice node. Positions of
 those nodes are given by:
 
-$$R_{uvw}=u\cdot\vec{a}+v\cdot\vec{b}+w\cdot\vec{c}$$
+\begin{displaymath}
+R_{uvw}=u\cdot\vec{a}+v\cdot\vec{b}+w\cdot\vec{c}
+\end{displaymath}
 
 $\vec{a}$, $\vec{b}$, $\vec{c}$ are the former vector of a base of the
 space. =u=, =v=, =w= are integrers. The pattern contain atomes
@@ -49,21 +56,21 @@ Nevertheless to compute the interaction of this real space lattice and
 the X-Rays, it is convenient to define another lattice called reciprocal
 lattice defined like this:
 
-$$\begin{eqnarray*}
- \vec{a}^{\star} & = & \tau\frac{\vec{b}\wedge\vec{c}}{\vec{a}\cdot(\vec{b}\wedge\vec{c})}\\
- \vec{b}^{\star} & = & \tau\frac{\vec{c}\wedge\vec{a}}{\vec{b}\cdot(\vec{c}\wedge\vec{a})}\\
- \vec{c}^{\star} & = & \tau\frac{\vec{a}\wedge\vec{b}}{\vec{c}\cdot(\vec{a}\wedge\vec{b})}
-\end{eqnarray*}$$
+\begin{eqnarray*}
+\vec{a}^{\star} & = & \tau\frac{\vec{b}\wedge\vec{c}}{\vec{a}\cdot(\vec{b}\wedge\vec{c})}\\
+\vec{b}^{\star} & = & \tau\frac{\vec{c}\wedge\vec{a}}{\vec{b}\cdot(\vec{c}\wedge\vec{a})}\\
+\vec{c}^{\star} & = & \tau\frac{\vec{a}\wedge\vec{b}}{\vec{c}\cdot(\vec{a}\wedge\vec{b})}
+\end{eqnarray*}
 
 $\tau=2\pi$ or $\tau=1$ depending on the conventions.
 
 It is then possible to define thoses orthogonal properties:
 
-$$\begin{eqnarray*}
+\begin{eqnarray*}
  \vec{a}^{\star}\cdot\vec{a}=\tau & \vec{b}^{\star}\cdot\vec{a}=0    & \vec{c}^{\star}\cdot\vec{a}=0\\
  \vec{a}^{\star}\cdot\vec{b}=0    & \vec{b}^{\star}\cdot\vec{b}=\tau & \vec{c}^{\star}\cdot\vec{b}=0\\
  \vec{a}^{\star}\cdot\vec{c}=0    & \vec{b}^{\star}\cdot\vec{c}=0    & \vec{c}^{\star}\cdot\vec{c}=\tau
-\end{eqnarray*}$$
+\end{eqnarray*}
 
 This reciprocal space lattice allow to write in a simpler form the
 interaction between the crystal and the X-Rays. We often only know about
@@ -71,26 +78,29 @@ $\vec{a}$, $\vec{b}$, $\vec{c}$ vectors and the angles $\alpha$,
 $\beta$, $\gamma$. Using the previous equations reciprocal, we can
 compute the reciprocal lattice this way:
 
-$$\begin{eqnarray*}
- a^{\star} & = & \frac{\sin\alpha}{aD}\\
- b^{\star} & = & \frac{\sin\beta}{bD}\\
- c^{\star} & = & \frac{\sin\gamma}{cD}
-\end{eqnarray*}$$
+
+\begin{eqnarray*}
+a^{\star} & = & \frac{\sin\alpha}{aD}\\
+b^{\star} & = & \frac{\sin\beta}{bD}\\
+c^{\star} & = & \frac{\sin\gamma}{cD}
+\end{eqnarray*}
 
 where
 
-$$D=\sqrt{1-\cos^{2}\alpha-\cos^{2}\beta-\cos^{2}\gamma+2\cos\alpha\cos\beta\cos\gamma}$$
+\begin{displaymath}
+D=\sqrt{1-\cos^{2}\alpha-\cos^{2}\beta-\cos^{2}\gamma+2\cos\alpha\cos\beta\cos\gamma}
+\end{displaymath}
 
 To compute the angles between the reciprocal space vectors, it is once
 again possible to use the previous equations reciprocal to obtain the
 sinus and cosinus of the angles $\alpha^\star$, $\beta^\star$ et
 $\gamma^\star$:
 
-$$\begin{eqnarray*}
+\begin{eqnarray*}
  \cos\alpha^{\star}=\frac{\cos\beta\cos\gamma-\cos\alpha}{\sin\beta\sin\gamma} & \, & \sin\alpha^{\star}=\frac{D}{\sin\beta\sin\gamma} \\
  \cos\beta^{\star}=\frac{\cos\gamma\cos\alpha-\cos\beta}{\sin\gamma\sin\alpha} & \, & \sin\beta^{\star}=\frac{D}{\sin\gamma\sin\alpha}\\
  \cos\gamma^{\star}=\frac{\cos\alpha\cos\beta-\cos\gamma}{\sin\alpha\sin\beta} & \, & \sin\gamma^{\star}=\frac{D}{\sin\alpha\sin\beta}
-\end{eqnarray*}$$
+\end{eqnarray*}
 
 *** Diffraction
 
@@ -99,7 +109,9 @@ $|k_{i}|=\tau/\lambda$ where $\lambda$ is the wavelength of the signal.
 The $\vec{k_{d}}$ vector wavelength of the diffracted beam. There is
 diffusion if the diffusion vector $\vec{q}$ can be expressed as follows:
 
-$$\vec{q}=\vec{k_{d}}-\vec{k_{i}}=h.\vec{a}^{*}+k.\vec{b}^{*}+l.\vec{c}^{*}$$
+\begin{displaymath}
+\vec{q}=\vec{k_{d}}-\vec{k_{i}}=h.\vec{a}^{*}+k.\vec{b}^{*}+l.\vec{c}^{*}
+\end{displaymath}
 
 where $(h,k,l)\in\mathbb{N}^{3}$ and $(h,k,l)\neq(0,0,0)$. Thoses
 indices $(h,k,l)$ are named Miller indices.
@@ -107,10 +119,11 @@ indices $(h,k,l)$ are named Miller indices.
 Another way of looking at things has been given by Bragg and that famous
 relationship:
 
-$$n\lambda=2d\sin\theta$$
+\begin{displaymath}
+n\lambda=2d\sin\theta
+\end{displaymath}
 
-where $d$ is the inter-plan distance and $n \in
-\mathbb{N}$.
+where $d$ is the inter-plan distance and $n \in \mathbb{N}$.
 
 The diffusion accure for a unique $\theta$ angle. Then we got $\vec{q}$
 perpendicular to the diffraction plan.
@@ -119,58 +132,73 @@ The Ewald construction allow to represent this diffraction in the
 reciprocal space.
 
 *** Quaternions
-
 **** Properties
 
 The quaternions will be used to discribe the diffractometers geometries.
 Thoses quaternions can represent 3D rotations. There is different way to
 describe then like complex numbers.
 
-$$q=a+bi+cj+dk$$
+\begin{displaymath}
+q=a+bi+cj+dk
+\end{displaymath}
 
 or
 
-$$q=[a,\vec{v}]$$
+\begin{displaymath}
+q=[a,\vec{v}]
+\end{displaymath}
 
 To compute the quaternion's norm, we can proceed like for complex
 numbers
 
-$$\lvert q \rvert = \sqrt{a{{}^2}+b{{}^2}+c{{}^2}+d{{}^2}}$$
+\begin{displaymath}
+\lvert q \rvert = \sqrt{a{{}^2}+b{{}^2}+c{{}^2}+d{{}^2}}
+\end{displaymath}
 
 Its conjugate is :
 
-$$q^{*}=[a,-\vec{u}]=a-bi-cj-dk$$
+\begin{displaymath}
+q^{*}=[a,-\vec{u}]=a-bi-cj-dk
+\end{displaymath}
 
 **** Operations
 
 The difference with the complexnumber algebre is about
 non-commutativity.
 
-$$qp \neq pq$$
+\begin{displaymath}
+qp \neq pq
+\end{displaymath}
 
-$$\bordermatrix{
+\begin{displaymath}
+\bordermatrix{
  ~ & 1 & i  & j  & k \cr
  1 & 1 & i  & j  & k \cr
  i & i & -1 & k  & -j \cr
  j & j & -k & -1 & i \cr
  k & k & j  & -i & -1
-}$$
+}
+\end{displaymath}
 
 The product of two quaternions can be express by the Grassman product
 Grassman product. So for two quaternions $p$ and $q$:
 
-$$\begin{align*}
+\begin{align*}
  q &= a+\vec{u} = a+bi+cj+dk\\
  p &= t+\vec{v} = t+xi+yj+zk
-\end{align*}$$
+\end{align*}
 
 we got
 
-$$pq=at-\vec{u}\cdot\vec{v}+a\vec{v}+t\vec{u}+\vec{v}\times\vec{u}$$
+\begin{displaymath}
+pq = at - \vec{u} \cdot \vec{v} + a \vec{v} + t \vec{u} + \vec{v} \times \vec{u}
+\end{displaymath}
 
 or equivalent
 
-$$pq=(at-bx-cy-dz)+(bt+ax+cz-dy)i+(ct+ay+dx-bz)j+(dt+az+by-cx)k$$
+\begin{displaymath}
+pq = (at - bx - cy - dz) + (bt + ax + cz - dy) i + (ct + ay + dx - bz) j + (dt + az + by - cx) k
+\end{displaymath}
 
 **** 3D rotations
 
@@ -187,7 +215,9 @@ complex et le nombre $e^{i\theta}$ permet de calculer simplement la
 rotation d'angle $\theta$ autour de l'origine, dans l'espace 3D
 l'expression équivalente est:
 
-$$z'=qzq^{-1}$$
+\begin{displaymath}
+z'=qzq^{-1}
+\end{displaymath}
 
 où $q$ est le quaternion de norme 1 représentant la rotation dans
 l'espace et $z$ le quaternion représentant le vecteur qui subit la
@@ -197,16 +227,20 @@ Dans le cas des quaternions de norme 1, il est très facile de calculer
 $q^{-1}$. En effet l'inverse d'une rotation d'angle $\theta$ est la
 rotation d'angle $-\theta$. On a donc directement:
 
-$$q^{-1}=[\cos\frac{-\theta}{2},\sin\frac{-\theta}{2}\vec{u}]=[\cos\frac{\theta}{2},-\sin\frac{\theta}{2}\vec{u}]=q^{*}$$
+\begin{displaymath}
+q^{-1}=[\cos\frac{-\theta}{2},\sin\frac{-\theta}{2}\vec{u}]=[\cos\frac{\theta}{2},-\sin\frac{\theta}{2}\vec{u}]=q^{*}
+\end{displaymath}
 
 Le passage aux matrices de rotation se fait par la formule suivante
 $q\rightarrow M$.
 
-$$\begin{bmatrix}
+\begin{displaymath}
+\begin{bmatrix}
  a{{}^2}+b{{}^2}-c{{}^2}-d{{}^2} & 2bc-2ad & 2ac+2bd\\
  2ad+2bc & a{{}^2}-b{{}^2}+c{{}^2}-d{{}^2} & 2cd-2ab\\
  2bd-2ac & 2ab+2cd & a{{}^2}-b{{}^2}-c{{}^2}+d{{}^2}
-\end{bmatrix}$$
+\end{bmatrix}
+\end{displaymath}
 
 La composition de rotation se fait simplement en multipliant les
 quaternions entre eux. Si l'on à $q$
@@ -221,10 +255,10 @@ exprimer les relations mathématiques qui lient les différents angles
 entre eux lorsque la condition de Bragg est vérifiée. L'équation
 fondamentale est la suivante:
 
-$$\begin{align*}
+\begin{align*}
  \left(\prod_{i}S_{i}\right)\cdot U\cdot B\cdot\vec{h} & =\left(\prod_{j}D_{j}-I\right)\cdot\vec{k_{i}}\\
  R\cdot U\cdot B\cdot\vec{h} & =\vec{Q}
-\end{align*}$$
+\end{align*}
 
 ou $\vec{h}$ est le vecteur $(h,k,l)$, $\vec{k_{i}}$ est le vecteur
 incident, $S_{i}$ les matrices de rotations des mouvements liés à
@@ -239,12 +273,14 @@ crystal réciproque) à un repère orthonormé.
 Si l'on connaît les paramètres cristallins du cristal étudié, il est
 très simple de calculer $B$:
 
-$$B=
+\begin{displaymath}
+B=
 \begin{bmatrix}
  a^{\star} & b^{\star}\cos\gamma^{\star} & c^{\star}\cos\beta^{\star}\\
  0 & b^{\star}\sin\gamma^{\star} & -c^{\star}\sin\beta^{\star}\cos\alpha\\
  0 & 0 & 1/c
-\end{bmatrix}$$
+\end{bmatrix}
+\end{displaymath}
 
 *** Calcule de U
 
@@ -269,10 +305,10 @@ l'échantillon. On mesure deux réflections $(\vec{h}_{1},\vec{h}_{2})$
 ainsi que leurs angles associés. Cela nous permet de calculer $R$ et
 $\vec{Q}$ pour chacune de ces reflections. nous avons alors ce système:
 
-$$\begin{eqnarray*}
+\begin{eqnarray*}
  U\cdot B\cdot\vec{h}_{1} & = & \tilde{R}_{1}\cdot\vec{Q}_{1}\\
  U\cdot B\cdot\vec{h}_{2} & = & \tilde{R}_{2}\cdot\vec{Q}_{2}
-\end{eqnarray*}$$
+\end{eqnarray*}
 
 De façon à calculer facilement $U$, il est intéressant de définir deux
 trièdres orthonormé $T_{\vec{h}}$ et $T_{\vec{Q}}$ à partir des vecteurs
@@ -280,11 +316,15 @@ $(B\vec{h}_{1},B\vec{h}_{2})$ et
 $(\tilde{R}_{1}\vec{Q}_{1},\tilde{R}_{2}\vec{Q}_{2})$. On a alors très
 simplement:
 
-$$U\cdot T_{\vec{h}}=T_{\vec{Q}}$$
+\begin{displaymath}
+U \cdot T_{\vec{h}} = T_{\vec{Q}}
+\end{displaymath}
 
 Et donc
 
-$$U=T_{\vec{Q}}\cdot\tilde{T}_{\vec{h}}$$
+\begin{displaymath}
+U = T_{\vec{Q}} \cdot \tilde{T}_{\vec{h}}
+\end{displaymath}
 
 *** Affinement par la méthode du simplex
 
@@ -295,14 +335,16 @@ paramètres qui permennt de representer $U$ sont en fait les angles
 d'euler. il faut donc être en mesure de passer d'une représentation
 eulérien à cette matrice :math::U et réciproquement.
 
-$$U=X\cdot Y\cdot Z$$
+\begin{displaymath}
+U = X \cdot Y \cdot Z
+\end{displaymath}
 
 où $X$ est la matrice rotation suivant l'axe Ox et le premier angle
 d'Euler, $Y$ la matrice de rotation suivant l'axe Oy et le deuxième
 angle d'Euler et $Z$ la matrice du troisième angle d'Euler pour l'axe
 Oz.
 
-$$\begin{tabular}{ccc}
+\begin{tabular}{ccc}
  $X$ & $Y$ & $Z$\tabularnewline
  $\begin{bmatrix}
      1 & 0 & 0\\
@@ -321,16 +363,18 @@ $$\begin{tabular}{ccc}
      F & E & 0\\
      0 & 0 & 1
  \end{bmatrix}$
-\end{tabular}$$
+\end{tabular}
 
 et donc:
 
-$$U=
+\begin{displaymath}
+U=
 \begin{bmatrix}
  CE & -CF & D\\
  BDE+AF & -BDF+AE & -BC\\
  -ADE+BF & ADF+BE & AC
-\end{bmatrix}$$
+\end{bmatrix}
+\end{displaymath}
 
 Il est donc facile de passer des angles d'Euler à la matrice
 d'orientation.
@@ -343,7 +387,7 @@ vers les angles d'euler.
 Pour ce diffractomètres, les matrices de rotations des différents axes
 sont les suivantes:
 
-$$\begin{tabular}{cccc}
+\begin{tabular}{cccc}
  $\Omega$ & $\chi$ & $\Phi$ & $2\Theta$\tabularnewline
  $\begin{bmatrix}
      \cos\omega & 0 & -\sin\omega\\
@@ -368,37 +412,47 @@ $$\begin{tabular}{cccc}
      0 & 1 & 0\\
      \sin2\theta & 0 & \cos2\theta
  \end{bmatrix}$
-\end{tabular}$$
+\end{tabular}
 
 On obtient alors la matrice de rotation de la machine
 
-$$R=\Omega\chi\Phi$$
+\begin{displaymath}
+R=\Omega\chi\Phi
+\end{displaymath}
 
 soit
 
-$$R=
+\begin{displaymath}
+R=
 \begin{bmatrix}
  \cos\omega\cos\phi-\cos\chi\sin\omega\sin\phi & -\sin\chi\sin\omega & -\cos\omega\sin\phi-\cos\chi\sin\omega\cos\phi\\
  -\sin\chi\sin\phi & \cos\chi & -\sin\chi\cos\phi\\
  \sin\omega\cos\phi-\cos\chi\cos\omega\sin\phi & -\sin\chi\cos\omega & -\sin\omega\sin\phi-\cos\chi\cos\omega\cos\phi
-\end{bmatrix}$$
+\end{bmatrix}
+\end{displaymath}
 
 De la même façon on peut calculer le vecteur diffusion en fonction des
 angles du détecteur:
 
-$$\vec{Q}=\left(2\Theta-I\right)\cdot\vec{k}_{i}$$
+\begin{displaymath}
+\vec{Q}=\left(2\Theta-I\right)\cdot\vec{k}_{i}
+\end{displaymath}
 
 où $I$ est la matrice identité. Finalement:
 
-$$\vec{Q}=k_{i}\left(\begin{array}{c}
+\begin{displaymath}
+\vec{Q}=k_{i}\left(\begin{array}{c}
 \cos2\theta-1\\
 0\\
 \sin2\theta
-\end{array}\right)$$
+\end{array}\right)
+\end{displaymath}
 
 L'équation fondamentale nous permet d'écrire:
 
-$$U\cdot B\cdot\vec{h}=\tilde{R}\cdot\vec{Q}$$
+\begin{displaymath}
+U\cdot B\cdot\vec{h}=\tilde{R}\cdot\vec{Q}
+\end{displaymath}
 
 Cette équation est de 4 inconnus pour seulement 3 équations. Il faut
 donc imposer des contraintes pour résoudre ce système et ainsi
@@ -413,118 +467,156 @@ ou telle solution plutôt qu'une autre.
 
 Dans ce mode on choisit d'avoir:
 
-$$\omega=\theta$$
+\begin{displaymath}
+\omega=\theta
+\end{displaymath}
 
 Le système s'écrit alors simplement:
 
-$$\begin{eqnarray*}
+\begin{eqnarray*}
  h_{\phi} & = & 2k_{i}\sin\theta\cos\chi\sin\phi\\
  k_{\phi} & = & 2k_{i}\sin\theta\sin\chi\\
  l_{\phi} & = & 2k_{i}\sin\theta\cos\chi\cos\phi
-\end{eqnarray*}$$
+\end{eqnarray*}
 
 On a:
 
-$$h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}=4k_{i}\sin^{2}\theta$$
+\begin{displaymath}
+h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}=4k_{i}\sin^{2}\theta
+\end{displaymath}
 
 où $k_{i}=\frac{\tau}{\lambda}$. donc on peut écrire:
 
-$$\left|\sin\theta\right|=\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$$
+\begin{displaymath}
+\left|\sin\theta\right|=\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}
+\end{displaymath}
 
 il faut donc enviseager les deux possibilité selon que $\theta$ est
 positif ou bien négatif.
 
-$$\sin\theta<0$$
+\begin{displaymath}
+\sin\theta<0
+\end{displaymath}
 
 On peut alors écrire:
 
-$$\sin\chi=-\frac{k_{\phi}}{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}$$
+\begin{displaymath}
+\sin\chi=-\frac{k_{\phi}}{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}
+\end{displaymath}
 
 puis en utilisant le relation bien connue $\cos^{2}+\sin^{2}=1$ on a:
 
-$$\cos^{2}\chi=\frac{h_{\phi}^{2}+l_{\phi}^{2}}{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}$$
+\begin{displaymath}
+\cos^{2}\chi=\frac{h_{\phi}^{2}+l_{\phi}^{2}}{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}
+\end{displaymath}
 
 Il faut une fois de plus faire un choix selon que $\cos\chi$ est positif
 ou négatif.
 
-$$\cos\chi<0$$
+\begin{displaymath}
+\cos\chi<0
+\end{displaymath}
 
-$$\cos\chi=-\sqrt{\frac{h_{\phi}^{2}+l_{\phi}^{2}}{h_{\phi}^{2}+k_{\phi+}^{2}l_{\phi}^{2}}}$$
+\begin{displaymath}
+\cos\chi=-\sqrt{\frac{h_{\phi}^{2}+l_{\phi}^{2}}{h_{\phi}^{2}+k_{\phi+}^{2}l_{\phi}^{2}}}
+\end{displaymath}
 
-$$\cos\chi>0$$
+\begin{displaymath}
+\cos\chi>0
+\end{displaymath}
 
-$$\cos\chi=\sqrt{\frac{h_{\phi}^{2}+l_{\phi}^{2}}{h_{\phi}^{2}+k_{\phi+}^{2}l_{\phi}^{2}}}$$
+\begin{displaymath}
+\cos\chi=\sqrt{\frac{h_{\phi}^{2}+l_{\phi}^{2}}{h_{\phi}^{2}+k_{\phi+}^{2}l_{\phi}^{2}}}
+\end{displaymath}
 
-$$\sin\theta>0$$
+\begin{displaymath}
+\sin\theta>0
+\end{displaymath}
 
 On peut alors écrire:
 
-$$\sin\chi=\frac{k_{\phi}}{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}$$
+\begin{displaymath}
+\sin\chi=\frac{k_{\phi}}{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}
+\end{displaymath}
 
 puis en utilisant le relation bien connue $\cos^{2}+\sin^{2}=1$ on a:
 
-$$\cos^{2}\chi=\frac{h_{\phi}^{2}+l_{\phi}^{2}}{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}$$
+\begin{displaymath}
+\cos^{2}\chi=\frac{h_{\phi}^{2}+l_{\phi}^{2}}{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}
+\end{displaymath}
 
 Il faut une fois de plus faire un choix selon que $\cos\chi$ est positif
 ou négatif.
 
-$$\cos\chi<0$$
+\begin{displaymath}
+\cos\chi<0
+\end{displaymath}
 
-$$\cos\chi=-\sqrt{\frac{h_{\phi}^{2}+l_{\phi}^{2}}{h_{\phi}^{2}+k_{\phi+}^{2}l_{\phi}^{2}}}$$
+\begin{displaymath}
+\cos\chi=-\sqrt{\frac{h_{\phi}^{2}+l_{\phi}^{2}}{h_{\phi}^{2}+k_{\phi+}^{2}l_{\phi}^{2}}}
+\end{displaymath}
 
-$$\cos\chi>0$$
+\begin{displaymath}
+\cos\chi>0
+\end{displaymath}
 
-$$\cos\chi=\sqrt{\frac{h_{\phi}^{2}+l_{\phi}^{2}}{h_{\phi}^{2}+k_{\phi+}^{2}l_{\phi}^{2}}}$$
+\begin{displaymath}
+\cos\chi=\sqrt{\frac{h_{\phi}^{2}+l_{\phi}^{2}}{h_{\phi}^{2}+k_{\phi+}^{2}l_{\phi}^{2}}}
+\end{displaymath}
 
 La résolution du système donne alors 4 quadruplets de solutions:
 
-$$\begin{tabular}{c|c|c|c}
+\begin{tabular}{c|c|c|c}
  $\omega$ & $\chi$ & $\phi$ & $2\theta$\tabularnewline
  \hline
  $-\theta$ & $\arctan2(-k_{\phi},-\sqrt{h_{\phi}^{2}+l_{\phi}^{2}})$ & $\arctan2(h_{\phi},l_{\phi})$ & $2\arcsin-\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$\tabularnewline
  $-\theta$ & $\arctan2(-k_{\phi},\sqrt{h_{\phi}^{2}+l_{\phi}^{2}})$ & $\arctan2(-h_{\phi},-l_{\phi})$ & $2\arcsin-\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$\tabularnewline
  $\theta$ & $\arctan2(k_{\phi},-\sqrt{h_{\phi}^{2}+l_{\phi}^{2}})$ & $\arctan2(-h_{\phi},-l_{\phi})$ & $2\arcsin\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$\tabularnewline
  $\theta$ & $\arctan2(k_{\phi},\sqrt{h_{\phi}^{2}+l_{\phi}^{2}})$ & $\arctan2(h_{\phi},l_{\phi})$ & $2\arcsin\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$\tabularnewline
-\end{tabular}$$
+\end{tabular}
 
 *** Mode Delta Theta
 
 Ce mode consiste à décaler $\omega$ par rapport à $\theta$ d'une valeur
 constante $C$:
 
-$$\omega=\theta+C$$
+\begin{displaymath}
+\omega=\theta+C
+\end{displaymath}
 
 Le système s'écrit alors comme suit:
 
-$$\begin{eqnarray*}
+\begin{eqnarray*}
  h_{\phi} & = & 2k_{i}\sin\theta\left(\cos C\cos\chi\sin\phi+\sin C\cos\phi\right)\\
  k_{\phi} & = & 2k_{i}\sin\theta\cos C\sin\chi\\
  l_{\phi} & = & 2k_{i}\sin\theta\left(\cos C\cos\chi\cos\phi-\sin C\sin\phi\right)
-\end{eqnarray*}$$
+\end{eqnarray*}
 
 On a toujours:
 
-$$h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}=4k_{i}\sin^{2}\theta$$
+\begin{displaymath}
+h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}=4k_{i}\sin^{2}\theta
+\end{displaymath}
 
 La résolution donne 4 quadruplets de solutions:
 
-$$\begin{tabular}{ccc}
+\begin{tabular}{ccc}
     $\omega$ & $\chi$ & $\phi$\tabularnewline
     \hline
     $-\theta+C$ & $\arctan2(\frac{-k_{\phi}}{\cos C},-\sqrt{h_{\phi}^{2}-k_{\phi}^{2}\tan^{2}C+l_{\phi}^{2}})$ & $\arctan2(-h_{\phi}\cos C\cos\chi+l_{\phi}\sin C,-l_{\phi}\cos C\cos\chi-h_{\phi}\sin C)$\tabularnewline
     $-\theta+C$ & $\arctan2(\frac{-k_{\phi}}{\cos C},\sqrt{h_{\phi}^{2}-k_{\phi}^{2}\tan^{2}C+l_{\phi}^{2}})$ & $\arctan2(-h_{\phi}\cos C\cos\chi+l_{\phi}\sin C,-l_{\phi}\cos C\cos\chi-h_{\phi}\sin C)$\tabularnewline
     $\theta+C$ & $\arctan2(\frac{k_{\phi}}{\cos C},-\sqrt{h_{\phi}^{2}-k_{\phi}^{2}\tan^{2}C+l_{\phi}^{2}})$ & $\arctan2(h_{\phi}\cos C\cos\chi-l_{\phi}\sin C,l_{\phi}\cos C\cos\chi+h_{\phi}\sin C)$\tabularnewline
     $\theta+C$ & $\arctan2(\frac{k_{\phi}}{\cos C},\sqrt{h_{\phi}^{2}-k_{\phi}^{2}\tan^{2}C+l_{\phi}^{2}})$ & $\arctan2(h_{\phi}\cos C\cos\chi-l_{\phi}\sin C,l_{\phi}\cos C\cos\chi+h_{\phi}\sin C)$\tabularnewline
-\end{tabular}$$
+\end{tabular}
 
-$$\begin{tabular}{c}
+\begin{tabular}{c}
  $2\theta$\tabularnewline
  \hline
  $2\arcsin-\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$\tabularnewline
  $2\arcsin-\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$\tabularnewline
  $2\arcsin\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$\tabularnewline
  $2\arcsin\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$\tabularnewline
-\end{tabular}$$
+\end{tabular}
 
 où
 
@@ -532,35 +624,37 @@ où
 
 Dans ce mode on choisit de garder $\omega$ toujours constant:
 
-$$\omega=C$$
+\begin{displaymath}
+\omega=C
+\end{displaymath}
 
 Le système s'écrit alors comme suit:
 
-$$\begin{eqnarray*}
+\begin{eqnarray*}
     h_{\phi} & = & 2k_{i}\sin\theta\left(\cos(C-\theta)\cos\chi\sin\phi+\sin(C-\theta)\cos\phi\right)\\
     k_{\phi} & = & 2k_{i}\sin\theta\cos(C-\theta)\sin\chi\\
     l_{\phi} & = & 2k_{i}\sin\theta\left(\cos(C-\theta)\cos\chi\cos\phi-\sin(C-\theta)\sin\phi\right)
-\end{eqnarray*}$$
+\end{eqnarray*}
 
 La résolution donne 4 quadruplets de solutions:
 
-$$\begin{tabular}{ccc}
+\begin{tabular}{ccc}
     $\omega$ & $\chi$ & $\phi$\tabularnewline
     \hline
     $-\theta+C$ & $\arctan2\left(-k_{\phi},-\sqrt{(h_{\phi}^{2}+l_{\phi}^{2})\cos^{2}(C-\theta)-k_{\phi}^{2}\sin^{2}(C-\theta)}\right)$ & $\arctan2(-h_{\phi}\cos C\cos\chi+l_{\phi}\sin C,-l_{\phi}\cos C\cos\chi-h_{\phi}\sin C)$\tabularnewline
     $-\theta+C$ & $\arctan2\left(-k_{\phi},\sqrt{(h_{\phi}^{2}+l_{\phi}^{2})\cos^{2}(C-\theta)-k_{\phi}^{2}\sin^{2}(C-\theta)}\right)$ & $\arctan2(-h_{\phi}\cos C\cos\chi+l_{\phi}\sin C,-l_{\phi}\cos C\cos\chi-h_{\phi}\sin C)$\tabularnewline
     $\theta+C$ & $\arctan2\left(k_{\phi},-\sqrt{(h_{\phi}^{2}+l_{\phi}^{2})\cos^{2}(C-\theta)-k_{\phi}^{2}\sin^{2}(C-\theta)}\right)$ & $\arctan2(h_{\phi}\cos C\cos\chi-l_{\phi}\sin C,l_{\phi}\cos C\cos\chi+h_{\phi}\sin C)$\tabularnewline
     $\theta+C$ & $\arctan2\left(k_{\phi},\sqrt{(h_{\phi}^{2}+l_{\phi}^{2})\cos^{2}(C-\theta)-k_{\phi}^{2}\sin^{2}(C-\theta)}\right)$ & $\arctan2(h_{\phi}\cos C\cos\chi-l_{\phi}\sin C,l_{\phi}\cos C\cos\chi+h_{\phi}\sin C)$\tabularnewline
-\end{tabular}$$
+\end{tabular}
 
-$$\begin{tabular}{c}
+\begin{tabular}{c}
     $2\theta$\tabularnewline
     \hline
     $2\arcsin-\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$\tabularnewline
     $2\arcsin-\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$\tabularnewline
     $2\arcsin\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$\tabularnewline
     $2\arcsin\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$\tabularnewline
-\end{tabular}$$
+\end{tabular}
 * PseudoAxes
 
 This section describe the calculations done by the library for the
@@ -570,23 +664,25 @@ different kind of pseudo axes.
 
 1st solution
 
-$$\begin{eqnarray*}
+\begin{eqnarray*}
  \kappa_\omega & = & \omega - p + \frac{\pi}{2} \\
  \kappa & = & 2 \arcsin\left(\frac{\sin\frac{\chi}{2}}{\sin\alpha}\right) \\
  \kappa_\phi & = &  \phi - p - \frac{\pi}{2}
-\end{eqnarray*}$$
+\end{eqnarray*}
 
 or 2nd one
 
-$$\begin{eqnarray*}
+\begin{eqnarray*}
  \kappa_\omega & = & \omega - p - \frac{\pi}{2} \\
  \kappa & = & -2 \arcsin\left(\frac{\sin\frac{\chi}{2}}{\sin\alpha}\right) \\
  \kappa_\phi & = &  \phi - p + \frac{\pi}{2}
-\end{eqnarray*}$$
+\end{eqnarray*}
 
 where
 
-$$p = \arcsin\left(\frac{\tan\frac{\chi}{2}}{\tan\alpha}\right);$$
+\begin{displaymath}
+p = \arcsin\left(\frac{\tan\frac{\chi}{2}}{\tan\alpha}\right)
+\end{displaymath}
 
 and $\alpha$ is the angle of the kappa axis with the $\vec{y}$ axis.
 
@@ -594,23 +690,25 @@ and $\alpha$ is the angle of the kappa axis with the $\vec{y}$ axis.
 
 1st solution
 
-$$\begin{eqnarray*}
+\begin{eqnarray*}
  \omega & = & \kappa_\omega + p - \frac{\pi}{2} \\
  \chi   & = & 2 \arcsin\left(\sin\frac{\kappa}{2} \sin\alpha\right) \\
  \phi   & = & \kappa_\phi + p + \frac{\pi}{2}
-\end{eqnarray*}$$
+\end{eqnarray*}
 
 or 2nd one
 
-$$\begin{eqnarray*}
+\begin{eqnarray*}
  \omega & = & \kappa_\omega + p + \frac{\pi}{2} \\
  \chi   & = & -2 \arcsin\left(\sin\frac{\kappa}{2} \sin\alpha\right) \\
  \phi   & = & \kappa_\phi + p - \frac{\pi}{2}
-\end{eqnarray*}$$
+\end{eqnarray*}
 
 where
 
-$$p = \arctan\left(\tan\frac{\kappa}{2} \cos\alpha\right)$$
+\begin{displaymath}
+p = \arctan\left(\tan\frac{\kappa}{2} \cos\alpha\right)
+\end{displaymath}
 
 #+CAPTION: $\omega = 0$, $\chi = 0$, $\phi = 0$, 1st solution
 [[./figures/e2k_1.png]]
@@ -634,11 +732,11 @@ this pseudo axis engine compute the perpendicular
 $\vec{Q}$ relatively to the surface of the sample defined by the
 $\vec{n}$ vector.
 
-$$\begin{eqnarray*}
+\begin{eqnarray*}
 \vec{q} & = & \vec{k_\text{f}} - \vec{k_\text{i}} \\
 \vec{q} & = & \vec{q_\text{per}} + \vec{q_\text{par}} \\
 \vec{q_\text{per}} & = & \frac{\vec{q} \cdot \vec{n}}{\left|\left|\vec{n}\right|\right|} \frac{\vec{n}}{\left|\left|\vec{n}\right|\right|}
-\end{eqnarray*}$$
+\end{eqnarray*}
 * Les Diffractomètres
 ** Eulérien 3S+1D
 
@@ -1796,7 +1894,6 @@ sample referential. The default value for $n$ is (0, 1, 0)
    -  Parameters : *"x"*, *"y"*, *"z"*
 
 ** Z-Axis
-
 *** Geometry
 
 For this geometry the *mu* axis is common to the sample and the
@@ -1815,7 +1912,6 @@ detector.
    -  *gamma* : rotation around the $\vec{z}$ direction (0, 0, 1)
 
 *** PseudoAxes
-
 **** hkl
 
 PseudoAxes provided : *h*, *k* and *l*
@@ -1847,7 +1943,6 @@ $\vec{x}$
    -  Axes : *"gamma"*, *"delta"*
    -  Parameters : no parameter
 * Developpement
-
 ** Getting hkl
 
 To get hkl, you can download the last stable version from sourceforge or
@@ -1908,9 +2003,19 @@ also [[https://projects.gnome.org/gtkglext/][gtkglext]] and
 
 if you want to work on the documentation you need the extra
 
--  [[http://www.gtk.org/gtk-doc/][gtk-doc]] for the api
--  [[http://sphinx.pocoo.org/][sphinx]] for the html and latex doc.
--  [[http://asymptote.sourceforge.net/][asymptote]] for the figures
+- [[http://www.gtk.org/gtk-doc/][gtk-doc]] for the api
+- [[http://sphinx.pocoo.org/][sphinx]] for the html and latex doc.
+- [[http://asymptote.sourceforge.net/][asymptote]] for the figures
+- [[http://www.gnu.org/software/emacs/][emacs]] the well known editor
+- [[https://github.com/emacsmirror/htmlize][htmlize]] used to highlight the source code
+- [[http://orgmode.org][org-mode]] litteral programming
+- [[http://savannah.nongnu.org/projects/dvipng/][dvipng]] convert latex equation into pictures
+
+On Debian/Ubuntu you just need to install
+
+#+BEGIN_SRC sh
+  sudo apt-get install emacs dvipng emacs-goodies-el org-mode
+#+END_SRC
 
 #+BEGIN_SRC sh
     ./configure --enable-gtk-doc
@@ -2017,7 +2122,7 @@ hey what's happend with theses solutions ! let's look closely to real
 numbers. the last column is the distance to the diffractometer current
 position. This distance is for now express like this:
 
-$$\sum_{axes} \left|\text{current position} - \text{target position}\right|$$
+$\sum_{axes} \left|\text{current position} - \text{target position}\right|$
 
 #+BEGIN_EXAMPLE
     [0.0, 119.99999999999999, 0.0, -90.0, 0.0, 59.99999999999999] 0.0
