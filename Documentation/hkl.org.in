@@ -32,783 +32,508 @@
 ** Diffraction
 *** the crystal
 
-A periodic crystal is the association of a pattern and a lattice. The
-pattern is located at each points of the lattice node. Positions of
-those nodes are given by:
+    A periodic crystal is the association of a pattern and a lattice. The
+    pattern is located at each points of the lattice node. Positions of
+    those nodes are given by:
 
-\begin{displaymath}
-R_{uvw}=u\cdot\vec{a}+v\cdot\vec{b}+w\cdot\vec{c}
-\end{displaymath}
+    \begin{displaymath}
+    R_{uvw}=u\cdot\vec{a}+v\cdot\vec{b}+w\cdot\vec{c}
+    \end{displaymath}
 
-$\vec{a}$, $\vec{b}$, $\vec{c}$ are the former vector of a base of the
-space. =u=, =v=, =w= are integrers. The pattern contain atomes
-associated to each lattice node. the purpose of diffraction is to study
-the interaction of this crystal (pattern+lattice) with X-rays.
+    $\vec{a}$, $\vec{b}$, $\vec{c}$ are the former vector of a base of the
+    space. =u=, =v=, =w= are integrers. The pattern contain atomes
+    associated to each lattice node. the purpose of diffraction is to study
+    the interaction of this crystal (pattern+lattice) with X-rays.
 
-#+CAPTION: Crystal direct lattice.
-[[./figures/crystal.png]]
+    #+CAPTION: Crystal direct lattice.
+    [[./figures/crystal.png]]
 
-this lattice is defined by $\vec{a}$, $\vec{b}$, $\vec{c}$ vectors, and
-the angles $\alpha$, $\beta$, $\gamma$. In general cases this lattice is
-not othonormal.
+    this lattice is defined by $\vec{a}$, $\vec{b}$, $\vec{c}$ vectors, and
+    the angles $\alpha$, $\beta$, $\gamma$. In general cases this lattice is
+    not othonormal.
 
-Nevertheless to compute the interaction of this real space lattice and
-the X-Rays, it is convenient to define another lattice called reciprocal
-lattice defined like this:
+    Nevertheless to compute the interaction of this real space lattice and
+    the X-Rays, it is convenient to define another lattice called reciprocal
+    lattice defined like this:
 
-\begin{eqnarray*}
-\vec{a}^{\star} & = & \tau\frac{\vec{b}\wedge\vec{c}}{\vec{a}\cdot(\vec{b}\wedge\vec{c})}\\
-\vec{b}^{\star} & = & \tau\frac{\vec{c}\wedge\vec{a}}{\vec{b}\cdot(\vec{c}\wedge\vec{a})}\\
-\vec{c}^{\star} & = & \tau\frac{\vec{a}\wedge\vec{b}}{\vec{c}\cdot(\vec{a}\wedge\vec{b})}
-\end{eqnarray*}
+    \begin{eqnarray*}
+    \vec{a}^{\star} & = & \tau\frac{\vec{b}\wedge\vec{c}}{\vec{a}\cdot(\vec{b}\wedge\vec{c})}\\
+    \vec{b}^{\star} & = & \tau\frac{\vec{c}\wedge\vec{a}}{\vec{b}\cdot(\vec{c}\wedge\vec{a})}\\
+    \vec{c}^{\star} & = & \tau\frac{\vec{a}\wedge\vec{b}}{\vec{c}\cdot(\vec{a}\wedge\vec{b})}
+    \end{eqnarray*}
 
-$\tau=2\pi$ or $\tau=1$ depending on the conventions.
+    $\tau=2\pi$ or $\tau=1$ depending on the conventions.
 
-It is then possible to define thoses orthogonal properties:
+    It is then possible to define thoses orthogonal properties:
 
-\begin{eqnarray*}
- \vec{a}^{\star}\cdot\vec{a}=\tau & \vec{b}^{\star}\cdot\vec{a}=0    & \vec{c}^{\star}\cdot\vec{a}=0\\
- \vec{a}^{\star}\cdot\vec{b}=0    & \vec{b}^{\star}\cdot\vec{b}=\tau & \vec{c}^{\star}\cdot\vec{b}=0\\
- \vec{a}^{\star}\cdot\vec{c}=0    & \vec{b}^{\star}\cdot\vec{c}=0    & \vec{c}^{\star}\cdot\vec{c}=\tau
-\end{eqnarray*}
+    \begin{eqnarray*}
+    \vec{a}^{\star}\cdot\vec{a}=\tau & \vec{b}^{\star}\cdot\vec{a}=0    & \vec{c}^{\star}\cdot\vec{a}=0\\
+    \vec{a}^{\star}\cdot\vec{b}=0    & \vec{b}^{\star}\cdot\vec{b}=\tau & \vec{c}^{\star}\cdot\vec{b}=0\\
+    \vec{a}^{\star}\cdot\vec{c}=0    & \vec{b}^{\star}\cdot\vec{c}=0    & \vec{c}^{\star}\cdot\vec{c}=\tau
+    \end{eqnarray*}
 
-This reciprocal space lattice allow to write in a simpler form the
-interaction between the crystal and the X-Rays. We often only know about
-$\vec{a}$, $\vec{b}$, $\vec{c}$ vectors and the angles $\alpha$,
-$\beta$, $\gamma$. Using the previous equations reciprocal, we can
-compute the reciprocal lattice this way:
+    This reciprocal space lattice allow to write in a simpler form the
+    interaction between the crystal and the X-Rays. We often only know about
+    $\vec{a}$, $\vec{b}$, $\vec{c}$ vectors and the angles $\alpha$,
+    $\beta$, $\gamma$. Using the previous equations reciprocal, we can
+    compute the reciprocal lattice this way:
 
 
-\begin{eqnarray*}
-a^{\star} & = & \frac{\sin\alpha}{aD}\\
-b^{\star} & = & \frac{\sin\beta}{bD}\\
-c^{\star} & = & \frac{\sin\gamma}{cD}
-\end{eqnarray*}
+    \begin{eqnarray*}
+    a^{\star} & = & \frac{\sin\alpha}{aD}\\
+    b^{\star} & = & \frac{\sin\beta}{bD}\\
+    c^{\star} & = & \frac{\sin\gamma}{cD}
+    \end{eqnarray*}
 
-where
+    where
 
-\begin{displaymath}
-D=\sqrt{1-\cos^{2}\alpha-\cos^{2}\beta-\cos^{2}\gamma+2\cos\alpha\cos\beta\cos\gamma}
-\end{displaymath}
+    \begin{displaymath}
+    D=\sqrt{1-\cos^{2}\alpha-\cos^{2}\beta-\cos^{2}\gamma+2\cos\alpha\cos\beta\cos\gamma}
+    \end{displaymath}
 
-To compute the angles between the reciprocal space vectors, it is once
-again possible to use the previous equations reciprocal to obtain the
-sinus and cosinus of the angles $\alpha^\star$, $\beta^\star$ et
-$\gamma^\star$:
+    To compute the angles between the reciprocal space vectors, it is once
+    again possible to use the previous equations reciprocal to obtain the
+    sinus and cosinus of the angles $\alpha^\star$, $\beta^\star$ et
+    $\gamma^\star$:
 
-\begin{eqnarray*}
- \cos\alpha^{\star}=\frac{\cos\beta\cos\gamma-\cos\alpha}{\sin\beta\sin\gamma} & \, & \sin\alpha^{\star}=\frac{D}{\sin\beta\sin\gamma} \\
- \cos\beta^{\star}=\frac{\cos\gamma\cos\alpha-\cos\beta}{\sin\gamma\sin\alpha} & \, & \sin\beta^{\star}=\frac{D}{\sin\gamma\sin\alpha}\\
- \cos\gamma^{\star}=\frac{\cos\alpha\cos\beta-\cos\gamma}{\sin\alpha\sin\beta} & \, & \sin\gamma^{\star}=\frac{D}{\sin\alpha\sin\beta}
-\end{eqnarray*}
+    \begin{eqnarray*}
+    \cos\alpha^{\star}=\frac{\cos\beta\cos\gamma-\cos\alpha}{\sin\beta\sin\gamma} & \, & \sin\alpha^{\star}=\frac{D}{\sin\beta\sin\gamma} \\
+    \cos\beta^{\star}=\frac{\cos\gamma\cos\alpha-\cos\beta}{\sin\gamma\sin\alpha} & \, & \sin\beta^{\star}=\frac{D}{\sin\gamma\sin\alpha}\\
+    \cos\gamma^{\star}=\frac{\cos\alpha\cos\beta-\cos\gamma}{\sin\alpha\sin\beta} & \, & \sin\gamma^{\star}=\frac{D}{\sin\alpha\sin\beta}
+    \end{eqnarray*}
 
 *** Diffraction
 
-Let the incomming X-rays beam whose wave vector is $\vec{k_{i}}$,
-$|k_{i}|=\tau/\lambda$ where $\lambda$ is the wavelength of the signal.
-The $\vec{k_{d}}$ vector wavelength of the diffracted beam. There is
-diffusion if the diffusion vector $\vec{q}$ can be expressed as follows:
+    Let the incomming X-rays beam whose wave vector is $\vec{k_{i}}$,
+    $|k_{i}|=\tau/\lambda$ where $\lambda$ is the wavelength of the signal.
+    The $\vec{k_{d}}$ vector wavelength of the diffracted beam. There is
+    diffusion if the diffusion vector $\vec{q}$ can be expressed as follows:
 
-\begin{displaymath}
-\vec{q}=\vec{k_{d}}-\vec{k_{i}}=h.\vec{a}^{*}+k.\vec{b}^{*}+l.\vec{c}^{*}
-\end{displaymath}
+    \begin{displaymath}
+    \vec{q}=\vec{k_{d}}-\vec{k_{i}}=h.\vec{a}^{*}+k.\vec{b}^{*}+l.\vec{c}^{*}
+    \end{displaymath}
 
-where $(h,k,l)\in\mathbb{N}^{3}$ and $(h,k,l)\neq(0,0,0)$. Thoses
-indices $(h,k,l)$ are named Miller indices.
+    where $(h,k,l)\in\mathbb{N}^{3}$ and $(h,k,l)\neq(0,0,0)$. Thoses
+    indices $(h,k,l)$ are named Miller indices.
 
-Another way of looking at things has been given by Bragg and that famous
-relationship:
+    Another way of looking at things has been given by Bragg and that famous
+    relationship:
 
-\begin{displaymath}
-n\lambda=2d\sin\theta
-\end{displaymath}
+    \begin{displaymath}
+    n\lambda=2d\sin\theta
+    \end{displaymath}
 
-where $d$ is the inter-plan distance and $n \in \mathbb{N}$.
+    where $d$ is the inter-plan distance and $n \in \mathbb{N}$.
 
-The diffusion accure for a unique $\theta$ angle. Then we got $\vec{q}$
-perpendicular to the diffraction plan.
+    The diffusion accure for a unique $\theta$ angle. Then we got $\vec{q}$
+    perpendicular to the diffraction plan.
 
-The Ewald construction allow to represent this diffraction in the
-reciprocal space.
+    The Ewald construction allow to represent this diffraction in the
+    reciprocal space.
 
 *** Quaternions
 **** Properties
 
-The quaternions will be used to discribe the diffractometers geometries.
-Thoses quaternions can represent 3D rotations. There is different way to
-describe then like complex numbers.
+     The quaternions will be used to discribe the diffractometers geometries.
+     Thoses quaternions can represent 3D rotations. There is different way to
+     describe then like complex numbers.
 
-\begin{displaymath}
-q=a+bi+cj+dk
-\end{displaymath}
+     \begin{displaymath}
+     q=a+bi+cj+dk
+     \end{displaymath}
 
-or
+     or
 
-\begin{displaymath}
-q=[a,\vec{v}]
-\end{displaymath}
+     \begin{displaymath}
+     q=[a,\vec{v}]
+     \end{displaymath}
 
-To compute the quaternion's norm, we can proceed like for complex
-numbers
+     To compute the quaternion's norm, we can proceed like for complex
+     numbers
 
-\begin{displaymath}
-\lvert q \rvert = \sqrt{a{{}^2}+b{{}^2}+c{{}^2}+d{{}^2}}
-\end{displaymath}
+     \begin{displaymath}
+     \lvert q \rvert = \sqrt{a{{}^2}+b{{}^2}+c{{}^2}+d{{}^2}}
+     \end{displaymath}
 
-Its conjugate is :
+     Its conjugate is :
 
-\begin{displaymath}
-q^{*}=[a,-\vec{u}]=a-bi-cj-dk
-\end{displaymath}
+     \begin{displaymath}
+     q^{*}=[a,-\vec{u}]=a-bi-cj-dk
+     \end{displaymath}
 
 **** Operations
 
-The difference with the complexnumber algebre is about
-non-commutativity.
+     The difference with the complexnumber algebre is about
+     non-commutativity.
 
-\begin{displaymath}
-qp \neq pq
-\end{displaymath}
+     \begin{displaymath}
+     qp \neq pq
+     \end{displaymath}
 
-\begin{displaymath}
-\bordermatrix{
- ~ & 1 & i  & j  & k \cr
- 1 & 1 & i  & j  & k \cr
- i & i & -1 & k  & -j \cr
- j & j & -k & -1 & i \cr
- k & k & j  & -i & -1
-}
-\end{displaymath}
+     \begin{displaymath}
+     \bordermatrix{
+     ~ & 1 & i  & j  & k \cr
+     1 & 1 & i  & j  & k \cr
+     i & i & -1 & k  & -j \cr
+     j & j & -k & -1 & i \cr
+     k & k & j  & -i & -1
+     }
+     \end{displaymath}
 
-The product of two quaternions can be express by the Grassman product
-Grassman product. So for two quaternions $p$ and $q$:
+     The product of two quaternions can be express by the Grassman product
+     Grassman product. So for two quaternions $p$ and $q$:
 
-\begin{align*}
- q &= a+\vec{u} = a+bi+cj+dk\\
- p &= t+\vec{v} = t+xi+yj+zk
-\end{align*}
+     \begin{align*}
+     q &= a+\vec{u} = a+bi+cj+dk\\
+     p &= t+\vec{v} = t+xi+yj+zk
+     \end{align*}
 
-we got
+     we got
 
-\begin{displaymath}
-pq = at - \vec{u} \cdot \vec{v} + a \vec{v} + t \vec{u} + \vec{v} \times \vec{u}
-\end{displaymath}
+     \begin{displaymath}
+     pq = at - \vec{u} \cdot \vec{v} + a \vec{v} + t \vec{u} + \vec{v} \times \vec{u}
+     \end{displaymath}
 
-or equivalent
+     or equivalent
 
-\begin{displaymath}
-pq = (at - bx - cy - dz) + (bt + ax + cz - dy) i + (ct + ay + dx - bz) j + (dt + az + by - cx) k
-\end{displaymath}
+     \begin{displaymath}
+     pq = (at - bx - cy - dz) + (bt + ax + cz - dy) i + (ct + ay + dx - bz) j + (dt + az + by - cx) k
+     \end{displaymath}
 
 **** 3D rotations
 
-L'ensemble des quaternions unitaires (leur norme est égale à 1) est le
-groupe qui représente les rotations dans l'espace 3D. Si on a un vecteur
-unitaire $\vec{u}$ et un angle de rotation $\theta$ alors le quaternion
-$[\cos\frac{\theta}{2},\sin\frac{\theta}{2}\vec{u]}$ représente la
-rotation de $\theta$ autour de l'axe $\vec{u}$ dans le sens
-trigonométrique. Nous allons donc utiliser ces quaternions unitaires
-pour représenter les mouvements du diffractomètre.
+     L'ensemble des quaternions unitaires (leur norme est égale à 1) est le
+     groupe qui représente les rotations dans l'espace 3D. Si on a un vecteur
+     unitaire $\vec{u}$ et un angle de rotation $\theta$ alors le quaternion
+     $[\cos\frac{\theta}{2},\sin\frac{\theta}{2}\vec{u]}$ représente la
+     rotation de $\theta$ autour de l'axe $\vec{u}$ dans le sens
+     trigonométrique. Nous allons donc utiliser ces quaternions unitaires
+     pour représenter les mouvements du diffractomètre.
 
-Alors que dans le plan 2D une simple multiplication entre un nombre
-complex et le nombre $e^{i\theta}$ permet de calculer simplement la
-rotation d'angle $\theta$ autour de l'origine, dans l'espace 3D
-l'expression équivalente est:
+     Alors que dans le plan 2D une simple multiplication entre un nombre
+     complex et le nombre $e^{i\theta}$ permet de calculer simplement la
+     rotation d'angle $\theta$ autour de l'origine, dans l'espace 3D
+     l'expression équivalente est:
 
-\begin{displaymath}
-z'=qzq^{-1}
-\end{displaymath}
+     \begin{displaymath}
+     z'=qzq^{-1}
+     \end{displaymath}
 
-où $q$ est le quaternion de norme 1 représentant la rotation dans
-l'espace et $z$ le quaternion représentant le vecteur qui subit la
-rotation (sa partie réelle est nulle).
+     où $q$ est le quaternion de norme 1 représentant la rotation dans
+     l'espace et $z$ le quaternion représentant le vecteur qui subit la
+     rotation (sa partie réelle est nulle).
 
-Dans le cas des quaternions de norme 1, il est très facile de calculer
-$q^{-1}$. En effet l'inverse d'une rotation d'angle $\theta$ est la
-rotation d'angle $-\theta$. On a donc directement:
+     Dans le cas des quaternions de norme 1, il est très facile de calculer
+     $q^{-1}$. En effet l'inverse d'une rotation d'angle $\theta$ est la
+     rotation d'angle $-\theta$. On a donc directement:
 
-\begin{displaymath}
-q^{-1}=[\cos\frac{-\theta}{2},\sin\frac{-\theta}{2}\vec{u}]=[\cos\frac{\theta}{2},-\sin\frac{\theta}{2}\vec{u}]=q^{*}
-\end{displaymath}
+     \begin{displaymath}
+     q^{-1}=[\cos\frac{-\theta}{2},\sin\frac{-\theta}{2}\vec{u}]=[\cos\frac{\theta}{2},-\sin\frac{\theta}{2}\vec{u}]=q^{*}
+     \end{displaymath}
 
-Le passage aux matrices de rotation se fait par la formule suivante
-$q\rightarrow M$.
+     Le passage aux matrices de rotation se fait par la formule suivante
+     $q\rightarrow M$.
 
-\begin{displaymath}
-\begin{bmatrix}
- a{{}^2}+b{{}^2}-c{{}^2}-d{{}^2} & 2bc-2ad & 2ac+2bd\\
- 2ad+2bc & a{{}^2}-b{{}^2}+c{{}^2}-d{{}^2} & 2cd-2ab\\
- 2bd-2ac & 2ab+2cd & a{{}^2}-b{{}^2}-c{{}^2}+d{{}^2}
-\end{bmatrix}
-\end{displaymath}
+     \begin{displaymath}
+     \begin{bmatrix}
+     a{{}^2}+b{{}^2}-c{{}^2}-d{{}^2} & 2bc-2ad & 2ac+2bd\\
+     2ad+2bc & a{{}^2}-b{{}^2}+c{{}^2}-d{{}^2} & 2cd-2ab\\
+     2bd-2ac & 2ab+2cd & a{{}^2}-b{{}^2}-c{{}^2}+d{{}^2}
+     \end{bmatrix}
+     \end{displaymath}
 
-La composition de rotation se fait simplement en multipliant les
-quaternions entre eux. Si l'on à $q$
+     La composition de rotation se fait simplement en multipliant les
+     quaternions entre eux. Si l'on à $q$
 
 ** Modes de fonctionnement
 ** Equations fondamentales
 
-Le problème que nous devons résoudre est de calculer pour une famille de
-plan $(h,k,l)$ donné, les angles de rotation du diffractomètre qui
-permettent de le mettre en condition de diffraction. Il faut donc
-exprimer les relations mathématiques qui lient les différents angles
-entre eux lorsque la condition de Bragg est vérifiée. L'équation
-fondamentale est la suivante:
+   Le problème que nous devons résoudre est de calculer pour une famille de
+   plan $(h,k,l)$ donné, les angles de rotation du diffractomètre qui
+   permettent de le mettre en condition de diffraction. Il faut donc
+   exprimer les relations mathématiques qui lient les différents angles
+   entre eux lorsque la condition de Bragg est vérifiée. L'équation
+   fondamentale est la suivante:
 
-\begin{align*}
- \left(\prod_{i}S_{i}\right)\cdot U\cdot B\cdot\vec{h} & =\left(\prod_{j}D_{j}-I\right)\cdot\vec{k_{i}}\\
- R\cdot U\cdot B\cdot\vec{h} & =\vec{Q}
-\end{align*}
+   \begin{align*}
+   \left(\prod_{i}S_{i}\right)\cdot U\cdot B\cdot\vec{h} & =\left(\prod_{j}D_{j}-I\right)\cdot\vec{k_{i}}\\
+   R\cdot U\cdot B\cdot\vec{h} & =\vec{Q}
+   \end{align*}
 
-ou $\vec{h}$ est le vecteur $(h,k,l)$, $\vec{k_{i}}$ est le vecteur
-incident, $S_{i}$ les matrices de rotations des mouvements liés à
-l'échantillon, $D_{j}$ les matrices de rotation des mouvements liés au
-détecteur, $I$ la matrice identité, $U$ la matrice d'orientation du
-cristal par rapport au repère de l'axe sur lequel ce dernier est monté
-et $B$ la matrice de passage d'un repère non orthonormé ( celui du
-crystal réciproque) à un repère orthonormé.
+   ou $\vec{h}$ est le vecteur $(h,k,l)$, $\vec{k_{i}}$ est le vecteur
+   incident, $S_{i}$ les matrices de rotations des mouvements liés à
+   l'échantillon, $D_{j}$ les matrices de rotation des mouvements liés au
+   détecteur, $I$ la matrice identité, $U$ la matrice d'orientation du
+   cristal par rapport au repère de l'axe sur lequel ce dernier est monté
+   et $B$ la matrice de passage d'un repère non orthonormé ( celui du
+   crystal réciproque) à un repère orthonormé.
 
 *** Calcule de B
 
-Si l'on connaît les paramètres cristallins du cristal étudié, il est
-très simple de calculer $B$:
+    Si l'on connaît les paramètres cristallins du cristal étudié, il est
+    très simple de calculer $B$:
 
-\begin{displaymath}
-B=
-\begin{bmatrix}
- a^{\star} & b^{\star}\cos\gamma^{\star} & c^{\star}\cos\beta^{\star}\\
- 0 & b^{\star}\sin\gamma^{\star} & -c^{\star}\sin\beta^{\star}\cos\alpha\\
- 0 & 0 & 1/c
-\end{bmatrix}
-\end{displaymath}
+    \begin{displaymath}
+    B=
+    \begin{bmatrix}
+    a^{\star} & b^{\star}\cos\gamma^{\star} & c^{\star}\cos\beta^{\star}\\
+    0 & b^{\star}\sin\gamma^{\star} & -c^{\star}\sin\beta^{\star}\cos\alpha\\
+    0 & 0 & 1/c
+    \end{bmatrix}
+    \end{displaymath}
 
 *** Calcule de U
 
-Il existe plusieurs façons de calculer $U$. Busing et Levy en a proposé
-plusieurs. Nous allons présenter celle qui nécessite la mesure de
-seulement deux réflections ainsi que la connaissance des paramètres
-cristallins. Cette façon de calculer la matrice d'orientation $U$, peut
-être généralisée à n'importe quel diffractomètre pour peu que la
-description des axes de rotation permette d'obtenir la matrice de
-rotation de la machine $R$ et le vecteur de diffusion $\vec{Q}$.
+    Il existe plusieurs façons de calculer $U$. Busing et Levy en a proposé
+    plusieurs. Nous allons présenter celle qui nécessite la mesure de
+    seulement deux réflections ainsi que la connaissance des paramètres
+    cristallins. Cette façon de calculer la matrice d'orientation $U$, peut
+    être généralisée à n'importe quel diffractomètre pour peu que la
+    description des axes de rotation permette d'obtenir la matrice de
+    rotation de la machine $R$ et le vecteur de diffusion $\vec{Q}$.
 
-Il est également possible de calculer $U$ sans la connaîssance des
-paramètres cristallins. il faut alors faire un affinement des
-paramètres. Cela revient à minimiser une fonction. Nous allons utiliser
-la méthode du simplex pour trouver ce minimum et donc ajuster l'ensemble
-des paramètres cristallins ainsi que la matrice d'orientation.
+    Il est également possible de calculer $U$ sans la connaîssance des
+    paramètres cristallins. il faut alors faire un affinement des
+    paramètres. Cela revient à minimiser une fonction. Nous allons utiliser
+    la méthode du simplex pour trouver ce minimum et donc ajuster l'ensemble
+    des paramètres cristallins ainsi que la matrice d'orientation.
 
 *** Algorithme de Busing Levy
 
-L'idée est de se placer dans le repère de l'axe sur lequel est monté
-l'échantillon. On mesure deux réflections $(\vec{h}_{1},\vec{h}_{2})$
-ainsi que leurs angles associés. Cela nous permet de calculer $R$ et
-$\vec{Q}$ pour chacune de ces reflections. nous avons alors ce système:
+    L'idée est de se placer dans le repère de l'axe sur lequel est monté
+    l'échantillon. On mesure deux réflections $(\vec{h}_{1},\vec{h}_{2})$
+    ainsi que leurs angles associés. Cela nous permet de calculer $R$ et
+    $\vec{Q}$ pour chacune de ces reflections. nous avons alors ce système:
 
-\begin{eqnarray*}
- U\cdot B\cdot\vec{h}_{1} & = & \tilde{R}_{1}\cdot\vec{Q}_{1}\\
- U\cdot B\cdot\vec{h}_{2} & = & \tilde{R}_{2}\cdot\vec{Q}_{2}
-\end{eqnarray*}
+    \begin{eqnarray*}
+    U\cdot B\cdot\vec{h}_{1} & = & \tilde{R}_{1}\cdot\vec{Q}_{1}\\
+    U\cdot B\cdot\vec{h}_{2} & = & \tilde{R}_{2}\cdot\vec{Q}_{2}
+    \end{eqnarray*}
 
-De façon à calculer facilement $U$, il est intéressant de définir deux
-trièdres orthonormé $T_{\vec{h}}$ et $T_{\vec{Q}}$ à partir des vecteurs
-$(B\vec{h}_{1},B\vec{h}_{2})$ et
-$(\tilde{R}_{1}\vec{Q}_{1},\tilde{R}_{2}\vec{Q}_{2})$. On a alors très
-simplement:
+    De façon à calculer facilement $U$, il est intéressant de définir deux
+    trièdres orthonormé $T_{\vec{h}}$ et $T_{\vec{Q}}$ à partir des vecteurs
+    $(B\vec{h}_{1},B\vec{h}_{2})$ et
+    $(\tilde{R}_{1}\vec{Q}_{1},\tilde{R}_{2}\vec{Q}_{2})$. On a alors très
+    simplement:
 
-\begin{displaymath}
-U \cdot T_{\vec{h}} = T_{\vec{Q}}
-\end{displaymath}
+    \begin{displaymath}
+    U \cdot T_{\vec{h}} = T_{\vec{Q}}
+    \end{displaymath}
 
-Et donc
+    Et donc
 
-\begin{displaymath}
-U = T_{\vec{Q}} \cdot \tilde{T}_{\vec{h}}
-\end{displaymath}
+    \begin{displaymath}
+    U = T_{\vec{Q}} \cdot \tilde{T}_{\vec{h}}
+    \end{displaymath}
 
 *** Affinement par la méthode du simplex
 
-Dans ce cas nous ne connaissons pas la matrice $B$, il faut donc mesurer
-plus que deux réflections pour ajuster les 9 paramètres. Six paramètres
-pour le crystal et trois pour la matrice d'orientation $U$. Les trois
-paramètres qui permennt de representer $U$ sont en fait les angles
-d'euler. il faut donc être en mesure de passer d'une représentation
-eulérien à cette matrice :math::U et réciproquement.
+    Dans ce cas nous ne connaissons pas la matrice $B$, il faut donc mesurer
+    plus que deux réflections pour ajuster les 9 paramètres. Six paramètres
+    pour le crystal et trois pour la matrice d'orientation $U$. Les trois
+    paramètres qui permennt de representer $U$ sont en fait les angles
+    d'euler. il faut donc être en mesure de passer d'une représentation
+    eulérien à cette matrice :math::U et réciproquement.
+
+    \begin{displaymath}
+    U = X \cdot Y \cdot Z
+    \end{displaymath}
+
+    où $X$ est la matrice rotation suivant l'axe Ox et le premier angle
+    d'Euler, $Y$ la matrice de rotation suivant l'axe Oy et le deuxième
+    angle d'Euler et $Z$ la matrice du troisième angle d'Euler pour l'axe
+    Oz.
+
+    \begin{tabular}{ccc}
+    $X$ & $Y$ & $Z$\tabularnewline
+    $\begin{bmatrix}
+    1 & 0 & 0\\
+    0 & A & -B\\
+    0 & B & A
+    \end{bmatrix}$
+    &
+    $\begin{bmatrix}
+    C & 0 & D\\
+    0 & 1 & 0\\
+    -D & 0 & C
+    \end{bmatrix}$
+    &
+    $\begin{bmatrix}
+    E & -F & 0\\
+    F & E & 0\\
+    0 & 0 & 1
+    \end{bmatrix}$
+    \end{tabular}
+
+    et donc:
+
+    \begin{displaymath}
+    U=
+    \begin{bmatrix}
+    CE & -CF & D\\
+    BDE+AF & -BDF+AE & -BC\\
+    -ADE+BF & ADF+BE & AC
+    \end{bmatrix}
+    \end{displaymath}
+
+    Il est donc facile de passer des angles d'Euler à la matrice
+    d'orientation.
+
+    Il faut maintenant faire la transformation inverse de la matrice $U$
+    vers les angles d'euler.
 
-\begin{displaymath}
-U = X \cdot Y \cdot Z
-\end{displaymath}
-
-où $X$ est la matrice rotation suivant l'axe Ox et le premier angle
-d'Euler, $Y$ la matrice de rotation suivant l'axe Oy et le deuxième
-angle d'Euler et $Z$ la matrice du troisième angle d'Euler pour l'axe
-Oz.
-
-\begin{tabular}{ccc}
- $X$ & $Y$ & $Z$\tabularnewline
- $\begin{bmatrix}
-     1 & 0 & 0\\
-     0 & A & -B\\
-     0 & B & A
- \end{bmatrix}$
- &
- $\begin{bmatrix}
-     C & 0 & D\\
-     0 & 1 & 0\\
-     -D & 0 & C
- \end{bmatrix}$
- &
- $\begin{bmatrix}
-     E & -F & 0\\
-     F & E & 0\\
-     0 & 0 & 1
- \end{bmatrix}$
-\end{tabular}
-
-et donc:
-
-\begin{displaymath}
-U=
-\begin{bmatrix}
- CE & -CF & D\\
- BDE+AF & -BDF+AE & -BC\\
- -ADE+BF & ADF+BE & AC
-\end{bmatrix}
-\end{displaymath}
-
-Il est donc facile de passer des angles d'Euler à la matrice
-d'orientation.
-
-Il faut maintenant faire la transformation inverse de la matrice $U$
-vers les angles d'euler.
-
-** Diffractomètre 4 Cercle (3S+1D) Eulerien
-
-Pour ce diffractomètres, les matrices de rotations des différents axes
-sont les suivantes:
-
-\begin{tabular}{cccc}
- $\Omega$ & $\chi$ & $\Phi$ & $2\Theta$\tabularnewline
- $\begin{bmatrix}
-     \cos\omega & 0 & -\sin\omega\\
-     0 & 1 & 0\\
-     \sin\omega & 0 & \cos\omega
- \end{bmatrix}$
- &
- $\begin{bmatrix}
-     1 & 0 & 0\\
-     0 & \cos\chi & -\sin\chi\\
-     0 & \sin\chi & \cos\chi
- \end{bmatrix}$
- &
- $\begin{bmatrix}
-     \cos\phi & 0 & -\sin\phi\\
-     0 & 1 & 0\\
-     \sin\phi & 0 & \cos\phi
- \end{bmatrix}$
- &
- $\begin{bmatrix}
-     \cos2\theta & 0 & -\sin2\theta\\
-     0 & 1 & 0\\
-     \sin2\theta & 0 & \cos2\theta
- \end{bmatrix}$
-\end{tabular}
-
-On obtient alors la matrice de rotation de la machine
-
-\begin{displaymath}
-R=\Omega\chi\Phi
-\end{displaymath}
-
-soit
-
-\begin{displaymath}
-R=
-\begin{bmatrix}
- \cos\omega\cos\phi-\cos\chi\sin\omega\sin\phi & -\sin\chi\sin\omega & -\cos\omega\sin\phi-\cos\chi\sin\omega\cos\phi\\
- -\sin\chi\sin\phi & \cos\chi & -\sin\chi\cos\phi\\
- \sin\omega\cos\phi-\cos\chi\cos\omega\sin\phi & -\sin\chi\cos\omega & -\sin\omega\sin\phi-\cos\chi\cos\omega\cos\phi
-\end{bmatrix}
-\end{displaymath}
-
-De la même façon on peut calculer le vecteur diffusion en fonction des
-angles du détecteur:
-
-\begin{displaymath}
-\vec{Q}=\left(2\Theta-I\right)\cdot\vec{k}_{i}
-\end{displaymath}
-
-où $I$ est la matrice identité. Finalement:
-
-\begin{displaymath}
-\vec{Q}=k_{i}\left(\begin{array}{c}
-\cos2\theta-1\\
-0\\
-\sin2\theta
-\end{array}\right)
-\end{displaymath}
-
-L'équation fondamentale nous permet d'écrire:
-
-\begin{displaymath}
-U\cdot B\cdot\vec{h}=\tilde{R}\cdot\vec{Q}
-\end{displaymath}
-
-Cette équation est de 4 inconnus pour seulement 3 équations. Il faut
-donc imposer des contraintes pour résoudre ce système et ainsi
-d'orienter le diffractomètre. Ces différentes contraintes définissent
-les modes de fonctionnement des diffractomètres. Dans la suite nous
-allons nous efforcer de trouver l'ensemble des solutions possibles pour
-les différents modes et non pas une seule solution. Ceci afin de laisser
-le choix suivant certaines stratégies à l'utilisateur d'utiliser telle
-ou telle solution plutôt qu'une autre.
-
-*** Mode Bisecteur
-
-Dans ce mode on choisit d'avoir:
-
-\begin{displaymath}
-\omega=\theta
-\end{displaymath}
-
-Le système s'écrit alors simplement:
-
-\begin{eqnarray*}
- h_{\phi} & = & 2k_{i}\sin\theta\cos\chi\sin\phi\\
- k_{\phi} & = & 2k_{i}\sin\theta\sin\chi\\
- l_{\phi} & = & 2k_{i}\sin\theta\cos\chi\cos\phi
-\end{eqnarray*}
-
-On a:
-
-\begin{displaymath}
-h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}=4k_{i}\sin^{2}\theta
-\end{displaymath}
-
-où $k_{i}=\frac{\tau}{\lambda}$. donc on peut écrire:
-
-\begin{displaymath}
-\left|\sin\theta\right|=\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}
-\end{displaymath}
-
-il faut donc enviseager les deux possibilité selon que $\theta$ est
-positif ou bien négatif.
-
-\begin{displaymath}
-\sin\theta<0
-\end{displaymath}
-
-On peut alors écrire:
-
-\begin{displaymath}
-\sin\chi=-\frac{k_{\phi}}{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}
-\end{displaymath}
-
-puis en utilisant le relation bien connue $\cos^{2}+\sin^{2}=1$ on a:
-
-\begin{displaymath}
-\cos^{2}\chi=\frac{h_{\phi}^{2}+l_{\phi}^{2}}{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}
-\end{displaymath}
-
-Il faut une fois de plus faire un choix selon que $\cos\chi$ est positif
-ou négatif.
-
-\begin{displaymath}
-\cos\chi<0
-\end{displaymath}
-
-\begin{displaymath}
-\cos\chi=-\sqrt{\frac{h_{\phi}^{2}+l_{\phi}^{2}}{h_{\phi}^{2}+k_{\phi+}^{2}l_{\phi}^{2}}}
-\end{displaymath}
-
-\begin{displaymath}
-\cos\chi>0
-\end{displaymath}
-
-\begin{displaymath}
-\cos\chi=\sqrt{\frac{h_{\phi}^{2}+l_{\phi}^{2}}{h_{\phi}^{2}+k_{\phi+}^{2}l_{\phi}^{2}}}
-\end{displaymath}
-
-\begin{displaymath}
-\sin\theta>0
-\end{displaymath}
-
-On peut alors écrire:
-
-\begin{displaymath}
-\sin\chi=\frac{k_{\phi}}{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}
-\end{displaymath}
-
-puis en utilisant le relation bien connue $\cos^{2}+\sin^{2}=1$ on a:
-
-\begin{displaymath}
-\cos^{2}\chi=\frac{h_{\phi}^{2}+l_{\phi}^{2}}{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}
-\end{displaymath}
-
-Il faut une fois de plus faire un choix selon que $\cos\chi$ est positif
-ou négatif.
-
-\begin{displaymath}
-\cos\chi<0
-\end{displaymath}
-
-\begin{displaymath}
-\cos\chi=-\sqrt{\frac{h_{\phi}^{2}+l_{\phi}^{2}}{h_{\phi}^{2}+k_{\phi+}^{2}l_{\phi}^{2}}}
-\end{displaymath}
-
-\begin{displaymath}
-\cos\chi>0
-\end{displaymath}
-
-\begin{displaymath}
-\cos\chi=\sqrt{\frac{h_{\phi}^{2}+l_{\phi}^{2}}{h_{\phi}^{2}+k_{\phi+}^{2}l_{\phi}^{2}}}
-\end{displaymath}
-
-La résolution du système donne alors 4 quadruplets de solutions:
-
-\begin{tabular}{c|c|c|c}
- $\omega$ & $\chi$ & $\phi$ & $2\theta$\tabularnewline
- \hline
- $-\theta$ & $\arctan2(-k_{\phi},-\sqrt{h_{\phi}^{2}+l_{\phi}^{2}})$ & $\arctan2(h_{\phi},l_{\phi})$ & $2\arcsin-\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$\tabularnewline
- $-\theta$ & $\arctan2(-k_{\phi},\sqrt{h_{\phi}^{2}+l_{\phi}^{2}})$ & $\arctan2(-h_{\phi},-l_{\phi})$ & $2\arcsin-\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$\tabularnewline
- $\theta$ & $\arctan2(k_{\phi},-\sqrt{h_{\phi}^{2}+l_{\phi}^{2}})$ & $\arctan2(-h_{\phi},-l_{\phi})$ & $2\arcsin\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$\tabularnewline
- $\theta$ & $\arctan2(k_{\phi},\sqrt{h_{\phi}^{2}+l_{\phi}^{2}})$ & $\arctan2(h_{\phi},l_{\phi})$ & $2\arcsin\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$\tabularnewline
-\end{tabular}
-
-*** Mode Delta Theta
-
-Ce mode consiste à décaler $\omega$ par rapport à $\theta$ d'une valeur
-constante $C$:
-
-\begin{displaymath}
-\omega=\theta+C
-\end{displaymath}
-
-Le système s'écrit alors comme suit:
-
-\begin{eqnarray*}
- h_{\phi} & = & 2k_{i}\sin\theta\left(\cos C\cos\chi\sin\phi+\sin C\cos\phi\right)\\
- k_{\phi} & = & 2k_{i}\sin\theta\cos C\sin\chi\\
- l_{\phi} & = & 2k_{i}\sin\theta\left(\cos C\cos\chi\cos\phi-\sin C\sin\phi\right)
-\end{eqnarray*}
-
-On a toujours:
-
-\begin{displaymath}
-h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}=4k_{i}\sin^{2}\theta
-\end{displaymath}
-
-La résolution donne 4 quadruplets de solutions:
-
-\begin{tabular}{ccc}
-    $\omega$ & $\chi$ & $\phi$\tabularnewline
-    \hline
-    $-\theta+C$ & $\arctan2(\frac{-k_{\phi}}{\cos C},-\sqrt{h_{\phi}^{2}-k_{\phi}^{2}\tan^{2}C+l_{\phi}^{2}})$ & $\arctan2(-h_{\phi}\cos C\cos\chi+l_{\phi}\sin C,-l_{\phi}\cos C\cos\chi-h_{\phi}\sin C)$\tabularnewline
-    $-\theta+C$ & $\arctan2(\frac{-k_{\phi}}{\cos C},\sqrt{h_{\phi}^{2}-k_{\phi}^{2}\tan^{2}C+l_{\phi}^{2}})$ & $\arctan2(-h_{\phi}\cos C\cos\chi+l_{\phi}\sin C,-l_{\phi}\cos C\cos\chi-h_{\phi}\sin C)$\tabularnewline
-    $\theta+C$ & $\arctan2(\frac{k_{\phi}}{\cos C},-\sqrt{h_{\phi}^{2}-k_{\phi}^{2}\tan^{2}C+l_{\phi}^{2}})$ & $\arctan2(h_{\phi}\cos C\cos\chi-l_{\phi}\sin C,l_{\phi}\cos C\cos\chi+h_{\phi}\sin C)$\tabularnewline
-    $\theta+C$ & $\arctan2(\frac{k_{\phi}}{\cos C},\sqrt{h_{\phi}^{2}-k_{\phi}^{2}\tan^{2}C+l_{\phi}^{2}})$ & $\arctan2(h_{\phi}\cos C\cos\chi-l_{\phi}\sin C,l_{\phi}\cos C\cos\chi+h_{\phi}\sin C)$\tabularnewline
-\end{tabular}
-
-\begin{tabular}{c}
- $2\theta$\tabularnewline
- \hline
- $2\arcsin-\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$\tabularnewline
- $2\arcsin-\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$\tabularnewline
- $2\arcsin\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$\tabularnewline
- $2\arcsin\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$\tabularnewline
-\end{tabular}
-
-où
-
-*** Mode omega constant
-
-Dans ce mode on choisit de garder $\omega$ toujours constant:
-
-\begin{displaymath}
-\omega=C
-\end{displaymath}
-
-Le système s'écrit alors comme suit:
-
-\begin{eqnarray*}
-    h_{\phi} & = & 2k_{i}\sin\theta\left(\cos(C-\theta)\cos\chi\sin\phi+\sin(C-\theta)\cos\phi\right)\\
-    k_{\phi} & = & 2k_{i}\sin\theta\cos(C-\theta)\sin\chi\\
-    l_{\phi} & = & 2k_{i}\sin\theta\left(\cos(C-\theta)\cos\chi\cos\phi-\sin(C-\theta)\sin\phi\right)
-\end{eqnarray*}
-
-La résolution donne 4 quadruplets de solutions:
-
-\begin{tabular}{ccc}
-    $\omega$ & $\chi$ & $\phi$\tabularnewline
-    \hline
-    $-\theta+C$ & $\arctan2\left(-k_{\phi},-\sqrt{(h_{\phi}^{2}+l_{\phi}^{2})\cos^{2}(C-\theta)-k_{\phi}^{2}\sin^{2}(C-\theta)}\right)$ & $\arctan2(-h_{\phi}\cos C\cos\chi+l_{\phi}\sin C,-l_{\phi}\cos C\cos\chi-h_{\phi}\sin C)$\tabularnewline
-    $-\theta+C$ & $\arctan2\left(-k_{\phi},\sqrt{(h_{\phi}^{2}+l_{\phi}^{2})\cos^{2}(C-\theta)-k_{\phi}^{2}\sin^{2}(C-\theta)}\right)$ & $\arctan2(-h_{\phi}\cos C\cos\chi+l_{\phi}\sin C,-l_{\phi}\cos C\cos\chi-h_{\phi}\sin C)$\tabularnewline
-    $\theta+C$ & $\arctan2\left(k_{\phi},-\sqrt{(h_{\phi}^{2}+l_{\phi}^{2})\cos^{2}(C-\theta)-k_{\phi}^{2}\sin^{2}(C-\theta)}\right)$ & $\arctan2(h_{\phi}\cos C\cos\chi-l_{\phi}\sin C,l_{\phi}\cos C\cos\chi+h_{\phi}\sin C)$\tabularnewline
-    $\theta+C$ & $\arctan2\left(k_{\phi},\sqrt{(h_{\phi}^{2}+l_{\phi}^{2})\cos^{2}(C-\theta)-k_{\phi}^{2}\sin^{2}(C-\theta)}\right)$ & $\arctan2(h_{\phi}\cos C\cos\chi-l_{\phi}\sin C,l_{\phi}\cos C\cos\chi+h_{\phi}\sin C)$\tabularnewline
-\end{tabular}
-
-\begin{tabular}{c}
-    $2\theta$\tabularnewline
-    \hline
-    $2\arcsin-\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$\tabularnewline
-    $2\arcsin-\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$\tabularnewline
-    $2\arcsin\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$\tabularnewline
-    $2\arcsin\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$\tabularnewline
-\end{tabular}
 * PseudoAxes
-
-This section describe the calculations done by the library for the
-different kind of pseudo axes.
-
+  This section describe the calculations done by the library for the
+  different kind of pseudo axes.
 ** Eulerians to Kappa angles
 
-1st solution
+   1st solution
 
-\begin{eqnarray*}
- \kappa_\omega & = & \omega - p + \frac{\pi}{2} \\
- \kappa & = & 2 \arcsin\left(\frac{\sin\frac{\chi}{2}}{\sin\alpha}\right) \\
- \kappa_\phi & = &  \phi - p - \frac{\pi}{2}
-\end{eqnarray*}
+   \begin{eqnarray*}
+   \kappa_\omega & = & \omega - p + \frac{\pi}{2} \\
+   \kappa & = & 2 \arcsin\left(\frac{\sin\frac{\chi}{2}}{\sin\alpha}\right) \\
+   \kappa_\phi & = &  \phi - p - \frac{\pi}{2}
+   \end{eqnarray*}
 
-or 2nd one
+   or 2nd one
 
-\begin{eqnarray*}
- \kappa_\omega & = & \omega - p - \frac{\pi}{2} \\
- \kappa & = & -2 \arcsin\left(\frac{\sin\frac{\chi}{2}}{\sin\alpha}\right) \\
- \kappa_\phi & = &  \phi - p + \frac{\pi}{2}
-\end{eqnarray*}
+   \begin{eqnarray*}
+   \kappa_\omega & = & \omega - p - \frac{\pi}{2} \\
+   \kappa & = & -2 \arcsin\left(\frac{\sin\frac{\chi}{2}}{\sin\alpha}\right) \\
+   \kappa_\phi & = &  \phi - p + \frac{\pi}{2}
+   \end{eqnarray*}
 
-where
+   where
 
-\begin{displaymath}
-p = \arcsin\left(\frac{\tan\frac{\chi}{2}}{\tan\alpha}\right)
-\end{displaymath}
+   \begin{displaymath}
+   p = \arcsin\left(\frac{\tan\frac{\chi}{2}}{\tan\alpha}\right)
+   \end{displaymath}
 
-and $\alpha$ is the angle of the kappa axis with the $\vec{y}$ axis.
+   and $\alpha$ is the angle of the kappa axis with the $\vec{y}$ axis.
 
 ** Kappa to Eulerians angles
 
-1st solution
+   1st solution
 
-\begin{eqnarray*}
- \omega & = & \kappa_\omega + p - \frac{\pi}{2} \\
- \chi   & = & 2 \arcsin\left(\sin\frac{\kappa}{2} \sin\alpha\right) \\
- \phi   & = & \kappa_\phi + p + \frac{\pi}{2}
-\end{eqnarray*}
+   \begin{eqnarray*}
+   \omega & = & \kappa_\omega + p - \frac{\pi}{2} \\
+   \chi   & = & 2 \arcsin\left(\sin\frac{\kappa}{2} \sin\alpha\right) \\
+   \phi   & = & \kappa_\phi + p + \frac{\pi}{2}
+   \end{eqnarray*}
 
-or 2nd one
+   or 2nd one
 
-\begin{eqnarray*}
- \omega & = & \kappa_\omega + p + \frac{\pi}{2} \\
- \chi   & = & -2 \arcsin\left(\sin\frac{\kappa}{2} \sin\alpha\right) \\
- \phi   & = & \kappa_\phi + p - \frac{\pi}{2}
-\end{eqnarray*}
+   \begin{eqnarray*}
+   \omega & = & \kappa_\omega + p + \frac{\pi}{2} \\
+   \chi   & = & -2 \arcsin\left(\sin\frac{\kappa}{2} \sin\alpha\right) \\
+   \phi   & = & \kappa_\phi + p - \frac{\pi}{2}
+   \end{eqnarray*}
 
-where
+   where
 
-\begin{displaymath}
-p = \arctan\left(\tan\frac{\kappa}{2} \cos\alpha\right)
-\end{displaymath}
+   \begin{displaymath}
+   p = \arctan\left(\tan\frac{\kappa}{2} \cos\alpha\right)
+   \end{displaymath}
 
-#+CAPTION: $\omega = 0$, $\chi = 0$, $\phi = 0$, 1st solution
-[[./figures/e2k_1.png]]
+   #+CAPTION: $\omega = 0$, $\chi = 0$, $\phi = 0$, 1st solution
+   [[./figures/e2k_1.png]]
 
-#+CAPTION: $\omega = 0$, $\chi = 0$, $\phi = 0$, 2nd solution
-[[./figures/e2k_2.png]]
+   #+CAPTION: $\omega = 0$, $\chi = 0$, $\phi = 0$, 2nd solution
+   [[./figures/e2k_2.png]]
 
-#+CAPTION: $\omega = 0$, $\chi = 90$, $\phi = 0$, 1st solution
-[[./figures/e2k_3.png]]
+   #+CAPTION: $\omega = 0$, $\chi = 90$, $\phi = 0$, 1st solution
+   [[./figures/e2k_3.png]]
 
-#+CAPTION: $\omega = 0$, $\chi = 90$, $\phi = 0$, 2nd solution
-[[./figures/e2k_4.png]]
+   #+CAPTION: $\omega = 0$, $\chi = 90$, $\phi = 0$, 2nd solution
+   [[./figures/e2k_4.png]]
 
 ** Qper and Qpar
-[[
-./figures/qper_qpar.png]]
+   [[
+   ./figures/qper_qpar.png]]
 
-this pseudo axis engine compute the perpendicular
-($\left|\left|\vec{Q_\text{per}}\right|\right|$) and parallel
-($\left|\left|\vec{Q_\text{par}}\right|\right|$) contribution of
-$\vec{Q}$ relatively to the surface of the sample defined by the
-$\vec{n}$ vector.
+   this pseudo axis engine compute the perpendicular
+   ($\left|\left|\vec{Q_\text{per}}\right|\right|$) and parallel
+   ($\left|\left|\vec{Q_\text{par}}\right|\right|$) contribution of
+   $\vec{Q}$ relatively to the surface of the sample defined by the
+   $\vec{n}$ vector.
 
-\begin{eqnarray*}
-\vec{q} & = & \vec{k_\text{f}} - \vec{k_\text{i}} \\
-\vec{q} & = & \vec{q_\text{per}} + \vec{q_\text{par}} \\
-\vec{q_\text{per}} & = & \frac{\vec{q} \cdot \vec{n}}{\left|\left|\vec{n}\right|\right|} \frac{\vec{n}}{\left|\left|\vec{n}\right|\right|}
-\end{eqnarray*}
-* Les Diffractomètres
+   \begin{eqnarray*}
+   \vec{q} & = & \vec{k_\text{f}} - \vec{k_\text{i}} \\
+   \vec{q} & = & \vec{q_\text{per}} + \vec{q_\text{par}} \\
+   \vec{q_\text{per}} & = & \frac{\vec{q} \cdot \vec{n}}{\left|\left|\vec{n}\right|\right|} \frac{\vec{n}}{\left|\left|\vec{n}\right|\right|}
+   \end{eqnarray*}
+* Diffractometers
 ** Eulérien 3S+1D
 
-Nous allons nous inspirer du modèle de Busin et Levy pour décrire notre
-diffractomètre. Les sens de rotation sont respectés mais le repère
-directe est choisi de façon à correspondre au repère de laboratoire de
-la ligne CRYSTAL du synchrotron Soleil. Les photons-X se propagent
-suivant le vecteur $\vec{x}$ et la direction verticale est suivant le
-vecteur $\vec{z}$. Ce diffractomètre est de type verticale (le vecteur
-de diffusion $\vec{Q}$ est dans le plan xOz). Les angles permettant de
-décrire la configuration du diffractomètre sont présentés sur la
-figure~ref{[[cap:3S+1D]]}.
+   Nous allons nous inspirer du modèle de Busin et Levy pour décrire notre
+   diffractomètre. Les sens de rotation sont respectés mais le repère
+   directe est choisi de façon à correspondre au repère de laboratoire de
+   la ligne CRYSTAL du synchrotron Soleil. Les photons-X se propagent
+   suivant le vecteur $\vec{x}$ et la direction verticale est suivant le
+   vecteur $\vec{z}$. Ce diffractomètre est de type verticale (le vecteur
+   de diffusion $\vec{Q}$ est dans le plan xOz). Les angles permettant de
+   décrire la configuration du diffractomètre sont présentés sur la
+   figure~ref{[[cap:3S+1D]]}.
 
-#+CAPTION: Dénomination des angles du diffractomètre 3S+1D Eulérien.label{[[cap:3S+1D]]}
-[[./figures/3S+1D.png]]
+   #+CAPTION: Dénomination des angles du diffractomètre 3S+1D Eulérien.label{[[cap:3S+1D]]}
+   [[./figures/3S+1D.png]]
 ** Eulérien 4S+2D
 
-Nous allons nous inspirer du modèle de You pour notre diffractomètre
-(fig.~ref{[[cap:4S+2D]]}) ici présenté tous les angles mis à zéro. Les
-rayons-X arrivent suivant le vecteur $vec{x}$ (le repère est différent
-de celui de You).
+   Nous allons nous inspirer du modèle de You pour notre diffractomètre
+   (fig.~ref{[[cap:4S+2D]]}) ici présenté tous les angles mis à zéro. Les
+   rayons-X arrivent suivant le vecteur $vec{x}$ (le repère est différent
+   de celui de You).
 
-#+CAPTION: Dénomination des angles du diffractomètre 4S+2D Eulérien.label{[[cap:4S+2D]]}
-[[./figures/4S+2D.png]]
+   #+CAPTION: Dénomination des angles du diffractomètre 4S+2D Eulérien.label{[[cap:4S+2D]]}
+   [[./figures/4S+2D.png]]
 
-Le principe des calcules de You est d'exprimer dans le repère du
-laboratoire le vecteur diffusion $\vec{Q}$ de deux façons différentes.
-Une première en utilisant les angles du goniomètre 4S puis une à partir
-des angles du détecteur 2D et de la connaissance des coordonnées du
-vecteur incident. En égalant les deux expressions, il obtient un système
-d'équation à 6 inconnus mais seulement 3 équations. Pour être à même de
-résoudre le système il faut fixer des contraintes supplémentaire. C'est
-ce que l'on appel les modes de fonctionnement du diffractomètre. Il est
-commode de définir d'autres angles que ceux du diffractomètre
-relativement à des vecteurs caractéristiques tel que le vecteur de
-diffusion $\vec{Q}$ ou un vecteur pointant dans une direction
-particulière du cristal $\vec{n}$. Cette direction peut-être soit lié à
-la cristallographie du cristal soit à sa forme (une normale à une face).
-La figure~ref{[[cap:Pseudo-Angles-li=0000E9s]]} représente les angles
-liés au vecteur de diffusion et à ce vecteur de référence. Tout d'abord
-$\theta$ (angle entre $\vec{Q}$ et le plan $yz$) et qui correspond à
-l'angle de Bragg. $\vartheta$ qui est l'angle azimutal que fait la
-projection de $\vec{Q}$ sur le plan $yz$ et la direction $+y$
-(fig~ref{[[cap:Pseudo-Angles-li=0000E9s}a]]). Il y a ensuite les angles
-$\alpha$ et $\varphi$ définits comme précédemment mais pour le vecteur
-de référence $\vec{n}$ (fig~ref{[[cap:Pseudo-Angles-li=0000E9s}b]]). Et
-finalement les angles $tau$ (angle entre $\vec{Q}$ et $\vec{n}$) et
-$\psi$ qui correspond à la rotation de $\vec{n}$ autour du vecteur de
-diffusion $\vec{Q}$ (fig~ref{[[cap:Pseudo-Angles-li=0000E9s}c]]).
-L'origine de cet angle $psi$ est prise à zéro lorsque le vecteur
-$\vec{n}$ est dans le plan de diffraction (plan contenant $\vec{Q}$ et
-$\vec{k_{i}}$) (fig~ref{[[cap:Pseudo-Angles-li=0000E9s}d]]).
+   Le principe des calcules de You est d'exprimer dans le repère du
+   laboratoire le vecteur diffusion $\vec{Q}$ de deux façons différentes.
+   Une première en utilisant les angles du goniomètre 4S puis une à partir
+   des angles du détecteur 2D et de la connaissance des coordonnées du
+   vecteur incident. En égalant les deux expressions, il obtient un système
+   d'équation à 6 inconnus mais seulement 3 équations. Pour être à même de
+   résoudre le système il faut fixer des contraintes supplémentaire. C'est
+   ce que l'on appel les modes de fonctionnement du diffractomètre. Il est
+   commode de définir d'autres angles que ceux du diffractomètre
+   relativement à des vecteurs caractéristiques tel que le vecteur de
+   diffusion $\vec{Q}$ ou un vecteur pointant dans une direction
+   particulière du cristal $\vec{n}$. Cette direction peut-être soit lié à
+   la cristallographie du cristal soit à sa forme (une normale à une face).
+   La figure~ref{[[cap:Pseudo-Angles-li=0000E9s]]} représente les angles
+   liés au vecteur de diffusion et à ce vecteur de référence. Tout d'abord
+   $\theta$ (angle entre $\vec{Q}$ et le plan $yz$) et qui correspond à
+   l'angle de Bragg. $\vartheta$ qui est l'angle azimutal que fait la
+   projection de $\vec{Q}$ sur le plan $yz$ et la direction $+y$
+   (fig~ref{[[cap:Pseudo-Angles-li=0000E9s}a]]). Il y a ensuite les angles
+   $\alpha$ et $\varphi$ définits comme précédemment mais pour le vecteur
+   de référence $\vec{n}$ (fig~ref{[[cap:Pseudo-Angles-li=0000E9s}b]]). Et
+   finalement les angles $tau$ (angle entre $\vec{Q}$ et $\vec{n}$) et
+   $\psi$ qui correspond à la rotation de $\vec{n}$ autour du vecteur de
+   diffusion $\vec{Q}$ (fig~ref{[[cap:Pseudo-Angles-li=0000E9s}c]]).
+   L'origine de cet angle $psi$ est prise à zéro lorsque le vecteur
+   $\vec{n}$ est dans le plan de diffraction (plan contenant $\vec{Q}$ et
+   $\vec{k_{i}}$) (fig~ref{[[cap:Pseudo-Angles-li=0000E9s}d]]).
 
-#+CAPTION: Pseudo angles $\theta$ et $\vartheta$ liés à $\vec{Q}$
-[[./figures/4S+2D_reciprocal.png]]
+   #+CAPTION: Pseudo angles $\theta$ et $\vartheta$ liés à $\vec{Q}$
+   [[./figures/4S+2D_reciprocal.png]]
 
-#+CAPTION: Pseudo angles $\alpha$ et $\phi$ liés à $\vec{n}$
-[[./figures/4S+2D_reciprocal2.png]]
+   #+CAPTION: Pseudo angles $\alpha$ et $\phi$ liés à $\vec{n}$
+   [[./figures/4S+2D_reciprocal2.png]]
 
-#+CAPTION: Pseudo angles $\tau$ et $\psi$ liés à $\vec{n}$ relativement à $\vec{Q}$ et le plan de diffraction
-[[./figures/4S+2D_reciprocal3.png]]
+   #+CAPTION: Pseudo angles $\tau$ et $\psi$ liés à $\vec{n}$ relativement à $\vec{Q}$ et le plan de diffraction
+   [[./figures/4S+2D_reciprocal3.png]]
 
-#+CAPTION: Pseudo Angles liés au vecteur de diffusion $\vec{Q}$ et à $\vec{n}$
-[[./figures/4S+2D_reciprocal4.png]]
+   #+CAPTION: Pseudo Angles liés au vecteur de diffusion $\vec{Q}$ et à $\vec{n}$
+   [[./figures/4S+2D_reciprocal4.png]]
 
-Il est alors possible d'exprimer ces pseudos angles en fonction des
-angles physique du diffractomètre.
+   Il est alors possible d'exprimer ces pseudos angles en fonction des
+   angles physique du diffractomètre.
 
 ** Eulerian 4 circles
 
-#+CAPTION: Schematic view of the diffractometer.
-[[../figures/3S+1D.png]]
+   #+CAPTION: Schematic view of the diffractometer.
+   [[../figures/3S+1D.png]]
 *** Geometry
 
 -  xrays source fix allong the $\vec{x}$ direction (1, 0, 0)
@@ -826,7 +551,7 @@ angles physique du diffractomètre.
 
 **** hkl
 
-PseudoAxes provided : *h*, *k* and *l*
+     PseudoAxes provided : *h*, *k* and *l*
 
 -  mode *bissector*
 
@@ -883,7 +608,7 @@ PseudoAxes provided : *h*, *k* and *l*
 
 **** psi
 
-PseudoAxis provided : *psi*
+     PseudoAxis provided : *psi*
 
 -  mode *psi*
 
@@ -892,9 +617,9 @@ PseudoAxis provided : *psi*
 
 **** q
 
-PseudoAxis provided : *q*
+     PseudoAxis provided : *q*
 
-where *q* is $|\vec{Q}| = \frac{2 \tau}{\lambda} \sin{\theta}$
+     where *q* is $|\vec{Q}| = \frac{2 \tau}{\lambda} \sin{\theta}$
 
 -  mode : *q*
 
@@ -903,8 +628,8 @@ where *q* is $|\vec{Q}| = \frac{2 \tau}{\lambda} \sin{\theta}$
 
 ** Eulerian 6 circles
 
-#+CAPTION: Schematic view of the diffractometer.
-[[../figures/4S+2D.png]]
+   #+CAPTION: Schematic view of the diffractometer.
+   [[../figures/4S+2D.png]]
 *** Geometry
 
 -  xrays source fix allong the $\vec{x}$ direction (1, 0, 0)
@@ -924,7 +649,7 @@ where *q* is $|\vec{Q}| = \frac{2 \tau}{\lambda} \sin{\theta}$
 
 **** hkl
 
-PseudoAxes provided : *h*, *k* and *l*
+     PseudoAxes provided : *h*, *k* and *l*
 
 -  mode *bissector\_vertical*
 
@@ -1031,7 +756,7 @@ PseudoAxes provided : *h*, *k* and *l*
 
 **** psi
 
-PseudoAxis provided : *psi*
+     PseudoAxis provided : *psi*
 
 -  mode *psi\_vertical*
 
@@ -1043,12 +768,12 @@ PseudoAxis provided : *psi*
 
 **** q2
 
-PseudoAxis provided : *q*, *alpha*
+     PseudoAxis provided : *q*, *alpha*
 
-where *q* is $|\vec{Q}| = \frac{2 \tau}{\lambda} \sin{\theta}$ and
-*alpha* is the azimuth of $\vec{Q}$ in the =yz= plan. The origin of this
-angles is the $\vec{y}$ vector, and the positive rotation along
-$\vec{x}$
+     where *q* is $|\vec{Q}| = \frac{2 \tau}{\lambda} \sin{\theta}$ and
+     *alpha* is the azimuth of $\vec{Q}$ in the =yz= plan. The origin of this
+     angles is the $\vec{y}$ vector, and the positive rotation along
+     $\vec{x}$
 
 -  mode : *q2*
 
@@ -1057,13 +782,13 @@ $\vec{x}$
 
 ** Kappa 4 circles vertical
 
-#+CAPTION: Schematic view of the diffractometer.
-[[../figures/k4cv.png]]
+   #+CAPTION: Schematic view of the diffractometer.
+   [[../figures/k4cv.png]]
 
 *** Geometry
 
-For this geometry there is a special parameters called $\alpha$ which is
-the angle between the kappa rotation axis and the $\vec{y}$ direction.
+    For this geometry there is a special parameters called $\alpha$ which is
+    the angle between the kappa rotation axis and the $\vec{y}$ direction.
 
 -  xrays source fix allong the $\vec{x}$ direction (1, 0, 0)
 -  3 axes for the sample
@@ -1081,7 +806,7 @@ the angle between the kappa rotation axis and the $\vec{y}$ direction.
 
 **** eulerians
 
-PseudoAxes provides : *"omega"*, *"chi"*, *"phi"*
+     PseudoAxes provides : *"omega"*, *"chi"*, *"phi"*
 
 -  mode *eulerians*
 
@@ -1094,7 +819,7 @@ PseudoAxes provides : *"omega"*, *"chi"*, *"phi"*
 
 **** hkl
 
-PseudoAxes provided : *h*, *k* and *l*
+     PseudoAxes provided : *h*, *k* and *l*
 
 -  mode *bissector*
 
@@ -1154,7 +879,7 @@ PseudoAxes provided : *h*, *k* and *l*
 
 **** psi
 
-PseudoAxis provided : *psi*
+     PseudoAxis provided : *psi*
 
 -  mode *psi*
 
@@ -1163,9 +888,9 @@ PseudoAxis provided : *psi*
 
 **** q
 
-PseudoAxis provided : *q*
+     PseudoAxis provided : *q*
 
-where *q* is $|\vec{Q}| = \frac{2 \tau}{\lambda} \sin{\theta}$
+     where *q* is $|\vec{Q}| = \frac{2 \tau}{\lambda} \sin{\theta}$
 
 -  mode : *q*
 
@@ -1174,12 +899,12 @@ where *q* is $|\vec{Q}| = \frac{2 \tau}{\lambda} \sin{\theta}$
 
 ** Kappa 6 circles
 
-#+CAPTION: Schematic view of the diffractometer.
-[[./figures/k6c.png]]
+   #+CAPTION: Schematic view of the diffractometer.
+   [[./figures/k6c.png]]
 *** Geometry
 
-For this geometry there is a special parameters called $\alpha$ which is
-the angle between the kappa rotation axis and the $\vec{y}$ direction.
+    For this geometry there is a special parameters called $\alpha$ which is
+    the angle between the kappa rotation axis and the $\vec{y}$ direction.
 
 -  xrays source fix allong the $\vec{x}$ direction (1, 0, 0)
 -  4 axes for the sample
@@ -1199,7 +924,7 @@ the angle between the kappa rotation axis and the $\vec{y}$ direction.
 
 **** eulerians
 
-PseudoAxes provides : *"omega"*, *"chi"*, *"phi"*
+     PseudoAxes provides : *"omega"*, *"chi"*, *"phi"*
 
 -  mode *eulerians*
 
@@ -1212,7 +937,7 @@ PseudoAxes provides : *"omega"*, *"chi"*, *"phi"*
 
 **** hkl
 
-PseudoAxes provided : *h*, *k* and *l*
+     PseudoAxes provided : *h*, *k* and *l*
 
 -  mode *bissector\_vertical*
 
@@ -1325,7 +1050,7 @@ PseudoAxes provided : *h*, *k* and *l*
 
 **** psi
 
-PseudoAxis provided : *psi*
+     PseudoAxis provided : *psi*
 
 -  mode *psi\_vertical*
 
@@ -1337,12 +1062,12 @@ PseudoAxis provided : *psi*
 
 **** q2
 
-PseudoAxis provided : *q*, *alpha*
+     PseudoAxis provided : *q*, *alpha*
 
-where *q* is $|\vec{Q}| = \frac{2 \tau}{\lambda} \sin{\theta}$ and
-*alpha* is the azimuth of $\vec{Q}$ in the =yz= plan. The origin of this
-angles is the $\vec{y}$ vector, and the positive rotation along
-$\vec{x}$
+     where *q* is $|\vec{Q}| = \frac{2 \tau}{\lambda} \sin{\theta}$ and
+     *alpha* is the azimuth of $\vec{Q}$ in the =yz= plan. The origin of this
+     angles is the $\vec{y}$ vector, and the positive rotation along
+     $\vec{x}$
 
 -  mode : *q2*
 
@@ -1368,7 +1093,7 @@ $\vec{x}$
 
 **** hkl
 
-PseudoAxes provided : *h*, *k* and *l*
+     PseudoAxes provided : *h*, *k* and *l*
 
 -  mode *bissector*
 
@@ -1425,7 +1150,7 @@ PseudoAxes provided : *h*, *k* and *l*
 
 **** psi
 
-PseudoAxis provided : *psi*
+     PseudoAxis provided : *psi*
 
 -  mode *psi*
 
@@ -1434,9 +1159,9 @@ PseudoAxis provided : *psi*
 
 **** q
 
-PseudoAxis provided : *q*
+     PseudoAxis provided : *q*
 
-where *q* is $|\vec{Q}| = \frac{2 \tau}{\lambda} \sin{\theta}$
+     where *q* is $|\vec{Q}| = \frac{2 \tau}{\lambda} \sin{\theta}$
 
 -  mode : *q*
 
@@ -1463,7 +1188,7 @@ where *q* is $|\vec{Q}| = \frac{2 \tau}{\lambda} \sin{\theta}$
 
 **** hkl
 
-PseudoAxes provided : *h*, *k* and *l*
+     PseudoAxes provided : *h*, *k* and *l*
 
 -  mode *pitch\_fixed*
 
@@ -1472,12 +1197,12 @@ PseudoAxes provided : *h*, *k* and *l*
 
 **** q2
 
-PseudoAxis provided : *q*, *alpha*
+     PseudoAxis provided : *q*, *alpha*
 
-where *q* is $|\vec{Q}| = \frac{2 \tau}{\lambda} \sin{\theta}$ and
-*alpha* is the azimuth of $\vec{Q}$ in the =yz= plan. The origin of this
-angles is the $\vec{y}$ vector, and the positive rotation along
-$\vec{x}$
+     where *q* is $|\vec{Q}| = \frac{2 \tau}{\lambda} \sin{\theta}$ and
+     *alpha* is the azimuth of $\vec{Q}$ in the =yz= plan. The origin of this
+     angles is the $\vec{y}$ vector, and the positive rotation along
+     $\vec{x}$
 
 -  mode : *q2*
 
@@ -1505,7 +1230,7 @@ $\vec{x}$
 
 **** hkl
 
-PseudoAxes provided : *h*, *k* and *l*
+     PseudoAxes provided : *h*, *k* and *l*
 
 -  mode *mu\_fixed*
 
@@ -1522,12 +1247,12 @@ PseudoAxes provided : *h*, *k* and *l*
 
 **** q2
 
-PseudoAxis provided : *q*, *alpha*
+     PseudoAxis provided : *q*, *alpha*
 
-where *q* is $|\vec{Q}| = \frac{2 \tau}{\lambda} \sin{\theta}$ and
-*alpha* is the azimuth of $\vec{Q}$ in the =yz= plan. The origin of this
-angles is the $\vec{y}$ vector, and the positive rotation along
-$\vec{x}$
+     where *q* is $|\vec{Q}| = \frac{2 \tau}{\lambda} \sin{\theta}$ and
+     *alpha* is the azimuth of $\vec{Q}$ in the =yz= plan. The origin of this
+     angles is the $\vec{y}$ vector, and the positive rotation along
+     $\vec{x}$
 
 -  mode : *q2*
 
@@ -1556,7 +1281,7 @@ $\vec{x}$
 
 **** hkl
 
-PseudoAxes provided : *h*, *k* and *l*
+     PseudoAxes provided : *h*, *k* and *l*
 
 -  mode *mu\_eta\_a\_fixed*
 
@@ -1573,12 +1298,12 @@ PseudoAxes provided : *h*, *k* and *l*
 
 **** q2
 
-PseudoAxis provided : *q*, *alpha*
+     PseudoAxis provided : *q*, *alpha*
 
-where *q* is $|\vec{Q}| = \frac{2 \tau}{\lambda} \sin{\theta}$ and
-*alpha* is the azimuth of $\vec{Q}$ in the =yz= plan. The origin of this
-angles is the $\vec{y}$ vector, and the positive rotation along
-$\vec{x}$
+     where *q* is $|\vec{Q}| = \frac{2 \tau}{\lambda} \sin{\theta}$ and
+     *alpha* is the azimuth of $\vec{Q}$ in the =yz= plan. The origin of this
+     angles is the $\vec{y}$ vector, and the positive rotation along
+     $\vec{x}$
 
 -  mode : *q2*
 
@@ -1587,11 +1312,11 @@ $\vec{x}$
 
 **** qper\_qpar
 
-PseudoAxis provided : *qper*, *qpar*
+     PseudoAxis provided : *qper*, *qpar*
 
-where *qper* and *qpar* are the perpendicular and parallel composants of
-the $|\vec{Q}|$ vector. projected respectively to the surface vector of
-the sample.
+     where *qper* and *qpar* are the perpendicular and parallel composants of
+     the $|\vec{Q}|$ vector. projected respectively to the surface vector of
+     the sample.
 ** PETRA3 P09 EH2
 
 *** Geometry
@@ -1614,7 +1339,7 @@ the sample.
 
 **** hkl
 
-PseudoAxes provided : *h*, *k* and *l*
+     PseudoAxes provided : *h*, *k* and *l*
 
 -  mode *zaxis + alpha-fixed*
 
@@ -1667,8 +1392,8 @@ PseudoAxes provided : *h*, *k* and *l*
 
 *** Geometry
 
-For this geometry there is a special parameters called $\alpha$ which is
-the angle between the kappa rotation axis and the $\vec{y}$ direction.
+    For this geometry there is a special parameters called $\alpha$ which is
+    the angle between the kappa rotation axis and the $\vec{y}$ direction.
 
 -  xrays source fix allong the $\vec{x}$ direction (1, 0, 0)
 -  4 axes for the sample
@@ -1688,7 +1413,7 @@ the angle between the kappa rotation axis and the $\vec{y}$ direction.
 
 **** eulerians
 
-PseudoAxes provides : *"omega"*, *"chi"*, *"phi"*
+     PseudoAxes provides : *"omega"*, *"chi"*, *"phi"*
 
 -  mode *eulerians*
 
@@ -1701,7 +1426,7 @@ PseudoAxes provides : *"omega"*, *"chi"*, *"phi"*
 
 **** hkl
 
-PseudoAxes provided : *h*, *k* and *l*
+     PseudoAxes provided : *h*, *k* and *l*
 
 -  mode *bissector\_vertical*
 
@@ -1814,7 +1539,7 @@ PseudoAxes provided : *h*, *k* and *l*
 
 **** psi
 
-PseudoAxis provided : *psi*
+     PseudoAxis provided : *psi*
 
 -  mode *psi\_vertical*
 
@@ -1826,12 +1551,12 @@ PseudoAxis provided : *psi*
 
 **** q2
 
-PseudoAxis provided : *q*, *alpha*
+     PseudoAxis provided : *q*, *alpha*
 
-where *q* is $|\vec{Q}| = \frac{2 \tau}{\lambda} \sin{\theta}$ and
-*alpha* is the azimuth of $\vec{Q}$ in the =yz= plan. The origin of this
-angles is the $\vec{y}$ vector, and the positive rotation along
-$\vec{x}$
+     where *q* is $|\vec{Q}| = \frac{2 \tau}{\lambda} \sin{\theta}$ and
+     *alpha* is the azimuth of $\vec{Q}$ in the =yz= plan. The origin of this
+     angles is the $\vec{y}$ vector, and the positive rotation along
+     $\vec{x}$
 
 -  mode : *q2*
 
@@ -1858,7 +1583,7 @@ $\vec{x}$
 
 **** hkl
 
-PseudoAxes provided : *h*, *k* and *l*
+     PseudoAxes provided : *h*, *k* and *l*
 
 -  mode : *lifting\_detector\_thetah*
 
@@ -1867,12 +1592,12 @@ PseudoAxes provided : *h*, *k* and *l*
 
 **** q2
 
-PseudoAxis provided : *q*, *alpha*
+     PseudoAxis provided : *q*, *alpha*
 
-where *q* is $|\vec{Q}| = \frac{2 \tau}{\lambda} \sin{\theta}$ and
-*alpha* is the azimuth of $\vec{Q}$ in the =yz= plan. The origin of this
-angles is the $\vec{y}$ vector, and the positive rotation along
-$\vec{x}$
+     where *q* is $|\vec{Q}| = \frac{2 \tau}{\lambda} \sin{\theta}$ and
+     *alpha* is the azimuth of $\vec{Q}$ in the =yz= plan. The origin of this
+     angles is the $\vec{y}$ vector, and the positive rotation along
+     $\vec{x}$
 
 -  mode : *q2*
 
@@ -1881,12 +1606,12 @@ $\vec{x}$
 
 **** qper\_qpar
 
-PseudoAxis provided : *qper*, *qpar*
+     PseudoAxis provided : *qper*, *qpar*
 
-where *qper* and *qpar* are the perpendicular and parallel composants of
-the $|\vec{Q}|$ vector projected respectively to the surface vector
-$\vec{n}$ of coordinates $x$, $y$, $z$ of the sample expressed in the
-sample referential. The default value for $n$ is (0, 1, 0)
+     where *qper* and *qpar* are the perpendicular and parallel composants of
+     the $|\vec{Q}|$ vector projected respectively to the surface vector
+     $\vec{n}$ of coordinates $x$, $y$, $z$ of the sample expressed in the
+     sample referential. The default value for $n$ is (0, 1, 0)
 
 -  mode : *qper\_qpar*
 
@@ -1896,8 +1621,8 @@ sample referential. The default value for $n$ is (0, 1, 0)
 ** Z-Axis
 *** Geometry
 
-For this geometry the *mu* axis is common to the sample and the
-detector.
+    For this geometry the *mu* axis is common to the sample and the
+    detector.
 
 -  xrays source fix allong the $\vec{x}$ direction (1, 0, 0)
 -  2 axes for the sample
@@ -1914,7 +1639,7 @@ detector.
 *** PseudoAxes
 **** hkl
 
-PseudoAxes provided : *h*, *k* and *l*
+     PseudoAxes provided : *h*, *k* and *l*
 
 -  mode *zaxis*
 
@@ -1931,12 +1656,12 @@ PseudoAxes provided : *h*, *k* and *l*
 
 **** q2
 
-PseudoAxis provided : *q*, *alpha*
+     PseudoAxis provided : *q*, *alpha*
 
-where *q* is $|\vec{Q}| = \frac{2 \tau}{\lambda} \sin{\theta}$ and
-*alpha* is the azimuth of $\vec{Q}$ in the =yz= plan. The origin of this
-angles is the $\vec{y}$ vector, and the positive rotation along
-$\vec{x}$
+     where *q* is $|\vec{Q}| = \frac{2 \tau}{\lambda} \sin{\theta}$ and
+     *alpha* is the azimuth of $\vec{Q}$ in the =yz= plan. The origin of this
+     angles is the $\vec{y}$ vector, and the positive rotation along
+     $\vec{x}$
 
 -  mode : *q2*
 
@@ -1945,63 +1670,63 @@ $\vec{x}$
 * Developpement
 ** Getting hkl
 
-To get hkl, you can download the last stable version from sourceforge or
-if you want the latest development version use
-[[http://git.or.cz/][git]] or
-[[http://code.google.com/p/msysgit/downloads/list][msysgit]] on windows
-system and do:
+   To get hkl, you can download the last stable version from sourceforge or
+   if you want the latest development version use
+   [[http://git.or.cz/][git]] or
+   [[http://code.google.com/p/msysgit/downloads/list][msysgit]] on windows
+   system and do:
 
-#+BEGIN_SRC sh
+   #+BEGIN_SRC sh
 git clone git://repo.or.cz/hkl.git
-#+END_SRC
+   #+END_SRC
 
-or:
+   or:
 
-#+BEGIN_SRC sh
+   #+BEGIN_SRC sh
     git clone http://repo.or.cz/r/hkl.git (slower)
-#+END_SRC
+   #+END_SRC
 
-then checkout the next branch like this:
+   then checkout the next branch like this:
 
-#+BEGIN_SRC sh
+   #+BEGIN_SRC sh
     cd hkl
     git checkout -b next origin/next
-#+END_SRC
+   #+END_SRC
 
 ** Building hkl
 
-To build hkl you need [[http://www.python.org][Python 2.3+]] the
-[[http://www.gnu.org/software/gsl/][GNU Scientific Library 1.12]] and
-[[https://developer.gnome.org/glib/][GLib-2.0 >= 2.3.4]]:
+   To build hkl you need [[http://www.python.org][Python 2.3+]] the
+   [[http://www.gnu.org/software/gsl/][GNU Scientific Library 1.12]] and
+   [[https://developer.gnome.org/glib/][GLib-2.0 >= 2.3.4]]:
 
-#+BEGIN_SRC sh
+   #+BEGIN_SRC sh
     ./configure --disable-gui
     make
     sudo make install
-#+END_SRC
+   #+END_SRC
 
-you can also build a GUI interfaces which use
-[[http://www.gtk.org][gtk]]:
+   you can also build a GUI interfaces which use
+   [[http://www.gtk.org][gtk]]:
 
-#+BEGIN_SRC sh
+   #+BEGIN_SRC sh
     ./configure
     make
     sudo make install
-#+END_SRC
+   #+END_SRC
 
-optionnaly you can build an experimental /libhkl3d/ library (no public
-API for now) which is used by the GUI to display and compute
-diffractometer collisions (only the /K6C/ model). To build it you need
-also [[https://projects.gnome.org/gtkglext/][gtkglext]] and
-[[http://bulletphysics.org/wordpress/][bullet 2.82]]:
+   optionnaly you can build an experimental /libhkl3d/ library (no public
+   API for now) which is used by the GUI to display and compute
+   diffractometer collisions (only the /K6C/ model). To build it you need
+   also [[https://projects.gnome.org/gtkglext/][gtkglext]] and
+   [[http://bulletphysics.org/wordpress/][bullet 2.82]]:
 
-#+BEGIN_SRC sh
+   #+BEGIN_SRC sh
     ./configure --enable-hkl3d
     make
     sudo make install
-#+END_SRC
+   #+END_SRC
 
-if you want to work on the documentation you need the extra
+   if you want to work on the documentation you need the extra
 
 - [[http://www.gtk.org/gtk-doc/][gtk-doc]] for the api
 - [[http://sphinx.pocoo.org/][sphinx]] for the html and latex doc.
@@ -2027,8 +1752,8 @@ On Debian/Ubuntu you just need to install
 
 *** Bug reporting
 
-You can find the bug tracker here
-[[https://bugs.debian.org/cgi-bin/pkgreport.cgi?repeatmerged=no&src=hkl][libhkl]]
+    You can find the bug tracker here
+    [[https://bugs.debian.org/cgi-bin/pkgreport.cgi?repeatmerged=no&src=hkl][libhkl]]
 
 -  Debian/Ubuntu:
 
@@ -2053,78 +1778,78 @@ You can find the bug tracker here
 
 *** Providing patchs
 
-you can send your patch to [[picca@synchrotron-soleil.fr][Picca
-Frédéric-Emmanuel]] using =git=
+    you can send your patch to [[picca@synchrotron-soleil.fr][Picca
+    Frédéric-Emmanuel]] using =git=
 
-Here a minimalist exemple of the workflow to prepare and send a patch
-for hkl. Suppose you wan to add a new feature to hkl create first a new
-branch from the next one:
+    Here a minimalist exemple of the workflow to prepare and send a patch
+    for hkl. Suppose you wan to add a new feature to hkl create first a new
+    branch from the next one:
 
-#+BEGIN_SRC sh
+    #+BEGIN_SRC sh
     git checkout -b my-next next
-#+END_SRC
+    #+END_SRC
 
-hack, hack:
+    hack, hack:
 
-#+BEGIN_SRC sh
+    #+BEGIN_SRC sh
     git commit -a
-#+END_SRC
+    #+END_SRC
 
-more hacks:
+    more hacks:
 
-#+BEGIN_SRC sh
+    #+BEGIN_SRC sh
     git commit -a
-#+END_SRC
+    #+END_SRC
 
-now that your new feature is ready for a review, you can send by email
-your work using git format-patch:
+    now that your new feature is ready for a review, you can send by email
+    your work using git format-patch:
 
-#+BEGIN_SRC sh
+    #+BEGIN_SRC sh
     git format-patch origin/next
-#+END_SRC
+    #+END_SRC
 
-and send generated files 0001\_xxx, 0002\_xxx, ... to the author.
+    and send generated files 0001\_xxx, 0002\_xxx, ... to the author.
 
 ** Howto add a diffractometer
 
-To add a new diffractometer, you just need to copy the
-hkl/hkl-engine-template.c into
-hkl/hkl-engine-INSTITUT-BEAMLINE-INSTRUMENT.c where you replace the
-upper case with the appropriate values.
+   To add a new diffractometer, you just need to copy the
+   hkl/hkl-engine-template.c into
+   hkl/hkl-engine-INSTITUT-BEAMLINE-INSTRUMENT.c where you replace the
+   upper case with the appropriate values.
 
-The template file is compiled during the build process to ensure that it
-is always valid.
+   The template file is compiled during the build process to ensure that it
+   is always valid.
 
-Then you just need to follow the instruction found in the template. If
-you need some precision about the process, do not hesitate to contact
-the main author.
+   Then you just need to follow the instruction found in the template. If
+   you need some precision about the process, do not hesitate to contact
+   the main author.
 
-do not forgot also to add this new file into hkl/Makefile.am with other
-diffractometers in the hkl\_c\_sources variable (please keep the
-alphabetic order).
+   do not forgot also to add this new file into hkl/Makefile.am with other
+   diffractometers in the hkl\_c\_sources variable (please keep the
+   alphabetic order).
 * Bindings
 
-The hkl library use the gobject-introspection to provide automatic
-binding for a few languages.
+  The hkl library use the gobject-introspection to provide automatic
+  binding for a few languages.
 
 ** Python
 
-hkl computation:
+   hkl computation:
 
-has you can see there is 4 available solutions.
+   has you can see there is 4 available solutions.
 
-let's compute an hkl trajectory and select the first solution.
+   let's compute an hkl trajectory and select the first solution.
 
-if we look at the 3 other solutions we can see that there is a problem
-of continuity at the begining of the trajectory.
+   if we look at the 3 other solutions we can see that there is a problem
+   of continuity at the begining of the trajectory.
 
-hey what's happend with theses solutions ! let's look closely to real
-numbers. the last column is the distance to the diffractometer current
-position. This distance is for now express like this:
+   hey what's happend with theses solutions ! let's look closely to real
+   numbers. the last column is the distance to the diffractometer current
+   position. This distance is for now express like this:
 
-$\sum_{axes} \left|\text{current position} - \text{target position}\right|$
+   $\sum_{axes} \left|\text{current position} - \text{target position}\right|$
 
-#+BEGIN_EXAMPLE
+   #+BEGIN_EXAMPLE
     [0.0, 119.99999999999999, 0.0, -90.0, 0.0, 59.99999999999999] 0.0
     [0.0, -119.99999999999999, 0.0, -90.0, 0.0, -59.99999999999999] 6.28318530718
     [0.0, -60.00000000000005, 0.0, 90.0, 0.0, 59.99999999999999] 6.28318530718
@@ -2179,26 +1904,26 @@ $\sum_{axes} \left|\text{current position} - \text{target position}\right|$
     [0.0, -155.33854118146962, 59.941489465646214, -110.33854432979601, 0.0, -89.99999918675044] 7.83839602383
     [0.0, -24.661458818530395, -59.941489465646214, 110.33854432979601, 0.0, 90.00000081324956] 8.3502621071
     [0.0, 65.3385391962557, -59.941489465646214, 110.3385360479293, 0.0, -89.99999918675044] 9.7307712883
-#+END_EXAMPLE
+   #+END_EXAMPLE
 
-as you can see for the first point of the trajectory, the 2nd, 3rd and
-4th solutions have identical distances to the current position of the
-diffractometer so they are un-ordered:
+   as you can see for the first point of the trajectory, the 2nd, 3rd and
+   4th solutions have identical distances to the current position of the
+   diffractometer so they are un-ordered:
 
-#+BEGIN_EXAMPLE
+   #+BEGIN_EXAMPLE
     [0.0, 119.99999999999999, 0.0, -90.0, 0.0, 59.99999999999999] 0.0
     [0.0, -119.99999999999999, 0.0, -90.0, 0.0, -59.99999999999999] 6.28318530718
     [0.0, -60.00000000000005, 0.0, 90.0, 0.0, 59.99999999999999] 6.28318530718
     [0.0, 60.00000000000001, 0.0, 90.0, 0.0, -59.99999999999999] 6.28318530718
-#+END_EXAMPLE
+   #+END_EXAMPLE
 
-then the problem arise with the second and third solution. you can see a
-sort of reorganisation of the solution. 2 -> 3, 3 -> 4 and 4 -> 2 then
-the order will stick unchanged until the end of the trajectory. this is
-because the distance is computed relatively to the current position of
-the diffractometer.:
+   then the problem arise with the second and third solution. you can see a
+   sort of reorganisation of the solution. 2 -> 3, 3 -> 4 and 4 -> 2 then
+   the order will stick unchanged until the end of the trajectory. this is
+   because the distance is computed relatively to the current position of
+   the diffractometer.:
 
-#+BEGIN_EXAMPLE
+   #+BEGIN_EXAMPLE
     [0.0, 117.7665607657826, 7.456826294401656, -92.39856410531434, 0.0, 60.33024982425957] 0.216753826612
     [0.0, -57.436310940366894, -7.456826294401656, 92.39856418853617, 0.0, 60.33024982425957] 6.41621345188
     [0.0, 62.2334392342174, -7.456826294401656, 92.39856410531434, 0.0, -60.33024982425957] 6.42197739723
@@ -2208,15 +1933,13 @@ the diffractometer.:
     [0.0, -125.42334103772737, 14.781064139466098, -94.7660427050904, 0.0, -61.314597086440706] 6.53671995288
     [0.0, -54.57665896227262, -14.781064139466098, 94.76604270509038, 0.0, 61.314597086440706] 6.67989976726
     [0.0, 64.10874397862072, -14.781064139466098, 94.7660423112577, 0.0, -61.314597086440706] 6.71437170098
-#+END_EXAMPLE
+   #+END_EXAMPLE
 
-#+BEGIN_QUOTE
-  *warning*
+   #+BEGIN_QUOTE
+   *warning*
 
-  when you compute a trajectory, start from a valid position (the
-  starting point must be the real first point of your trajectory) then
-  use only the closest solution for the next points of the trajectory.
-  (first solution of the geometries list)
-#+END_QUOTE
-
-
+   when you compute a trajectory, start from a valid position (the
+   starting point must be the real first point of your trajectory) then
+   use only the closest solution for the next points of the trajectory.
+   (first solution of the geometries list)
+   #+END_QUOTE
