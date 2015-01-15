@@ -31,9 +31,7 @@
 #include <g3d/quat.h>
 #include <g3d/matrix.h>
 
-#include "hkl/ccan/container_of/container_of.h"
 #include "hkl3d.h"
-#include "hkl-axis-private.h"
 #include "hkl-geometry-private.h"
 
 #include "btBulletCollisionCommon.h"
@@ -593,15 +591,14 @@ static void hkl3d_geometry_apply_transformations(Hkl3DGeometry *self)
 		for(j=0; j<len; j++){
 			size_t k;
 			size_t idx = (*holder)->config->idx[j];
-			HklAxis *axis = container_of(darray_item(self->geometry->axes, idx),
-						     HklAxis, parameter);
+			const HklQuaternion *q = hkl_parameter_quaternion_get(darray_item(self->geometry->axes, idx));
 			G3DMatrix G3DM[16];
 
 			/* conversion beetween hkl -> bullet coordinates */
-			btQ *= btQuaternion(-axis->q.data[1],
-					    axis->q.data[3],
-					    axis->q.data[2],
-					    axis->q.data[0]);
+			btQ *= btQuaternion(-q->data[1],
+					    q->data[3],
+					    q->data[2],
+					    q->data[0]);
 
 			/* move each object connected to that hkl Axis. */
 			/* apply the quaternion transformation to the bullet object */
