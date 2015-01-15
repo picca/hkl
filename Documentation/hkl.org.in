@@ -490,7 +490,7 @@
       output += "*** Axes: \n"
       for axis in geometry.axes_names_get():
           axis_v = geometry.axis_get(axis).axis_v_get().data
-          output += "    + \"*" + axis + "*\": rotation around the axis: " + repr(axis_v) + "\n"
+          output += "    + \"*" + axis + "*\": rotation around the *" + repr(axis_v) + "* axis\n"
 
       output += "*** Engines: \n"
       for engine in engines.engines_get():
