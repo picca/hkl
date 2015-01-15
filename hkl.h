@@ -89,6 +89,28 @@
 
 G_BEGIN_DECLS
 
+/**********/
+/* Vector */
+/**********/
+
+typedef struct _HklVector HklVector;
+
+struct _HklVector
+{
+	double data[3];
+};
+
+/**************/
+/* Quaternion */
+/**************/
+
+typedef struct _HklQuaternion HklQuaternion;
+
+struct _HklQuaternion
+{
+	double data[4];
+};
+
 typedef darray(const char *) darray_string;
 
 /**********/
@@ -163,6 +185,12 @@ HKLAPI int hkl_parameter_fit_get(const HklParameter *self) HKL_ARG_NONNULL(1);
 HKLAPI void hkl_parameter_fit_set(HklParameter *self, int fit) HKL_ARG_NONNULL(1);
 
 HKLAPI void hkl_parameter_randomize(HklParameter *self) HKL_ARG_NONNULL(1);
+
+/* getter and setter specific to certain type of HklParameter */
+
+HKLAPI const HklVector *hkl_parameter_axis_v_get(const HklParameter *self) HKL_ARG_NONNULL(1);
+
+HKLAPI const HklQuaternion *hkl_parameter_quaternion_get(const HklParameter *self) HKL_ARG_NONNULL(1);
 
 /************/
 /* Detector */

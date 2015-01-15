@@ -160,15 +160,29 @@ static void min_max(void)
 	hkl_parameter_free(p);
 }
 
+static void getter(void)
+{
+	HklParameter *p;
+
+	p = hkl_parameter_new("toto", 1, 2, 3,
+			      FALSE, TRUE,
+			      &hkl_unit_angle_rad, &hkl_unit_angle_deg);
+
+	ok(NULL == hkl_parameter_axis_v_get(p), __func__);
+	ok(NULL == hkl_parameter_quaternion_get(p), __func__);
+
+	hkl_parameter_free(p);
+}
+
 int main(int argc, char** argv)
 {
-	plan(40);
+	plan(42);
 
 	new();
 	new_copy();
 	init();
 	is_valid();
 	min_max();
-
+	getter();
 	return 0;
 }

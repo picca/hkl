@@ -23,15 +23,9 @@
 #define __HKL_QUATERNION_PRIVATE_H__
 
 #include <stdio.h>                      // for FILE
-#include "hkl-vector-private.h"         // for HklQuaternion, HklVector
 #include "hkl.h"                        // for G_BEGIN_DECLS, etc
 
 G_BEGIN_DECLS
-
-struct _HklQuaternion
-{
-	double data[4];
-};
 
 extern HklQuaternion *hkl_quaternion_dup(const HklQuaternion* self);
 

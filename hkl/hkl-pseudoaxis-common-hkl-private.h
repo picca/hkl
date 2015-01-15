@@ -40,19 +40,6 @@ extern int _psi_constant_vertical_func(const gsl_vector *x, void *params, gsl_ve
 extern int RUBh_minus_Q(double const x[], void *params, double f[]);
 extern int _double_diffraction(double const x[], void *params, double f[]);
 
-/**
- * @brief Standard getter for the hkl pseudoAxis.
- *
- * @param self
- * @param geometry
- * @param detector
- * @param sample
- *
- * @return the status of the getter method.
- *
- * This method can be used with all geometries of diffractometers
- * in getter/setter.
- */
 extern int hkl_mode_get_hkl_real(HklMode *self,
 				 HklEngine *engine,
 				 HklGeometry *geometry,

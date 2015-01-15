@@ -66,17 +66,20 @@ typedef enum {
 /****************/
 
 struct _HklParameterOperations {
-	HklParameter * (*copy)(const HklParameter *self);
-	void           (*free)(HklParameter *self);
-	int            (*init_copy)(HklParameter *self, const HklParameter *src, GError **error);
-	double         (*get_value_closest)(const HklParameter *self,
-					    const HklParameter *other);
-	int            (*set_value)(HklParameter *self, double value,
-				    HklUnitEnum unit_type, GError **error);
-	void           (*set_value_smallest_in_range)(HklParameter *self);
-	void           (*randomize)(HklParameter *self);
-	int            (*is_valid)(const HklParameter *self);
-	void           (*fprintf)(FILE *f, const HklParameter *self);
+	HklParameter *        (*copy)(const HklParameter *self);
+	void                  (*free)(HklParameter *self);
+	int                   (*init_copy)(HklParameter *self, const HklParameter *src,
+					   GError **error);
+	double                (*get_value_closest)(const HklParameter *self,
+						   const HklParameter *other);
+	int                   (*set_value)(HklParameter *self, double value,
+					   HklUnitEnum unit_type, GError **error);
+	void                  (*set_value_smallest_in_range)(HklParameter *self);
+	void                  (*randomize)(HklParameter *self);
+	int                   (*is_valid)(const HklParameter *self);
+	void                  (*fprintf)(FILE *f, const HklParameter *self);
+	const HklVector *     (*axis_v_get)(const HklParameter *self);
+	const HklQuaternion * (*quaternion_get)(const HklParameter *self);
 };
 
 #define HKL_PARAMETER_OPERATIONS_DEFAULTS				\
@@ -88,7 +91,9 @@ struct _HklParameterOperations {
 		.set_value_smallest_in_range = hkl_parameter_value_set_smallest_in_range_real, \
 		.randomize = hkl_parameter_randomize_real,		\
 		.is_valid = hkl_parameter_is_valid_real,		\
-		.fprintf = hkl_parameter_fprintf_real
+		.fprintf = hkl_parameter_fprintf_real,			\
+		.axis_v_get = hkl_parameter_axis_v_get_real,		\
+		.quaternion_get = hkl_parameter_quaternion_get_real
 
 static inline HklParameter *hkl_parameter_copy_real(const HklParameter *self)
 {
@@ -182,6 +187,16 @@ static inline void hkl_parameter_fprintf_real(FILE *f, const HklParameter *self)
 			self->range.min * factor,
 			self->range.max * factor,
 			self->fit);
+}
+
+static inline const HklVector *hkl_parameter_axis_v_get_real(const HklParameter *self)
+{
+	return NULL;
+}
+
+static inline const HklQuaternion *hkl_parameter_quaternion_get_real(const HklParameter *self)
+{
+	return NULL;
 }
 
 static HklParameterOperations hkl_parameter_operations_defaults = {

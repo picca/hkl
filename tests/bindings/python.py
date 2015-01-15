@@ -31,8 +31,30 @@ from gi.repository import Hkl
 class TestAPI(unittest.TestCase):
     """Test all the Hkl API, if something brakes here it means that API
     has changed !!!
-
     """
+
+    def test_vector_api(self):
+        """
+        enforce the Vector api
+        """
+        v = Hkl.Vector()
+        self.assertTrue(type(v) == Hkl.Vector)
+        self.assertTrue(type(v.data) == list)
+        self.assertTrue(3 == len(v.data))
+
+        del v
+
+    def test_quaternion_api(self):
+        """
+        enforce the Vector api
+        """
+        q = Hkl.Quaternion()
+        self.assertTrue(type(q) == Hkl.Quaternion)
+        self.assertTrue(type(q.data) == list)
+        self.assertTrue(4 == len(q.data))
+
+        del q
+
     def test_factory_api(self):
         """
         enforce the Factory API
@@ -87,6 +109,8 @@ class TestAPI(unittest.TestCase):
         for name in axes_names:
             axis = geometry.axis_get(name)
             axis.min_max_set(0, math.radians(180), Hkl.UnitEnum.USER)
+            v = axis.axis_v_get()
+            q = axis.quaternion_get()
             geometry.axis_set(name, axis)
 
         del geometry

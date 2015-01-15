@@ -372,3 +372,25 @@ void hkl_parameter_fprintf(FILE *f, HklParameter *self)
 			self->range.max * factor,
 			self->fit);
 }
+
+/**
+ * hkl_parameter_axis_v_get:
+ * @self: the this ptr
+ *
+ * Returns: (allow-none):
+ **/
+const HklVector *hkl_parameter_axis_v_get(const HklParameter *self)
+{
+	return self->ops->axis_v_get(self);
+}
+
+/**
+ * hkl_parameter_quaternion_get:
+ * @self: the this ptr
+ *
+ * Returns: (allow-none):
+ **/
+const HklQuaternion *hkl_parameter_quaternion_get(const HklParameter *self)
+{
+	return self->ops->quaternion_get(self);
+}

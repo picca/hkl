@@ -489,7 +489,8 @@
 
       output += "*** Axes: \n"
       for axis in geometry.axes_names_get():
-          output += "    + \"*" + axis + "*\": rotation around the axis: ???\n"
+          axis_v = geometry.axis_get(axis).axis_v_get().data
+          output += "    + \"*" + axis + "*\": rotation around the axis: " + repr(axis_v) + "\n"
 
       output += "*** Engines: \n"
       for engine in engines.engines_get():
@@ -787,11 +788,15 @@ On Debian/Ubuntu you just need to install
    #+END_QUOTE
 * Todo
 ** hkl
-*** TODO HklAxis degenerated.
-    an axis is degenerated if its position have no effect
-    on the HklPseudoAxis calculus. Add a degenerated member to the axis.
-    that way it would be possible to check a posteriori for this degenerescencence.
-*** TODO HklAxis method to use min/max to check for the validity
+*** TODO [2/3] HklParameter
+    - [X] method to use min/max to check for the validity
+    - [X] add a method to get the axis_v and quaternion of the HklAxis
+      this method will return NULL if this is not relevant.
+      hkl_parameter_axis_v_get and hkl_parameter_quaternion_get
+    - [ ] degenerated an axis is degenerated if its position have no
+      effect on the HklPseudoAxis calculus. Add a degenerated member
+      to the axis. that way it would be possible to check a posteriori
+      for this degenerescencence.
 *** TODO HklGeometryList different method to help select a solution.
     this select solution can depend on the geometry
     for example the kappa axis must be in one side of the plane.
@@ -800,8 +805,8 @@ On Debian/Ubuntu you just need to install
 *** TODO HklSample add the cell volum computation.
 *** TODO HklEngine "zone"
 *** TODO HklEngine "custom"
-		 for now this pseudoaxis let you select the axis you
-		 want to use for the computation.
+    for now this pseudoaxis let you select the axis you
+    want to use for the computation.
 *** TODO create a macro to help compare two real the right way
     fabs(a-b) < epsilon * max(1, abs(a), abs(b))
 *** TODO add an hkl_sample_set_lattice_unit()
@@ -824,12 +829,15 @@ On Debian/Ubuntu you just need to install
 *** TODO investigate the prigo geometry.
 *** TODO augeas/elektra for the plugin configure part.
 *** TODO logging
-**** gir logging
+**** TODO [1/2] add in a few methods.
+     + [X] hkl_pseudo_axes_values_set
+     + [ ] hkl_sample_affine
+**** TODO gir logging
      It would be nice to generate the library logging using the .gir
      information. So instead of writing the logging code for each
      method, it would be better to have a generic method for this
      purpose.
-**** parsable logging information.
+**** TODO parsable logging information.
      A parsable logging format would help to setup some re-play unit
      test. This way it could help during the developpement process
      (modification of the hkl internals) to be confident that

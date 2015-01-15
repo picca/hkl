@@ -25,7 +25,6 @@
 #include <stdio.h>
 
 #include "hkl.h"
-#include "hkl-vector-private.h"
 
 G_BEGIN_DECLS
 

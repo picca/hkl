@@ -27,6 +27,23 @@
 #include "hkl/hkl-macros-private.h"
 #include "hkl/hkl-pseudoaxis-private.h"
 
+void is_quaternion(const HklQuaternion *wanted, const HklQuaternion *seen, const char *format, ...)
+{
+	va_list args;
+
+	va_start(args, format);
+	fflush(stderr);
+	if(TRUE == hkl_quaternion_cmp(wanted, seen))
+		okv(1, format, args);
+	else{
+		printf("# wanted: %g %g %g %g\n",
+		       wanted->data[0], wanted->data[1], wanted->data[2], wanted->data[3]);
+		printf("#   seen: %g %g %g %g\n",
+		       seen->data[0], seen->data[1], seen->data[2], wanted->data[3]);
+		okv(0, format, args);
+	}
+}
+
 void is_matrix(const HklMatrix *wanted, const HklMatrix *seen, const char *format, ...)
 {
 	va_list args;

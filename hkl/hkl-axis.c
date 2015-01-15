@@ -210,6 +210,16 @@ static inline void hkl_axis_fprintf_real(FILE *f, const HklParameter *self)
 	hkl_quaternion_fprintf(f, &axis->q);
 }
 
+static inline const HklVector *hkl_axis_axis_v_get_real(const HklParameter *self)
+{
+	return &container_of(self, HklAxis, parameter)->axis_v;
+}
+
+static inline const HklQuaternion *hkl_axis_quaternion_get_real(const HklParameter *self)
+{
+	return &container_of(self, HklAxis, parameter)->q;
+}
+
 static HklParameterOperations hkl_parameter_operations_axis = {
 	HKL_PARAMETER_OPERATIONS_DEFAULTS,
 	.copy = hkl_axis_copy_real,
@@ -220,7 +230,9 @@ static HklParameterOperations hkl_parameter_operations_axis = {
 	.set_value_smallest_in_range = hkl_axis_set_value_smallest_in_range_real,
 	.randomize = hkl_axis_randomize_real,
 	.is_valid = hkl_axis_is_valid_real,
-	.fprintf = hkl_axis_fprintf_real
+	.fprintf = hkl_axis_fprintf_real,
+	.axis_v_get = hkl_axis_axis_v_get_real,
+	.quaternion_get = hkl_axis_quaternion_get_real
 };
 
 HklParameter *hkl_parameter_new_axis(char const *name, HklVector const *axis_v)

@@ -27,23 +27,6 @@
 
 G_BEGIN_DECLS
 
-/* forward declaration begin */
-typedef struct _HklQuaternion HklQuaternion;
-/* forward declaration end */
-
-typedef struct _HklVector HklVector;
-
-/**
- * HklVector:
- * @data: (skip): contain the vector data
-
- *  A struct containing a 3D space coordinates.
- **/
-struct _HklVector
-{
-	double data[3];
-};
-
 HklVector* hkl_vector_dup(const HklVector* self);
 
 void hkl_vector_free(HklVector* self);

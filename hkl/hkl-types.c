@@ -58,6 +58,7 @@ HKL_TYPE(geometry_list_item, HklGeometryListItem, hkl_geometry_list_item_new_cop
 HKL_TYPE(lattice, HklLattice, hkl_lattice_new_copy, hkl_lattice_free);
 HKL_TYPE(matrix, HklMatrix, hkl_matrix_dup, hkl_matrix_free);
 HKL_TYPE(parameter, HklParameter, hkl_parameter_new_copy, hkl_parameter_free);
+HKL_TYPE(quaternion, HklQuaternion, hkl_quaternion_dup, hkl_quaternion_free);
 HKL_TYPE(sample, HklSample, hkl_sample_new_copy, hkl_sample_free);
 HKL_TYPE(sample_reflection, HklSampleReflection, hkl_fake_ref, hkl_fake_unref);
 HKL_TYPE(unit, HklUnit, hkl_unit_dup, hkl_unit_free);

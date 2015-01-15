@@ -37,6 +37,9 @@
 
 G_BEGIN_DECLS
 
+extern void is_quaternion(const HklQuaternion *wanted, const HklQuaternion *seen, const char *format, ...)
+	__attribute__((__format__(printf, 3, 4)));
+
 extern void is_matrix(const HklMatrix *wanted, const HklMatrix *seen, const char *format, ...)
 	__attribute__((__format__(printf, 3, 4)));
 
