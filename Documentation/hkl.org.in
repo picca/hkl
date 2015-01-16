@@ -844,17 +844,22 @@ On Debian/Ubuntu you just need to install
      test. This way it could help during the developpement process
      (modification of the hkl internals) to be confident that
      computation are ok.
-
 *** TODO performances
     Investigate [[http://liboil.freedesktop.org/wiki/][liboil]] to speed calculation (in HklVector, HklMatrix
     and HklQuaternion)
-
-*** TODO rewrite documentation in org-mode
-    - asymptote and python code could be embeded directly into the
-      documentation.
-    - need to check if templates could be generated using the hkl
-      python binding for alldiffractometer geometries.
-    - need to add a description for the diffractometer, the mode, the parameters.
+** documentation
+*** TODO [1/4] rewrite documentation in org-mode
+    - [ ] embed code into the org-mode
+      - [ ] [0/4] python
+	- [ ] auto generation of the diffractometer descriptions
+	- [ ] trajectories explanations
+	- [ ] trajectories tests.
+	- [ ] unit tests output ?
+      - [ ] asymptote
+    - [X] need to check if templates could be generated using the hkl
+      python binding for all diffractometer geometries.
+    - [ ] need to add a description for the diffractometer, the mode, the parameters.
+    - [ ] need a nice css for the generated doc.
 ** gui
 *** TODO change the color of fitparameter cells if they differ from the current
 	   sample values
