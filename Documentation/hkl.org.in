@@ -792,7 +792,18 @@ On Debian/Ubuntu you just need to install
     for example the kappa axis must be in one side of the plane.
 *** TODO add a fit on the Hklaxis offsets.
 *** TODO API to put a detector and a sample on the Geometry.
-*** TODO HklSample add the cell volum computation.
+*** TODO HklSample
+**** TODO HklSample add the cell volum computation.
+**** TODO unit test: hkl_sample_affine.
+     Check this:
+     lattice=1.540000;1.540000;1.540000;90.000000;90.000000;90.000000;0;0;0;0;0;0
+     uxuyuz=0.000000;0.000000;0.000000
+     reflection=1.540000;0.159010;1.256718;0.796660;1;0.000000;0.000000;0.000000;0.000000;0.000000
+     reflection=1.540000;0.206208;0.342357;-0.080346;1;0.000000;0.000000;0.000000;0.000000;0.000000
+     reflection=1.540000;0.206208;0.342357;-0.080346;1;0.000000;0.000000;0.000000;0.000000;0.000000
+
+     A,  B, C, Alpha,  Beta, Gamma, Ux, Uy, Uy:
+     17764892.133, 5793679.092, 15733785.198,  179.997,  179.999,452408725.23,  -575727594.04,  -1913661011.01 (affine) 1rst finetness
 *** TODO HklEngine "zone"
 *** TODO HklEngine "custom"
     for now this pseudoaxis let you select the axis you
@@ -859,3 +870,4 @@ On Debian/Ubuntu you just need to install
 
 ** packaging
 *** TODO add a .spec file for rpm generation.
+
