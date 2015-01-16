@@ -605,18 +605,7 @@ On Debian/Ubuntu you just need to install
 
 -  Other OS
 
-   You just need to send an email:
-
-   #+BEGIN_EXAMPLE
-       To: submit@bugs.debian.org
-       From: xxx@yyy.zzz
-       Subject: My problem with hkl...
-
-       Package: hkl
-       Version: |version|
-
-       I found this problem in hkl...
-   #+END_EXAMPLE
+   You just need to send an [[mailto:submit@bugs.debian.org?subject=%20My%20problem%20with%20hkl...&body=Package:%20hkl%0AVersion:%20@VERSION@%0A%0AI%20found%20this%20problem%20in%20hkl][email]]
 
 *** Providing patchs
 
