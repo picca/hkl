@@ -2,15 +2,13 @@ SUBDIRS=api figures sphinx
 
 dist_man_MANS = ghkl.1
 
-# We require automake 1.6 at least.
-AUTOMAKE_OPTIONS = 1.6
-
-DOC_ENVIRONMENT=env GI_TYPELIB_PATH=$(top_builddir)/hkl
-
 AM_LDFLAGS = $(top_builddir)/hkl/libhkl.la
 
-DOC_MODULE=hkl
+dist_html_DATA=hkl.html
 
-DOC_EMACS_DEFAULT_EL = default.el
+.html.org:
+	env GI_TYPELIB_PATH=$(top_builddir)/hkl\
+	$(LIBTOOL) --mode=execute -dlopen $(AM_LDFLAGS)\
+	$(EMACS) $< --batch -q --load $(srcdir)/default.el -f org-html-export-to-html --kill
 
-include $(top_srcdir)/org-doc.make
+EXTRA_DIST=default.el

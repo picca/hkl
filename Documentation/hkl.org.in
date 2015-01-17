@@ -2,7 +2,7 @@
 #+AUTHOR: Picca Frédéric-Emmanuel
 #+EMAIL: picca at synchrotron dash soleil dot fr
 #+LANGUAGE: en
-#+OPTIONS: tex:dvipng
+#+HTML_MATHJAX: path:"/usr/share/javascript/mathjax/MathJax.js"
 
 * Introduction
   The purpose of the library is to factorise single crystal
