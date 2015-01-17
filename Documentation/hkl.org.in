@@ -3,6 +3,8 @@
 #+EMAIL: picca at synchrotron dash soleil dot fr
 #+LANGUAGE: en
 #+HTML_MATHJAX: path:"/usr/share/javascript/mathjax/MathJax.js"
+#+STYLE: <style>table.center {margin-left:auto; margin- right:auto;}</style> 
+#+INFOJS_OPT: view:info toc:nil
 
 * Introduction
   The purpose of the library is to factorise single crystal
@@ -171,13 +173,13 @@
      \end{displaymath}
 
      \begin{displaymath}
-     \bordermatrix{
+     \begin{bmatrix}
      ~ & 1 & i  & j  & k \cr
      1 & 1 & i  & j  & k \cr
      i & i & -1 & k  & -j \cr
      j & j & -k & -1 & i \cr
      k & k & j  & -i & -1
-     }
+     \end{bmatrix}
      \end{displaymath}
 
      The product of two quaternions can be express by the Grassman product
@@ -344,26 +346,10 @@
     angle d'Euler et $Z$ la matrice du troisième angle d'Euler pour l'axe
     Oz.
 
-    \begin{tabular}{ccc}
-    $X$ & $Y$ & $Z$\tabularnewline
-    $\begin{bmatrix}
-    1 & 0 & 0\\
-    0 & A & -B\\
-    0 & B & A
-    \end{bmatrix}$
-    &
-    $\begin{bmatrix}
-    C & 0 & D\\
-    0 & 1 & 0\\
-    -D & 0 & C
-    \end{bmatrix}$
-    &
-    $\begin{bmatrix}
-    E & -F & 0\\
-    F & E & 0\\
-    0 & 0 & 1
-    \end{bmatrix}$
-    \end{tabular}
+    #+ATTR_HTML: class="center"
+    | $X$        | $Y$        | $Z$        |
+    | <10>       | <10>       | <10>       |
+    | $\begin{bmatrix} 1 & 0 & 0\\ 0 & A & -B\\ 0 & B & A \end{bmatrix}$ | $\begin{bmatrix}C & 0 & D\\0 & 1 & 0\\-D & 0 & C\end{bmatrix}$ | $\begin{bmatrix}E & -F & 0\\F & E & 0\\0 & 0 & 1\end{bmatrix}$ |
 
     et donc:
 
