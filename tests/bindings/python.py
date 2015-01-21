@@ -94,6 +94,11 @@ class TestAPI(unittest.TestCase):
         factory = Hkl.factories()['K6C']
         geometry = factory.create_new_geometry()
 
+        # source access
+        wavelength = 1.
+        geometry.wavelength_set(wavelength, Hkl.UnitEnum.USER)
+        self.assertTrue(wavelength == geometry.wavelength_get(Hkl.UnitEnum.USER))  # noqa
+
         # set the geometry axes values
         values_w = [0, 30, 0, 0, 0, 60]
         geometry.axes_values_set(values_w, Hkl.UnitEnum.USER)

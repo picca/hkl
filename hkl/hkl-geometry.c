@@ -387,7 +387,7 @@ int hkl_geometry_axis_set(HklGeometry *self, const char *name,
 }
 
 /**
- * hkl_geometry_wavelength_get: (skip)
+ * hkl_geometry_wavelength_get:
  * @self: the this ptr
  * @unit_type: the unit type (default or user) of the returned value
  *
