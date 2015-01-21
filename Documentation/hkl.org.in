@@ -765,6 +765,60 @@ git clone git://repo.or.cz/hkl.git
    #+END_QUOTE
 * Todo
 ** hkl
+*** TODO [/] PetraIII
+**** TODO computatin problem
+     Dear Teresa,
+
+     Using the prruptest.txt ubmatrix I see that the value of psi is
+     offset by 45 degrees. I expect it to be 0 degrees when azimuth
+     reference vector is 0 0 1 that is along the beam. See below
+     thereturned numbers. This might have to do with the definition of
+     the beam axis in the controller.  Otherwise now when I change
+     reference vector by 90 degrees the computed value is changed by
+     90 degrees. That is a progress. Can you contact Frederic and ask
+     him about this ?
+
+     Best regards,
+
+     Sonia
+     
+     See below
+     p09/door/haspp09.01 [9]: setaz 1 0 0
+
+     p09/door/haspp09.01 [10]: wh
+
+     Engine: hkl
+     
+     Mode: psi_constant_vertical
+
+     H K L =    0.00000   3.00605  -0.00000
+     Ref   =    1.00000   0.00000   0.00000
+     Azimuth (Psi - calculated) =  -45.00005
+     Azimuth (Psi - set) =  0.00000
+     Wavelength =  2.07957
+
+     Delta       Theta          Chi         Phi         Mu       Gamma
+     45.77575    22.88783     90.00000   182.85400    0.00000    -0.00000
+
+     p09/door/haspp09.01 [11]: setaz 0 0 1
+
+     p09/door/haspp09.01 [12]: wh
+
+     Engine: hkl
+
+     Mode: psi_constant_vertical
+
+     H K L =    0.00000   3.00605  -0.00000
+     Ref   =    0.00000   0.00000   1.00000
+     Azimuth (Psi - calculated) =  -135.00005
+     Azimuth (Psi - set) =  0.00000
+     Wavelength =  2.07957
+
+     Delta       Theta          Chi         Phi         Mu       Gamma
+     45.77575    22.88783     90.00000   182.85400    0.00000    -0.00000
+
+     I need to understand the meaning of Azimuth (h2 ,k2, l2) ?
+     
 *** TODO [2/4] HklParameter
     - [X] method to use min/max to check for the validity
     - [X] add a method to get the axis_v and quaternion of the HklAxis
