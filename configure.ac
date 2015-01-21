@@ -122,23 +122,21 @@ AM_COND_IF([LOGGING],
 	AC_DEFINE([LOGGING], [1], [activate the logging or not])
 	)
 
-dnl ***************
+dnl ***********
+dnl *** doc ***
+dnl ***********
+
+OPTION_DEFAULT_ON([hkl-doc], [build documentation])
+AM_CONDITIONAL([HKL_DOC], [test x$enable_hkl_doc = xyes])
+AM_COND_IF([HKL_DOC],
+	   [dnl *** asymptote ***
+	    AC_PATH_PROG([ASY], [asy], [echo])
+	    dnl *** emacs ***
+	    AC_PATH_PROG([EMACS], [emacs], [no])
+	   ])
+
 dnl *** gtk-doc ***
-dnl ***************
-
 GTK_DOC_CHECK([1.9],[--flavour no-tmpl])
-
-dnl ***********
-dnl *** asy ***
-dnl ***********
-
-AC_PATH_PROG([ASY], [asy], [echo])
-
-dnl *************
-dnl *** emacs ***
-dnl *************
-
-AC_PATH_PROG([EMACS], [emacs], [no])
 
 dnl *******************************
 dnl *** add an option for hkl3d ***

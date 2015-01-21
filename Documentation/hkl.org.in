@@ -4,7 +4,6 @@
 #+LANGUAGE: en
 #+HTML_MATHJAX: path:"/usr/share/javascript/mathjax/MathJax.js"
 #+STYLE: <style>table.center {margin-left:auto; margin- right:auto;}</style> 
-#+INFOJS_OPT: view:info toc:nil
 
 * Introduction
   The purpose of the library is to factorise single crystal
@@ -434,8 +433,7 @@
    [[./figures/e2k_4.png]]
 
 ** Qper and Qpar
-   [[
-   ./figures/qper_qpar.png]]
+   [[./figures/qper_qpar.png]]
 
    this pseudo axis engine compute the perpendicular
    ($\left|\left|\vec{Q_\text{per}}\right|\right|$) and parallel
@@ -557,25 +555,30 @@ git clone git://repo.or.cz/hkl.git
 
    if you want to work on the documentation you need the extra
 
-- [[http://www.gtk.org/gtk-doc/][gtk-doc]] for the api
-- [[http://sphinx.pocoo.org/][sphinx]] for the html and latex doc.
-- [[http://asymptote.sourceforge.net/][asymptote]] for the figures
-- [[http://www.gnu.org/software/emacs/][emacs]] the well known editor
-- [[https://github.com/emacsmirror/htmlize][htmlize]] used to highlight the source code
-- [[http://orgmode.org][org-mode]] litteral programming
-- [[http://savannah.nongnu.org/projects/dvipng/][dvipng]] convert latex equation into pictures
+   - [[http://www.gtk.org/gtk-doc/][gtk-doc]] for the api
+   - [[http://sphinx.pocoo.org/][sphinx]] for the html and latex doc.
+   - [[http://asymptote.sourceforge.net/][asymptote]] for the figures
+   - [[http://www.gnu.org/software/emacs/][emacs]] the well known editor
+   - [[https://github.com/emacsmirror/htmlize][htmlize]] used to highlight the source code
+   - [[http://orgmode.org][org-mode]] litteral programming
 
-On Debian/Ubuntu you just need to install
+   On Debian/Ubuntu you just need to install
 
-#+BEGIN_SRC sh
-  sudo apt-get install emacs dvipng emacs-goodies-el org-mode
-#+END_SRC
+   #+BEGIN_SRC sh
+    sudo apt-get install emacs dvipng emacs-goodies-el org-mode
+   #+END_SRC
 
-#+BEGIN_SRC sh
+   #+BEGIN_SRC sh
     ./configure --enable-gtk-doc
     make
     make html
 #+END_SRC
+
+   nevertheless if you do not want to build the documentation you can do:
+
+   #+BEGIN_SRC sh
+   ./configure --disable-hkl-doc
+   #+END_SRC
 
 ** Hacking hkl
 *** Bug reporting
@@ -833,10 +836,10 @@ On Debian/Ubuntu you just need to install
     Investigate [[http://liboil.freedesktop.org/wiki/][liboil]] to speed calculation (in HklVector, HklMatrix
     and HklQuaternion)
 ** documentation
-*** TODO [1/4] rewrite documentation in org-mode
-    - [ ] embed code into the org-mode
-      - [ ] [0/4] python
-	- [ ] auto generation of the diffractometer descriptions
+*** TODO [1/5] rewrite documentation in org-mode
+    - [-] embedding code into the org file
+      - [-] [1/4] python
+	- [X] auto generation of the diffractometer descriptions
 	- [ ] trajectories explanations
 	- [ ] trajectories tests.
 	- [ ] unit tests output ?
@@ -845,6 +848,7 @@ On Debian/Ubuntu you just need to install
       python binding for all diffractometer geometries.
     - [ ] need to add a description for the diffractometer, the mode, the parameters.
     - [ ] need a nice css for the generated doc.
+    - [ ] check if org-info.js could be usefull
 ** gui
 *** TODO change the color of fitparameter cells if they differ from the current
 	   sample values

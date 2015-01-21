@@ -10,7 +10,10 @@ endif
 if GUI
 SUBDIRS += gui
 endif
-SUBDIRS += tests Documentation
+if HKL_DOC
+SUBDIRS += Documentation
+endif
+SUBDIRS += tests
 
 EXTRA_DIST = hkl.pc.in hkl3d.pc.in
 
