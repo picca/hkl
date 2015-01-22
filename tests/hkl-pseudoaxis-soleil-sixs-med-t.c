@@ -68,7 +68,7 @@ static void qper_qpar(void)
 	/* gamma must be positif */
 	qper_qpar[0] = 0.1;
 	qper_qpar[1] = 4.;
-	geometries = hkl_engine_pseudo_axes_values_set(engine, qper_qpar, ARRAY_SIZE(qper_qpar),
+	geometries = hkl_engine_pseudo_axis_values_set(engine, qper_qpar, ARRAY_SIZE(qper_qpar),
 							HKL_UNIT_DEFAULT, NULL);
 	if(geometries){
 		gamma = GET_GAMMA(geometries);
@@ -79,7 +79,7 @@ static void qper_qpar(void)
 	/* gamma must be negatif */
 	qper_qpar[0] = -0.1;
 	qper_qpar[1] = 4.;
-	geometries = hkl_engine_pseudo_axes_values_set(engine, qper_qpar, ARRAY_SIZE(qper_qpar),
+	geometries = hkl_engine_pseudo_axis_values_set(engine, qper_qpar, ARRAY_SIZE(qper_qpar),
 							HKL_UNIT_DEFAULT, NULL);
 	if(geometries){
 		gamma = GET_GAMMA(geometries);
@@ -118,7 +118,7 @@ static void med_2_3(void)
 	factory = hkl_factory_get_by_name("SOLEIL SIXS MED2+3", NULL);
 	geometry = hkl_factory_create_new_geometry(factory);
 
-	hkl_geometry_axes_values_set(geometry,
+	hkl_geometry_axis_values_set(geometry,
 				     positions, ARRAY_SIZE(positions), HKL_UNIT_USER,
 				     NULL);
 	hkl_geometry_wavelength_set(geometry, 1.54980, HKL_UNIT_DEFAULT, NULL);
@@ -144,7 +144,7 @@ static void med_2_3(void)
 	hkl_engine_current_mode_set(hkl, "mu_fixed", NULL);
 
 	/* hkl 1.95, 2, 6 (should not fail) */
-	geometries = hkl_engine_pseudo_axes_values_set(hkl,
+	geometries = hkl_engine_pseudo_axis_values_set(hkl,
 						       hkl_p, ARRAY_SIZE(hkl_p),
 						       HKL_UNIT_DEFAULT, NULL);
 	res &= DIAG((geometries != NULL));

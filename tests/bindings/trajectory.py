@@ -31,7 +31,7 @@ def compute_hkl_trajectories(engines, engine, hkl1=None, hkl2=None, n=100):
     trajectories = []
     for hh, kk, ll in zip(h, k, l):
         try:
-            solutions = engine.pseudo_axes_values_set([hh, kk, ll],
+            solutions = engine.pseudo_axis_values_set([hh, kk, ll],
                                                       Hkl.UnitEnum.USER)
             first_solution = solutions.items()[0]
             for i, item in enumerate(solutions.items()):
@@ -39,7 +39,7 @@ def compute_hkl_trajectories(engines, engine, hkl1=None, hkl2=None, n=100):
                     trajectories[i]
                 except IndexError:
                     trajectories.append([])
-                values = item.geometry_get().axes_values_get(Hkl.UnitEnum.USER)
+                values = item.geometry_get().axis_values_get(Hkl.UnitEnum.USER)
                 trajectories[i].append(values)
             engines.select_solution(first_solution)
         except GLib.GError, err:
@@ -63,14 +63,14 @@ def plot_hkl_trajectory(filename, geometry, engines,
     plot the trajectory for a engine. It is possible to limit the
     number of trajectory using the max_traj keyword
     """
-    axes_names = geometry.axes_names_get()
+    axis_names = geometry.axis_names_get()
 
     hkl = engines.engine_get_by_name("hkl")
     page = 1
     plt.clf()
     plt.suptitle("\"" + filename + "\" " + repr(
         hkl1) + " -> " + repr(hkl2) + " page " + str(page))
-    _plot_legend(axes_names)
+    _plot_legend(axis_names)
     idx = 2
     for mode in hkl.modes_names_get():
         hkl.current_mode_set(mode)
@@ -100,7 +100,7 @@ def plot_hkl_trajectory(filename, geometry, engines,
             pp.savefig()
             plt.clf()
             page += 1
-            _plot_legend(axes_names)
+            _plot_legend(axis_names)
             plt.suptitle(filename + " " + repr(
                 hkl1) + " -> " + repr(hkl2) + " page " + str(page))
             idx = 2
@@ -127,7 +127,7 @@ def main():
 
         # here we set the detector arm with only positiv values for
         # now tth or delta arm
-        for axis in geometry.axes_names_get():
+        for axis in geometry.axis_names_get():
             if axis in ["tth", "delta"]:
                 tmp = geometry.axis_get(axis)
                 tmp.min_max_set(0, 180., Hkl.UnitEnum.USER)

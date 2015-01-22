@@ -193,14 +193,14 @@ diffractometer_set_solutions(struct diffractometer_t *self, HklGeometryList *sol
 }
 
 static gboolean
-diffractometer_pseudo_axes_values_set(struct diffractometer_t *self,
+diffractometer_pseudo_axis_values_set(struct diffractometer_t *self,
 				      HklEngine *engine, gdouble values[], guint n_values,
 				      GError **error)
 {
 	HklGeometryList *solutions;
 
 
-	solutions = hkl_engine_pseudo_axes_values_set(engine, values, n_values, HKL_UNIT_USER, error);
+	solutions = hkl_engine_pseudo_axis_values_set(engine, values, n_values, HKL_UNIT_USER, error);
 
 	return diffractometer_set_solutions(self, solutions);
 }
@@ -634,10 +634,10 @@ update_solutions (HklGuiWindow* self)
 	i=0;
 	HKL_GEOMETRY_LIST_FOREACH(item, priv->diffractometer->solutions){
 		const HklGeometry *geometry = hkl_geometry_list_item_geometry_get(item);
-		unsigned int n_v = darray_size(*hkl_geometry_axes_names_get(geometry));
+		unsigned int n_v = darray_size(*hkl_geometry_axis_names_get(geometry));
 		double v[n_v];
 
-		hkl_geometry_axes_values_get(geometry, v, n_v, HKL_UNIT_USER);
+		hkl_geometry_axis_values_get(geometry, v, n_v, HKL_UNIT_USER);
 
 		g_value_set_int(&values[SOLUTION_COL_INDEX], i);
 		g_value_set_pointer(&values[SOLUTION_COL_HKL_GEOMETRY_LIST_ITEM], (gpointer)item);
@@ -732,7 +732,7 @@ pseudo_axes_frame_changed_cb (HklGuiEngine *gui_engine, HklGuiWindow *self)
 		     "liststore", &liststore,
 		     NULL);
 
-	n_values = darray_size(*hkl_engine_pseudo_axes_names_get(engine));
+	n_values = darray_size(*hkl_engine_pseudo_axis_names_get(engine));
 	gdouble values[n_values];
 
 	/* extract all the values from the listore */
@@ -751,7 +751,7 @@ pseudo_axes_frame_changed_cb (HklGuiEngine *gui_engine, HklGuiWindow *self)
 		valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(liststore), &iter);
 	}
 
-	if(diffractometer_pseudo_axes_values_set(priv->diffractometer, engine,
+	if(diffractometer_pseudo_axis_values_set(priv->diffractometer, engine,
 						 values, n_values, &error)){
 		update_axes (self);
 		update_pseudo_axes (self);
@@ -837,7 +837,7 @@ set_up_tree_view_axes (HklGuiWindow* self)
 
 	gtk_list_store_clear (priv->liststore_axis);
 
-	axes = hkl_geometry_axes_names_get(priv->diffractometer->geometry);
+	axes = hkl_geometry_axis_names_get(priv->diffractometer->geometry);
 	darray_foreach (axis, *axes){
 		gtk_list_store_append (priv->liststore_axis, &iter);
 		gtk_list_store_set (priv->liststore_axis, &iter,
@@ -860,7 +860,7 @@ set_up_tree_view_pseudo_axes (HklGuiWindow* self)
 
 	engines = hkl_engine_list_engines_get(priv->diffractometer->engines);
 	darray_foreach(engine, *engines){
-		const darray_string *pseudo_axes = hkl_engine_pseudo_axes_names_get(*engine);
+		const darray_string *pseudo_axes = hkl_engine_pseudo_axis_names_get(*engine);
 		GtkTreeIter iter = {0};
 		guint idx;
 
@@ -897,7 +897,7 @@ set_up_tree_view_solutions (HklGuiWindow* self)
 	GType* types;
 	gint n_columns;
 
-	axes = hkl_geometry_axes_names_get(priv->diffractometer->geometry);
+	axes = hkl_geometry_axis_names_get(priv->diffractometer->geometry);
 
 	n_columns = SOLUTION_COL_N_COLUMNS + darray_size(*axes);
 
@@ -1234,7 +1234,7 @@ hkl_gui_window_cellrenderertext5_edited_cb(GtkCellRendererText *renderer,
 			    PSEUDO_AXIS_COL_WRITE, &old_value,
 			    -1);
 
-	n_values = darray_size(*hkl_engine_pseudo_axes_names_get(engine));
+	n_values = darray_size(*hkl_engine_pseudo_axis_names_get(engine));
 	gdouble values[n_values];
 
 	/* extract all the values from the listore */
@@ -1261,7 +1261,7 @@ hkl_gui_window_cellrenderertext5_edited_cb(GtkCellRendererText *renderer,
 	value = atof(new_text); /* TODO need to check for the right conversion */
 	values[idx] = value;
 
-	if(diffractometer_pseudo_axes_values_set(priv->diffractometer, engine,
+	if(diffractometer_pseudo_axis_values_set(priv->diffractometer, engine,
 						 values, n_values, &error)){
 		gtk_list_store_set (priv->liststore_pseudo_axes,
 				    &iter,

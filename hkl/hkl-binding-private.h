@@ -38,11 +38,11 @@ HKLAPI GHashTable *hkl_factories(void);
 /* HklGeometry */
 /***************/
 
-HKLAPI const char **hkl_geometry_axes_names_get_binding(const HklGeometry *self,
+HKLAPI const char **hkl_geometry_axis_names_get_binding(const HklGeometry *self,
 							size_t *length) HKL_ARG_NONNULL(1, 2);
 
 
-HKLAPI double* hkl_geometry_axes_values_get_binding(const HklGeometry *self, unsigned int *len,
+HKLAPI double* hkl_geometry_axis_values_get_binding(const HklGeometry *self, unsigned int *len,
 						    HklUnitEnum unit_type) HKL_ARG_NONNULL(1, 2);
 
 /*******************/
@@ -58,17 +58,17 @@ HKLAPI GSList* hkl_geometry_list_items(HklGeometryList *self) HKL_ARG_NONNULL(1)
 HKLAPI const char **hkl_engine_modes_names_get_binding(const HklEngine *self,
 						       size_t *length) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI const char **hkl_engine_pseudo_axes_names_get_binding(HklEngine *self,
+HKLAPI const char **hkl_engine_pseudo_axis_names_get_binding(HklEngine *self,
 							     size_t *length) HKL_ARG_NONNULL(1, 2);
 
 HKLAPI const char **hkl_engine_parameters_names_get_binding(const HklEngine *self,
 							    size_t *length) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI const char **hkl_engine_axes_names_get_binding(const HklEngine *self,
+HKLAPI const char **hkl_engine_axis_names_get_binding(const HklEngine *self,
 						      HklEngineAxesNamesGet mode,
 						      size_t *length) HKL_ARG_NONNULL(1, 3);
 
-HKLAPI double *hkl_engine_pseudo_axes_values_get_binding(const HklEngine *self,
+HKLAPI double *hkl_engine_pseudo_axis_values_get_binding(const HklEngine *self,
 							 guint *len, HklUnitEnum unit_type);
 
 /***************************/

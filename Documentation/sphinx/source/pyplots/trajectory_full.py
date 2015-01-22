@@ -20,8 +20,8 @@ detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))
 
 factory = Hkl.factories()['K6C']
 geometry = factory.create_new_geometry()
-axes_names = geometry.axes_names_get()
-geometry.axes_values_set([0., 120, 0., -90., 0., 60.],
+axis_names = geometry.axis_names_get()
+geometry.axis_values_set([0., 120, 0., -90., 0., 60.],
                          Hkl.UnitEnum.USER)
 
 engines = factory.create_new_engine_list()
@@ -39,7 +39,7 @@ hkl = engines.engine_get_by_name("hkl")
 trajectories = []
 for hh, kk, ll in zip(h, k, l):
     try:
-        solutions = hkl.pseudo_axes_values_set([hh, kk, ll],
+        solutions = hkl.pseudo_axis_values_set([hh, kk, ll],
                                                Hkl.UnitEnum.USER)
         first_solution = solutions.items()[0]
         for i, item in enumerate(solutions.items()):
@@ -47,7 +47,7 @@ for hh, kk, ll in zip(h, k, l):
                 trajectories[i]
             except IndexError:
                 trajectories.append([])
-            values = item.geometry_get().axes_values_get(Hkl.UnitEnum.USER)
+            values = item.geometry_get().axis_values_get(Hkl.UnitEnum.USER)
             # print values, item.geometry.distance(geometry)
             trajectories[i].append(values)
         engines.select_solution(first_solution)

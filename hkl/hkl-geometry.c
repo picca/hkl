@@ -305,14 +305,14 @@ int hkl_geometry_set(HklGeometry *self, const HklGeometry *src)
 }
 
 /**
- * hkl_geometry_axes_names_get:
+ * hkl_geometry_axis_names_get:
  * @self: the this ptr
  *
  * get all the axes of the given #HklGeometry
  *
  * Returns: (type gpointer): array of the axes names.
  **/
-const darray_string *hkl_geometry_axes_names_get(const HklGeometry *self)
+const darray_string *hkl_geometry_axis_names_get(const HklGeometry *self)
 {
 	return &self->factory->axes;
 }
@@ -542,7 +542,7 @@ HklParameter *hkl_geometry_get_axis_by_name(HklGeometry *self, const char *name)
 }
 
 /**
- * hkl_geometry_axes_values_get:
+ * hkl_geometry_axis_values_get:
  * @self: the this ptr
  * @values: (array length=n_values): the values to get
  * @n_values: the size of the values array.
@@ -550,7 +550,7 @@ HklParameter *hkl_geometry_get_axis_by_name(HklGeometry *self, const char *name)
  *
  * fill the values array with the #HklGeometry axes.
  **/
-void hkl_geometry_axes_values_get(const HklGeometry *self,
+void hkl_geometry_axis_values_get(const HklGeometry *self,
 				  double values[], size_t n_values,
 				  HklUnitEnum unit_type)
 {
@@ -565,7 +565,7 @@ void hkl_geometry_axes_values_get(const HklGeometry *self,
 }
 
 /**
- * hkl_geometry_axes_values_set:
+ * hkl_geometry_axis_values_set:
  * @self: the this ptr
  * @values: (array length=n_values): the values to set.
  * @n_values: the length of the values array.
@@ -576,7 +576,7 @@ void hkl_geometry_axes_values_get(const HklGeometry *self,
  *
  * Returns: TRUE on success, FALSE if an error occurred
  **/
-int hkl_geometry_axes_values_set(HklGeometry *self,
+int hkl_geometry_axis_values_set(HklGeometry *self,
 				 double values[], size_t n_values,
 				 HklUnitEnum unit_type,
 				 GError **error)

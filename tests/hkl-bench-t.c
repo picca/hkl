@@ -61,7 +61,7 @@ static void hkl_test_bench_run_real(HklEngine *engine, HklGeometry *geometry,
 
 			hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 0., 0., 0., 0., 10., 10.);
 			gettimeofday(&debut, NULL);
-			solutions = hkl_engine_pseudo_axes_values_set(engine, values, n_values, HKL_UNIT_DEFAULT, NULL);
+			solutions = hkl_engine_pseudo_axis_values_set(engine, values, n_values, HKL_UNIT_DEFAULT, NULL);
 			if (NULL != solutions)
 				hkl_geometry_list_free(solutions);
 			gettimeofday(&fin, NULL);
@@ -84,7 +84,7 @@ static void hkl_test_bench_run_v(HklEngineList *engines, HklGeometry *geometry,
 	va_list ap;
 	size_t i;
 	HklEngine *engine = hkl_engine_list_engine_get_by_name(engines, name, NULL);
-	size_t n_values = darray_size(*hkl_engine_pseudo_axes_names_get(engine));
+	size_t n_values = darray_size(*hkl_engine_pseudo_axis_names_get(engine));
 	double values[n_values];
 
 	va_start(ap, n);
@@ -159,7 +159,7 @@ static void hkl_test_bench_eulerians(void)
 		hkl_engine_current_mode_set(engine, *mode, NULL);
 
 		/* studdy this degenerated case */
-		solutions = hkl_engine_pseudo_axes_values_set(engine,
+		solutions = hkl_engine_pseudo_axis_values_set(engine,
 							       values, ARRAY_SIZE(values),
 							       HKL_UNIT_DEFAULT, NULL);
 		if (solutions) {
@@ -168,7 +168,7 @@ static void hkl_test_bench_eulerians(void)
 			HKL_GEOMETRY_LIST_FOREACH(item, solutions){
 				hkl_geometry_set(geometry,
 						 hkl_geometry_list_item_geometry_get(item));
-				hkl_engine_pseudo_axes_values_get(engine, values, ARRAY_SIZE(values),
+				hkl_engine_pseudo_axis_values_get(engine, values, ARRAY_SIZE(values),
 								   HKL_UNIT_DEFAULT, NULL);
 			}
 		}

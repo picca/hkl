@@ -145,7 +145,7 @@ static void degenerated(void)
 		}
 
 		/* studdy this degenerated case */
-		geometries = hkl_engine_pseudo_axes_values_set(engine,
+		geometries = hkl_engine_pseudo_axis_values_set(engine,
 								hkl, ARRAY_SIZE(hkl),
 								HKL_UNIT_DEFAULT, NULL);
 		if (geometries){
@@ -206,7 +206,7 @@ static void q2(void)
 				double values[] = {q, alpha};
 				HklGeometryList *geometries;
 
-				geometries = hkl_engine_pseudo_axes_values_set(engine,
+				geometries = hkl_engine_pseudo_axis_values_set(engine,
 										values, ARRAY_SIZE(values),
 										HKL_UNIT_DEFAULT, NULL);
 				if(geometries){
@@ -281,7 +281,7 @@ static void petra3(void)
 	hkl_engine_current_mode_set(hkl, "psi_constant_vertical", NULL);
 	/* set the mode parameters 0, 0, 1, 90. */
 	hkl_engine_parameters_values_set(hkl, hkl_p, ARRAY_SIZE(hkl_p), HKL_UNIT_DEFAULT, NULL);
-	geometries = hkl_engine_pseudo_axes_values_set(hkl, hkl_v, ARRAY_SIZE(hkl_v),
+	geometries = hkl_engine_pseudo_axis_values_set(hkl, hkl_v, ARRAY_SIZE(hkl_v),
 							HKL_UNIT_DEFAULT, NULL);
 	if(geometries){
 		const HklGeometryListItem *item;
@@ -293,7 +293,7 @@ static void petra3(void)
 			hkl_geometry_set(geometry,
 					 hkl_geometry_list_item_geometry_get(item));
 			hkl_engine_initialized_set(psi, TRUE, NULL);
-			hkl_engine_pseudo_axes_values_get(psi, &current, 1,
+			hkl_engine_pseudo_axis_values_get(psi, &current, 1,
 							   HKL_UNIT_DEFAULT, NULL);
 			res &= DIAG(fabs(PSI - current) < HKL_EPSILON);
 		}
@@ -394,7 +394,7 @@ static void petra3_2(void)
 
 			hkl_geometry_set(geometry, hkl_geometry_list_item_geometry_get(item));
 			hkl_engine_initialized_set(psi, TRUE, NULL);
-			hkl_engine_pseudo_axes_values_get(psi, &current, 1,
+			hkl_engine_pseudo_axis_values_get(psi, &current, 1,
 							   HKL_UNIT_DEFAULT, NULL);
 			res &= DIAG(fabs(PSI - current) < HKL_EPSILON);
 		}
@@ -420,7 +420,7 @@ static void petra3_2(void)
 
 			hkl_geometry_set(geometry, hkl_geometry_list_item_geometry_get(item));
 			hkl_engine_initialized_set(psi, TRUE, NULL);
-			hkl_engine_pseudo_axes_values_get(psi, &current, 1,
+			hkl_engine_pseudo_axis_values_get(psi, &current, 1,
 							   HKL_UNIT_DEFAULT, NULL);
 			res &= DIAG(fabs(PSI - current) < HKL_EPSILON);
 		}
@@ -457,7 +457,7 @@ static void petra3_2(void)
 
 			hkl_geometry_set(geometry, hkl_geometry_list_item_geometry_get(item));
 			hkl_engine_initialized_set(psi, TRUE, NULL);
-			hkl_engine_pseudo_axes_values_get(psi, &current, 1,
+			hkl_engine_pseudo_axis_values_get(psi, &current, 1,
 							   HKL_UNIT_DEFAULT, NULL);
 			res &= DIAG(fabs(PSI - current) < HKL_EPSILON);
 		}
@@ -484,7 +484,7 @@ static void petra3_2(void)
 
 			hkl_geometry_set(geometry, hkl_geometry_list_item_geometry_get(item));
 			hkl_engine_initialized_set(psi, TRUE, NULL);
-			hkl_engine_pseudo_axes_values_get(psi, &current, 1,
+			hkl_engine_pseudo_axis_values_get(psi, &current, 1,
 							   HKL_UNIT_DEFAULT, NULL);
 			res &= DIAG(fabs(PSI - current) < HKL_EPSILON);
 		}

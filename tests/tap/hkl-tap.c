@@ -90,7 +90,7 @@ int check_pseudoaxes(HklEngine *engine,
 
 	hkl_assert(hkl_engine_len(engine) == len);
 
-	if(hkl_engine_pseudo_axes_values_get(engine, currents, len, HKL_UNIT_DEFAULT, NULL)){
+	if(hkl_engine_pseudo_axis_values_get(engine, currents, len, HKL_UNIT_DEFAULT, NULL)){
 		for(i=0; i<len; ++i){
 			res &= fabs(currents[i] - expected[i]) <= HKL_EPSILON;
 			if (!res){
@@ -124,7 +124,7 @@ HklGeometryList *hkl_engine_set_values_v(HklEngine *self, ...)
 		values[i] = va_arg(ap, double);
 		
 	va_end(ap);
-	return hkl_engine_pseudo_axes_values_set(self, values, len,
+	return hkl_engine_pseudo_axis_values_set(self, values, len,
 						  HKL_UNIT_DEFAULT, NULL);
 }
 

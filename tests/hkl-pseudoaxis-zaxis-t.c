@@ -67,7 +67,7 @@ static void solution(void)
 	hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 1., 0., 0., 0.);
 
 	/* compute the 1 1 0 */
-	geometries = hkl_engine_pseudo_axes_values_set(engine, hkl, ARRAY_SIZE(hkl),
+	geometries = hkl_engine_pseudo_axis_values_set(engine, hkl, ARRAY_SIZE(hkl),
 							HKL_UNIT_DEFAULT, NULL);
 	if (geometries){
 		const HklGeometryListItem *item;

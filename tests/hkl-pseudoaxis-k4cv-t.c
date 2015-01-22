@@ -65,7 +65,7 @@ static void degenerated(void)
 		}
 
 		/* studdy this degenerated case */
-		geometries = hkl_engine_pseudo_axes_values_set(engine,
+		geometries = hkl_engine_pseudo_axis_values_set(engine,
 								hkl, ARRAY_SIZE(hkl),
 								HKL_UNIT_DEFAULT, NULL);
 		if (geometries){
@@ -130,7 +130,7 @@ static void eulerians(void)
 		}
 
 		/* studdy this degenerated case */
-		geometries = hkl_engine_pseudo_axes_values_set(engine,
+		geometries = hkl_engine_pseudo_axis_values_set(engine,
 								eulerians, ARRAY_SIZE(eulerians),
 								HKL_UNIT_DEFAULT, NULL);
 		if (geometries) {

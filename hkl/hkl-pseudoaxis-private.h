@@ -321,7 +321,7 @@ struct _HklEngine
 	HklEngineList *engines; /* not owned */
 	darray_parameter axes;
 	darray_parameter pseudo_axes;
-	darray_string pseudo_axes_names;
+	darray_string pseudo_axis_names;
 	darray_mode modes;
 	darray_string mode_names;
 };
@@ -347,8 +347,8 @@ static GQuark hkl_engine_error_quark (void)
 
 
 typedef enum {
-	HKL_ENGINE_ERROR_PSEUDO_AXES_VALUES_GET, /* can not get the engine pseudo axes values */
-	HKL_ENGINE_ERROR_PSEUDO_AXES_VALUES_SET, /* can not set the engine pseudo axes values */
+	HKL_ENGINE_ERROR_PSEUDO_AXIS_VALUES_GET, /* can not get the engine pseudo axes values */
+	HKL_ENGINE_ERROR_PSEUDO_AXIS_VALUES_SET, /* can not set the engine pseudo axes values */
 	HKL_ENGINE_ERROR_PSEUDO_AXIS_SET, /* can not set the pseudo axis */
 	HKL_ENGINE_ERROR_INITIALIZE, /* can not initialize the engine */
 	HKL_ENGINE_ERROR_SET, /* can not set the engine */
@@ -399,7 +399,7 @@ static inline void hkl_engine_release(HklEngine *self)
 	}
 	darray_free(self->pseudo_axes);
 
-	darray_free(self->pseudo_axes_names);
+	darray_free(self->pseudo_axis_names);
 
 	darray_free(self->mode_names);
 }
@@ -433,7 +433,7 @@ static inline void hkl_engine_init(HklEngine *self,
 	self->ops = ops;
 	darray_init(self->modes);
 	darray_init(self->pseudo_axes);
-	darray_init(self->pseudo_axes_names);
+	darray_init(self->pseudo_axis_names);
 	darray_init(self->mode_names);
 	self->geometry = NULL;
 	self->detector = NULL;
@@ -454,7 +454,7 @@ static inline HklParameter *register_pseudo_axis(HklEngine *self,
 
 	parameter = hkl_parameter_new_pseudo_axis(pseudo_axis, self);
 	darray_append(self->pseudo_axes, parameter);
-	darray_append(self->pseudo_axes_names, parameter->name);
+	darray_append(self->pseudo_axis_names, parameter->name);
 	
 	return parameter;
 }
@@ -544,7 +544,7 @@ static inline void hkl_engine_prepare_internal(HklEngine *self)
  * @self: the HklEngine
  * @name: the mode to select
  *
- * This method also populate the self->axes from the mode->axes_names.
+ * This method also populate the self->axes from the mode->axis_names.
  * this is to speed the computation of the numerical axes.
  **/
 static inline void hkl_engine_mode_set(HklEngine *self, HklMode *mode)

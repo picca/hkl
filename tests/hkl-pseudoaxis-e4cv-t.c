@@ -109,7 +109,7 @@ static void degenerated(void)
 		}
 
 		/* studdy this degenerated case */
-		geometries = hkl_engine_pseudo_axes_values_set(engine, values, 3, HKL_UNIT_DEFAULT, NULL);
+		geometries = hkl_engine_pseudo_axis_values_set(engine, values, 3, HKL_UNIT_DEFAULT, NULL);
 		if(geometries){
 			const HklGeometryListItem *item;
 
@@ -231,7 +231,7 @@ static void psi_setter(void)
 		for(psi=-180 * HKL_DEGTORAD;psi<180 * HKL_DEGTORAD;psi += HKL_DEGTORAD){
 			HklGeometryList *geometries;
 
-			geometries = hkl_engine_pseudo_axes_values_set(engine, &psi, 1,
+			geometries = hkl_engine_pseudo_axis_values_set(engine, &psi, 1,
 									HKL_UNIT_DEFAULT, NULL);
 			if(geometries){
 				const HklGeometryListItem *item;
@@ -289,7 +289,7 @@ static void q(void)
 		for(q=-1.; q<1.; q += 0.1){
 			HklGeometryList *geometries;
 
-			geometries = hkl_engine_pseudo_axes_values_set(engine, &q, 1,
+			geometries = hkl_engine_pseudo_axis_values_set(engine, &q, 1,
 									HKL_UNIT_DEFAULT, NULL);
 			if(geometries){
 				const HklGeometryListItem *item;
@@ -343,7 +343,7 @@ static void hkl_psi_constant_vertical(void)
 	hkl_engine_parameters_values_set(engine, hkl2, ARRAY_SIZE(hkl2), HKL_UNIT_DEFAULT, NULL);
 	hkl_engine_initialized_set(engine, TRUE, NULL);
 
-	geometries = hkl_engine_pseudo_axes_values_set(engine, hkl, ARRAY_SIZE(hkl),
+	geometries = hkl_engine_pseudo_axis_values_set(engine, hkl, ARRAY_SIZE(hkl),
 							HKL_UNIT_DEFAULT, NULL);
 	if(geometries){
 		const HklGeometryListItem *item;

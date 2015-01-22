@@ -31,10 +31,10 @@ detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))
 factory = Hkl.factories()['K6C']
 geometry = factory.create_new_geometry()
 values_w = [0., 30., 0., 0., 0., 60.]
-geometry.axes_values_set(values_w, Hkl.UnitEnum.USER)
-axes_names = geometry.axes_names_get()
-print geometry.name_get(), "diffractometer has", len(axes_names),\
-    "axes : ", axes_names
+geometry.axis_values_set(values_w, Hkl.UnitEnum.USER)
+axis_names = geometry.axis_names_get()
+print geometry.name_get(), "diffractometer has", len(axis_names),\
+    "axes : ", axis_names
 print values_w
 
 sample = Hkl.Sample.new("toto")
@@ -51,24 +51,24 @@ engines.get()
 
 # get the hkl engine and do a computation
 hkl = engines.engine_get_by_name("hkl")
-values = hkl.pseudo_axes_values_get(Hkl.UnitEnum.USER)
+values = hkl.pseudo_axis_values_get(Hkl.UnitEnum.USER)
 print "read : ", values
 
 # set the hkl engine and get the results
 for _ in range(100):
     try:
         print
-        solutions = hkl.pseudo_axes_values_set(values,
+        solutions = hkl.pseudo_axis_values_set(values,
                                                Hkl.UnitEnum.USER)
-        print hkl.pseudo_axes_values_get(Hkl.UnitEnum.USER)
+        print hkl.pseudo_axis_values_get(Hkl.UnitEnum.USER)
 
         print("idx".center(15)),
-        for name in axes_names:
+        for name in axis_names:
             print("{}".format(name.center(15))),
         print
 
         for i, item in enumerate(solutions.items()):
-            read = item.geometry_get().axes_values_get(Hkl.UnitEnum.USER)
+            read = item.geometry_get().axis_values_get(Hkl.UnitEnum.USER)
             print("{}".format(repr(i).center(15))),
             for value in read:
                 print("{}".format(repr(value)[:15].center(15))),

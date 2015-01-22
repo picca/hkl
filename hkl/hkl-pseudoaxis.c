@@ -105,18 +105,18 @@ unsigned int hkl_engine_len(const HklEngine *self)
 }
 
 /**
- * hkl_engine_pseudo_axes_names_get:
+ * hkl_engine_pseudo_axis_names_get:
  * @self: the this ptr
  *
  * Return value: (type gpointer): the pseudo_axes managed by this #HklEngine
  **/
-const darray_string *hkl_engine_pseudo_axes_names_get(HklEngine *self)
+const darray_string *hkl_engine_pseudo_axis_names_get(HklEngine *self)
 {
-	return &self->pseudo_axes_names;
+	return &self->pseudo_axis_names;
 }
 
 /**
- * hkl_engine_pseudo_axes_values_get:
+ * hkl_engine_pseudo_axis_values_get:
  * @self: the this ptr
  * @values: (array length=n_values): the values to get
  * @n_values: the size of the values array.
@@ -126,7 +126,7 @@ const darray_string *hkl_engine_pseudo_axes_names_get(HklEngine *self)
  *
  * return value: TRUE if succeded or FALSE otherwise.
  **/
-int hkl_engine_pseudo_axes_values_get(HklEngine *self,
+int hkl_engine_pseudo_axis_values_get(HklEngine *self,
 				       double values[], size_t n_values,
 				       HklUnitEnum unit_type, GError **error)
 {
@@ -135,7 +135,7 @@ int hkl_engine_pseudo_axes_values_get(HklEngine *self,
 	if(n_values != darray_size(self->info->pseudo_axes)){
 		g_set_error(error,
 			    HKL_ENGINE_ERROR,
-			    HKL_ENGINE_ERROR_PSEUDO_AXES_VALUES_GET,
+			    HKL_ENGINE_ERROR_PSEUDO_AXIS_VALUES_GET,
 			    "cannot get engine pseudo axes, wrong number of parameter (%d) given, (%d) expected\n",
 			    n_values, darray_size(self->info->pseudo_axes));
 		return FALSE;
@@ -155,7 +155,7 @@ int hkl_engine_pseudo_axes_values_get(HklEngine *self,
 }
 
 /**
- * hkl_engine_pseudo_axes_values_set:
+ * hkl_engine_pseudo_axis_values_set:
  * @self: the this ptr
  * @values: (array length=n_values): the values to set
  * @n_values: the size of the values array.
@@ -167,7 +167,7 @@ int hkl_engine_pseudo_axes_values_get(HklEngine *self,
  * Return value: #HklGeometryList or NULL if no solution was found,
  *               use hkl_geometry_list_free to release the memory once done.
  **/
-HklGeometryList *hkl_engine_pseudo_axes_values_set(HklEngine *self,
+HklGeometryList *hkl_engine_pseudo_axis_values_set(HklEngine *self,
 						   double values[], size_t n_values,
 						   HklUnitEnum unit_type, GError **error)
 {
@@ -181,7 +181,7 @@ HklGeometryList *hkl_engine_pseudo_axes_values_set(HklEngine *self,
 	if(n_values != darray_size(self->info->pseudo_axes)){
 		g_set_error(error,
 			    HKL_ENGINE_ERROR,
-			    HKL_ENGINE_ERROR_PSEUDO_AXES_VALUES_SET,
+			    HKL_ENGINE_ERROR_PSEUDO_AXIS_VALUES_SET,
 			    "cannot set engine pseudo axes, wrong number of parameter (%d) given, (%d) expected\n",
 			    n_values,  darray_size(self->info->pseudo_axes));
 		goto out;
@@ -492,7 +492,7 @@ const char *hkl_engine_current_mode_get(const HklEngine *self)
  * @name: the mode to select
  * @error: return location for a GError, or NULL
  *
- * This method also populate the self->axes from the mode->axes_names.
+ * This method also populate the self->axes from the mode->axis_names.
  * this is to speed the computation of the numerical axes.
  *
  * return value: TRUE if succeded or FALSE otherwise.
@@ -520,7 +520,7 @@ int hkl_engine_current_mode_set(HklEngine *self, const char *name,
 }
 
 /**
- * hkl_engine_axes_names_get:
+ * hkl_engine_axis_names_get:
  * @self: the this ptr
  * @mode: 
  *
@@ -533,13 +533,13 @@ int hkl_engine_current_mode_set(HklEngine *self, const char *name,
  *
  * Returns: (type gpointer): 
  **/
-const darray_string *hkl_engine_axes_names_get(const HklEngine *self,
+const darray_string *hkl_engine_axis_names_get(const HklEngine *self,
 					       HklEngineAxesNamesGet mode)
 {
 	switch(mode){
-	case HKL_ENGINE_AXES_NAMES_GET_READ:
+	case HKL_ENGINE_AXIS_NAMES_GET_READ:
 		return &self->mode->info->axes_r;
-	case HKL_ENGINE_AXES_NAMES_GET_WRITE:
+	case HKL_ENGINE_AXIS_NAMES_GET_WRITE:
 		return &self->mode->info->axes_w;
 	}
 }

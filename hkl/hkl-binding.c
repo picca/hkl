@@ -66,20 +66,20 @@ GHashTable *hkl_factories(void)
 /************/
 
 /**
- * hkl_geometry_axes_names_get_binding:
+ * hkl_geometry_axis_names_get_binding:
  * @self: the this ptr
  * @length: (out caller-allocates): the length of the returned array
  *
  * get all the axes of the given geometry.
  *
- * Rename to: hkl_geometry_axes_names_get
+ * Rename to: hkl_geometry_axis_names_get
  *
  * Returns: (array length=length) (transfer none): array of the axes names.
  **/
-const char **hkl_geometry_axes_names_get_binding(const HklGeometry *self,
+const char **hkl_geometry_axis_names_get_binding(const HklGeometry *self,
 						 size_t *length)
 {
-	const darray_string *axes = hkl_geometry_axes_names_get(self);
+	const darray_string *axes = hkl_geometry_axis_names_get(self);
 
 	*length = darray_size(*axes);
 
@@ -87,17 +87,17 @@ const char **hkl_geometry_axes_names_get_binding(const HklGeometry *self,
 }
 
 /**
- * hkl_geometry_axes_values_get_binding:
+ * hkl_geometry_axis_values_get_binding:
  * @self: the this ptr
  * @len: (out caller-allocates): the length of the returned array
  * @unit_type: the unit type (default or user) of the returned value
  *
- * Rename to: hkl_geometry_axes_values_get
+ * Rename to: hkl_geometry_axis_values_get
  *
  * Return value: (array length=len) (transfer container): list of axes values,
  *          free the list with free when done.
  **/
-double *hkl_geometry_axes_values_get_binding(const HklGeometry *self, guint *len,
+double *hkl_geometry_axis_values_get_binding(const HklGeometry *self, guint *len,
 					     HklUnitEnum unit_type)
 {
 	double *values;
@@ -159,19 +159,19 @@ const char **hkl_engine_modes_names_get_binding(const HklEngine *self, size_t *l
 }
 
 /**
- * hkl_engine_pseudo_axes_names_get_binding:
+ * hkl_engine_pseudo_axis_names_get_binding:
  * @self: the this ptr
  * @length: (out caller-allocates): return the length of the returned array.
  *
- * Rename to: hkl_engine_pseudo_axes_names_get
+ * Rename to: hkl_engine_pseudo_axis_names_get
  *
  * Return value: (array length=length) (transfer none): All the pseudo_axes names of the #HklEngine
  *
  **/
-const char **hkl_engine_pseudo_axes_names_get_binding(HklEngine *self, size_t *length)
+const char **hkl_engine_pseudo_axis_names_get_binding(HklEngine *self, size_t *length)
 {
-	*length = darray_size(self->pseudo_axes_names);
-	return &darray_item(self->pseudo_axes_names, 0);
+	*length = darray_size(self->pseudo_axis_names);
+	return &darray_item(self->pseudo_axis_names, 0);
 }
 
 /**
@@ -190,20 +190,20 @@ const char **hkl_engine_parameters_names_get_binding(const HklEngine *self, size
 }
 
 /**
- * hkl_engine_axes_names_get_binding:
+ * hkl_engine_axis_names_get_binding:
  * @self: the this ptr
  * @mode: the #HklEngineAxesNamesGet
  * @length: (out caller-allocates): return the length of the returned array.
  *
- * Rename to: hkl_engine_axes_names_get
+ * Rename to: hkl_engine_axis_names_get
  *
  * Return value: (array length=length) (transfer none): axes of the #HklEngine for the given mode.
  **/
-const char **hkl_engine_axes_names_get_binding(const HklEngine *self,
+const char **hkl_engine_axis_names_get_binding(const HklEngine *self,
 					       HklEngineAxesNamesGet mode,
 					       size_t *length)
 {
-	const darray_string *axes = hkl_engine_axes_names_get(self, mode);
+	const darray_string *axes = hkl_engine_axis_names_get(self, mode);
 
 	*length = darray_size(*axes);
 
@@ -211,17 +211,17 @@ const char **hkl_engine_axes_names_get_binding(const HklEngine *self,
 }
 
 /**
- * hkl_engine_pseudo_axes_values_get_binding:
+ * hkl_engine_pseudo_axis_values_get_binding:
  * @self: the this ptr
  * @len: (out caller-allocates): the length of the returned array
  * @unit_type: the unit type (default or user) of the returned value
  *
- * Rename to: hkl_engine_pseudo_axes_values_get
+ * Rename to: hkl_engine_pseudo_axis_values_get
  *
  * Return value: (array length=len) (transfer container): list of pseudo axes values,
  *          free the list with free when done.
  **/
-double *hkl_engine_pseudo_axes_values_get_binding(const HklEngine *self, guint *len,
+double *hkl_engine_pseudo_axis_values_get_binding(const HklEngine *self, guint *len,
 						  HklUnitEnum unit_type)
 {
 	double *values;

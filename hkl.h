@@ -226,7 +226,7 @@ HKLAPI void hkl_geometry_free(HklGeometry *self) HKL_ARG_NONNULL(1);
 
 HKLAPI int hkl_geometry_set(HklGeometry *self, const HklGeometry *src) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI const darray_string *hkl_geometry_axes_names_get(const HklGeometry *self) HKL_ARG_NONNULL(1);
+HKLAPI const darray_string *hkl_geometry_axis_names_get(const HklGeometry *self) HKL_ARG_NONNULL(1);
 
 HKLAPI const HklParameter *hkl_geometry_axis_get(const HklGeometry *self, const char *name,
 						 GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
@@ -235,11 +235,11 @@ HKLAPI int hkl_geometry_axis_set(HklGeometry *self, const char *name,
 				 const HklParameter *axis,
 				 GError **error) HKL_ARG_NONNULL(1, 2, 3) HKL_WARN_UNUSED_RESULT;
 
-HKLAPI void hkl_geometry_axes_values_get(const HklGeometry *self,
+HKLAPI void hkl_geometry_axis_values_get(const HklGeometry *self,
 					 double values[], size_t n_values,
 					 HklUnitEnum unit_type) HKL_ARG_NONNULL(1, 2);
 
-HKLAPI int hkl_geometry_axes_values_set(HklGeometry *self,
+HKLAPI int hkl_geometry_axis_values_set(HklGeometry *self,
 					double values[], size_t n_values,
 					HklUnitEnum unit_type,
 					GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
@@ -455,13 +455,13 @@ HKLAPI const char *hkl_engine_name_get(const HklEngine *self) HKL_ARG_NONNULL(1)
 
 HKLAPI unsigned int hkl_engine_len(const HklEngine *self) HKL_ARG_NONNULL(1);
 
-HKLAPI const darray_string *hkl_engine_pseudo_axes_names_get(HklEngine *self) HKL_ARG_NONNULL(1);
+HKLAPI const darray_string *hkl_engine_pseudo_axis_names_get(HklEngine *self) HKL_ARG_NONNULL(1);
 
-HKLAPI int hkl_engine_pseudo_axes_values_get(HklEngine *self,
+HKLAPI int hkl_engine_pseudo_axis_values_get(HklEngine *self,
 					     double values[], size_t n_values,
 					     HklUnitEnum unit_type, GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
 
-HKLAPI HklGeometryList *hkl_engine_pseudo_axes_values_set(HklEngine *self,
+HKLAPI HklGeometryList *hkl_engine_pseudo_axis_values_set(HklEngine *self,
 							  double values[], size_t n_values,
 							  HklUnitEnum unit_type, GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
 
@@ -495,11 +495,11 @@ HKLAPI int hkl_engine_current_mode_set(HklEngine *self, const char *name, GError
 
 typedef enum _HklEngineAxesNamesGet
 {
-	HKL_ENGINE_AXES_NAMES_GET_READ,
-	HKL_ENGINE_AXES_NAMES_GET_WRITE,
+	HKL_ENGINE_AXIS_NAMES_GET_READ,
+	HKL_ENGINE_AXIS_NAMES_GET_WRITE,
 } HklEngineAxesNamesGet;
 
-HKLAPI const darray_string *hkl_engine_axes_names_get(const HklEngine *self,
+HKLAPI const darray_string *hkl_engine_axis_names_get(const HklEngine *self,
 						      HklEngineAxesNamesGet mode) HKL_ARG_NONNULL(1);
 
 HKLAPI const darray_string *hkl_engine_parameters_names_get(const HklEngine *self) HKL_ARG_NONNULL(1);

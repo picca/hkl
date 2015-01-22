@@ -159,7 +159,7 @@ update_pseudo_axis (HklGuiEngine* self)
 {
 	HklGuiEnginePrivate *priv = HKL_GUI_ENGINE_GET_PRIVATE(self);
 	GtkTreeIter iter = {0};
-	const darray_string *parameters = hkl_engine_pseudo_axes_names_get (priv->engine);
+	const darray_string *parameters = hkl_engine_pseudo_axis_names_get (priv->engine);
 	unsigned int n_values = darray_size(*parameters);
 	double values[n_values];
 	GError *error = NULL;
@@ -168,7 +168,7 @@ update_pseudo_axis (HklGuiEngine* self)
 	g_return_if_fail (self != NULL);
 
 	gtk_list_store_clear (priv->store_pseudo);
-	if(!hkl_engine_pseudo_axes_values_get(priv->engine, values, n_values, HKL_UNIT_USER, &error)){
+	if(!hkl_engine_pseudo_axis_values_get(priv->engine, values, n_values, HKL_UNIT_USER, &error)){
 		/* TODO check for the error */
 		g_clear_error(&error);
 		return;

@@ -109,7 +109,7 @@ static int _get(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
 	GError *error;
 	int res = TRUE;
 	HklGeometry *geometry = hkl_engine_list_geometry_get(engine_list);
-	const darray_string *pseudo_axes = hkl_engine_pseudo_axes_names_get(engine);
+	const darray_string *pseudo_axes = hkl_engine_pseudo_axis_names_get(engine);
 	const size_t n_pseudo_axes = darray_size(*pseudo_axes);
 	double targets[n_pseudo_axes];
 	double currents[n_pseudo_axes];
@@ -128,12 +128,12 @@ static int _get(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
 	/* pseudo -> geometry */
 	if(HKL_ENGINE_CAPABILITIES_INITIALIZABLE & hkl_engine_capabilities_get(engine))
 		res &= DIAG(hkl_engine_initialized_set(engine, TRUE, NULL));
-	res &= DIAG(hkl_engine_pseudo_axes_values_get(engine, currents, n_pseudo_axes,
+	res &= DIAG(hkl_engine_pseudo_axis_values_get(engine, currents, n_pseudo_axes,
 						      HKL_UNIT_DEFAULT, NULL));
 
 	/* idem with error management */
 	error = NULL;
-	res &= DIAG(hkl_engine_pseudo_axes_values_get(engine, currents, n_pseudo_axes,
+	res &= DIAG(hkl_engine_pseudo_axis_values_get(engine, currents, n_pseudo_axes,
 						      HKL_UNIT_DEFAULT, &error));
 	res &= DIAG(NULL == error);
 	for(i=0; i<n_pseudo_axes; ++i)
@@ -154,7 +154,7 @@ static int _set(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
 	int unreachable = 0;
 	int res = TRUE;
 	HklGeometry *geometry = hkl_engine_list_geometry_get(engine_list);
-	const darray_string *pseudo_axes = hkl_engine_pseudo_axes_names_get(engine);
+	const darray_string *pseudo_axes = hkl_engine_pseudo_axis_names_get(engine);
 	const size_t n_pseudo_axes = darray_size(*pseudo_axes);
 	double targets[n_pseudo_axes];
 	double currents[n_pseudo_axes];
@@ -182,7 +182,7 @@ static int _set(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
 	res &= DIAG(hkl_engine_initialized_set(engine, TRUE, &error));
 
 	/* geometry -> pseudo */
-	solutions = hkl_engine_pseudo_axes_values_set(engine,
+	solutions = hkl_engine_pseudo_axis_values_set(engine,
 						      targets, n_pseudo_axes,
 						      HKL_UNIT_DEFAULT, &error);
 	if(solutions) {
@@ -192,7 +192,7 @@ static int _set(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
 			hkl_geometry_set(geometry,
 					 hkl_geometry_list_item_geometry_get(item));
 
-			res &= DIAG(hkl_engine_pseudo_axes_values_get(engine, currents, n_pseudo_axes, HKL_UNIT_DEFAULT, &error));
+			res &= DIAG(hkl_engine_pseudo_axis_values_get(engine, currents, n_pseudo_axes, HKL_UNIT_DEFAULT, &error));
 			for(j=0; j<n_pseudo_axes; ++j)
 				res &= DIAG(fabs(targets[j] - currents[j]) < HKL_EPSILON);
 		}
@@ -232,13 +232,13 @@ static void set(int nb_iter)
 static int _pseudo_axis_get(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
 {
 	static const char *bad = "_bad_name_";
-	const darray_string *pseudo_axes_names = hkl_engine_pseudo_axes_names_get(engine);
+	const darray_string *pseudo_axis_names = hkl_engine_pseudo_axis_names_get(engine);
 	const char **pseudo_axis_name;
 	const HklParameter *pseudo_axis;
 	int res = TRUE;
 	GError *error;
 
-	darray_foreach(pseudo_axis_name, *pseudo_axes_names){
+	darray_foreach(pseudo_axis_name, *pseudo_axis_names){
 		pseudo_axis = hkl_engine_pseudo_axis_get(engine, *pseudo_axis_name, NULL);
 		res &= DIAG(NULL != pseudo_axis);
 
@@ -401,7 +401,7 @@ static int _check_axes(const darray_string *axes, const darray_string *refs)
 	return ko;
 }
 
-static int _axes_names(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
+static int _axis_names(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
 {
 	int res  = TRUE;
 	HklGeometry *geometry;
@@ -410,15 +410,15 @@ static int _axes_names(HklEngine *engine, HklEngineList *engine_list, unsigned i
 	const darray_string *axes_w;
 
 	geometry = hkl_engine_list_geometry_get(engine_list);
-	all_axes = hkl_geometry_axes_names_get(geometry);
+	all_axes = hkl_geometry_axis_names_get(geometry);
 
 	/* check consistency of the engines, all axes should be in the
 	 * list of the geometry axes */
-	axes_r = hkl_engine_axes_names_get(engine,
-					   HKL_ENGINE_AXES_NAMES_GET_READ);
+	axes_r = hkl_engine_axis_names_get(engine,
+					   HKL_ENGINE_AXIS_NAMES_GET_READ);
 
-	axes_w = hkl_engine_axes_names_get(engine,
-					   HKL_ENGINE_AXES_NAMES_GET_WRITE);
+	axes_w = hkl_engine_axis_names_get(engine,
+					   HKL_ENGINE_AXIS_NAMES_GET_WRITE);
 
 	res &= DIAG(axes_r != NULL);
 	res &= DIAG(axes_w != NULL);
@@ -426,9 +426,9 @@ static int _axes_names(HklEngine *engine, HklEngineList *engine_list, unsigned i
 	res &= DIAG(_check_axes(axes_w, all_axes));
 }
 
-static void axes_names(void)
+static void axis_names(void)
 {
-	ok(TRUE == TEST_FOREACH_MODE(1, _axes_names), __func__);
+	ok(TRUE == TEST_FOREACH_MODE(1, _axis_names), __func__);
 }
 
 
@@ -510,7 +510,7 @@ int main(int argc, char** argv)
 	capabilities();
 	initialized();
 	modes();
-	axes_names();
+	axis_names();
 	parameters();
 
 	return 0;

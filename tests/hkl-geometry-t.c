@@ -169,7 +169,7 @@ static void set(void)
 	hkl_geometry_free(g);
 }
 
-static void axes_values_get_set(void)
+static void axis_values_get_set(void)
 {
 	unsigned int i;
 	HklGeometry *g;
@@ -187,26 +187,26 @@ static void axes_values_get_set(void)
 
 	/* check set DEFAULT unit */
 	error = NULL;
-	ok(TRUE == hkl_geometry_axes_values_set(g, set_1, ARRAY_SIZE(set_1), HKL_UNIT_DEFAULT, NULL), __func__);
-	ok(TRUE == hkl_geometry_axes_values_set(g, set_1, ARRAY_SIZE(set_1), HKL_UNIT_DEFAULT, &error), __func__);
+	ok(TRUE == hkl_geometry_axis_values_set(g, set_1, ARRAY_SIZE(set_1), HKL_UNIT_DEFAULT, NULL), __func__);
+	ok(TRUE == hkl_geometry_axis_values_set(g, set_1, ARRAY_SIZE(set_1), HKL_UNIT_DEFAULT, &error), __func__);
 	ok(error == NULL, __func__);
 	for(i=0; i<ARRAY_SIZE(set_1); ++i)
 		is_double(set_1[i], hkl_parameter_value_get(darray_item(g->axes, i), HKL_UNIT_DEFAULT), HKL_EPSILON, __func__);
 
 	/* check get DEFAULT unit */
-	hkl_geometry_axes_values_get(g, values, 3, HKL_UNIT_DEFAULT);
+	hkl_geometry_axis_values_get(g, values, 3, HKL_UNIT_DEFAULT);
 	for(i=0; i<ARRAY_SIZE(set_1); ++i)
 		is_double(set_1[i], values[i], HKL_EPSILON, __func__);
 
 	/* check set USER unit */
-	ok(TRUE == hkl_geometry_axes_values_set(g, set_10, ARRAY_SIZE(set_10), HKL_UNIT_USER, NULL), __func__);
-	ok(TRUE == hkl_geometry_axes_values_set(g, set_10, ARRAY_SIZE(set_10), HKL_UNIT_USER, &error), __func__);
+	ok(TRUE == hkl_geometry_axis_values_set(g, set_10, ARRAY_SIZE(set_10), HKL_UNIT_USER, NULL), __func__);
+	ok(TRUE == hkl_geometry_axis_values_set(g, set_10, ARRAY_SIZE(set_10), HKL_UNIT_USER, &error), __func__);
 	ok(error == NULL, __func__);
 	for(i=0; i<ARRAY_SIZE(set_10); ++i)
 		is_double(set_10[i] * HKL_DEGTORAD, hkl_parameter_value_get(darray_item(g->axes, i), HKL_UNIT_DEFAULT), HKL_EPSILON, __func__);
 
 	/* check get USER unit */
-	hkl_geometry_axes_values_get(g, values, 3, HKL_UNIT_USER);
+	hkl_geometry_axis_values_get(g, values, 3, HKL_UNIT_USER);
 	for(i=0; i<ARRAY_SIZE(set_10); ++i)
 		is_double(set_10[i], values[i], HKL_EPSILON, __func__);
 
@@ -415,7 +415,7 @@ int main(int argc, char** argv)
 	get_axis();
 	update();
 	set();
-	axes_values_get_set();
+	axis_values_get_set();
 	distance();
 	is_valid();
 	wavelength();

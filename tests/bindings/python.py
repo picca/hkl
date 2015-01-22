@@ -101,8 +101,8 @@ class TestAPI(unittest.TestCase):
 
         # set the geometry axes values
         values_w = [0, 30, 0, 0, 0, 60]
-        geometry.axes_values_set(values_w, Hkl.UnitEnum.USER)
-        values_r = geometry.axes_values_get(Hkl.UnitEnum.USER)
+        geometry.axis_values_set(values_w, Hkl.UnitEnum.USER)
+        values_r = geometry.axis_values_get(Hkl.UnitEnum.USER)
 
         # check that the read and write values of the geometry are
         # almost equals
@@ -110,8 +110,8 @@ class TestAPI(unittest.TestCase):
             self.assertAlmostEqual(r, w)
 
         # check that we can access the axes
-        axes_names = geometry.axes_names_get()
-        for name in axes_names:
+        axis_names = geometry.axis_names_get()
+        for name in axis_names:
             axis = geometry.axis_get(name)
             axis.min_max_set(0, math.radians(180), Hkl.UnitEnum.USER)
             v = axis.axis_v_get()
@@ -130,7 +130,7 @@ class TestAPI(unittest.TestCase):
         factory = Hkl.factories()['K6C']
         geometry = factory.create_new_geometry()
         values_w = [0., 30., 0., 0., 0., 60.]
-        geometry.axes_values_set(values_w, Hkl.UnitEnum.USER)
+        geometry.axis_values_set(values_w, Hkl.UnitEnum.USER)
 
         sample = Hkl.Sample.new("toto")
         lattice = sample.lattice_get()
@@ -144,7 +144,7 @@ class TestAPI(unittest.TestCase):
 
         # get the hkl engine and do a computation
         hkl = engines.engine_get_by_name("hkl")
-        values = hkl.pseudo_axes_values_get(Hkl.UnitEnum.USER)
+        values = hkl.pseudo_axis_values_get(Hkl.UnitEnum.USER)
 
         # check for all modes
         for mode in hkl.modes_names_get():
@@ -153,7 +153,7 @@ class TestAPI(unittest.TestCase):
         # set the hkl engine and get the results
         for _ in range(100):
             try:
-                solutions = hkl.pseudo_axes_values_set(values,
+                solutions = hkl.pseudo_axis_values_set(values,
                                                        Hkl.UnitEnum.USER)
                 self.assertTrue(type(solutions) is Hkl.GeometryList)
                 for item in solutions.items():
@@ -167,12 +167,12 @@ class TestAPI(unittest.TestCase):
         for engine in engines.engines_get():
             self.assertTrue(type(engine) is Hkl.Engine)
             self.assertTrue(type(engine.name_get()) is str)
-            self.assertTrue(type(engine.pseudo_axes_names_get()) is list)
+            self.assertTrue(type(engine.pseudo_axis_names_get()) is list)
             self.assertTrue(type(engine.modes_names_get()) is list)
             self.assertTrue(len(engine.modes_names_get()))
             for mode in engine.modes_names_get():
                 self.assertTrue(type(mode) is str)
-            values = engine.pseudo_axes_values_get(Hkl.UnitEnum.USER)
+            values = engine.pseudo_axis_values_get(Hkl.UnitEnum.USER)
             self.assertTrue(type(values) is list)
             for value in values:
                 self.assertTrue(type(value) is float)
@@ -183,9 +183,9 @@ class TestAPI(unittest.TestCase):
                 engine.current_mode_set(mode)
                 parameters = engine.parameters_names_get()
                 self.assertTrue(type(parameters) is list)
-                axes_r = engine.axes_names_get(Hkl.EngineAxesNamesGet.READ)
+                axes_r = engine.axis_names_get(Hkl.EngineAxesNamesGet.READ)
                 self.assertTrue(type(axes_r) is list)
-                axes_w = engine.axes_names_get(Hkl.EngineAxesNamesGet.WRITE)
+                axes_w = engine.axis_names_get(Hkl.EngineAxesNamesGet.WRITE)
                 self.assertTrue(type(axes_w) is list)
 
         # check all the capabilities
@@ -282,7 +282,7 @@ class TestAPI(unittest.TestCase):
         factory = Hkl.factories()['K6C']
         geometry = factory.create_new_geometry()
         values_w = [0., 30., 0., 0., 0., 60.]
-        geometry.axes_values_set(values_w, Hkl.UnitEnum.USER)
+        geometry.axis_values_set(values_w, Hkl.UnitEnum.USER)
 
         sample = Hkl.Sample.new("toto")
 

@@ -19,8 +19,8 @@ delta = geometry.axes()[5]
 # delta.parameter.range.min = 0
 # values_w = [0., -60, 0., 90., 0., 60.]
 values_w = [0., 120, 0., -90., 0., 60.]
-geometry.set_axes_values_unit(values_w)
-axes_names = [axis.name for axis in geometry.axes()]
+geometry.set_axis_values_unit(values_w)
+axis_names = [axis.name for axis in geometry.axes()]
 
 sample = Hkl.Sample.new("toto")
 lattice = sample.lattice_get()
@@ -57,7 +57,7 @@ trajectories = []
 for idx, h, k, l in zip(range(n), h, k, l):
     try:
         hkl.set_values_unit([h, k, l])
-        # print geometry.get_axes_values_unit()
+        # print geometry.get_axis_values_unit()
         if engines.geometries.len != 4:
             print idx, h, k, l
         for i, item in enumerate(engines.geometries().items()):
@@ -65,7 +65,7 @@ for idx, h, k, l in zip(range(n), h, k, l):
                 trajectories[i]
             except IndexError:
                 trajectories.append([])
-            values = item.geometry.get_axes_values_unit()
+            values = item.geometry.get_axis_values_unit()
             print values, geometry.distance(item.geometry)
             trajectories[i].append(values)
         print
