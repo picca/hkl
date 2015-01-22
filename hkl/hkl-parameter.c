@@ -34,6 +34,7 @@
 /****************/
 
 static int hkl_parameter_init(HklParameter *self, const char *name,
+			      const char *description,
 			      double min, double value, double max,
 			      int fit, int changed,
 			      const HklUnit *unit, const HklUnit *punit)
@@ -41,8 +42,10 @@ static int hkl_parameter_init(HklParameter *self, const char *name,
 	if (min <= value
 	    && value <= max
 	    && strcmp(name, "")
+	    && strcmp(description, "")
 	    && hkl_unit_compatible(unit, punit)) {
 		self->name = name;
+		self->description = description;
 		self->range.min = min;
 		self->range.max = max;
 		self->_value = value;
@@ -72,7 +75,7 @@ static int hkl_parameter_init(HklParameter *self, const char *name,
  *
  * Returns:
  **/
-HklParameter *hkl_parameter_new(const char *name,
+HklParameter *hkl_parameter_new(const char *name, const char *description,
 				double min, double value, double max,
 				int fit, int changed,
 				const HklUnit *unit, const HklUnit *punit)
@@ -82,7 +85,8 @@ HklParameter *hkl_parameter_new(const char *name,
 	self = HKL_MALLOC(HklParameter);
 
 	if (!hkl_parameter_init(self,
-				name, min, value, max,
+				name, description,
+				min, value, max,
 				fit, changed,
 				unit, punit)) {
 		free(self);
@@ -393,4 +397,15 @@ const HklVector *hkl_parameter_axis_v_get(const HklParameter *self)
 const HklQuaternion *hkl_parameter_quaternion_get(const HklParameter *self)
 {
 	return self->ops->quaternion_get(self);
+}
+
+/**
+ * hkl_parameter_description_get:
+ * @self: the this ptr
+ *
+ * Returns: the #HklParameter description
+ **/
+const char *hkl_parameter_description_get(const HklParameter *self)
+{
+	return self->description;
 }

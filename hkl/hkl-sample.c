@@ -345,15 +345,18 @@ HklSample* hkl_sample_new(const char *name)
 	hkl_matrix_init(&self->U,1, 0, 0, 0, 1, 0, 0, 0, 1);
 	hkl_matrix_init(&self->UB,1, 0, 0, 0, 1, 0, 0, 0, 1);
 
-	self->ux = hkl_parameter_new("ux", -M_PI, 0., M_PI,
+	self->ux = hkl_parameter_new("ux", "the sample rotation around $\vec{x}$",
+				     -M_PI, 0., M_PI,
 				     TRUE, TRUE,
 				     &hkl_unit_angle_rad,
 				     &hkl_unit_angle_deg);
-	self->uy = hkl_parameter_new("uy", -M_PI, 0., M_PI,
+	self->uy = hkl_parameter_new("uy", "the sample rotation around $\vec{y}$",
+				     -M_PI, 0., M_PI,
 				     TRUE, TRUE,
 				     &hkl_unit_angle_rad,
 				     &hkl_unit_angle_deg);
-	self->uz = hkl_parameter_new("uz", -M_PI, 0., M_PI,
+	self->uz = hkl_parameter_new("uz", "the sample rotation around $\vec{z}$",
+				     -M_PI, 0., M_PI,
 				     TRUE, TRUE,
 				     &hkl_unit_angle_rad,
 				     &hkl_unit_angle_deg);

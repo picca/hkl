@@ -94,27 +94,36 @@ HklLattice *hkl_lattice_new(double a, double b, double c,
 
 	self = HKL_MALLOC(HklLattice);
 
-	self->a = hkl_parameter_new("a", 0, a, a+10,
+	self->a = hkl_parameter_new("a", "The length of the first lattice vector",
+				    0, a, a+10,
 				    TRUE, TRUE,
 				    &hkl_unit_length_nm,
 				    &hkl_unit_length_nm);
-	self->b = hkl_parameter_new("b", 0, b, b+10,
+	self->b = hkl_parameter_new("b", "The length of the second lattice vector",
+				    0, b, b+10,
 				    TRUE, TRUE,
 				    &hkl_unit_length_nm,
 				    &hkl_unit_length_nm);
-	self->c = hkl_parameter_new("c", 0, c, c+10,
+	self->c = hkl_parameter_new("c", "The length of the third lattice vector",
+				    0, c, c+10,
 				    TRUE, TRUE,
 				    &hkl_unit_length_nm,
 				    &hkl_unit_length_nm);
-	self->alpha = hkl_parameter_new("alpha", -M_PI, alpha, M_PI,
+	self->alpha = hkl_parameter_new("alpha",
+					"The angle between the second and third lattice vector",
+					-M_PI, alpha, M_PI,
 					TRUE, TRUE,
 					&hkl_unit_angle_rad,
 					&hkl_unit_angle_deg);
-	self->beta = hkl_parameter_new("beta", -M_PI, beta, M_PI,
+	self->beta = hkl_parameter_new("beta",
+					"The angle between the first and third lattice vector",
+				       -M_PI, beta, M_PI,
 				       TRUE, TRUE,
 				       &hkl_unit_angle_rad,
 				       &hkl_unit_angle_deg);
-	self->gamma = hkl_parameter_new("gamma", -M_PI, gamma, M_PI,
+	self->gamma = hkl_parameter_new("gamma",
+					"The angle between the first and second lattice vector",
+					-M_PI, gamma, M_PI,
 					TRUE, TRUE,
 					&hkl_unit_angle_rad,
 					&hkl_unit_angle_deg);

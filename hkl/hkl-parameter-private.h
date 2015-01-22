@@ -37,6 +37,7 @@ typedef struct _HklParameterOperations HklParameterOperations;
 
 struct _HklParameter {
 	const char *name;
+	const char *description;
 	HklInterval range;
 	double _value;
 	const HklUnit *unit;
@@ -46,7 +47,7 @@ struct _HklParameter {
 	const HklParameterOperations *ops;
 };
 
-#define HKL_PARAMETER_DEFAULTS .name="dummy", .range={.min=0, .max=0}, ._value=0, .unit=NULL, .punit=NULL, .fit=TRUE, .changed=TRUE, .ops = &hkl_parameter_operations_defaults
+#define HKL_PARAMETER_DEFAULTS .name="dummy", .description="no description", .range={.min=0, .max=0}, ._value=0, .unit=NULL, .punit=NULL, .fit=TRUE, .changed=TRUE, .ops = &hkl_parameter_operations_defaults
 
 #define HKL_PARAMETER_DEFAULTS_ANGLE HKL_PARAMETER_DEFAULTS, .range={.min=-M_PI, .max=M_PI}, .unit = &hkl_unit_angle_rad, .punit = &hkl_unit_angle_deg
 
@@ -204,7 +205,7 @@ static HklParameterOperations hkl_parameter_operations_defaults = {
 };
 
 
-extern HklParameter *hkl_parameter_new(const char *name,
+extern HklParameter *hkl_parameter_new(const char *name, const char *description,
 				       double min, double value, double max,
 				       int fit, int changed,
 				       const HklUnit *unit,

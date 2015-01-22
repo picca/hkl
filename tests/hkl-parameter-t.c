@@ -29,24 +29,24 @@ static void new(void)
 {
 	HklParameter *p;
 
-	ok(NULL == hkl_parameter_new("", 2, 1, 3,
+	ok(NULL == hkl_parameter_new("", "", 2, 1, 3,
 				     FALSE, TRUE,
 				     &hkl_unit_angle_rad, &hkl_unit_angle_deg), __func__);
-	ok(NULL == hkl_parameter_new("", 2, 1, 3,
+	ok(NULL == hkl_parameter_new("", "", 2, 1, 3,
 				     FALSE, TRUE,
 				     &hkl_unit_angle_rad, &hkl_unit_angle_deg), __func__);
-	ok(NULL == hkl_parameter_new("", 2, 1, 3,
+	ok(NULL == hkl_parameter_new("", "", 2, 1, 3,
 				     FALSE, TRUE,
 				     &hkl_unit_angle_rad, &hkl_unit_angle_deg), __func__);
-	ok(NULL == hkl_parameter_new("toto", 2, 1, 3,
+	ok(NULL == hkl_parameter_new("toto", "", 2, 1, 3,
 				     FALSE, TRUE,
 				     &hkl_unit_angle_rad, &hkl_unit_angle_deg), __func__);
 
-	ok(NULL == hkl_parameter_new("toto", 1, 2, 3,
+	ok(NULL == hkl_parameter_new("toto", "", 1, 2, 3,
 				     FALSE, TRUE,
 				     &hkl_unit_angle_rad, &hkl_unit_length_nm), __func__);
 
-	p = hkl_parameter_new("toto", 1, 2, 3,
+	p = hkl_parameter_new("toto", "no description", 1, 2, 3,
 			      FALSE, TRUE,
 			      &hkl_unit_angle_rad, &hkl_unit_angle_deg);
 	ok(0 == !p, __func__);
@@ -65,13 +65,14 @@ static void new_copy(void)
 {
 	HklParameter *copy, *p;
 
-	p = hkl_parameter_new("toto", 1, 2, 3,
+	p = hkl_parameter_new("toto", "no description", 1, 2, 3,
 			      FALSE, TRUE,
 			      &hkl_unit_angle_rad, &hkl_unit_angle_deg);
 
 	copy = hkl_parameter_new_copy(p);
 
 	ok(copy->name == p->name, __func__);
+	ok(copy->description == p->description, __func__);
 	is_double(copy->range.min, p->range.min, HKL_EPSILON, __func__);
 	is_double(copy->_value, p->_value, HKL_EPSILON, __func__);
 	is_double(copy->range.max, p->range.max, HKL_EPSILON, __func__);
@@ -88,22 +89,22 @@ static void init(void)
 {
 	HklParameter *p;
 
-	ok(NULL == hkl_parameter_new("", 2, 1, 3,
+	ok(NULL == hkl_parameter_new("", "no description", 2, 1, 3,
 				     FALSE, TRUE,
 				     &hkl_unit_angle_rad, &hkl_unit_angle_deg), __func__);
-	ok(NULL == hkl_parameter_new("", 2, 1, 3,
+	ok(NULL == hkl_parameter_new("", "no description", 2, 1, 3,
 				     FALSE, TRUE,
 				     &hkl_unit_angle_rad, &hkl_unit_angle_deg), __func__);
-	ok(NULL == hkl_parameter_new("", 2, 1, 3,
+	ok(NULL == hkl_parameter_new("", "no description", 2, 1, 3,
 				     FALSE, TRUE,
 				     &hkl_unit_angle_rad, &hkl_unit_angle_deg), __func__);
-	ok(NULL == hkl_parameter_new("toto", 2, 1, 3,
+	ok(NULL == hkl_parameter_new("toto", "no description", 2, 1, 3,
 				     FALSE, TRUE,
 				     &hkl_unit_angle_rad, &hkl_unit_angle_deg), __func__);
-	ok(NULL == hkl_parameter_new("toto", 1, 2, 3,
+	ok(NULL == hkl_parameter_new("toto", "no description", 1, 2, 3,
 				     FALSE, TRUE,
 				     &hkl_unit_angle_rad, &hkl_unit_length_nm), __func__);
-	p = hkl_parameter_new("toto", 1, 2, 3,
+	p = hkl_parameter_new("toto", "no description", 1, 2, 3,
 			      FALSE, TRUE,
 			      &hkl_unit_angle_rad, &hkl_unit_angle_deg);
 	ok(NULL != p, __func__);
@@ -116,7 +117,7 @@ static void is_valid(void)
 	HklParameter *p;
 	GError *error;
 
-	p = hkl_parameter_new("toto", 1, 2, 3,
+	p = hkl_parameter_new("toto", "no description", 1, 2, 3,
 			      FALSE, TRUE,
 			      &hkl_unit_angle_rad, &hkl_unit_angle_deg);
 	ok(TRUE == hkl_parameter_is_valid(p), __func__);
@@ -135,7 +136,7 @@ static void min_max(void)
 	double min, max;
 	GError *error;
 
-	p = hkl_parameter_new("toto", 1, 2, 3,
+	p = hkl_parameter_new("toto", "no description", 1, 2, 3,
 			      FALSE, TRUE,
 			      &hkl_unit_angle_rad, &hkl_unit_angle_deg);
 	hkl_parameter_min_max_get(p, &min, &max, HKL_UNIT_DEFAULT);
@@ -164,19 +165,20 @@ static void getter(void)
 {
 	HklParameter *p;
 
-	p = hkl_parameter_new("toto", 1, 2, 3,
+	p = hkl_parameter_new("toto", "no description", 1, 2, 3,
 			      FALSE, TRUE,
 			      &hkl_unit_angle_rad, &hkl_unit_angle_deg);
 
 	ok(NULL == hkl_parameter_axis_v_get(p), __func__);
 	ok(NULL == hkl_parameter_quaternion_get(p), __func__);
+	ok(NULL != hkl_parameter_description_get(p), __func__);
 
 	hkl_parameter_free(p);
 }
 
 int main(int argc, char** argv)
 {
-	plan(42);
+	plan(44);
 
 	new();
 	new_copy();

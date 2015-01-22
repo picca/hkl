@@ -192,6 +192,8 @@ HKLAPI const HklVector *hkl_parameter_axis_v_get(const HklParameter *self) HKL_A
 
 HKLAPI const HklQuaternion *hkl_parameter_quaternion_get(const HklParameter *self) HKL_ARG_NONNULL(1);
 
+HKLAPI const char *hkl_parameter_description_get(const HklParameter *self) HKL_ARG_NONNULL(1);
+
 /************/
 /* Detector */
 /************/
