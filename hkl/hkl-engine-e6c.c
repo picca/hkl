@@ -174,13 +174,9 @@ static HklMode *double_diffraction_vertical(void)
 	static const char* axes_r[] = {"mu", "omega", "chi", "phi", "gamma", "delta"};
 	static const char* axes_w[] = {"omega", "chi", "phi", "delta"};
 	static const HklFunction *functions[] = {&double_diffraction_func};
-	static const HklParameter parameters[] = {
-		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, ._value = 1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, ._value = 1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, ._value = 1,},
-	};
 	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes_r, axes_w, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes_r, axes_w,
+					       functions, double_diffraction_parameters),
 	};
 
 	return hkl_mode_auto_new(&info,
@@ -207,13 +203,9 @@ static HklMode *double_diffraction_horizontal(void)
 	static const char* axes_r[] = {"mu", "omega", "chi", "phi", "gamma", "delta"};
 	static const char* axes_w[] = {"mu", "chi", "phi", "gamma"};
 	static const HklFunction *functions[] = {&double_diffraction_func};
-	static const HklParameter parameters[] = {
-		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, ._value = 1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, ._value = 1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, ._value = 1,},
-	};
 	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes_r, axes_w, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes_r, axes_w,
+					       functions, double_diffraction_parameters),
 	};
 
 	return hkl_mode_auto_new(&info,
@@ -396,4 +388,3 @@ static HklEngineList *hkl_engine_list_new_eulerian6C(const HklFactory *factory)
 }
 
 REGISTER_DIFFRACTOMETER(eulerian6C, "E6C", HKL_GEOMETRY_EULERIAN6C_DESCRIPTION);
-

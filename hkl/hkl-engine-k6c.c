@@ -483,13 +483,9 @@ static HklMode *double_diffraction_vertical(void)
 	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "gamma", "delta"};
 	static const char* axes_w[] = {"komega", "kappa", "kphi", "delta"};
 	static const HklFunction *functions[] = {&double_diffraction_func};
-	static const HklParameter parameters[] = {
-		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, ._value = 1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, ._value = 1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, ._value = 1,},
-	};
 	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes_r, axes_w, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes_r, axes_w,
+					       functions, double_diffraction_parameters),
 	};
 
 	return hkl_mode_auto_new(&info,
@@ -547,13 +543,9 @@ static HklMode *double_diffraction_horizontal(void)
 	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "gamma", "delta"};
 	static const char* axes_w[] = {"mu", "komega", "kappa", "kphi", "gamma"};
 	static const HklFunction *functions[] = {&double_diffraction_h};
-	static const HklParameter parameters[] = {
-		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, ._value = 1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, ._value = 1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, ._value = 1,},
-	};
 	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes_r, axes_w, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes_r, axes_w,
+					       functions, double_diffraction_parameters),
 	};
 
 	return hkl_mode_auto_new(&info,
@@ -752,13 +744,9 @@ static HklMode *double_diffraction_vertical_soleil_sirius_kappa(void)
 	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "delta", "gamma"};
 	static const char* axes_w[] = {"komega", "kappa", "kphi", "gamma"};
 	static const HklFunction *functions[] = {&double_diffraction_func};
-	static const HklParameter parameters[] = {
-		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, ._value = 1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, ._value = 1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, ._value = 1,},
-	};
 	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO_WITH_PARAMS("double_diffraction_vertical", axes_r, axes_w, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS("double_diffraction_vertical", axes_r, axes_w,
+					       functions, double_diffraction_parameters),
 	};
 
 	return hkl_mode_auto_new(&info,
@@ -816,13 +804,9 @@ static HklMode *double_diffraction_horizontal_soleil_sirius_kappa(void)
 	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "delta", "gamma"};
 	static const char* axes_w[] = {"mu", "komega", "kappa", "kphi", "delta"};
 	static const HklFunction *functions[] = {&double_diffraction_h};
-	static const HklParameter parameters[] = {
-		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, ._value = 1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, ._value = 1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, ._value = 1,},
-	};
 	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO_WITH_PARAMS("double_diffraction_horizontal", axes_r, axes_w, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS("double_diffraction_horizontal", axes_r, axes_w,
+					       functions, double_diffraction_parameters),
 	};
 
 	return hkl_mode_auto_new(&info,
