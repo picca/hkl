@@ -186,7 +186,10 @@ static HklMode *mode_eulerians()
 	HklMode *mode;
 	static const char *axes[] = {"komega", "kappa", "kphi"};
 	static const HklParameter parameters[] = {
-		{HKL_PARAMETER_DEFAULTS, .name="solutions", .range = {.max = 1}, ._value = 1,},
+		{ HKL_PARAMETER_DEFAULTS,.name = "solutions", ._value = 1,
+		  .description = "(0/1) to select the first or second solution",
+		  .range = { .max = 1 },
+		},
 	};
 	static const HklModeInfo info = {
 		HKL_MODE_INFO_WITH_PARAMS("eulerians", axes, axes, parameters),
