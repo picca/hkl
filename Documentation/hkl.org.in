@@ -765,8 +765,8 @@ git clone git://repo.or.cz/hkl.git
    #+END_QUOTE
 * Todo
 ** hkl
-*** TODO [/] PetraIII
-**** TODO computatin problem
+*** TODO [0/1] PetraIII
+**** TODO computation problem
      Dear Teresa,
 
      Using the prruptest.txt ubmatrix I see that the value of psi is
@@ -817,7 +817,10 @@ git clone git://repo.or.cz/hkl.git
      Delta       Theta          Chi         Phi         Mu       Gamma
      45.77575    22.88783     90.00000   182.85400    0.00000    -0.00000
 
-     I need to understand the meaning of Azimuth (h2 ,k2, l2) ?
+     where:
+
+     Azimuth (Psi - calculated) is the value of the pseudomotor psi.
+     Azimuth (Psi - set) is the value set in the parameter psi of the current mode.
      
 *** TODO [2/4] HklParameter
     - [X] method to use min/max to check for the validity
