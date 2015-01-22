@@ -410,7 +410,7 @@ static void get_reflections_xxx_angle(void)
 		  HKL_EPSILON, __func__);
 
 	is_double(90 * HKL_DEGTORAD,
-		  hkl_sample_get_reflection_mesured_angle(sample, r0, r1),
+		  hkl_sample_get_reflection_measured_angle(sample, r0, r1),
 		  HKL_EPSILON, __func__);
 
 	is_double(90 * HKL_DEGTORAD,
@@ -418,7 +418,7 @@ static void get_reflections_xxx_angle(void)
 		  HKL_EPSILON, __func__);
 
 	is_double(90 * HKL_DEGTORAD,
-		  hkl_sample_get_reflection_mesured_angle(sample, r1, r2),
+		  hkl_sample_get_reflection_measured_angle(sample, r1, r2),
 		  HKL_EPSILON, __func__);
 
 	hkl_sample_free(sample);

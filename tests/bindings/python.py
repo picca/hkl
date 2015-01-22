@@ -207,7 +207,7 @@ class TestAPI(unittest.TestCase):
                 self.assertTrue(True == engine.initialized_get())
 
     @unittest.skip("for testing figures")
-    def test_doc_exemple(self):
+    def test_doc_example(self):
         # execfile("../../Documentation/sphinx/source/bindings/python.py")
         execfile(
             "../../Documentation/sphinx/source/pyplots/trajectory_simple.py")
@@ -296,7 +296,7 @@ class TestAPI(unittest.TestCase):
         self.assertTrue(r2.hkl_get() == (1.0, 0.0, 1.0))
 
         # compute the angles
-        sample.get_reflection_mesured_angle(r1, r2)
+        sample.get_reflection_measured_angle(r1, r2)
         sample.get_reflection_theoretical_angle(r1, r2)
 
         # remove all the reflections

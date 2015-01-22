@@ -784,16 +784,16 @@ int hkl_sample_affine(HklSample *self, GError **error)
 }
 
 /**
- * hkl_sample_get_reflection_mesured_angle:
+ * hkl_sample_get_reflection_measured_angle:
  * @self: the this ptr
  * @r1: the first #HklSampleReflection
  * @r2: the second #HklSampleReflection
  *
- * get the mesured angles between two #HklSampleReflection
+ * get the measured angles between two #HklSampleReflection
  *
- * Returns: the mesured angle beetween them
+ * Returns: the measured angle beetween them
  **/
-double hkl_sample_get_reflection_mesured_angle(const HklSample *self,
+double hkl_sample_get_reflection_measured_angle(const HklSample *self,
 					       const HklSampleReflection *r1,
 					       const HklSampleReflection *r2)
 {
