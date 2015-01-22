@@ -287,7 +287,9 @@ HklEngine *hkl_engine_psi_new(void)
 {
 	HklEnginePsi *self;
 	static const HklPseudoAxis psi = {
-		.parameter = { HKL_PARAMETER_DEFAULTS_ANGLE, .name = "psi"}
+		.parameter = { HKL_PARAMETER_DEFAULTS_ANGLE, .name = "psi",
+			       .description = "angle between the reference vector and the diffraction plan",
+		},
 	};
 	static const HklPseudoAxis *pseudo_axes[] = {&psi};
 	static const HklEngineInfo info = {

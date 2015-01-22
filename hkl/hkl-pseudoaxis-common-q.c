@@ -112,7 +112,10 @@ static int get_q_real(HklMode *self,
 /* not declared in the constructor as it is used also in the q2 pseudo
  * axis engine */
 static const HklPseudoAxis q = {
-	.parameter = {HKL_PARAMETER_DEFAULTS, .name="q", .range={.max=1}},
+	.parameter = { HKL_PARAMETER_DEFAULTS, .name="q",
+		       .description = "the norm of $\vec{q}$",
+		       .range = { .max=1 },
+	},
 };
 
 static HklMode *mode_q(void)
@@ -253,7 +256,9 @@ static HklMode *mode_q2(void)
 }
 
 static const HklPseudoAxis alpha = {
-	.parameter = {HKL_PARAMETER_DEFAULTS_ANGLE, .name="alpha"},
+	.parameter = { HKL_PARAMETER_DEFAULTS_ANGLE, .name = "alpha",
+		       .description = "angle of the projection of $\vec{q}$ on the yOz plan and $\vec{y}$",
+	},
 };
 
 static void hkl_engine_q2_free_real(HklEngine *base)
@@ -397,9 +402,21 @@ static HklMode *mode_qper_qpar(void)
 	static const char* axes[] = {"gamma", "delta"};
 	static const HklFunction *functions[] = {&qper_qpar_func};
 	static const HklParameter parameters[] = {
-		{HKL_PARAMETER_DEFAULTS, .name = "x", .range = {.min=-1, .max=1}, ._value = 0,},
-		{HKL_PARAMETER_DEFAULTS, .name = "y", .range = {.min=-1, .max=1}, ._value = 1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "z", .range = {.min=-1, .max=1}, ._value = 0,},
+		{
+			HKL_PARAMETER_DEFAULTS,	.name = "x", ._value = 0,
+			.description = "the first coordinate of the surface vector",
+			.range = { .min=-1, .max=1 },
+		},
+		{
+			HKL_PARAMETER_DEFAULTS, .name = "y", ._value = 1,
+			.description = "the second coordinate of the surface vector",
+			.range = { .min=-1, .max=1 },
+		},
+		{
+			HKL_PARAMETER_DEFAULTS, .name = "z", ._value = 0,
+			.description = "the third coordinate of the surface vector",
+			.range = { .min=-1, .max=1 },
+		},
 	};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO_WITH_PARAMS("qper_qpar", axes, axes, functions, parameters),
@@ -422,10 +439,16 @@ static void hkl_engine_qper_qpar_free_real(HklEngine *base)
 HklEngine *hkl_engine_qper_qpar_new(void)
 {
 	static const HklPseudoAxis qper = {
-		.parameter = {HKL_PARAMETER_DEFAULTS, .name="qper", .range={.min=-1, .max=1}},
+		.parameter = { HKL_PARAMETER_DEFAULTS, .name = "qper",
+			       .description = "perpendicular component of $\vec{q}$ along the normal of the sample surface",
+			       .range = { .min=-1, .max=1 },
+		},
 	};
 	static const HklPseudoAxis qpar = {
-		.parameter = {HKL_PARAMETER_DEFAULTS, .name="qpar", .range={.min=-1, .max=1}},
+		.parameter = { HKL_PARAMETER_DEFAULTS, .name = "qpar",
+			       .description = "parallel component of $\vec{q}$",
+			       .range = { .min=-1, .max=1 },
+		},
 	};
 	static const HklPseudoAxis *pseudo_axes[] = {&qper, &qpar};
 	static const HklEngineInfo info = {

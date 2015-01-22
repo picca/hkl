@@ -760,13 +760,22 @@ HklEngine *hkl_engine_hkl_new(void)
 {
 	HklEngineHkl *self;
 	static const HklPseudoAxis h = {
-		.parameter = { HKL_PARAMETER_DEFAULTS, .name = "h", .range={.min=-1, .max=1}}
+		.parameter = { HKL_PARAMETER_DEFAULTS, .name = "h",
+			       .description = "h coordinate of the diffracting plan",
+			       .range = { .min=-1, .max=1 },
+		},
 	};
 	static const HklPseudoAxis k = {
-		.parameter = { HKL_PARAMETER_DEFAULTS, .name = "k", .range={.min=-1, .max=1}}
+		.parameter = { HKL_PARAMETER_DEFAULTS, .name = "k",
+			       .description = "k coordinate of the deiffracting plan",
+			       .range = { .min=-1, .max=1 },
+		},
 	};
 	static const HklPseudoAxis l = {
-		.parameter = { HKL_PARAMETER_DEFAULTS, .name = "l", .range={.min=-1, .max=1}}
+		.parameter = { HKL_PARAMETER_DEFAULTS, .name = "l",
+			       .description = "l coordinate of the diffracting plan",
+			       .range={ .min=-1, .max=1 },
+		},
 	};
 	static const HklPseudoAxis *pseudo_axes[] = {&h, &k, &l};
 	static HklEngineInfo info = {

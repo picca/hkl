@@ -218,13 +218,19 @@ HklEngine *hkl_engine_eulerians_new(void)
 	HklEngineEulerians *self;
 	HklMode *mode;
 	static const HklPseudoAxis omega = {
-		.parameter = { HKL_PARAMETER_DEFAULTS_ANGLE, .name = "omega"}
+		.parameter = { HKL_PARAMETER_DEFAULTS_ANGLE, .name = "omega",
+			       .description = "omega equivalent for a four circle eulerian geometry",
+		}
 	};
 	static const HklPseudoAxis chi = {
-		.parameter = { HKL_PARAMETER_DEFAULTS_ANGLE, .name = "chi"}
+		.parameter = { HKL_PARAMETER_DEFAULTS_ANGLE, .name = "chi",
+			       .description = "chi equivalent for a four circle eulerian geometry",
+		}
 	};
 	static const HklPseudoAxis phi = {
-		.parameter = {HKL_PARAMETER_DEFAULTS_ANGLE, .name = "phi"}
+		.parameter = { HKL_PARAMETER_DEFAULTS_ANGLE, .name = "phi",
+			       .description = "phi equivalent for a four circle eulerian geometry",
+		}
 	};
 	static const HklPseudoAxis *pseudo_axes[] = {&omega, &chi, &phi};
 	static HklEngineInfo info = {
