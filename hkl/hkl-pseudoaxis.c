@@ -405,7 +405,7 @@ int hkl_engine_parameters_values_set(HklEngine *self,
 }
 
 /**
- * hkl_engine_parameter_get: (skip)
+ * hkl_engine_parameter_get:
  * @self: the this ptr
  * @name: the name of the expected parameter
  * @error: return location for a GError, or NULL

@@ -187,6 +187,9 @@ class TestAPI(unittest.TestCase):
                 self.assertTrue(type(axes_r) is list)
                 axes_w = engine.axis_names_get(Hkl.EngineAxesNamesGet.WRITE)
                 self.assertTrue(type(axes_w) is list)
+                for parameter in parameters:
+                    p = engine.parameter_get(parameter)
+                    self.assertTrue(type(p.description_get()) is str)
 
         # check all the capabilities
         for engine in engines.engines_get():
