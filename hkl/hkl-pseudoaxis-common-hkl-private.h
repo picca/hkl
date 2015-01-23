@@ -146,3 +146,29 @@ static const HklParameter double_diffraction_parameters[] = {
 			}
 
 static const HklParameter psi_constant_parameters[] = { PSI_CONSTANT_PARAMETERS(1, 1, 1, 0) };
+
+static const HklParameter constant_incidence_parameters[] = {
+	{
+		HKL_PARAMETER_DEFAULTS, .name = "x", ._value = 1,
+		.description = "the x coordinate of the surface $\vec{n}$",
+		.range = { .min=-1, .max=1 },
+	},
+	{
+		HKL_PARAMETER_DEFAULTS, .name = "y", ._value = 1,
+		.description = "the y coordinate of the surface $\vec{n}$",
+		.range = { .min=-1, .max=1 },
+	},
+	{
+		HKL_PARAMETER_DEFAULTS, .name = "z", ._value = 1,
+		.description = "the z coordinate of the surface $\vec{n}$",
+		.range = { .min=-1, .max=1 },
+	},
+	{
+		HKL_PARAMETER_DEFAULTS_ANGLE, .name = "incidence",
+		.description = "expected incidence of the incoming beam $\vec{k_i}$ on the surface."
+	},
+	{
+		HKL_PARAMETER_DEFAULTS_ANGLE, .name = "azimuth", ._value = M_PI_2,
+		.description = "expected azimuth",
+	},
+};

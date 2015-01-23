@@ -573,15 +573,9 @@ static HklMode *constant_incidence(void)
 	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "gamma", "delta"};
 	static const char* axes_w[] = {"komega", "kappa", "kphi", "gamma", "delta"};
 	static const HklFunction *functions[] = {&constant_incidence_func};
-	static const HklParameter parameters[] = {
-		{HKL_PARAMETER_DEFAULTS, .name = "x", .range = {.min=-1, .max=1}, ._value = 1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "y", .range = {.min=-1, .max=1}, ._value = 1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "z", .range = {.min=-1, .max=1}, ._value = 1,},
-		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "incidence"},
-		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "azimuth", ._value = M_PI_2,},
-	};
 	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes_r, axes_w, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes_r, axes_w,
+					       functions, constant_incidence_parameters),
 	};
 
 	return hkl_mode_auto_with_init_new(&info,
@@ -829,15 +823,9 @@ static HklMode *constant_incidence_soleil_sirius_kappa(void)
 	static const char* axes_r[] = {"mu", "komega", "kappa", "kphi", "delta", "gamma"};
 	static const char* axes_w[] = {"komega", "kappa", "kphi", "delta", "gamma"};
 	static const HklFunction *functions[] = {&constant_incidence_func};
-	static const HklParameter parameters[] = {
-		{HKL_PARAMETER_DEFAULTS, .name = "x", .range = {.min=-1, .max=1}, ._value = 1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "y", .range = {.min=-1, .max=1}, ._value = 1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "z", .range = {.min=-1, .max=1}, ._value = 1,},
-		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "incidence"},
-		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "azimuth", ._value = M_PI_2,},
-	};
 	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO_WITH_PARAMS("constant_incidence", axes_r, axes_w, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS("constant_incidence", axes_r, axes_w,
+					       functions, constant_incidence_parameters),
 	};
 
 	return hkl_mode_auto_with_init_new(&info,
