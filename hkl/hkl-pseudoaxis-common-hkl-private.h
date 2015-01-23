@@ -123,3 +123,25 @@ static const HklParameter double_diffraction_parameters[] = {
 		.range = {.min=-1, .max=1},
 	},
 };
+
+static const HklParameter psi_constant_parameters[] = {
+	{
+		HKL_PARAMETER_DEFAULTS, .name = "h2", ._value = 1,
+		.description = "h coordinate of the reference plan",
+		.range = { .min=-1, .max=1 },
+	},
+	{
+		HKL_PARAMETER_DEFAULTS, .name = "k2", ._value = 1,
+		.description = "k coordinate of the reference plan",
+		.range = { .min=-1, .max=1 },
+	},
+	{
+		HKL_PARAMETER_DEFAULTS, .name = "l2", ._value = 1,
+		.description = "l coordinate of the reference plan",
+		.range = { .min=-1, .max=1 },
+	},
+	{
+		HKL_PARAMETER_DEFAULTS_ANGLE, .name = "psi",
+		.description = "expected angle between the reference and the diffraction plans",
+	},
+};
