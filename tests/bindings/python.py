@@ -183,10 +183,13 @@ class TestAPI(unittest.TestCase):
                 engine.current_mode_set(mode)
                 parameters = engine.parameters_names_get()
                 self.assertTrue(type(parameters) is list)
+                [self.assertTrue(type(_) is str) for _ in parameters]
                 axes_r = engine.axis_names_get(Hkl.EngineAxesNamesGet.READ)
                 self.assertTrue(type(axes_r) is list)
+                [self.assertTrue(type(_) is str) for _ in axes_r]
                 axes_w = engine.axis_names_get(Hkl.EngineAxesNamesGet.WRITE)
                 self.assertTrue(type(axes_w) is list)
+                [self.assertTrue(type(_) is str) for _ in axes_w]
                 for parameter in parameters:
                     p = engine.parameter_get(parameter)
                     self.assertTrue(type(p.description_get()) is str)
