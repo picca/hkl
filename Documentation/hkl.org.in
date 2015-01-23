@@ -3,7 +3,7 @@
 #+EMAIL: picca at synchrotron dash soleil dot fr
 #+LANGUAGE: en
 #+HTML_MATHJAX: path:"/usr/share/javascript/mathjax/MathJax.js"
-#+STYLE: <style>table.center {margin-left:auto; margin- right:auto;}</style> 
+#+STYLE: <style>table.center {margin-left:auto; margin- right:auto;}</style>
 
 * Introduction
   The purpose of the library is to factorise single crystal
@@ -781,14 +781,14 @@ git clone git://repo.or.cz/hkl.git
      Best regards,
 
      Sonia
-     
+
      See below
      p09/door/haspp09.01 [9]: setaz 1 0 0
 
      p09/door/haspp09.01 [10]: wh
 
      Engine: hkl
-     
+
      Mode: psi_constant_vertical
 
      H K L =    0.00000   3.00605  -0.00000
@@ -821,7 +821,39 @@ git clone git://repo.or.cz/hkl.git
 
      Azimuth (Psi - calculated) is the value of the pseudomotor psi.
      Azimuth (Psi - set) is the value set in the parameter psi of the current mode.
-     
+
+   Hi Frederic,
+
+   This is the UB matrix:
+
+   Best regards,
+
+   Sonia
+
+   Created at 2015-01-21 12:35
+
+   Crystal    prruptest
+
+   Wavelength 2.07957463938
+
+   A 8.03656 B 8.03656 C 8.03656
+   Alpha 90.0 Beta 90.0 Gamma 90.0
+
+   R0 0 0.0 1.0 0.0 0 1 0.0 14.8979 90.0 182.854 0.0 29.7959
+   R1 1 1.0 0.0 1.0 0 1 0.0 14.8979 0.0 182.854 0.0 29.7959
+
+   Mode psi_constant_vertical
+
+   PsiRef 0.0 0.0 1.0
+
+   U00 -0.580 U01 0.000 U02 0.525
+   U10 0.000 U11 0.782 U12 -0.000
+   U20 -0.525 U21 -0.000 U22 -0.580
+
+   Ux 179.999952315 Uy 42.14605 Uz -179.999932647
+
+   SaveDirectory /home/p09user/crystals/
+
 *** TODO [2/4] HklParameter
     - [X] method to use min/max to check for the validity
     - [X] add a method to get the axis_v and quaternion of the HklAxis
@@ -917,4 +949,3 @@ git clone git://repo.or.cz/hkl.git
 
 ** packaging
 *** TODO add a .spec file for rpm generation.
-
