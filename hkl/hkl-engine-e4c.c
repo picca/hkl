@@ -156,13 +156,9 @@ static HklMode *psi(void)
 {
 	static const char *axes[] = {"omega", "chi", "phi", "tth"};
 	static const HklFunction *functions[] = {&psi_func};
-	static const HklParameter parameters[] = {
-		{HKL_PARAMETER_DEFAULTS, .name = "h1", .range = {.min=-1, .max=1}, ._value=1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "k1", .range = {.min=-1, .max=1}, ._value=1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "l1", .range = {.min=-1, .max=1}, ._value=1,},
-	};
 	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes,
+					       functions, psi_parameters),
 	};
 
 	return hkl_mode_psi_new(&info);

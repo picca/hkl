@@ -302,13 +302,9 @@ static HklMode* psi_vertical()
 	static const char *axes_r[] = {"mu", "omega", "chi", "phi", "gamma", "delta"};
 	static const char *axes_w[] = {"omega", "chi", "phi", "delta"};
 	static const HklFunction *functions[] = {&psi_func};
-	static const HklParameter parameters[] = {
-		{HKL_PARAMETER_DEFAULTS, .name = "h1", .range = {.min=-1, .max=1}, ._value=1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "k1", .range = {.min=-1, .max=1}, ._value=1,},
-		{HKL_PARAMETER_DEFAULTS, .name = "l1", .range = {.min=-1, .max=1}, ._value=1,},
-	};
 	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes_r, axes_w, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes_r, axes_w,
+					       functions, psi_parameters),
 	};
 
 	return hkl_mode_psi_new(&info);
