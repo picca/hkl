@@ -105,24 +105,13 @@ static const HklFunction psi_constant_vertical_func = {
 	.size = 4,
 };
 
-/* outside the mode because used in more than one mode */
-static const HklParameter double_diffraction_parameters[] = {
-	{
-		HKL_PARAMETER_DEFAULTS, .name = "h2", ._value = 1,
-		.description = "h coordinate of the second diffracting plan",
-		.range = {.min=-1, .max=1},
-	},
-	{
-		HKL_PARAMETER_DEFAULTS, .name = "k2", ._value = 1,
-		.description = "k coordinate of the second diffracting plan",
-		.range = {.min=-1, .max=1},
-	},
-	{
-		HKL_PARAMETER_DEFAULTS, .name = "l2", ._value = 1,
-		.description = "l coordinate of the second diffracting plan",
-		.range = {.min=-1, .max=1},
-	},
-};
+/* mode parameters */
+
+#define CONSTANT_PARAMETER(_name)				\
+	{							\
+		HKL_PARAMETER_DEFAULTS_ANGLE, .name = #_name,	\
+			.description = "the freezed value",	\
+			}
 
 #define PSI_CONSTANT_PARAMETERS(_h2, _k2, _l2, _psi)			\
 	{								\
@@ -144,6 +133,29 @@ static const HklParameter double_diffraction_parameters[] = {
 		HKL_PARAMETER_DEFAULTS_ANGLE, .name = "psi", ._value = _psi, \
 			.description = "expected angle between the reference and the diffraction plans", \
 			}
+
+static const HklParameter constant_omega_parameters[] = { CONSTANT_PARAMETER(omega) };
+static const HklParameter constant_chi_parameters[] = { CONSTANT_PARAMETER(chi) };
+static const HklParameter constant_phi_parameters[] = { CONSTANT_PARAMETER(phi) };
+
+/* outside the mode because used in more than one mode */
+static const HklParameter double_diffraction_parameters[] = {
+	{
+		HKL_PARAMETER_DEFAULTS, .name = "h2", ._value = 1,
+		.description = "h coordinate of the second diffracting plan",
+		.range = {.min=-1, .max=1},
+	},
+	{
+		HKL_PARAMETER_DEFAULTS, .name = "k2", ._value = 1,
+		.description = "k coordinate of the second diffracting plan",
+		.range = {.min=-1, .max=1},
+	},
+	{
+		HKL_PARAMETER_DEFAULTS, .name = "l2", ._value = 1,
+		.description = "l coordinate of the second diffracting plan",
+		.range = {.min=-1, .max=1},
+	},
+};
 
 static const HklParameter psi_constant_parameters[] = { PSI_CONSTANT_PARAMETERS(1, 1, 1, 0) };
 

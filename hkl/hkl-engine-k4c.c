@@ -168,11 +168,9 @@ static HklMode *constant_omega(void)
 {
 	static const char* axes[] = {"komega", "kappa", "kphi", "tth"};
 	static const HklFunction *functions[] = {&constant_omega_f1, &constant_omega_f2};
-	static const HklParameter parameters[] = {
-		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "omega"},
-	};
 	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes,
+					       functions, constant_omega_parameters),
 	};
 
 	return hkl_mode_auto_new(&info,
@@ -230,11 +228,9 @@ static HklMode *constant_chi(void)
 {
 	static const char* axes[] = {"komega", "kappa", "kphi", "tth"};
 	static const HklFunction *functions[] = {&constant_chi_f1, &constant_chi_f2};
-	static const HklParameter parameters[] = {
-		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "chi"},
-	};
 	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes,
+					       functions, constant_chi_parameters),
 	};
 
 	return hkl_mode_auto_new(&info,
@@ -294,11 +290,9 @@ static HklMode *constant_phi(void)
 {
 	static const char* axes[] = {"komega", "kappa", "kphi", "tth"};
 	static const HklFunction *functions[] = {&constant_phi_f1, &constant_phi_f2};
-	static const HklParameter parameters[] = {
-		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "phi"},
-	};
 	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes, functions, parameters),
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes,
+					       functions, constant_phi_parameters),
 	};
 
 	return hkl_mode_auto_new(&info,
