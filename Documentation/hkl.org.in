@@ -780,7 +780,7 @@ git clone git://repo.or.cz/hkl.git
    #+END_QUOTE
 * Todo
 ** hkl
-*** TODO [0/1] PetraIII
+*** TODO [0/2] PetraIII
 **** TODO computation problem
      Dear Teresa,
 
@@ -869,6 +869,20 @@ git clone git://repo.or.cz/hkl.git
 
    SaveDirectory /home/p09user/crystals/
 
+**** TODO another question
+     J'ai un probleme avec la position que le controlleur calcule avec la
+     matrice UB que nous t'avons envoye.
+     See sequence of emails echanges avec Teresa.
+
+     >>>> I am at 0 3.00605 0 with phi -182 and psi calculated is -135
+     >>>> When I freeze psi at -135  and type ca 0 3.00605 0 the controller
+     >> should return to me the positions at which I am. But no he tells me
+     that I
+     >> have to go to 178 degrees in  phi that is turning by 360 degrees.
+
+     Est-ce un probleme avec la trajectoire selectionnee ?
+     Est-ce qu'il est possible de definir des cut-points comme dans spec avec
+     ta librairie ?
 *** TODO [2/4] HklParameter
     - [X] method to use min/max to check for the validity
     - [X] add a method to get the axis_v and quaternion of the HklAxis
@@ -940,7 +954,7 @@ git clone git://repo.or.cz/hkl.git
     Investigate [[http://liboil.freedesktop.org/wiki/][liboil]] to speed calculation (in HklVector, HklMatrix
     and HklQuaternion)
 ** documentation
-*** TODO [1/5] rewrite documentation in org-mode
+*** TODO [1/6] rewrite documentation in org-mode
     - [-] embedding code into the org file
       - [-] [1/4] python
 	- [X] auto generation of the diffractometer descriptions
@@ -953,6 +967,7 @@ git clone git://repo.or.cz/hkl.git
     - [ ] need to add a description for the diffractometer, the mode, the parameters.
     - [ ] need a nice css for the generated doc.
     - [ ] check if org-info.js could be usefull
+    - [ ] add documentation explaining the sector-cuts a la hkl
 ** gui
 *** TODO change the color of fitparameter cells if they differ from the current
 	   sample values
