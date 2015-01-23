@@ -200,7 +200,7 @@ const char **hkl_engine_parameters_names_get_binding(const HklEngine *self, size
  * Return value: (array length=length) (transfer none): axes of the #HklEngine for the given mode.
  **/
 const char **hkl_engine_axis_names_get_binding(const HklEngine *self,
-					       HklEngineAxesNamesGet mode,
+					       HklEngineAxisNamesGet mode,
 					       size_t *length)
 {
 	const darray_string *axes = hkl_engine_axis_names_get(self, mode);

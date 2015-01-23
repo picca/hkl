@@ -459,12 +459,15 @@
   def bold(l):
       return ["\"*" + _ + "*\"" for _ in l]
 
+  def level(indent=1, s=None):
+      return "  "*indent + s
+
   diffractometers = Hkl.factories().iterkeys()
 
   output = ''
   for diffractometer in sorted(diffractometers):
       factory = Hkl.factories()[diffractometer]
-      output += "** " + diffractometer + "\n"
+      output += "** " + diffractometer + "\n\n"
       detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))
       sample = Hkl.Sample.new("toto")
       geometry = factory.create_new_geometry()
@@ -472,25 +475,37 @@
       engines.init(geometry, detector, sample)
 
       output += "*** Axes: \n"
-      for axis in geometry.axes_names_get():
+      for axis in geometry.axis_names_get():
           axis_v = geometry.axis_get(axis).axis_v_get().data
-          output += "    + \"*" + axis + "*\": rotation around the *" + repr(axis_v) + "* axis\n"
+          output += level(2, "+ \"*" + axis + "*\": rotation around the *" + repr(axis_v) + "* axis\n")
 
       output += "*** Engines: \n"
       for engine in engines.engines_get():
-          output += "    * \"*" + engine.name_get() + "*\":"
-          for pseudo in engine.pseudo_axes_names_get():
-              output += " \"*" + pseudo + "*\""
+          output += "**** \"*" + engine.name_get() + "*\":\n\n"
+          output += level(3, "* pseudo axes:\n")
+          for pseudo in engine.pseudo_axis_names_get():
+              p = engine.pseudo_axis_get(pseudo)
+              description = p.description_get()
+              output += level(4, "* \"*" + pseudo + "*\" : " + description + '\n\n')
           output += "\n"
           for mode in engine.modes_names_get():
-              output += " "*6 + "+ mode: \"*" + mode + "*\"\n"
+              output += level(3, "+ mode: \"*" + mode + "*\"\n")
               engine.current_mode_set(mode)
-              axes_r = engine.axes_names_get(Hkl.EngineAxesNamesGet.READ)
-              axes_w = engine.axes_names_get(Hkl.EngineAxesNamesGet.WRITE)
-              parameters = engine.parameters_names_get() or ["No parameter"]
-              output += " "*8 + "+ axes (read) : " + ", ".join(bold(axes_r)) + "\n"
-              output += " "*8 + "+ axes (write): " + ", ".join(bold(axes_w)) + "\n"
-              output += " "*8 + "+ parameters: " + ", ".join(bold(parameters)) + "\n"
+              axes_r = engine.axis_names_get(Hkl.EngineAxisNamesGet.READ)
+              axes_w = engine.axis_names_get(Hkl.EngineAxisNamesGet.WRITE)
+              output += level(4, "+ axes (read) : " + ", ".join(bold(axes_r)) + "\n")
+              output += level(4, "+ axes (write): " + ", ".join(bold(axes_w)) + "\n")
+              parameters = engine.parameters_names_get()
+              output += level(4, "+ parameters: ")
+              if parameters:
+                  output += "\n"
+                  for parameter in parameters:
+                      p = engine.parameter_get(parameter)
+                      description = p.description_get()
+                      value = p.value_get(Hkl.UnitEnum.USER)
+                      output += level(5, "+ *" + parameter + "* [" + str(value) + "]: " + description + "\n")
+              else:
+                  output += "No parameter\n"
 
   return output
 #+END_SRC

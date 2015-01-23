@@ -6,7 +6,7 @@ AM_LDFLAGS = $(top_builddir)/hkl/libhkl.la
 
 dist_html_DATA=hkl.html
 
-hkl.html: hkl.org
+hkl.html: hkl.org $(srcdir)/default.el
 	env GI_TYPELIB_PATH=$(top_builddir)/hkl \
 	$(LIBTOOL) --mode=execute -dlopen $(AM_LDFLAGS) \
 	$(EMACS) $< --batch -q --load $(srcdir)/default.el -f org-html-export-to-html --kill
@@ -14,3 +14,11 @@ hkl.html: hkl.org
 EXTRA_DIST=default.el
 
 CLEANFILES=hkl.html
+
+editdoc:
+	env GI_TYPELIB_PATH=$(top_builddir)/hkl \
+	$(LIBTOOL) --mode=execute -dlopen $(AM_LDFLAGS) \
+	$(EMACS) hkl.org.in -q --load $(srcdir)/default.el
+
+
+.PHONY: editdoc

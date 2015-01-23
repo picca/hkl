@@ -113,7 +113,7 @@ static int get_q_real(HklMode *self,
  * axis engine */
 static const HklPseudoAxis q = {
 	.parameter = { HKL_PARAMETER_DEFAULTS, .name="q",
-		       .description = "the norm of $\vec{q}$",
+		       .description = "the norm of $\\vec{q}$",
 		       .range = { .max=1 },
 	},
 };
@@ -257,7 +257,7 @@ static HklMode *mode_q2(void)
 
 static const HklPseudoAxis alpha = {
 	.parameter = { HKL_PARAMETER_DEFAULTS_ANGLE, .name = "alpha",
-		       .description = "angle of the projection of $\vec{q}$ on the yOz plan and $\vec{y}$",
+		       .description = "angle of the projection of $\\vec{q}$ on the $yOz$ plan and $\\vec{y}$",
 	},
 };
 
@@ -440,13 +440,13 @@ HklEngine *hkl_engine_qper_qpar_new(void)
 {
 	static const HklPseudoAxis qper = {
 		.parameter = { HKL_PARAMETER_DEFAULTS, .name = "qper",
-			       .description = "perpendicular component of $\vec{q}$ along the normal of the sample surface",
+			       .description = "perpendicular component of $\\vec{q}$ along the normal of the sample surface",
 			       .range = { .min=-1, .max=1 },
 		},
 	};
 	static const HklPseudoAxis qpar = {
 		.parameter = { HKL_PARAMETER_DEFAULTS, .name = "qpar",
-			       .description = "parallel component of $\vec{q}$",
+			       .description = "parallel component of $\\vec{q}$",
 			       .range = { .min=-1, .max=1 },
 		},
 	};

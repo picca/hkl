@@ -495,14 +495,14 @@ HKLAPI const char *hkl_engine_current_mode_get(const HklEngine *self) HKL_ARG_NO
 
 HKLAPI int hkl_engine_current_mode_set(HklEngine *self, const char *name, GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
 
-typedef enum _HklEngineAxesNamesGet
+typedef enum _HklEngineAxisNamesGet
 {
 	HKL_ENGINE_AXIS_NAMES_GET_READ,
 	HKL_ENGINE_AXIS_NAMES_GET_WRITE,
-} HklEngineAxesNamesGet;
+} HklEngineAxisNamesGet;
 
 HKLAPI const darray_string *hkl_engine_axis_names_get(const HklEngine *self,
-						      HklEngineAxesNamesGet mode) HKL_ARG_NONNULL(1);
+						      HklEngineAxisNamesGet mode) HKL_ARG_NONNULL(1);
 
 HKLAPI const darray_string *hkl_engine_parameters_names_get(const HklEngine *self) HKL_ARG_NONNULL(1);
 

@@ -230,7 +230,7 @@ out:
 }
 
 /**
- * hkl_engine_pseudo_axis_get: (skip)
+ * hkl_engine_pseudo_axis_get:
  * @self: the this ptr
  * @name: the name of the expected psudo_axis
  * @error: return location for a GError, or NULL
@@ -534,7 +534,7 @@ int hkl_engine_current_mode_set(HklEngine *self, const char *name,
  * Returns: (type gpointer): 
  **/
 const darray_string *hkl_engine_axis_names_get(const HklEngine *self,
-					       HklEngineAxesNamesGet mode)
+					       HklEngineAxisNamesGet mode)
 {
 	switch(mode){
 	case HKL_ENGINE_AXIS_NAMES_GET_READ:

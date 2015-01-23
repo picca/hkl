@@ -21,5 +21,5 @@
  '(org-latex-pdf-process
    (quote
     ("pdflatex -interaction nonstopmode --shell-escape -output-directory %o %f" "pdflatex -interaction nonstopmode --shell-escape -output-directory %o %f" "pdflatex -interaction nonstopmode --shell-escape -output-directory %o %f")))
- '(org-export-with-sub-superscripts nil))
- 
+ '(org-export-with-sub-superscripts nil)
+ '(org-src-fontify-natively t))

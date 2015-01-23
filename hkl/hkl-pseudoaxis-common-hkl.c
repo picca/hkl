@@ -767,7 +767,7 @@ HklEngine *hkl_engine_hkl_new(void)
 	};
 	static const HklPseudoAxis k = {
 		.parameter = { HKL_PARAMETER_DEFAULTS, .name = "k",
-			       .description = "k coordinate of the deiffracting plan",
+			       .description = "k coordinate of the diffracting plan",
 			       .range = { .min=-1, .max=1 },
 		},
 	};
