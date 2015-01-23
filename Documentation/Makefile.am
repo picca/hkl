@@ -12,3 +12,5 @@ hkl.html: hkl.org
 	$(EMACS) $< --batch -q --load $(srcdir)/default.el -f org-html-export-to-html --kill
 
 EXTRA_DIST=default.el
+
+CLEANFILES=hkl.html
