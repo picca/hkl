@@ -968,12 +968,13 @@ git clone git://repo.or.cz/hkl.git
     - [ ] need a nice css for the generated doc.
     - [ ] check if org-info.js could be usefull
     - [ ] add documentation explaining the sector-cuts a la hkl
-** gui
-*** TODO change the color of fitparameter cells if they differ from the current
-	   sample values
-*** TODO REPL
-    https://github.com/jonathanslenders/python-prompt-toolkit/tree/master/examples/tutorial
-
+** [0/3] gui
+   - [ ] change the color of fitparameter cells if they differ from
+     the current sample values
+   - [ ] check if a [[https://github.com/jonathanslenders/python-prompt-toolkit/tree/master/examples/tutorial][REPL]] could be integrated to provide an autocad
+      like interface.
+   - [ ] add tooltips using hkl_parameter_description_get for the
+     pseudo axes and the mode parameters.
 ** hkl3d
 *** TODO add a method to find the 3D models in the right directories.
 
