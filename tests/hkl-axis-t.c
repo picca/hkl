@@ -52,7 +52,7 @@ static void get_quaternions(void)
 {
 	static HklVector v_ref = {{1, 0, 0}};
 	static HklQuaternion q1_ref = {{1, 0, 0, 0}};
-	static HklQuaternion q2_ref = {{1./sqrt(2.), -1./sqrt(2.), 0, 0}};
+	static HklQuaternion q2_ref = {{M_SQRT1_2, -M_SQRT1_2, 0, 0}};
 	HklParameter *axis;
 
 	axis = hkl_parameter_new_axis("omega", &v_ref);
@@ -68,7 +68,7 @@ static void get_quaternions(void)
 static void copy(void)
 {
 	static HklVector v = {{1, 0, 0}};
-	static HklQuaternion q_ref = {{1./sqrt(2.), -1./sqrt(2.), 0, 0}};
+	static HklQuaternion q_ref = {{M_SQRT1_2, -M_SQRT1_2, 0, 0}};
 	HklParameter *axis;
 	HklParameter *copy;
 	double min, max;
