@@ -645,23 +645,44 @@ git clone git://repo.or.cz/hkl.git
 
     and send generated files 0001\_xxx, 0002\_xxx, ... to the author.
 
-** Howto add a diffractometer
+** Howto's
+*** Add a diffractometer
+    To add a new diffractometer, you just need to copy the
+    ~hkl/hkl-engine-template.c~ into
+    ~hkl/hkl-engine-INSTITUT-BEAMLINE-INSTRUMENT.c~ where you replace
+    the upper case with the appropriate values.
 
-   To add a new diffractometer, you just need to copy the
-   hkl/hkl-engine-template.c into
-   hkl/hkl-engine-INSTITUT-BEAMLINE-INSTRUMENT.c where you replace the
-   upper case with the appropriate values.
+    The template file is compiled during the build process to ensure
+    that it is always valid.
 
-   The template file is compiled during the build process to ensure that it
-   is always valid.
+    Then you just need to follow the instruction found in the
+    template. If you need some precision about the process, do not
+    hesitate to contact the main author.
 
-   Then you just need to follow the instruction found in the template. If
-   you need some precision about the process, do not hesitate to contact
-   the main author.
+    do not forgot also to add this new file into ~hkl/Makefile.am~
+    with other diffractometers in the hkl_c_sources variable (please
+    keep the alphabetic order).
+*** Work on the documentation
+    The documentation system is written with [[http://orgmode.org/][org-mode]], and the [[http://orgmode.org/worg/org-contrib/babel/][babel]]
+    extension which allow to introspect the library and generate part
+    of the doc using the hkl library. Python code is executed during
+    the build process to generate the Diffractometer section of the
+    documentation. To work on the doc and test the embedded python
+    code it is necessary to setup a few environment variables and
+    start emacs with the right LD_LIBRARY_PATH. In order to simplify
+    the process a make target was written. You just need to type:
+    #+BEGIN_SRC sh
+      cd Documentation
+      make editdoc
+    #+END_SRC
+    and start to contribute.
 
-   do not forgot also to add this new file into hkl/Makefile.am with other
-   diffractometers in the hkl\_c\_sources variable (please keep the
-   alphabetic order).
+    If you do not have emacs, you can nevertheless contribute by
+    editing the ~Documentation/hkl.org.in~ file which is text only.
+
+    The most expected contributions for now are:
+    * english correctness
+    * a nicer css
 * Bindings
 
   The hkl library use the gobject-introspection to provide automatic
