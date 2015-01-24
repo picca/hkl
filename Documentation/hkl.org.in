@@ -643,7 +643,7 @@ git clone git://repo.or.cz/hkl.git
     git format-patch origin/next
     #+END_SRC
 
-    and send generated files 0001\_xxx, 0002\_xxx, ... to the author.
+    and send generated files ~0001\_xxx~, ~0002\_xxx~, ... to the author.
 
 ** Howto's
 *** Add a diffractometer
