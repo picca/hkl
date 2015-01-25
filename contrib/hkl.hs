@@ -5,6 +5,14 @@ import Numeric.LinearAlgebra (fromLists, Vector, Matrix,
                               (@>), (<>), format, vecdisp, disps)
 import Text.Printf (printf)
 
+data Lattice = Cubic Double -- a = b = c, alpha = beta = gamma = 90
+             | Tetragonal Double Double -- a = b != c, alpha = beta = gamma = 90
+             | Orthorhombic Double Double Double -- a != b != c,  alpha = beta = gamma = 90
+             | Rhombohedral Double Double -- a = b = c, alpha = beta = gamma != 90
+             | Hexagonal Double Double -- a = b != c, alpha = beta = 90, gamma = 120
+             | Monoclinic Double Double Double Double Double -- a != b != c, alpha = gamma = 90, beta != 90
+             | Triclinic Double Double Double Double Double Double -- a != b != c, alpha != beta != gamma != 90
+
 tau :: Double
 tau = 1
 
@@ -51,25 +59,30 @@ e4c = holder [omega, chi, phi]
 u :: [Double] -> Matrix Double
 u = holder [rx, ry, rz]
 
-busing :: Double -> Double -> Double -> Double -> Double -> Double -> Matrix Double
-busing a b c alpha beta gamma = fromLists [[b00, b01, b02],
-                                           [0, b11, b12],
-                                           [0, 0, b22]]
-  where
-    b00 = tau * sin alpha / (a * d)
-    b01 = b11 / d * (cos alpha * cos beta - cos gamma)
-    b02 = tmp / d * (cos gamma * cos alpha - cos beta)
-    b11 = tau / (b * sin alpha)
-    b12 = tmp / (sin beta * sin gamma) * (cos beta * cos gamma - cos alpha)
-    b22 = tau / c
-    d = sqrt(1 - cos alpha ** 2 - cos beta ** 2 - cos gamma ** 2 + 2 * cos alpha * cos beta * cos gamma)
-    tmp = b22 / sin alpha;
+busing' :: Double -> Double -> Double -> Double -> Double -> Double -> Matrix Double
+busing' a b c alpha beta gamma = fromLists [[b00, b01, b02],
+                                            [0, b11, b12],
+                                            [0, 0, b22]]
+    where
+      b00 = tau * sin alpha / (a * d)
+      b01 = b11 / d * (cos alpha * cos beta - cos gamma)
+      b02 = tmp / d * (cos gamma * cos alpha - cos beta)
+      b11 = tau / (b * sin alpha)
+      b12 = tmp / (sin beta * sin gamma) * (cos beta * cos gamma - cos alpha)
+      b22 = tau / c
+      d = sqrt(1 - cos alpha ** 2 - cos beta ** 2 - cos gamma ** 2 + 2 * cos alpha * cos beta * cos gamma)
+      tmp = b22 / sin alpha;
 
-ub :: [Double] -> Double -> Double -> Double -> Double -> Double -> Double -> Matrix Double
-ub uxuyuz a b c alpha beta gamma = u uxuyuz <> busing a b c alpha beta gamma
+busing :: Lattice -> Matrix Double
+busing lattice = case lattice of
+                   Cubic a                          -> busing' a a a 90 90 90
+                   Triclinic a b c alpha beta gamma -> busing' a b c alpha beta gamma
 
-sample :: [Double] -> [Double] -> Double -> Double -> Double -> Double -> Double -> Double -> [Double] -> Vector Double
-sample positions uxuyuz a b c alpha beta gamma hkl = e4c positions <> ub uxuyuz a b c alpha beta gamma <> fromList hkl
+ub :: [Double] -> Lattice -> Matrix Double
+ub uxuyuz lattice = u uxuyuz <> busing lattice
+
+sample :: [Double] -> [Double] -> Lattice -> [Double] -> Vector Double
+sample positions uxuyuz lattice hkl = e4c positions <> ub uxuyuz lattice <> fromList hkl
 
 disp :: Matrix Double -> IO ()
 disp = putStrLn . format "  " (printf "%.3f")
@@ -78,7 +91,7 @@ dispv :: Vector Double -> IO ()
 dispv = putStr . vecdisp (disps 2)
 
 main :: IO()
-main =  dispv (sample [30, 30, 30] [0, 90, 0] 1.54 1.54 1.54 90 90 90 [1, 1, 1])
+main =  dispv (sample [30, 30, 30] [0, 90, 0] (Triclinic 1.54 1.54 1.54 90 90 90) [1, 1, 1])
 
 -- rosenbrock a b [x,y] = [ a*(1-x), b*(y-x^2) ]
 
