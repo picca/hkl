@@ -10,8 +10,12 @@ data Lattice = Cubic Double -- a = b = c, alpha = beta = gamma = 90
              | Orthorhombic Double Double Double -- a != b != c,  alpha = beta = gamma = 90
              | Rhombohedral Double Double -- a = b = c, alpha = beta = gamma != 90
              | Hexagonal Double Double -- a = b != c, alpha = beta = 90, gamma = 120
-             | Monoclinic Double Double Double Double Double -- a != b != c, alpha = gamma = 90, beta != 90
+             | Monoclinic Double Double Double Double -- a != b != c, alpha = gamma = 90, beta != 90
              | Triclinic Double Double Double Double Double Double -- a != b != c, alpha != beta != gamma != 90
+               deriving (Show)
+
+data Transformation = Rotation [Double]
+                      deriving (Show)
 
 tau :: Double
 tau = 1
@@ -24,34 +28,29 @@ crossprod axis = fromLists [[0, -axis @> 2, axis @> 1],
                             [axis @> 2, 0, -axis @> 0],
                             [-axis @> 1, axis @> 0, 0]]
 
-rotation :: Double -> Vector Double -> Matrix Double
-rotation angle axis = scalar c * ident 3
-                      + scalar s * crossprod axis
-                      + scalar (1 - c) * axis `outer` axis
+rotation :: [Double] -> Double -> Matrix Double
+rotation axis angle = scalar c * ident 3
+                      + scalar s * crossprod ax
+                      + scalar (1 - c) * ax `outer` ax
   where
+    ax = fromList axis
     c = cos(radian angle)
     s = sin(radian angle)
 
-rx :: Double -> Matrix Double
-rx angle = rotation angle (fromList [1, 0, 0])
+rx = Rotation [1, 0, 0]
+ry = Rotation [0, 1, 0]
+rz = Rotation [0, 0, 1]
 
-ry :: Double -> Matrix Double
-ry angle = rotation angle (fromList [0, 1, 0])
+omega = Rotation [0, -1, 0]
+chi = Rotation [1, 0, 0]
+phi = Rotation [0, -1, 0]
 
-rz :: Double -> Matrix Double
-rz angle = rotation angle (fromList [0, 0, 1])
+apply :: Transformation -> Double -> Matrix Double
+apply t v = case t of
+            Rotation axis -> rotation axis v
 
-omega :: Double -> Matrix Double
-omega angle = rotation angle (fromList [0, -1, 0])
-
-chi :: Double -> Matrix Double
-chi angle = rotation angle (fromList [1, 0, 0])
-
-phi :: Double -> Matrix Double
-phi angle = rotation angle (fromList [0, -1, 0])
-
-holder :: [Double -> Matrix Double] -> [Double] -> Matrix Double
-holder matrix positions = foldl1 (<>) (zipWith ($) matrix positions)
+holder :: [Transformation] -> [Double] -> Matrix Double
+holder t positions = foldl1 (<>) (zipWith apply t positions)
 
 e4c :: [Double] -> Matrix Double
 e4c = holder [omega, chi, phi]
@@ -76,13 +75,18 @@ busing' a b c alpha beta gamma = fromLists [[b00, b01, b02],
 busing :: Lattice -> Matrix Double
 busing lattice = case lattice of
                    Cubic a                          -> busing' a a a 90 90 90
+                   Tetragonal a c                   -> busing' a a c 90 90 90
+                   Orthorhombic a b c               -> busing' a b c 90 90 90
+                   Rhombohedral a alpha             -> busing' a a a alpha alpha alpha
+                   Hexagonal a c                    -> busing' a a c 90 90 120
+                   Monoclinic a b c beta            -> busing' a b c 90 beta 90
                    Triclinic a b c alpha beta gamma -> busing' a b c alpha beta gamma
 
 ub :: [Double] -> Lattice -> Matrix Double
 ub uxuyuz lattice = u uxuyuz <> busing lattice
 
 sample :: [Double] -> [Double] -> Lattice -> [Double] -> Vector Double
-sample positions uxuyuz lattice hkl = e4c positions <> ub uxuyuz lattice <> fromList hkl
+sample motors uxuyuz lattice hkl = e4c motors <> ub uxuyuz lattice <> fromList hkl
 
 disp :: Matrix Double -> IO ()
 disp = putStrLn . format "  " (printf "%.3f")
@@ -91,7 +95,7 @@ dispv :: Vector Double -> IO ()
 dispv = putStr . vecdisp (disps 2)
 
 main :: IO()
-main =  dispv (sample [30, 30, 30] [0, 90, 0] (Triclinic 1.54 1.54 1.54 90 90 90) [1, 1, 1])
+main =  dispv (sample [30, 30, 30] [0, 90, 0] (Cubic 1.54) [1, 1, 1])
 
 -- rosenbrock a b [x,y] = [ a*(1-x), b*(y-x^2) ]
 
