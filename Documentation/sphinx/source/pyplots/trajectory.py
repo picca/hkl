@@ -7,6 +7,8 @@ import numpy
 from gi.repository import GLib
 from gi.repository import Hkl
 
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))

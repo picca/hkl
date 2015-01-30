@@ -4,6 +4,8 @@
 import math
 import numpy
 
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 from gi.repository import GLib
