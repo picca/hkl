@@ -16,7 +16,7 @@ AM_LDFLAGS = -version-info 0:0:0 \
 	$(YAML_LIBS) \
 	$(BULLET_LIBS)
 
-lib_LTLIBRARIES = libhkl3d.la
+noinst_LTLIBRARIES = libhkl3d.la
 libhkl3d_la_SOURCES = hkl3d.cpp
 libhkl3d_la_LIBADD = \
 	$(top_builddir)/hkl/libhkl.la
