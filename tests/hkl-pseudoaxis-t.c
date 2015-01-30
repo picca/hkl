@@ -33,7 +33,7 @@ typedef int (* test_func) (HklEngine *engine, HklEngineList *engine_list, unsign
 static int __test(unsigned int nb_iter, test_func f, int foreach_mode)
 {
 	HklFactory **factories;
-	unsigned int i, j, n;
+	size_t i, j, n;
 	HklGeometry *geometry = NULL;
 	HklDetector *detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	HklSample *sample = hkl_sample_new("test");
@@ -90,7 +90,7 @@ static int __test(unsigned int nb_iter, test_func f, int foreach_mode)
 static void factories(void)
 {
 	int res = TRUE;
-	uint i, n;
+	size_t i, n;
 	HklEngineList *engines;
 	HklFactory **factories;
 
