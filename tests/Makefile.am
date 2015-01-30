@@ -42,6 +42,9 @@ if HKL3D
 
 all_tests += hkl3d-test-t
 
+# force linkage with g++
+nodist_EXTRA_hkl3d_test_t_SOURCES = dummy.cxx
+
 AM_CPPFLAGS += -I$(top_srcdir)/hkl3d \
 	$(G3D_CFLAGS) \
 	$(BULLET_CFLAGS)

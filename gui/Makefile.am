@@ -31,6 +31,7 @@ appldir = ${datadir}/applications
 dist_appl_DATA = ghkl.desktop
 
 if HKL3D
+
 AM_CFLAGS += \
 	-I$(top_srcdir)/hkl3d \
 	-I$(top_srcdir)/hkl3d/bullet/src \
@@ -43,6 +44,9 @@ AM_LDFLAGS += -lstdc++\
 	$(G3D_LIBS) \
 	$(GTKGLEXT_LIBS) \
 	$(BULLET_LIBS)
+
+# force linkage using g++ for libhkl3d.la
+nodist_EXTRA_ghkl_SOURCES = dummy.cxx
 
 ghkl_LDADD += \
 	$(top_builddir)/hkl3d/libhkl3d.la
