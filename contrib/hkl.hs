@@ -23,8 +23,8 @@ data Lattice = Cubic (Length Double) -- a = b = c, alpha = beta = gamma = 90
              | Triclinic (Length Double) (Length Double) (Length Double) (Angle Double) (Angle Double) (Angle Double) -- a != b != c, alpha != beta != gamma != 90
                deriving (Show)
 
-data Transformation = Rotation [Double]
-                      deriving (Show)
+data Transformation = NoTransformation -- Doesn't transform the vector at all
+                    | Rotation [Double] (Angle Double)
 
 tau :: Dimensionless Double
 tau = _1 -- 1 or 2*pi
@@ -34,17 +34,19 @@ crossprod axis = fromLists [[0, -axis @> 2, axis @> 1],
                             [axis @> 2, 0, -axis @> 0],
                             [-axis @> 1, axis @> 0, 0]]
 
-rotation :: [Double] -> Angle Double -> Matrix Double
-rotation axis angle = scalar c Prelude.* ident 3
-                      Prelude.+ scalar s Prelude.* crossprod ax
-                      Prelude.+ scalar (1 Prelude.- c) Prelude.* ax `outer` ax
-  where
-    ax = fromList axis
-    c = cos angle /~ one
-    s = sin angle /~ one
+-- apply a transformation
+apply :: Transformation -> Vector Double -> Vector Double
+apply NoTransformation v = v
+apply (Rotation axis angle) v = (scalar c Prelude.* ident 3
+                                 Prelude.+ scalar s Prelude.* crossprod ax
+                                 Prelude.+ scalar (1 Prelude.- c) Prelude.* ax `outer` ax) <> v
+    where
+      ax = fromList axis
+      c = cos angle /~ one
+      s = sin angle /~ one
 
 -- define a few transformations
-rx, ry, rz, omega, chi, phi :: Transformation
+rx, ry, rz, omega, chi, phi, tth :: Angle Double -> Transformation
 rx = Rotation [1, 0, 0]
 ry = Rotation [0, 1, 0]
 rz = Rotation [0, 0, 1]
@@ -53,20 +55,16 @@ chi = Rotation [1, 0, 0]
 phi = Rotation [0, -1, 0]
 tth = Rotation [0, -1, 0]
 
---  compute a transformation
-apply :: Transformation -> Angle Double -> Matrix Double
-apply (Rotation axis) = rotation axis
+holder :: [Angle Double -> Transformation] -> [Angle Double] -> Vector Double -> Vector Double
+holder t positions v = foldr apply v (zipWith ($) t positions)
 
-holder :: [Transformation] -> [Angle Double] -> Matrix Double
-holder t positions = foldl1 (<>) (zipWith apply t positions)
-
-e4cS :: [Angle Double] -> Matrix Double
+e4cS :: [Angle Double] -> Vector Double -> Vector Double
 e4cS = holder [omega, chi, phi]
 
-e4cD :: [Angle Double] -> Matrix Double
+e4cD :: [Angle Double] -> Vector Double -> Vector Double
 e4cD = holder [tth]
 
-u :: [Angle Double] -> Matrix Double
+u :: [Angle Double] -> Vector Double -> Vector Double
 u = holder [rx, ry, rz]
 
 busing' :: Length Double -> Length Double -> Length Double -> Angle Double -> Angle Double-> Angle Double -> Matrix Double
@@ -92,11 +90,11 @@ busing (Hexagonal a c) = busing' a a c (90 *~ degree) (90 *~ degree) (120 *~ deg
 busing (Monoclinic a b c beta) = busing' a b c (90 *~ degree) beta (90 *~ degree)
 busing (Triclinic a b c alpha beta gamma) = busing' a b c alpha beta gamma
 
-ub :: [Angle Double] -> Lattice -> Matrix Double
-ub uxuyuz lattice = u uxuyuz <> busing lattice
+ub :: [Angle Double] -> Lattice -> Vector Double -> Vector Double
+ub uxuyuz lattice v = u uxuyuz (busing lattice <> v)
 
 sample :: [Angle Double] -> [Angle Double] -> Lattice -> [Double] -> Vector Double
-sample motors uxuyuz lattice hkl = e4cS motors <> ub uxuyuz lattice <> fromList hkl
+sample motors uxuyuz lattice v = e4cS motors (ub uxuyuz lattice (fromList v))
 
 lambda :: Length Double
 lambda = 1.54 *~ nano meter
@@ -105,7 +103,7 @@ ki :: Vector Double
 ki = fromList [(tau / lambda) /~ (one / meter), 0, 0]
 
 detector :: [Angle Double] -> Vector Double
-detector motors = e4cD motors <> ki Prelude.- ki
+detector motors = e4cD motors ki Prelude.- ki
 
 -- disp :: Matrix Double -> IO ()
 -- disp = putStrLn . format "  " (printf "%.3f")
