@@ -1,67 +1,78 @@
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# OPTIONS_GHC -fglasgow-exts -fallow-undecidable-instances #-}
+
+import Prelude hiding (sqrt, sin, cos, (+), (-), (*), (**), (/))
+import qualified Prelude
 
 import Numeric.LinearAlgebra (fromLists, Vector, Matrix,
                               ident, scalar, fromList, outer,
-                              (@>), (<>), format, vecdisp, disps)
-import Text.Printf (printf)
+                              (@>), (<>), vecdisp, disps)
+-- import Text.Printf (printf)
 
-data Lattice = Cubic Double -- a = b = c, alpha = beta = gamma = 90
-             | Tetragonal Double Double -- a = b != c, alpha = beta = gamma = 90
-             | Orthorhombic Double Double Double -- a != b != c,  alpha = beta = gamma = 90
-             | Rhombohedral Double Double -- a = b = c, alpha = beta = gamma != 90
-             | Hexagonal Double Double -- a = b != c, alpha = beta = 90, gamma = 120
-             | Monoclinic Double Double Double Double -- a != b != c, alpha = gamma = 90, beta != 90
-             | Triclinic Double Double Double Double Double Double -- a != b != c, alpha != beta != gamma != 90
+import Numeric.Units.Dimensional.Prelude (_1, _2, nano, meter, degree,
+                                          (*~), (/~), (+), (-), (*), (**), (/),
+                                          Length, Angle, sin, cos, one, sqrt,
+                                          Dimensionless)
+
+data Lattice = Cubic (Length Double) -- a = b = c, alpha = beta = gamma = 90
+             | Tetragonal (Length Double) (Length Double) -- a = b != c, alpha = beta = gamma = 90
+             | Orthorhombic (Length Double) (Length Double) (Length Double) -- a != b != c,  alpha = beta = gamma = 90
+             | Rhombohedral (Length Double) (Angle Double) -- a = b = c, alpha = beta = gamma != 90
+             | Hexagonal (Length Double) (Length Double) -- a = b != c, alpha = beta = 90, gamma = 120
+             | Monoclinic (Length Double) (Length Double) (Length Double) (Angle Double) -- a != b != c, alpha = gamma = 90, beta != 90
+             | Triclinic (Length Double) (Length Double) (Length Double) (Angle Double) (Angle Double) (Angle Double) -- a != b != c, alpha != beta != gamma != 90
                deriving (Show)
 
 data Transformation = Rotation [Double]
                       deriving (Show)
 
-tau :: Double
-tau = 1
-
-radian :: Double -> Double
-radian angle = angle * pi / 180.0
+tau :: Dimensionless Double
+tau = _1 -- 1 or 2*pi
 
 crossprod :: Vector Double -> Matrix Double
 crossprod axis = fromLists [[0, -axis @> 2, axis @> 1],
                             [axis @> 2, 0, -axis @> 0],
                             [-axis @> 1, axis @> 0, 0]]
 
-rotation :: [Double] -> Double -> Matrix Double
-rotation axis angle = scalar c * ident 3
-                      + scalar s * crossprod ax
-                      + scalar (1 - c) * ax `outer` ax
+rotation :: [Double] -> Angle Double -> Matrix Double
+rotation axis angle = scalar c Prelude.* ident 3
+                      Prelude.+ scalar s Prelude.* crossprod ax
+                      Prelude.+ scalar (1 Prelude.- c) Prelude.* ax `outer` ax
   where
     ax = fromList axis
-    c = cos(radian angle)
-    s = sin(radian angle)
+    c = cos angle /~ one
+    s = sin angle /~ one
 
+-- define a few transformations
+rx, ry, rz, omega, chi, phi :: Transformation
 rx = Rotation [1, 0, 0]
 ry = Rotation [0, 1, 0]
 rz = Rotation [0, 0, 1]
-
 omega = Rotation [0, -1, 0]
 chi = Rotation [1, 0, 0]
 phi = Rotation [0, -1, 0]
+tth = Rotation [0, -1, 0]
 
-apply :: Transformation -> Double -> Matrix Double
-apply t v = case t of
-            Rotation axis -> rotation axis v
+--  compute a transformation
+apply :: Transformation -> Angle Double -> Matrix Double
+apply (Rotation axis) = rotation axis
 
-holder :: [Transformation] -> [Double] -> Matrix Double
+holder :: [Transformation] -> [Angle Double] -> Matrix Double
 holder t positions = foldl1 (<>) (zipWith apply t positions)
 
-e4c :: [Double] -> Matrix Double
-e4c = holder [omega, chi, phi]
+e4cS :: [Angle Double] -> Matrix Double
+e4cS = holder [omega, chi, phi]
 
-u :: [Double] -> Matrix Double
+e4cD :: [Angle Double] -> Matrix Double
+e4cD = holder [tth]
+
+u :: [Angle Double] -> Matrix Double
 u = holder [rx, ry, rz]
 
-busing' :: Double -> Double -> Double -> Double -> Double -> Double -> Matrix Double
-busing' a b c alpha beta gamma = fromLists [[b00, b01, b02],
-                                            [0, b11, b12],
-                                            [0, 0, b22]]
+busing' :: Length Double -> Length Double -> Length Double -> Angle Double -> Angle Double-> Angle Double -> Matrix Double
+busing' a b c alpha beta gamma = fromLists [[b00 /~ (one / meter), b01/~ (one / meter), b02/~ (one / meter)],
+                                            [0  , b11 /~ (one / meter), b12 /~ (one / meter)],
+                                            [0  , 0  , b22 /~ (one / meter)]]
     where
       b00 = tau * sin alpha / (a * d)
       b01 = b11 / d * (cos alpha * cos beta - cos gamma)
@@ -69,33 +80,45 @@ busing' a b c alpha beta gamma = fromLists [[b00, b01, b02],
       b11 = tau / (b * sin alpha)
       b12 = tmp / (sin beta * sin gamma) * (cos beta * cos gamma - cos alpha)
       b22 = tau / c
-      d = sqrt(1 - cos alpha ** 2 - cos beta ** 2 - cos gamma ** 2 + 2 * cos alpha * cos beta * cos gamma)
+      d = sqrt(_1 - cos alpha ** _2 - cos beta ** _2 - cos gamma ** _2 + _2 * cos alpha * cos beta * cos gamma)
       tmp = b22 / sin alpha;
 
 busing :: Lattice -> Matrix Double
-busing lattice = case lattice of
-                   Cubic a                          -> busing' a a a 90 90 90
-                   Tetragonal a c                   -> busing' a a c 90 90 90
-                   Orthorhombic a b c               -> busing' a b c 90 90 90
-                   Rhombohedral a alpha             -> busing' a a a alpha alpha alpha
-                   Hexagonal a c                    -> busing' a a c 90 90 120
-                   Monoclinic a b c beta            -> busing' a b c 90 beta 90
-                   Triclinic a b c alpha beta gamma -> busing' a b c alpha beta gamma
+busing (Cubic a) = busing' a a a (90 *~ degree) (90 *~ degree) (90 *~ degree)
+busing (Tetragonal a c) = busing' a a c (90 *~ degree) (90 *~ degree) (90 *~ degree)
+busing (Orthorhombic a b c) = busing' a b c (90 *~ degree) (90 *~ degree) (90 *~ degree)
+busing (Rhombohedral a alpha)= busing' a a a alpha alpha alpha
+busing (Hexagonal a c) = busing' a a c (90 *~ degree) (90 *~ degree) (120 *~ degree)
+busing (Monoclinic a b c beta) = busing' a b c (90 *~ degree) beta (90 *~ degree)
+busing (Triclinic a b c alpha beta gamma) = busing' a b c alpha beta gamma
 
-ub :: [Double] -> Lattice -> Matrix Double
+ub :: [Angle Double] -> Lattice -> Matrix Double
 ub uxuyuz lattice = u uxuyuz <> busing lattice
 
-sample :: [Double] -> [Double] -> Lattice -> [Double] -> Vector Double
-sample motors uxuyuz lattice hkl = e4c motors <> ub uxuyuz lattice <> fromList hkl
+sample :: [Angle Double] -> [Angle Double] -> Lattice -> [Double] -> Vector Double
+sample motors uxuyuz lattice hkl = e4cS motors <> ub uxuyuz lattice <> fromList hkl
 
-disp :: Matrix Double -> IO ()
-disp = putStrLn . format "  " (printf "%.3f")
+lambda :: Length Double
+lambda = 1.54 *~ nano meter
+
+ki :: Vector Double
+ki = fromList [(tau / lambda) /~ (one / meter), 0, 0]
+
+detector :: [Angle Double] -> Vector Double
+detector motors = e4cD motors <> ki Prelude.- ki
+
+-- disp :: Matrix Double -> IO ()
+-- disp = putStrLn . format "  " (printf "%.3f")
 
 dispv :: Vector Double -> IO ()
 dispv = putStr . vecdisp (disps 2)
 
 main :: IO()
-main =  dispv (sample [30, 30, 30] [0, 90, 0] (Cubic 1.54) [1, 1, 1])
+main =  do
+  dispv (sample [30.0 *~ degree, 0.0 *~ degree, 0.0 *~ degree]
+                    [0.0 *~ degree, 0.0 *~ degree, 0.0 *~ degree] (Cubic (1.54 *~ nano meter))
+         [0, 0, 1])
+  dispv (detector [60.0 *~ degree])
 
 -- rosenbrock a b [x,y] = [ a*(1-x), b*(y-x^2) ]
 
