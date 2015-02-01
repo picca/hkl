@@ -60,9 +60,6 @@ tth = Rotation [0, -1, 0]
 apply' :: [Transformation] -> Vector Double -> Vector Double
 apply' t v = foldr apply v t
 
-holder :: [Angle Double -> Transformation] -> [Angle Double] -> [Transformation]
-holder t positions = zipWith ($) t positions
-
 e4cS :: [Angle Double -> Transformation]
 e4cS = [omega, chi, phi, rx, ry, rz]
 
@@ -93,7 +90,7 @@ busing (Monoclinic a b c beta) = busing' a b c (90 *~ degree) beta (90 *~ degree
 busing (Triclinic a b c alpha beta gamma) = busing' a b c alpha beta gamma
 
 sample :: [Angle Double] -> Lattice -> Vector Double -> Vector Double
-sample positions lattice = apply' (holder e4cS positions ++ [UB lattice])
+sample positions lattice = apply' (zipWith ($) e4cS positions ++ [UB lattice])
 
 lambda :: Length Double
 lambda = 1.54 *~ nano meter
@@ -102,7 +99,7 @@ ki :: Vector Double
 ki = fromList [(tau / lambda) /~ (one / meter), 0, 0]
 
 detector :: [Angle Double] -> Vector Double
-detector positions = apply' (holder e4cD positions) ki Prelude.- ki
+detector positions = apply' (zipWith ($) e4cD positions) ki Prelude.- ki
 
 -- disp :: Matrix Double -> IO ()
 -- disp = putStrLn . format "  " (printf "%.3f")
