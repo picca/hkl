@@ -25,6 +25,7 @@ data Lattice = Cubic (Length Double) -- a = b = c, alpha = beta = gamma = 90
 
 data Transformation = NoTransformation -- Doesn't transform the vector at all
                     | Rotation [Double] (Angle Double)
+                    | UB Lattice
 
 tau :: Dimensionless Double
 tau = _1 -- 1 or 2*pi
@@ -44,6 +45,7 @@ apply (Rotation axis angle) v = (scalar c Prelude.* ident 3
       ax = fromList axis
       c = cos angle /~ one
       s = sin angle /~ one
+apply (UB lattice) v = busing lattice <> v
 
 -- define a few transformations
 rx, ry, rz, omega, chi, phi, tth :: Angle Double -> Transformation
@@ -55,17 +57,17 @@ chi = Rotation [1, 0, 0]
 phi = Rotation [0, -1, 0]
 tth = Rotation [0, -1, 0]
 
-holder :: [Angle Double -> Transformation] -> [Angle Double] -> Vector Double -> Vector Double
-holder t positions v = foldr apply v (zipWith ($) t positions)
+apply' :: [Transformation] -> Vector Double -> Vector Double
+apply' t v = foldr apply v t
 
-e4cS :: [Angle Double] -> Vector Double -> Vector Double
-e4cS = holder [omega, chi, phi]
+holder :: [Angle Double -> Transformation] -> [Angle Double] -> [Transformation]
+holder t positions = zipWith ($) t positions
 
-e4cD :: [Angle Double] -> Vector Double -> Vector Double
-e4cD = holder [tth]
+e4cS :: [Angle Double -> Transformation]
+e4cS = [omega, chi, phi, rx, ry, rz]
 
-u :: [Angle Double] -> Vector Double -> Vector Double
-u = holder [rx, ry, rz]
+e4cD :: [Angle Double -> Transformation]
+e4cD = [tth]
 
 busing' :: Length Double -> Length Double -> Length Double -> Angle Double -> Angle Double-> Angle Double -> Matrix Double
 busing' a b c alpha beta gamma = fromLists [[b00 /~ (one / meter), b01/~ (one / meter), b02/~ (one / meter)],
@@ -90,11 +92,8 @@ busing (Hexagonal a c) = busing' a a c (90 *~ degree) (90 *~ degree) (120 *~ deg
 busing (Monoclinic a b c beta) = busing' a b c (90 *~ degree) beta (90 *~ degree)
 busing (Triclinic a b c alpha beta gamma) = busing' a b c alpha beta gamma
 
-ub :: [Angle Double] -> Lattice -> Vector Double -> Vector Double
-ub uxuyuz lattice v = u uxuyuz (busing lattice <> v)
-
-sample :: [Angle Double] -> [Angle Double] -> Lattice -> [Double] -> Vector Double
-sample motors uxuyuz lattice v = e4cS motors (ub uxuyuz lattice (fromList v))
+sample :: [Angle Double] -> Lattice -> Vector Double -> Vector Double
+sample positions lattice = apply' (holder e4cS positions ++ [UB lattice])
 
 lambda :: Length Double
 lambda = 1.54 *~ nano meter
@@ -103,7 +102,7 @@ ki :: Vector Double
 ki = fromList [(tau / lambda) /~ (one / meter), 0, 0]
 
 detector :: [Angle Double] -> Vector Double
-detector motors = e4cD motors ki Prelude.- ki
+detector positions = apply' (holder e4cD positions) ki Prelude.- ki
 
 -- disp :: Matrix Double -> IO ()
 -- disp = putStrLn . format "  " (printf "%.3f")
@@ -113,9 +112,9 @@ dispv = putStr . vecdisp (disps 2)
 
 main :: IO()
 main =  do
-  dispv (sample [30.0 *~ degree, 0.0 *~ degree, 0.0 *~ degree]
-                    [0.0 *~ degree, 0.0 *~ degree, 0.0 *~ degree] (Cubic (1.54 *~ nano meter))
-         [0, 0, 1])
+  dispv (sample [30.0 *~ degree, 0.0 *~ degree, 0.0 *~ degree,
+                 0.0 *~ degree, 0.0 *~ degree, 0.0 *~ degree] (Cubic (1.54 *~ nano meter))
+         (fromList [0, 0, 1]))
   dispv (detector [60.0 *~ degree])
 
 -- rosenbrock a b [x,y] = [ a*(1-x), b*(y-x^2) ]
