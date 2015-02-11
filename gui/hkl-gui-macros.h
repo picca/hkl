@@ -43,7 +43,7 @@ static void get_ui(GtkBuilder *builder, const char *filename)
 	if (0 == access(filename, R_OK))
 		gtk_builder_add_from_file (builder, filename, NULL);
 	else{
-		char *ui = g_build_filename(PKGDATA, filename);
+		char *ui = g_build_filename(PKGDATA, filename, NULL);
 		gtk_builder_add_from_file (builder, ui, NULL);
 		g_free(ui);
 	}
