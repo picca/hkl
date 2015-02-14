@@ -6,10 +6,10 @@ import qualified Prelude
 
 import Numeric.LinearAlgebra (fromLists, Vector, Matrix,
                               ident, scalar, fromList, outer,
-                              (@>), (<>), vecdisp, disps)
+                              (@>), (<>), vecdisp, disps, inv)
 -- import Text.Printf (printf)
 
-import Numeric.Units.Dimensional.Prelude (_1, _2, nano, meter, degree,
+import Numeric.Units.Dimensional.Prelude (_0, _1, _2, nano, meter, degree,
                                           (*~), (/~), (+), (-), (*), (**), (/),
                                           Length, Angle, sin, cos, one, sqrt,
                                           Dimensionless)
@@ -23,6 +23,7 @@ data Lattice = Cubic (Length Double) -- a = b = c, alpha = beta = gamma = 90
              | Triclinic (Length Double) (Length Double) (Length Double) (Angle Double) (Angle Double) (Angle Double) -- a != b != c, alpha != beta != gamma != 90
                deriving (Show)
 
+-- A Transformation which can be apply to a Vector of Double
 data Transformation = NoTransformation -- Doesn't transform the vector at all
                     | Rotation [Double] (Angle Double)
                     | UB Lattice
@@ -47,6 +48,12 @@ apply (Rotation axis angle) v = (scalar c Prelude.* ident 3
       s = sin angle /~ one
 apply (UB lattice) v = busing lattice <> v
 
+-- unapply a transformation
+unapply :: Vector Double -> Transformation -> Vector Double
+unapply v NoTransformation = v
+unapply v (Rotation axis angle) = apply (Rotation axis (_0 - angle)) v
+unapply v (UB lattice) =  inv (busing lattice) <> v
+
 -- define a few transformations
 rx, ry, rz, omega, chi, phi, tth :: Angle Double -> Transformation
 rx = Rotation [1, 0, 0]
@@ -59,6 +66,9 @@ tth = Rotation [0, -1, 0]
 
 apply' :: [Transformation] -> Vector Double -> Vector Double
 apply' t v = foldr apply v t
+
+unapply' :: [Transformation] -> Vector Double -> Vector Double
+unapply' t v = foldl unapply v t
 
 e4cS :: [Angle Double -> Transformation]
 e4cS = [omega, chi, phi, rx, ry, rz]
@@ -89,8 +99,8 @@ busing (Hexagonal a c) = busing' a a c (90 *~ degree) (90 *~ degree) (120 *~ deg
 busing (Monoclinic a b c beta) = busing' a b c (90 *~ degree) beta (90 *~ degree)
 busing (Triclinic a b c alpha beta gamma) = busing' a b c alpha beta gamma
 
-sample :: [Angle Double] -> Lattice -> Vector Double -> Vector Double
-sample positions lattice = apply' (zipWith ($) e4cS positions ++ [UB lattice])
+sample :: [Angle Double] -> Lattice -> [Transformation]
+sample positions lattice = zipWith ($) e4cS positions ++ [UB lattice]
 
 lambda :: Length Double
 lambda = 1.54 *~ nano meter
@@ -98,8 +108,8 @@ lambda = 1.54 *~ nano meter
 ki :: Vector Double
 ki = fromList [(tau / lambda) /~ (one / meter), 0, 0]
 
-detector :: [Angle Double] -> Vector Double
-detector positions = apply' (zipWith ($) e4cD positions) ki Prelude.- ki
+detector :: [Angle Double] -> [Transformation]
+detector = zipWith ($) e4cD
 
 -- disp :: Matrix Double -> IO ()
 -- disp = putStrLn . format "  " (printf "%.3f")
@@ -109,10 +119,15 @@ dispv = putStr . vecdisp (disps 2)
 
 main :: IO()
 main =  do
-  dispv (sample [30.0 *~ degree, 0.0 *~ degree, 0.0 *~ degree,
-                 0.0 *~ degree, 0.0 *~ degree, 0.0 *~ degree] (Cubic (1.54 *~ nano meter))
-         (fromList [0, 0, 1]))
-  dispv (detector [60.0 *~ degree])
+  dispv (apply' (sample s_positions lattice) (fromList [0, 0, 1]))
+  dispv q
+  dispv (unapply' (sample s_positions lattice) q)
+       where
+         s_positions = [30.0 *~ degree, 0.0 *~ degree, 0.0 *~ degree,
+                        00.0 *~ degree, 0.0 *~ degree, 0.0 *~ degree]
+         d_positions = [60.0 *~ degree]
+         lattice = Cubic (1.54 *~ nano meter)
+         q = apply' (detector d_positions) ki Prelude.- ki
 
 -- rosenbrock a b [x,y] = [ a*(1-x), b*(y-x^2) ]
 
