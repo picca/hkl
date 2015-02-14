@@ -50,6 +50,7 @@ busing (Triclinic a b c alpha beta gamma) = busing' a b c alpha beta gamma
 data Transformation = NoTransformation -- Doesn't transform the vector at all
                     | Rotation [Double] (Angle Double)
                     | UB Lattice
+                    | Holder [Transformation]
 
 tau :: Dimensionless Double
 tau = _1 -- 1 or 2*pi
@@ -70,18 +71,14 @@ apply (Rotation axis angle) v = (scalar c Prelude.* ident 3
       c = cos angle /~ one
       s = sin angle /~ one
 apply (UB lattice) v = busing lattice <> v
+apply (Holder t) v = foldr apply v t
 
 -- unapply a transformation
 unapply :: Vector Double -> Transformation -> Vector Double
 unapply v NoTransformation = v
 unapply v (Rotation axis angle) = apply (Rotation axis (_0 - angle)) v
 unapply v (UB lattice) =  inv (busing lattice) <> v
-
-apply' :: [Transformation] -> Vector Double -> Vector Double
-apply' t v = foldr apply v t
-
-unapply' :: [Transformation] -> Vector Double -> Vector Double
-unapply' t v = foldl unapply v t
+unapply v (Holder t) = foldl unapply v t
 
 -- source
 lambda :: Length Double
@@ -106,9 +103,9 @@ e4c = Diffractometer [omega, chi, phi, rx, ry, rz] [tth]
 
 computeHkl :: Diffractometer -> [Angle Double] -> [Angle Double] -> Lattice -> Vector Double
 computeHkl (Diffractometer sample detector) s d lattice =
-    unapply' (zipWith ($) sample s ++ [UB lattice]) q
+    unapply q (Holder (zipWith ($) sample s ++ [UB lattice]))
         where
-          kf = apply' (zipWith ($) detector d) ki
+          kf = apply (Holder (zipWith ($) detector d)) ki
           q = kf Prelude.- ki
 
 dispv :: Vector Double -> IO ()
