@@ -119,8 +119,9 @@ computeAngles' :: Diffractometer -> Lattice -> [Double] -> [Double] -> [Double]
 computeAngles' diffractometer lattice hkl values =
     toList (computeHkl diffractometer s d lattice Prelude.- fromList hkl)
         where
-          s = toAngles $ toList (subVector 0 2 (fromList values)) ++ [0.0]
-          d = toAngles $ toList (subVector 2 1 (fromList values))
+          (_s, _d) = splitAt 2 values
+          s = toAngles (_s ++ [0.0, 0.0, 10.0, 0.0])
+          d = toAngles _d
 
 computeAngles :: Diffractometer -> Lattice -> [Double] -> ([Double], Matrix Double)
 computeAngles diffractometer lattice hkl =
