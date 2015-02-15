@@ -1,11 +1,19 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# OPTIONS_GHC -fglasgow-exts -fallow-undecidable-instances #-}
+{-
+    Copyright  : Copyright (C) 2014-2015 Synchrotron Soleil
+    License    : GPL3+
+
+    Maintainer : picca@synchrotron-soleil.fr
+    Stability  : Experimental
+    Portability: GHC only?
+-}
 
 import Prelude hiding (sqrt, sin, cos, (+), (-), (*), (**), (/))
 import qualified Prelude
 
 import Numeric.LinearAlgebra (fromLists, Vector, Matrix,
-                              ident, scalar, fromList, outer,
+                              ident, scalar, fromList,
                               (@>), (<>), vecdisp, disps, inv,
                               toList, dispf)
 
@@ -60,20 +68,23 @@ tau :: Dimensionless Double
 tau = _1 -- 1 or 2*pi
 
 crossprod :: Vector Double -> Matrix Double
-crossprod axis = fromLists [[0, -axis @> 2, axis @> 1],
-                            [axis @> 2, 0, -axis @> 0],
-                            [-axis @> 1, axis @> 0, 0]]
+crossprod axis = fromLists [[ 0, -z,  y],
+                            [ z,  0, -x],
+                            [-y,  x,  0]]
+    where
+      x = axis @> 0
+      y = axis @> 1
+      z = axis @> 2
 
 -- apply a transformation
 apply :: Transformation -> Vector Double -> Vector Double
 apply NoTransformation v = v
-apply (Rotation axis angle) v = (scalar c Prelude.* ident 3
-                                 Prelude.+ scalar s Prelude.* crossprod ax
-                                 Prelude.+ scalar (1 Prelude.- c) Prelude.* ax `outer` ax) <> v
+apply (Rotation axis angle) v = (ident 3 Prelude.+ s Prelude.* q Prelude.+ c Prelude.* (q <> q)) <> v
     where
       ax = fromList axis
-      c = cos angle /~ one
-      s = sin angle /~ one
+      c = scalar (1 Prelude.- cos angle /~ one)
+      s = scalar (sin angle /~ one)
+      q = crossprod ax
 apply (UB lattice) v = busing lattice <> v
 apply (Holder t) v = foldr apply v t
 
