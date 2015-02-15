@@ -6,7 +6,7 @@ import qualified Prelude
 
 import Numeric.LinearAlgebra (fromLists, Vector, Matrix,
                               ident, scalar, fromList, outer,
-                              (@>), (<>), vecdisp, disps, inv, subVector,
+                              (@>), (<>), vecdisp, disps, inv,
                               toList, dispf)
 
 import Numeric.GSL.Root (root, RootMethod (Hybrids))
@@ -20,6 +20,9 @@ import Numeric.Units.Dimensional.Prelude (_0, _1, _2, nano, meter, degree,
 
 toAngles :: [Double] -> [Angle Double]
 toAngles v = [i *~ degree | i <- v]
+
+fromAngles :: [Angle Double] -> [Double]
+fromAngles v = [i /~ degree | i <- v]
 
 data Lattice = Cubic (Length Double) -- a = b = c, alpha = beta = gamma = 90
              | Tetragonal (Length Double) (Length Double) -- a = b != c, alpha = beta = gamma = 90
@@ -96,6 +99,7 @@ ki = fromList [(tau / lambda) /~ (one / meter), 0, 0]
 
 -- diffractometer
 data Diffractometer = Diffractometer [Angle Double -> Transformation] [Angle Double -> Transformation]
+data Mode = ModeHklE4CConstantPhi
 
 e4c :: Diffractometer
 e4c = Diffractometer [omega, chi, phi, rx, ry, rz] [tth]
@@ -108,24 +112,43 @@ e4c = Diffractometer [omega, chi, phi, rx, ry, rz] [tth]
         phi = Rotation [0, -1, 0]
         tth = Rotation [0, -1, 0]
 
-computeHkl :: Diffractometer -> [Angle Double] -> [Angle Double] -> Lattice -> Vector Double
-computeHkl (Diffractometer sample detector) s d lattice =
+computeHkl :: Diffractometer -> [Angle Double] -> Lattice -> Vector Double
+computeHkl (Diffractometer sample detector) values lattice =
     unapply q (Holder (zipWith ($) sample s ++ [UB lattice]))
         where
+          (s, d) = splitAt 6 values
           kf = apply (Holder (zipWith ($) detector d)) ki
           q = kf Prelude.- ki
 
-computeAngles' :: Diffractometer -> Lattice -> [Double] -> [Double] -> [Double]
-computeAngles' diffractometer lattice hkl values =
-    toList (computeHkl diffractometer s d lattice Prelude.- fromList hkl)
+fromMode :: Mode -> [Double] -> [Angle Double] -> [Angle Double]
+fromMode ModeHklE4CConstantPhi fitted angles =
+    newAngles
         where
-          (_s, _d) = splitAt 2 values
-          s = toAngles (_s ++ [0.0, 0.0, 10.0, 0.0])
-          d = toAngles _d
+          (_vs, _d) = splitAt 2 fitted
+          (_cs, _) = splitAt 6 angles
+          (_, _ccs) = splitAt 2 _cs
+          newAngles = toAngles _vs ++ _ccs ++ toAngles _d
 
-computeAngles :: Diffractometer -> Lattice -> [Double] -> ([Double], Matrix Double)
-computeAngles diffractometer lattice hkl =
-    root Hybrids 1E-7 30 (computeAngles' diffractometer lattice hkl) [10.0, 10.0, 10.0]
+toMode :: Mode -> [Angle Double] -> [Double]
+toMode ModeHklE4CConstantPhi angles =
+    v
+        where
+          (_s, _d) = splitAt 6 angles
+          (_ss, _) = splitAt 2 _s
+          v = fromAngles (_ss ++ _d)
+
+computeAngles' :: Diffractometer -> [Angle Double] -> Lattice -> Mode -> [Double] -> [Double] -> [Double]
+computeAngles' diffractometer angles lattice mode hkl fitted =
+    toList (computeHkl diffractometer newAngles lattice Prelude.- fromList hkl)
+        where
+          newAngles = fromMode mode fitted angles
+
+computeAngles :: Diffractometer -> [Angle Double] -> Lattice -> Mode -> [Double] -> ([Double], Matrix Double)
+computeAngles diffractometer angles lattice mode hkl =
+    root Hybrids 1E-7 30 f guess
+         where
+           f = computeAngles' diffractometer angles lattice mode hkl
+           guess = toMode mode angles
 
 dispv :: Vector Double -> IO ()
 dispv = putStr . vecdisp (disps 2)
@@ -135,11 +158,14 @@ disp = putStr . dispf 3
 
 main :: IO()
 main = do
-  let (sol, path) = computeAngles e4c lattice  [0, 1, 1]
-  dispv (computeHkl e4c s d lattice)
-  print sol
+  print (fromAngles solution)
+  dispv (computeHkl e4c solution lattice)
   disp path
        where
-         s = toAngles [30.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-         d = toAngles [60.0]
+         (sol, path) = computeAngles e4c angles lattice mode [0, 0, 1]
+         s = [30.0, 0.0, 0.0, 0.0, 10.0, 0.0]
+         d = [60.0]
+         angles = toAngles (s ++ d)
+         solution = fromMode mode sol angles
          lattice = Cubic (1.54 *~ nano meter)
+         mode = ModeHklE4CConstantPhi
