@@ -6,8 +6,12 @@ import qualified Prelude
 
 import Numeric.LinearAlgebra (fromLists, Vector, Matrix,
                               ident, scalar, fromList, outer,
-                              (@>), (<>), vecdisp, disps, inv)
--- import Text.Printf (printf)
+                              (@>), (<>), vecdisp, disps, inv, subVector,
+                              toList, dispf)
+
+import Numeric.GSL.Root (root, RootMethod (Hybrids))
+
+import Text.Printf (printf)
 
 import Numeric.Units.Dimensional.Prelude (_0, _1, _2, nano, meter, degree,
                                           (*~), (/~), (+), (-), (*), (**), (/),
@@ -108,21 +112,34 @@ computeHkl (Diffractometer sample detector) s d lattice =
           kf = apply (Holder (zipWith ($) detector d)) ki
           q = kf Prelude.- ki
 
+computeAngles' :: Diffractometer -> Lattice -> [Double] -> [Double] -> [Double]
+computeAngles' diffractometer lattice hkl values =
+    toList (computeHkl diffractometer s d lattice Prelude.- fromList hkl)
+        where
+          s = [i *~ degree | i <- toList $ subVector 0 2 (fromList values)]
+          d = [i *~ degree | i <- toList $ subVector 2 1 (fromList values)]
+
+computeAngles :: Diffractometer -> Lattice -> [Double] -> ([Double], Matrix Double)
+computeAngles diffractometer lattice hkl =
+    root Hybrids 1E-7 30 (computeAngles' diffractometer lattice hkl) [10.0, 10.0, 10.0]
+
 dispv :: Vector Double -> IO ()
 dispv = putStr . vecdisp (disps 2)
 
 main :: IO()
-main =
-  dispv (computeHkl e4c s d lattice)
-       where
-         s = [30.0 *~ degree, 0.0 *~ degree, 0.0 *~ degree,
-              00.0 *~ degree, 0.0 *~ degree, 0.0 *~ degree]
-         d = [60.0 *~ degree]
-         lattice = Cubic (1.54 *~ nano meter)
+main = do
+  -- dispv (computeHkl e4c s d lattice)
+  --      where
+  --        s = [30.0 *~ degree, 0.0 *~ degree, 0.0 *~ degree,
+  --             00.0 *~ degree, 0.0 *~ degree, 0.0 *~ degree]
+  --        d = [60.0 *~ degree]
+  --        lattice = Cubic (1.54 *~ nano meter)
+  let (sol, path) = (computeAngles e4c (Cubic (1.54 *~ nano meter))  [0, 0, 1])
+  print sol
+  disp path
 
 -- rosenbrock a b [x,y] = [ a*(1-x), b*(y-x^2) ]
-
--- disp = putStrLn . format "  " (printf "%.3f")
+disp = putStr . dispf 3
 
 -- main = do
 --    let (sol,path) = root Hybrids 1E-7 30 (rosenbrock 1 10) [-100,-5]
