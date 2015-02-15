@@ -16,13 +16,7 @@ import Numeric.GSL.Root (root, RootMethod (Hybrids))
 import Numeric.Units.Dimensional.Prelude (_0, _1, _2, nano, meter, degree,
                                           (*~), (/~), (+), (-), (*), (**), (/),
                                           Length, Angle, sin, cos, one, sqrt,
-                                          Dimensionless)
-
-toAngles :: [Double] -> [Angle Double]
-toAngles v = [i *~ degree | i <- v]
-
-fromAngles :: [Angle Double] -> [Double]
-fromAngles v = [i /~ degree | i <- v]
+                                          Dimensionless, (*~~), (/~~))
 
 data Lattice = Cubic (Length Double) -- a = b = c, alpha = beta = gamma = 90
              | Tetragonal (Length Double) (Length Double) -- a = b != c, alpha = beta = gamma = 90
@@ -127,7 +121,7 @@ fromMode ModeHklE4CConstantPhi fitted angles =
           (_vs, _d) = splitAt 2 fitted
           (_cs, _) = splitAt 6 angles
           (_, _ccs) = splitAt 2 _cs
-          newAngles = toAngles _vs ++ _ccs ++ toAngles _d
+          newAngles = _vs *~~ degree ++ _ccs ++ _d *~~ degree
 
 toMode :: Mode -> [Angle Double] -> [Double]
 toMode ModeHklE4CConstantPhi angles =
@@ -135,7 +129,7 @@ toMode ModeHklE4CConstantPhi angles =
         where
           (_s, _d) = splitAt 6 angles
           (_ss, _) = splitAt 2 _s
-          v = fromAngles (_ss ++ _d)
+          v = (_ss ++ _d) /~~ degree
 
 computeAngles' :: Diffractometer -> [Angle Double] -> Lattice -> Mode -> [Double] -> [Double] -> [Double]
 computeAngles' diffractometer angles lattice mode hkl fitted =
@@ -158,14 +152,14 @@ disp = putStr . dispf 3
 
 main :: IO()
 main = do
-  print (fromAngles solution)
+  print (solution /~~ degree)
   dispv (computeHkl e4c solution lattice)
   disp path
        where
          (sol, path) = computeAngles e4c angles lattice mode [0, 0, 1]
          s = [30.0, 0.0, 0.0, 0.0, 10.0, 0.0]
          d = [60.0]
-         angles = toAngles (s ++ d)
+         angles = (s ++ d) *~~ degree
          solution = fromMode mode sol angles
          lattice = Cubic (1.54 *~ nano meter)
          mode = ModeHklE4CConstantPhi
