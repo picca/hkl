@@ -232,7 +232,7 @@ out:
 /**
  * hkl_engine_pseudo_axis_get:
  * @self: the this ptr
- * @name: the name of the expected psudo_axis
+ * @name: the name of the expected pseudo_axis
  * @error: return location for a GError, or NULL
  *
  * get the #HklParameter with the given @name.
