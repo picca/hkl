@@ -375,7 +375,7 @@ void hkl_engine_parameters_values_get(const HklEngine *self,
 }
 
 /**
- * hkl_engine_parameters_values_set: (skip)
+ * hkl_engine_parameters_values_set:
  * @self: the this ptr
  * @values: (array length=n_values): the values to set
  * @n_values: the size of the values array.

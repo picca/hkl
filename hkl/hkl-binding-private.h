@@ -64,6 +64,9 @@ HKLAPI const char **hkl_engine_pseudo_axis_names_get_binding(HklEngine *self,
 HKLAPI const char **hkl_engine_parameters_names_get_binding(const HklEngine *self,
 							    size_t *length) HKL_ARG_NONNULL(1, 2);
 
+HKLAPI double *hkl_engine_parameters_values_get_binding(const HklEngine *self, guint *len,
+							HklUnitEnum unit_type) HKL_ARG_NONNULL(1, 2);
+
 HKLAPI const char **hkl_engine_axis_names_get_binding(const HklEngine *self,
 						      HklEngineAxisNamesGet mode,
 						      size_t *length) HKL_ARG_NONNULL(1, 3);

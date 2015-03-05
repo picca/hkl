@@ -185,9 +185,22 @@ class TestAPI(unittest.TestCase):
                 parameters = engine.parameters_names_get()
                 self.assertTrue(type(parameters) is list)
                 [self.assertTrue(type(_) is str) for _ in parameters]
+                # all together
+                values = engine.parameters_values_get(Hkl.UnitEnum.USER)
+                [self.assertTrue(type(_) is float) for _ in values]
+                engine.parameters_values_set(values, Hkl.UnitEnum.USER)
+                # one by one
                 for parameter in parameters:
                     p = engine.parameter_get(parameter)
                     self.assertTrue(type(p.description_get()) is str)
+
+                # check that parameters are writable.
+                values = engine.parameters_values_get(Hkl.UnitEnum.USER)
+                values = [1.] * len(values)
+                engine.parameters_values_set(values, Hkl.UnitEnum.USER)
+                [self.assertTrue(ref == v)
+                 for ref, v in zip(values,
+                                   engine.parameters_values_get(Hkl.UnitEnum.USER))]
 
                 axes_r = engine.axis_names_get(Hkl.EngineAxisNamesGet.READ)
                 self.assertTrue(type(axes_r) is list)

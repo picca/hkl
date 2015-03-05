@@ -211,6 +211,37 @@ const char **hkl_engine_axis_names_get_binding(const HklEngine *self,
 }
 
 /**
+ * hkl_engine_parameters_values_get_binding:
+ * @self: the this ptr
+ * @len: (out caller-allocates): the length of the returned array
+ * @unit_type: the unit type (default or user) of the returned value
+ *
+ * Rename to: hkl_engine_parameters_values_get
+ *
+ * Return value: (array length=len) (transfer container): list of parameters values,
+ *          free the list with free when done.
+ **/
+double *hkl_engine_parameters_values_get_binding(const HklEngine *self, guint *len,
+						 HklUnitEnum unit_type)
+{
+	double *values;
+	uint i = 0;
+	HklParameter **parameter;
+
+	if(!self || !len || !self->mode || darray_size(self->mode->parameters) == 0)
+		return NULL;
+
+	*len = darray_size(self->mode->parameters);
+	values = malloc(*len * sizeof(*values));
+
+	darray_foreach(parameter, self->mode->parameters){
+		values[i++] = hkl_parameter_value_get(*parameter, unit_type);
+	}
+
+	return values;
+}
+
+/**
  * hkl_engine_pseudo_axis_values_get_binding:
  * @self: the this ptr
  * @len: (out caller-allocates): the length of the returned array
