@@ -997,13 +997,13 @@ set_up_3D (HklGuiWindow* self)
 #if HKL3D
 
 	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
-	const char *filename = NULL;
+	char *filename = NULL;
 	const char *name = hkl_factory_name_get(priv->diffractometer->factory);
 
 	if(!strcmp("K6C", name))
-		filename = "../data/diffabs.yaml";
+		filename = get_model("diffabs.yaml");
 	else if (!strcmp("K4CV", name))	
-		filename = "../data/cristal4C.yaml";
+		filename = get_model("cristal4C.yaml");
 
 	if(priv->frame3d){
 		gtk_widget_destroy(GTK_WIDGET(hkl_gui_3d_frame_get(priv->frame3d)));
