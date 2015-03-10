@@ -103,6 +103,19 @@
     \cos\gamma^{\star}=\frac{\cos\alpha\cos\beta-\cos\gamma}{\sin\alpha\sin\beta} & \, & \sin\gamma^{\star}=\frac{D}{\sin\alpha\sin\beta}
     \end{eqnarray*}
 
+    the volume of the lattice can be compute this way:
+
+    \begin{displaymath}
+    V = abcD
+    \end{displaymath}
+
+    or
+
+    \begin{displaymath}
+    V = \vec{a} \dot (\vec{b} \wedge \vec{c}) = \vec{b} \dot (\vec{c} \wedge \vec{a}) = \vec{c} \dot (\vec{a} \wedge \vec{b})
+    \end{displaymath}
+
+
 *** Diffraction
 
     Let the incomming X-rays beam whose wave vector is $\vec{k_{i}}$,
@@ -801,6 +814,13 @@ git clone git://repo.or.cz/hkl.git
    #+END_QUOTE
 * Todo
 ** hkl
+*** TODO [#A] [0/3] HklEngine "read_only"
+    * [ ] "alpha" incidence angle
+    * [ ] "beta" emergence angle
+    * [ ] "tth" the real 2*theta
+*** DONE [#A] HklLattice add an hkl_lattice_volume_get
+*** TODO [#A] HklEngine "nrj dependant"
+    Need an API to check if the engine depends or not of the nrj.
 *** TODO [0/2] PetraIII
 **** TODO computation problem
      Dear Teresa,
@@ -921,8 +941,7 @@ git clone git://repo.or.cz/hkl.git
 *** TODO add a fit on the Hklaxis offsets.
 *** TODO API to put a detector and a sample on the Geometry.
 *** TODO HklSample
-**** TODO HklSample add the cell volum computation.
-**** TODO unit test: hkl_sample_affine.
+**** TODO [#B] unit test: hkl_sample_affine.
      Check this:
      lattice=1.540000;1.540000;1.540000;90.000000;90.000000;90.000000;0;0;0;0;0;0
      uxuyuz=0.000000;0.000000;0.000000
@@ -932,6 +951,9 @@ git clone git://repo.or.cz/hkl.git
 
      A,  B, C, Alpha,  Beta, Gamma, Ux, Uy, Uy:
      17764892.133, 5793679.092, 15733785.198,  179.997,  179.999,452408725.23,  -575727594.04,  -1913661011.01 (affine) 1rst finetness
+
+     all the reflections are non collinear the affine method should
+     warn the user about this.
 *** TODO HklEngine "zone"
 *** TODO HklEngine "custom"
     for now this pseudoaxis let you select the axis you

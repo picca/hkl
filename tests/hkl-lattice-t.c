@@ -25,7 +25,7 @@
 #include <tap/hkl-tap.h>
 
 #define CHECK_PARAM(_lattice, _param, _value)				\
-	is_double(_value,						\
+	is_double((_value),						\
 		  hkl_parameter_value_get(hkl_lattice_## _param ##_get(_lattice), \
 					  HKL_UNIT_DEFAULT),		\
 		  HKL_EPSILON, __func__);
@@ -276,6 +276,28 @@ static void reciprocal(void)
 	hkl_lattice_free(reciprocal);
 }
 
+static void volume(void)
+{
+	HklLattice *lattice;
+	HklLattice *reciprocal;
+	const HklParameter *volume;
+
+	lattice = hkl_lattice_new_default();
+	reciprocal = hkl_lattice_new_default();
+
+	/* cubic */
+	hkl_lattice_set(lattice, 1.54, 1.54, 1.54,
+			90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD,
+			HKL_UNIT_DEFAULT, NULL);
+	CHECK_PARAM(lattice, volume, 1.54*1.54*1.54);
+
+	hkl_lattice_reciprocal(lattice, reciprocal);
+	CHECK_PARAM(reciprocal, volume, (HKL_TAU * HKL_TAU * HKL_TAU)/(1.54*1.54*1.54));
+
+	hkl_lattice_free(lattice);
+	hkl_lattice_free(reciprocal);
+}
+
 static void get_B(void)
 {
 	HklMatrix *B_ref = hkl_matrix_new_full(HKL_TAU / 1.54, 0, 0,
@@ -326,12 +348,13 @@ static void get_1_B(void)
 
 int main(int argc, char** argv)
 {
-	plan(137);
+	plan(139);
 
 	new();
 	new_copy();
 	set();
 	reciprocal();
+	volume();
 	get_B();
 	get_1_B();
 

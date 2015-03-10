@@ -44,6 +44,7 @@ static double convert_to_default(const HklParameter *p, double value, HklUnitEnu
 
 static int check_lattice_param(double a, double b, double c,
 			       double alpha, double beta, double gamma,
+			       double *volume,
 			       GError **error)
 {
 	hkl_error (error == NULL || *error == NULL);
@@ -57,8 +58,10 @@ static int check_lattice_param(double a, double b, double c,
 			    HKL_LATTICE_CHECK_LATTICE,
 			    "these lattice parameters are not valid, check alpha, beta and gamma");
 		return FALSE;
-	}else
+	}else{
+		*volume = a * b * c * sqrt(D);
 		return TRUE;
+	}
 }
 
 /* public */
@@ -82,10 +85,11 @@ HklLattice *hkl_lattice_new(double a, double b, double c,
 			    GError **error)
 {
 	HklLattice *self = NULL;
+	double volume;
 
 	hkl_error (error == NULL || *error == NULL);
 
-	if(!check_lattice_param(a, b, c, alpha, beta, gamma, error))
+	if(!check_lattice_param(a, b, c, alpha, beta, gamma, &volume, error))
 	{
 		g_assert (error == NULL || *error != NULL);
 		return FALSE;
@@ -127,6 +131,13 @@ HklLattice *hkl_lattice_new(double a, double b, double c,
 					TRUE, TRUE,
 					&hkl_unit_angle_rad,
 					&hkl_unit_angle_deg);
+	self->volume = hkl_parameter_new("volume",
+					 "The volume of the lattice",
+					 0, volume, a*b*c,
+					 FALSE, FALSE,
+					 &hkl_unit_length_nm,
+					 &hkl_unit_length_nm);
+
 	return self;
 }
 
@@ -150,6 +161,7 @@ HklLattice *hkl_lattice_new_copy(const HklLattice *self)
 	copy->alpha = hkl_parameter_new_copy(self->alpha);
 	copy->beta = hkl_parameter_new_copy(self->beta);
 	copy->gamma = hkl_parameter_new_copy(self->gamma);
+	copy->volume = hkl_parameter_new_copy(self->volume);
 
 	return copy;
 }
@@ -182,8 +194,24 @@ void hkl_lattice_free(HklLattice *self)
 	hkl_parameter_free(self->alpha);
 	hkl_parameter_free(self->beta);
 	hkl_parameter_free(self->gamma);
+	hkl_parameter_free(self->volume);
 	free(self);
 }
+
+#define HKL_LATTICE_X_SET(_p, _parameter, _error) do{			\
+		hkl_error ((_error) == NULL || *(_error) == NULL);	\
+		double a, b, c, alpha, beta, gamma;			\
+		/* check if the combinaison of parameters is ok */	\
+		hkl_lattice_get(self, &a, &b, &c, &alpha, &beta, &gamma, HKL_UNIT_DEFAULT); \
+		_p = hkl_parameter_value_get((_parameter), HKL_UNIT_DEFAULT); \
+									\
+		if(!hkl_lattice_set(self, a, b, c, alpha, beta, gamma, HKL_UNIT_DEFAULT, (_error))){ \
+			g_assert ((_error) == NULL || *(_error) != NULL); \
+			return FALSE;					\
+		}							\
+		g_assert ((_error) == NULL || *(_error) == NULL);	\
+		return hkl_parameter_init_copy(self->_p, (_parameter), (_error)); \
+	}while(0)
 
 /**
  * hkl_lattice_a_get: (skip)
@@ -205,9 +233,7 @@ const HklParameter *hkl_lattice_a_get(const HklLattice *self)
 int hkl_lattice_a_set(HklLattice *self, const HklParameter *parameter,
 		      GError **error)
 {
-	hkl_error (error == NULL || *error == NULL);
-
-	return hkl_parameter_init_copy(self->a, parameter, error);
+	HKL_LATTICE_X_SET(a, parameter, error);
 }
 
 /**
@@ -230,9 +256,7 @@ const HklParameter *hkl_lattice_b_get(const HklLattice *self)
 int hkl_lattice_b_set(HklLattice *self, const HklParameter *parameter,
 		      GError **error)
 {
-	hkl_error (error == NULL || *error == NULL);
-
-	return hkl_parameter_init_copy(self->b, parameter, error);
+	HKL_LATTICE_X_SET(b, parameter, error);
 }
 
 /**
@@ -255,9 +279,7 @@ const HklParameter *hkl_lattice_c_get(const HklLattice *self)
 int hkl_lattice_c_set(HklLattice *self, const HklParameter *parameter,
 		      GError **error)
 {
-	hkl_error (error == NULL || *error == NULL);
-
-	return hkl_parameter_init_copy(self->c, parameter, error);
+	HKL_LATTICE_X_SET(c, parameter, error);
 }
 
 /**
@@ -280,9 +302,7 @@ const HklParameter *hkl_lattice_alpha_get(const HklLattice *self)
 int hkl_lattice_alpha_set(HklLattice *self, const HklParameter *parameter,
 			  GError **error)
 {
-	hkl_error (error == NULL || *error == NULL);
-
-	return hkl_parameter_init_copy(self->alpha, parameter, error);
+	HKL_LATTICE_X_SET(alpha, parameter, error);
 }
 
 /**
@@ -305,9 +325,7 @@ const HklParameter *hkl_lattice_beta_get(const HklLattice *self)
 int hkl_lattice_beta_set(HklLattice *self, const HklParameter *parameter,
 			 GError **error)
 {
-	hkl_error (error == NULL || *error == NULL);
-
-	return hkl_parameter_init_copy(self->beta, parameter, error);
+	HKL_LATTICE_X_SET(beta, parameter, error);
 }
 
 /**
@@ -330,9 +348,16 @@ const HklParameter *hkl_lattice_gamma_get(const HklLattice *self)
 int hkl_lattice_gamma_set(HklLattice *self, const HklParameter *parameter,
 			   GError **error)
 {
-	hkl_error (error == NULL || *error == NULL);
+	HKL_LATTICE_X_SET(gamma, parameter, error);
+}
 
-	return hkl_parameter_init_copy(self->gamma, parameter, error);
+/**
+ * hkl_lattice_volume_get:
+ * @self: the this ptr
+ **/
+const HklParameter *hkl_lattice_volume_get(const HklLattice *self)
+{
+	return self->volume;
 }
 
 /**
@@ -351,6 +376,7 @@ void hkl_lattice_lattice_set(HklLattice *self, const HklLattice *lattice)
 	hkl_parameter_init_copy(self->alpha, lattice->alpha, NULL);
 	hkl_parameter_init_copy(self->beta, lattice->beta, NULL);
 	hkl_parameter_init_copy(self->gamma, lattice->gamma, NULL);
+	hkl_parameter_init_copy(self->volume, lattice->volume, NULL);
 }
 
 /**
@@ -375,6 +401,7 @@ int hkl_lattice_set(HklLattice *self,
 	hkl_error (error == NULL || *error == NULL);
 
 	double _a, _b, _c, _alpha, _beta, _gamma;
+	double _volume;
 
 	_a = convert_to_default(self->a, a, unit_type);
 	_b = convert_to_default(self->b, b, unit_type);
@@ -384,7 +411,7 @@ int hkl_lattice_set(HklLattice *self,
 	_gamma = convert_to_default(self->gamma, gamma, unit_type);
 
 	/* need to do the conversion before the check */
-	if(!check_lattice_param(_a, _b, _c, _alpha, _beta, _gamma, error)){
+	if(!check_lattice_param(_a, _b, _c, _alpha, _beta, _gamma, &_volume, error)){
 		g_assert (error == NULL || *error != NULL);
 		return FALSE;
 	}
@@ -396,6 +423,8 @@ int hkl_lattice_set(HklLattice *self,
 	hkl_parameter_value_set(self->alpha, _alpha, HKL_UNIT_DEFAULT, NULL);
 	hkl_parameter_value_set(self->beta, _beta, HKL_UNIT_DEFAULT, NULL);
 	hkl_parameter_value_set(self->gamma, _gamma, HKL_UNIT_DEFAULT, NULL);
+
+	hkl_parameter_value_set(self->volume, _volume, HKL_UNIT_DEFAULT, NULL);
 
 	return TRUE;
 }

@@ -36,6 +36,7 @@ struct _HklLattice
 	HklParameter *alpha;
 	HklParameter *beta;
 	HklParameter *gamma;
+	HklParameter *volume;
 };
 
 #define HKL_LATTICE_ERROR hkl_lattice_error_quark ()

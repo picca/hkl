@@ -331,6 +331,8 @@ HKLAPI const HklParameter *hkl_lattice_gamma_get(const HklLattice *self) HKL_ARG
 HKLAPI int hkl_lattice_gamma_set(HklLattice *self, const HklParameter *parameter,
 				 GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
 
+HKLAPI const HklParameter *hkl_lattice_volume_get(const HklLattice *self) HKL_ARG_NONNULL(1);
+
 HKLAPI int hkl_lattice_set(HklLattice *self,
 			   double a, double b, double c,
 			   double alpha, double beta, double gamma,

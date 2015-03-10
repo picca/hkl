@@ -293,6 +293,9 @@ class TestAPI(unittest.TestCase):
         reciprocal = lattice.copy()
         lattice.reciprocal(reciprocal)
 
+        # get the lattice volume
+        lattice.volume_get()
+
         del sample
         del lattice
 
