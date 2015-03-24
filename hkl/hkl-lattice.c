@@ -214,7 +214,7 @@ void hkl_lattice_free(HklLattice *self)
 	}while(0)
 
 /**
- * hkl_lattice_a_get: (skip)
+ * hkl_lattice_a_get:
  * @self: the this ptr
  **/
 const HklParameter *hkl_lattice_a_get(const HklLattice *self)
@@ -223,7 +223,7 @@ const HklParameter *hkl_lattice_a_get(const HklLattice *self)
 }
 
 /**
- * hkl_lattice_a_set: (skip)
+ * hkl_lattice_a_set:
  * @self: the this ptr
  * @parameter: the parameter to set
  * @error: return location for a GError, or NULL
@@ -237,7 +237,7 @@ int hkl_lattice_a_set(HklLattice *self, const HklParameter *parameter,
 }
 
 /**
- * hkl_lattice_b_get: (skip)
+ * hkl_lattice_b_get:
  * @self: the this ptr
  **/
 const HklParameter *hkl_lattice_b_get(const HklLattice *self)
@@ -246,7 +246,7 @@ const HklParameter *hkl_lattice_b_get(const HklLattice *self)
 }
 
 /**
- * hkl_lattice_b_set: (skip)
+ * hkl_lattice_b_set:
  * @self: the this ptr
  * @parameter: the parameter to set
  * @error: return location for a GError, or NULL
@@ -260,7 +260,7 @@ int hkl_lattice_b_set(HklLattice *self, const HklParameter *parameter,
 }
 
 /**
- * hkl_lattice_c_get: (skip)
+ * hkl_lattice_c_get:
  * @self: the this ptr
  **/
 const HklParameter *hkl_lattice_c_get(const HklLattice *self)
@@ -269,7 +269,7 @@ const HklParameter *hkl_lattice_c_get(const HklLattice *self)
 }
 
 /**
- * hkl_lattice_c_set: (skip)
+ * hkl_lattice_c_set:
  * @self: the this ptr
  * @parameter: the parameter to set
  * @error: return location for a GError, or NULL
@@ -283,7 +283,7 @@ int hkl_lattice_c_set(HklLattice *self, const HklParameter *parameter,
 }
 
 /**
- * hkl_lattice_alpha_get: (skip)
+ * hkl_lattice_alpha_get:
  * @self: the this ptr
  **/
 const HklParameter *hkl_lattice_alpha_get(const HklLattice *self)
@@ -292,7 +292,7 @@ const HklParameter *hkl_lattice_alpha_get(const HklLattice *self)
 }
 
 /**
- * hkl_lattice_alpha_set: (skip)
+ * hkl_lattice_alpha_set:
  * @self: the this ptr
  * @parameter: the parameter to set
  * @error: return location for a GError, or NULL
@@ -306,7 +306,7 @@ int hkl_lattice_alpha_set(HklLattice *self, const HklParameter *parameter,
 }
 
 /**
- * hkl_lattice_beta_get: (skip)
+ * hkl_lattice_beta_get:
  * @self: the this ptr
  **/
 const HklParameter *hkl_lattice_beta_get(const HklLattice *self)
@@ -315,7 +315,7 @@ const HklParameter *hkl_lattice_beta_get(const HklLattice *self)
 }
 
 /**
- * hkl_lattice_beta_set: (skip)
+ * hkl_lattice_beta_set:
  * @self: the this ptr
  * @parameter: the parameter to set
  * @error: return location for a GError, or NULL
@@ -329,7 +329,7 @@ int hkl_lattice_beta_set(HklLattice *self, const HklParameter *parameter,
 }
 
 /**
- * hkl_lattice_gamma_get: (skip)
+ * hkl_lattice_gamma_get:
  * @self: the this ptr
  **/
 const HklParameter *hkl_lattice_gamma_get(const HklLattice *self)
@@ -338,7 +338,7 @@ const HklParameter *hkl_lattice_gamma_get(const HklLattice *self)
 }
 
 /**
- * hkl_lattice_gamma_set: (skip)
+ * hkl_lattice_gamma_set:
  * @self: the this ptr
  * @parameter: the parameter to set
  * @error: return location for a GError, or NULL

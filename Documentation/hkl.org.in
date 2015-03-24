@@ -833,6 +833,9 @@ git clone git://repo.or.cz/hkl.git
   }
   ...
 #+END_SRC
+*** DONE =HklLattice= expose in the binding the _x_get/set methods <2015-03-24 mar.>
+    Now you can use hkl_lattice_x_get where x=a, b, c, alpha, beta,
+    gamma in the bindings.
 * Todo
 ** hkl
 *** TODO [#A] [0/3] HklEngine "read_only"

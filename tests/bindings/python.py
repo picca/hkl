@@ -242,6 +242,43 @@ class TestAPI(unittest.TestCase):
 
         self.assertTrue(False)
 
+    def test_lattice_api(self):
+        lattice = Hkl.Lattice.new(1.54, 1.54, 1.54,
+                                  math.radians(90.),
+                                  math.radians(90.),
+                                  math.radians(90.))
+        lattice2 = lattice.copy()
+
+        # check all the accessors
+        a = lattice.a_get()
+        b = lattice.b_get()
+        c = lattice.c_get()
+        alpha = lattice.alpha_get()
+        beta = lattice.beta_get()
+        gamma = lattice.gamma_get()
+
+        lattice.a_set(a)
+        lattice.b_set(b)
+        lattice.c_set(c)
+        lattice.alpha_set(alpha)
+        lattice.beta_set(beta)
+        lattice.gamma_set(gamma)
+
+        # change the lattice parameter by expanding the tuple from
+        # the get method. the lattice should not change.
+        a, b, c, alpha, beta, gamma = lattice.get(Hkl.UnitEnum.DEFAULT)
+        lattice.set(a, b, c, alpha, beta, gamma, Hkl.UnitEnum.DEFAULT)
+
+        # now change the lattice parameter
+        lattice.set(1, 2, 3, 90, 90, 90, Hkl.UnitEnum.USER)
+
+        # this new lattice is different from the one in the sample
+        self.assertTrue(lattice.get(Hkl.UnitEnum.DEFAULT)
+                        != lattice2.get(Hkl.UnitEnum.DEFAULT))
+
+        del lattice2
+        del lattice
+
     def test_sample_api(self):
         """
         enforce the HklSample API
