@@ -812,15 +812,33 @@ git clone git://repo.or.cz/hkl.git
    use only the closest solution for the next points of the trajectory.
    (first solution of the geometries list)
    #+END_QUOTE
+* Releases
+** @VERSION@
+*** DONE =HklLattice= add an =hkl_lattice_volume_get=
+#+BEGIN_SRC c
+  volume = hkl_lattice_volume_get(lattice);
+#+END_SRC
+*** DONE =HklEngine= "nrj, sample, ...  dependencies" <2015-03-24 mar.>
+    Add the =hkl_engine_dependencies_get= method which return if the
+    =HklEngine= depends of the axes, the energy, or the sample. the
+    possible values are stored in the =HklEngineDependencies= enum.
+
+#+BEGIN_SRC c
+  dependencies = hkl_engine_dependencies_get(engine);
+  if (dependencies & HKL_ENGINE_DEPENDENCIES_ENERGY) {
+          ...
+  }
+  if (dependencies & HKL_ENGINE_DEPENDENCIES_SAMPLE) {
+          ...
+  }
+  ...
+#+END_SRC
 * Todo
 ** hkl
 *** TODO [#A] [0/3] HklEngine "read_only"
     * [ ] "alpha" incidence angle
     * [ ] "beta" emergence angle
     * [ ] "tth" the real 2*theta
-*** DONE [#A] HklLattice add an hkl_lattice_volume_get
-*** TODO [#A] HklEngine "nrj dependant"
-    Need an API to check if the engine depends or not of the nrj.
 *** TODO [0/2] PetraIII
 **** TODO computation problem
      Dear Teresa,

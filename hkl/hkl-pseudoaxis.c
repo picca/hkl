@@ -582,6 +582,21 @@ int hkl_engine_initialized_set(HklEngine *self, int initialized, GError **error)
 }
 
 /**
+ * hkl_engine_dependencies_get:
+ * @self: the this ptr
+ *
+ * return all dependencies of the engine which are not mode parameters
+ * or axes. The possible combination of values are defined in
+ * #HklEngineDependencies enum.
+ *
+ * return value:
+ **/
+unsigned int hkl_engine_dependencies_get(const HklEngine *self)
+{
+	return self->info->dependencies;
+}
+
+/**
  * hkl_engine_fprintf: (skip)
  * @f: the FILE
  * @self: the HklEngine

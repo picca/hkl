@@ -307,8 +307,12 @@ static inline void hkl_mode_free(HklMode *self)
 struct _HklEngineInfo {
 	const char *name;
 	const darray(const HklPseudoAxis *) pseudo_axes;
+	unsigned int dependencies;
 };
 
+#define HKL_ENGINE_INFO(_name, _pseudo_axes, _dependencies) .name = (_name), \
+		.pseudo_axes = DARRAY(_pseudo_axes),			\
+		.dependencies = (_dependencies)
 
 struct _HklEngine
 {

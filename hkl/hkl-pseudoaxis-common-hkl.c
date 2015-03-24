@@ -779,8 +779,9 @@ HklEngine *hkl_engine_hkl_new(void)
 	};
 	static const HklPseudoAxis *pseudo_axes[] = {&h, &k, &l};
 	static HklEngineInfo info = {
-		.name = "hkl",
-		.pseudo_axes = DARRAY(pseudo_axes),
+		HKL_ENGINE_INFO("hkl",
+				pseudo_axes,
+				HKL_ENGINE_DEPENDENCIES_AXES | HKL_ENGINE_DEPENDENCIES_ENERGY | HKL_ENGINE_DEPENDENCIES_SAMPLE),
 	};
 	static HklEngineOperations operations = {
 		HKL_ENGINE_OPERATIONS_DEFAULTS,

@@ -237,8 +237,9 @@ HklEngine *hkl_engine_eulerians_new(void)
 	};
 	static const HklPseudoAxis *pseudo_axes[] = {&omega, &chi, &phi};
 	static HklEngineInfo info = {
-		.name = "eulerians",
-		.pseudo_axes = DARRAY(pseudo_axes),
+		HKL_ENGINE_INFO("eulerians",
+				pseudo_axes,
+				HKL_ENGINE_DEPENDENCIES_AXES),
 	};
 	static HklEngineOperations operations = {
 		HKL_ENGINE_OPERATIONS_DEFAULTS,

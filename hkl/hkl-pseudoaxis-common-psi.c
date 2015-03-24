@@ -293,8 +293,9 @@ HklEngine *hkl_engine_psi_new(void)
 	};
 	static const HklPseudoAxis *pseudo_axes[] = {&psi};
 	static const HklEngineInfo info = {
-		.name = "psi",
-		.pseudo_axes = DARRAY(pseudo_axes),
+		HKL_ENGINE_INFO("psi",
+				pseudo_axes,
+				HKL_ENGINE_DEPENDENCIES_AXES | HKL_ENGINE_DEPENDENCIES_ENERGY | HKL_ENGINE_DEPENDENCIES_SAMPLE),
 	};
 	static const HklEngineOperations operations = {
 		HKL_ENGINE_OPERATIONS_DEFAULTS,

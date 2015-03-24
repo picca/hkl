@@ -84,7 +84,7 @@ static int __test(unsigned int nb_iter, test_func f, int foreach_mode)
 	return res;
 }
 
-#define TEST(_nb_iter, _f) __test(_nb_iter, _f, 0)
+#define TEST_FOREACH_ENGINE(_nb_iter, _f) __test(_nb_iter, _f, 0)
 #define TEST_FOREACH_MODE(_nb_iter, _f) __test(_nb_iter, _f, 1)
 
 static void factories(void)
@@ -263,7 +263,7 @@ static int _pseudo_axis_get(HklEngine *engine, HklEngineList *engine_list, unsig
 
 static void pseudo_axis_get(void)
 {
-	ok(TRUE == TEST(1, _pseudo_axis_get), __func__);
+	ok(TRUE == TEST_FOREACH_ENGINE(1, _pseudo_axis_get), __func__);
 }
 
 static int _capabilities(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
@@ -380,7 +380,7 @@ static int _modes(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
 
 static void modes(void)
 {
-	ok(TRUE == TEST(1, _modes), __func__);
+	ok(TRUE == TEST_FOREACH_ENGINE(1, _modes), __func__);
 }
 
 static int _check_axes(const darray_string *axes, const darray_string *refs)
@@ -491,12 +491,47 @@ static void parameters(void)
 	ok(TRUE == TEST_FOREACH_MODE(1, _parameters), __func__);
 }
 
+static int _depends(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
+{
+	int res = TRUE;
+	const char *name = hkl_engine_name_get(engine);
+	const unsigned int depends = hkl_engine_dependencies_get(engine);
+
+	if(!strcmp("hkl", name))
+		res &= DIAG((depends & (HKL_ENGINE_DEPENDENCIES_AXES | HKL_ENGINE_DEPENDENCIES_ENERGY | HKL_ENGINE_DEPENDENCIES_SAMPLE)) != 0);
+	if(!strcmp("eulerians", hkl_engine_name_get(engine))){
+		res &= DIAG((depends & HKL_ENGINE_DEPENDENCIES_AXES) != 0);
+		res &= DIAG((depends & HKL_ENGINE_DEPENDENCIES_ENERGY) == 0);
+		res &= DIAG((depends & HKL_ENGINE_DEPENDENCIES_SAMPLE) == 0);
+	}
+	if(!strcmp("q", name)){
+		res &= DIAG((depends &(HKL_ENGINE_DEPENDENCIES_AXES | HKL_ENGINE_DEPENDENCIES_ENERGY)) != 0);
+		res &= DIAG((depends & HKL_ENGINE_DEPENDENCIES_SAMPLE) == 0);
+	}
+	if(!strcmp("q2", name)){
+		res &= DIAG((depends &(HKL_ENGINE_DEPENDENCIES_AXES | HKL_ENGINE_DEPENDENCIES_ENERGY)) != 0);
+		res &= DIAG((depends & HKL_ENGINE_DEPENDENCIES_SAMPLE) == 0);
+	}
+	if(!strcmp("qper_qpar", name)){
+		res &= DIAG((depends & (HKL_ENGINE_DEPENDENCIES_AXES | HKL_ENGINE_DEPENDENCIES_ENERGY)) != 0);
+		res &= DIAG((depends & HKL_ENGINE_DEPENDENCIES_SAMPLE) == 0);
+	}
+	if(!strcmp("psi", name))
+		res &= DIAG((depends & (HKL_ENGINE_DEPENDENCIES_AXES | HKL_ENGINE_DEPENDENCIES_ENERGY | HKL_ENGINE_DEPENDENCIES_SAMPLE)) != 0);
+
+	return res;
+}
+
+static void depends(void)
+{
+	ok(TRUE == TEST_FOREACH_ENGINE(1, _depends), __func__);
+}
 
 int main(int argc, char** argv)
 {
 	double n;
 
-	plan(9);
+	plan(10);
 
 	if (argc > 1)
 		n = atoi(argv[1]);
@@ -512,6 +547,7 @@ int main(int argc, char** argv)
 	modes();
 	axis_names();
 	parameters();
+	depends();
 
 	return 0;
 }

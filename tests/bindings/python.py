@@ -227,6 +227,11 @@ class TestAPI(unittest.TestCase):
                 engine.initialized_set(True)
                 self.assertTrue(True == engine.initialized_get())
 
+        # check all the dependencies
+        for engine in engines.engines_get():
+            dependencies = engine.dependencies_get()
+            self.assertTrue(dependencies & Hkl.EngineDependencies.AXES)
+
     @unittest.skip("for testing figures")
     def test_doc_example(self):
         # execfile("../../Documentation/sphinx/source/bindings/python.py")

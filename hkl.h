@@ -523,6 +523,16 @@ HKLAPI int hkl_engine_parameters_values_set(HklEngine *self,
 					    double values[], size_t n_values,
 					    HklUnitEnum unit_type, GError **error) HKL_ARG_NONNULL(1, 2) HKL_WARN_UNUSED_RESULT;
 
+typedef enum _HklEngineDependencies
+{
+	HKL_ENGINE_DEPENDENCIES_AXES = 1u << 0,
+	HKL_ENGINE_DEPENDENCIES_ENERGY = 1u << 1,
+	HKL_ENGINE_DEPENDENCIES_SAMPLE = 1u << 2,
+} HklEngineDependencies;
+
+HKLAPI unsigned int hkl_engine_dependencies_get(const HklEngine *self) HKL_ARG_NONNULL(1);
+
+
 /* HklEngineList */
 
 HKLAPI void hkl_engine_list_free(HklEngineList *self) HKL_ARG_NONNULL(1);

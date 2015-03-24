@@ -20,5 +20,7 @@ editdoc:
 	$(LIBTOOL) --mode=execute -dlopen $(AM_LDFLAGS) \
 	$(EMACS) hkl.org.in -q --load $(srcdir)/default.el
 
+showdoc: hkl.html
+	iceweasel $(builddir)/hkl.html
 
-.PHONY: editdoc
+.PHONY: editdoc showdoc
