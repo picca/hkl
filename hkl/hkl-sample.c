@@ -1017,10 +1017,12 @@ int hkl_sample_reflection_hkl_set(HklSampleReflection *self,
 }
 
 /**
- * hkl_sample_reflection_flag_get: (skip)
- * @self:
+ * hkl_sample_reflection_flag_get:
+ * @self: the this ptr
  *
  * get the flag of the reflection
+ *
+ * Returns: the flag value
  **/
 int hkl_sample_reflection_flag_get(const HklSampleReflection *self)
 {
@@ -1028,11 +1030,11 @@ int hkl_sample_reflection_flag_get(const HklSampleReflection *self)
 }
 
 /**
- * hkl_sample_reflection_flag_set: (skip)
- * @self:
- * @flag:
+ * hkl_sample_reflection_flag_set:
+ * @self: the this ptr
+ * @flag: the value of the flag to set
  *
- * set the flag of the reglection
+ * set the flag of the reflection.
  **/
 void hkl_sample_reflection_flag_set(HklSampleReflection *self, int flag)
 {
@@ -1040,10 +1042,12 @@ void hkl_sample_reflection_flag_set(HklSampleReflection *self, int flag)
 }
 
 /**
- * hkl_sample_reflection_geometry_get: (skip)
- * @self:
+ * hkl_sample_reflection_geometry_get:
+ * @self: the this ptr
  *
- * set the geometry of the reflection
+ * get the #HklGeometry stored in the #HklSampleReflection
+ *
+ * Returns: the geometry saved into the reflection.
  **/
 const HklGeometry *hkl_sample_reflection_geometry_get(HklSampleReflection *self)
 {
@@ -1051,9 +1055,9 @@ const HklGeometry *hkl_sample_reflection_geometry_get(HklSampleReflection *self)
 }
 
 /**
- * hkl_sample_reflection_geometry_set: (skip)
- * @self:
- * @geometry:
+ * hkl_sample_reflection_geometry_set:
+ * @self: the this ptr
+ * @geometry: the geometry to set in the  #HklSampleReflection
  *
  * set the geometry of the reflection
  **/

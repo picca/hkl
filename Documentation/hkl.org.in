@@ -836,6 +836,21 @@ git clone git://repo.or.cz/hkl.git
 *** DONE =HklLattice= expose in the binding the _x_get/set methods <2015-03-24 mar.>
     Now you can use hkl_lattice_x_get where x=a, b, c, alpha, beta,
     gamma in the bindings.
+#+BEGIN_SRC python :export code
+  a = lattice.a_get()
+  lattice.a_set(a)
+#+END_SRC
+*** DONE =HklSampleReflection= expose the flag_get/set and geometry_get/set method <2015-03-24 mar.>
+    It is now possible to change the geometry stored into a reflection
+    via the bindings.
+#+BEGIN_SRC python :export code
+  flag = reflection.flag_get()
+  reflection.flag_set(flag)
+
+  geometry = reflection.geometry_get()
+  geometry.axes_values_set([omega, chi, phi, ...])
+  reflection.geometry_set(geometry)
+#+END_SRC
 * Todo
 ** hkl
 *** TODO [#A] [0/3] HklEngine "read_only"

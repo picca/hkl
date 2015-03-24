@@ -361,6 +361,14 @@ class TestAPI(unittest.TestCase):
         r2.hkl_set(1, 0, 1)
         self.assertTrue(r2.hkl_get() == (1.0, 0.0, 1.0))
 
+        # get the flag part
+        flag = r1.flag_get()
+        r1.flag_set(flag)
+
+        # get the geometry part
+        g = r1.geometry_get()
+        r1.geometry_set(g)
+
         # compute the angles
         sample.get_reflection_measured_angle(r1, r2)
         sample.get_reflection_theoretical_angle(r1, r2)
