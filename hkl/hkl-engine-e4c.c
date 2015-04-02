@@ -132,12 +132,12 @@ static HklMode *psi_constant(void)
 /* pseudo axes engines */
 /***********************/
 
-static HklEngine *hkl_engine_e4c_hkl_new(void)
+static HklEngine *hkl_engine_e4c_hkl_new(HklEngineList *engines)
 {
 	HklEngine *self;
 	HklMode *default_mode;
 
-	self = hkl_engine_hkl_new();
+	self = hkl_engine_hkl_new(engines);
 
 	default_mode = bissector();
 	hkl_engine_add_mode(self, default_mode);
@@ -164,12 +164,12 @@ static HklMode *psi(void)
 	return hkl_mode_psi_new(&info);
 }
 
-static HklEngine *hkl_engine_e4c_psi_new(void)
+static HklEngine *hkl_engine_e4c_psi_new(HklEngineList *engines)
 {
 	HklEngine *self;
 	HklMode *default_mode;
 
-	self = hkl_engine_psi_new();
+	self = hkl_engine_psi_new(engines);
 
 	default_mode = psi();
 	hkl_engine_add_mode(self, default_mode);
@@ -216,9 +216,9 @@ static HklEngineList *hkl_engine_list_new_eulerian4C_vertical(const HklFactory *
 {
 	HklEngineList *self = hkl_engine_list_new();
 
-	hkl_engine_list_add(self, hkl_engine_e4c_hkl_new());
-	hkl_engine_list_add(self, hkl_engine_e4c_psi_new());
-	hkl_engine_list_add(self, hkl_engine_q_new());
+	hkl_engine_list_add(self, hkl_engine_e4c_hkl_new(self));
+	hkl_engine_list_add(self, hkl_engine_e4c_psi_new(self));
+	hkl_engine_list_add(self, hkl_engine_q_new(self));
 
 	return self;
 }
@@ -264,9 +264,9 @@ static HklEngineList *hkl_engine_list_new_soleil_mars(const HklFactory *factory)
 {
 	HklEngineList *self = hkl_engine_list_new();
 
-	hkl_engine_list_add(self, hkl_engine_e4c_hkl_new());
-	hkl_engine_list_add(self, hkl_engine_e4c_psi_new());
-	hkl_engine_list_add(self, hkl_engine_q_new());
+	hkl_engine_list_add(self, hkl_engine_e4c_hkl_new(self));
+	hkl_engine_list_add(self, hkl_engine_e4c_psi_new(self));
+	hkl_engine_list_add(self, hkl_engine_q_new(self));
 
 	return self;
 }
@@ -311,9 +311,9 @@ static HklEngineList *hkl_engine_list_new_eulerian4C_horizontal(const HklFactory
 {
 	HklEngineList *self = hkl_engine_list_new();
 
-	hkl_engine_list_add(self, hkl_engine_e4c_hkl_new());
-	hkl_engine_list_add(self, hkl_engine_e4c_psi_new());
-	hkl_engine_list_add(self, hkl_engine_q_new());
+	hkl_engine_list_add(self, hkl_engine_e4c_hkl_new(self));
+	hkl_engine_list_add(self, hkl_engine_e4c_psi_new(self));
+	hkl_engine_list_add(self, hkl_engine_q_new(self));
 
 	return self;
 }

@@ -42,12 +42,12 @@ static HklMode* lifting_detector_thetah()
 				 TRUE);
 }
 
-static HklEngine *hkl_engine_soleil_sirius_turret_hkl_new(void)
+static HklEngine *hkl_engine_soleil_sirius_turret_hkl_new(HklEngineList *engines)
 {
 	HklEngine *self;
 	HklMode *default_mode;
 
-	self = hkl_engine_hkl_new();
+	self = hkl_engine_hkl_new(engines);
 
 	default_mode = lifting_detector_thetah();
 	hkl_engine_add_mode(self, default_mode);
@@ -96,10 +96,10 @@ static HklEngineList *hkl_engine_list_new_soleil_sirius_turret(const HklFactory 
 {
 	HklEngineList *self = hkl_engine_list_new();
 
-	hkl_engine_list_add(self, hkl_engine_soleil_sirius_turret_hkl_new());
-	hkl_engine_list_add(self, hkl_engine_q2_new());
-	hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
-	hkl_engine_list_add(self, hkl_engine_tth2_new());
+	hkl_engine_list_add(self, hkl_engine_soleil_sirius_turret_hkl_new(self));
+	hkl_engine_list_add(self, hkl_engine_q2_new(self));
+	hkl_engine_list_add(self, hkl_engine_qper_qpar_new(self));
+	hkl_engine_list_add(self, hkl_engine_tth2_new(self));
 
 	return self;
 }

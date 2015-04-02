@@ -170,12 +170,12 @@ static HklMode *fourc_constant_phi_horizontal()
 /* pseudo axis engine */
 /**********************/
 
-static HklEngine *hkl_engine_petra3_p09_eh2_hkl_new(void)
+static HklEngine *hkl_engine_petra3_p09_eh2_hkl_new(HklEngineList *engines)
 {
 	HklEngine *self;
 	HklMode *default_mode;
 
-	self = hkl_engine_hkl_new();
+	self = hkl_engine_hkl_new(engines);
 
 	default_mode = zaxis_alpha_fixed();
 	hkl_engine_add_mode(self, default_mode);
@@ -235,7 +235,7 @@ static HklEngineList *hkl_engine_list_new_petra3_p09_eh2(const HklFactory *facto
 {
 	HklEngineList *self = hkl_engine_list_new();
 
-	hkl_engine_list_add(self, hkl_engine_petra3_p09_eh2_hkl_new());
+	hkl_engine_list_add(self, hkl_engine_petra3_p09_eh2_hkl_new(self));
 
 	return self;
 }

@@ -31,13 +31,13 @@ typedef struct _HklEngineEulerians HklEngineEulerians;
 
 struct _HklEngineEulerians
 {
+	HklEngine engine;
 	HklParameter *omega;
 	HklParameter *chi;
 	HklParameter *phi;
-	HklEngine engine;
 };
 
-extern HklEngine *hkl_engine_eulerians_new(void);
+extern HklEngine *hkl_engine_eulerians_new(HklEngineList *engines);
 
 extern void kappa_2_kappap(double komega, double kappa, double kphi, double alpha,
 			   double *komegap, double *kappap, double *kphip);

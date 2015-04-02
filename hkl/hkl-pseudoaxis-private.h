@@ -391,10 +391,13 @@ static inline void unregister_pseudo_axis(HklParameter *pseudo_axis)
 
 
 static inline HklParameter *register_pseudo_axis(HklEngine *self,
+						 HklEngineList *engines,
 						 const HklParameter *pseudo_axis)
 {
 	HklParameter *parameter;
 
+	/* TODO find an already existing pseudo axis in the list */
+	
 	parameter = hkl_parameter_new_copy(pseudo_axis);
 	darray_append(self->pseudo_axes, parameter);
 	darray_append(self->pseudo_axis_names, parameter->name);

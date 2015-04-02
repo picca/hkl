@@ -328,12 +328,12 @@ static HklMode *psi_constant(void)
 				 TRUE);
 }
 
-static HklEngine *hkl_engine_k4cv_hkl_new(void)
+static HklEngine *hkl_engine_k4cv_hkl_new(HklEngineList *engines)
 {
 	HklEngine *self;
 	HklMode *default_mode;
 
-	self = hkl_engine_hkl_new();
+	self = hkl_engine_hkl_new(engines);
 
 	default_mode = bissector();
 	hkl_engine_add_mode(self, default_mode);
@@ -365,12 +365,12 @@ static HklMode *psi()
 	return hkl_mode_psi_new(&info);
 }
 
-static HklEngine *hkl_engine_k4cv_psi_new(void)
+static HklEngine *hkl_engine_k4cv_psi_new(HklEngineList *engines)
 {
 	HklEngine *self;
 	HklMode *default_mode;
 
-	self = hkl_engine_psi_new();
+	self = hkl_engine_psi_new(engines);
 
 	default_mode = psi();
 	hkl_engine_add_mode(self, default_mode);
@@ -422,10 +422,10 @@ static HklEngineList *hkl_engine_list_new_kappa4C_vertical(const HklFactory *fac
 	HklEngineList *self = hkl_engine_list_new();
 
 	self->geometries->multiply = hkl_geometry_list_multiply_k4c_real;
-	hkl_engine_list_add(self, hkl_engine_k4cv_hkl_new());
-	hkl_engine_list_add(self, hkl_engine_eulerians_new());
-	hkl_engine_list_add(self, hkl_engine_k4cv_psi_new());
-	hkl_engine_list_add(self, hkl_engine_q_new());
+	hkl_engine_list_add(self, hkl_engine_k4cv_hkl_new(self));
+	hkl_engine_list_add(self, hkl_engine_eulerians_new(self));
+	hkl_engine_list_add(self, hkl_engine_k4cv_psi_new(self));
+	hkl_engine_list_add(self, hkl_engine_q_new(self));
 
 	return self;
 }

@@ -49,7 +49,7 @@ struct _HklEnginePsi
 extern HklMode *hkl_mode_psi_new(
 	const HklModeAutoInfo *info);
 
-extern HklEngine *hkl_engine_psi_new(void);
+extern HklEngine *hkl_engine_psi_new(HklEngineList *engines);
 
 extern int _psi_func(const gsl_vector *x, void *params, gsl_vector *f);
 

@@ -32,9 +32,9 @@ typedef struct _HklEngineQperQpar HklEngineQperQpar;
 
 extern double qmax(double wavelength);
 
-extern HklEngine *hkl_engine_q_new(void);
-extern HklEngine *hkl_engine_q2_new(void);
-extern HklEngine *hkl_engine_qper_qpar_new(void);
+extern HklEngine *hkl_engine_q_new(HklEngineList *engines);
+extern HklEngine *hkl_engine_q2_new(HklEngineList *engines);
+extern HklEngine *hkl_engine_qper_qpar_new(HklEngineList *engines);
 
 G_END_DECLS
 

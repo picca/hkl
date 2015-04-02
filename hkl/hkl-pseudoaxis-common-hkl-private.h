@@ -62,7 +62,7 @@ extern int hkl_mode_initialized_set_psi_constant_vertical_real(HklMode *base,
 							       int initialized,
 							       GError **error);
 
-extern HklEngine *hkl_engine_hkl_new(void);
+extern HklEngine *hkl_engine_hkl_new(HklEngineList *engines);
 
 #define HKL_MODE_OPERATIONS_HKL_DEFAULTS	\
 	HKL_MODE_OPERATIONS_AUTO_DEFAULTS,	\

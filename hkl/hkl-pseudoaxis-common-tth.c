@@ -134,7 +134,7 @@ static void hkl_engine_tth2_free_real(HklEngine *base)
 	free(self);
 }
 
-HklEngine *hkl_engine_tth2_new(void)
+HklEngine *hkl_engine_tth2_new(HklEngineList *engines)
 {
 	HklEngineTth2 *self;
 	HklMode *mode;
@@ -161,8 +161,8 @@ HklEngine *hkl_engine_tth2_new(void)
 	self = HKL_MALLOC(HklEngineTth2);
 
 	hkl_engine_init(&self->engine, &info, &operations);
-	self->tth = register_pseudo_axis(&self->engine, &tth);
-	self->alpha = register_pseudo_axis(&self->engine, &alpha);
+	self->tth = register_pseudo_axis(&self->engine, engines, &tth);
+	self->alpha = register_pseudo_axis(&self->engine, engines, &alpha);
 
 	/* tth2 [default] */
 	mode = mode_tth2();

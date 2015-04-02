@@ -78,12 +78,12 @@ static HklMode* reflectivity_2_2()
 				 TRUE);
 }
 
-static HklEngine *hkl_engine_soleil_sixs_med_2_2_hkl_new(void)
+static HklEngine *hkl_engine_soleil_sixs_med_2_2_hkl_new(HklEngineList *engines)
 {
 	HklEngine *self;
 	HklMode *default_mode;
 
-	self = hkl_engine_hkl_new();
+	self = hkl_engine_hkl_new(engines);
 
 	default_mode = mu_fixed_2_2();
 	hkl_engine_add_mode(self, default_mode);
@@ -112,12 +112,12 @@ static HklMode* pitch_fixed()
 				 TRUE);
 }
 
-static HklEngine *hkl_engine_soleil_sixs_med_1_2_hkl_new(void)
+static HklEngine *hkl_engine_soleil_sixs_med_1_2_hkl_new(HklEngineList *engines)
 {
 	HklEngine *self;
 	HklMode *default_mode;
 
-	self = hkl_engine_hkl_new();
+	self = hkl_engine_hkl_new(engines);
 
 	default_mode = pitch_fixed();
 	hkl_engine_add_mode(self, default_mode);
@@ -282,12 +282,12 @@ static HklMode* mu_fixed_2_3()
 				 TRUE);
 }
 
-static HklEngine *hkl_engine_soleil_sixs_med_2_3_hkl_new(void)
+static HklEngine *hkl_engine_soleil_sixs_med_2_3_hkl_new(HklEngineList *engines)
 {
 	HklEngine *self;
 	HklMode *default_mode;
 
-	self = hkl_engine_hkl_new();
+	self = hkl_engine_hkl_new(engines);
 
 	default_mode = mu_fixed_2_3();
 	hkl_engine_add_mode(self, default_mode);
@@ -338,10 +338,10 @@ static HklEngineList *hkl_engine_list_new_soleil_sixs_med_2_2(const HklFactory *
 {
 	HklEngineList *self = hkl_engine_list_new();
 
-	hkl_engine_list_add(self, hkl_engine_soleil_sixs_med_2_2_hkl_new());
-	hkl_engine_list_add(self, hkl_engine_q2_new());
-	hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
-	hkl_engine_list_add(self, hkl_engine_tth2_new());
+	hkl_engine_list_add(self, hkl_engine_soleil_sixs_med_2_2_hkl_new(self));
+	hkl_engine_list_add(self, hkl_engine_q2_new(self));
+	hkl_engine_list_add(self, hkl_engine_qper_qpar_new(self));
+	hkl_engine_list_add(self, hkl_engine_tth2_new(self));
 
 	return self;
 }
@@ -388,10 +388,10 @@ static HklEngineList *hkl_engine_list_new_soleil_sixs_med_1_2(const HklFactory *
 {
 	HklEngineList *self = hkl_engine_list_new();
 
-	hkl_engine_list_add(self, hkl_engine_soleil_sixs_med_1_2_hkl_new());
-	hkl_engine_list_add(self, hkl_engine_q2_new());
-	hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
-	hkl_engine_list_add(self, hkl_engine_tth2_new());
+	hkl_engine_list_add(self, hkl_engine_soleil_sixs_med_1_2_hkl_new(self));
+	hkl_engine_list_add(self, hkl_engine_q2_new(self));
+	hkl_engine_list_add(self, hkl_engine_qper_qpar_new(self));
+	hkl_engine_list_add(self, hkl_engine_tth2_new(self));
 
 	return self;
 }
@@ -444,10 +444,10 @@ static HklEngineList *hkl_engine_list_new_soleil_sixs_med_2_3(const HklFactory *
 	HklEngineList *self = hkl_engine_list_new();
 
 	self->geometries->multiply = hkl_geometry_list_multiply_soleil_sixs_med_2_3;
-	hkl_engine_list_add(self, hkl_engine_soleil_sixs_med_2_3_hkl_new());
-	hkl_engine_list_add(self, hkl_engine_q2_new());
-	hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
-	hkl_engine_list_add(self, hkl_engine_tth2_new());
+	hkl_engine_list_add(self, hkl_engine_soleil_sixs_med_2_3_hkl_new(self));
+	hkl_engine_list_add(self, hkl_engine_q2_new(self));
+	hkl_engine_list_add(self, hkl_engine_qper_qpar_new(self));
+	hkl_engine_list_add(self, hkl_engine_tth2_new(self));
 
 	return self;
 }

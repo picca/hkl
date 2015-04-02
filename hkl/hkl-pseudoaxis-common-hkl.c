@@ -756,7 +756,7 @@ static void hkl_engine_hkl_free_real(HklEngine *base)
 	free(self);
 }
 
-HklEngine *hkl_engine_hkl_new(void)
+HklEngine *hkl_engine_hkl_new(HklEngineList *engines)
 {
 	HklEngineHkl *self;
 	static const HklParameter h = {
@@ -789,9 +789,9 @@ HklEngine *hkl_engine_hkl_new(void)
 
 	hkl_engine_init(&self->engine, &info, &operations);
 
-	self->h = register_pseudo_axis(&self->engine, &h);
-	self->k = register_pseudo_axis(&self->engine, &k);
-	self->l = register_pseudo_axis(&self->engine, &l);
+	self->h = register_pseudo_axis(&self->engine, engines, &h);
+	self->k = register_pseudo_axis(&self->engine, engines, &k);
+	self->l = register_pseudo_axis(&self->engine, engines, &l);
 
 	return &self->engine;
 }

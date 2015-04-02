@@ -216,7 +216,7 @@ static void hkl_engine_eulerians_free_real(HklEngine *base)
 	free(self);
 }
 
-HklEngine *hkl_engine_eulerians_new(void)
+HklEngine *hkl_engine_eulerians_new(HklEngineList *engines)
 {
 	HklEngineEulerians *self;
 	HklMode *mode;
@@ -247,9 +247,9 @@ HklEngine *hkl_engine_eulerians_new(void)
 	hkl_engine_init(&self->engine, &info, &operations);
 
 	/* add the pseudo axes with the new API */
-	self->omega = register_pseudo_axis(&self->engine, &omega);
-	self->chi = register_pseudo_axis(&self->engine, &chi);
-	self->phi = register_pseudo_axis(&self->engine, &phi);
+	self->omega = register_pseudo_axis(&self->engine, engines, &omega);
+	self->chi = register_pseudo_axis(&self->engine, engines, &chi);
+	self->phi = register_pseudo_axis(&self->engine, engines, &phi);
 
 	/* eulerians [default] */
 	mode = mode_eulerians();

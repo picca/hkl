@@ -283,7 +283,7 @@ static void hkl_engine_psi_free_real(HklEngine *base)
 	free(self);
 }
 
-HklEngine *hkl_engine_psi_new(void)
+HklEngine *hkl_engine_psi_new(HklEngineList *engines)
 {
 	HklEnginePsi *self;
 	static const HklParameter psi = {
@@ -305,7 +305,7 @@ HklEngine *hkl_engine_psi_new(void)
 
 	hkl_engine_init(&self->engine, &info, &operations);
 
-	self->psi = register_pseudo_axis(&self->engine, &psi);
+	self->psi = register_pseudo_axis(&self->engine, engines, &psi);
 
 	return &self->engine;
 }

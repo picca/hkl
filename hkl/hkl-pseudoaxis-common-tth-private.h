@@ -28,7 +28,7 @@ G_BEGIN_DECLS
 
 typedef struct _HklEngineTth2 HklEngineTth2;
 
-extern HklEngine *hkl_engine_tth2_new(void);
+extern HklEngine *hkl_engine_tth2_new(HklEngineList *engines);
 
 G_END_DECLS
 
