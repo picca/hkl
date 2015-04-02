@@ -22,9 +22,10 @@
 #include <gsl/gsl_sys.h>                // for gsl_isnan
 #include "hkl-factory-private.h"        // for autodata_factories_, etc
 #include "hkl-pseudoaxis-common-eulerians-private.h"
-#include "hkl-pseudoaxis-common-q-private.h"  // for hkl_engine_q2_new, etc
 #include "hkl-pseudoaxis-common-hkl-private.h"  // for RUBh_minus_Q, etc
 #include "hkl-pseudoaxis-common-psi-private.h"  // for hkl_engine_psi_new, etc
+#include "hkl-pseudoaxis-common-q-private.h"  // for hkl_engine_q2_new, etc
+#include "hkl-pseudoaxis-common-tth-private.h"  // for hkl_engine_tth2_new, etc
 
 static void hkl_geometry_list_multiply_k6c_real(HklGeometryList *self,
 						HklGeometryListItem *item)
@@ -955,6 +956,7 @@ static HklEngineList *hkl_engine_list_new_kappa6C(const HklFactory *factory)
 	hkl_engine_list_add(self, hkl_engine_k6c_psi_new());
 	hkl_engine_list_add(self, hkl_engine_q2_new());
 	hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
+	hkl_engine_list_add(self, hkl_engine_tth2_new());
 
 	return self;
 }
@@ -1010,6 +1012,7 @@ static HklEngineList *hkl_engine_list_new_soleil_sirius_kappa(const HklFactory *
 	hkl_engine_list_add(self, hkl_engine_soleil_sirius_kappa_psi_new());
 	hkl_engine_list_add(self, hkl_engine_q2_new());
 	hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
+	hkl_engine_list_add(self, hkl_engine_tth2_new());
 
 	return self;
 }

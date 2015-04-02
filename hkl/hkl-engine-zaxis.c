@@ -21,8 +21,9 @@
  */
 #include <gsl/gsl_sys.h>                // for gsl_isnan
 #include "hkl-factory-private.h"        // for autodata_factories_, etc
-#include "hkl-pseudoaxis-common-q-private.h"  // for hkl_engine_q2_new, etc
 #include "hkl-pseudoaxis-common-hkl-private.h"  // for RUBh_minus_Q, etc
+#include "hkl-pseudoaxis-common-q-private.h"  // for hkl_engine_q2_new, etc
+#include "hkl-pseudoaxis-common-tth-private.h"  // for hkl_engine_tth2_new, etc
 
 /* #define DEBUG */
 
@@ -138,6 +139,7 @@ static HklEngineList *hkl_engine_list_new_zaxis(const HklFactory *factory)
 	hkl_engine_list_add(self, hkl_engine_zaxis_hkl_new());
 	hkl_engine_list_add(self, hkl_engine_q2_new());
 	hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
+	hkl_engine_list_add(self, hkl_engine_tth2_new());
 
 	return self;
 }

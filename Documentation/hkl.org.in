@@ -857,6 +857,10 @@ git clone git://repo.or.cz/hkl.git
     * [ ] "alpha" incidence angle
     * [ ] "beta" emergence angle
     * [ ] "tth" the real 2*theta
+*** TODO [#A] HklSource
+    Create a parameter for the wavelength. This is just internally for
+    the futur trajectory system, so no need to change the signature of
+    hkl_geometry_vawelength get/set
 *** TODO [0/2] PetraIII
 **** TODO computation problem
      Dear Teresa,
@@ -970,7 +974,7 @@ git clone git://repo.or.cz/hkl.git
       to the axis. that way it would be possible to check a posteriori
       for this degenerescencence.
     - [ ] Add a description for each parameters.
-      This will help for the documentation and the gui.
+*** TODO This will help for the documentation and the gui.
 *** TODO HklGeometryList different method to help select a solution.
     this select solution can depend on the geometry
     for example the kappa axis must be in one side of the plane.

@@ -22,8 +22,9 @@
 #include <gsl/gsl_multiroots.h>
 #include "hkl-factory-private.h"        // for autodata_factories_, etc
 #include "hkl-axis-private.h"           // for HklAxis
-#include "hkl-pseudoaxis-common-q-private.h"  // for hkl_engine_q2_new, etc
 #include "hkl-pseudoaxis-common-hkl-private.h"  // for hkl_engine_hkl_new, etc
+#include "hkl-pseudoaxis-common-q-private.h"  // for hkl_engine_q2_new, etc
+#include "hkl-pseudoaxis-common-tth-private.h"  // for hkl_engine_tth2_new, etc
 
 /* #define DEBUG */
 
@@ -340,6 +341,7 @@ static HklEngineList *hkl_engine_list_new_soleil_sixs_med_2_2(const HklFactory *
 	hkl_engine_list_add(self, hkl_engine_soleil_sixs_med_2_2_hkl_new());
 	hkl_engine_list_add(self, hkl_engine_q2_new());
 	hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
+	hkl_engine_list_add(self, hkl_engine_tth2_new());
 
 	return self;
 }
@@ -389,6 +391,7 @@ static HklEngineList *hkl_engine_list_new_soleil_sixs_med_1_2(const HklFactory *
 	hkl_engine_list_add(self, hkl_engine_soleil_sixs_med_1_2_hkl_new());
 	hkl_engine_list_add(self, hkl_engine_q2_new());
 	hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
+	hkl_engine_list_add(self, hkl_engine_tth2_new());
 
 	return self;
 }
@@ -444,6 +447,7 @@ static HklEngineList *hkl_engine_list_new_soleil_sixs_med_2_3(const HklFactory *
 	hkl_engine_list_add(self, hkl_engine_soleil_sixs_med_2_3_hkl_new());
 	hkl_engine_list_add(self, hkl_engine_q2_new());
 	hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
+	hkl_engine_list_add(self, hkl_engine_tth2_new());
 
 	return self;
 }

@@ -20,8 +20,9 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 #include "hkl-factory-private.h"        // for autodata_factories_, etc
-#include "hkl-pseudoaxis-common-q-private.h"  // for hkl_engine_q2_new, etc
 #include "hkl-pseudoaxis-common-hkl-private.h"  // for hkl_engine_hkl_new, etc
+#include "hkl-pseudoaxis-common-q-private.h"  // for hkl_engine_q2_new, etc
+#include "hkl-pseudoaxis-common-tth-private.h"  // for hkl_engine_tth2_new, etc
 
 /**************************/
 /* TURRET PseudoAxeEngine */
@@ -98,6 +99,7 @@ static HklEngineList *hkl_engine_list_new_soleil_sirius_turret(const HklFactory 
 	hkl_engine_list_add(self, hkl_engine_soleil_sirius_turret_hkl_new());
 	hkl_engine_list_add(self, hkl_engine_q2_new());
 	hkl_engine_list_add(self, hkl_engine_qper_qpar_new());
+	hkl_engine_list_add(self, hkl_engine_tth2_new());
 
 	return self;
 }
