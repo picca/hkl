@@ -111,11 +111,10 @@ static int get_q_real(HklMode *self,
 
 /* not declared in the constructor as it is used also in the q2 pseudo
  * axis engine */
-static const HklPseudoAxis q = {
-	.parameter = { HKL_PARAMETER_DEFAULTS, .name="q",
-		       .description = "the norm of $\\vec{q}$",
-		       .range = { .max=1 },
-	},
+static const HklParameter q = {
+	HKL_PARAMETER_DEFAULTS, .name="q",
+	.description = "the norm of $\\vec{q}$",
+	.range = { .max=1 },
 };
 
 static HklMode *mode_q(void)
@@ -144,7 +143,7 @@ HklEngine *hkl_engine_q_new(void)
 {
 	HklEngineQ *self;
 	HklMode *mode;
-	static const HklPseudoAxis *pseudo_axes[] = {&q};
+	static const HklParameter *pseudo_axes[] = {&q};
 	static const HklEngineInfo info = {
 		HKL_ENGINE_INFO("q",
 				pseudo_axes,
@@ -158,7 +157,7 @@ HklEngine *hkl_engine_q_new(void)
 	self = HKL_MALLOC(HklEngineQ);
 
 	hkl_engine_init(&self->engine, &info, &operations);
-	self->q = register_pseudo_axis(&self->engine, &q.parameter);
+	self->q = register_pseudo_axis(&self->engine, &q);
 
 	/* q [default] */
 	mode = mode_q();
@@ -256,10 +255,9 @@ static HklMode *mode_q2(void)
 	return hkl_mode_auto_new(&info, &operations, TRUE);
 }
 
-static const HklPseudoAxis alpha = {
-	.parameter = { HKL_PARAMETER_DEFAULTS_ANGLE, .name = "alpha",
-		       .description = "angle of the projection of $\\vec{q}$ on the $yOz$ plan and $\\vec{y}$",
-	},
+static const HklParameter alpha = {
+	HKL_PARAMETER_DEFAULTS_ANGLE, .name = "alpha",
+	.description = "angle of the projection of $\\vec{q}$ on the $yOz$ plan and $\\vec{y}$",
 };
 
 static void hkl_engine_q2_free_real(HklEngine *base)
@@ -273,7 +271,7 @@ HklEngine *hkl_engine_q2_new(void)
 {
 	HklEngineQ2 *self;
 	HklMode *mode;
-	static const HklPseudoAxis *pseudo_axes[] = {&q, &alpha};
+	static const HklParameter *pseudo_axes[] = {&q, &alpha};
 	static const HklEngineInfo info = {
 		HKL_ENGINE_INFO("q2",
 				pseudo_axes,
@@ -287,8 +285,8 @@ HklEngine *hkl_engine_q2_new(void)
 	self = HKL_MALLOC(HklEngineQ2);
 
 	hkl_engine_init(&self->engine, &info, &operations);
-	self->q = register_pseudo_axis(&self->engine, &q.parameter);
-	self->alpha = register_pseudo_axis(&self->engine, &alpha.parameter);
+	self->q = register_pseudo_axis(&self->engine, &q);
+	self->alpha = register_pseudo_axis(&self->engine, &alpha);
 
 	/* q2 [default] */
 	mode = mode_q2();
@@ -440,19 +438,17 @@ static void hkl_engine_qper_qpar_free_real(HklEngine *base)
 
 HklEngine *hkl_engine_qper_qpar_new(void)
 {
-	static const HklPseudoAxis qper = {
-		.parameter = { HKL_PARAMETER_DEFAULTS, .name = "qper",
-			       .description = "perpendicular component of $\\vec{q}$ along the normal of the sample surface",
-			       .range = { .min=-1, .max=1 },
-		},
+	static const HklParameter qper = {
+		HKL_PARAMETER_DEFAULTS, .name = "qper",
+		.description = "perpendicular component of $\\vec{q}$ along the normal of the sample surface",
+		.range = { .min=-1, .max=1 },
 	};
-	static const HklPseudoAxis qpar = {
-		.parameter = { HKL_PARAMETER_DEFAULTS, .name = "qpar",
-			       .description = "parallel component of $\\vec{q}$",
-			       .range = { .min=-1, .max=1 },
-		},
+	static const HklParameter qpar = {
+		HKL_PARAMETER_DEFAULTS, .name = "qpar",
+		.description = "parallel component of $\\vec{q}$",
+		.range = { .min=-1, .max=1 },
 	};
-	static const HklPseudoAxis *pseudo_axes[] = {&qper, &qpar};
+	static const HklParameter *pseudo_axes[] = {&qper, &qpar};
 	static const HklEngineInfo info = {
 		HKL_ENGINE_INFO("qper_qpar",
 				pseudo_axes,
@@ -468,8 +464,8 @@ HklEngine *hkl_engine_qper_qpar_new(void)
 	self = HKL_MALLOC(HklEngineQperQpar);
 
 	hkl_engine_init(&self->engine, &info, &operations);
-	self->qper = register_pseudo_axis(&self->engine, &qper.parameter);
-	self->qpar = register_pseudo_axis(&self->engine, &qpar.parameter);
+	self->qper = register_pseudo_axis(&self->engine, &qper);
+	self->qpar = register_pseudo_axis(&self->engine, &qpar);
 
 	/* qper_qpar [default] */
 	mode = mode_qper_qpar();

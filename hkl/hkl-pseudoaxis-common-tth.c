@@ -139,17 +139,15 @@ HklEngine *hkl_engine_tth2_new(void)
 	HklEngineTth2 *self;
 	HklMode *mode;
 
-	static const HklPseudoAxis tth = {
-		.parameter = { HKL_PARAMETER_DEFAULTS_ANGLE, .name="tth",
-			       .description = "the $2 \\theta$ angle",
-		},
+	static const HklParameter tth = {
+		HKL_PARAMETER_DEFAULTS_ANGLE, .name="tth",
+		.description = "the $2 \\theta$ angle",
 	};
-	static const HklPseudoAxis alpha = {
-		.parameter = { HKL_PARAMETER_DEFAULTS_ANGLE, .name = "alpha",
-			       .description = "angle of the projection of $\\vec{q}$ on the $yOz$ plan and $\\vec{y}$",
-		},
+	static const HklParameter alpha = {
+		HKL_PARAMETER_DEFAULTS_ANGLE, .name = "alpha",
+		.description = "angle of the projection of $\\vec{q}$ on the $yOz$ plan and $\\vec{y}$",
 	};
-	static const HklPseudoAxis *pseudo_axes[] = {&tth, &alpha};
+	static const HklParameter *pseudo_axes[] = {&tth, &alpha};
 	static const HklEngineInfo info = {
 		HKL_ENGINE_INFO("tth2",
 				pseudo_axes,
@@ -163,8 +161,8 @@ HklEngine *hkl_engine_tth2_new(void)
 	self = HKL_MALLOC(HklEngineTth2);
 
 	hkl_engine_init(&self->engine, &info, &operations);
-	self->tth = register_pseudo_axis(&self->engine, &tth.parameter);
-	self->alpha = register_pseudo_axis(&self->engine, &alpha.parameter);
+	self->tth = register_pseudo_axis(&self->engine, &tth);
+	self->alpha = register_pseudo_axis(&self->engine, &alpha);
 
 	/* tth2 [default] */
 	mode = mode_tth2();

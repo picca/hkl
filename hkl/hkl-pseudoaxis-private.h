@@ -36,7 +36,6 @@
 
 G_BEGIN_DECLS
 
-typedef struct _HklPseudoAxis HklPseudoAxis;
 typedef struct _HklModeOperations HklModeOperations;
 typedef struct _HklModeInfo HklModeInfo;
 typedef struct _HklMode HklMode;
@@ -44,66 +43,6 @@ typedef struct _HklEngineInfo HklEngineInfo;
 typedef struct _HklEngineOperations HklEngineOperations;
 
 typedef darray(HklMode *) darray_mode;
-
-/*****************/
-/* HklPseudoAxis */
-/*****************/
-
-struct _HklPseudoAxis
-{
-	HklParameter parameter;
-	HklEngine *engine;
-};
-
-
-#define HKL_PARAMETER_OPERATIONS_PSEUDOAXIS_DEFAULTS HKL_PARAMETER_OPERATIONS_DEFAULTS,	\
-		.copy = hkl_parameter_copy_pseudo_axis_real,		\
-		.free = hkl_parameter_free_pseudo_axis_real,		\
-		.fprintf = hkl_parameter_fprintf_pseudo_axis_real
-
-
-static inline HklParameter *hkl_parameter_copy_pseudo_axis_real(const HklParameter *self)
-{
-	HklPseudoAxis *pseudo_axis = container_of(self, HklPseudoAxis, parameter);
-	HklPseudoAxis *dup = HKL_MALLOC(HklPseudoAxis);
-
-	*dup = *pseudo_axis;
-
-	return &dup->parameter;
-}
-
-
-static inline void hkl_parameter_free_pseudo_axis_real(HklParameter *self)
-{
-	HklPseudoAxis *pseudo_axis = container_of(self, HklPseudoAxis, parameter);
-
-	free(pseudo_axis);
-}
-
-
-static inline void hkl_parameter_fprintf_pseudo_axis_real(FILE *f, const HklParameter *self)
-{
-	HklPseudoAxis *pseudo_axis = container_of(self, HklPseudoAxis, parameter);
-
-	hkl_parameter_fprintf_real(f, self);
-	fprintf(f, " %p", pseudo_axis->engine);
-}
-
-
-static inline HklParameter *hkl_parameter_new_pseudo_axis(const HklParameter *parameter,
-							  HklEngine *engine)
-{
-	HklPseudoAxis *self;
-	static HklParameterOperations ops = {HKL_PARAMETER_OPERATIONS_PSEUDOAXIS_DEFAULTS};
-
-	self = HKL_MALLOC(HklPseudoAxis);
-
-	self->parameter = *parameter;
-	self->parameter.ops = &ops;
-	self->engine = engine;
-
-	return &self->parameter;
-}
 
 /***********/
 /* HklMode */
@@ -306,7 +245,7 @@ static inline void hkl_mode_free(HklMode *self)
 
 struct _HklEngineInfo {
 	const char *name;
-	const darray(const HklPseudoAxis *) pseudo_axes;
+	const darray(const HklParameter *) pseudo_axes;
 	unsigned int dependencies;
 };
 
@@ -456,7 +395,7 @@ static inline HklParameter *register_pseudo_axis(HklEngine *self,
 {
 	HklParameter *parameter;
 
-	parameter = hkl_parameter_new_pseudo_axis(pseudo_axis, self);
+	parameter = hkl_parameter_new_copy(pseudo_axis);
 	darray_append(self->pseudo_axes, parameter);
 	darray_append(self->pseudo_axis_names, parameter->name);
 	

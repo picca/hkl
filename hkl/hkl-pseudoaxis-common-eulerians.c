@@ -220,22 +220,19 @@ HklEngine *hkl_engine_eulerians_new(void)
 {
 	HklEngineEulerians *self;
 	HklMode *mode;
-	static const HklPseudoAxis omega = {
-		.parameter = { HKL_PARAMETER_DEFAULTS_ANGLE, .name = "omega",
-			       .description = "omega equivalent for a four circle eulerian geometry",
-		}
+	static const HklParameter omega = {
+		HKL_PARAMETER_DEFAULTS_ANGLE, .name = "omega",
+		.description = "omega equivalent for a four circle eulerian geometry",
 	};
-	static const HklPseudoAxis chi = {
-		.parameter = { HKL_PARAMETER_DEFAULTS_ANGLE, .name = "chi",
-			       .description = "chi equivalent for a four circle eulerian geometry",
-		}
+	static const HklParameter chi = {
+		HKL_PARAMETER_DEFAULTS_ANGLE, .name = "chi",
+		.description = "chi equivalent for a four circle eulerian geometry",
 	};
-	static const HklPseudoAxis phi = {
-		.parameter = { HKL_PARAMETER_DEFAULTS_ANGLE, .name = "phi",
-			       .description = "phi equivalent for a four circle eulerian geometry",
-		}
+	static const HklParameter phi = {
+		HKL_PARAMETER_DEFAULTS_ANGLE, .name = "phi",
+		.description = "phi equivalent for a four circle eulerian geometry",
 	};
-	static const HklPseudoAxis *pseudo_axes[] = {&omega, &chi, &phi};
+	static const HklParameter *pseudo_axes[] = {&omega, &chi, &phi};
 	static HklEngineInfo info = {
 		HKL_ENGINE_INFO("eulerians",
 				pseudo_axes,
@@ -250,9 +247,9 @@ HklEngine *hkl_engine_eulerians_new(void)
 	hkl_engine_init(&self->engine, &info, &operations);
 
 	/* add the pseudo axes with the new API */
-	self->omega = register_pseudo_axis(&self->engine, &omega.parameter);
-	self->chi = register_pseudo_axis(&self->engine, &chi.parameter);
-	self->phi = register_pseudo_axis(&self->engine, &phi.parameter);
+	self->omega = register_pseudo_axis(&self->engine, &omega);
+	self->chi = register_pseudo_axis(&self->engine, &chi);
+	self->phi = register_pseudo_axis(&self->engine, &phi);
 
 	/* eulerians [default] */
 	mode = mode_eulerians();

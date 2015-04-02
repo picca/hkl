@@ -759,25 +759,22 @@ static void hkl_engine_hkl_free_real(HklEngine *base)
 HklEngine *hkl_engine_hkl_new(void)
 {
 	HklEngineHkl *self;
-	static const HklPseudoAxis h = {
-		.parameter = { HKL_PARAMETER_DEFAULTS, .name = "h",
-			       .description = "h coordinate of the diffracting plan",
-			       .range = { .min=-1, .max=1 },
-		},
+	static const HklParameter h = {
+		HKL_PARAMETER_DEFAULTS, .name = "h",
+		.description = "h coordinate of the diffracting plan",
+		.range = { .min=-1, .max=1 },
 	};
-	static const HklPseudoAxis k = {
-		.parameter = { HKL_PARAMETER_DEFAULTS, .name = "k",
-			       .description = "k coordinate of the diffracting plan",
-			       .range = { .min=-1, .max=1 },
-		},
+	static const HklParameter k = {
+		HKL_PARAMETER_DEFAULTS, .name = "k",
+		.description = "k coordinate of the diffracting plan",
+		.range = { .min=-1, .max=1 },
 	};
-	static const HklPseudoAxis l = {
-		.parameter = { HKL_PARAMETER_DEFAULTS, .name = "l",
-			       .description = "l coordinate of the diffracting plan",
-			       .range={ .min=-1, .max=1 },
-		},
+	static const HklParameter l = {
+		HKL_PARAMETER_DEFAULTS, .name = "l",
+		.description = "l coordinate of the diffracting plan",
+		.range={ .min=-1, .max=1 },
 	};
-	static const HklPseudoAxis *pseudo_axes[] = {&h, &k, &l};
+	static const HklParameter *pseudo_axes[] = {&h, &k, &l};
 	static HklEngineInfo info = {
 		HKL_ENGINE_INFO("hkl",
 				pseudo_axes,
@@ -792,9 +789,9 @@ HklEngine *hkl_engine_hkl_new(void)
 
 	hkl_engine_init(&self->engine, &info, &operations);
 
-	self->h = register_pseudo_axis(&self->engine, &h.parameter);
-	self->k = register_pseudo_axis(&self->engine, &k.parameter);
-	self->l = register_pseudo_axis(&self->engine, &l.parameter);
+	self->h = register_pseudo_axis(&self->engine, &h);
+	self->k = register_pseudo_axis(&self->engine, &k);
+	self->l = register_pseudo_axis(&self->engine, &l);
 
 	return &self->engine;
 }

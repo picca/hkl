@@ -286,12 +286,11 @@ static void hkl_engine_psi_free_real(HklEngine *base)
 HklEngine *hkl_engine_psi_new(void)
 {
 	HklEnginePsi *self;
-	static const HklPseudoAxis psi = {
-		.parameter = { HKL_PARAMETER_DEFAULTS_ANGLE, .name = "psi",
-			       .description = "angle between the reference vector and the diffraction plan",
-		},
+	static const HklParameter psi = {
+		HKL_PARAMETER_DEFAULTS_ANGLE, .name = "psi",
+		.description = "angle between the reference vector and the diffraction plan",
 	};
-	static const HklPseudoAxis *pseudo_axes[] = {&psi};
+	static const HklParameter *pseudo_axes[] = {&psi};
 	static const HklEngineInfo info = {
 		HKL_ENGINE_INFO("psi",
 				pseudo_axes,
@@ -306,7 +305,7 @@ HklEngine *hkl_engine_psi_new(void)
 
 	hkl_engine_init(&self->engine, &info, &operations);
 
-	self->psi = register_pseudo_axis(&self->engine, &psi.parameter);
+	self->psi = register_pseudo_axis(&self->engine, &psi);
 
 	return &self->engine;
 }
