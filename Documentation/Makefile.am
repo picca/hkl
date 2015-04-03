@@ -15,12 +15,12 @@ EXTRA_DIST=default.el
 
 CLEANFILES=hkl.html
 
-editdoc:
+doc-edit:
 	env GI_TYPELIB_PATH=$(top_builddir)/hkl \
 	$(LIBTOOL) --mode=execute -dlopen $(AM_LDFLAGS) \
 	$(EMACS) hkl.org.in -q --load $(srcdir)/default.el
 
-showdoc: hkl.html
-	iceweasel $(builddir)/hkl.html
+doc-show: hkl.html
+	sensible-browser $(builddir)/hkl.html
 
-.PHONY: editdoc showdoc
+.PHONY: doc-edit doc-show
