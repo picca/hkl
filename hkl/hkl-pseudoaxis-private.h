@@ -370,7 +370,8 @@ static inline void hkl_engine_free(HklEngine *self)
 
 static inline void hkl_engine_init(HklEngine *self,
 				   const HklEngineInfo *info,
-				   const HklEngineOperations *ops)
+				   const HklEngineOperations *ops,
+				   HklEngineList *engines)
 {
 	self->info = info;
 	self->ops = ops;
@@ -381,6 +382,7 @@ static inline void hkl_engine_init(HklEngine *self,
 	self->geometry = NULL;
 	self->detector = NULL;
 	self->sample = NULL;
+	self->engines = engines;
 }
 
 
@@ -397,7 +399,7 @@ static inline HklParameter *register_pseudo_axis(HklEngine *self,
 	HklParameter *parameter;
 
 	/* TODO find an already existing pseudo axis in the list */
-	
+
 	parameter = hkl_parameter_new_copy(pseudo_axis);
 	darray_append(self->pseudo_axes, parameter);
 	darray_append(self->pseudo_axis_names, parameter->name);
@@ -496,7 +498,6 @@ static inline void hkl_engine_prepare_internal(HklEngine *self)
 static inline void hkl_engine_mode_set(HklEngine *self, HklMode *mode)
 {
 	self->mode = mode;
-	hkl_engine_prepare_internal(self);
 }
 
 
@@ -660,9 +661,6 @@ static inline int hkl_engine_list_add(HklEngineList *self,
 {
 	if (!engine)
 		return FALSE;
-
-	/* set the engines to access the Geometries list. */
-	engine->engines = self;
 
 	darray_append(*self, engine);
 

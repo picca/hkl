@@ -160,7 +160,7 @@ HklEngine *hkl_engine_tth2_new(HklEngineList *engines)
 
 	self = HKL_MALLOC(HklEngineTth2);
 
-	hkl_engine_init(&self->engine, &info, &operations);
+	hkl_engine_init(&self->engine, &info, &operations, engines);
 	self->tth = register_pseudo_axis(&self->engine, engines, &tth);
 	self->alpha = register_pseudo_axis(&self->engine, engines, &alpha);
 

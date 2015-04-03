@@ -303,7 +303,7 @@ HklEngine *hkl_engine_psi_new(HklEngineList *engines)
 
 	self = HKL_MALLOC(HklEnginePsi);
 
-	hkl_engine_init(&self->engine, &info, &operations);
+	hkl_engine_init(&self->engine, &info, &operations, engines);
 
 	self->psi = register_pseudo_axis(&self->engine, engines, &psi);
 

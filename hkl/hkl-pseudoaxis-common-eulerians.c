@@ -244,7 +244,7 @@ HklEngine *hkl_engine_eulerians_new(HklEngineList *engines)
 	};
 
 	self = HKL_MALLOC(HklEngineEulerians);
-	hkl_engine_init(&self->engine, &info, &operations);
+	hkl_engine_init(&self->engine, &info, &operations, engines);
 
 	/* add the pseudo axes with the new API */
 	self->omega = register_pseudo_axis(&self->engine, engines, &omega);

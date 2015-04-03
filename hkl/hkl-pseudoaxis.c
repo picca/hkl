@@ -34,11 +34,6 @@
 #include "hkl/ccan/container_of/container_of.h"  // for container_of
 #include "hkl/ccan/darray/darray.h"     // for darray_foreach, darray_init, etc
 
-/*****************/
-/* HklPseudoAxis */
-/*****************/
-
-
 /***********/
 /* HklMode */
 /***********/

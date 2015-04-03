@@ -156,7 +156,7 @@ HklEngine *hkl_engine_q_new(HklEngineList *engines)
 
 	self = HKL_MALLOC(HklEngineQ);
 
-	hkl_engine_init(&self->engine, &info, &operations);
+	hkl_engine_init(&self->engine, &info, &operations, engines);
 	self->q = register_pseudo_axis(&self->engine, engines, &q);
 
 	/* q [default] */
@@ -284,7 +284,7 @@ HklEngine *hkl_engine_q2_new(HklEngineList *engines)
 
 	self = HKL_MALLOC(HklEngineQ2);
 
-	hkl_engine_init(&self->engine, &info, &operations);
+	hkl_engine_init(&self->engine, &info, &operations, engines);
 	self->q = register_pseudo_axis(&self->engine, engines, &q);
 	self->alpha = register_pseudo_axis(&self->engine, engines, &alpha);
 
@@ -463,7 +463,7 @@ HklEngine *hkl_engine_qper_qpar_new(HklEngineList *engines)
 
 	self = HKL_MALLOC(HklEngineQperQpar);
 
-	hkl_engine_init(&self->engine, &info, &operations);
+	hkl_engine_init(&self->engine, &info, &operations, engines);
 	self->qper = register_pseudo_axis(&self->engine, engines, &qper);
 	self->qpar = register_pseudo_axis(&self->engine, engines, &qpar);
 

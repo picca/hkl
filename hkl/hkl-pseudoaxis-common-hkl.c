@@ -787,7 +787,7 @@ HklEngine *hkl_engine_hkl_new(HklEngineList *engines)
 
 	self = HKL_MALLOC(HklEngineHkl);
 
-	hkl_engine_init(&self->engine, &info, &operations);
+	hkl_engine_init(&self->engine, &info, &operations, engines);
 
 	self->h = register_pseudo_axis(&self->engine, engines, &h);
 	self->k = register_pseudo_axis(&self->engine, engines, &k);
