@@ -277,6 +277,7 @@ struct _HklEngineList
 	HklGeometry *geometry;
 	HklDetector *detector;
 	HklSample *sample;
+	darray_parameter pseudo_axes;
 };
 
 
@@ -335,15 +336,8 @@ static inline void hkl_engine_release(HklEngine *self)
 	darray_free(self->modes);
 
 	darray_free(self->axes);
-
-	/* release the HklPseudoAxe memory */
-	darray_foreach(pseudo_axis, self->pseudo_axes){
-		hkl_parameter_free(*pseudo_axis);
-	}
 	darray_free(self->pseudo_axes);
-
 	darray_free(self->pseudo_axis_names);
-
 	darray_free(self->mode_names);
 }
 
@@ -388,12 +382,6 @@ static inline void hkl_engine_init(HklEngine *self,
 }
 
 
-static inline void unregister_pseudo_axis(HklParameter *pseudo_axis)
-{
-	hkl_parameter_free(pseudo_axis);
-}
-
-
 static inline HklParameter *register_pseudo_axis(HklEngine *self,
 						 HklEngineList *engines,
 						 const HklParameter *pseudo_axis)
@@ -403,6 +391,7 @@ static inline HklParameter *register_pseudo_axis(HklEngine *self,
 	/* TODO find an already existing pseudo axis in the list */
 
 	parameter = hkl_parameter_new_copy(pseudo_axis);
+	darray_append(engines->pseudo_axes, parameter);
 	darray_append(self->pseudo_axes, parameter);
 	darray_append(self->pseudo_axis_names, parameter->name);
 	
@@ -631,6 +620,8 @@ static inline HklEngineList *hkl_engine_list_new(void)
 	self->detector = NULL;
 	self->sample = NULL;
 
+	darray_init(self->pseudo_axes);
+
 	return self;
 }
 
@@ -657,11 +648,17 @@ static inline const HklEngineList *hkl_engine_list_new_copy(const HklEngineList 
 static inline void hkl_engine_list_clear(HklEngineList *self)
 {
 	HklEngine **engine;
+	HklParameter **parameter;
 
 	darray_foreach(engine, *self){
 		hkl_engine_free(*engine);
 	}
 	darray_free(*self);
+
+	darray_foreach(parameter, self->pseudo_axes){
+		hkl_parameter_free(*parameter);
+	}
+	darray_free(self->pseudo_axes);
 }
 
 
