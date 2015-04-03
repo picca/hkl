@@ -196,6 +196,7 @@ static int _set(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
 			for(j=0; j<n_pseudo_axes; ++j)
 				res &= DIAG(fabs(targets[j] - currents[j]) < HKL_EPSILON);
 		}
+		hkl_geometry_list_free(solutions);
 	}else{
 		res &= DIAG(error != NULL);
 		g_clear_error(&error);
