@@ -386,12 +386,20 @@ static inline HklParameter *register_pseudo_axis(HklEngine *self,
 						 HklEngineList *engines,
 						 const HklParameter *pseudo_axis)
 {
+	HklParameter **param;
 	HklParameter *parameter;
 
-	/* TODO find an already existing pseudo axis in the list */
+	/* try to find an already existing pseudo axis in the list. */
+	darray_foreach(param, engines->pseudo_axes){
+		if(!strcmp(pseudo_axis->name, (*param)->name)){
+			parameter = *param;
+			goto out;
+		}
+	}
 
 	parameter = hkl_parameter_new_copy(pseudo_axis);
 	darray_append(engines->pseudo_axes, parameter);
+out:
 	darray_append(self->pseudo_axes, parameter);
 	darray_append(self->pseudo_axis_names, parameter->name);
 	
