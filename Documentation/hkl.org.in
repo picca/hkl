@@ -818,12 +818,13 @@ git clone git://repo.or.cz/hkl.git
 #+BEGIN_SRC c
   volume = hkl_lattice_volume_get(lattice);
 #+END_SRC
-*** DONE =HklEngine= "nrj, sample, ...  dependencies" <2015-03-24 mar.>
-    Add the =hkl_engine_dependencies_get= method which return if the
-    =HklEngine= depends of the axes, the energy, or the sample. the
-    possible values are stored in the =HklEngineDependencies= enum.
+*** DONE =HklEngine=
+**** "nrj, sample, ...  dependencies" <2015-03-24 mar.>
+     Add the =hkl_engine_dependencies_get= method which return if the
+     =HklEngine= depends of the axes, the energy, or the sample. the
+     possible values are stored in the =HklEngineDependencies= enum.
 
-#+BEGIN_SRC c
+#+BEGIN_SoRC c
   dependencies = hkl_engine_dependencies_get(engine);
   if (dependencies & HKL_ENGINE_DEPENDENCIES_ENERGY) {
           ...
@@ -833,6 +834,10 @@ git clone git://repo.or.cz/hkl.git
   }
   ...
 #+END_SRC
+**** "tth2" <2015-04-03 ven>
+     Add a new hkl engine which contain two pseudo axes.
+     + =tth=  two time the diffraction angle $\theta$
+     + =alpha= the azimuth of q in the zOy plan.
 *** DONE =HklLattice= expose in the binding the _x_get/set methods <2015-03-24 mar.>
     Now you can use hkl_lattice_x_get where x=a, b, c, alpha, beta,
     gamma in the bindings.
@@ -856,7 +861,6 @@ git clone git://repo.or.cz/hkl.git
 *** TODO [#A] [0/3] HklEngine "read_only"
     * [ ] "alpha" incidence angle
     * [ ] "beta" emergence angle
-    * [ ] "tth" the real 2*theta
 *** TODO [#A] HklSource
     Create a parameter for the wavelength. This is just internally for
     the futur trajectory system, so no need to change the signature of
