@@ -1038,8 +1038,9 @@ git clone git://repo.or.cz/hkl.git
      (modification of the hkl internals) to be confident that
      computation are ok.
 *** TODO performances
-    Investigate [[http://liboil.freedesktop.org/wiki/][liboil]] to speed calculation (in HklVector, HklMatrix
-    and HklQuaternion)
+    + Investigate [[http://liboil.freedesktop.org/wiki/][liboil]] to speed calculation (in HklVector, HklMatrix
+      and HklQuaternion)
+    + Avoid to call =hkl_engine_prepare_internal= at each computation.
 ** documentation
 *** TODO [1/6] rewrite documentation in org-mode
     - [-] embedding code into the org file
