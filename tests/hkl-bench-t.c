@@ -171,6 +171,7 @@ static void hkl_test_bench_eulerians(void)
 				hkl_engine_pseudo_axis_values_get(engine, values, ARRAY_SIZE(values),
 								   HKL_UNIT_DEFAULT, NULL);
 			}
+			hkl_geometry_list_free(solutions);
 		}
 	}
 
