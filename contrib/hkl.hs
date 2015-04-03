@@ -123,7 +123,7 @@ computeHkl :: Diffractometer -> [Angle Double] -> Lattice -> Vector Double
 computeHkl (Diffractometer sample detector) values lattice =
     unapply q (Holder (zipWith ($) sample s ++ [UB lattice]))
         where
-          (s, d) = splitAt 6 values
+          (s, d) = splitAt (length sample) values
           kf = apply (Holder (zipWith ($) detector d)) ki
           q = kf Prelude.- ki
 
