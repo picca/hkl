@@ -235,7 +235,7 @@ static HklEngineList *hkl_engine_list_new_petra3_p09_eh2(const HklFactory *facto
 {
 	HklEngineList *self = hkl_engine_list_new();
 
-	hkl_engine_list_add(self, hkl_engine_petra3_p09_eh2_hkl_new(self));
+	hkl_engine_petra3_p09_eh2_hkl_new(self);
 
 	return self;
 }

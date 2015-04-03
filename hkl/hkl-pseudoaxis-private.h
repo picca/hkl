@@ -383,6 +383,8 @@ static inline void hkl_engine_init(HklEngine *self,
 	self->detector = NULL;
 	self->sample = NULL;
 	self->engines = engines;
+
+	darray_append(*engines, self);
 }
 
 
@@ -645,28 +647,6 @@ static inline const HklEngineList *hkl_engine_list_new_copy(const HklEngineList 
 {
 	return NULL;
 }
-
-
-/**
- * hkl_engine_list_add: (skip)
- * @self: the engine list
- * @engine: the engine to add
- *
- * add an #HklEngine to the #HklEngineList
- *
- * Returns: HKL_SUCCESS or HKL_FAIL
- **/
-static inline int hkl_engine_list_add(HklEngineList *self,
-				      HklEngine *engine)
-{
-	if (!engine)
-		return FALSE;
-
-	darray_append(*self, engine);
-
-	return TRUE;
-}
-
 
 /**
  * hkl_engine_list_clear: (skip)

@@ -951,12 +951,12 @@ static HklEngineList *hkl_engine_list_new_kappa6C(const HklFactory *factory)
 	HklEngineList *self = hkl_engine_list_new();
 
 	self->geometries->multiply = hkl_geometry_list_multiply_k6c_real;
-	hkl_engine_list_add(self, hkl_engine_k6c_hkl_new(self));
-	hkl_engine_list_add(self, hkl_engine_eulerians_new(self));
-	hkl_engine_list_add(self, hkl_engine_k6c_psi_new(self));
-	hkl_engine_list_add(self, hkl_engine_q2_new(self));
-	hkl_engine_list_add(self, hkl_engine_qper_qpar_new(self));
-	hkl_engine_list_add(self, hkl_engine_tth2_new(self));
+	hkl_engine_k6c_hkl_new(self);
+	hkl_engine_eulerians_new(self);
+	hkl_engine_k6c_psi_new(self);
+	hkl_engine_q2_new(self);
+	hkl_engine_qper_qpar_new(self);
+	hkl_engine_tth2_new(self);
 
 	return self;
 }
@@ -1007,12 +1007,12 @@ static HklEngineList *hkl_engine_list_new_soleil_sirius_kappa(const HklFactory *
 	HklEngineList *self = hkl_engine_list_new();
 
 	self->geometries->multiply = hkl_geometry_list_multiply_k6c_real;
-	hkl_engine_list_add(self, hkl_engine_soleil_sirius_kappa_hkl_new(self));
-	hkl_engine_list_add(self, hkl_engine_eulerians_new(self));
-	hkl_engine_list_add(self, hkl_engine_soleil_sirius_kappa_psi_new(self));
-	hkl_engine_list_add(self, hkl_engine_q2_new(self));
-	hkl_engine_list_add(self, hkl_engine_qper_qpar_new(self));
-	hkl_engine_list_add(self, hkl_engine_tth2_new(self));
+	hkl_engine_soleil_sirius_kappa_hkl_new(self);
+	hkl_engine_eulerians_new(self);
+	hkl_engine_soleil_sirius_kappa_psi_new(self);
+	hkl_engine_q2_new(self);
+	hkl_engine_qper_qpar_new(self);
+	hkl_engine_tth2_new(self);
 
 	return self;
 }

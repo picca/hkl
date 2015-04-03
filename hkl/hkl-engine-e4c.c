@@ -216,9 +216,9 @@ static HklEngineList *hkl_engine_list_new_eulerian4C_vertical(const HklFactory *
 {
 	HklEngineList *self = hkl_engine_list_new();
 
-	hkl_engine_list_add(self, hkl_engine_e4c_hkl_new(self));
-	hkl_engine_list_add(self, hkl_engine_e4c_psi_new(self));
-	hkl_engine_list_add(self, hkl_engine_q_new(self));
+	hkl_engine_e4c_hkl_new(self);
+	hkl_engine_e4c_psi_new(self);
+	hkl_engine_q_new(self);
 
 	return self;
 }
@@ -264,9 +264,9 @@ static HklEngineList *hkl_engine_list_new_soleil_mars(const HklFactory *factory)
 {
 	HklEngineList *self = hkl_engine_list_new();
 
-	hkl_engine_list_add(self, hkl_engine_e4c_hkl_new(self));
-	hkl_engine_list_add(self, hkl_engine_e4c_psi_new(self));
-	hkl_engine_list_add(self, hkl_engine_q_new(self));
+	hkl_engine_e4c_hkl_new(self);
+	hkl_engine_e4c_psi_new(self);
+	hkl_engine_q_new(self);
 
 	return self;
 }
@@ -311,9 +311,9 @@ static HklEngineList *hkl_engine_list_new_eulerian4C_horizontal(const HklFactory
 {
 	HklEngineList *self = hkl_engine_list_new();
 
-	hkl_engine_list_add(self, hkl_engine_e4c_hkl_new(self));
-	hkl_engine_list_add(self, hkl_engine_e4c_psi_new(self));
-	hkl_engine_list_add(self, hkl_engine_q_new(self));
+	hkl_engine_e4c_hkl_new(self);
+	hkl_engine_e4c_psi_new(self);
+	hkl_engine_q_new(self);
 
 	return self;
 }
