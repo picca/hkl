@@ -369,9 +369,13 @@ static const HklFunction constant_incidence_func = {
 	.size = 5,
 };
 
-/********/
-/* mode */
-/********/
+/*******/
+/* K6C */
+/*******/
+
+/************/
+/* hkl mode */
+/************/
 
 static HklMode *bissector_vertical(void)
 {

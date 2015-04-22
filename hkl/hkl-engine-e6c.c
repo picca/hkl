@@ -76,9 +76,9 @@ static const HklFunction bissector_vertical_func = {
 	.size = 4,
 };
 
-/*********/
-/* modes */
-/*********/
+/************/
+/* mode hkl */
+/************/
 
 static HklMode *bissector_vertical(void)
 {
@@ -266,10 +266,6 @@ static HklMode *constant_mu_horizontal(void)
 				 TRUE);
 }
 
-/***********************/
-/* E6C PseudoAxeEngine */
-/***********************/
-
 static HklEngine *hkl_engine_e6c_hkl_new(HklEngineList *engines)
 {
 	HklEngine *self;
@@ -297,9 +293,9 @@ static HklEngine *hkl_engine_e6c_hkl_new(HklEngineList *engines)
 	return self;
 }
 
-/********/
-/* mode */
-/********/
+/************/
+/* mode psi */
+/************/
 
 static HklMode* psi_vertical()
 {
@@ -313,10 +309,6 @@ static HklMode* psi_vertical()
 
 	return hkl_mode_psi_new(&info);
 }
-
-/**********************/
-/* pseudo axis engine */
-/**********************/
 
 static HklEngine *hkl_engine_e6c_psi_new(HklEngineList *engines)
 {

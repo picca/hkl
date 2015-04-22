@@ -136,10 +136,6 @@ static HklMode *psi_constant(void)
 				 TRUE);
 }
 
-/***********************/
-/* pseudo axes engines */
-/***********************/
-
 static HklEngine *hkl_engine_e4c_hkl_new(HklEngineList *engines)
 {
 	HklEngine *self;
@@ -159,6 +155,10 @@ static HklEngine *hkl_engine_e4c_hkl_new(HklEngineList *engines)
 
 	return self;
 }
+
+/************/
+/* mode psi */
+/************/
 
 static HklMode *psi(void)
 {
