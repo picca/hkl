@@ -25,6 +25,7 @@
 #include "hkl-pseudoaxis-common-hkl-private.h"  // for RUBh_minus_Q, etc
 #include "hkl-pseudoaxis-common-psi-private.h"  // for hkl_engine_psi_new, etc
 #include "hkl-pseudoaxis-common-q-private.h"  // for hkl_engine_q2_new, etc
+#include "hkl-pseudoaxis-common-readonly-private.h"
 #include "hkl-pseudoaxis-common-tth-private.h"  // for hkl_engine_tth2_new, etc
 
 static void hkl_geometry_list_multiply_k6c_real(HklGeometryList *self,
@@ -352,7 +353,7 @@ static int _constant_incidence_func(const gsl_vector *x, void *params, gsl_vecto
 	hkl_vector_rotated_quaternion(&n, &darray_item(engine->geometry->holders, 0)->q);
 
 	hkl_source_compute_ki(&engine->geometry->source, &ki);
-	incidence = M_PI_2 - hkl_vector_angle(&n, &ki);
+	incidence = _incidence(&n, &ki);
 
 	hkl_vector_project_on_plan(&n, &ki);
 	azimuth = hkl_vector_angle(&n, &Y);
@@ -576,10 +577,6 @@ static HklMode *constant_incidence(void)
 					   TRUE);
 }
 
-/**********************/
-/* pseudo axis engine */
-/**********************/
-
 static HklEngine *hkl_engine_k6c_hkl_new(HklEngineList *engines)
 {
 	HklEngine *self;
@@ -608,11 +605,106 @@ static HklEngine *hkl_engine_k6c_hkl_new(HklEngineList *engines)
 	return self;
 }
 
+/************/
+/* psi mode */
+/************/
+
+static HklMode *psi_vertical(void)
+{
+	static const char *axes_r[] = {"mu", "komega", "kappa", "kphi", "gamma", "delta"};
+	static const char *axes_w[] = {"komega", "kappa", "kphi", "delta"};
+	static const HklFunction *functions[] = {&psi_func};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes_r, axes_w,
+					       functions, psi_parameters),
+	};
+
+	return hkl_mode_psi_new(&info);
+}
+
+static HklEngine *hkl_engine_k6c_psi_new(HklEngineList *engines)
+{
+	HklEngine *self;
+	HklMode *default_mode;
+
+	self = hkl_engine_psi_new(engines);
+
+	default_mode = psi_vertical();
+	hkl_engine_add_mode(self, default_mode);
+	hkl_engine_mode_set(self, default_mode);
+
+	return self;
+}
+
+/******************/
+/* incidence mode */
+/******************/
+
+static const char *k6c_incidence_axes[] = {"mu", "komega", "kappa", "kphi"};
+
+REGISTER_INCIDENCE_ENGINE(k6c);
+
+#define HKL_GEOMETRY_KAPPA6C_DESCRIPTION				\
+	"For this geometry there is a special parameters called :math:`\\alpha` which is the\n" \
+	"angle between the kappa rotation axis and the  :math:`\\vec{y}` direction.\n" \
+	"\n"								\
+	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"+ 4 axes for the sample\n"					\
+	"\n"								\
+	"  + **mu** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **komega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **kappa** : rotating around the :math:`\\vec{x}` direction (0, :math:`-\\cos\\alpha`, :math:`-\\sin\\alpha`)\n" \
+	"  + **kphi** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"\n"								\
+	"+ 2 axes for the detector\n"					\
+	"\n"								\
+	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
+
+static const char* hkl_geometry_kappa6C_axes[] = {"mu", "komega", "kappa", "kphi", "gamma", "delta"};
+
+static HklGeometry *hkl_geometry_new_kappa6C(const HklFactory *factory)
+{
+	HklGeometry *self = hkl_geometry_new(factory);
+	double alpha = 50 * HKL_DEGTORAD;
+	HklHolder *h;
+
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, "komega", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, "kappa", 0, -cos(alpha), -sin(alpha));
+	hkl_holder_add_rotation_axis(h, "kphi", 0, -1, 0);
+
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
+
+	return self;
+}
+
+static HklEngineList *hkl_engine_list_new_kappa6C(const HklFactory *factory)
+{
+	HklEngineList *self = hkl_engine_list_new();
+
+	self->geometries->multiply = hkl_geometry_list_multiply_k6c_real;
+	hkl_engine_k6c_hkl_new(self);
+	hkl_engine_eulerians_new(self);
+	hkl_engine_k6c_psi_new(self);
+	hkl_engine_q2_new(self);
+	hkl_engine_qper_qpar_new(self);
+	hkl_engine_k6c_incidence_new(self);
+	hkl_engine_tth2_new(self);
+
+	return self;
+}
+
+REGISTER_DIFFRACTOMETER(kappa6C, "K6C", HKL_GEOMETRY_KAPPA6C_DESCRIPTION);
+
 /***********************/
 /* SOLEIL sirius kappa */
 /***********************/
 
-/* mode */
+/* hkl mode */
 
 static HklMode *bissector_vertical_soleil_sirius_kappa(void)
 {
@@ -846,36 +938,7 @@ static HklEngine *hkl_engine_soleil_sirius_kappa_hkl_new(HklEngineList *engines)
 	return self;
 }
 
-static HklMode *psi_vertical()
-{
-	static const char *axes_r[] = {"mu", "komega", "kappa", "kphi", "gamma", "delta"};
-	static const char *axes_w[] = {"komega", "kappa", "kphi", "delta"};
-	static const HklFunction *functions[] = {&psi_func};
-	static const HklModeAutoInfo info = {
-		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes_r, axes_w,
-					       functions, psi_parameters),
-	};
-
-	return hkl_mode_psi_new(&info);
-}
-
-static HklEngine *hkl_engine_k6c_psi_new(HklEngineList *engines)
-{
-	HklEngine *self;
-	HklMode *default_mode;
-
-	self = hkl_engine_psi_new(engines);
-
-	default_mode = psi_vertical();
-	hkl_engine_add_mode(self, default_mode);
-	hkl_engine_mode_set(self, default_mode);
-
-	return self;
-}
-
-/***********************/
-/* SOLEIL SIRIUS KAPPA */
-/***********************/
+/* psi mode */
 
 static HklMode *psi_vertical_soleil_sirius_kappa()
 {
@@ -904,68 +967,7 @@ static HklEngine *hkl_engine_soleil_sirius_kappa_psi_new(HklEngineList *engines)
 	return self;
 }
 
-/*******/
-/* K6C */
-/*******/
-
-#define HKL_GEOMETRY_KAPPA6C_DESCRIPTION				\
-	"For this geometry there is a special parameters called :math:`\\alpha` which is the\n" \
-	"angle between the kappa rotation axis and the  :math:`\\vec{y}` direction.\n" \
-	"\n"								\
-	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
-	"+ 4 axes for the sample\n"					\
-	"\n"								\
-	"  + **mu** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
-	"  + **komega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"  + **kappa** : rotating around the :math:`\\vec{x}` direction (0, :math:`-\\cos\\alpha`, :math:`-\\sin\\alpha`)\n" \
-	"  + **kphi** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"\n"								\
-	"+ 2 axes for the detector\n"					\
-	"\n"								\
-	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
-	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
-
-static const char* hkl_geometry_kappa6C_axes[] = {"mu", "komega", "kappa", "kphi", "gamma", "delta"};
-
-static HklGeometry *hkl_geometry_new_kappa6C(const HklFactory *factory)
-{
-	HklGeometry *self = hkl_geometry_new(factory);
-	double alpha = 50 * HKL_DEGTORAD;
-	HklHolder *h;
-
-	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
-	hkl_holder_add_rotation_axis(h, "komega", 0, -1, 0);
-	hkl_holder_add_rotation_axis(h, "kappa", 0, -cos(alpha), -sin(alpha));
-	hkl_holder_add_rotation_axis(h, "kphi", 0, -1, 0);
-
-	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1);
-	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
-
-	return self;
-}
-
-static HklEngineList *hkl_engine_list_new_kappa6C(const HklFactory *factory)
-{
-	HklEngineList *self = hkl_engine_list_new();
-
-	self->geometries->multiply = hkl_geometry_list_multiply_k6c_real;
-	hkl_engine_k6c_hkl_new(self);
-	hkl_engine_eulerians_new(self);
-	hkl_engine_k6c_psi_new(self);
-	hkl_engine_q2_new(self);
-	hkl_engine_qper_qpar_new(self);
-	hkl_engine_tth2_new(self);
-
-	return self;
-}
-
-REGISTER_DIFFRACTOMETER(kappa6C, "K6C", HKL_GEOMETRY_KAPPA6C_DESCRIPTION);
-
-/***********************/
 /* SOLEIL SIRIUS KAPPA */
-/***********************/
 
 #define HKL_GEOMETRY_TYPE_SOLEIL_SIRIUS_KAPPA_DESCRIPTION		\
 	"+ xrays source fix along the :math:`\\vec{x}` direction (1, 0, 0)\n" \
@@ -1013,6 +1015,7 @@ static HklEngineList *hkl_engine_list_new_soleil_sirius_kappa(const HklFactory *
 	hkl_engine_q2_new(self);
 	hkl_engine_qper_qpar_new(self);
 	hkl_engine_tth2_new(self);
+	hkl_engine_k6c_incidence_new(self);
 
 	return self;
 }

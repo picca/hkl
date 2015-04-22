@@ -213,7 +213,8 @@ class TestAPI(unittest.TestCase):
         for engine in engines.engines_get():
             capabilities = engine.capabilities_get()
             self.assertTrue(capabilities & Hkl.EngineCapabilities.READABLE)
-            self.assertTrue(capabilities & Hkl.EngineCapabilities.WRITABLE)
+            if engine.name_get() != "incidence":
+                self.assertTrue(capabilities & Hkl.EngineCapabilities.WRITABLE)
             if engine.name_get() == "psi":
                 self.assertTrue(capabilities & Hkl.EngineCapabilities.INITIALIZABLE)
 

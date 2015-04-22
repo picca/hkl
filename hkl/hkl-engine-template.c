@@ -28,6 +28,7 @@
 #include "hkl-pseudoaxis-common-psi-private.h"  // for hkl_engine_psi_new, etc
 #include "hkl-pseudoaxis-common-q-private.h"  // for hkl_engine_q2_new, etc
 #include "hkl-pseudoaxis-common-tth-private.h"  // for hkl_engine_tth2_new, etc
+#include "hkl-pseudoaxis-common-readonly-private.h"
 
 /**************/
 /* Axes names */
@@ -170,6 +171,14 @@ static HklMode* psi_vertical()
 	return hkl_mode_psi_new(&info);
 }
 
+/******************/
+/* mode incidence */
+/******************/
+
+static const char *template_incidence_axes[] = {MU, OMEGA, CHI, PHI};
+
+REGISTER_INCIDENCE_ENGINE(template);
+
 /***********/
 /* Engines */
 /***********/
@@ -217,6 +226,7 @@ static HklEngineList *hkl_engine_list_new_eulerian6C(const HklFactory *factory)
 	hkl_engine_q2_new(self);
 	hkl_engine_qper_qpar_new(self);
 	hkl_engine_tth2_new(self);
+	hkl_engine_template_incidence_new(self);
 
 	return self;
 }

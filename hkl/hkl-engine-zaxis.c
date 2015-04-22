@@ -24,6 +24,10 @@
 #include "hkl-pseudoaxis-common-hkl-private.h"  // for RUBh_minus_Q, etc
 #include "hkl-pseudoaxis-common-q-private.h"  // for hkl_engine_q2_new, etc
 #include "hkl-pseudoaxis-common-tth-private.h"  // for hkl_engine_tth2_new, etc
+#include "hkl-pseudoaxis-common-readonly-private.h"  // for hkl_engine_tth2_new, etc
+
+#define MU "mu"
+#define OMEGA "omega"
 
 /* #define DEBUG */
 
@@ -94,6 +98,14 @@ static HklEngine *hkl_engine_zaxis_hkl_new(HklEngineList *engines)
 	return self;
 }
 
+/******************/
+/* mode incidence */
+/******************/
+
+static const char *zaxis_incidence_axes[] = {MU, OMEGA};
+
+REGISTER_INCIDENCE_ENGINE(zaxis);
+
 /*********/
 /* ZAXIS */
 /*********/
@@ -140,6 +152,7 @@ static HklEngineList *hkl_engine_list_new_zaxis(const HklFactory *factory)
 	hkl_engine_q2_new(self);
 	hkl_engine_qper_qpar_new(self);
 	hkl_engine_tth2_new(self);
+	hkl_engine_zaxis_incidence_new(self);
 
 	return self;
 }

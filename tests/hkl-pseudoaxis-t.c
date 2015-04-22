@@ -272,9 +272,12 @@ static int _capabilities(HklEngine *engine, HklEngineList *engine_list, unsigned
 	int res = TRUE;
 	const unsigned long capabilities = hkl_engine_capabilities_get(engine);
 
-	/* all motors must have the read/write capabilities */
+	/* all motors must have the read capabilities */
 	res &= DIAG((capabilities & HKL_ENGINE_CAPABILITIES_READABLE) != 0);
-	res &= DIAG((capabilities & HKL_ENGINE_CAPABILITIES_WRITABLE) != 0);
+
+	/* all engines except the readonly (incidence) are writable */
+	if(strcmp("incidence", hkl_engine_name_get(engine)))
+		res &= DIAG((capabilities & HKL_ENGINE_CAPABILITIES_WRITABLE) != 0);
 
 	/* all psi engines must be initialisable */
 	if(!strcmp("psi", hkl_engine_name_get(engine)))

@@ -25,6 +25,12 @@
 #include "hkl-pseudoaxis-common-q-private.h"  // for hkl_engine_q2_new, etc
 #include "hkl-pseudoaxis-common-hkl-private.h"  // for RUBh_minus_Q, etc
 #include "hkl-pseudoaxis-common-psi-private.h"  // for hkl_engine_psi_new, etc
+#include "hkl-pseudoaxis-common-readonly-private.h"
+
+#define KOMEGA "komega"
+#define KAPPA "kappa"
+#define KPHI "kphi"
+#define TTH "tth"
 
 static void hkl_geometry_list_multiply_k4c_real(HklGeometryList *self,
 						HklGeometryListItem *item)
@@ -379,6 +385,14 @@ static HklEngine *hkl_engine_k4cv_psi_new(HklEngineList *engines)
 	return self;
 }
 
+/******************/
+/* mode incidence */
+/******************/
+
+static const char *kappa4C_vertical_incidence_axes[] = {KOMEGA, KAPPA, KPHI};
+
+REGISTER_INCIDENCE_ENGINE(kappa4C_vertical);
+
 /********/
 /* K4CV */
 /********/
@@ -426,6 +440,7 @@ static HklEngineList *hkl_engine_list_new_kappa4C_vertical(const HklFactory *fac
 	hkl_engine_eulerians_new(self);
 	hkl_engine_k4cv_psi_new(self);
 	hkl_engine_q_new(self);
+	hkl_engine_kappa4C_vertical_incidence_new(self);
 
 	return self;
 }

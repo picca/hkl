@@ -32,6 +32,7 @@
 #include "hkl-parameter-private.h"      // for _HklParameter, etc
 #include "hkl-pseudoaxis-auto-private.h"  // for HklFunction, etc
 #include "hkl-pseudoaxis-common-q-private.h"  // for HklEngineQ2, etc
+#include "hkl-pseudoaxis-common-readonly-private.h"
 #include "hkl-pseudoaxis-private.h"     // for _HklEngine, etc
 #include "hkl-source-private.h"         // for hkl_source_compute_ki, etc
 #include "hkl-vector-private.h"         // for HklVector, hkl_vector_angle, etc
@@ -402,21 +403,7 @@ static HklMode *mode_qper_qpar(void)
 	static const char* axes[] = {"gamma", "delta"};
 	static const HklFunction *functions[] = {&qper_qpar_func};
 	static const HklParameter parameters[] = {
-		{
-			HKL_PARAMETER_DEFAULTS,	.name = "x", ._value = 0,
-			.description = "the first coordinate of the surface vector",
-			.range = { .min=-1, .max=1 },
-		},
-		{
-			HKL_PARAMETER_DEFAULTS, .name = "y", ._value = 1,
-			.description = "the second coordinate of the surface vector",
-			.range = { .min=-1, .max=1 },
-		},
-		{
-			HKL_PARAMETER_DEFAULTS, .name = "z", ._value = 0,
-			.description = "the third coordinate of the surface vector",
-			.range = { .min=-1, .max=1 },
-		},
+		SURFACE_PARAMETERS(0, 1, 0),
 	};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO_WITH_PARAMS("qper_qpar", axes, axes, functions, parameters),

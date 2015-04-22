@@ -24,8 +24,16 @@
 #include "hkl-pseudoaxis-common-q-private.h"  // for hkl_engine_q2_new, etc
 #include "hkl-pseudoaxis-common-hkl-private.h"  // for hkl_mode_operations, etc
 #include "hkl-pseudoaxis-common-psi-private.h"  // for hkl_engine_psi_new, etc
+#include "hkl-pseudoaxis-common-readonly-private.h"
 
-/* bissector */
+#define OMEGA "omega"
+#define CHI "chi"
+#define PHI "phi"
+#define TTH "tth"
+
+/************/
+/* mode hkl */
+/************/
 
 static int _bissector_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
@@ -178,6 +186,14 @@ static HklEngine *hkl_engine_e4c_psi_new(HklEngineList *engines)
 	return self;
 }
 
+/******************/
+/* mode incidence */
+/******************/
+
+static const char *e4c_incidence_axes[] = {OMEGA, CHI, PHI};
+
+REGISTER_INCIDENCE_ENGINE(e4c);
+
 /********/
 /* E4CV */
 /********/
@@ -219,6 +235,7 @@ static HklEngineList *hkl_engine_list_new_eulerian4C_vertical(const HklFactory *
 	hkl_engine_e4c_hkl_new(self);
 	hkl_engine_e4c_psi_new(self);
 	hkl_engine_q_new(self);
+	hkl_engine_e4c_incidence_new(self);
 
 	return self;
 }
@@ -267,6 +284,7 @@ static HklEngineList *hkl_engine_list_new_soleil_mars(const HklFactory *factory)
 	hkl_engine_e4c_hkl_new(self);
 	hkl_engine_e4c_psi_new(self);
 	hkl_engine_q_new(self);
+	hkl_engine_e4c_incidence_new(self);
 
 	return self;
 }
@@ -314,6 +332,7 @@ static HklEngineList *hkl_engine_list_new_eulerian4C_horizontal(const HklFactory
 	hkl_engine_e4c_hkl_new(self);
 	hkl_engine_e4c_psi_new(self);
 	hkl_engine_q_new(self);
+	hkl_engine_e4c_incidence_new(self);
 
 	return self;
 }

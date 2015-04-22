@@ -9,7 +9,7 @@ dist_html_DATA=hkl.html
 hkl.html: hkl.org $(srcdir)/default.el
 	env GI_TYPELIB_PATH=$(top_builddir)/hkl \
 	$(LIBTOOL) --mode=execute -dlopen $(AM_LDFLAGS) \
-	$(EMACS) $< --batch -q --load $(srcdir)/default.el -f org-html-export-to-html --kill
+	$(EMACS) $< --batch -q --load $(srcdir)/default.el -f org-html-export-to-html --debug-init --kill
 
 EXTRA_DIST=default.el
 

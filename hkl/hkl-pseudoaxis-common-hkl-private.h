@@ -20,10 +20,14 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  *          Maria-Teresa Nunez-Pardo-de-Verra <tnunez@mail.desy.de>
  */
+#ifndef __HKL_PSEUDOAXIS_COMMON_HKL_PRIVATE__
+#define __HKL_PSEUDOAXIS_COMMON_HKL_PRIVATE__
+
 #include <gsl/gsl_vector_double.h>      // for gsl_vector
 #include "hkl-pseudoaxis-auto-private.h"
 #include "hkl-pseudoaxis-private.h"     // for HklModeOperations, etc
 #include "hkl.h"                        // for HklEngine, HklDetector, etc
+#include "hkl-pseudoaxis-common-readonly-private.h"
 
 typedef struct _HklEngineHkl HklEngineHkl;
 struct _HklEngineHkl {
@@ -160,21 +164,7 @@ static const HklParameter double_diffraction_parameters[] = {
 static const HklParameter psi_constant_parameters[] = { PSI_CONSTANT_PARAMETERS(1, 1, 1, 0) };
 
 static const HklParameter constant_incidence_parameters[] = {
-	{
-		HKL_PARAMETER_DEFAULTS, .name = "x", ._value = 1,
-		.description = "the x coordinate of the surface $\\vec{n}$",
-		.range = { .min=-1, .max=1 },
-	},
-	{
-		HKL_PARAMETER_DEFAULTS, .name = "y", ._value = 1,
-		.description = "the y coordinate of the surface $\\vec{n}$",
-		.range = { .min=-1, .max=1 },
-	},
-	{
-		HKL_PARAMETER_DEFAULTS, .name = "z", ._value = 1,
-		.description = "the z coordinate of the surface $\\vec{n}$",
-		.range = { .min=-1, .max=1 },
-	},
+	SURFACE_PARAMETERS(1, 1, 1),
 	{
 		HKL_PARAMETER_DEFAULTS_ANGLE, .name = "incidence",
 		.description = "expected incidence of the incoming beam $\\vec{k_i}$ on the surface."
@@ -184,3 +174,5 @@ static const HklParameter constant_incidence_parameters[] = {
 		.description = "expected azimuth",
 	},
 };
+
+#endif

@@ -23,10 +23,11 @@
 #include "hkl-pseudoaxis-common-hkl-private.h"  // for hkl_engine_hkl_new, etc
 #include "hkl-pseudoaxis-common-q-private.h"  // for hkl_engine_q2_new, etc
 #include "hkl-pseudoaxis-common-tth-private.h"  // for hkl_engine_tth2_new, etc
+#include "hkl-pseudoaxis-common-readonly-private.h"
 
-/**************************/
-/* TURRET PseudoAxeEngine */
-/**************************/
+/************/
+/* mode hkl */
+/************/
 
 static HklMode* lifting_detector_thetah()
 {
@@ -55,6 +56,14 @@ static HklEngine *hkl_engine_soleil_sirius_turret_hkl_new(HklEngineList *engines
 
 	return self;
 }
+
+/******************/
+/* mode incidence */
+/******************/
+
+static const char *soleil_sirius_turret_incidence_axes[] = {"thetah", "alphay", "alphax"};
+
+REGISTER_INCIDENCE_ENGINE(soleil_sirius_turret);
 
 /************************/
 /* SOLEIL SIRIUS TURRET */
@@ -100,6 +109,7 @@ static HklEngineList *hkl_engine_list_new_soleil_sirius_turret(const HklFactory 
 	hkl_engine_q2_new(self);
 	hkl_engine_qper_qpar_new(self);
 	hkl_engine_tth2_new(self);
+	hkl_engine_soleil_sirius_turret_incidence_new(self);
 
 	return self;
 }

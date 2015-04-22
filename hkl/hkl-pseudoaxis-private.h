@@ -32,6 +32,7 @@
 #include "hkl-macros-private.h"         // for HKL_MALLOC
 #include "hkl-parameter-private.h"      // for hkl_parameter_list_free, etc
 #include "hkl.h"                        // for HklEngine, HklMode, etc
+#include "hkl/ccan/array_size/array_size.h"
 #include "hkl/ccan/darray/darray.h"     // for darray_foreach, etc
 
 G_BEGIN_DECLS
@@ -55,8 +56,10 @@ struct _HklModeInfo {
 	const darray(const HklParameter) parameters;
 };
 
-#define HKL_MODE_INFO(_name, _axes_r, _axes_w) .name=_name, .axes_r=DARRAY(_axes_r), .axes_w=DARRAY(_axes_w)
+#define HKL_MODE_INFO_RO(_name, _axes) .name=_name, .axes_r=DARRAY(_axes)
+#define HKL_MODE_INFO(_name, _axes_r, _axes_w) HKL_MODE_INFO_RO((_name), (_axes_r)), .axes_w=DARRAY((_axes_w))
 
+#define HKL_MODE_INFO_RO_WITH_PARAMS(_name, _axes, _parameters) HKL_MODE_INFO_RO((_name), (_axes)), .parameters=DARRAY(_parameters)
 #define HKL_MODE_INFO_WITH_PARAMS(_name, _axes_r, _axes_w, _parameters)	\
 	HKL_MODE_INFO(_name, _axes_r, _axes_w), .parameters=DARRAY(_parameters)
 
@@ -168,7 +171,7 @@ static inline int hkl_mode_get_real(HklMode *self,
 				    GError **error)
 {
 	/* by default do nothing and no error */
-	return TRUE;
+	return FALSE;
 }
 
 
@@ -180,7 +183,7 @@ static inline int hkl_mode_set_real(HklMode *self,
 				    GError **error)
 {
 	/* by default do nothing and no error */
-	return TRUE;
+	return FALSE;
 }
 
 
@@ -381,6 +384,11 @@ static inline void hkl_engine_init(HklEngine *self,
 	darray_append(*engines, self);
 }
 
+
+static inline HklParameter *register_mode_parameter(HklMode *mode, unsigned int index)
+{
+	return darray_item(mode->parameters, index);
+}
 
 static inline HklParameter *register_pseudo_axis(HklEngine *self,
 						 HklEngineList *engines,

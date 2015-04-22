@@ -29,6 +29,7 @@ hkl_c_sources = \
 	hkl-pseudoaxis-common-hkl.c \
 	hkl-pseudoaxis-common-psi.c \
 	hkl-pseudoaxis-common-q.c \
+	hkl-pseudoaxis-common-readonly.c \
 	hkl-pseudoaxis-common-tth.c \
 	hkl-engine-2c.c \
 	hkl-engine-e4c.c \
@@ -63,6 +64,7 @@ hkl_private_h_sources = \
 	hkl-pseudoaxis-common-hkl-private.h \
 	hkl-pseudoaxis-common-psi-private.h \
 	hkl-pseudoaxis-common-q-private.h \
+	hkl-pseudoaxis-common-readonly-private.h \
 	hkl-pseudoaxis-common-tth-private.h \
 	hkl-quaternion-private.h \
 	hkl-sample-private.h \

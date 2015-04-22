@@ -25,6 +25,12 @@
 #include "hkl-pseudoaxis-common-hkl-private.h"  // for hkl_engine_hkl_new, etc
 #include "hkl-pseudoaxis-common-q-private.h"  // for hkl_engine_q2_new, etc
 #include "hkl-pseudoaxis-common-tth-private.h"  // for hkl_engine_tth2_new, etc
+#include "hkl-pseudoaxis-common-readonly-private.h"
+
+#define PITCH "pitch"
+#define BETA "beta"
+#define MU "mu"
+#define OMEGA "omega"
 
 /* #define DEBUG */
 
@@ -94,6 +100,12 @@ static HklEngine *hkl_engine_soleil_sixs_med_2_2_hkl_new(HklEngineList *engines)
 	return self;
 }
 
+/* mode incidence */
+
+static const char *soleil_sixs_med_2_2_incidence_axes[] = {BETA, MU, OMEGA};
+
+REGISTER_INCIDENCE_ENGINE(soleil_sixs_med_2_2);
+
 /*********************/
 /* MED 1+2 HklEngine */
 /*********************/
@@ -125,6 +137,12 @@ static HklEngine *hkl_engine_soleil_sixs_med_1_2_hkl_new(HklEngineList *engines)
 
 	return self;
 }
+
+/* mode incidence */
+
+static const char *soleil_sixs_med_1_2_incidence_axes[] = {PITCH, MU};
+
+REGISTER_INCIDENCE_ENGINE(soleil_sixs_med_1_2);
 
 /*********************/
 /* MED 2+3 HklEngine */
@@ -342,6 +360,7 @@ static HklEngineList *hkl_engine_list_new_soleil_sixs_med_2_2(const HklFactory *
 	hkl_engine_q2_new(self);
 	hkl_engine_qper_qpar_new(self);
 	hkl_engine_tth2_new(self);
+	hkl_engine_soleil_sixs_med_2_2_incidence_new(self);
 
 	return self;
 }
@@ -392,6 +411,7 @@ static HklEngineList *hkl_engine_list_new_soleil_sixs_med_1_2(const HklFactory *
 	hkl_engine_q2_new(self);
 	hkl_engine_qper_qpar_new(self);
 	hkl_engine_tth2_new(self);
+	hkl_engine_soleil_sixs_med_1_2_incidence_new(self);
 
 	return self;
 }
@@ -448,6 +468,7 @@ static HklEngineList *hkl_engine_list_new_soleil_sixs_med_2_3(const HklFactory *
 	hkl_engine_q2_new(self);
 	hkl_engine_qper_qpar_new(self);
 	hkl_engine_tth2_new(self);
+	hkl_engine_soleil_sixs_med_2_2_incidence_new(self);
 
 	return self;
 }
