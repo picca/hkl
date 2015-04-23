@@ -23,19 +23,8 @@
 #define __HKL_PSEUDOAXIS_COMMON_EULERIANS_H__
 
 #include "hkl.h"                        // for HklParameter, etc
-#include "hkl-pseudoaxis-auto-private.h"// for HklEngine
 
 G_BEGIN_DECLS
-
-typedef struct _HklEngineEulerians HklEngineEulerians;
-
-struct _HklEngineEulerians
-{
-	HklEngine engine;
-	HklParameter *omega;
-	HklParameter *chi;
-	HklParameter *phi;
-};
 
 extern HklEngine *hkl_engine_eulerians_new(HklEngineList *engines);
 

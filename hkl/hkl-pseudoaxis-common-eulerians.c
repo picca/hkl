@@ -34,6 +34,23 @@
 #include "hkl/ccan/container_of/container_of.h"  // for container_of
 #include "hkl/ccan/darray/darray.h"     // for darray_item
 
+typedef struct _HklModeEulerians HklModeEulerians;
+typedef struct _HklEngineEulerians HklEngineEulerians;
+
+struct _HklModeEulerians
+{
+	HklMode parent;
+	HklParameter *solutions;
+};
+
+struct _HklEngineEulerians
+{
+	HklEngine engine;
+	HklParameter *omega;
+	HklParameter *chi;
+	HklParameter *phi;
+};
+
 #define HKL_MODE_EULERIANS_ERROR hkl_mode_eulerians_error_quark ()
 
 static GQuark hkl_mode_eulerians_error_quark (void)
@@ -97,13 +114,9 @@ static int eulerian_to_kappa(const double omega, const double chi, const double 
 void kappa_2_kappap(double komega, double kappa, double kphi, double alpha,
 		    double *komegap, double *kappap, double *kphip)
 {
-	double p;
-	double omega;
-	double phi;
-
-	p = atan(tan(kappa/2.) * cos(alpha));
-	omega = komega + p - M_PI_2;
-	phi = kphi + p + M_PI_2;
+	double p = atan(tan(kappa/2.) * cos(alpha));
+	double omega = komega + p - M_PI_2;
+	double phi = kphi + p + M_PI_2;
 
 	*komegap = gsl_sf_angle_restrict_symm(2*omega - komega);
 	*kappap = -kappa;
@@ -115,14 +128,15 @@ void kappa_2_kappap(double komega, double kappa, double kphi, double alpha,
 /* HklMode */
 /***********/
 
-static int hkl_mode_get_eulerians_real(HklMode *self,
+static int hkl_mode_get_eulerians_real(HklMode *base,
 				       HklEngine *engine,
 				       HklGeometry *geometry,
 				       HklDetector *detector,
 				       HklSample *sample,
 				       GError **error)
 {
-	HklEngineEulerians *eulerians;
+	HklModeEulerians *self = container_of(base, HklModeEulerians, parent);
+	HklEngineEulerians *eulerians = container_of(engine, HklEngineEulerians, engine);;
 	const double angles[] = {
 		hkl_parameter_value_get(
 			hkl_geometry_get_axis_by_name(geometry, "komega"),
@@ -134,41 +148,34 @@ static int hkl_mode_get_eulerians_real(HklMode *self,
 			hkl_geometry_get_axis_by_name(geometry, "kphi"),
 			HKL_UNIT_DEFAULT),
 	};
-	double values[3];
-	double solution;
-	HklParameter *parameter;
 
 	hkl_geometry_update(geometry);
 
-	solution = darray_item(self->parameters, 0)->_value;
-
-	eulerians = container_of(engine, HklEngineEulerians, engine);
 	kappa_to_eulerian(angles,
 			  &eulerians->omega->_value,
 			  &eulerians->chi->_value,
 			  &eulerians->phi->_value,
-			  50 * HKL_DEGTORAD, solution);
+			  50 * HKL_DEGTORAD, self->solutions->_value);
 
 	return TRUE;
 }
 
-static int hkl_mode_set_eulerians_real(HklMode *self,
+static int hkl_mode_set_eulerians_real(HklMode *base,
 				       HklEngine *engine,
 				       HklGeometry *geometry,
 				       HklDetector *detector,
 				       HklSample *sample,
 				       GError **error)
 {
-	double solution;
-	HklEngineEulerians *engine_eulerians;
+	HklModeEulerians *self = container_of(base, HklModeEulerians, parent);
+	HklEngineEulerians *eulerians = container_of(engine, HklEngineEulerians, engine);;
 	double angles[3];
 
-	solution = darray_item(self->parameters, 0)->_value;
-	engine_eulerians = container_of(engine, HklEngineEulerians, engine);
-	if(!eulerian_to_kappa(engine_eulerians->omega->_value,
-			      engine_eulerians->chi->_value,
-			      engine_eulerians->phi->_value,
-			      angles, 50 * HKL_DEGTORAD, solution)){
+	if(!eulerian_to_kappa(eulerians->omega->_value,
+			      eulerians->chi->_value,
+			      eulerians->phi->_value,
+			      angles, 50 * HKL_DEGTORAD,
+			      self->solutions->_value)){
 		g_set_error(error,
 			    HKL_MODE_EULERIANS_ERROR,
 			    HKL_MODE_EULERIANS_ERROR_SET,
@@ -180,10 +187,8 @@ static int hkl_mode_set_eulerians_real(HklMode *self,
 	return TRUE;
 }
 
-
 static HklMode *mode_eulerians()
 {
-	HklMode *mode;
 	static const char *axes[] = {"komega", "kappa", "kphi"};
 	static const HklParameter parameters[] = {
 		{ HKL_PARAMETER_DEFAULTS,.name = "solutions", ._value = 1,
@@ -200,7 +205,16 @@ static HklMode *mode_eulerians()
 		.set = hkl_mode_set_eulerians_real,
 	};
  
-	return hkl_mode_new(&info, &operations, TRUE);
+	HklModeEulerians *self = HKL_MALLOC(HklModeEulerians);
+
+	/* the base constructor; */
+	hkl_mode_init(&self->parent,
+		      &info,
+		      &operations, TRUE);
+
+	self->solutions = register_mode_parameter(&self->parent, 0);
+
+	return &self->parent;
 };
 
 /*************/
