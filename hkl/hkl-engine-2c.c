@@ -24,20 +24,20 @@
 #include "hkl-pseudoaxis-private.h"     // for hkl_engine_list_add, etc
 #include "hkl/ccan/array_size/array_size.h"
 
-#define AXIS_0_NAME "omega"
-#define AXIS_1_NAME "tth"
+#define OMEGA "omega"
+#define TTH "tth"
 
 #define HKL_GEOMETRY_TWOC_DESCRIPTION					\
 	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
 	"+ 1 axes for the sample\n"					\
 	"\n"								\
-	"  + **" AXIS_0_NAME "** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **" OMEGA "** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
 	"\n"								\
 	"+ 1 axis for the detector\n"					\
 	"\n"								\
-	"  + **" AXIS_1_NAME "** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
+	"  + **" TTH "** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
 
-static const char* hkl_geometry_twoC_axes[] = {AXIS_0_NAME, AXIS_1_NAME};
+static const char* hkl_geometry_twoC_axes[] = {OMEGA, TTH};
 
 static HklGeometry *hkl_geometry_new_twoC(const HklFactory *factory)
 {
@@ -45,10 +45,10 @@ static HklGeometry *hkl_geometry_new_twoC(const HklFactory *factory)
 	HklHolder *h;
 
 	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, AXIS_0_NAME, 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, OMEGA, 0, -1, 0);
 
 	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, AXIS_1_NAME, 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, TTH, 0, -1, 0);
 
 	return self;
 }

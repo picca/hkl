@@ -23,14 +23,21 @@
 #include "hkl-factory-private.h"        // for autodata_factories_, etc
 #include "hkl-pseudoaxis-common-hkl-private.h"
 
+#define MU "mu"
+#define OMEGA "omega"
+#define CHI "chi"
+#define PHI "phi"
+#define DELTA "delta"
+#define GAMMA "gamma"
+
 /********/
 /* mode */
 /********/
 
 static HklMode *zaxis_alpha_fixed()
 {
-	static const char *axes_r[] = {"mu", "omega", "chi", "phi", "delta", "gamma"};
-	static const char *axes_w[] = {"omega", "delta", "gamma"};
+	static const char *axes_r[] = {MU, OMEGA, CHI, PHI, DELTA, GAMMA};
+	static const char *axes_w[] = {OMEGA, DELTA, GAMMA};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO("zaxis + alpha-fixed", axes_r, axes_w, functions),
@@ -43,8 +50,8 @@ static HklMode *zaxis_alpha_fixed()
 
 static HklMode *zaxis_beta_fixed()
 {
-	static const char *axes_r[] = {"mu", "omega", "chi", "phi", "delta", "gamma"};
-	static const char *axes_w[] = {"mu", "delta", "gamma"};
+	static const char *axes_r[] = {MU, OMEGA, CHI, PHI, DELTA, GAMMA};
+	static const char *axes_w[] = {MU, DELTA, GAMMA};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO("zaxis + beta-fixed", axes_r, axes_w, functions),
@@ -78,8 +85,8 @@ static const HklFunction reflectivity = {
 
 static HklMode *zaxis_alpha_eq_beta()
 {
-	static const char *axes_r[] = {"mu", "omega", "chi", "phi", "delta", "gamma"};
-	static const char *axes_w[] = {"mu", "omega", "delta", "gamma"};
+	static const char *axes_r[] = {MU, OMEGA, CHI, PHI, DELTA, GAMMA};
+	static const char *axes_w[] = {MU, OMEGA, DELTA, GAMMA};
 	static const HklFunction *functions[] = {&reflectivity};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO("zaxis + alpha=beta", axes_r, axes_w, functions),
@@ -112,8 +119,8 @@ static const HklFunction bissector_horizontal = {
 
 static HklMode *fourc_bissector_horizontal()
 {
-	static const char *axes_r[] = {"mu", "omega", "chi", "phi", "delta", "gamma"};
-	static const char *axes_w[] = {"omega", "chi", "phi", "delta"};
+	static const char *axes_r[] = {MU, OMEGA, CHI, PHI, DELTA, GAMMA};
+	static const char *axes_w[] = {OMEGA, CHI, PHI, DELTA};
 	static const HklFunction *functions[] = {&bissector_horizontal};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO("4-circles bissecting horizontal", axes_r, axes_w, functions),
@@ -126,8 +133,8 @@ static HklMode *fourc_bissector_horizontal()
 
 static HklMode *fourc_constant_omega_horizontal()
 {
-	static const char *axes_r[] = {"mu", "omega", "chi", "phi", "delta", "gamma"};
-	static const char *axes_w[] = {"chi", "phi", "delta"};
+	static const char *axes_r[] = {MU, OMEGA, CHI, PHI, DELTA, GAMMA};
+	static const char *axes_w[] = {CHI, PHI, DELTA};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO("4-circles constant omega horizontal", axes_r, axes_w, functions),
@@ -140,8 +147,8 @@ static HklMode *fourc_constant_omega_horizontal()
 
 static HklMode *fourc_constant_chi_horizontal()
 {
-	static const char *axes_r[] = {"mu", "omega", "chi", "phi", "delta", "gamma"};
-	static const char *axes_w[] = {"omega", "phi", "delta"};
+	static const char *axes_r[] = {MU, OMEGA, CHI, PHI, DELTA, GAMMA};
+	static const char *axes_w[] = {OMEGA, PHI, DELTA};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO("4-circles constant chi horizontal", axes_r, axes_w, functions),
@@ -154,8 +161,8 @@ static HklMode *fourc_constant_chi_horizontal()
 
 static HklMode *fourc_constant_phi_horizontal()
 {
-	static const char *axes_r[] = {"mu", "omega", "chi", "phi", "delta", "gamma"};
-	static const char *axes_w[] = {"omega", "chi", "delta"};
+	static const char *axes_r[] = {MU, OMEGA, CHI, PHI, DELTA, GAMMA};
+	static const char *axes_w[] = {OMEGA, CHI, DELTA};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO("4-circles constant phi horizontal", axes_r, axes_w, functions),
@@ -199,18 +206,18 @@ static HklEngine *hkl_engine_petra3_p09_eh2_hkl_new(HklEngineList *engines)
 	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
 	"+ 4 axes for the sample\n"					\
 	"\n"								\
-	"  + **mu** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"  + **omega** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
-	"  + **chi** : rotating around the :math:`\\vec{x}` direction (1, 0, 0)\n" \
-	"  + **phi** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **" MU "** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **" OMEGA "** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **" CHI "** : rotating around the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"  + **" PHI "** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
 	"\n"								\
 	"+ 3 axis for the detector\n"					\
 	"\n"								\
-	"  + **mu** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"  + **delta** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
-	"  + **gamma** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
+	"  + **" MU "** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **" DELTA "** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **" GAMMA "** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
 
-static const char* hkl_geometry_petra3_p09_eh2_axes[] = {"mu", "omega", "chi", "phi", "delta", "gamma"};
+static const char* hkl_geometry_petra3_p09_eh2_axes[] = {MU, OMEGA, CHI, PHI, DELTA, GAMMA};
 
 static HklGeometry *hkl_geometry_new_petra3_p09_eh2(const HklFactory *factory)
 {
@@ -218,15 +225,15 @@ static HklGeometry *hkl_geometry_new_petra3_p09_eh2(const HklFactory *factory)
 	HklHolder *h;
 
 	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "mu", 0, -1, 0);
-	hkl_holder_add_rotation_axis(h, "omega", 0, 0, 1);
-	hkl_holder_add_rotation_axis(h, "chi", 1, 0, 0);
-	hkl_holder_add_rotation_axis(h, "phi", 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, MU, 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, OMEGA, 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, CHI, 1, 0, 0);
+	hkl_holder_add_rotation_axis(h, PHI, 0, 0, 1);
 
 	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "mu", 0, -1, 0);
-	hkl_holder_add_rotation_axis(h, "delta", 0, 0, 1);
-	hkl_holder_add_rotation_axis(h, "gamma", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, MU, 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, DELTA, 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, GAMMA, 0, -1, 0);
 
 	return self;
 }

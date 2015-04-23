@@ -111,7 +111,7 @@ static const HklFunction bissector_f2 = {
 
 static HklMode *bissector(void)
 {
-	static const char* axes[] = {"komega", "kappa", "kphi", "tth"};
+	static const char* axes[] = {KOMEGA, KAPPA, KPHI, TTH};
 	static const HklFunction *functions[] = {&bissector_f1, &bissector_f2};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO(__func__, axes, axes, functions),
@@ -172,7 +172,7 @@ static const HklFunction constant_omega_f2 = {
 
 static HklMode *constant_omega(void)
 {
-	static const char* axes[] = {"komega", "kappa", "kphi", "tth"};
+	static const char* axes[] = {KOMEGA, KAPPA, KPHI, TTH};
 	static const HklFunction *functions[] = {&constant_omega_f1, &constant_omega_f2};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes,
@@ -232,7 +232,7 @@ static const HklFunction constant_chi_f2 = {
 
 static HklMode *constant_chi(void)
 {
-	static const char* axes[] = {"komega", "kappa", "kphi", "tth"};
+	static const char* axes[] = {KOMEGA, KAPPA, KPHI, TTH};
 	static const HklFunction *functions[] = {&constant_chi_f1, &constant_chi_f2};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes,
@@ -294,7 +294,7 @@ static const HklFunction constant_phi_f2 = {
 
 static HklMode *constant_phi(void)
 {
-	static const char* axes[] = {"komega", "kappa", "kphi", "tth"};
+	static const char* axes[] = {KOMEGA, KAPPA, KPHI, TTH};
 	static const HklFunction *functions[] = {&constant_phi_f1, &constant_phi_f2};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes,
@@ -308,7 +308,7 @@ static HklMode *constant_phi(void)
 
 static HklMode *double_diffraction(void)
 {
-	static const char* axes[] = {"komega", "kappa", "kphi", "tth"};
+	static const char* axes[] = {KOMEGA, KAPPA, KPHI, TTH};
 	static const HklFunction *functions[] = {&double_diffraction_func};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes,
@@ -322,7 +322,7 @@ static HklMode *double_diffraction(void)
 
 static HklMode *psi_constant(void)
 {
-	static const char* axes[] = {"komega", "kappa", "kphi", "tth"};
+	static const char* axes[] = {KOMEGA, KAPPA, KPHI, TTH};
 	static const HklFunction *functions[] = {&psi_constant_vertical_func};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes,
@@ -361,7 +361,7 @@ static HklEngine *hkl_engine_k4cv_hkl_new(HklEngineList *engines)
 /* psi */
 static HklMode *psi()
 {
-	static const char *axes[] = {"komega", "kappa", "kphi", "tth"};
+	static const char *axes[] = {KOMEGA, KAPPA, KPHI, TTH};
 	static const HklFunction *functions[] = {&psi_func};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes,
@@ -404,15 +404,15 @@ REGISTER_INCIDENCE_ENGINE(kappa4C_vertical);
 	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
 	"+ 3 axes for the sample\n"					\
 	"\n"								\
-	"  + **komega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"  + **kappa** : rotating around the :math:`\\vec{x}` direction (0, :math:`-\\cos\\alpha`, :math:`-\\sin\\alpha`)\n" \
-	"  + **kphi** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **" KOMEGA "** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **" KAPPA "** : rotating around the :math:`\\vec{x}` direction (0, :math:`-\\cos\\alpha`, :math:`-\\sin\\alpha`)\n" \
+	"  + **" KPHI "** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
 	"\n"								\
 	"+ 1 axis for the detector\n"					\
 	"\n"								\
-	"  + **tth** : rotation around the :math:`-\\\vec{y}` direction (0, -1, 0)\n"
+	"  + **" TTH "** : rotation around the :math:`-\\\vec{y}` direction (0, -1, 0)\n"
 
-static const char* hkl_geometry_kappa4C_vertical_axes[] = {"komega", "kappa", "kphi", "tth"};
+static const char* hkl_geometry_kappa4C_vertical_axes[] = {KOMEGA, KAPPA, KPHI, TTH};
 
 static HklGeometry *hkl_geometry_new_kappa4C_vertical(const HklFactory *factory)
 {
@@ -421,12 +421,12 @@ static HklGeometry *hkl_geometry_new_kappa4C_vertical(const HklFactory *factory)
 	HklHolder *h;
 
 	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "komega", 0, -1, 0);
-	hkl_holder_add_rotation_axis(h, "kappa", 0, -cos(alpha), -sin(alpha));
-	hkl_holder_add_rotation_axis(h, "kphi", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, KOMEGA, 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, KAPPA, 0, -cos(alpha), -sin(alpha));
+	hkl_holder_add_rotation_axis(h, KPHI, 0, -1, 0);
 
 	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "tth", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, TTH, 0, -1, 0);
 
 	return self;
 }

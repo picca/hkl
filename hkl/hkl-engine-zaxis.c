@@ -28,13 +28,15 @@
 
 #define MU "mu"
 #define OMEGA "omega"
+#define DELTA "delta"
+#define GAMMA "gamma"
 
 /* #define DEBUG */
 
 static HklMode* _zaxis()
 {
-	static const char *axes_r[] = {"mu", "omega", "delta", "gamma"};
-	static const char *axes_w[] = {"omega", "delta", "gamma"};
+	static const char *axes_r[] = {MU, OMEGA, DELTA, GAMMA};
+	static const char *axes_w[] = {OMEGA, DELTA, GAMMA};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO("zaxis", axes_r, axes_w, functions),
@@ -67,7 +69,7 @@ static const HklFunction reflectivity_func = {
 
 static HklMode* reflectivity()
 {
-	static const char* axes[] = {"mu", "omega", "delta", "gamma"};
+	static const char* axes[] = {MU, OMEGA, DELTA, GAMMA};
 	static const HklFunction *functions[] = {&reflectivity_func};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO(__func__, axes, axes, functions),
@@ -116,16 +118,16 @@ REGISTER_INCIDENCE_ENGINE(zaxis);
 	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
 	"+ 2 axes for the sample\n"					\
 	"\n"								\
-	"  + **mu** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
-	"  + **omega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **" MU "** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **" OMEGA "** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
 	"\n"								\
 	"+ 3 axis for the detector\n"					\
 	"\n"								\
-	"  + **mu** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
-	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n"
+	"  + **" MU "** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **" DELTA "** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **" GAMMA "** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n"
 
-static const char* hkl_geometry_zaxis_axes[] = {"mu", "omega", "delta", "gamma"};
+static const char* hkl_geometry_zaxis_axes[] = {MU, OMEGA, DELTA, GAMMA};
 
 static HklGeometry *hkl_geometry_new_zaxis(const HklFactory *factory)
 {
@@ -133,13 +135,13 @@ static HklGeometry *hkl_geometry_new_zaxis(const HklFactory *factory)
 	HklHolder *h;
 
 	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
-	hkl_holder_add_rotation_axis(h, "omega", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, MU, 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, OMEGA, 0, -1, 0);
 
 	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
-	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
-	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, MU, 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, DELTA, 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, GAMMA, 0, 0, 1);
 
 	return self;
 }

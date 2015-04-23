@@ -49,15 +49,15 @@
 	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
 	"+ 4 axes for the sample\n"					\
 	"\n"								\
-	"  + **"MU"** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
-	"  + **"OMEGA"** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"  + **"CHI"** : rotating around the :math:`\\vec{x}` direction (1, 0, 0)\n" \
-	"  + **"PHI"** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **" MU "** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **" OMEGA "** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **" CHI "** : rotating around the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"  + **" PHI "** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
 	"\n"								\
 	"+ 2 axes for the detector\n"					\
 	"\n"								\
-	"  + **"GAMMA"** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
-	"  + **"DELTA"** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
+	"  + **" GAMMA "** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **" DELTA "** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
 
 static const char* hkl_geometry_eulerian6C_axes[] = {MU, OMEGA, CHI, PHI, GAMMA, DELTA};
 

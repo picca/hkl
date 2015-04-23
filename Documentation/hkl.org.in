@@ -842,6 +842,9 @@ git clone git://repo.or.cz/hkl.git
      Add a new incidence engine whcih contain ony one pseudo axis.
      + =incidence= the incoming beam incidence on the sample surface.
      + =azimuth= the sample surface azimuth.
+**** general
+     - use #define AXIS "axis_name" in all the code to set the axes
+       names at only one place. <2015-04-23 jeu.>
 *** DONE =HklLattice= expose in the binding the _x_get/set methods <2015-03-24 mar.>
     Now you can use hkl_lattice_x_get where x=a, b, c, alpha, beta,
     gamma in the bindings.
@@ -862,7 +865,7 @@ git clone git://repo.or.cz/hkl.git
 #+END_SRC
 * Todo
 ** hkl
-*** TODO [#A] [0/1] HklEngine "read_only"
+*** TODO [#A] [0/2] HklEngine "read_only"
     * [ ] "beta" emergence angle
 *** TODO [#A] HklSource
     Create a parameter for the wavelength. This is just internally for

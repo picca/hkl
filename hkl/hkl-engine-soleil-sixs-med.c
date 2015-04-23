@@ -31,6 +31,9 @@
 #define BETA "beta"
 #define MU "mu"
 #define OMEGA "omega"
+#define GAMMA "gamma"
+#define DELTA "delta"
+#define ETA_A "eta_a"
 
 /* #define DEBUG */
 
@@ -58,8 +61,8 @@ static const HklFunction reflectivity_func = {
 
 static HklMode* mu_fixed_2_2()
 {
-	static const char* axes_r[] = {"beta", "mu", "omega", "gamma", "delta"};
-	static const char* axes_w[] = {"omega", "gamma", "delta"};
+	static const char* axes_r[] = {BETA, MU, OMEGA, GAMMA, DELTA};
+	static const char* axes_w[] = {OMEGA, GAMMA, DELTA};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO("mu_fixed", axes_r, axes_w, functions),
@@ -72,8 +75,8 @@ static HklMode* mu_fixed_2_2()
 
 static HklMode* reflectivity_2_2()
 {
-	static const char* axes_r[] = {"beta", "mu", "omega", "gamma", "delta"};
-	static const char* axes_w[] = {"mu", "omega", "gamma", "delta"};
+	static const char* axes_r[] = {BETA, MU, OMEGA, GAMMA, DELTA};
+	static const char* axes_w[] = {MU, OMEGA, GAMMA, DELTA};
 	static const HklFunction *functions[] = {&reflectivity_func};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO("reflectivity", axes_r, axes_w, functions),
@@ -112,8 +115,8 @@ REGISTER_INCIDENCE_ENGINE(soleil_sixs_med_2_2);
 
 static HklMode* pitch_fixed()
 {
-	static const char *axes_r[] = {"pitch", "mu", "gamma", "delta"};
-	static const char* axes_w[] = {"mu", "gamma", "delta"};
+	static const char *axes_r[] = {PITCH, MU, GAMMA, DELTA};
+	static const char* axes_w[] = {MU, GAMMA, DELTA};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO(__func__, axes_r, axes_w, functions),
@@ -288,8 +291,8 @@ static void hkl_geometry_list_multiply_soleil_sixs_med_2_3(HklGeometryList *self
 
 static HklMode* mu_fixed_2_3()
 {
-	static const char *axes_r[] = {"beta", "mu", "omega", "gamma", "delta", "eta_a"};
-	static const char* axes_w[] = {"omega", "gamma", "delta"};
+	static const char *axes_r[] = {BETA, MU, OMEGA, GAMMA, DELTA, ETA_A};
+	static const char* axes_w[] = {OMEGA, GAMMA, DELTA};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO("mu_fixed", axes_r, axes_w, functions),
@@ -322,17 +325,17 @@ static HklEngine *hkl_engine_soleil_sixs_med_2_3_hkl_new(HklEngineList *engines)
 	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
 	"+ 3 axes for the sample\n"					\
 	"\n"								\
-	"  + **beta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"  + **mu** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
-	"  + **omega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **" BETA "** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **" MU "** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **" OMEGA "** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
 	"\n"								\
 	"+ 3 axis for the detector\n"					\
 	"\n"								\
-	"  + **beta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
-	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
+	"  + **" BETA "** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **" GAMMA "** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **" DELTA "** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
 
-static const char* hkl_geometry_soleil_sixs_med_2_2_axes[] = {"beta", "mu", "omega", "gamma", "delta"};
+static const char* hkl_geometry_soleil_sixs_med_2_2_axes[] = {BETA, MU, OMEGA, GAMMA, DELTA};
 
 static HklGeometry *hkl_geometry_new_soleil_sixs_med_2_2(const HklFactory *factory)
 {
@@ -340,14 +343,14 @@ static HklGeometry *hkl_geometry_new_soleil_sixs_med_2_2(const HklFactory *facto
 	HklHolder *h;
 
 	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "beta", 0, -1, 0);
-	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
-	hkl_holder_add_rotation_axis(h, "omega", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, BETA, 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, MU, 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, OMEGA, 0, -1, 0);
 
 	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "beta", 0, -1, 0);
-	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1);
-	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, BETA, 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, GAMMA, 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, DELTA, 0, -1, 0);
 
 	return self;
 }
@@ -375,16 +378,16 @@ REGISTER_DIFFRACTOMETER(soleil_sixs_med_2_2,"SOLEIL SIXS MED2+2", HKL_GEOMETRY_T
 	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
 	"+ 2 axes for the sample\n"					\
 	"\n"								\
-	"  + **pitch** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"  + **mu** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **" PITCH "** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **" MU "** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
 	"\n"								\
 	"+ 3 axis for the detector\n"					\
 	"\n"								\
-	"  + **pitch** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
-	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
+	"  + **" PITCH "** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **" GAMMA "** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **" DELTA "** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
 
-static const char* hkl_geometry_soleil_sixs_med_1_2_axes[] = {"pitch", "mu", "gamma", "delta"};
+static const char* hkl_geometry_soleil_sixs_med_1_2_axes[] = {PITCH, MU, GAMMA, DELTA};
 
 static HklGeometry *hkl_geometry_new_soleil_sixs_med_1_2(const HklFactory *factory)
 {
@@ -392,13 +395,13 @@ static HklGeometry *hkl_geometry_new_soleil_sixs_med_1_2(const HklFactory *facto
 	HklHolder *h;
 
 	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "pitch", 0, -1, 0);
-	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, PITCH, 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, MU, 0, 0, 1);
 
 	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "pitch", 0, -1, 0);
-	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1);
-	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, PITCH, 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, GAMMA, 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, DELTA, 0, -1, 0);
 
 	return self;
 }
@@ -427,18 +430,18 @@ REGISTER_DIFFRACTOMETER(soleil_sixs_med_1_2, "SOLEIL SIXS MED1+2", HKL_GEOMETRY_
 	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
 	"+ 3 axes for the sample\n"					\
 	"\n"								\
-	"  + **beta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"  + **mu** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
-	"  + **omega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **" BETA "** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **" MU "** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **" OMEGA "** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
 	"\n"								\
 	"+ 4 axis for the detector\n"					\
 	"\n"								\
-	"  + **beta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"  + **gamma** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
-	"  + **delta** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"  + **eta_a** : rotation around the :math:`-\\vec{x}` direction (-1, 0, 0)\n"
+	"  + **" BETA "** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **" GAMMA "** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **" DELTA "** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **" ETA_A "** : rotation around the :math:`-\\vec{x}` direction (-1, 0, 0)\n"
 
-static const char* hkl_geometry_soleil_sixs_med_2_3_axes[] = {"beta", "mu", "omega", "gamma", "delta", "eta_a"};
+static const char* hkl_geometry_soleil_sixs_med_2_3_axes[] = {BETA, MU, OMEGA, GAMMA, DELTA, ETA_A};
 
 static HklGeometry *hkl_geometry_new_soleil_sixs_med_2_3(const HklFactory *factory)
 {
@@ -446,15 +449,15 @@ static HklGeometry *hkl_geometry_new_soleil_sixs_med_2_3(const HklFactory *facto
 	HklHolder *h;
 
 	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "beta", 0, -1, 0);
-	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
-	hkl_holder_add_rotation_axis(h, "omega", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, BETA, 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, MU, 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, OMEGA, 0, -1, 0);
 
 	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "beta", 0, -1, 0);
-	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1);
-	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
-	hkl_holder_add_rotation_axis(h, "eta_a", -1, 0, 0);
+	hkl_holder_add_rotation_axis(h, BETA, 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, GAMMA, 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, DELTA, 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, ETA_A, -1, 0, 0);
 
 	return self;
 }

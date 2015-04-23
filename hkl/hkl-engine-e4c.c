@@ -55,7 +55,7 @@ static const HklFunction bissector_func = {
 
 static HklMode *bissector(void)
 {
-	static const char* axes[] = {"omega", "chi", "phi", "tth"};
+	static const char* axes[] = {OMEGA, CHI, PHI, TTH};
 	static const HklFunction *functions[] = {&bissector_func};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO(__func__, axes, axes, functions),
@@ -68,8 +68,8 @@ static HklMode *bissector(void)
 
 static HklMode *constant_omega(void)
 {
-	static const char* axes_r[] = {"omega", "chi", "phi", "tth"};
-	static const char* axes_w[] = {"chi", "phi", "tth"};
+	static const char* axes_r[] = {OMEGA, CHI, PHI, TTH};
+	static const char* axes_w[] = {CHI, PHI, TTH};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO(__func__, axes_r, axes_w, functions),
@@ -82,8 +82,8 @@ static HklMode *constant_omega(void)
 
 static HklMode *constant_chi(void)
 {
-	static const char* axes_r[] = {"omega", "chi", "phi", "tth"};
-	static const char* axes_w[] = {"omega", "phi", "tth"};
+	static const char* axes_r[] = {OMEGA, CHI, PHI, TTH};
+	static const char* axes_w[] = {OMEGA, PHI, TTH};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO(__func__, axes_r, axes_w, functions),
@@ -96,8 +96,8 @@ static HklMode *constant_chi(void)
 
 static HklMode *constant_phi(void)
 {
-	static const char* axes_r[] = {"omega", "chi", "phi", "tth"};
-	static const char* axes_w[] = {"omega", "chi", "tth"};
+	static const char* axes_r[] = {OMEGA, CHI, PHI, TTH};
+	static const char* axes_w[] = {OMEGA, CHI, TTH};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO(__func__, axes_r, axes_w, functions),
@@ -110,7 +110,7 @@ static HklMode *constant_phi(void)
 
 static HklMode *double_diffraction(void)
 {
-	static const char* axes[] = {"omega", "chi", "phi", "tth"};
+	static const char* axes[] = {OMEGA, CHI, PHI, TTH};
 	static const HklFunction *functions[] = {&double_diffraction_func};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes,
@@ -124,7 +124,7 @@ static HklMode *double_diffraction(void)
 
 static HklMode *psi_constant(void)
 {
-	static const char* axes[] = {"omega", "chi", "phi", "tth"};
+	static const char* axes[] = {OMEGA, CHI, PHI, TTH};
 	static const HklFunction *functions[] = {&psi_constant_vertical_func};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes,
@@ -162,7 +162,7 @@ static HklEngine *hkl_engine_e4c_hkl_new(HklEngineList *engines)
 
 static HklMode *psi(void)
 {
-	static const char *axes[] = {"omega", "chi", "phi", "tth"};
+	static const char *axes[] = {OMEGA, CHI, PHI, TTH};
 	static const HklFunction *functions[] = {&psi_func};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO_WITH_PARAMS(__func__, axes, axes,
@@ -202,15 +202,15 @@ REGISTER_INCIDENCE_ENGINE(e4c);
 	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
 	"+ 3 axes for the sample\n"					\
 	"\n"								\
-	"  + **omega** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
-	"  + **chi** : rotating around the :math:`\\vec{x}` direction (1, 0, 0)\n" \
-	"  + **phi** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **" OMEGA "** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
+	"  + **" CHI "** : rotating around the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"  + **" PHI "** : rotating around the :math:`-\\vec{y}` direction (0, -1, 0)\n" \
 	"\n"								\
 	"+ 1 axis for the detector\n"					\
 	"\n"								\
-	"  + **tth** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
+	"  + **" TTH "** : rotation around the :math:`-\\vec{y}` direction (0, -1, 0)\n"
 
-static const char* hkl_geometry_eulerian4C_vertical_axes[] = {"omega", "chi", "phi", "tth"};
+static const char* hkl_geometry_eulerian4C_vertical_axes[] = {OMEGA, CHI, PHI, TTH};
 
 static HklGeometry *hkl_geometry_new_eulerian4C_vertical(const HklFactory *factory)
 {
@@ -218,12 +218,12 @@ static HklGeometry *hkl_geometry_new_eulerian4C_vertical(const HklFactory *facto
 	HklHolder *h;
 
 	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "omega", 0, -1, 0);
-	hkl_holder_add_rotation_axis(h, "chi", 1, 0, 0);
-	hkl_holder_add_rotation_axis(h, "phi", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, OMEGA, 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, CHI, 1, 0, 0);
+	hkl_holder_add_rotation_axis(h, PHI, 0, -1, 0);
 
 	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "tth", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, TTH, 0, -1, 0);
 
 	return self;
 }
@@ -251,15 +251,15 @@ REGISTER_DIFFRACTOMETER(eulerian4C_vertical, "E4CV", HKL_GEOMETRY_EULERIAN4C_VER
 	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
 	"+ 3 axes for the sample\n"					\
 	"\n"								\
-	"  + **omega** : rotating around the :math:`\\vec{z}` direction (0, -1, 0)\n" \
-	"  + **chi** : rotating around the :math:`\\vec{x}` direction (-1, 0, 0)\n" \
-	"  + **phi** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **" OMEGA "** : rotating around the :math:`\\vec{z}` direction (0, -1, 0)\n" \
+	"  + **" CHI "** : rotating around the :math:`\\vec{x}` direction (-1, 0, 0)\n" \
+	"  + **" PHI "** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
 	"\n"								\
 	"+ 1 axis for the detector\n"					\
 	"\n"								\
-	"  + **tth** : rotation around the :math:`\\vec{z}` direction (0, -1, 0)\n"
+	"  + **" TTH "** : rotation around the :math:`\\vec{z}` direction (0, -1, 0)\n"
 
-static const char* hkl_geometry_soleil_mars_axes[] = {"omega", "chi", "phi", "tth"};
+static const char* hkl_geometry_soleil_mars_axes[] = {OMEGA, CHI, PHI, TTH};
 
 static HklGeometry *hkl_geometry_new_soleil_mars(const HklFactory *factory)
 {
@@ -267,12 +267,12 @@ static HklGeometry *hkl_geometry_new_soleil_mars(const HklFactory *factory)
 	HklHolder *h;
 
 	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "omega", 0, -1, 0);
-	hkl_holder_add_rotation_axis(h, "chi", -1, 0, 0);
-	hkl_holder_add_rotation_axis(h, "phi", 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, OMEGA, 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, CHI, -1, 0, 0);
+	hkl_holder_add_rotation_axis(h, PHI, 0, 0, 1);
 
 	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "tth", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, TTH, 0, -1, 0);
 
 	return self;
 }
@@ -299,15 +299,15 @@ REGISTER_DIFFRACTOMETER(soleil_mars, "SOLEIL MARS", HKL_GEOMETRY_TYPE_SOLEIL_MAR
 	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
 	"+ 3 axes for the sample\n"					\
 	"\n"								\
-	"  + **omega** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
-	"  + **chi** : rotating around the :math:`\\vec{x}` direction (1, 0, 0)\n" \
-	"  + **phi** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **" OMEGA "** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
+	"  + **" CHI "** : rotating around the :math:`\\vec{x}` direction (1, 0, 0)\n" \
+	"  + **" PHI "** : rotating around the :math:`\\vec{z}` direction (0, 0, 1)\n" \
 	"\n"								\
 	"+ 1 axis for the detector\n"					\
 	"\n"								\
-	"  + **tth** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n"
+	"  + **" TTH "** : rotation around the :math:`\\vec{z}` direction (0, 0, 1)\n"
 
-static const char* hkl_geometry_eulerian4C_horizontal_axes[] = {"omega", "chi", "phi", "tth"};
+static const char* hkl_geometry_eulerian4C_horizontal_axes[] = {OMEGA, CHI, PHI, TTH};
 
 static HklGeometry *hkl_geometry_new_eulerian4C_horizontal(const HklFactory *factory)
 {
@@ -315,12 +315,12 @@ static HklGeometry *hkl_geometry_new_eulerian4C_horizontal(const HklFactory *fac
 	HklHolder *h;
 
 	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "omega", 0, 0, 1);
-	hkl_holder_add_rotation_axis(h, "chi", 1, 0, 0);
-	hkl_holder_add_rotation_axis(h, "phi", 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, OMEGA, 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, CHI, 1, 0, 0);
+	hkl_holder_add_rotation_axis(h, PHI, 0, 0, 1);
 
 	h = hkl_geometry_add_holder(self);
-	hkl_holder_add_rotation_axis(h, "tth", 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, TTH, 0, 0, 1);
 
 	return self;
 }
