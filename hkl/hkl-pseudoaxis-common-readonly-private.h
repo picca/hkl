@@ -25,6 +25,16 @@
 
 #include "hkl-pseudoaxis-private.h"
 
+typedef struct _HklModeIncidence HklModeIncidence;
+
+struct _HklModeIncidence
+{
+	HklMode parent;
+	HklParameter *n_x;
+	HklParameter *n_y;
+	HklParameter *n_z;
+};
+
 extern HklMode *hkl_mode_incidence_new(const HklModeInfo *info);
 
 extern HklEngine *hkl_engine_incidence_new(HklEngineList *engines);

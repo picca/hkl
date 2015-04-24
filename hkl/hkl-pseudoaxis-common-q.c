@@ -41,6 +41,12 @@
 #include "hkl/ccan/container_of/container_of.h"  // for container_of
 #include "hkl/ccan/darray/darray.h"     // for darray_item
 
+#define GAMMA "gamma"
+#define DELTA "delta"
+
+typedef struct _HklEngineQ HklEngineQ;
+typedef struct _HklEngineQ2 HklEngineQ2;
+typedef struct _HklEngineQperQpar HklEngineQperQpar;
 
 double qmax(double wavelength)
 {
@@ -243,7 +249,7 @@ static int get_q2_real(HklMode *self,
 
 static HklMode *mode_q2(void)
 {
-	static const char* axes[] = {"gamma", "delta"};
+	static const char* axes[] = {GAMMA, DELTA};
 	static const HklFunction *functions[] = {&q2_func};
 	static const HklModeAutoInfo info = {
 		HKL_MODE_AUTO_INFO("q2", axes, axes, functions),
@@ -301,6 +307,8 @@ HklEngine *hkl_engine_q2_new(HklEngineList *engines)
 /* QperQpar */
 /************/
 
+typedef struct _HklModeIncidence HklModeQperQpar;
+
 struct _HklEngineQperQpar
 {
 	HklEngine engine;
@@ -312,13 +320,14 @@ static void _qper_qpar(HklEngine *engine,
 		       HklGeometry *geometry, HklDetector *detector,
 		       double *qper, double *qpar)
 {
+	HklModeQperQpar *mode = container_of(engine->mode, HklModeQperQpar, parent);
 	HklVector ki;
 	HklVector q;
 	HklVector n = {
 		.data = {
-			darray_item(engine->mode->parameters, 0)->_value,
-			darray_item(engine->mode->parameters, 1)->_value,
-			darray_item(engine->mode->parameters, 2)->_value,
+			mode->n_x->_value,
+			mode->n_y->_value,
+			mode->n_z->_value,
 		},
 	};
 	HklVector npar;
@@ -400,7 +409,7 @@ static int get_qper_qpar_real(HklMode *self,
 
 static HklMode *mode_qper_qpar(void)
 {
-	static const char* axes[] = {"gamma", "delta"};
+	static const char* axes[] = {GAMMA, DELTA};
 	static const HklFunction *functions[] = {&qper_qpar_func};
 	static const HklParameter parameters[] = {
 		SURFACE_PARAMETERS(0, 1, 0),
@@ -413,7 +422,18 @@ static HklMode *mode_qper_qpar(void)
 		.get = get_qper_qpar_real,
 	};
 
-	return hkl_mode_auto_new(&info, &operations, TRUE);
+	HklModeQperQpar *self = HKL_MALLOC(HklModeQperQpar);
+
+	/* the base constructor; */
+	hkl_mode_auto_init(&self->parent,
+			   &info,
+			   &operations, TRUE);
+
+	self->n_x = register_mode_parameter(&self->parent, 0);
+	self->n_y = register_mode_parameter(&self->parent, 1);
+	self->n_z = register_mode_parameter(&self->parent, 2);
+
+	return &self->parent;
 }
 
 static void hkl_engine_qper_qpar_free_real(HklEngine *base)

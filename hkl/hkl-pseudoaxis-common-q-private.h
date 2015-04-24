@@ -26,10 +26,6 @@
 
 G_BEGIN_DECLS
 
-typedef struct _HklEngineQ HklEngineQ;
-typedef struct _HklEngineQ2 HklEngineQ2;
-typedef struct _HklEngineQperQpar HklEngineQperQpar;
-
 extern double qmax(double wavelength);
 
 extern HklEngine *hkl_engine_q_new(HklEngineList *engines);

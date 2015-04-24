@@ -22,16 +22,7 @@
 #include "hkl-pseudoaxis-common-readonly-private.h"
 #include "hkl-pseudoaxis-private.h"
 
-typedef struct _HklModeIncidence HklModeIncidence;
 typedef struct _HklEngineIncidence HklEngineIncidence;
-
-struct _HklModeIncidence
-{
-	HklMode parent;
-	HklParameter *n_x;
-	HklParameter *n_y;
-	HklParameter *n_z;
-};
 
 struct _HklEngineIncidence
 {
