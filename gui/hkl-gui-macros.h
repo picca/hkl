@@ -39,7 +39,7 @@
 #define get_model(filename)						\
 	(0 == access(filename, R_OK)) ? filename :			\
 	((0 == access("../data/" filename, R_OK)) ? "../data/" filename : \
-	 ((0 == access(PKGDATA "hkl3d" filename, R_OK)) ? PKGDATA "hkl3d" filename : NULL))
+	 ((0 == access(PKGDATA "/hkl3d/" filename, R_OK)) ? PKGDATA "/hkl3d/" filename : NULL))
 
 static void get_ui(GtkBuilder *builder, const char *filename)
 {
