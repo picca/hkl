@@ -814,6 +814,7 @@ git clone git://repo.or.cz/hkl.git
    #+END_QUOTE
 * Releases
 ** @VERSION@
+** 4.99.99.1940 <2015-05-04 lun.>
 *** DONE =HklLattice= add an =hkl_lattice_volume_get=
 #+BEGIN_SRC c
   volume = hkl_lattice_volume_get(lattice);
