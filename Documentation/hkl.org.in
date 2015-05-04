@@ -6,7 +6,7 @@
 #+STYLE: <style>table.center {margin-left:auto; margin- right:auto;}</style>
 
 * Introduction
-  The purpose of the library is to factorise single crystal
+  The purpose of the library is to factorize single crystal
   diffraction angles computation for different kind of diffractometer
   geometries. It is used at the SOLEIL, Desy and Alba synchrotron with
   the Tango control system to pilot diffractometers.
@@ -18,7 +18,7 @@
      - simplex computation with more than 2 reflections using the GSL
        library.
      - Eulerians angles to pre-orientate your sample.
-   - Crystal lattice affinement
+   - Crystal lattice refinement
      - with more than 2 reflections you can select which parameter must
        be fitted.
    - Pseudoaxes
@@ -42,7 +42,7 @@
     \end{displaymath}
 
     $\vec{a}$, $\vec{b}$, $\vec{c}$ are the former vector of a base of the
-    space. =u=, =v=, =w= are integrers. The pattern contain atomes
+    space. =u=, =v=, =w= are integers. The pattern contain atoms
     associated to each lattice node. the purpose of diffraction is to study
     the interaction of this crystal (pattern+lattice) with X-rays.
 
@@ -51,7 +51,7 @@
 
     this lattice is defined by $\vec{a}$, $\vec{b}$, $\vec{c}$ vectors, and
     the angles $\alpha$, $\beta$, $\gamma$. In general cases this lattice is
-    not othonormal.
+    not orthonormal.
 
     Nevertheless to compute the interaction of this real space lattice and
     the X-Rays, it is convenient to define another lattice called reciprocal
@@ -65,7 +65,7 @@
 
     $\tau=2\pi$ or $\tau=1$ depending on the conventions.
 
-    It is then possible to define thoses orthogonal properties:
+    It is then possible to define theses orthogonal properties:
 
     \begin{eqnarray*}
     \vec{a}^{\star}\cdot\vec{a}=\tau & \vec{b}^{\star}\cdot\vec{a}=0    & \vec{c}^{\star}\cdot\vec{a}=0\\
@@ -94,7 +94,7 @@
 
     To compute the angles between the reciprocal space vectors, it is once
     again possible to use the previous equations reciprocal to obtain the
-    sinus and cosinus of the angles $\alpha^\star$, $\beta^\star$ et
+    sines and cosines of the angles $\alpha^\star$, $\beta^\star$ and
     $\gamma^\star$:
 
     \begin{eqnarray*}
@@ -118,7 +118,7 @@
 
 *** Diffraction
 
-    Let the incomming X-rays beam whose wave vector is $\vec{k_{i}}$,
+    Let the incoming X-rays beam whose wave vector is $\vec{k_{i}}$,
     $|k_{i}|=\tau/\lambda$ where $\lambda$ is the wavelength of the signal.
     The $\vec{k_{d}}$ vector wavelength of the diffracted beam. There is
     diffusion if the diffusion vector $\vec{q}$ can be expressed as follows:
@@ -127,7 +127,7 @@
     \vec{q}=\vec{k_{d}}-\vec{k_{i}}=h.\vec{a}^{*}+k.\vec{b}^{*}+l.\vec{c}^{*}
     \end{displaymath}
 
-    where $(h,k,l)\in\mathbb{N}^{3}$ and $(h,k,l)\neq(0,0,0)$. Thoses
+    where $(h,k,l)\in\mathbb{N}^{3}$ and $(h,k,l)\neq(0,0,0)$. Theses
     indices $(h,k,l)$ are named Miller indices.
 
     Another way of looking at things has been given by Bragg and that famous
@@ -139,8 +139,8 @@
 
     where $d$ is the inter-plan distance and $n \in \mathbb{N}$.
 
-    The diffusion accure for a unique $\theta$ angle. Then we got $\vec{q}$
-    perpendicular to the diffraction plan.
+    The diffusion occurs for an unique $\theta$ angle. Then we got
+    $\vec{q}$ perpendicular to the diffraction plan.
 
     The Ewald construction allow to represent this diffraction in the
     reciprocal space.
@@ -148,8 +148,8 @@
 *** Quaternions
 **** Properties
 
-     The quaternions will be used to discribe the diffractometers geometries.
-     Thoses quaternions can represent 3D rotations. There is different way to
+     The quaternions will be used to describe the diffractometers geometries.
+     Theses quaternions can represent 3D rotations. There is different way to
      describe then like complex numbers.
 
      \begin{displaymath}
@@ -177,7 +177,7 @@
 
 **** Operations
 
-     The difference with the complexnumber algebre is about
+     The difference with the complex number algebra is about
      non-commutativity.
 
      \begin{displaymath}
@@ -624,7 +624,7 @@ git clone git://repo.or.cz/hkl.git
 
    You just need to send an [[mailto:submit@bugs.debian.org?subject=%20My%20problem%20with%20hkl...&body=Package:%20hkl%0AVersion:%20@VERSION@%0A%0AI%20found%20this%20problem%20in%20hkl][email]]
 
-*** Providing patchs
+*** Providing patches
 
     you can send your patch to [[picca@synchrotron-soleil.fr][Picca
     Frédéric-Emmanuel]] using =git=
@@ -836,10 +836,10 @@ git clone git://repo.or.cz/hkl.git
 #+END_SRC
 **** "tth2" <2015-04-03 ven>
      Add a new hkl engine which contain two pseudo axes.
-     + =tth=  two time the diffraction angle $\theta$
+     + =tth=  two times the diffraction angle $\theta$
      + =alpha= the azimuth of q in the zOy plan.
 **** "incidence" <2015-04-21 mar.>
-     Add a new incidence engine whcih contain ony one pseudo axis.
+     Add a new incidence engine which contain only one pseudo axis.
      + =incidence= the incoming beam incidence on the sample surface.
      + =azimuth= the sample surface azimuth.
 **** =hkl_engine_parameter_set= <2015-05-04 lun.>
@@ -855,7 +855,7 @@ git clone git://repo.or.cz/hkl.git
   lattice.a_set(a)
 #+END_SRC
 *** DONE =HklSampleReflection= expose the flag_get/set and geometry_get/set method <2015-03-24 mar.>
-    It is now possible to change the geometry stored into a reflection
+    It is now possible to change the geometry stored in a reflection
     via the bindings.
 #+BEGIN_SRC python :export code
   flag = reflection.flag_get()
