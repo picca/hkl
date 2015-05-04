@@ -432,7 +432,7 @@ const HklParameter *hkl_engine_parameter_get(const HklEngine *self,
 }
 
 /**
- * hkl_engine_parameter_set: (skip)
+ * hkl_engine_parameter_set:
  * @self: the this ptr
  * @name: the name of the parameter to set. 
  * @parameter: the parameter to set.
@@ -454,10 +454,11 @@ int hkl_engine_parameter_set(HklEngine *self,
 
 	darray_foreach(p, self->mode->parameters)
 		if(!strcmp(name, (*p)->name)){
+			const char *old_name = (*p)->name;
 			hkl_parameter_init_copy(*p, parameter, NULL);
 			/* we do not check if the name is identical so force the right name */
 			/* TODO rethink this HklParameter assignement */
-			(*p)->name = name;
+			(*p)->name = old_name;
 			return TRUE;
 		}
 

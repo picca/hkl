@@ -439,7 +439,7 @@ static void axis_names(void)
 
 static int _parameters(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
 {
-	static const char *bad = "__bad_parameer_name__";
+	static const char *bad = "__bad_parameter_name__";
 	int res = TRUE;
 	GError *error = NULL;
 	const char **parameter;

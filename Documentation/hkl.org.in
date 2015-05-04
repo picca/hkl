@@ -842,6 +842,8 @@ git clone git://repo.or.cz/hkl.git
      Add a new incidence engine whcih contain ony one pseudo axis.
      + =incidence= the incoming beam incidence on the sample surface.
      + =azimuth= the sample surface azimuth.
+**** =hkl_engine_parameter_set= <2015-05-04 lun.>
+     Fix a bug and expose the method in the binding.
 **** general
      - use #define AXIS "axis_name" in all the code to set the axes
        names at only one place. <2015-04-23 jeu.>
