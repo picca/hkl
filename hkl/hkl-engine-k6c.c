@@ -647,13 +647,15 @@ static HklEngine *hkl_engine_k6c_psi_new(HklEngineList *engines)
 	return self;
 }
 
-/******************/
-/* incidence mode */
-/******************/
+/*****************/
+/* mode readonly */
+/*****************/
 
-static const char *k6c_incidence_axes[] = {MU, KOMEGA, KAPPA, KPHI};
+REGISTER_READONLY_INCIDENCE(hkl_engine_k6c_incidence_new,
+			    P99_PROTECT({MU, KOMEGA, KAPPA, KPHI}));
 
-REGISTER_INCIDENCE_ENGINE(k6c);
+REGISTER_READONLY_EMERGENCE(hkl_engine_k6c_emergence_new,
+			    P99_PROTECT({MU, KOMEGA, KAPPA, KPHI, GAMMA, DELTA}));
 
 #define HKL_GEOMETRY_KAPPA6C_DESCRIPTION				\
 	"For this geometry there is a special parameters called :math:`\\alpha` which is the\n" \
@@ -705,6 +707,7 @@ static HklEngineList *hkl_engine_list_new_kappa6C(const HklFactory *factory)
 	hkl_engine_qper_qpar_new(self);
 	hkl_engine_k6c_incidence_new(self);
 	hkl_engine_tth2_new(self);
+	hkl_engine_k6c_emergence_new(self);
 
 	return self;
 }
@@ -1027,6 +1030,7 @@ static HklEngineList *hkl_engine_list_new_soleil_sirius_kappa(const HklFactory *
 	hkl_engine_qper_qpar_new(self);
 	hkl_engine_tth2_new(self);
 	hkl_engine_k6c_incidence_new(self);
+	hkl_engine_k6c_emergence_new(self);
 
 	return self;
 }

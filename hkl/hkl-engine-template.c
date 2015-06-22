@@ -171,13 +171,15 @@ static HklMode* psi_vertical()
 	return hkl_mode_psi_new(&info);
 }
 
-/******************/
-/* mode incidence */
-/******************/
+/*****************/
+/* mode readonly */
+/*****************/
 
-static const char *template_incidence_axes[] = {MU, OMEGA, CHI, PHI};
+REGISTER_READONLY_INCIDENCE(hkl_engine_template_incidence_new,
+			    P99_PROTECT({MU, OMEGA, CHI, PHI}));
 
-REGISTER_INCIDENCE_ENGINE(template);
+REGISTER_READONLY_EMERGENCE(hkl_engine_template_emergence_new,
+			    P99_PROTECT({MU, OMEGA, CHI, PHI, GAMMA, DELTA}));
 
 /***********/
 /* Engines */
@@ -227,6 +229,7 @@ static HklEngineList *hkl_engine_list_new_eulerian6C(const HklFactory *factory)
 	hkl_engine_qper_qpar_new(self);
 	hkl_engine_tth2_new(self);
 	hkl_engine_template_incidence_new(self);
+	hkl_engine_template_emergence_new(self);
 
 	return self;
 }

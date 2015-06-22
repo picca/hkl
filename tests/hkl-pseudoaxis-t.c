@@ -275,8 +275,9 @@ static int _capabilities(HklEngine *engine, HklEngineList *engine_list, unsigned
 	/* all motors must have the read capabilities */
 	res &= DIAG((capabilities & HKL_ENGINE_CAPABILITIES_READABLE) != 0);
 
-	/* all engines except the readonly (incidence) are writable */
-	if(strcmp("incidence", hkl_engine_name_get(engine)))
+	/* all engines except the readonly (incidence, emergence) are writable */
+	if(strcmp("incidence", hkl_engine_name_get(engine))
+	   && strcmp("emergence", hkl_engine_name_get(engine)))
 		res &= DIAG((capabilities & HKL_ENGINE_CAPABILITIES_WRITABLE) != 0);
 
 	/* all psi engines must be initialisable */

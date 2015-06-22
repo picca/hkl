@@ -186,13 +186,15 @@ static HklEngine *hkl_engine_e4c_psi_new(HklEngineList *engines)
 	return self;
 }
 
-/******************/
-/* mode incidence */
-/******************/
+/*****************/
+/* mode readonly */
+/*****************/
 
-static const char *e4c_incidence_axes[] = {OMEGA, CHI, PHI};
+REGISTER_READONLY_INCIDENCE(hkl_engine_e4c_incidence_new,
+			    P99_PROTECT({OMEGA, CHI, PHI}));
 
-REGISTER_INCIDENCE_ENGINE(e4c);
+REGISTER_READONLY_EMERGENCE(hkl_engine_e4c_emergence_new,
+			    P99_PROTECT({OMEGA, CHI, PHI, TTH}));
 
 /********/
 /* E4CV */
@@ -333,10 +335,9 @@ static HklEngineList *hkl_engine_list_new_eulerian4C_horizontal(const HklFactory
 	hkl_engine_e4c_psi_new(self);
 	hkl_engine_q_new(self);
 	hkl_engine_e4c_incidence_new(self);
+	hkl_engine_e4c_emergence_new(self);
 
 	return self;
 }
 
 REGISTER_DIFFRACTOMETER(eulerian4C_horizontal, "E4CH", HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL_DESCRIPTION);
-
-

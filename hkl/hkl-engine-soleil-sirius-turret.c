@@ -63,13 +63,15 @@ static HklEngine *hkl_engine_soleil_sirius_turret_hkl_new(HklEngineList *engines
 	return self;
 }
 
-/******************/
-/* mode incidence */
-/******************/
+/*****************/
+/* mode readonly */
+/*****************/
 
-static const char *soleil_sirius_turret_incidence_axes[] = {THETAH, ALPHAY, ALPHAX};
+REGISTER_READONLY_INCIDENCE(hkl_engine_soleil_sirius_turret_incidence_new,
+			    P99_PROTECT({THETAH, ALPHAY, ALPHAX}));
 
-REGISTER_INCIDENCE_ENGINE(soleil_sirius_turret);
+REGISTER_READONLY_EMERGENCE(hkl_engine_soleil_sirius_turret_emergence_new,
+			    P99_PROTECT({THETAH, ALPHAY, ALPHAX, DELTA, GAMMA}));
 
 /************************/
 /* SOLEIL SIRIUS TURRET */
@@ -116,6 +118,7 @@ static HklEngineList *hkl_engine_list_new_soleil_sirius_turret(const HklFactory 
 	hkl_engine_qper_qpar_new(self);
 	hkl_engine_tth2_new(self);
 	hkl_engine_soleil_sirius_turret_incidence_new(self);
+	hkl_engine_soleil_sirius_turret_emergence_new(self);
 
 	return self;
 }

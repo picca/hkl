@@ -385,13 +385,15 @@ static HklEngine *hkl_engine_k4cv_psi_new(HklEngineList *engines)
 	return self;
 }
 
-/******************/
-/* mode incidence */
-/******************/
+/*****************/
+/* mode readonly */
+/*****************/
 
-static const char *kappa4C_vertical_incidence_axes[] = {KOMEGA, KAPPA, KPHI};
+REGISTER_READONLY_INCIDENCE(hkl_engine_kappa4C_vertical_incidence_new,
+			    P99_PROTECT({KOMEGA, KAPPA, KPHI}));
 
-REGISTER_INCIDENCE_ENGINE(kappa4C_vertical);
+REGISTER_READONLY_EMERGENCE(hkl_engine_kappa4C_vertical_emergence_new,
+			    P99_PROTECT({KOMEGA, KAPPA, KPHI, TTH}));
 
 /********/
 /* K4CV */
@@ -441,6 +443,7 @@ static HklEngineList *hkl_engine_list_new_kappa4C_vertical(const HklFactory *fac
 	hkl_engine_k4cv_psi_new(self);
 	hkl_engine_q_new(self);
 	hkl_engine_kappa4C_vertical_incidence_new(self);
+	hkl_engine_kappa4C_vertical_emergence_new(self);
 
 	return self;
 }

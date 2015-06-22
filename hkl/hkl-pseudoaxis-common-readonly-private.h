@@ -44,6 +44,15 @@ static inline double _incidence(const HklVector *v1, const HklVector *v2)
 	return hkl_vector_angle(v1, v2) - M_PI_2;
 }
 
+static inline double _emergence(const HklVector *v1, const HklVector *v2)
+{
+	return M_PI_2 - hkl_vector_angle(v1, v2);
+}
+
+extern HklMode *hkl_mode_emergence_new(const HklModeInfo *info);
+
+extern HklEngine *hkl_engine_emergence_new(HklEngineList *engines);
+
 /* mode parameters */
 
 #define SURFACE_PARAMETERS(_x, _y, _z)					\
@@ -67,22 +76,29 @@ static const HklParameter surface_parameters[] = {
 	SURFACE_PARAMETERS(0, 1, 0),
 };
 
-#define HKL_MODE_INFO_INCIDENCE_DEFAULTS(_name, _axes)			\
-	HKL_MODE_INFO_RO_WITH_PARAMS((_name), (_axes), surface_parameters)
+#define P99_PROTECT(...) __VA_ARGS__
 
-#define REGISTER_INCIDENCE_ENGINE(_name)				\
-	static HklEngine *hkl_engine_## _name ## _incidence_new(HklEngineList *engines) \
+#define HKL_MODE_INFO_incidence_DEFAULTS(_axes)			\
+	HKL_MODE_INFO_RO_WITH_PARAMS("incidence", (_axes), surface_parameters)
+
+#define HKL_MODE_INFO_emergence_DEFAULTS(_axes)			\
+	HKL_MODE_INFO_RO_WITH_PARAMS("emergence", (_axes), surface_parameters)
+
+#define REGISTER_READONLY(_engine, _func, _axes)			\
+	static HklEngine* _func(HklEngineList *engines)			\
 	{								\
-		HklEngine *self;					\
-		HklMode *default_mode;					\
+		HklEngine *self = hkl_engine_ ## _engine ## _new(engines); \
+		static const char *axes[] = _axes;			\
 		static const HklModeInfo info = {			\
-			HKL_MODE_INFO_INCIDENCE_DEFAULTS("incidence",	\
-							 _name ## _incidence_axes), \
+			HKL_MODE_INFO_ ## _engine ## _DEFAULTS(axes),	\
 		};							\
-		self = hkl_engine_incidence_new(engines);		\
-		default_mode = hkl_mode_incidence_new(&info);		\
+		HklMode *default_mode = hkl_mode_ ## _engine ## _new(&info); \
 		hkl_engine_add_mode(self, default_mode);		\
 		hkl_engine_mode_set(self, default_mode);		\
 		return self;						\
 	}
+
+#define REGISTER_READONLY_INCIDENCE(_func, _axes) REGISTER_READONLY(incidence, _func, P99_PROTECT(_axes))
+#define REGISTER_READONLY_EMERGENCE(_func, _axes) REGISTER_READONLY(emergence, _func, P99_PROTECT(_axes))
+
 #endif

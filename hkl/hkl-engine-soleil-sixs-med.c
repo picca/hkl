@@ -105,9 +105,8 @@ static HklEngine *hkl_engine_soleil_sixs_med_2_2_hkl_new(HklEngineList *engines)
 
 /* mode incidence */
 
-static const char *soleil_sixs_med_2_2_incidence_axes[] = {BETA, MU, OMEGA};
-
-REGISTER_INCIDENCE_ENGINE(soleil_sixs_med_2_2);
+REGISTER_READONLY_INCIDENCE(hkl_engine_soleil_sixs_med_2_2_incidence_new,
+			    P99_PROTECT({BETA, MU, OMEGA}));
 
 /*********************/
 /* MED 1+2 HklEngine */
@@ -143,9 +142,8 @@ static HklEngine *hkl_engine_soleil_sixs_med_1_2_hkl_new(HklEngineList *engines)
 
 /* mode incidence */
 
-static const char *soleil_sixs_med_1_2_incidence_axes[] = {PITCH, MU};
-
-REGISTER_INCIDENCE_ENGINE(soleil_sixs_med_1_2);
+REGISTER_READONLY_INCIDENCE(hkl_engine_soleil_sixs_med_1_2_incidence_new,
+			    P99_PROTECT({PITCH, MU}));
 
 /*********************/
 /* MED 2+3 HklEngine */

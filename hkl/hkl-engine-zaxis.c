@@ -100,13 +100,15 @@ static HklEngine *hkl_engine_zaxis_hkl_new(HklEngineList *engines)
 	return self;
 }
 
-/******************/
-/* mode incidence */
-/******************/
+/*****************/
+/* mode readonly */
+/*****************/
 
-static const char *zaxis_incidence_axes[] = {MU, OMEGA};
+REGISTER_READONLY_INCIDENCE(hkl_engine_zaxis_incidence_new,
+			    P99_PROTECT({MU, OMEGA}));
 
-REGISTER_INCIDENCE_ENGINE(zaxis);
+REGISTER_READONLY_EMERGENCE(hkl_engine_zaxis_emergence_new,
+			    P99_PROTECT({MU, OMEGA, DELTA, GAMMA}));
 
 /*********/
 /* ZAXIS */
@@ -155,6 +157,7 @@ static HklEngineList *hkl_engine_list_new_zaxis(const HklFactory *factory)
 	hkl_engine_qper_qpar_new(self);
 	hkl_engine_tth2_new(self);
 	hkl_engine_zaxis_incidence_new(self);
+	hkl_engine_zaxis_emergence_new(self);
 
 	return self;
 }

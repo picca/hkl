@@ -814,6 +814,11 @@ git clone git://repo.or.cz/hkl.git
    #+END_QUOTE
 * Releases
 ** @VERSION@
+*** DONE =HklEngine=
+**** "emergence" <2015-06-22 lun.>
+     Add a new emergence engine which contain only one pseudo axis.
+     + =emergence= the outgoing beam emergence from the sample's surface.
+     + =azimuth= the sample's surface azimuth.
 ** 4.99.99.1940 <2015-05-04 lun.>
 *** DONE =HklLattice= add an =hkl_lattice_volume_get=
 #+BEGIN_SRC c
@@ -868,8 +873,6 @@ git clone git://repo.or.cz/hkl.git
 #+END_SRC
 * Todo
 ** hkl
-*** TODO [#A] [0/2] HklEngine "read_only"
-    * [ ] "beta" emergence angle
 *** TODO [#A] HklSource
     Create a parameter for the wavelength. This is just internally for
     the futur trajectory system, so no need to change the signature of
