@@ -686,14 +686,14 @@ git clone git://repo.or.cz/hkl.git
     the process a make target was written. You just need to type:
     #+BEGIN_SRC sh
       cd Documentation
-      make editdoc
+      make doc-edit
     #+END_SRC
     and start to contribute.
 
     If you do not have emacs, you can nevertheless contribute by
     editing the ~Documentation/hkl.org.in~ file which is text only.
 
-    The most expected contributions for now are:
+    The most expected contributions are for now:
     * english correctness
     * a nicer css
 * Bindings
