@@ -383,6 +383,21 @@
 * PseudoAxes
   This section describe the calculations done by the library for the
   different kind of pseudo axes.
+** General process
+*** First Solution
+    The hkl library use the gsl library in order to find the first
+    valid solution.
+*** Multiplication of the solutions.
+    Once we have got the first solution different strategies are
+    applyed in order to generate more solutions.
+**** Geometry Multiplication
+     For kappa diffractometers, once you have one solution it is
+     possible to générate another one using a property of this
+     geometry. (Left arm and right arm).
+*** Restrains of the Solutions
+    We apply then some constrains to reduce these solutions to only a
+    bunch of acceptable ones. Usualy we take the axis range into
+    account.
 ** Eulerians to Kappa angles
 
    1st solution
