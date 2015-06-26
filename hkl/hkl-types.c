@@ -35,7 +35,7 @@
 	GType hkl_## type ## _get_type (void) {				\
 		static volatile gsize hkl_type_id__volatile = 0;	\
 		if (g_once_init_enter (&hkl_type_id__volatile)) {	\
-			GType hkl_type_id;			\
+			GType hkl_type_id;				\
 			hkl_type_id = g_boxed_type_register_static (	\
 				#camelcase_type,			\
 				(GBoxedCopyFunc) copy,			\

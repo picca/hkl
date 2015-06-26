@@ -120,7 +120,7 @@ HklLattice *hkl_lattice_new(double a, double b, double c,
 					&hkl_unit_angle_rad,
 					&hkl_unit_angle_deg);
 	self->beta = hkl_parameter_new("beta",
-					"The angle between the first and third lattice vector",
+				       "The angle between the first and third lattice vector",
 				       -M_PI, beta, M_PI,
 				       TRUE, TRUE,
 				       &hkl_unit_angle_rad,
@@ -346,7 +346,7 @@ const HklParameter *hkl_lattice_gamma_get(const HklLattice *self)
  * Returns: TRUE on success, FALSE if an error occurred
  **/
 int hkl_lattice_gamma_set(HklLattice *self, const HklParameter *parameter,
-			   GError **error)
+			  GError **error)
 {
 	HKL_LATTICE_X_SET(gamma, parameter, error);
 }

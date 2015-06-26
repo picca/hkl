@@ -449,4 +449,3 @@ static HklEngineList *hkl_engine_list_new_kappa4C_vertical(const HklFactory *fac
 }
 
 REGISTER_DIFFRACTOMETER(kappa4C_vertical, "K4CV", HKL_GEOMETRY_KAPPA4C_VERTICAL_DESCRIPTION);
-

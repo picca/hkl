@@ -78,10 +78,10 @@ static const HklParameter surface_parameters[] = {
 
 #define P99_PROTECT(...) __VA_ARGS__
 
-#define HKL_MODE_INFO_incidence_DEFAULTS(_axes)			\
+#define HKL_MODE_INFO_incidence_DEFAULTS(_axes)				\
 	HKL_MODE_INFO_RO_WITH_PARAMS("incidence", (_axes), surface_parameters)
 
-#define HKL_MODE_INFO_emergence_DEFAULTS(_axes)			\
+#define HKL_MODE_INFO_emergence_DEFAULTS(_axes)				\
 	HKL_MODE_INFO_RO_WITH_PARAMS("emergence", (_axes), surface_parameters)
 
 #define REGISTER_READONLY(_engine, _func, _axes)			\

@@ -53,7 +53,7 @@ struct _HklEngineTth2
 };
 
 static void _tth2(HklGeometry *geometry, HklDetector *detector,
-		double *tth, double *alpha)
+		  double *tth, double *alpha)
 {
 	HklVector kf, ki;
 	static HklVector x = {
@@ -97,11 +97,11 @@ static const HklFunction tth2_func = {
 };
 
 static int get_tth2_real(HklMode *self,
-		       HklEngine *engine,
-		       HklGeometry *geometry,
-		       HklDetector *detector,
-		       HklSample *sample,
-		       GError **error)
+			 HklEngine *engine,
+			 HklGeometry *geometry,
+			 HklDetector *detector,
+			 HklSample *sample,
+			 GError **error)
 {
 	HklEngineTth2 *engine_tth2 = container_of(engine, HklEngineTth2, engine);
 

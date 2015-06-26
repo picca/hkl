@@ -797,8 +797,8 @@ int hkl_sample_affine(HklSample *self, GError **error)
  * Returns: the measured angle beetween them
  **/
 double hkl_sample_get_reflection_measured_angle(const HklSample *self,
-					       const HklSampleReflection *r1,
-					       const HklSampleReflection *r2)
+						const HklSampleReflection *r1,
+						const HklSampleReflection *r2)
 {
 	return hkl_vector_angle(&r1->_hkl,
 				&r2->_hkl);

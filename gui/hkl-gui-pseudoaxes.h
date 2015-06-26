@@ -82,5 +82,3 @@ void hkl_gui_engine_update (HklGuiEngine* self);
 G_END_DECLS
 
 #endif /* __HKL_GUI_ENGINE_H__ */
-
-

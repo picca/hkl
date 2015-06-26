@@ -76,7 +76,7 @@ static int fit_detector_function(const gsl_vector *x, void *params, gsl_vector *
 	/* update the workspace from x; */
 	for(i=0; i<fitp->len; ++i)
 		hkl_parameter_value_set(fitp->axes[i],
-					x->data[i], 
+					x->data[i],
 					HKL_UNIT_DEFAULT, NULL);
 
 	hkl_geometry_update(fitp->geometry);

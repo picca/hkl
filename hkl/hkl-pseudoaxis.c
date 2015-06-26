@@ -122,8 +122,8 @@ const darray_string *hkl_engine_pseudo_axis_names_get(HklEngine *self)
  * return value: TRUE if succeded or FALSE otherwise.
  **/
 int hkl_engine_pseudo_axis_values_get(HklEngine *self,
-				       double values[], size_t n_values,
-				       HklUnitEnum unit_type, GError **error)
+				      double values[], size_t n_values,
+				      HklUnitEnum unit_type, GError **error)
 {
 	hkl_error(error == NULL ||*error == NULL);
 
@@ -317,7 +317,7 @@ HklGeometryList *hkl_engine_pseudo_axis_set(HklEngine *self,
  *                               with hkl_engine_initialize before
  *                               reading or writing on it.
  *
- * Returns: 
+ * Returns:
  **/
 unsigned int hkl_engine_capabilities_get(const HklEngine *self)
 {
@@ -434,7 +434,7 @@ const HklParameter *hkl_engine_parameter_get(const HklEngine *self,
 /**
  * hkl_engine_parameter_set:
  * @self: the this ptr
- * @name: the name of the parameter to set. 
+ * @name: the name of the parameter to set.
  * @parameter: the parameter to set.
  * @error: return location for a GError, or NULL
  *
@@ -518,7 +518,7 @@ int hkl_engine_current_mode_set(HklEngine *self, const char *name,
 /**
  * hkl_engine_axis_names_get:
  * @self: the this ptr
- * @mode: 
+ * @mode:
  *
  * return a list of axes relevant when reading or writing on the
  * #HklEngine.
@@ -527,7 +527,7 @@ int hkl_engine_current_mode_set(HklEngine *self, const char *name,
  * Engine control only 3 motors when writing, but the hkl values
  * depends on the 6 motors when reading.
  *
- * Returns: (type gpointer): 
+ * Returns: (type gpointer):
  **/
 const darray_string *hkl_engine_axis_names_get(const HklEngine *self,
 					       HklEngineAxisNamesGet mode)

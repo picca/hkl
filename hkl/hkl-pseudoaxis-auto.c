@@ -148,13 +148,13 @@ static int find_first_geometry(HklEngine *self,
 	gsl_multiroot_fsolver_set (s, f, x);
 
 #ifdef DEBUG
-			fprintf(stdout, "Initial starting point: \n");
-			fprintf(stdout, "x: ");
-			for(i=0; i<len; ++i)
-				fprintf(stdout, " %.7f", s->x->data[i]);
-			fprintf(stdout, "\nf: ");
-			for(i=0; i<len; ++i)
-				fprintf(stdout, " %.7f", s->f->data[i]);
+	fprintf(stdout, "Initial starting point: \n");
+	fprintf(stdout, "x: ");
+	for(i=0; i<len; ++i)
+		fprintf(stdout, " %.7f", s->x->data[i]);
+	fprintf(stdout, "\nf: ");
+	for(i=0; i<len; ++i)
+		fprintf(stdout, " %.7f", s->f->data[i]);
 #endif
 
 	/* iterate to find the solution */
@@ -182,10 +182,10 @@ static int find_first_geometry(HklEngine *self,
 		}
 		status = gsl_multiroot_test_residual (s->f, HKL_EPSILON / 10.);
 #ifdef DEBUG
-	fprintf(stdout, "\nstatus : %d iter : %d", status, iter);
-	for(i=0; i<len; ++i)
-		fprintf(stdout, " %.7f", s->f->data[i]);
-	fprintf(stdout, "\n");
+		fprintf(stdout, "\nstatus : %d iter : %d", status, iter);
+		for(i=0; i<len; ++i)
+			fprintf(stdout, " %.7f", s->f->data[i]);
+		fprintf(stdout, "\n");
 #endif
 
 	} while (status == GSL_CONTINUE && iter < 2000);

@@ -50,7 +50,3 @@ struct _HklGuiWindowClass {
 GType hkl_gui_window_get_type (void) G_GNUC_CONST;
 
 HklGuiWindow* hkl_gui_window_new (void);
-
-
-
-

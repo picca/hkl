@@ -410,7 +410,7 @@ static inline HklParameter *register_pseudo_axis(HklEngine *self,
 out:
 	darray_append(self->pseudo_axes, parameter);
 	darray_append(self->pseudo_axis_names, parameter->name);
-	
+
 	return parameter;
 }
 

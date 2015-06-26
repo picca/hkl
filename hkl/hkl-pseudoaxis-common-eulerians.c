@@ -204,7 +204,7 @@ static HklMode *mode_eulerians()
 		.get = hkl_mode_get_eulerians_real,
 		.set = hkl_mode_set_eulerians_real,
 	};
- 
+
 	HklModeEulerians *self = HKL_MALLOC(HklModeEulerians);
 
 	/* the base constructor; */

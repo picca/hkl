@@ -236,4 +236,3 @@ static HklEngineList *hkl_engine_list_new_eulerian6C(const HklFactory *factory)
 
 /* Register the diffractometer into the factory */
 REGISTER_DIFFRACTOMETER(eulerian6C, "E6C", HKL_GEOMETRY_EULERIAN6C_DESCRIPTION);
-
