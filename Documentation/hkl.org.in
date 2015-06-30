@@ -829,6 +829,7 @@ git clone git://repo.or.cz/hkl.git
    #+END_QUOTE
 * Releases
 ** @VERSION@
+** 4.99.99.1946 <2015-06-30 mar.>
 *** DONE =HklEngine=
 **** "emergence" <2015-06-22 lun.>
      Add a new emergence engine which contain only one pseudo axis.
