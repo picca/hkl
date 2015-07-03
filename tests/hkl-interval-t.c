@@ -33,7 +33,7 @@ static void cmp(void)
 	HklInterval interval;
 
 	interval = interval_ref;
-	ok(TRUE == hkl_interval_cmp(&interval_ref, &interval), __func__);
+	ok(FALSE == hkl_interval_cmp(&interval_ref, &interval), __func__);
 }
 
 static void plus_interval(void)
@@ -43,7 +43,7 @@ static void plus_interval(void)
 	HklInterval i2 = {-1, 4};
 
 	hkl_interval_plus_interval(&i1, &i2);
-	ok(TRUE == hkl_interval_cmp(&i_ref, &i1), __func__);
+	ok(FALSE == hkl_interval_cmp(&i_ref, &i1), __func__);
 }
 
 static void plus_double(void)
@@ -52,7 +52,7 @@ static void plus_double(void)
 	HklInterval i1 = {-2, 8};
 
 	hkl_interval_plus_double(&i1, 1);
-	ok(TRUE == hkl_interval_cmp(&i_ref, &i1), __func__);
+	ok(FALSE == hkl_interval_cmp(&i_ref, &i1), __func__);
 }
 
 static void times_interval(void)
@@ -62,7 +62,7 @@ static void times_interval(void)
 	HklInterval i2 = {-1, 4};
 
 	hkl_interval_times_interval(&i1, &i2);
-	ok(TRUE == hkl_interval_cmp(&i_ref, &i1), __func__);
+	ok(FALSE == hkl_interval_cmp(&i_ref, &i1), __func__);
 }
 
 static void times_double(void)
@@ -71,7 +71,7 @@ static void times_double(void)
 	HklInterval i1 = {-9, 36};
 
 	hkl_interval_times_double(&i1, -3);
-	ok(TRUE == hkl_interval_cmp(&i_ref, &i1), __func__);
+	ok(FALSE == hkl_interval_cmp(&i_ref, &i1), __func__);
 }
 
 static void divides_double(void)
@@ -80,7 +80,7 @@ static void divides_double(void)
 	HklInterval i1 = {-108, 27};
 
 	hkl_interval_divides_double(&i1, -3);
-	ok(TRUE == hkl_interval_cmp(&i_ref, &i1), __func__);
+	ok(FALSE == hkl_interval_cmp(&i_ref, &i1), __func__);
 }
 
 static void contain_zero(void)
@@ -111,7 +111,7 @@ static void cosinus(void)
 		i_ref.min = min_ref;					\
 		i_ref.max = max_ref;					\
 		hkl_interval_cos(&i);					\
-		ok(TRUE == hkl_interval_cmp(&i_ref, &i), __func__);	\
+		ok(FALSE == hkl_interval_cmp(&i_ref, &i), __func__);	\
 	} while(0)
 
 	/* 1st max(0) */
@@ -166,7 +166,7 @@ static void acosinus(void)
 	HklInterval i = {-.5, .5};
 
 	hkl_interval_acos(&i);
-	ok(TRUE == hkl_interval_cmp(&i_ref, &i), __func__);
+	ok(FALSE == hkl_interval_cmp(&i_ref, &i), __func__);
 }
 
 static void sinus(void)
@@ -187,7 +187,7 @@ static void sinus(void)
 		i_ref.min = min_ref;					\
 		i_ref.max = max_ref;					\
 		hkl_interval_sin(&i);					\
-		ok(TRUE == hkl_interval_cmp(&i_ref, &i), __func__);	\
+		ok(FALSE == hkl_interval_cmp(&i_ref, &i), __func__);	\
 	} while(0)
 
 	/* 1st max(0) */
@@ -245,7 +245,7 @@ static void asinus(void)
 	HklInterval i = {-.5, .5};
 
 	hkl_interval_asin(&i);
-	ok(TRUE == hkl_interval_cmp(&i_ref, &i), __func__);
+	ok(FALSE == hkl_interval_cmp(&i_ref, &i), __func__);
 }
 
 static void tangeante(void)
@@ -260,7 +260,7 @@ static void tangeante(void)
 		i_ref.min = min_ref;					\
 		i_ref.max = max_ref;					\
 		hkl_interval_tan(&i);					\
-		ok(TRUE == hkl_interval_cmp(&i_ref, &i), __func__);	\
+		ok(FALSE == hkl_interval_cmp(&i_ref, &i), __func__);	\
 	} while(0)
 
 	TAN(-100, -89, -INFINITY, INFINITY);
@@ -279,7 +279,7 @@ static void atangeante(void)
 	HklInterval i = {-10, 10};
 
 	hkl_interval_atan(&i);
-	ok(TRUE == hkl_interval_cmp(&i_ref, &i), __func__);
+	ok(FALSE == hkl_interval_cmp(&i_ref, &i), __func__);
 }
 
 static void length(void)

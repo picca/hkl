@@ -829,6 +829,10 @@ git clone git://repo.or.cz/hkl.git
    #+END_QUOTE
 * Releases
 ** @VERSION@
+*** DONE =HklInterval= <2015-07-03 ven.>
+    =hkl_interval_cmp= was wrong. Now the comparison is done between
+    =HKL_EPSILON= and the distance between minimum and maximum. This
+    problem was triggered first on ppc64el architecture.
 ** 4.99.99.1946 <2015-06-30 mar.>
 *** DONE =HklEngine=
 **** "emergence" <2015-06-22 lun.>

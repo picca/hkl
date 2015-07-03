@@ -70,7 +70,8 @@ void hkl_interval_free(HklInterval *self)
  **/
 int hkl_interval_cmp(const HklInterval *self, const HklInterval *interval)
 {
-	return self->min == interval->min && self->max == interval->max;
+	return (fabs(self->min - interval->min) > HKL_EPSILON)
+		|| (fabs(self->max - interval->max) > HKL_EPSILON);
 }
 
 /**
