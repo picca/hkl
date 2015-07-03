@@ -758,15 +758,16 @@ void hkl3d_free(Hkl3D *self)
 Hkl3DModel *hkl3d_add_model_from_file(Hkl3D *self,
 				       const char *filename, const char *directory)
 {
-	char current[PATH_MAX];
+	char *current;
 	Hkl3DModel *model = NULL;
 	int res;
 
 	/* first set the current directory using the directory parameter*/
-	getcwd(current, PATH_MAX);
+	current = get_current_dir_name();
 	res = chdir(directory);
 	model = hkl3d_model_new_from_file(filename);
 	res = chdir(current);
+	free(current);
 
 	if(model){
 		/* we can not display two different models with the current g3dviewer code */

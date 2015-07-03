@@ -833,6 +833,9 @@ git clone git://repo.or.cz/hkl.git
     =hkl_interval_cmp= was wrong. Now the comparison is done between
     =HKL_EPSILON= and the distance between minimum and maximum. This
     problem was triggered first on ppc64el architecture.
+*** DONE PATH_MAX <2015-07-03 ven.>
+    Replace getcwd called by get_current_dir_path instead in order to
+    avoid PATH_MAX which is not available on hurd.
 ** 4.99.99.1946 <2015-06-30 mar.>
 *** DONE =HklEngine=
 **** "emergence" <2015-06-22 lun.>
