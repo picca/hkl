@@ -429,6 +429,8 @@ static int _axis_names(HklEngine *engine, HklEngineList *engine_list, unsigned i
 	res &= DIAG(axes_w != NULL);
 	res &= DIAG(_check_axes(axes_r, all_axes));
 	res &= DIAG(_check_axes(axes_w, all_axes));
+
+	return res;
 }
 
 static void axis_names(void)

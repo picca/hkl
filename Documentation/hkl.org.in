@@ -829,6 +829,9 @@ git clone git://repo.or.cz/hkl.git
    #+END_QUOTE
 * Releases
 ** @VERSION@
+** 4.99.99.1950 <2015-07-07 mar.>
+   Fix an FTBFS observed on the sparc arch
+** 4.99.99.1949 <2015-07-03 ven.>
 *** DONE =HklInterval= <2015-07-03 ven.>
     =hkl_interval_cmp= was wrong. Now the comparison is done between
     =HKL_EPSILON= and the distance between minimum and maximum. This
