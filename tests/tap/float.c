@@ -10,7 +10,7 @@
  * This file is part of C TAP Harness.  The current version plus supporting
  * documentation is at <http://www.eyrie.org/~eagle/software/c-tap-harness/>.
  *
- * Copyright 2008, 2010, 2012 Russ Allbery <rra@stanford.edu>
+ * Copyright 2008, 2010, 2012, 2013, 2014, 2015 Russ Allbery <eagle@eyrie.org>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -49,19 +49,24 @@
  * Takes an expected double and a seen double and assumes the test passes if
  * those two numbers are within delta of each other.
  */
-void
+int
 is_double(double wanted, double seen, double epsilon, const char *format, ...)
 {
     va_list args;
+    int success;
 
     va_start(args, format);
     fflush(stderr);
     if ((isnan(wanted) && isnan(seen))
-        || (isinf(wanted) && isinf(seen) && wanted == seen)
-        || fabs(wanted - seen) <= epsilon)
+        || (isinf(wanted) && isinf(wanted) == isinf(seen))
+        || fabs(wanted - seen) <= epsilon) {
+        success = 1;
         okv(1, format, args);
-    else {
-        printf("# wanted: %g\n#   seen: %g\n", wanted, seen);
+    } else {
+        success = 0;
+        diag("wanted: %g", wanted);
+        diag("  seen: %g", seen);
         okv(0, format, args);
     }
+    return success;
 }

@@ -59,7 +59,7 @@ check_PROGRAMS = runtests $(all_tests)
 ## tap tests
 
 check-local: $(check_PROGRAMS)
-	./runtests -s $(abs_top_srcdir) $(all_tests)
+	./runtests -v -s $(abs_top_srcdir) $(all_tests)
 
 # Support for GNU Flymake, in Emacs.
 check-syntax: AM_CFLAGS += -fsyntax-only -pipe
