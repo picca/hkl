@@ -30,6 +30,9 @@
 #include <g3d/g3d.h>
 #include <g3d/quat.h>
 #include <g3d/matrix.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 #include "hkl3d.h"
 #include "hkl-geometry-private.h"
@@ -756,19 +759,23 @@ void hkl3d_free(Hkl3D *self)
 }
 
 Hkl3DModel *hkl3d_add_model_from_file(Hkl3D *self,
-				       const char *filename, const char *directory)
+				      const char *filename, const char *directory)
 {
-	char *current;
+	int current;
 	Hkl3DModel *model = NULL;
 	int res;
 
-	/* first set the current directory using the directory parameter*/
-	current = get_current_dir_name();
+	/* first set the current directory using the directory
+	 * parameter. Maybe using openat should be a better solution
+	 * in the hkl3d_model_new_from_file */
+	current = open(".", O_RDONLY);
+	if (current < 0)
+		return NULL;
 	res = chdir(directory);
-	model = hkl3d_model_new_from_file(filename);
-	res = chdir(current);
-	free(current);
+	if(res < 0)
+		goto close_current;
 
+	model = hkl3d_model_new_from_file(filename);
 	if(model){
 		/* we can not display two different models with the current g3dviewer code */
 		/* so concatenate this loaded model with the one of hkl3d */
@@ -778,7 +785,14 @@ Hkl3DModel *hkl3d_add_model_from_file(Hkl3D *self,
 		/* update the Hkl3D internals from the model */
 		hkl3d_config_add_model(self->config, model);
 	}
+	/* restore the current directory */
+	res = fchdir(current);
+
 	return model;
+
+close_current:
+	close(current);
+	return NULL;
 }
 
 /* check that the axis name is really available in the Geometry */
