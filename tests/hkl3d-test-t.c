@@ -67,20 +67,18 @@ static void check_model_validity(Hkl3D *hkl3d)
 static void check_collision(Hkl3D *hkl3d)
 {
 	char buffer[1000];
-	int res;
-	int i;
+	int res = TRUE;
 
 	/* check the collision and that the right axes are colliding */
-	res = TRUE;
-	hkl_geometry_set_values_v(hkl3d->geometry->geometry,
-				  HKL_UNIT_USER, NULL,
-				  23., 0., 0., 0., 0., 0.);
+	res &= DIAG(hkl_geometry_set_values_v(hkl3d->geometry->geometry,
+					      HKL_UNIT_USER, NULL,
+					      23., 0., 0., 0., 0., 0.));
 
 	res &= DIAG(hkl3d_is_colliding(hkl3d) == TRUE);
 	strcpy(buffer, "");
 
 	/* now check that only delta and mu are colliding */
-	for(i=0; i<hkl3d->config->models[0]->len; ++i){
+	for(size_t i=0; i<hkl3d->config->models[0]->len; ++i){
 		const char *name;
 		int tmp;
 
@@ -102,41 +100,40 @@ static void check_collision(Hkl3D *hkl3d)
 
 static void check_no_collision(Hkl3D *hkl3d)
 {
-	int res;
+	int res = TRUE;
 	int i;
 
 	/* check that rotating around komega/kappa/kphi do not create collisison */
-	res = TRUE;
-	hkl_geometry_set_values_v(hkl3d->geometry->geometry,
-				  HKL_UNIT_USER, NULL,
-				  0., 0., 0., 0., 0., 0.);
+	res &= DIAG(hkl_geometry_set_values_v(hkl3d->geometry->geometry,
+					      HKL_UNIT_USER, NULL,
+					      0., 0., 0., 0., 0., 0.));
 	/* komega */
 	for(i=0; i<=360; i=i+10){
-		hkl_geometry_set_values_v(hkl3d->geometry->geometry,
-					  HKL_UNIT_USER, NULL,
-					  0., i, 0., 0., 0., 0.);
+		res &= DIAG(hkl_geometry_set_values_v(hkl3d->geometry->geometry,
+						      HKL_UNIT_USER, NULL,
+						      0., i, 0., 0., 0., 0.));
 		res &= DIAG(hkl3d_is_colliding(hkl3d) == FALSE);
 	}
 
 	/* kappa */
 	for(i=0; i<=360; i=i+10){
-		hkl_geometry_set_values_v(hkl3d->geometry->geometry,
-					  HKL_UNIT_USER, NULL,
-					  0., 0., i, 0., 0., 0.);
+		res &= DIAG(hkl_geometry_set_values_v(hkl3d->geometry->geometry,
+						      HKL_UNIT_USER, NULL,
+						      0., 0., i, 0., 0., 0.));
 		res &= DIAG(hkl3d_is_colliding(hkl3d) == FALSE);
 	}
 
 	/* kphi */
 	for(i=0; i<=360; i=i+10){
-		hkl_geometry_set_values_v(hkl3d->geometry->geometry,
-					  HKL_UNIT_USER, NULL,
-					  0., 0., 0., i, 0., 0.);
+		res &= DIAG(hkl_geometry_set_values_v(hkl3d->geometry->geometry,
+						      HKL_UNIT_USER, NULL,
+						      0., 0., 0., i, 0., 0.));
 		res &= DIAG(hkl3d_is_colliding(hkl3d) == FALSE);
 	}
 	ok(res == TRUE, "no-collision");
 }
 
-int main(int argc, char** argv)
+int main(void)
 {
 	char* filename;
 	const HklFactory *factory;

@@ -151,15 +151,6 @@ delete_diffractometer(struct diffractometer_t *self)
 		hkl_geometry_list_free(self->solutions);
 }
 
-
-static void
-dump_diffractometer(struct diffractometer_t *self)
-{
-	/* hkl_geometry_fprintf(stderr, self->geometry); */
-	/* hkl_engine_list_fprintf(stderr, self->engines); */
-	/* hkl_detector_fprintf(stderr, self->detector); */
-}
-
 static void
 diffractometer_set_sample(struct diffractometer_t *self,
 			  HklSample *sample)
@@ -522,16 +513,6 @@ raise_error(HklGuiWindow *self, GError **error)
 	g_clear_error(error);
 }
 
-static void
-clear_error(HklGuiWindow *self, GError **error)
-{
-	HklGuiWindowPrivate *priv =  HKL_GUI_WINDOW_GET_PRIVATE(self);
-
-	g_return_if_fail (self != NULL);
-
-	gtk_widget_hide(GTK_WIDGET(priv->info_bar));
-}
-
 static gboolean
 _update_axis (GtkTreeModel *model, GtkTreePath *path,
 	      GtkTreeIter *iter, gpointer data)
@@ -574,7 +555,6 @@ static gboolean
 _update_pseudo_axes (GtkTreeModel *model, GtkTreePath *path,
 		     GtkTreeIter *iter, gpointer data)
 {
-	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(data);
 	const char *name;
 	const HklEngine *engine;
 	const HklParameter *pseudo_axis;
@@ -770,7 +750,6 @@ set_up_pseudo_axes_frames (HklGuiWindow* self)
 {
 	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
 	HklGuiEngine **pseudo;
-	GtkVBox* vbox2;
 	HklEngine **engine;
 	darray_engine *engines;
 
@@ -830,9 +809,6 @@ set_up_tree_view_axes (HklGuiWindow* self)
 	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
 	const darray_string *axes;
 	const char **axis;
-	GtkCellRenderer* renderer = NULL;
-	GtkTreeViewColumn* column = NULL;
-	GList* columns;
 	GtkTreeIter iter = {0};
 
 	gtk_list_store_clear (priv->liststore_axis);
@@ -852,7 +828,6 @@ static void
 set_up_tree_view_pseudo_axes (HklGuiWindow* self)
 {
 	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(self);
-	HklParameter **parameter;
 	HklEngine **engine;
 	const darray_engine *engines;
 
@@ -1002,7 +977,7 @@ set_up_3D (HklGuiWindow* self)
 
 	if(!strcmp("K6C", name))
 		filename = get_model("diffabs.yaml");
-	else if (!strcmp("K4CV", name))	
+	else if (!strcmp("K4CV", name))
 		filename = get_model("cristal4C.yaml");
 
 	if(priv->frame3d){
@@ -1096,10 +1071,15 @@ hkl_gui_window_cellrendererspin1_edited_cb(GtkCellRendererText *renderer,
 	/* set the axis value */
 	parameter = hkl_parameter_new_copy(hkl_geometry_axis_get(priv->diffractometer->geometry,
 								 axis, NULL));
-	hkl_parameter_value_set (parameter, value, HKL_UNIT_USER, NULL);
-	hkl_geometry_axis_set(priv->diffractometer->geometry,
-			      axis, parameter, NULL);
-	hkl_parameter_free(parameter);
+	if(NULL == parameter)
+		return;
+
+	if(FALSE == hkl_parameter_value_set (parameter, value, HKL_UNIT_USER, NULL))
+		goto out;
+
+	if(FALSE == hkl_geometry_axis_set(priv->diffractometer->geometry,
+					  axis, parameter, NULL))
+		goto out;
 
 	hkl_engine_list_get(priv->diffractometer->engines);
 
@@ -1112,6 +1092,10 @@ hkl_gui_window_cellrendererspin1_edited_cb(GtkCellRendererText *renderer,
 	update_pseudo_axes (self);
 	update_pseudo_axes_frames (self);
 	update_3d(self);
+
+out:
+	hkl_parameter_free(parameter);
+	return;
 }
 
 /* axis min cb */
@@ -1145,17 +1129,27 @@ hkl_gui_window_cellrendererspin3_edited_cb(GtkCellRendererText *renderer,
 
 	parameter = hkl_parameter_new_copy(hkl_geometry_axis_get(priv->diffractometer->geometry,
 								 axis, NULL));
+	if(NULL == parameter)
+		goto out;
+
 	hkl_parameter_min_max_get (parameter, &shit, &max, HKL_UNIT_USER);
-	hkl_parameter_min_max_set (parameter, value, max, HKL_UNIT_USER, NULL); /* TODO error */
-	hkl_geometry_axis_set(priv->diffractometer->geometry,
-			      axis, parameter, NULL);
-	hkl_parameter_free(parameter);
+	if(FALSE == hkl_parameter_min_max_set (parameter, value, max, HKL_UNIT_USER, NULL))
+		goto free_parameter;
+
+	if(FALSE == hkl_geometry_axis_set(priv->diffractometer->geometry,
+					  axis, parameter, NULL))
+		goto free_parameter;
 
 	gtk_list_store_set (priv->liststore_axis, &iter,
 			    AXIS_COL_MIN, value,
 			    -1);
 
 	update_pseudo_axes (self);
+
+free_parameter:
+	hkl_parameter_free(parameter);
+out:
+	return;
 }
 
 
@@ -1191,18 +1185,27 @@ hkl_gui_window_cellrendererspin4_edited_cb(GtkCellRendererText *renderer,
 
 	parameter = hkl_parameter_new_copy(hkl_geometry_axis_get(priv->diffractometer->geometry,
 								 axis, NULL));
-	hkl_parameter_min_max_get (parameter, &min, &shit, HKL_UNIT_USER);
-	hkl_parameter_min_max_set (parameter, min, value, HKL_UNIT_USER, NULL);
-	hkl_geometry_axis_set(priv->diffractometer->geometry,
-			      axis, parameter, NULL);
-	hkl_parameter_free(parameter);
+	if(NULL == parameter)
+		goto out;
 
+	hkl_parameter_min_max_get (parameter, &min, &shit, HKL_UNIT_USER);
+	if(FALSE == hkl_parameter_min_max_set (parameter, min, value, HKL_UNIT_USER, NULL))
+		goto free_parameter;
+
+	if (FALSE == hkl_geometry_axis_set(priv->diffractometer->geometry,
+					   axis, parameter, NULL))
+		goto free_parameter;
 
 	gtk_list_store_set (priv->liststore_axis, &iter,
 			    AXIS_COL_MAX, value,
 			    -1);
 
 	update_pseudo_axes (self);
+
+free_parameter:
+	hkl_parameter_free(parameter);
+out:
+	return;
 }
 
 
@@ -1511,7 +1514,6 @@ hkl_gui_window_toolbutton_del_reflection_clicked_cb (GtkToolButton* _sender, gpo
 {
 	HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
 	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
-	HklSample* sample = NULL;
 
 	g_return_if_fail (self != NULL);
 
@@ -1524,8 +1526,6 @@ hkl_gui_window_toolbutton_del_reflection_clicked_cb (GtkToolButton* _sender, gpo
 		if (nb_rows > 0) {
 			GtkTreeModel* model = NULL;
 			GList* list;
-			guint* indexes;
-			gint i;
 			GtkMessageDialog* dialog;
 
 			model = GTK_TREE_MODEL(priv->liststore_reflections);
@@ -1578,7 +1578,6 @@ hkl_gui_window_cellrenderertext10_edited_cb(GtkCellRendererText* _sender, const 
 	GtkTreeModel* model = NULL;
 	GtkTreeIter iter = {0};
 	HklSample* sample = NULL;
-	gchar* name = NULL;
 
 	g_return_if_fail (user_data != NULL);
 	g_return_if_fail (path != NULL);
@@ -1839,7 +1838,6 @@ void
 hkl_gui_window_toolbutton_add_crystal_clicked_cb (GtkToolButton* _sender, gpointer user_data)
 {
 	HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
-	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
 	HklSample *sample;
 
 	g_return_if_fail (user_data != NULL);
@@ -1869,7 +1867,6 @@ hkl_gui_window_toolbutton_copy_crystal_clicked_cb (GtkToolButton* _sender, gpoin
 void
 hkl_gui_window_toolbutton_del_crystal_clicked_cb (GtkToolButton* _sender, gpointer user_data)
 {
-	HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
 	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
 
 	g_return_if_fail (user_data != NULL);
@@ -1955,7 +1952,6 @@ _update_crystal_model(GtkTreeModel *model,
 		      GtkTreeIter *iter,
 		      gpointer data)
 {
-	HklGuiWindow *self = HKL_GUI_WINDOW(data);
 	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(data);
 	HklSample *sample = NULL;
 
@@ -2016,9 +2012,7 @@ hkl_gui_window_button2_clicked_cb (GtkButton* _sender, gpointer user_data)
 
 	if (priv->sample != NULL) {
 		gdouble a, b, c, alpha, beta, gamma;
-		gdouble ux, uy, uz;
 		HklLattice *lattice;
-		HklParameter *p;
 		GError *error = NULL;
 
 		fprintf(stderr, "%s\n", __func__);

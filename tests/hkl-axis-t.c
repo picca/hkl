@@ -192,7 +192,7 @@ static void get_value_closest(void)
 	hkl_parameter_free(axis2);
 }
 
-int main(int argc, char** argv)
+int main(void)
 {
 	plan(53);
 

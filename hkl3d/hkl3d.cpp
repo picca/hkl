@@ -325,7 +325,7 @@ static Hkl3DModel *hkl3d_model_new(void)
 
 static void hkl3d_model_free(Hkl3DModel *self)
 {
-	int i;
+	size_t i;
 
 	if(!self)
 		return;
@@ -349,7 +349,7 @@ static void hkl3d_model_add_object(Hkl3DModel *self, Hkl3DObject *object)
 
 static void hkl3d_model_delete_object(Hkl3DModel *self, Hkl3DObject *object)
 {
-	int i;
+	size_t i;
 
 	if(!self || !object)
 		return;
@@ -369,9 +369,8 @@ static void hkl3d_model_delete_object(Hkl3DModel *self, Hkl3DObject *object)
 
 void hkl3d_model_fprintf(FILE *f, const Hkl3DModel *self)
 {
-	int i;
 	fprintf(f, "config (%d):\n", self->len);
-	for(i=0; i<self->len; ++i)
+	for(size_t i=0; i<self->len; ++i)
 		hkl3d_object_fprintf(f, self->objects[i]);
 }
 
@@ -442,12 +441,10 @@ static Hkl3DConfig* hkl3d_config_new(void)
 
 static void hkl3d_config_free(Hkl3DConfig *self)
 {
-	int i;
-
 	if(!self)
 		return;
 
-	for(i=0; i<self->len; ++i)
+	for(size_t i=0; i<self->len; ++i)
 		hkl3d_model_free(self->models[i]);
 	free(self->models);
 	free(self);
@@ -461,9 +458,8 @@ static void hkl3d_config_add_model(Hkl3DConfig *self, Hkl3DModel *model)
 
 void hkl3d_config_fprintf(FILE *f, const Hkl3DConfig *self)
 {
-	int i;
 	fprintf(f, "models (%d):\n", self->len);
-	for(i=0; i<self->len; ++i)
+	for(size_t i=0; i<self->len; ++i)
 		hkl3d_model_fprintf(f, self->models[i]);
 }
 
@@ -519,7 +515,7 @@ static void hkl3d_axis_attach_object(Hkl3DAxis *self, Hkl3DObject *object)
 /* should be optimized (useless if the Hkl3DObject had a connection with the Hkl3DAxis */
 static void hkl3d_axis_detach_object(Hkl3DAxis *self, Hkl3DObject *object)
 {
-	int i;
+	size_t i;
 
 	if(!self || !object)
 		return;
@@ -539,13 +535,11 @@ static void hkl3d_axis_detach_object(Hkl3DAxis *self, Hkl3DObject *object)
 
 static void hkl3d_axis_fprintf(FILE *f, const Hkl3DAxis *self)
 {
-	int i;
-
 	if(!f || !self)
 		return;
 
 	fprintf(f, "Axis len : %d\n", self->len);
-	for(i=0; i<self->len; ++i)
+	for(size_t i=0; i<self->len; ++i)
 		hkl3d_object_fprintf(f, self->objects[i]);
 }
 
@@ -555,7 +549,7 @@ static void hkl3d_axis_fprintf(FILE *f, const Hkl3DAxis *self)
 
 static Hkl3DGeometry *hkl3d_geometry_new(HklGeometry *geometry)
 {
-	int i;
+	uint i;
 	Hkl3DGeometry *self = NULL;
 
 	self = HKL3D_MALLOC(Hkl3DGeometry);
@@ -571,7 +565,7 @@ static Hkl3DGeometry *hkl3d_geometry_new(HklGeometry *geometry)
 
 static void hkl3d_geometry_free(Hkl3DGeometry *self)
 {
-	int i;
+	uint i;
 
 	if(!self)
 		return;
@@ -619,22 +613,18 @@ static void hkl3d_geometry_apply_transformations(Hkl3DGeometry *self)
 
 static void hkl3d_geometry_fprintf(FILE *f, const Hkl3DGeometry *self)
 {
-	int i;
-
 	if(!f || !self)
 		return;
 
 	fprintf(f, "Hkl3DGeometry : \n");
 	hkl_geometry_fprintf(f, self->geometry);
-	for(i=0; i<darray_size(self->geometry->axes); ++i)
+	for(size_t i=0; i<darray_size(self->geometry->axes); ++i)
 		hkl3d_axis_fprintf(f, self->axes[i]);
 }
 
 static Hkl3DAxis *hkl3d_geometry_axis_get(Hkl3DGeometry *self, const char *name)
 {
-	uint i;
-
-	for(i=0; i<darray_size(self->geometry->axes); ++i){
+	for(size_t i=0; i<darray_size(self->geometry->axes); ++i){
 		if (!strcmp(hkl_parameter_name_get(darray_item(self->geometry->axes, i)),
 			    name))
 			return self->axes[i];
@@ -659,12 +649,9 @@ static void hkl3d_apply_transformations(Hkl3D *self)
 
 void hkl3d_connect_all_axes(Hkl3D *self)
 {
-	int i;
-	int j;
-
 	/* connect use the axes names */
-	for(i=0;i<self->config->len;i++)
-		for(j=0;j<self->config->models[i]->len;j++)
+	for(size_t i=0;i<self->config->len;i++)
+		for(size_t j=0;j<self->config->models[i]->len;j++)
 			hkl3d_connect_object_to_axis(self,
 						     self->config->models[i]->objects[j],
 						     self->config->models[i]->objects[j]->axis_name);
@@ -728,11 +715,9 @@ void hkl3d_free(Hkl3D *self)
 	if(!self)
 		return;
 
-	int i, j;
-
 	/* remove all objects from the collision world */
-	for(i=0; i<self->config->len; ++i)
-		for(j=0; j<self->config->models[i]->len; ++j)
+	for(size_t i=0; i<self->config->len; ++i)
+		for(size_t j=0; j<self->config->models[i]->len; ++j)
 			if(self->config->models[i]->objects[j]->added)
 				self->_btWorld->removeCollisionObject(self->config->models[i]->objects[j]->btObject);
 
@@ -830,15 +815,15 @@ void hkl3d_connect_object_to_axis(Hkl3D *self, Hkl3DObject *object, const char *
 
 void hkl3d_load_config(Hkl3D *self, const char *filename)
 {
-	int j,l;
-	int newFile=0;
+	int j = 0;
+	int l;
 	int endEvent = 0;
 	yaml_parser_t parser;
 	yaml_event_t input_event;
 	FILE *file;
 	char *dirc;
 	char *dir;
-	Hkl3DModel *config;
+	Hkl3DModel *config = NULL;
 
 	/* Clear the objects. */
 	memset(&parser, 0, sizeof(parser));
@@ -957,10 +942,7 @@ void hkl3d_load_config(Hkl3D *self, const char *filename)
 
 void hkl3d_save_config(Hkl3D *self, const char *filename)
 {
-	int i;
-
-	for(i=0; i<self->config->len; i++){
-		int j;
+	for(size_t i=0; i<self->config->len; i++){
 		char number[64];
 		int properties1, key1, value1,seq0;
 		int root;
@@ -1026,7 +1008,7 @@ void hkl3d_save_config(Hkl3D *self, const char *filename)
 		seq0 = yaml_document_add_sequence(&output_document,
 						  (yaml_char_t *)YAML_SEQ_TAG,
 						  YAML_BLOCK_SEQUENCE_STYLE);
-		for(j=0; j<self->config->models[i]->len; j++){
+		for(size_t j=0; j<self->config->models[i]->len; j++){
 			int k;
 			int properties;
 			int key;
@@ -1176,9 +1158,6 @@ struct ContactSensorCallback : public btCollisionWorld::ContactResultCallback
 
 int hkl3d_is_colliding(Hkl3D *self)
 {
-	int i;
-	int j;
-	bool res = true;
 	int numManifolds;
 	struct timeval debut, fin;
 
@@ -1197,13 +1176,13 @@ int hkl3d_is_colliding(Hkl3D *self)
 	numManifolds = self->_btWorld->getDispatcher()->getNumManifolds();
 
 	/* reset all the collisions */
-	for(i=0; i<self->config->len; i++)
-		for(j=0; j<self->config->models[i]->len; j++)
+	for(size_t i=0; i<self->config->len; i++)
+		for(size_t j=0; j<self->config->models[i]->len; j++)
 			self->config->models[i]->objects[j]->is_colliding = FALSE;
 
 	/* check all the collisions */
-	for(i=0; i<self->config->len; i++)
-		for(j=0; j<self->config->models[i]->len; j++){
+	for(size_t i=0; i<self->config->len; i++)
+		for(size_t j=0; j<self->config->models[i]->len; j++){
 			Hkl3DObject *object = self->config->models[i]->objects[j];
 			ContactSensorCallback callback(object);
 			self->_btWorld->contactTest(object->btObject, callback);

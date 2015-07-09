@@ -24,6 +24,7 @@
 #include <tap/float.h>
 #include <tap/hkl-tap.h>
 
+#include "hkl-vector-private.h"
 #include "hkl-quaternion-private.h"
 
 static void assignment(void)
@@ -146,7 +147,7 @@ static void to_angle_and_axe(void)
 	}
 }
 
-int main(int argc, char** argv)
+int main(void)
 {
 	plan(375);
 

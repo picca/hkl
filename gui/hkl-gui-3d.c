@@ -25,6 +25,7 @@
 #include <g3d/quat.h>
 
 #include "hkl3d.h"
+#include "hkl/ccan/compiler/compiler.h"
 #include "hkl-gui.h"
 #include "hkl-gui-macros.h"
 #include "hkl-gui-3d.h"
@@ -68,7 +69,7 @@ enum {
 	N_SIGNALS
 };
 
-static guint signals[N_SIGNALS] = { 0 };
+static NEEDED guint signals[N_SIGNALS] = { 0 };
 
 
 struct _HklGui3D {
@@ -214,7 +215,6 @@ set_property (GObject *object, guint prop_id,
 	      const GValue *value, GParamSpec *pspec)
 {
 	HklGui3D *self = HKL_GUI_3D (object);
-	HklGui3DPrivate *priv = HKL_GUI_3D_GET_PRIVATE(self);
 
 	switch (prop_id) {
 	case PROP_FILENAME:
@@ -234,7 +234,6 @@ get_property (GObject *object, guint prop_id,
 	      GValue *value, GParamSpec *pspec)
 {
 	HklGui3D *self = HKL_GUI_3D (object);
-	HklGui3DPrivate *priv = HKL_GUI_3D_GET_PRIVATE(self);
 
 	switch (prop_id)
 	{
@@ -413,8 +412,6 @@ void hkl_gui_3d_toolbutton2_clicked_cb(GtkToolButton *toolbutton,
 	GtkTreePath *path;
 	GtkTreeViewColumn * column;
 	Hkl3DObject *object;
-	int i;
-	int j;
 
 	gtk_tree_view_get_cursor(priv->treeview1, &path, &column);
 	gtk_tree_model_get_iter(GTK_TREE_MODEL(priv->treestore1), &iter, path);
@@ -487,7 +484,6 @@ void hkl_gui_3d_button1_clicked_cb(GtkButton *button,
 {
 	HklGui3D *self = user_data;
 	HklGui3DPrivate *priv = HKL_GUI_3D_GET_PRIVATE(user_data);
-	size_t i;
 	GSList *filenames;
 	GSList *filename;
 
@@ -545,7 +541,6 @@ static void hkl_gui_3d_draw_g3dmodel(HklGui3D *self)
 		for(j=0; j<priv->hkl3d->config->models[i]->len; j++){
 			GSList *faces;
 			G3DFace *face;
-			G3DMaterial *material;
 			double alpha;
 
 			if(priv->hkl3d->config->models[i]->objects[j]->is_colliding)
@@ -568,7 +563,6 @@ static void hkl_gui_3d_draw_g3dmodel(HklGui3D *self)
 static void draw_g3dObject(G3DObject *object)
 {
 	GSList *faces;
-	G3DFace *face;
 	float *vertex;
 
 	faces = object->faces;
@@ -676,8 +670,6 @@ void hkl_gui_3d_draw_collisions(HklGui3D *self)
 {
 	int i;
 	int numManifolds;
-	gboolean isColliding;
-	float m[16];
 	HklGui3DPrivate *priv = HKL_GUI_3D_GET_PRIVATE(self);
 
 	/* glDisable(GL_LIGHTING); */
@@ -973,7 +965,6 @@ hkl_gui_3d_drawingarea1_motion_notify_event_cb(GtkWidget *drawing_area,
 	GtkAllocation alloc;
 	gint x, y;
 	GdkModifierType state;
-	G3DFloat rx, ry, rz;
 
 	gtk_widget_get_allocation(drawing_area, &alloc);
 
@@ -1087,7 +1078,6 @@ static void hkl_gui_3d_init (HklGui3D * self)
 {
 	HklGui3DPrivate *priv = HKL_GUI_3D_GET_PRIVATE(self);
 	GtkBuilder *builder;
-	G3DGLRenderOptions renderoptions = {0};
 
 	/* properties */
 	priv->filename = NULL;

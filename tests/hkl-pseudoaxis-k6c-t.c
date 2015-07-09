@@ -52,7 +52,7 @@ static void degenerated(void)
 		const darray_string *parameters;
 		HklGeometryList *geometries;
 
-		hkl_engine_current_mode_set(engine, *mode, NULL);
+		res &= DIAG(hkl_engine_current_mode_set(engine, *mode, NULL));
 		parameters = hkl_engine_parameters_names_get(engine);
 		if (!strcasecmp(*mode, "constant_chi_vertical")){
 			size_t n_params = darray_size(*parameters);
@@ -62,9 +62,9 @@ static void degenerated(void)
 							 params, n_params,
 							 HKL_UNIT_DEFAULT);
 			params[0] = 1;
-			hkl_engine_parameters_values_set(engine,
-							 params, n_params,
-							 HKL_UNIT_DEFAULT, NULL);
+			res &= DIAG(hkl_engine_parameters_values_set(engine,
+								     params, n_params,
+								     HKL_UNIT_DEFAULT, NULL));
 		}
 		if (!strcasecmp(*mode, "constant_incidence")){
 			size_t n_params = darray_size(*parameters);
@@ -74,9 +74,9 @@ static void degenerated(void)
 							 params, n_params,
 							 HKL_UNIT_DEFAULT);
 			params[3] = 1;
-			hkl_engine_parameters_values_set(engine,
-							 params, n_params,
-							 HKL_UNIT_DEFAULT, NULL);
+			res &= DIAG(hkl_engine_parameters_values_set(engine,
+								     params, n_params,
+								     HKL_UNIT_DEFAULT, NULL));
 		}
 
 		/* studdy this degenerated case */
@@ -128,12 +128,11 @@ static void eulerians(void)
 	modes = hkl_engine_modes_names_get(engine);
 
 	darray_foreach(mode, *modes){
-		double omega, chi, phi;
 		const darray_string *parameters;
 		HklGeometryList *geometries;
 		size_t n_params;
 
-		hkl_engine_current_mode_set(engine, *mode, NULL);
+		res &= DIAG(hkl_engine_current_mode_set(engine, *mode, NULL));
 		parameters = hkl_engine_parameters_names_get(engine);
 		n_params = darray_size(*parameters);
 		if (n_params){
@@ -143,9 +142,9 @@ static void eulerians(void)
 							 params, n_params,
 							 HKL_UNIT_DEFAULT);
 			params[0] = 1;
-			hkl_engine_parameters_values_set(engine,
-							 params, n_params,
-							 HKL_UNIT_DEFAULT, NULL);
+			res &= DIAG(hkl_engine_parameters_values_set(engine,
+								     params, n_params,
+								     HKL_UNIT_DEFAULT, NULL));
 		}
 
 		/* studdy this degenerated case */
@@ -205,13 +204,13 @@ static void q2(void)
 	modes = hkl_engine_modes_names_get(engine);
 
 	/* the init part */
-	hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 0., 30., 0., 0., 0., 60.);
-	hkl_engine_initialized_set(engine, TRUE, NULL);
+	res &= DIAG(hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 0., 30., 0., 0., 0., 60.));
+	res &= DIAG(hkl_engine_initialized_set(engine, TRUE, NULL));
 
 	darray_foreach(mode, *modes){
 		double q, alpha;
 
-		hkl_engine_current_mode_set(engine, *mode, NULL);
+		res &= DIAG(hkl_engine_current_mode_set(engine, *mode, NULL));
 		for(q=0.1; q<1.; q += 0.1)
 			for(alpha = -M_PI; alpha<M_PI; alpha += M_PI/180.){
 				double values[] = {q, alpha};
@@ -264,7 +263,7 @@ static void m15110(void)
 	engine = hkl_engine_list_engine_get_by_name(engines, "psi", NULL);
 
 	/* the init part must succed */
-	hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 0., 62.95, 134.75, 0., 0., 60.);
+	res &= DIAG(hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 0., 62.95, 134.75, 0., 0., 60.));
 	res &= DIAG(hkl_engine_initialized_set(engine, TRUE, NULL));
 
 	hkl_engine_list_free(engines);
@@ -275,7 +274,7 @@ static void m15110(void)
 	ok(res == TRUE, "m15110");
 }
 
-int main(int argc, char** argv)
+int main(void)
 {
 	plan(4);
 

@@ -23,6 +23,7 @@
 #include <tap/basic.h>
 #include <tap/float.h>
 
+#include "hkl-vector-private.h"
 #include "hkl-matrix-private.h" /* we will check also the private API */
 
 static void init(void)
@@ -136,7 +137,7 @@ static void transpose(void)
 	ok(TRUE == hkl_matrix_cmp(&m_ref, &m), __func__);
 }
 
-int main(int argc, char** argv)
+int main(void)
 {
 	plan(17);
 

@@ -223,7 +223,7 @@ static void project_on_plan(void)
 	ok(0 == hkl_vector_cmp(&v2_ref, &v), __func__);
 }
 
-int main(int argc, char** argv)
+int main(void)
 {
 	plan(32);
 

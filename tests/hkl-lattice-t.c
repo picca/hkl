@@ -280,15 +280,14 @@ static void volume(void)
 {
 	HklLattice *lattice;
 	HklLattice *reciprocal;
-	const HklParameter *volume;
 
 	lattice = hkl_lattice_new_default();
 	reciprocal = hkl_lattice_new_default();
 
 	/* cubic */
-	hkl_lattice_set(lattice, 1.54, 1.54, 1.54,
-			90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD,
-			HKL_UNIT_DEFAULT, NULL);
+	DIAG(hkl_lattice_set(lattice, 1.54, 1.54, 1.54,
+			     90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD,
+			     HKL_UNIT_DEFAULT, NULL));
 	CHECK_PARAM(lattice, volume, 1.54*1.54*1.54);
 
 	hkl_lattice_reciprocal(lattice, reciprocal);
@@ -346,7 +345,7 @@ static void get_1_B(void)
 	hkl_matrix_free(I_ref);
 }
 
-int main(int argc, char** argv)
+int main(void)
 {
 	plan(139);
 

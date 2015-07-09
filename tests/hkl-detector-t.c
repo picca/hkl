@@ -21,6 +21,7 @@
  */
 #include "hkl.h"
 #include <tap/basic.h>
+#include <tap/hkl-tap.h>
 
 #include "hkl-axis-private.h" /* temporary */
 #include "hkl-detector-private.h"
@@ -63,10 +64,9 @@ static void attach_to_holder(void)
 
 static void compute_kf(void)
 {
+	int res = TRUE;
 	HklDetector *detector = NULL;
 	HklGeometry *geometry = NULL;
-	HklAxis *axis1 = NULL;
-	HklAxis *axis2 = NULL;
 	HklHolder *holder = NULL;
 	HklVector kf;
 	HklVector kf_ref = {{0, HKL_TAU / HKL_SOURCE_DEFAULT_WAVE_LENGTH, 0}};
@@ -82,18 +82,20 @@ static void compute_kf(void)
 	hkl_holder_add_rotation_axis(holder, "a", 1, 0, 0);
 	hkl_holder_add_rotation_axis(holder, "b", 0, 1, 0);
 
-	hkl_parameter_value_set(darray_item(geometry->axes, 0), M_PI_2, HKL_UNIT_DEFAULT, NULL);
-	hkl_parameter_value_set(darray_item(geometry->axes, 1), M_PI_2, HKL_UNIT_DEFAULT, NULL);
+	res &= DIAG(hkl_parameter_value_set(darray_item(geometry->axes, 0), M_PI_2, HKL_UNIT_DEFAULT, NULL));
+	res &= DIAG(hkl_parameter_value_set(darray_item(geometry->axes, 1), M_PI_2, HKL_UNIT_DEFAULT, NULL));
 
 	hkl_detector_attach_to_holder(detector, holder);
 	hkl_detector_compute_kf(detector, geometry, &kf);
-	ok(0 == hkl_vector_cmp(&kf_ref, &kf), __func__);
+	res &= DIAG(0 == hkl_vector_cmp(&kf_ref, &kf));
+
+	ok(res, __func__);
 
 	hkl_geometry_free(geometry);
 	hkl_detector_free(detector);
 }
 
-int main(int argc, char** argv)
+int main(void)
 {
 	plan(7);
 

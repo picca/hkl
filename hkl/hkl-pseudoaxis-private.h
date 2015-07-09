@@ -192,7 +192,6 @@ static inline int hkl_mode_init(HklMode *self,
 				const HklModeOperations *ops,
 				int initialized)
 {
-	size_t i;
 	const HklParameter *parameter;
 
 	/* ensure part */
@@ -321,7 +320,6 @@ static inline void set_geometry_axes(HklEngine *engine, const double values[])
 static inline void hkl_engine_release(HklEngine *self)
 {
 	HklMode **mode;
-	HklParameter **pseudo_axis;
 
 	if(self->geometry)
 		hkl_geometry_free(self->geometry);
@@ -459,8 +457,6 @@ static inline void hkl_engine_add_geometry(HklEngine *self,
 
 static inline void hkl_engine_prepare_internal(HklEngine *self)
 {
-	uint i;
-
 	if(!self || !self->engines)
 		return;
 
@@ -603,7 +599,7 @@ static inline int hkl_engine_set(HklEngine *self, GError **error)
 #define HKL_ENGINE_LIST_ERROR hkl_engine_list_error_quark ()
 
 
-static GQuark hkl_engine_list_error_quark (void)
+static inline GQuark hkl_engine_list_error_quark (void)
 {
 	return g_quark_from_static_string ("hkl-engine-list-error-quark");
 }

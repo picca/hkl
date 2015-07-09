@@ -495,7 +495,7 @@ static void reflection_set_geometry(void)
 	hkl_matrix_free(m_ref);
 }
 
-int main(int argc, char** argv)
+int main(void)
 {
 	plan(114);
 

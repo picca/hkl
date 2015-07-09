@@ -41,7 +41,7 @@ struct _HklLattice
 
 #define HKL_LATTICE_ERROR hkl_lattice_error_quark ()
 
-static GQuark hkl_lattice_error_quark (void)
+static inline GQuark hkl_lattice_error_quark (void)
 {
 	return g_quark_from_static_string ("hkl-lattice-error-quark");
 }

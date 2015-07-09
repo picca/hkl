@@ -53,8 +53,6 @@ static GTimer *timer = NULL;
 
 static void gl_init(void)
 {
-	GLenum error;
-
 #if DEBUG > 1
 	g_printerr("init OpenGL\n");
 #endif
@@ -149,7 +147,6 @@ void gl_load_texture(gpointer key, gpointer value, gpointer data)
 {
 	G3DImage *image = (G3DImage *)value;
 	gint32 env;
-	GLenum error;
 
 
 #if 0
@@ -675,7 +672,6 @@ static void gl_setup_shadow_stencil(G3DGLRenderOptions *options)
 
 void gl_draw(G3DGLRenderOptions *options, G3DModel *model)
 {
-	GLenum error;
 	gfloat f;
 #ifdef TIMING
 	gboolean ignore_timing = FALSE;

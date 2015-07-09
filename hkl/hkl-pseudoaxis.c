@@ -47,7 +47,6 @@
  **/
 void hkl_mode_fprintf(FILE *f, const HklMode *self)
 {
-	unsigned int i;
 	HklParameter **parameter;
 	const char **axis;
 
@@ -166,9 +165,11 @@ HklGeometryList *hkl_engine_pseudo_axis_values_set(HklEngine *self,
 						   double values[], size_t n_values,
 						   HklUnitEnum unit_type, GError **error)
 {
+#if LOGGING
 	char *msg;
 	size_t msg_size;
 	FILE *stream;
+#endif
 	HklGeometryList *solutions = NULL;
 
 	hkl_error(error == NULL ||*error == NULL);
@@ -385,7 +386,7 @@ int hkl_engine_parameters_values_set(HklEngine *self,
 				     double values[], size_t n_values,
 				     HklUnitEnum unit_type, GError **error)
 {
-	hkl_error (error == NULL || *error == NULL && n_values == darray_size(self->mode->parameters));
+	hkl_error (error == NULL || *error == NULL || n_values == darray_size(self->mode->parameters));
 
 	for(size_t i=0; i<n_values; ++i){
 		if(!hkl_parameter_value_set(darray_item(self->mode->parameters, i),
@@ -537,6 +538,8 @@ const darray_string *hkl_engine_axis_names_get(const HklEngine *self,
 		return &self->mode->info->axes_r;
 	case HKL_ENGINE_AXIS_NAMES_GET_WRITE:
 		return &self->mode->info->axes_w;
+	default:
+		return NULL;
 	}
 }
 

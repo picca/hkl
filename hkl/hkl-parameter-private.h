@@ -26,6 +26,7 @@
 #include <math.h>                       // for M_PI
 #include <stdio.h>                      // for FILE, fprintf, NULL
 #include <stdlib.h>                     // for free, rand, RAND_MAX
+#include "ccan/compiler/compiler.h"
 #include "hkl-interval-private.h"       // for HklInterval
 #include "hkl-macros-private.h"         // for HKL_MALLOC
 #include "hkl-unit-private.h"           // for HklUnit, hkl_unit_factor
@@ -53,7 +54,7 @@ struct _HklParameter {
 
 #define HKL_PARAMETER_ERROR hkl_parameter_error_quark ()
 
-static GQuark hkl_parameter_error_quark (void)
+static inline GQuark hkl_parameter_error_quark (void)
 {
 	return g_quark_from_static_string ("hkl-parameter-error-quark");
 }
@@ -123,7 +124,7 @@ static inline int hkl_parameter_init_copy_real(HklParameter *self, const HklPara
 }
 
 static inline double hkl_parameter_value_get_closest_real(const HklParameter *self,
-							  const HklParameter *ref)
+							  UNUSED const HklParameter *ref)
 {
 	return self->_value;
 }
@@ -146,7 +147,7 @@ static inline int hkl_parameter_value_set_real(HklParameter *self, double value,
 	return TRUE;
 }
 
-static inline void hkl_parameter_value_set_smallest_in_range_real(HklParameter *self)
+static inline void hkl_parameter_value_set_smallest_in_range_real(UNUSED HklParameter *self)
 {
 	/* DOES NOTHING for a standard parameter */
 }
@@ -190,17 +191,17 @@ static inline void hkl_parameter_fprintf_real(FILE *f, const HklParameter *self)
 			self->fit);
 }
 
-static inline const HklVector *hkl_parameter_axis_v_get_real(const HklParameter *self)
+static inline const HklVector *hkl_parameter_axis_v_get_real(UNUSED const HklParameter *self)
 {
 	return NULL;
 }
 
-static inline const HklQuaternion *hkl_parameter_quaternion_get_real(const HklParameter *self)
+static inline const HklQuaternion *hkl_parameter_quaternion_get_real(UNUSED const HklParameter *self)
 {
 	return NULL;
 }
 
-static HklParameterOperations hkl_parameter_operations_defaults = {
+static NEEDED HklParameterOperations hkl_parameter_operations_defaults = {
 	HKL_PARAMETER_OPERATIONS_DEFAULTS,
 };
 

@@ -37,7 +37,9 @@ static void hkl_test_bench_run_real(HklEngine *engine, HklGeometry *geometry,
 		const darray_string *parameters;
 		size_t n_params;
 
-		hkl_engine_current_mode_set(engine, *mode, NULL);
+		if (FALSE == hkl_engine_current_mode_set(engine, *mode, NULL))
+			continue;
+
 		parameters = hkl_engine_parameters_names_get(engine);
 		n_params = darray_size(*parameters);
 		if (n_params){
@@ -47,9 +49,10 @@ static void hkl_test_bench_run_real(HklEngine *engine, HklGeometry *geometry,
 							 params, n_params,
 							 HKL_UNIT_DEFAULT);
 			values[0] = 1;
-			hkl_engine_parameters_values_set(engine,
-							 params, n_params,
-							 HKL_UNIT_DEFAULT, NULL);
+			if(FALSE == hkl_engine_parameters_values_set(engine,
+								     params, n_params,
+								     HKL_UNIT_DEFAULT, NULL))
+				continue;
 		}
 
 		mean = max = 0;
@@ -59,7 +62,8 @@ static void hkl_test_bench_run_real(HklEngine *engine, HklGeometry *geometry,
 			double t;
 			HklGeometryList *solutions;
 
-			hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 0., 0., 0., 0., 10., 10.);
+			if(FALSE == hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 0., 0., 0., 0., 10., 10.))
+				break;
 			gettimeofday(&debut, NULL);
 			solutions = hkl_engine_pseudo_axis_values_set(engine, values, n_values, HKL_UNIT_DEFAULT, NULL);
 			if (NULL != solutions)
@@ -99,12 +103,9 @@ static void hkl_test_bench_k6c(int n)
 {
 	const HklFactory *factory;
 	HklEngineList *engines;
-	HklEngine *engine;
 	HklGeometry *geom;
 	HklDetector *detector;
 	HklSample *sample;
-	size_t i, j;
-	int res;
 
 	factory = hkl_factory_get_by_name("K6C", NULL);
 
@@ -156,7 +157,8 @@ static void hkl_test_bench_eulerians(void)
 		static double values[3] = {0, 90 * HKL_DEGTORAD, 0};
 		HklGeometryList *solutions;
 
-		hkl_engine_current_mode_set(engine, *mode, NULL);
+		if(FALSE == hkl_engine_current_mode_set(engine, *mode, NULL))
+			continue;
 
 		/* studdy this degenerated case */
 		solutions = hkl_engine_pseudo_axis_values_set(engine,
@@ -168,8 +170,9 @@ static void hkl_test_bench_eulerians(void)
 			HKL_GEOMETRY_LIST_FOREACH(item, solutions){
 				hkl_geometry_set(geometry,
 						 hkl_geometry_list_item_geometry_get(item));
-				hkl_engine_pseudo_axis_values_get(engine, values, ARRAY_SIZE(values),
-								   HKL_UNIT_DEFAULT, NULL);
+				if(FALSE == hkl_engine_pseudo_axis_values_get(engine, values, ARRAY_SIZE(values),
+									      HKL_UNIT_DEFAULT, NULL))
+					break;
 			}
 			hkl_geometry_list_free(solutions);
 		}

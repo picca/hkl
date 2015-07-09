@@ -45,19 +45,19 @@ static void getter(void)
 	engine = hkl_engine_list_engine_get_by_name(engines, "hkl", NULL);
 
 	/* geometry -> pseudo */
-	hkl_geometry_set_values_v(geom, HKL_UNIT_USER, NULL, 30., 0., 0., 60.);
+	res &= DIAG(hkl_geometry_set_values_v(geom, HKL_UNIT_USER, NULL, 30., 0., 0., 60.));
 	res &= DIAG(check_pseudoaxes_v(engine, 0., 0., 1.));
 
-	hkl_geometry_set_values_v(geom, HKL_UNIT_USER, NULL, 30., 0., 90., 60.);
+	res &= DIAG(hkl_geometry_set_values_v(geom, HKL_UNIT_USER, NULL, 30., 0., 90., 60.));
 	res &= DIAG(check_pseudoaxes_v(engine, 1., 0., 0.));
 
-	hkl_geometry_set_values_v(geom, HKL_UNIT_USER, NULL, 30., 0., -90., 60.);
+	res &= DIAG(hkl_geometry_set_values_v(geom, HKL_UNIT_USER, NULL, 30., 0., -90., 60.));
 	res &= DIAG(check_pseudoaxes_v(engine, -1., 0., 0.));
 
-	hkl_geometry_set_values_v(geom, HKL_UNIT_USER, NULL, 30., 0., 180., 60.);
+	res &= DIAG(hkl_geometry_set_values_v(geom, HKL_UNIT_USER, NULL, 30., 0., 180., 60.));
 	res &= DIAG(check_pseudoaxes_v(engine, 0., 0., -1.));
 
-	hkl_geometry_set_values_v(geom, HKL_UNIT_USER, NULL, 45., 0., 135., 90.);
+	res &= DIAG(hkl_geometry_set_values_v(geom, HKL_UNIT_USER, NULL, 45., 0., 135., 90.));
 	res &= DIAG(check_pseudoaxes_v(engine, 1., 0., -1.));
 
 	ok(res == TRUE, "getter");
@@ -97,7 +97,7 @@ static void degenerated(void)
 		HklGeometryList *geometries;
 		size_t n_params;
 
-		hkl_engine_current_mode_set(engine, *mode, NULL);
+		res &= DIAG(hkl_engine_current_mode_set(engine, *mode, NULL));
 		const darray_string *parameters = hkl_engine_parameters_names_get(engine);
 		n_params = darray_size(*parameters);
 		if (n_params){
@@ -105,7 +105,7 @@ static void degenerated(void)
 
 			hkl_engine_parameters_values_get(engine, params, n_params, HKL_UNIT_DEFAULT);
 			params[0] = 0;
-			hkl_engine_parameters_values_set(engine, params, n_params, HKL_UNIT_DEFAULT, NULL);
+			res &= DIAG(hkl_engine_parameters_values_set(engine, params, n_params, HKL_UNIT_DEFAULT, NULL));
 		}
 
 		/* studdy this degenerated case */
@@ -153,37 +153,37 @@ static void psi_getter(void)
 	engine = hkl_engine_list_engine_get_by_name(engines, "psi", NULL);
 
 	/* the getter part */
-	hkl_geometry_set_values_v(geom, HKL_UNIT_USER, NULL, 30., 0., 0., 60.);
-	hkl_engine_initialized_set(engine, TRUE, NULL);
+	res &= DIAG(hkl_geometry_set_values_v(geom, HKL_UNIT_USER, NULL, 30., 0., 0., 60.));
+	res &= DIAG(hkl_engine_initialized_set(engine, TRUE, NULL));
 
 	/* 1 0 0 */
 	hkl[0] = 1, hkl[1] = 0, hkl[2] = 0;
-	hkl_engine_parameters_values_set(engine, hkl, ARRAY_SIZE(hkl), HKL_UNIT_DEFAULT, NULL);
+	res &= DIAG(hkl_engine_parameters_values_set(engine, hkl, ARRAY_SIZE(hkl), HKL_UNIT_DEFAULT, NULL));
 	res &= DIAG(check_pseudoaxes_v(engine, 0.));
 
 	/* 0 1 0*/
 	hkl[0] = 0, hkl[1] = 1, hkl[2] = 0;
-	hkl_engine_parameters_values_set(engine, hkl, ARRAY_SIZE(hkl), HKL_UNIT_DEFAULT, NULL);
+	res &= DIAG(hkl_engine_parameters_values_set(engine, hkl, ARRAY_SIZE(hkl), HKL_UNIT_DEFAULT, NULL));
 	res &= DIAG(check_pseudoaxes_v(engine, 90. * HKL_DEGTORAD));
 
 	/* here Q and <h, k, l>_ref are colinear must FAIL */
 	hkl[0] = 0, hkl[1] = 0, hkl[2] = 1;
-	hkl_engine_parameters_values_set(engine, hkl, ARRAY_SIZE(hkl), HKL_UNIT_DEFAULT, NULL);
+	res &= DIAG(hkl_engine_parameters_values_set(engine, hkl, ARRAY_SIZE(hkl), HKL_UNIT_DEFAULT, NULL));
 	res &= DIAG(!check_pseudoaxes_v(engine, 0. * HKL_DEGTORAD));
 
 	/* -1 0 0 */
 	hkl[0] = -1, hkl[1] = 0, hkl[2] = 0;
-	hkl_engine_parameters_values_set(engine, hkl, ARRAY_SIZE(hkl), HKL_UNIT_DEFAULT, NULL);
+	res &= DIAG(hkl_engine_parameters_values_set(engine, hkl, ARRAY_SIZE(hkl), HKL_UNIT_DEFAULT, NULL));
 	res &= DIAG(check_pseudoaxes_v(engine, 180. * HKL_DEGTORAD));
 
 	/* 0 -1 0 */
 	hkl[0] = 0, hkl[1] = -1, hkl[2] = 0;
-	hkl_engine_parameters_values_set(engine, hkl, ARRAY_SIZE(hkl), HKL_UNIT_DEFAULT, NULL);
+	res &= DIAG(hkl_engine_parameters_values_set(engine, hkl, ARRAY_SIZE(hkl), HKL_UNIT_DEFAULT, NULL));
 	res &= DIAG(check_pseudoaxes_v(engine, -90. * HKL_DEGTORAD));
 
 	/* Q and <h, k, l>_ref are colinear so must FAIL */
 	hkl[0] = 0, hkl[1] = 0, hkl[2] = -1;
-	hkl_engine_parameters_values_set(engine, hkl, ARRAY_SIZE(hkl), HKL_UNIT_DEFAULT, NULL);
+	res &= DIAG(hkl_engine_parameters_values_set(engine, hkl, ARRAY_SIZE(hkl), HKL_UNIT_DEFAULT, NULL));
 	res &= DIAG(!check_pseudoaxes_v(engine, 0. * HKL_DEGTORAD));
 
 	ok(res == TRUE, "psi getter");
@@ -220,14 +220,14 @@ static void psi_setter(void)
 	modes = hkl_engine_modes_names_get(engine);
 
 	/* the init part */
-	hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 30., 0., 0., 60.);
-	hkl_engine_parameters_values_set(engine, hkl, ARRAY_SIZE(hkl), HKL_UNIT_DEFAULT, NULL);
-	hkl_engine_initialized_set(engine, TRUE, NULL);
+	res &= DIAG(hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 30., 0., 0., 60.));
+	res &= DIAG(hkl_engine_parameters_values_set(engine, hkl, ARRAY_SIZE(hkl), HKL_UNIT_DEFAULT, NULL));
+	res &= DIAG(hkl_engine_initialized_set(engine, TRUE, NULL));
 
 	darray_foreach(mode, *modes){
 		double psi;
 
-		hkl_engine_current_mode_set(engine, *mode, NULL);
+		res &= DIAG(hkl_engine_current_mode_set(engine, *mode, NULL));
 		for(psi=-180 * HKL_DEGTORAD;psi<180 * HKL_DEGTORAD;psi += HKL_DEGTORAD){
 			HklGeometryList *geometries;
 
@@ -279,13 +279,13 @@ static void q(void)
 	modes = hkl_engine_modes_names_get(engine);
 
 	/* the init part */
-	hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 30., 0., 0., 60.);
-	hkl_engine_initialized_set(engine, TRUE, NULL);
+	res &= DIAG(hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 30., 0., 0., 60.));
+	res &= DIAG(hkl_engine_initialized_set(engine, TRUE, NULL));
 
 	darray_foreach(mode, *modes){
 		double q;
 
-		hkl_engine_current_mode_set(engine, *mode, NULL);
+		res &= DIAG(hkl_engine_current_mode_set(engine, *mode, NULL));
 		for(q=-1.; q<1.; q += 0.1){
 			HklGeometryList *geometries;
 
@@ -336,12 +336,12 @@ static void hkl_psi_constant_vertical(void)
 
 	engine = hkl_engine_list_engine_get_by_name(engines, "hkl", NULL);
 
-	hkl_engine_current_mode_set(engine, "psi_constant", NULL);
+	res &= DIAG(hkl_engine_current_mode_set(engine, "psi_constant", NULL));
 
 	/* the init part */
-	hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 30., 0., 0., 60.);
-	hkl_engine_parameters_values_set(engine, hkl2, ARRAY_SIZE(hkl2), HKL_UNIT_DEFAULT, NULL);
-	hkl_engine_initialized_set(engine, TRUE, NULL);
+	res &= DIAG(hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 30., 0., 0., 60.));
+	res &= DIAG(hkl_engine_parameters_values_set(engine, hkl2, ARRAY_SIZE(hkl2), HKL_UNIT_DEFAULT, NULL));
+	res &= DIAG(hkl_engine_initialized_set(engine, TRUE, NULL));
 
 	geometries = hkl_engine_pseudo_axis_values_set(engine, hkl, ARRAY_SIZE(hkl),
 							HKL_UNIT_DEFAULT, NULL);
@@ -364,7 +364,7 @@ static void hkl_psi_constant_vertical(void)
 	hkl_geometry_free(geometry);
 }
 
-int main(int argc, char** argv)
+int main(void)
 {
 	plan(6);
 

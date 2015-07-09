@@ -30,9 +30,6 @@ static void compatible(void)
 {
 	int res = TRUE;
 
-	const HklUnit *unit;
-	const HklUnit *punit;
-
 	res &= DIAG(hkl_unit_compatible(&hkl_unit_angle_deg, &hkl_unit_angle_rad));
 	res &= DIAG(!hkl_unit_compatible(&hkl_unit_angle_deg, &hkl_unit_length_nm));
 	res &= DIAG(!hkl_unit_compatible(&hkl_unit_angle_rad, &hkl_unit_length_nm));
@@ -46,7 +43,7 @@ static void factor(void)
 	is_double(HKL_DEGTORAD, hkl_unit_factor(&hkl_unit_angle_deg, &hkl_unit_angle_rad), HKL_EPSILON, __func__);
 }
 
-int main(int argc, char** argv)
+int main(void)
 {
 	plan(2);
 

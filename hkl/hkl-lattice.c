@@ -39,6 +39,8 @@ static double convert_to_default(const HklParameter *p, double value, HklUnitEnu
 		return value;
 	case HKL_UNIT_USER:
 		return value / hkl_unit_factor(p->unit, p->punit);
+	default:
+		return NAN;
 	}
 }
 

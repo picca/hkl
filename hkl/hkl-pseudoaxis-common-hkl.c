@@ -436,14 +436,13 @@ int hkl_mode_set_hkl_real(HklMode *self,
 		    ++i, item=list_next(&engine->engines->geometries->items, item, list)){
 			int j;
 			HklVector ki;
-			HklVector kf;
 			HklVector kf2;
 			HklVector q;
 			HklVector axis_v;
 			HklQuaternion qr;
 			HklAxis *axis;
-			HklVector cp = {0};
-			HklVector op = {0};
+			HklVector cp = {{0}};
+			HklVector op = {{0}};
 			double angle;
 			HklGeometry *geom;
 

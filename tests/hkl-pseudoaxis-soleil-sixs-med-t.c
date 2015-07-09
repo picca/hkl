@@ -34,13 +34,13 @@
 
 static void qper_qpar(void)
 {
+	int res = TRUE;
 	HklEngineList *engines;
 	HklEngine *engine;
 	const HklFactory *factory;
 	HklGeometry *geom;
 	HklDetector *detector;
 	HklSample *sample;
-	size_t i, f_idx;
 	double qper_qpar[2];
 	double gamma;
 	HklGeometryList *geometries;
@@ -62,8 +62,8 @@ static void qper_qpar(void)
 	engine = hkl_engine_list_engine_get_by_name(engines, "qper_qpar", NULL);
 
 	/* the init part */
-	hkl_geometry_set_values_v(geom, HKL_UNIT_USER, NULL, 0., 0.1, 0., 0., 90., 0.);
-	hkl_engine_initialized_set(engine, TRUE, NULL);
+	res &= DIAG(hkl_geometry_set_values_v(geom, HKL_UNIT_USER, NULL, 0., 0.1, 0., 0., 90., 0.));
+	res &= DIAG(hkl_engine_initialized_set(engine, TRUE, NULL));
 
 	/* gamma must be positif */
 	qper_qpar[0] = 0.1;
@@ -87,6 +87,8 @@ static void qper_qpar(void)
 		hkl_geometry_list_free(geometries);
 	}
 
+	ok(res, __func__);
+
 	hkl_engine_list_free(engines);
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
@@ -99,7 +101,6 @@ static void med_2_3(void)
 	HklEngineList *engines;
 	HklEngine *hkl;
 	const HklFactory *factory;
-	const HklGeometryListItem *item;
 	HklGeometry *geometry;
 	HklGeometryList *geometries;
 	HklDetector *detector;
@@ -118,10 +119,10 @@ static void med_2_3(void)
 	factory = hkl_factory_get_by_name("SOLEIL SIXS MED2+3", NULL);
 	geometry = hkl_factory_create_new_geometry(factory);
 
-	hkl_geometry_axis_values_set(geometry,
-				     positions, ARRAY_SIZE(positions), HKL_UNIT_USER,
-				     NULL);
-	hkl_geometry_wavelength_set(geometry, 1.54980, HKL_UNIT_DEFAULT, NULL);
+	res &= DIAG(hkl_geometry_axis_values_set(geometry,
+						 positions, ARRAY_SIZE(positions), HKL_UNIT_USER,
+						 NULL));
+	res &= DIAG(hkl_geometry_wavelength_set(geometry, 1.54980, HKL_UNIT_DEFAULT, NULL));
 
 	sample = hkl_sample_new("test");
 	lattice = hkl_lattice_new(4.759, 4.759, 12.992,
@@ -141,7 +142,7 @@ static void med_2_3(void)
 	hkl_engine_list_init(engines, geometry, detector, sample);
 
 	hkl = hkl_engine_list_engine_get_by_name(engines, "hkl", NULL);
-	hkl_engine_current_mode_set(hkl, "mu_fixed", NULL);
+	res &= DIAG(hkl_engine_current_mode_set(hkl, "mu_fixed", NULL));
 
 	/* hkl 1.95, 2, 6 (should not fail) */
 	geometries = hkl_engine_pseudo_axis_values_set(hkl,
@@ -158,9 +159,9 @@ static void med_2_3(void)
 	hkl_geometry_free(geometry);
 }
 
-int main(int argc, char** argv)
+int main(void)
 {
-	plan(3);
+	plan(4);
 
 	qper_qpar();
 	med_2_3();

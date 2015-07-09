@@ -368,7 +368,7 @@ int hkl_geometry_axis_set(HklGeometry *self, const char *name,
 		g_set_error(error,
 			    HKL_GEOMETRY_ERROR,
 			    HKL_GEOMETRY_ERROR_AXIS_SET,
-			    "The axis to set \"%s\" is different from the parameter name \"\"\n",
+			    "The axis to set \"%s\" is different from the parameter name \"%s\"\n",
 			    name, axis->name);
 		return FALSE;
 	}
@@ -467,7 +467,6 @@ HklHolder *hkl_geometry_add_holder(HklGeometry *self)
 void hkl_geometry_update(HklGeometry *self)
 {
 	HklParameter **axis;
-	size_t i;
 	int ko = 0;
 
 	darray_foreach(axis, self->axes){
@@ -956,7 +955,6 @@ void hkl_geometry_list_sort(HklGeometryList *self, HklGeometry *ref)
 	size_t *idx = alloca(self->n_items * sizeof(*idx));
 	HklGeometryListItem **items = alloca(self->n_items * sizeof(*items));
 	HklGeometryListItem *item;
-	HklGeometryListItem *next;
 	int i = 0;
 	size_t x;
 	int j, p;
@@ -997,7 +995,6 @@ void hkl_geometry_list_sort(HklGeometryList *self, HklGeometry *ref)
  **/
 void hkl_geometry_list_fprintf(FILE *f, const HklGeometryList *self)
 {
-	HklGeometry *g;
 	uint i = 0;
 	double value;
 

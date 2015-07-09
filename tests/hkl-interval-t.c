@@ -295,7 +295,7 @@ static void length(void)
 	is_double(1., hkl_interval_length(&interval), HKL_EPSILON, __func__);
 }
 
-int main(int argc, char** argv)
+int main(void)
 {
 	plan(59);
 

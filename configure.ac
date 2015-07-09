@@ -54,6 +54,10 @@ AC_SUBST(release_info)
 VMAJ=v_maj
 AC_SUBST(VMAJ)
 
+# activate all the warnings
+AX_CFLAGS_WARN_ALL
+AX_CXXFLAGS_WARN_ALL
+
 # Checks for libraries.
 AX_PATH_GSL
 AM_PATH_GLIB_2_0

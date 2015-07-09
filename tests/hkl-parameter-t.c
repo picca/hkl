@@ -176,7 +176,7 @@ static void getter(void)
 	hkl_parameter_free(p);
 }
 
-int main(int argc, char** argv)
+int main(void)
 {
 	plan(44);
 

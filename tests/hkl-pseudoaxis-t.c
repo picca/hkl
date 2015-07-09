@@ -103,7 +103,7 @@ static void factories(void)
 	ok(res == TRUE, "factories");
 }
 
-static int _get(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
+static int _get(HklEngine *engine, HklEngineList *engine_list, UNUSED unsigned int n)
 {
 	uint i;
 	GError *error;
@@ -147,9 +147,8 @@ static void get()
 	ok(TRUE == TEST_FOREACH_MODE(1, _get), __func__);
 }
 
-static int _set(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
+static int _set(HklEngine *engine, HklEngineList *engine_list, UNUSED unsigned int n)
 {
-	uint i;
 	GError *error = NULL;
 	int unreachable = 0;
 	int res = TRUE;
@@ -167,7 +166,6 @@ static int _set(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
 		return TRUE;
 
 	size_t j;
-	HklParameter **pseudo_axis;
 	HklGeometryList *solutions;
 
 	/* randomize the pseudoAxes values */
@@ -230,7 +228,7 @@ static void set(int nb_iter)
 }
 
 
-static int _pseudo_axis_get(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
+static int _pseudo_axis_get(HklEngine *engine, UNUSED HklEngineList *engine_list, UNUSED unsigned int n)
 {
 	static const char *bad = "_bad_name_";
 	const darray_string *pseudo_axis_names = hkl_engine_pseudo_axis_names_get(engine);
@@ -267,7 +265,7 @@ static void pseudo_axis_get(void)
 	ok(TRUE == TEST_FOREACH_ENGINE(1, _pseudo_axis_get), __func__);
 }
 
-static int _capabilities(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
+static int _capabilities(HklEngine *engine, UNUSED HklEngineList *engine_list, UNUSED unsigned int n)
 {
 	int res = TRUE;
 	const unsigned long capabilities = hkl_engine_capabilities_get(engine);
@@ -292,7 +290,7 @@ static void capabilities(void)
 	ok(TRUE == TEST_FOREACH_MODE(1, _capabilities), __func__);
 }
 
-static int _initialized(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
+static int _initialized(HklEngine *engine, UNUSED HklEngineList *engine_list, UNUSED unsigned int n)
 {
 	int res = TRUE;
 	GError *error = NULL;
@@ -344,7 +342,7 @@ static void initialized(void)
 HKLAPI int hkl_engine_initialized_set(HklEngine *self, int initialized,
 				      GError **error) HKL_ARG_NONNULL(1) HKL_WARN_UNUSED_RESULT;
 
-static int _modes(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
+static int _modes(HklEngine *engine, UNUSED HklEngineList *engine_list, UNUSED unsigned int n)
 {
 	static const char *bad = "__bad_mode_name__";
 	int res = TRUE;
@@ -406,7 +404,7 @@ static int _check_axes(const darray_string *axes, const darray_string *refs)
 	return ko;
 }
 
-static int _axis_names(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
+static int _axis_names(HklEngine *engine, HklEngineList *engine_list, UNUSED unsigned int n)
 {
 	int res  = TRUE;
 	HklGeometry *geometry;
@@ -439,8 +437,7 @@ static void axis_names(void)
 }
 
 
-
-static int _parameters(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
+static int _parameters(HklEngine *engine, UNUSED HklEngineList *engine_list, UNUSED unsigned int n)
 {
 	static const char *bad = "__bad_parameter_name__";
 	int res = TRUE;
@@ -498,7 +495,7 @@ static void parameters(void)
 	ok(TRUE == TEST_FOREACH_MODE(1, _parameters), __func__);
 }
 
-static int _depends(HklEngine *engine, HklEngineList *engine_list, unsigned int n)
+static int _depends(HklEngine *engine, UNUSED HklEngineList *engine_list, UNUSED unsigned int n)
 {
 	int res = TRUE;
 	const char *name = hkl_engine_name_get(engine);

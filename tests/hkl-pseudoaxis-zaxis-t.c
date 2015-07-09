@@ -40,7 +40,7 @@ static void solution(void)
 	/* get the geometry and set the source */
 	factory = hkl_factory_get_by_name("ZAXIS", NULL);
 	geometry = hkl_factory_create_new_geometry(factory);
-	hkl_geometry_wavelength_set(geometry, 0.842, HKL_UNIT_DEFAULT, NULL);
+	res &= DIAG(hkl_geometry_wavelength_set(geometry, 0.842, HKL_UNIT_DEFAULT, NULL));
 
 	/* set up the sample */
 	sample = hkl_sample_new("test");
@@ -64,7 +64,7 @@ static void solution(void)
 	engine = hkl_engine_list_engine_get_by_name(engines, "hkl", NULL);
 
 	/* the init part must succed */
-	hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 1., 0., 0., 0.);
+	res &= DIAG(hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 1., 0., 0., 0.));
 
 	/* compute the 1 1 0 */
 	geometries = hkl_engine_pseudo_axis_values_set(engine, hkl, ARRAY_SIZE(hkl),
@@ -91,7 +91,7 @@ static void solution(void)
 	ok(res == TRUE, "solution");
 }
 
-int main(int argc, char** argv)
+int main(void)
 {
 	plan(1);
 

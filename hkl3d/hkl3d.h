@@ -97,7 +97,7 @@ extern "C" {
 		char *filename;
 		G3DModel *g3d;
 		Hkl3DObject **objects;
-		int len;
+		size_t len;
 	};
 
 	extern void hkl3d_model_fprintf(FILE *f, const Hkl3DModel *self);
@@ -109,7 +109,7 @@ extern "C" {
 	struct _Hkl3DConfig
 	{
 		Hkl3DModel **models;
-		int len;
+		size_t len;
 	};
 
 	extern void hkl3d_config_fprintf(FILE *f, const Hkl3DConfig *self);
@@ -121,7 +121,7 @@ extern "C" {
 	struct _Hkl3DAxis
 	{
 		Hkl3DObject **objects; /* connected object */
-		int len;
+		size_t len;
 	};
 
 	/*****************/

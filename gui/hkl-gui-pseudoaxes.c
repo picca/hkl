@@ -76,7 +76,6 @@ set_property (GObject *object, guint prop_id,
 	      const GValue *value, GParamSpec *pspec)
 {
 	HklGuiEngine *self = HKL_GUI_ENGINE (object);
-	HklGuiEnginePrivate *priv = HKL_GUI_ENGINE_GET_PRIVATE(self);
 
 	switch (prop_id) {
 	case PROP_ENGINE:
@@ -93,7 +92,6 @@ get_property (GObject *object, guint prop_id,
 	      GValue *value, GParamSpec *pspec)
 {
 	HklGuiEngine *self = HKL_GUI_ENGINE (object);
-	HklGuiEnginePrivate *priv = HKL_GUI_ENGINE_GET_PRIVATE(self);
 
 	switch (prop_id)
 	{
@@ -334,7 +332,6 @@ cell_tree_view_pseudo_axis_value_edited_cb (GtkCellRendererText* renderer,
 {
 	HklGuiEnginePrivate *priv = HKL_GUI_ENGINE_GET_PRIVATE(self);
 	GtkTreeIter iter = {0};
-	GtkListStore* model = NULL;
 
 	if (gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(priv->store_pseudo),
 						 &iter, path)) {

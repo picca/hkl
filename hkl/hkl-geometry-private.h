@@ -63,7 +63,7 @@ struct _HklGeometry
 
 #define HKL_GEOMETRY_ERROR hkl_geometry_error_quark ()
 
-static GQuark hkl_geometry_error_quark (void)
+static inline GQuark hkl_geometry_error_quark (void)
 {
 	return g_quark_from_static_string ("hkl-geometry-error-quark");
 }

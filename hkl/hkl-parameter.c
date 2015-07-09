@@ -184,6 +184,8 @@ inline double hkl_parameter_value_get(const HklParameter *self,
 	case HKL_UNIT_USER:
 		return self->_value * hkl_unit_factor(self->unit, self->punit);
 		break;
+	default:
+		return NAN;
 	}
 }
 

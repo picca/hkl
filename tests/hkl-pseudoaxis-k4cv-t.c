@@ -53,7 +53,7 @@ static void degenerated(void)
 		HklGeometryList *geometries;
 		size_t n_params;
 
-		hkl_engine_current_mode_set(engine, *mode, NULL);
+		res &= DIAG(hkl_engine_current_mode_set(engine, *mode, NULL));
 		parameters = hkl_engine_parameters_names_get(engine);
 		n_params = darray_size(*parameters);
 		if(n_params){
@@ -61,7 +61,7 @@ static void degenerated(void)
 
 			hkl_engine_parameters_values_get(engine, params, n_params, HKL_UNIT_DEFAULT);
 			params[0] = 1;
-			hkl_engine_parameters_values_set(engine, params, n_params, HKL_UNIT_DEFAULT, NULL);
+			res &= DIAG(hkl_engine_parameters_values_set(engine, params, n_params, HKL_UNIT_DEFAULT, NULL));
 		}
 
 		/* studdy this degenerated case */
@@ -118,7 +118,7 @@ static void eulerians(void)
 		HklGeometryList *geometries;
 		size_t n_params;
 
-		hkl_engine_current_mode_set(engine, *mode, NULL);
+		res &= DIAG(hkl_engine_current_mode_set(engine, *mode, NULL));
 		parameters = hkl_engine_parameters_names_get(engine);
 		n_params = darray_size(*parameters);
 		if(n_params){
@@ -126,7 +126,7 @@ static void eulerians(void)
 
 			hkl_engine_parameters_values_get(engine, params, n_params, HKL_UNIT_DEFAULT);
 			params[0] = 1;
-			hkl_engine_parameters_values_set(engine, params, n_params, HKL_UNIT_DEFAULT, NULL);
+			res &= DIAG(hkl_engine_parameters_values_set(engine, params, n_params, HKL_UNIT_DEFAULT, NULL));
 		}
 
 		/* studdy this degenerated case */
@@ -188,13 +188,13 @@ static void q(void)
 	modes = hkl_engine_modes_names_get(engine);
 
 	/* the init part */
-	hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 30., 0., 0., 60.);
-	hkl_engine_initialized_set(engine, TRUE, NULL);
+	res &= DIAG(hkl_geometry_set_values_v(geometry, HKL_UNIT_USER, NULL, 30., 0., 0., 60.));
+	res &= DIAG(hkl_engine_initialized_set(engine, TRUE, NULL));
 
 	darray_foreach(mode, *modes){
 		double q;
 
-		hkl_engine_current_mode_set(engine, *mode, NULL);
+		res &= DIAG(hkl_engine_current_mode_set(engine, *mode, NULL));
 		for(q=-1.; q<1.; q += 0.1){
 			HklGeometryList *geometries;
 
@@ -221,7 +221,7 @@ static void q(void)
 	hkl_geometry_free(geometry);
 }
 
-int main(int argc, char** argv)
+int main(void)
 {
 	plan(3);
 

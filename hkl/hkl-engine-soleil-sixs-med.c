@@ -250,8 +250,6 @@ static int fit_slits_orientation(HklSlitsFit *params)
 static void hkl_geometry_list_multiply_soleil_sixs_med_2_3(HklGeometryList *self,
 							   HklGeometryListItem *item)
 {
-	unsigned int i;
-	unsigned int len;
 	HklSlitsFit params;
 	HklGeometry *geometry;
 	double slits_position;

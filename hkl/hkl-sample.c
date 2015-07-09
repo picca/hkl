@@ -213,7 +213,7 @@ static double set_UB_fitness(const gsl_vector *x, void *params)
 
 static double mono_crystal_fitness(const gsl_vector *x, void *params)
 {
-	size_t i, j;
+	size_t i;
 	double fitness;
 	HklSample *sample = params;
 	HklSampleReflection *reflection;
@@ -229,8 +229,8 @@ static double mono_crystal_fitness(const gsl_vector *x, void *params)
 			UBh = reflection->hkl;
 			hkl_matrix_times_vector(&sample->UB, &UBh);
 
-			for(j=0; j<3; ++j) {
-				double tmp = UBh.data[j] - reflection->_hkl.data[j];
+			for(i=0; i<3; ++i) {
+				double tmp = UBh.data[i] - reflection->_hkl.data[i];
 				fitness += tmp * tmp;
 			}
 		}
@@ -556,6 +556,8 @@ int hkl_sample_uy_set(HklSample *self, const HklParameter *uy,
 				   hkl_parameter_value_get(self->uy, HKL_UNIT_DEFAULT),
 				   hkl_parameter_value_get(self->uz, HKL_UNIT_DEFAULT));
 	hkl_sample_compute_UB(self);
+
+	return TRUE;
 }
 
 /**
@@ -584,6 +586,8 @@ int hkl_sample_uz_set(HklSample *self, const HklParameter *uz,
 				   hkl_parameter_value_get(self->uy, HKL_UNIT_DEFAULT),
 				   hkl_parameter_value_get(self->uz, HKL_UNIT_DEFAULT));
 	hkl_sample_compute_UB(self);
+
+	return TRUE;
 }
 
 /**

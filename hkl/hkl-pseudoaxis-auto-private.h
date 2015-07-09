@@ -99,7 +99,7 @@ struct _HklModeAutoWithInit {
 
 #define HKL_MODE_AUTO_WITH_INIT_ERROR hkl_mode_auto_with_init_error_quark ()
 
-static GQuark hkl_mode_auto_with_init_error_quark (void)
+static inline GQuark hkl_mode_auto_with_init_error_quark (void)
 {
 	return g_quark_from_static_string ("hkl-mode-auto-with-init-error-quark");
 }
@@ -114,7 +114,7 @@ typedef enum {
 		.free = hkl_mode_auto_with_init_free_real,		\
 		.initialized_set = hkl_mode_auto_with_init_initialized_set_real
 
-static void hkl_mode_auto_with_init_free_real(HklMode *mode)
+static NEEDED void hkl_mode_auto_with_init_free_real(HklMode *mode)
 {
 	HklModeAutoWithInit *self = container_of(mode, HklModeAutoWithInit, mode);
 
@@ -129,13 +129,13 @@ static void hkl_mode_auto_with_init_free_real(HklMode *mode)
 }
 
 
-static int hkl_mode_auto_with_init_initialized_set_real(HklMode *mode,
-							HklEngine *engine,
-							HklGeometry *geometry,
-							HklDetector *detector,
-							HklSample *sample,
-							int initialized,
-							GError **error)
+static NEEDED int hkl_mode_auto_with_init_initialized_set_real(HklMode *mode,
+							       HklEngine *engine,
+							       HklGeometry *geometry,
+							       HklDetector *detector,
+							       HklSample *sample,
+							       int initialized,
+							       GError **error)
 {
 	HklModeAutoWithInit *self = container_of(mode, HklModeAutoWithInit, mode);
 

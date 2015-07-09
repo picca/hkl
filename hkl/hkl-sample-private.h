@@ -48,7 +48,7 @@ struct _HklSample {
 
 #define HKL_SAMPLE_ERROR hkl_sample_error_quark ()
 
-static GQuark hkl_sample_error_quark (void)
+static inline GQuark hkl_sample_error_quark (void)
 {
 	return g_quark_from_static_string ("hkl-sample-error-quark");
 }
@@ -77,7 +77,7 @@ struct _HklSampleReflection {
 
 #define HKL_SAMPLE_REFLECTION_ERROR hkl_sample_reflection_error_quark ()
 
-static GQuark hkl_sample_reflection_error_quark (void)
+static inline GQuark hkl_sample_reflection_error_quark (void)
 {
 	return g_quark_from_static_string ("hkl-sample-reflection-error-quark");
 }
