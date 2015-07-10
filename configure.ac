@@ -34,6 +34,7 @@ AC_PROG_CPP
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
+AC_PROG_RANLIB
 LT_INIT
 AM_SILENT_RULES
 
@@ -66,7 +67,7 @@ AM_PATH_GLIB_2_0
 AC_HEADER_STDC
 AC_HEADER_TIME
 AC_FUNC_ALLOCA
-AC_CHECK_HEADERS([float.h limits.h malloc.h memory.h stddef.h stdint.h stdlib.h string.h sys/time.h unistd.h])
+AC_CHECK_HEADERS([fcntl.h float.h limits.h malloc.h memory.h stddef.h stdint.h stdlib.h string.h sys/param.h sys/time.h unistd.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -75,6 +76,7 @@ AC_TYPE_INT16_T
 AC_TYPE_INT32_T
 AC_TYPE_INT64_T
 AC_TYPE_INT8_T
+AC_TYPE_PID_T
 AC_TYPE_SIZE_T
 AC_TYPE_UINT16_T
 AC_TYPE_UINT32_T
@@ -86,7 +88,8 @@ AC_FUNC_ERROR_AT_LINE
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_FUNC_VPRINTF
-AC_CHECK_FUNCS([floor getcwd gettimeofday memmove memset pow select sqrt strchr strdup strstr])
+AC_FUNC_FORK
+AC_CHECK_FUNCS([atexit dup2 fchdir floor getcwd getpagesize gettimeofday isascii memchr memmove memset mkdir pow putenv rmdir select sqrt strchr strcasecmp strdup strerror strncasecmp strrchr strstr strtol strtoul])
 
 dnl OPTION_DEFAULT_OFF(NAME, HELP-STRING)
 dnl Create a new --enable option that defaults to being disabled.
