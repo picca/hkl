@@ -73,7 +73,7 @@ CCAN_PRIVATE_MODULES=array_size container_of autodata list
 CCAN_LOCAL_REPO=/tmp/ccan
 CCAN_LOCAL_EXTRACT=/tmp/ccan.tmp
 CCAN_URL=git://git.ozlabs.org/~ccan/ccan
-CCAN_CREATE_TREE=rm -rf $(CCAN_LOCAL_EXTRACT) && $(CCAN_LOCAL_REPO)/tools/create-ccan-tree -b automake $(CCAN_LOCAL_EXTRACT)
+CCAN_CREATE_TREE=rm -rf $(CCAN_LOCAL_EXTRACT) && cd $(CCAN_LOCAL_REPO) && tools/create-ccan-tree -b automake $(CCAN_LOCAL_EXTRACT)
 CCAN_DEST=$(top_srcdir)/hkl/
 CCAN_TMP_DEST=/tmp/ccan.next
 ccan-update:
@@ -90,15 +90,23 @@ ccan-update:
 	@rm -rf $(CCAN_TMP_DEST) && mkdir -p $(CCAN_TMP_DEST)
 	@rsync -av --exclude=Makefile.am $(CCAN_LOCAL_EXTRACT)/* $(CCAN_TMP_DEST)
 	@find $(CCAN_TMP_DEST)/ccan -maxdepth 2 -name '*.[ch]' | xargs sed -i -e 's,ccan/,hkl/ccan/,'
+	@find $(CCAN_TMP_DEST)/ccan -maxdepth 2 -name '*.[ch]' | xargs sed -i -e 's,"config.h",<hkl/ccan/ccan_config.h>,'
 
 	@$(CCAN_CREATE_TREE) $(CCAN_PUBLIC_MODULES)
 
 	@echo Generating the Makefile.am
 	@(\
 		echo "AM_CFLAGS=-I\$$(top_srcdir)"; echo;\
+		echo "noinst_PROGRAMS=configurator";\
+		echo "BUILT_SOURCES=ccan_config.h";\
+		echo "ccan_config.h: configurator";\
+		(\
+			echo -e "\t\$$(builddir)/configurator \$$(CC) \$$(CCAN_CFLAGS) > \$$@.tmp && mv \$$@.tmp \$$@";\
+		);\
 		echo "noinst_LTLIBRARIES=libccan.la";\
 		echo "libccan_la_SOURCES = \\";\
 		(\
+			echo -e "\tccan_config.h \\";\
 			cd $(CCAN_TMP_DEST)/ccan && find . -maxdepth 2 -name '*.[ch]'\
 				| sed -e 's,^./,\t,;$$!s,$$, \\,'; echo;\
 		);\
@@ -108,7 +116,13 @@ ccan-update:
 			cd $(CCAN_LOCAL_EXTRACT)/ccan && find . -maxdepth 2 -name '*.[h]'\
 				| sed -e 's,^./,\t,;$$!s,$$, \\,';\
 		);\
+		echo "nodist_ccaninclude_HEADERS=ccan_config.h";\
+		echo "EXTRA_DIST=configurator.c";\
+		echo "CLEANFILES=configurator ccan_config.h";\
 	) > $(CCAN_TMP_DEST)/ccan/Makefile.am
+
+	@echo Extracting the configurator
+	@rsync -av $(CCAN_LOCAL_REPO)/tools/configurator/configurator.c $(CCAN_TMP_DEST)/ccan
 
 	@echo purge the previous ccan directory
 	cd $(CCAN_DEST) && rm -rf licenses && find ccan -mindepth 1 -type d \! -name ".*" | xargs rm -rf

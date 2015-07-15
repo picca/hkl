@@ -1,5 +1,5 @@
 /* CC0 (Public domain) - see LICENSE file for details */
-#include "config.h"
+#include <hkl/ccan/ccan_config.h>
 #include <hkl/ccan/str/str_debug.h>
 #include <assert.h>
 #include <ctype.h>

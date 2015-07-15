@@ -1,7 +1,7 @@
 // Licensed under BSD-MIT: See LICENSE.
 #ifndef CCAN_AUTODATA_H
 #define CCAN_AUTODATA_H
-#include "config.h"
+#include <hkl/ccan/ccan_config.h>
 #include <hkl/ccan/compiler/compiler.h>
 #include <stdlib.h>
 

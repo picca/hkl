@@ -1,7 +1,7 @@
 // Licensed under BSD-MIT: See LICENSE.
 #ifndef CCAN_PTR_VALID_H
 #define CCAN_PTR_VALID_H
-#include "config.h"
+#include <hkl/ccan/ccan_config.h>
 #include <stdbool.h>
 #include <stdlib.h>
 

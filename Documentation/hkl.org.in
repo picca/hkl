@@ -829,6 +829,9 @@ git clone git://repo.or.cz/hkl.git
    #+END_QUOTE
 * Releases
 ** @VERSION@
+** 4.99.99.1955 <2015-07-15 mer.>
+   Add the ccan_config.h public header. This header is generated with
+   the ccan configurator program.
 ** 4.99.99.1950 <2015-07-07 mar.>
    Fix an FTBFS observed on the sparc arch
 ** 4.99.99.1949 <2015-07-03 ven.>
