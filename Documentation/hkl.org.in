@@ -1043,6 +1043,9 @@ git clone git://repo.or.cz/hkl.git
 *** TODO HklEngine "custom"
     for now this pseudoaxis let you select the axis you
     want to use for the computation.
+*** TODO HklEngine "q/q2" add a "reflectivity" mode
+    This mode should have the surface as parameters and the incident
+    angle is equal to the emergence angle.
 *** TODO create a macro to help compare two real the right way
     fabs(a-b) < epsilon * max(1, abs(a), abs(b))
 *** TODO add an hkl_sample_set_lattice_unit()
