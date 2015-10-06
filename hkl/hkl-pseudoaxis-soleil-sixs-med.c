@@ -100,6 +100,17 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_soleil_sixs_med_1_2_hkl_new(void)
 		(size_t)3, "mu", "gamma", "delta");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
+	/* delta_fixed" */
+	mode = hkl_pseudo_axis_engine_mode_new(
+		"delta_fixed",
+		NULL,
+		hkl_pseudo_axis_engine_mode_get_hkl_real,
+		hkl_pseudo_axis_engine_mode_set_hkl_real,
+		1, RUBh_minus_Q_func,
+		(size_t)0,
+		(size_t)3, "pitch", "mu", "gamma");
+	hkl_pseudo_axis_engine_add_mode(self, mode);
+
 	hkl_pseudo_axis_engine_select_mode(self, 0);
 
 	return self;
@@ -257,6 +268,18 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_soleil_sixs_med_2_3_hkl_new(void)
 		(size_t)0,
 		(size_t)3, "omega", "gamma", "delta");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
+
+	/* gamma_fixed */
+	mode = hkl_pseudo_axis_engine_mode_new(
+		"gamma_fixed",
+		NULL,
+		hkl_pseudo_axis_engine_mode_get_hkl_real,
+		hkl_pseudo_axis_engine_mode_set_hkl_real,
+		1, RUBh_minus_Q_func,
+		(size_t)0,
+		(size_t)3, "mu", "omega", "delta");
+	hkl_pseudo_axis_engine_add_mode(self, mode);
+
 
 	hkl_pseudo_axis_engine_select_mode(self, 0);
 
