@@ -126,6 +126,20 @@ static HklMode* pitch_fixed()
 				 TRUE);
 }
 
+static HklMode *delta_fixed()
+{
+	static const char *axes_r[] = {PITCH, MU, GAMMA, DELTA};
+	static const char* axes_w[] = {PITCH, MU, GAMMA};
+	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO(__func__, axes_r, axes_w, functions),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_full_mode_operations,
+				 TRUE);
+}
+
 static HklEngine *hkl_engine_soleil_sixs_med_1_2_hkl_new(HklEngineList *engines)
 {
 	HklEngine *self;
@@ -136,6 +150,8 @@ static HklEngine *hkl_engine_soleil_sixs_med_1_2_hkl_new(HklEngineList *engines)
 	default_mode = pitch_fixed();
 	hkl_engine_add_mode(self, default_mode);
 	hkl_engine_mode_set(self, default_mode);
+
+	hkl_engine_add_mode(self, delta_fixed());
 
 	return self;
 }
@@ -299,6 +315,20 @@ static HklMode* mu_fixed_2_3()
 				 TRUE);
 }
 
+static HklMode* gamma_fixed_2_3()
+{
+	static const char *axes_r[] = {BETA, MU, OMEGA, GAMMA, DELTA, ETA_A};
+	static const char* axes_w[] = {MU, OMEGA, DELTA};
+	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO("gamma_fixed", axes_r, axes_w, functions),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_full_mode_operations,
+				 TRUE);
+}
+
 static HklEngine *hkl_engine_soleil_sixs_med_2_3_hkl_new(HklEngineList *engines)
 {
 	HklEngine *self;
@@ -309,6 +339,8 @@ static HklEngine *hkl_engine_soleil_sixs_med_2_3_hkl_new(HklEngineList *engines)
 	default_mode = mu_fixed_2_3();
 	hkl_engine_add_mode(self, default_mode);
 	hkl_engine_mode_set(self, default_mode);
+
+	hkl_engine_add_mode(self, gamma_fixed_2_3());
 
 	return self;
 }
