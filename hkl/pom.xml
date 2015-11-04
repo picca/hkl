@@ -53,9 +53,16 @@
                    <c>
                        <sourceDirectory>${project.basedir}</sourceDirectory>
                        <includePaths>
+                           <includePath>/usr/include/glib-2.0</includePath>
+                           <includePath>/usr/lib/glib-2.0/include</includePath>
+                           <includePath>${project.basedir}</includePath>
                            <includePath>${project.basedir}</includePath>
                            <includePath>${project.basedir}/..</includePath>
+                           <includePath>${project.basedir}/../ica/rhel4/</includePath>
                        </includePaths>
+                       <options>
+                           <option>-std=gnu99</option>
+                       </options>
                    </c>
                </configuration>
            </plugin>
