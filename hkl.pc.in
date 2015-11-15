@@ -7,7 +7,7 @@ Name: hkl
 Description: Library for hkl Diffractometer computation
 Version: @VERSION@
 URL: http://repo.or.cz/w/hkl.git
-Requires: gsl
+Requires: gsl glib-2.0
 Libs: -L${libdir} -lhkl
 Libs.private: -lm
 Cflags: -I${includedir}/hkl-@VMAJ@
