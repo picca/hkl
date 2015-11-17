@@ -7,7 +7,7 @@
        <version>RELEASE</version>
    </parent>
    <groupId>fr.soleil.lib</groupId>
-   <artifactId>HKL-${aol}-${library}-${mode}</artifactId>
+   <artifactId>HKL-${aol}-shared-${mode}</artifactId>
    <version>5.0.0-SNAPSHOT</version>
    <packaging>nar</packaging>
    <name>HKL</name>
@@ -50,6 +50,12 @@
                <groupId>org.freehep</groupId>
                <artifactId>freehep-nar-plugin</artifactId>
                <configuration>
+                   <libraries>
+                       <library>
+                           <type>shared</type>
+                           <subSystem>gui</subSystem>
+                       </library>
+                   </libraries>
                    <c>
                        <sourceDirectory>${project.basedir}</sourceDirectory>
                        <excludes>
