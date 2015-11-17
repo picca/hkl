@@ -52,6 +52,13 @@
                <configuration>
                    <c>
                        <sourceDirectory>${project.basedir}</sourceDirectory>
+                       <excludes>
+                           <exclude>hkl-types.c</exclude>
+                           <exclude>ccan/configurator.c</exclude>
+                       </excludes>
+                       <defines>
+                           <define>LOGGING</define>
+                       </defines>
                        <includePaths>
                            <includePath>/usr/include/glib-2.0</includePath>
                            <includePath>/usr/lib/glib-2.0/include</includePath>
