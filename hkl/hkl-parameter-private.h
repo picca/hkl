@@ -114,6 +114,7 @@ static inline void hkl_parameter_free_real(HklParameter *self)
 static inline int hkl_parameter_init_copy_real(HklParameter *self, const HklParameter *src,
 					       GError **error)
 {
+	hkl_error (src != NULL);
 	hkl_error (error == NULL || *error == NULL);
 	hkl_error (self->name == src->name || strcmp(self->name, src->name) == 0);
 
