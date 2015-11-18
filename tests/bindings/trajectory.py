@@ -42,7 +42,7 @@ def compute_hkl_trajectories(engines, engine, hkl1=None, hkl2=None, n=100):
                 values = item.geometry_get().axis_values_get(Hkl.UnitEnum.USER)
                 trajectories[i].append(values)
             engines.select_solution(first_solution)
-        except GLib.GError, err:
+        except GLib.GError as err:
             pass
 
     return trajectories
@@ -51,7 +51,7 @@ def compute_hkl_trajectories(engines, engine, hkl1=None, hkl2=None, n=100):
 def _plot_legend(axes):
     plt.subplot(3, 4, 1)
     plt.title("legend")
-    print "legende", 1
+    print("legende", 1)
     for name in axes:
         plt.plot([0, 0], label=name)
     plt.legend()
@@ -75,7 +75,7 @@ def plot_hkl_trajectory(filename, geometry, engines,
     for mode in hkl.modes_names_get():
         hkl.current_mode_set(mode)
         trajectories = compute_hkl_trajectories(engines, hkl, hkl1=hkl1, hkl2=hkl2, n=n)
-        print "\"" + filename + "\"", idx, mode, len(trajectories)
+        print("\"" + filename + "\"", idx, mode, len(trajectories))
 
         plt.subplot(3, 4, idx)
         plt.title(mode)
@@ -121,7 +121,7 @@ def main():
 
     detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))
 
-    for key, factory in Hkl.factories().iteritems():
+    for key, factory in Hkl.factories().items():
         geometry = factory.create_new_geometry()
         engines = factory.create_new_engine_list()
 

@@ -61,7 +61,7 @@ class TestAPI(unittest.TestCase):
         """
         # factories dict <name, Factory>
         factories = Hkl.factories()
-        for key, factory in factories.iteritems():
+        for key, factory in factories.items():
             self.assertTrue(type(key) == str)
             self.assertTrue(type(factory) == Hkl.Factory)
 
@@ -160,8 +160,8 @@ class TestAPI(unittest.TestCase):
                     self.assertTrue(type(item) is Hkl.GeometryListItem)
                     self.assertTrue(type(item.geometry_get()) is Hkl.Geometry)
                 values[1] += .01
-            except GLib.GError, err:
-                print values, err
+            except GLib.GError as err:
+                print(values, err)
 
         # check that all the values computed are reachable
         for engine in engines.engines_get():
