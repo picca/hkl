@@ -193,6 +193,17 @@ AM_COND_IF([HAVE_INTROSPECTION],
 	[PKG_CHECK_MODULES([GOBJECT], [gobject-2.0])])
 
 
+dnl ***************
+dnl *** contrib ***
+dnl ***************
+
+OPTION_DEFAULT_OFF([contrib], [compile the contrib part])
+
+AM_CONDITIONAL([CONTRIB], [test x$enable_contrib != xno])
+AM_COND_IF([CONTRIB],
+	   [PKG_CHECK_MODULES([HDF5], [hdf5 >= 1.8.13])
+])
+
 AC_CONFIG_FILES([Makefile
 		 hkl/Makefile
 		 hkl/ccan/Makefile
@@ -210,6 +221,8 @@ AC_CONFIG_FILES([Makefile
 		 Documentation/sphinx/source/conf.py
 		 gui/Makefile
 		 data/Makefile
+		 contrib/Makefile
+		 contrib/sixs/Makefile
 ])
 
 AC_OUTPUT

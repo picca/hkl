@@ -14,6 +14,9 @@ if HKL_DOC
 SUBDIRS += Documentation
 endif
 SUBDIRS += tests
+if CONTRIB
+SUBDIRS += contrib
+endif
 
 EXTRA_DIST = hkl.pc.in hkl3d.pc.in
 
