@@ -96,7 +96,7 @@ struct _HklDataframeSixsUhv {
 
 static HklDataframeSixsUhv hkl_h5_open(const char *filename)
 {
-	herr_t status;
+	/* herr_t status; */
 	hid_t h5file_id;
 	HklDataframeSixsUhv dataframe = {0};
 
@@ -209,40 +209,116 @@ static const HklDataframe hkl_dataframe_next(const HklDataframe dataframe)
 }
 
 
+static herr_t get_position(hid_t dataset_id, int idx, double *position)
+{
+	hid_t space_id;
+	hid_t mem_type_id;
+	hid_t mem_space_id;
+	hsize_t count[1];
+	hsize_t offset[1];
+
+	mem_type_id = H5Dget_type(dataset_id);
+
+	/* Get the dataspace handle */
+	if ( (space_id = H5Dget_space( dataset_id )) < 0 )
+		goto out;
+
+	/* Define a hyperslab in the dataset of the size of the records */
+	offset[0] = idx;
+	count[0]  = 1;
+	if ( H5Sselect_hyperslab(space_id, H5S_SELECT_SET, offset, NULL, count, NULL) < 0 )
+		goto out;
+
+	/* Create a memory dataspace handle */
+	if ( (mem_space_id = H5Screate_simple( 1, count, NULL )) < 0 )
+		goto out;
+
+	if ( H5Dread(dataset_id, mem_type_id, mem_space_id, space_id, H5P_DEFAULT, position ) < 0 )
+		goto out;
+
+	/* Terminate access to the memory dataspace */
+	if ( H5Sclose( mem_space_id ) < 0 )
+		goto out;
+
+	/* Terminate access to the dataspace */
+	if ( H5Sclose( space_id ) < 0 )
+		goto out;
+
+	return 0;
+out:
+	H5Tclose(mem_type_id);
+	return -1;
+}
+
 static herr_t hkl_dataframe_geometry_get(const HklDataframe dataframe, HklGeometry **geometry)
 {
 	herr_t status = 0;
+	hid_t datatype;
+	double wavelength;
+	double axes[4];
 
 	/* create the HklGeometry */
 	if((*geometry) == NULL){
-		hid_t datatype;
-		char *buf;
+		char *name;
 		size_t n;
 		HklFactory *factory;
 
+		/* read the diffractometer type from the hdf5 file */
 		datatype = H5Dget_type(dataframe._dataframe->dtype);
 		n = H5Tget_size(datatype);
-		buf = malloc(n+1);
+		name = malloc(n+1);
 		status = H5Dread(dataframe._dataframe->dtype,
 				 datatype,
 				 H5S_ALL, H5S_ALL,
-				 H5P_DEFAULT, buf);
+				 H5P_DEFAULT, name);
 		if(status >= 0){
 			/* remove the last "\n" char */
-			buf[n-1] = 0;
+			name[n-1] = 0;
 
-			factory = hkl_factory_get_by_name(buf, NULL);
+			factory = hkl_factory_get_by_name(name, NULL);
 			*geometry = hkl_factory_create_new_geometry(factory);
 		}
-		free(buf);
+		free(name);
 		H5Tclose(datatype);
 	}
 
-	/* read the wavelength */
-	hkl_geometry_fprintf(stdout, *geometry);
-	fprintf(stdout, "\n");
+	/* read the wavelength double */
+	/* TODO check the right size */
+	/* TODO how to obtain the unit of the  wavelength */
+	datatype = H5Dget_type(dataframe._dataframe->wavelength);
+	status = H5Dread(dataframe._dataframe->wavelength,
+			 datatype,
+			 H5S_ALL, H5S_ALL,
+			 H5P_DEFAULT, &wavelength);
+	if(status >= 0)
+		hkl_geometry_wavelength_set(*geometry, wavelength, HKL_UNIT_USER, NULL);
+	H5Tclose(datatype);
 
-	return status;
+	/* read the axis positions of the ith dataframe */
+	/* check how to decide about the dataset connection and the hkl axes connection */
+	/* TODO check the right size */
+	/* TODO how to obtain the unit of the axes position */
+	if (get_position(dataframe._dataframe->mu,
+			 dataframe.i, &axes[0]) < 0)
+		goto out;
+	if (get_position(dataframe._dataframe->omega,
+			 dataframe.i, &axes[1]) < 0)
+		goto out;
+	if (get_position(dataframe._dataframe->gamma,
+			 dataframe.i, &axes[2]) < 0)
+		goto out;
+	if (get_position(dataframe._dataframe->delta,
+			 dataframe.i, &axes[3]) < 0)
+		goto out;
+
+	hkl_geometry_axis_values_set(*geometry, axes, 4, HKL_UNIT_USER, NULL);
+	/* hkl_geometry_fprintf(stdout, *geometry); */
+	/* fprintf(stdout, "\n"); */
+
+	return 0;
+out:
+	return -1;
+
 }
 
 int main (int argc, char ** argv)
@@ -250,7 +326,7 @@ int main (int argc, char ** argv)
 	const char *filename =  ROOT FILENAME;
 	HklDataframeSixsUhv dataframe_h5 = hkl_h5_open(filename);
 	int res = hkl_h5_is_valid(&dataframe_h5);
-	fprintf(stdout, "h5file is valid : %d\n", res);
+	/* fprintf(stdout, "h5file is valid : %d\n", res); */
 	HklGeometry *geometry = NULL;
 
 	for(HklDataframe dataframe =  hkl_dataframe_first(&dataframe_h5);
@@ -258,9 +334,11 @@ int main (int argc, char ** argv)
 	    dataframe = hkl_dataframe_next(dataframe))
 	{
 		hkl_dataframe_geometry_get(dataframe, &geometry);
-		fprintf(stdout, " %d", dataframe.i);
+		/* fprintf(stdout, " %d", dataframe.i); */
 	}
 
 	hkl_geometry_free(geometry);
 	hkl_h5_close(&dataframe_h5);
+
+	return res;
 }
