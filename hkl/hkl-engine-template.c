@@ -176,10 +176,12 @@ static HklMode* psi_vertical()
 /*****************/
 
 REGISTER_READONLY_INCIDENCE(hkl_engine_template_incidence_new,
-			    P99_PROTECT({MU, OMEGA, CHI, PHI}));
+			    P99_PROTECT({MU, OMEGA, CHI, PHI}),
+			    surface_parameters_y);
 
 REGISTER_READONLY_EMERGENCE(hkl_engine_template_emergence_new,
-			    P99_PROTECT({MU, OMEGA, CHI, PHI, GAMMA, DELTA}));
+			    P99_PROTECT({MU, OMEGA, CHI, PHI, GAMMA, DELTA}),
+			    surface_parameters_y);
 
 /***********/
 /* Engines */

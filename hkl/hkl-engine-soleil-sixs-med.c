@@ -106,7 +106,13 @@ static HklEngine *hkl_engine_soleil_sixs_med_2_2_hkl_new(HklEngineList *engines)
 /* mode incidence */
 
 REGISTER_READONLY_INCIDENCE(hkl_engine_soleil_sixs_med_2_2_incidence_new,
-			    P99_PROTECT({BETA, MU, OMEGA}));
+			    P99_PROTECT({BETA, MU, OMEGA}),
+			    surface_parameters_y);
+
+REGISTER_READONLY_EMERGENCE(hkl_engine_soleil_sixs_med_2_2_emergence_new,
+                            P99_PROTECT({BETA, MU, OMEGA, GAMMA, DELTA}),
+			    surface_parameters_y);
+
 
 /*********************/
 /* MED 1+2 HklEngine */
@@ -158,8 +164,17 @@ static HklEngine *hkl_engine_soleil_sixs_med_1_2_hkl_new(HklEngineList *engines)
 
 /* mode incidence */
 
+static const HklParameter surface_parameters[] = {
+	SURFACE_PARAMETERS(0, 0, 1),
+};
+
 REGISTER_READONLY_INCIDENCE(hkl_engine_soleil_sixs_med_1_2_incidence_new,
-			    P99_PROTECT({PITCH, MU}));
+			    P99_PROTECT({PITCH, MU}),
+			    surface_parameters_z);
+
+REGISTER_READONLY_EMERGENCE(hkl_engine_soleil_sixs_med_1_2_emergence_new,
+			    P99_PROTECT({PITCH, MU, GAMMA, DELTA}),
+			    surface_parameters_z);
 
 /*********************/
 /* MED 2+3 HklEngine */
@@ -392,6 +407,7 @@ static HklEngineList *hkl_engine_list_new_soleil_sixs_med_2_2(const HklFactory *
 	hkl_engine_qper_qpar_new(self);
 	hkl_engine_tth2_new(self);
 	hkl_engine_soleil_sixs_med_2_2_incidence_new(self);
+	hkl_engine_soleil_sixs_med_2_2_emergence_new(self);
 
 	return self;
 }
@@ -443,6 +459,7 @@ static HklEngineList *hkl_engine_list_new_soleil_sixs_med_1_2(const HklFactory *
 	hkl_engine_qper_qpar_new(self);
 	hkl_engine_tth2_new(self);
 	hkl_engine_soleil_sixs_med_1_2_incidence_new(self);
+	hkl_engine_soleil_sixs_med_1_2_emergence_new(self);
 
 	return self;
 }
@@ -500,6 +517,7 @@ static HklEngineList *hkl_engine_list_new_soleil_sixs_med_2_3(const HklFactory *
 	hkl_engine_qper_qpar_new(self);
 	hkl_engine_tth2_new(self);
 	hkl_engine_soleil_sixs_med_2_2_incidence_new(self);
+	hkl_engine_soleil_sixs_med_2_2_emergence_new(self);
 
 	return self;
 }
