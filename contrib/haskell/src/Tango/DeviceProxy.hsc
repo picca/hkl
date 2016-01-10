@@ -6,7 +6,7 @@
 {-# LANGUAGE FlexibleContexts            #-}
 {-# LANGUAGE RecordWildCards            #-}
 
-module Hkl.Tango.DeviceProxy (
+module Tango.DeviceProxy (
        deviceproxy
        , DeviceProxy ) where
 
