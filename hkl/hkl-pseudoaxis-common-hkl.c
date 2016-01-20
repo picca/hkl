@@ -277,7 +277,7 @@ static int hkl_is_reachable(HklEngine *engine, double wavelength, GError **error
 }
 
 /**
- * RUBh_minus_Q_func: (skip)
+ * _RUBh_minus_Q_func: (skip)
  * @x:
  * @params:
  * @f:
@@ -742,6 +742,160 @@ int hkl_mode_initialized_set_psi_constant_vertical_real(HklMode *self,
 	self->initialized = initialized;
 
 	return TRUE;
+}
+
+/*******************/
+/* emergence fixed */
+/*******************/
+
+typedef struct _HklModeAutoHklEmergenceFixed HklModeAutoHklEmergenceFixed;
+
+struct _HklModeAutoHklEmergenceFixed
+{
+	HklMode parent;
+	HklParameter *n_x; /* not owned */
+	HklParameter *n_y; /* not owned */
+	HklParameter *n_z; /* not owned */
+	HklParameter *emergence; /* not owned */
+};
+
+#define HKL_MODE_HKL_EMERGENCE_FIXED_ERROR hkl_mode_hkl_emergence_fixed_error_quark ()
+
+static GQuark hkl_mode_hkl_emergence_fixed_error_quark (void)
+{
+	return g_quark_from_static_string ("hkl-mode-hkl-emergence-fixed-error-quark");
+}
+
+typedef enum {
+	HKL_MODE_HKL_EMERGENCE_FIXED_ERROR_INITIALIZED_SET, /* can not init the engine */
+	HKL_MODE_HKL_EMERGENCE_FIXED_ERROR_SET, /* can not set the engine */
+} HklModeAutoHklEmergenceFixedError;
+
+
+static HklVector surface(const HklModeAutoHklEmergenceFixed *mode){
+	HklVector n = {
+		.data = {
+			mode->n_x->_value,
+			mode->n_y->_value,
+			mode->n_z->_value,
+		}
+	};
+	return n;
+}
+
+static double expected_emergence(const HklModeAutoHklEmergenceFixed *mode){
+	return mode->emergence->_value;
+}
+
+static int hkl_mode_hkl_emergence_fixed_initialized_set_real(HklMode *self,
+							     HklEngine *engine,
+							     HklGeometry *geometry,
+							     HklDetector *detector,
+							     HklSample *sample,
+							     int initialized,
+							     GError **error)
+{
+	const HklModeAutoHklEmergenceFixed *mode = container_of(self, HklModeAutoHklEmergenceFixed, parent);
+	HklVector kf;
+	HklVector n = surface(mode);
+
+	/* first check the parameters */
+	if (hkl_vector_is_null(&n)){
+		g_set_error(error,
+			    HKL_MODE_HKL_EMERGENCE_FIXED_ERROR,
+			    HKL_MODE_HKL_EMERGENCE_FIXED_ERROR_INITIALIZED_SET,
+			    "Can not compute emergence fixed when the surface vector is null.");
+		return FALSE;
+	}
+
+	/* compute the orientation of the surface */
+	hkl_vector_rotated_quaternion(&n, &darray_item(geometry->holders, 0)->q);
+
+	hkl_detector_compute_kf(detector, geometry, &kf);
+
+	/* compute emergence and keep it */
+	mode->emergence->_value = _emergence(&n, &kf);
+
+	self->initialized = initialized;
+
+	return TRUE;
+}
+
+
+int _emergence_fixed_func(const gsl_vector *x, void *params, gsl_vector *f)
+{
+	HklEngine *engine = params;
+	HklModeAutoHklEmergenceFixed *mode = container_of(engine->mode,
+							  HklModeAutoHklEmergenceFixed,
+							  parent);
+	HklGeometry *geometry = engine->geometry;
+	const HklDetector *detector = engine->detector;
+	HklVector n = surface(mode);
+	HklVector kf;
+
+	CHECK_NAN(x->data, x->size);
+
+	RUBh_minus_Q(x->data, params, f->data);
+
+	/* compute the orientation of the surface */
+	hkl_vector_rotated_quaternion(&n, &darray_item(geometry->holders, 0)->q);
+	hkl_detector_compute_kf(detector, geometry, &kf);
+
+	f->data[3] = expected_emergence(mode) - _emergence(&n, &kf);
+
+	return  GSL_SUCCESS;
+}
+
+int hkl_mode_hkl_emergence_fixed_set_real(HklMode *self,
+					  HklEngine *engine,
+					  HklGeometry *geometry,
+					  HklDetector *detector,
+					  HklSample *sample,
+					  GError **error)
+{
+	const HklModeAutoHklEmergenceFixed *mode = container_of(self, HklModeAutoHklEmergenceFixed, parent);
+	HklVector n = surface(mode);
+
+	/* first check the parameters */
+	if (hkl_vector_is_null(&n)){
+		g_set_error(error,
+			    HKL_MODE_HKL_EMERGENCE_FIXED_ERROR,
+			    HKL_MODE_HKL_EMERGENCE_FIXED_ERROR_SET,
+			    "Can not compute hkl with emergence fixed when the surface vector is null.");
+		return FALSE;
+	}
+
+	return hkl_mode_set_hkl_real(self, engine, geometry, detector, sample, error);
+}
+
+HklMode *hkl_mode_hkl_emergence_fixed_new(const HklModeAutoInfo *auto_info)
+{
+	static const HklModeOperations operations = {
+		HKL_MODE_OPERATIONS_HKL_FULL_DEFAULTS,
+		.capabilities = HKL_ENGINE_CAPABILITIES_READABLE | HKL_ENGINE_CAPABILITIES_WRITABLE | HKL_ENGINE_CAPABILITIES_INITIALIZABLE,
+		.initialized_set = hkl_mode_hkl_emergence_fixed_initialized_set_real,
+		.set = hkl_mode_hkl_emergence_fixed_set_real,
+	};
+	HklModeAutoHklEmergenceFixed *self;
+
+	if (darray_size(auto_info->info.axes_w) != 4){
+		fprintf(stderr, "This generic HklModeAutoHklEmergenceFixed need exactly 4 axes");
+		exit(128);
+	}
+
+	self = HKL_MALLOC(HklModeAutoHklEmergenceFixed);
+
+	/* the base constructor; */
+	hkl_mode_auto_init(&self->parent,
+			   auto_info,
+			   &operations, FALSE);
+
+	self->n_x = register_mode_parameter(&self->parent, 0);
+	self->n_y = register_mode_parameter(&self->parent, 1);
+	self->n_z = register_mode_parameter(&self->parent, 2);
+	self->emergence = register_mode_parameter(&self->parent, 3);
+
+	return &self->parent;
 }
 
 /*************/

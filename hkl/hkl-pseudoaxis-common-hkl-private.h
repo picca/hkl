@@ -40,6 +40,7 @@ struct _HklEngineHkl {
 extern int _RUBh_minus_Q_func(const gsl_vector *x, void *params, gsl_vector *f);
 extern int _double_diffraction_func(const gsl_vector *x, void *params, gsl_vector *f);
 extern int _psi_constant_vertical_func(const gsl_vector *x, void *params, gsl_vector *f);
+extern int _emergence_fixed_func(const gsl_vector *x, void *params, gsl_vector *f);
 
 extern int RUBh_minus_Q(double const x[], void *params, double f[]);
 extern int _double_diffraction(double const x[], void *params, double f[]);
@@ -72,20 +73,22 @@ extern HklEngine *hkl_engine_hkl_new(HklEngineList *engines);
 	HKL_MODE_OPERATIONS_AUTO_DEFAULTS,	\
 		.get = hkl_mode_get_hkl_real
 
+#define HKL_MODE_OPERATIONS_HKL_FULL_DEFAULTS		\
+	HKL_MODE_OPERATIONS_HKL_DEFAULTS,		\
+		.set = hkl_mode_set_hkl_real
+
 static const HklModeOperations hkl_mode_operations = {
 	HKL_MODE_OPERATIONS_HKL_DEFAULTS,
 };
 
 static const HklModeOperations hkl_full_mode_operations = {
-	HKL_MODE_OPERATIONS_HKL_DEFAULTS,
-	.set = hkl_mode_set_hkl_real,
+	HKL_MODE_OPERATIONS_HKL_FULL_DEFAULTS,
 };
 
 static const HklModeOperations psi_constant_vertical_mode_operations = {
-	HKL_MODE_OPERATIONS_HKL_DEFAULTS,
+	HKL_MODE_OPERATIONS_HKL_FULL_DEFAULTS,
 	.capabilities = HKL_ENGINE_CAPABILITIES_READABLE | HKL_ENGINE_CAPABILITIES_WRITABLE | HKL_ENGINE_CAPABILITIES_INITIALIZABLE,
 	.initialized_set = hkl_mode_initialized_set_psi_constant_vertical_real,
-	.set = hkl_mode_set_hkl_real,
 };
 
 static const HklModeOperations constant_incidence_mode_operations = {
@@ -174,5 +177,34 @@ static const HklParameter constant_incidence_parameters[] = {
 		.description = "expected azimuth",
 	},
 };
+
+#define HKL_PARAMETER_EMERGENCE_DEFAULTS				\
+	HKL_PARAMETER_DEFAULTS_ANGLE,					\
+		.name="emergence",					\
+		.description = "expected emergence of the outgoing beam $\\vec{k_f}$ from the surface $\\vec{n}$."
+
+#define HKL_PARAMETER_EMERGENCE_AZIMUTH_DEFAULTS			\
+	HKL_PARAMETER_DEFAULTS_ANGLE,					\
+		.name="emergence_azimuth",				\
+		._value = M_PI_2,					\
+		.description = "expected azimuth of the outgoing beam $\\vec{k_f}$ from the surface $\\vec{n}$ projected into the yOz plan."
+
+/*******************/
+/* Emergence fixed */
+/*******************/
+
+static const HklFunction emergence_fixed_func = {
+	.function = _emergence_fixed_func,
+	.size = 4,
+};
+
+#define HKL_MODE_HKL_EMERGENCE_FIXED_PARAMETERS_DEFAULTS(_x, _y, _z, _emergence) \
+	SURFACE_PARAMETERS(_x, _y, _z),					\
+	{								\
+		HKL_PARAMETER_EMERGENCE_DEFAULTS,			\
+			._value = _emergence,				\
+			}
+
+extern HklMode *hkl_mode_hkl_emergence_fixed_new(const HklModeAutoInfo *info);
 
 #endif
