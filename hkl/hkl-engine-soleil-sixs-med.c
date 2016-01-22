@@ -361,6 +361,22 @@ static HklMode* gamma_fixed_2_3()
 				 TRUE);
 }
 
+static HklMode *emergence_fixed_2_3()
+{
+	static const char* axes_r[] = {BETA, MU, OMEGA, GAMMA, DELTA, ETA_A};
+	static const char* axes_w[] = {MU, OMEGA, GAMMA, DELTA};
+	static const HklFunction* functions[] = {&emergence_fixed_func};
+	static const HklParameter parameters[] = {
+		HKL_MODE_HKL_EMERGENCE_FIXED_PARAMETERS_DEFAULTS(0, 1, 0, 0),
+	};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO_WITH_PARAMS("emergence_fixed", axes_r, axes_w,
+					       functions, parameters),
+	};
+
+	return hkl_mode_hkl_emergence_fixed_new(&info);
+}
+
 static HklEngine *hkl_engine_soleil_sixs_med_2_3_hkl_new(HklEngineList *engines)
 {
 	HklEngine *self;
@@ -373,6 +389,7 @@ static HklEngine *hkl_engine_soleil_sixs_med_2_3_hkl_new(HklEngineList *engines)
 	hkl_engine_mode_set(self, default_mode);
 
 	hkl_engine_add_mode(self, gamma_fixed_2_3());
+	hkl_engine_add_mode(self, emergence_fixed_2_3());
 
 	return self;
 }
