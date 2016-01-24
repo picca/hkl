@@ -2,7 +2,7 @@
 -- see http://haskell.org/cabal/users-guide/
 
 -- The name of the package.
-name:                Hkl
+name:                hkl
 
 -- The package version.  See the Haskell package versioning policy (PVP) 
 -- for standards guiding when and how versions should be incremented.
@@ -48,21 +48,14 @@ cabal-version:       >=1.10
 
 executable ghkl
   main-is:             ghkl.hs
-  build-depends:       base >=4.8 && <4.9, hmatrix >=0.16 && <0.17, containers >=0.5 && <0.6, hmatrix-gsl >=0.16 && <0.17, dimensional, gtk
+  build-depends:       base >=4.8 && <4.9, containers >=0.5 && <0.6, gtk >=0.13 && <0.14, hkl >= 0.1
   hs-source-dirs:      src
-  other-modules:       Hkl.Transformation, Hkl.Lattice, Hkl.Source
-  default-language:    Haskell2010
-
-executable hkl
-  main-is:             hkl.hs
-  hs-source-dirs:      src
-  build-depends:       base >=4.8 && <4.9, hmatrix >=0.16 && <0.17, containers >=0.5 && <0.6, hmatrix-gsl >=0.16 && <0.17, dimensional
-  other-modules:       Hkl.Transformation, Hkl.Lattice, Hkl.Source
+--  other-modules:       Hkl.Transformation, Hkl.Lattice, Hkl.Source
   default-language:    Haskell2010
 
 library
   -- Modules exported by the library.
-  exposed-modules:     Hkl.Transformation, Hkl.Lattice, Hkl.Source
+   exposed-modules:     Hkl.C
   
   -- Modules included in this library but not exported.
   -- other-modules:       
@@ -71,17 +64,17 @@ library
   other-extensions:    CPP, ForeignFunctionInterface, EmptyDataDecls, TypeFamilies, FlexibleInstances, FlexibleContexts, RecordWildCards
   
   -- Other library packages from which modules are imported.
-  build-depends:       base >=4.8 && <4.9, hmatrix >=0.16 && <0.17, containers >=0.5 && <0.6, hmatrix-gsl >=0.16 && <0.17, dimensional
+  build-depends:       base >=4.8 && <4.9, containers >=0.5 && <0.6
   
   -- Directories containing source files.
   hs-source-dirs:      src
   
   -- Extra tools (e.g. alex, hsc2hs, ...) needed to build the source.
-  build-tools:         hsc2hs
+--  build-tools:         hsc2hs
   
   -- Base language which the package is written in.
   default-language:    Haskell2010
 
-  pkgconfig-depends: tango
+  pkgconfig-depends: hkl
   
-  ghc-options: -pgml g++
+--  ghc-options: -pgml g++
