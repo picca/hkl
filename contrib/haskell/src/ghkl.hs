@@ -1,5 +1,14 @@
 import Graphics.UI.Gtk
+import System.FilePath ((</>))
+
+import Paths_hkl
 import qualified Hkl.C as Hkl
+
+ghklUi :: FilePath
+ghklUi = "ghkl.ui"
+
+tmpGhklUi :: FilePath
+tmpGhklUi = "../../gui/ghkl.ui"
 
 main :: IO ()
 main = do
@@ -10,7 +19,8 @@ main = do
     print factories
     print names
     builder <- builderNew
-    builderAddFromFile builder "../gui/ghkl.ui"
+    ui <- getDataFileName ghklUi
+    builderAddFromFile builder tmpGhklUi
 
     mainWindow <- builderGetObject builder castToWindow "window1"
     onDestroy mainWindow mainQuit
