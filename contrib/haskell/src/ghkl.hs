@@ -1,7 +1,9 @@
-import Graphics.UI.Gtk
-import System.FilePath ((</>))
+-- import Graphics.UI.Gtk
+import Prelude hiding (lookup)
+-- import System.FilePath ((</>))
+import Data.Map.Strict (lookup)
 
-import Paths_hkl
+-- import Paths_hkl
 import qualified Hkl.C as Hkl
 
 ghklUi :: FilePath
@@ -10,39 +12,49 @@ ghklUi = "ghkl.ui"
 tmpGhklUi :: FilePath
 tmpGhklUi = "../../gui/ghkl.ui"
 
+-- diffractometer :: Hkl.Diffractometer
+-- diffractometer = Hkl.Diffractometer "ZAXIS"
+
+
 main :: IO ()
 main = do
-    initGUI
+    -- initGUI
+  factories <- Hkl.factories
+  case lookup "E6C" factories of
+    (Just factory) -> do
+         engines <- Hkl.newEngineList factory
+         geometry <- Hkl.newGeometry factory
+         detector <- Hkl.newDetector Hkl.DetectorType0D
+         sample <- Hkl.newSample "test"
+         print (engines, geometry, detector, sample)
+         Hkl.engineListInit engines geometry detector sample
+    Nothing        -> error $ "wrong diffractometer:" ++ show factories
 
-    factories <- Hkl.factoryGetAll
-    names <- mapM Hkl.factoryNameGet factories
-    print factories
-    print names
-    builder <- builderNew
-    ui <- getDataFileName ghklUi
-    builderAddFromFile builder tmpGhklUi
+    -- builder <- builderNew
+    -- ui <- getDataFileName ghklUi
+    -- builderAddFromFile builder tmpGhklUi
 
-    mainWindow <- builderGetObject builder castToWindow "window1"
-    onDestroy mainWindow mainQuit
+    -- mainWindow <- builderGetObject builder castToWindow "window1"
+    -- onDestroy mainWindow mainQuit
 
 
-    -- liststore
-    liststoreDiffractometer <- builderGetObject builder castToTreeModel "liststore_diffractometer"
-    liststoreAxis <- builderGetObject builder castToTreeModel "liststore_axis"
-    liststorePseudoAxes <- builderGetObject builder castToTreeModel "liststore_pseudo_axes"
-    liststoreReflections <- builderGetObject builder castToTreeModel "liststore_reflections"
-    liststoreCrystals <- builderGetObject builder castToTreeModel "liststore_crystals"
+    -- -- liststore
+    -- liststoreDiffractometer <- builderGetObject builder castToTreeModel "liststore_diffractometer"
+    -- liststoreAxis <- builderGetObject builder castToTreeModel "liststore_axis"
+    -- liststorePseudoAxes <- builderGetObject builder castToTreeModel "liststore_pseudo_axes"
+    -- liststoreReflections <- builderGetObject builder castToTreeModel "liststore_reflections"
+    -- liststoreCrystals <- builderGetObject builder castToTreeModel "liststore_crystals"
 
-    labelUB11 <- builderGetObject builder castToLabel "label_UB11"
-    labelUB12 <- builderGetObject builder castToLabel "label_UB12"
-    labelUB13 <- builderGetObject builder castToLabel "label_UB13"
-    labelUB21 <- builderGetObject builder castToLabel "label_UB21"
-    labelUB22 <- builderGetObject builder castToLabel "label_UB22"
-    labelUB23 <- builderGetObject builder castToLabel "label_UB23"
-    labelUB31 <- builderGetObject builder castToLabel "label_UB31"
-    labelUB32 <- builderGetObject builder castToLabel "label_UB32"
-    labelUB33 <- builderGetObject builder castToLabel "label_UB33"
-    
+    -- labelUB11 <- builderGetObject builder castToLabel "label_UB11"
+    -- labelUB12 <- builderGetObject builder castToLabel "label_UB12"
+    -- labelUB13 <- builderGetObject builder castToLabel "label_UB13"
+    -- labelUB21 <- builderGetObject builder castToLabel "label_UB21"
+    -- labelUB22 <- builderGetObject builder castToLabel "label_UB22"
+    -- labelUB23 <- builderGetObject builder castToLabel "label_UB23"
+    -- labelUB31 <- builderGetObject builder castToLabel "label_UB31"
+    -- labelUB32 <- builderGetObject builder castToLabel "label_UB32"
+    -- labelUB33 <- builderGetObject builder castToLabel "label_UB33"
+
     -- get_object(builder, GTK_BUTTON, priv, button2);
     -- get_object(builder, GTK_SPIN_BUTTON, priv, spinbutton_a);
     -- get_object(builder, GTK_SPIN_BUTTON, priv, spinbutton_a_min);
@@ -116,5 +128,5 @@ main = do
 
    -- gtk_builder_connect_signals (builder, self);
 
-    widgetShowAll mainWindow
-    mainGUI
+    -- widgetShowAll mainWindow
+    -- mainGUI
