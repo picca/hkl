@@ -15,7 +15,7 @@ module Hkl.C
 
 import Control.Monad ((>=>))
 import Data.Map.Strict as Map
-import Foreign (Ptr, ForeignPtr, FunPtr, peek, newForeignPtr, withForeignPtr)
+import Foreign (Ptr, ForeignPtr, FunPtr, peek, newForeignPtr, withForeignPtr, nullPtr)
 import Foreign.C.Types
 import Foreign.C.String (CString, peekCString, withCString)
 import Foreign.Marshal.Alloc (alloca)
@@ -100,9 +100,16 @@ foreign import ccall unsafe "hkl.h hkl_engine_list_init"
 data HklSample
 newtype Sample = Sample (ForeignPtr HklSample) deriving (Show)
 
-newSample :: String -> IO Sample
-newSample name =
-  Sample <$> withCString name (c_hkl_sample_new >=> newForeignPtr c_hkl_sample_free)
+newSample :: String -> IO (Maybe Sample)
+newSample name = withCString name $ \cname -> do
+                   ptr <- c_hkl_sample_new cname
+                   if ptr /= nullPtr
+                   then do
+                     foreignPtr <- newForeignPtr c_hkl_sample_free ptr
+                     let sample = Sample foreignPtr
+                     return $ Just sample
+                   else
+                     return Nothing
 
 foreign import ccall unsafe "hkl.h hkl_sample_new"
   c_hkl_sample_new:: CString -> IO (Ptr HklSample)

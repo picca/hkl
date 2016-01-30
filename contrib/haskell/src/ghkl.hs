@@ -2,6 +2,7 @@
 import Prelude hiding (lookup)
 -- import System.FilePath ((</>))
 import Data.Map.Strict (lookup)
+import Data.Maybe (isNothing, fromJust)
 
 -- import Paths_hkl
 import qualified Hkl.C as Hkl
@@ -20,15 +21,23 @@ main :: IO ()
 main = do
     -- initGUI
   factories <- Hkl.factories
-  case lookup "E6C" factories of
-    (Just factory) -> do
-         engines <- Hkl.newEngineList factory
-         geometry <- Hkl.newGeometry factory
-         detector <- Hkl.newDetector Hkl.DetectorType0D
-         sample <- Hkl.newSample "test"
-         print (engines, geometry, detector, sample)
-         Hkl.engineListInit engines geometry detector sample
-    Nothing        -> error $ "wrong diffractometer:" ++ show factories
+  let mfactory = lookup "E6C" factories
+  if isNothing mfactory
+     then
+         return $ error $ "wrong diffractometer:" ++ show factories
+  else do
+    let factory = fromJust mfactory
+    engines <- Hkl.newEngineList factory
+    geometry <- Hkl.newGeometry factory
+    detector <- Hkl.newDetector Hkl.DetectorType0D
+    msample <- Hkl.newSample "test"
+    print (engines, geometry, detector, msample)
+    if isNothing msample
+    then
+        return $ error "Please provide a valid sample name"
+    else do
+      let sample = fromJust msample
+      Hkl.engineListInit engines geometry detector sample
 
     -- builder <- builderNew
     -- ui <- getDataFileName ghklUi
