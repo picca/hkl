@@ -1,30 +1,16 @@
 {-# LANGUAGE ForeignFunctionInterface #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
-module Hkl.C
-       ( Factory
-       , DetectorType (..)
-       , engineListInit
-       , factories
-       , geometryName
-       , newDetector
-       , newEngineList
-       , newGeometry
-       , newSample
-       ) where
+module Hkl.C where
 
 import Control.Monad ((>=>))
 import Data.Map.Strict as Map
-import Foreign (Ptr, ForeignPtr, FunPtr, peek, newForeignPtr, withForeignPtr, nullPtr)
+import Foreign
+import Foreign.C
 import Foreign.C.Types
-import Foreign.C.String (CString, peekCString, withCString)
-import Foreign.Marshal.Alloc (alloca)
-import Foreign.Marshal.Array (peekArray)
-import Foreign.Storable (Storable)
 
+import Hkl.Types
 
 -- data Factory
-newtype Factory = Factory (Ptr Factory) deriving (Show, Storable)
 
 factories :: IO (Map String Factory)
 factories = do
@@ -50,8 +36,6 @@ foreign import ccall unsafe "hkl.h hkl_factory_name_get"
 
 
 -- data Geometry
-data HklGeometry
-newtype Geometry = Geometry (ForeignPtr HklGeometry) deriving (Show)
 
 newGeometry :: Factory -> IO Geometry
 newGeometry f =
@@ -69,10 +53,16 @@ geometryName (Geometry g) = withForeignPtr g (c_hkl_geometry_name_get >=> peekCS
 foreign import ccall unsafe "hkl.h hkl_geometry_name_get"
   c_hkl_geometry_name_get :: Ptr HklGeometry -> IO CString
 
+-- Engine
+
+engineNameGet :: Engine -> IO String
+engineNameGet engine = c_hkl_engine_name_get engine >>= peekCString
+
+foreign import ccall unsafe "hkl.h hkl_engine_name_get"
+  c_hkl_engine_name_get :: Engine -> IO CString
+
 
 -- EngineList
-data HklEngineList
-newtype EngineList = EngineList (ForeignPtr HklEngineList) deriving (Show)
 
 newEngineList :: Factory -> IO EngineList
 newEngineList f =
@@ -83,6 +73,12 @@ foreign import ccall unsafe "hkl.h hkl_factory_create_new_engine_list"
 
 foreign import ccall unsafe "hkl.h &hkl_engine_list_free"
   c_hkl_engine_list_free :: FunPtr (Ptr HklEngineList -> IO ())
+
+engineListGet :: EngineList -> IO ()
+engineListGet (EngineList e) = withForeignPtr e c_hkl_engine_list_get
+
+foreign import ccall unsafe "hkl.h hkl_engine_list_get"
+  c_hkl_engine_list_get:: Ptr HklEngineList -> IO ()
 
 engineListInit :: EngineList -> Geometry -> Detector -> Sample -> IO ()
 engineListInit (EngineList e) (Geometry g) (Detector d) (Sample s) =
@@ -97,8 +93,6 @@ foreign import ccall unsafe "hkl.h hkl_engine_list_init"
   c_hkl_engine_list_init:: Ptr HklEngineList -> Ptr HklGeometry -> Ptr HklDetector -> Ptr HklSample -> IO ()
 
 -- Sample
-data HklSample
-newtype Sample = Sample (ForeignPtr HklSample) deriving (Show)
 
 newSample :: String -> IO (Maybe Sample)
 newSample name = withCString name $ \cname -> do
@@ -117,12 +111,7 @@ foreign import ccall unsafe "hkl.h hkl_sample_new"
 foreign import ccall unsafe "hkl.h &hkl_sample_free"
   c_hkl_sample_free :: FunPtr (Ptr HklSample -> IO ())
 
-
 -- Detector
-data DetectorType = DetectorType0D
-
-data HklDetector
-newtype Detector = Detector (ForeignPtr HklDetector) deriving (Show)
 
 newDetector :: DetectorType -> IO Detector
 newDetector t =

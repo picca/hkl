@@ -1,3 +1,5 @@
+module Main where
+
 -- import Graphics.UI.Gtk
 import Prelude hiding (lookup)
 -- import System.FilePath ((</>))
@@ -5,7 +7,7 @@ import Data.Map.Strict (lookup)
 import Data.Maybe (isNothing, fromJust)
 
 -- import Paths_hkl
-import qualified Hkl.C as Hkl
+import qualified Hkl
 
 ghklUi :: FilePath
 ghklUi = "ghkl.ui"
@@ -38,6 +40,11 @@ main = do
     else do
       let sample = fromJust msample
       Hkl.engineListInit engines geometry detector sample
+      Hkl.engineListGet engines
+      tmp <- Hkl.engineListEnginesGet engines
+      print tmp
+      names <- mapM Hkl.engineNameGet tmp
+      print names
 
     -- builder <- builderNew
     -- ui <- getDataFileName ghklUi
