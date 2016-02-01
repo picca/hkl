@@ -4,13 +4,21 @@ module Hkl.Types where
 
 import Foreign
 
-newtype Factory = Factory (Ptr Factory) deriving (Show, Storable)
+-- HklFactory should be private
+newtype HklFactory = HklFactory (Ptr HklFactory) deriving (Show, Storable)
 
+-- HklParameter -- should be private
+data HklParameter
+
+-- Parameter
+data Parameter = Parameter String deriving (Show)
+
+-- Geometry
 data HklGeometry
 newtype Geometry = Geometry (ForeignPtr HklGeometry) deriving (Show)
 
--- Engine
-newtype Engine = Engine (Ptr Engine) deriving (Show, Storable)
+-- HklEngine -- should be private
+newtype HklEngine = HklEngine (Ptr HklEngine) deriving (Show, Storable)
 
 -- EngineList
 data HklEngineList

@@ -41,10 +41,9 @@ main = do
       let sample = fromJust msample
       Hkl.engineListInit engines geometry detector sample
       Hkl.engineListGet engines
-      tmp <- Hkl.engineListEnginesGet engines
-      print tmp
-      names <- mapM Hkl.engineNameGet tmp
-      print names
+      hklEngines <- Hkl.engineListEnginesGet engines
+      pseudoAxes <- mapM Hkl.enginePseudoAxesGet hklEngines
+      print pseudoAxes
 
     -- builder <- builderNew
     -- ui <- getDataFileName ghklUi
