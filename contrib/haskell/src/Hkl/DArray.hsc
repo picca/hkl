@@ -3,6 +3,7 @@
 
 module Hkl.DArray
     ( engineListPseudoAxesGet
+    , geometryAxesGet
     ) where
 
 import Control.Monad
@@ -13,44 +14,59 @@ import Hkl.Types
 
 #include "hkl.h"
 
-engineListEnginesGet :: EngineList -> IO [HklEngine]
-engineListEnginesGet (EngineList e) = withForeignPtr e $ \ep -> do
-  pdarray <- c_hkl_engine_list_engines_get ep
-  n <- (#{peek darray_engine, size} pdarray) :: IO CSize
-  engines <- #{peek darray_engine ,item} pdarray :: IO (Ptr HklEngine)
-  peekArray (fromEnum n) engines
+-- helpers
 
-foreign import ccall unsafe "hkl.h hkl_engine_list_engines_get"
-  c_hkl_engine_list_engines_get:: Ptr HklEngineList -> IO (Ptr ())
+peekParameter :: Ptr HklParameter -> IO Parameter
+peekParameter p =
+    alloca $ \pmin ->
+        alloca $ \pmax -> do
+          cname <- c_hkl_parameter_name_get p
+          name <- peekCString cname
+          value <- c_hkl_parameter_value_get p unit
+          c_hkl_parameter_min_max_get p pmin pmax unit
+          min <- peek pmin
+          max <- peek pmax
+          return (Parameter name value (min, max))
+
+peekDArrayString :: Ptr () -> IO [CString]
+peekDArrayString p = do
+  n <- (#{peek darray_string, size} p) :: IO CSize
+  items <- #{peek darray_string ,item} p :: IO (Ptr CString)
+  peekArray (fromEnum n) items
+
+-- geometry
+
+geometryAxisNamesGet' :: Geometry -> IO [CString]
+geometryAxisNamesGet' (Geometry g) =
+  withForeignPtr g (c_hkl_geometry_axis_names_get >=> peekDArrayString)
+
+foreign import ccall unsafe "hkl.h hkl_geometry_axis_names_get"
+  c_hkl_geometry_axis_names_get:: Ptr HklGeometry -> IO (Ptr ()) -- darray_string
+
+geometryAxisGet :: Geometry -> CString -> IO Parameter
+geometryAxisGet (Geometry g) n =
+    withForeignPtr g $ \gp ->
+        c_hkl_geometry_axis_get gp n nullPtr >>= peekParameter
+
+foreign import ccall unsafe "hkl.h hkl_geometry_axis_get"
+  c_hkl_geometry_axis_get :: Ptr HklGeometry -> CString -> Ptr () -> IO (Ptr HklParameter)
+
+geometryAxesGet :: Geometry -> IO [Parameter]
+geometryAxesGet g = geometryAxisNamesGet' g >>= mapM (geometryAxisGet g)
+
+-- engine
 
 enginePseudoAxisNamesGet' :: HklEngine -> IO [CString]
-enginePseudoAxisNamesGet' e = do
-  pdarray <- c_hkl_engine_pseudo_axis_names_get e
-  n <- (#{peek darray_string, size} pdarray) :: IO CSize
-  items <- #{peek darray_string ,item} pdarray :: IO (Ptr CString)
-  peekArray (fromEnum n) items
+enginePseudoAxisNamesGet' e = c_hkl_engine_pseudo_axis_names_get e >>= peekDArrayString
 
 foreign import ccall unsafe "hkl.h hkl_engine_pseudo_axis_names_get"
   c_hkl_engine_pseudo_axis_names_get:: HklEngine -> IO (Ptr ()) -- darray_string
 
 enginePseudoAxisNamesGet :: HklEngine -> IO [String]
-enginePseudoAxisNamesGet e = do
-  cnames <- enginePseudoAxisNamesGet' e
-  mapM peekCString cnames
+enginePseudoAxisNamesGet e = enginePseudoAxisNamesGet' e >>= mapM peekCString
 
 enginePseudoAxisGet :: HklEngine -> CString -> IO Parameter
-enginePseudoAxisGet e n =
-    alloca $ \pmin ->
-        alloca $ \pmax -> do
-          pseudoAxis <- c_hkl_engine_pseudo_axis_get e n nullPtr
-          cname <- c_hkl_parameter_name_get pseudoAxis
-          name <- peekCString cname
-          let unit = 1 -- default unit
-          value <- c_hkl_parameter_value_get pseudoAxis unit
-          c_hkl_parameter_min_max_get pseudoAxis pmin pmax unit
-          min <- peek pmin
-          max <- peek pmax
-          return (Parameter name value (min, max))
+enginePseudoAxisGet e n = c_hkl_engine_pseudo_axis_get e n nullPtr >>= peekParameter
 
 foreign import ccall unsafe "hkl.h hkl_engine_pseudo_axis_get"
   c_hkl_engine_pseudo_axis_get:: HklEngine -> CString -> Ptr () -> IO (Ptr HklParameter)
@@ -65,12 +81,21 @@ foreign import ccall unsafe "hkl.h hkl_parameter_min_max_get"
         c_hkl_parameter_min_max_get :: Ptr HklParameter -> Ptr Double -> Ptr Double -> CInt -> IO ()
 
 enginePseudoAxesGet :: HklEngine -> IO [Parameter]
-enginePseudoAxesGet e = do
-  cnames <- enginePseudoAxisNamesGet' e
-  mapM (enginePseudoAxisGet e) cnames
+enginePseudoAxesGet e = enginePseudoAxisNamesGet' e >>= mapM (enginePseudoAxisGet e)
+
+-- engineList
+
+engineListEnginesGet :: EngineList -> IO [HklEngine]
+engineListEnginesGet (EngineList e) = withForeignPtr e $ \ep -> do
+  pdarray <- c_hkl_engine_list_engines_get ep
+  n <- (#{peek darray_engine, size} pdarray) :: IO CSize
+  engines <- #{peek darray_engine ,item} pdarray :: IO (Ptr HklEngine)
+  peekArray (fromEnum n) engines
+
+foreign import ccall unsafe "hkl.h hkl_engine_list_engines_get"
+  c_hkl_engine_list_engines_get:: Ptr HklEngineList -> IO (Ptr ())
 
 engineListPseudoAxesGet :: EngineList -> IO [[Parameter]]
 engineListPseudoAxesGet l@(EngineList e) =
-  withForeignPtr e $ \ep -> do
-      engines <- engineListEnginesGet l
-      mapM enginePseudoAxesGet engines
+  withForeignPtr e $ \ep ->
+      engineListEnginesGet l >>= mapM enginePseudoAxesGet

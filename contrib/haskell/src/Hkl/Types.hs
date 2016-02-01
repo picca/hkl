@@ -3,6 +3,10 @@
 module Hkl.Types where
 
 import Foreign
+import Foreign.C
+
+unit :: CInt
+unit = 1
 
 type Range = (Double, Double)
 

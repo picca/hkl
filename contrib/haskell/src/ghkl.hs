@@ -32,9 +32,9 @@ main = do
     let factory = fromJust mfactory
     engines <- Hkl.newEngineList factory
     geometry <- Hkl.newGeometry factory
+    axes <- Hkl.geometryAxesGet geometry
     detector <- Hkl.newDetector Hkl.DetectorType0D
     msample <- Hkl.newSample "test"
-    -- print (engines, geometry, detector, msample)
     if isNothing msample
     then
         return $ error "Please provide a valid sample name"
@@ -44,7 +44,7 @@ main = do
       Hkl.engineListGet engines
       pseudoAxes <- Hkl.engineListPseudoAxesGet engines
       print pseudoAxes
-      -- print pseudoAxes
+      print axes
 
     -- builder <- builderNew
     -- ui <- getDataFileName ghklUi

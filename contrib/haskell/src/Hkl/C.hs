@@ -9,7 +9,6 @@ import Foreign.C
 import Foreign.C.Types
 
 import Hkl.Types
-import Hkl.DArray
 
 -- data Factory
 
