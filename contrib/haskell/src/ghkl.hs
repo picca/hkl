@@ -1,6 +1,7 @@
 module Main where
 
 -- import Graphics.UI.Gtk
+import Control.Monad
 import Prelude hiding (lookup)
 -- import System.FilePath ((</>))
 import Data.Map.Strict (lookup)
@@ -33,7 +34,7 @@ main = do
     geometry <- Hkl.newGeometry factory
     detector <- Hkl.newDetector Hkl.DetectorType0D
     msample <- Hkl.newSample "test"
-    print (engines, geometry, detector, msample)
+    -- print (engines, geometry, detector, msample)
     if isNothing msample
     then
         return $ error "Please provide a valid sample name"
@@ -43,6 +44,7 @@ main = do
       Hkl.engineListGet engines
       pseudoAxes <- Hkl.engineListPseudoAxesGet engines
       print pseudoAxes
+      -- print pseudoAxes
 
     -- builder <- builderNew
     -- ui <- getDataFileName ghklUi

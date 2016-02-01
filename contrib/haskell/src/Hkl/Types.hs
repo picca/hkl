@@ -4,6 +4,8 @@ module Hkl.Types where
 
 import Foreign
 
+type Range = (Double, Double)
+
 -- HklFactory should be private
 newtype HklFactory = HklFactory (Ptr HklFactory) deriving (Show, Storable)
 
@@ -11,7 +13,10 @@ newtype HklFactory = HklFactory (Ptr HklFactory) deriving (Show, Storable)
 data HklParameter
 
 -- Parameter
-data Parameter = Parameter String deriving (Show)
+data Parameter = Parameter { parameterName :: String
+                           , parameterValue ::Double
+                           , parameterRange :: Range
+                           } deriving (Show)
 
 -- Geometry
 data HklGeometry
