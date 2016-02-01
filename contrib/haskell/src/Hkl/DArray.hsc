@@ -4,6 +4,7 @@
 module Hkl.DArray
     ( engineListPseudoAxesGet
     , geometryAxesGet
+    , geometryAxisValuesGet
     ) where
 
 import Control.Monad
@@ -34,6 +35,11 @@ peekDArrayString p = do
   items <- #{peek darray_string ,item} p :: IO (Ptr CString)
   peekArray (fromEnum n) items
 
+darrayStringLen :: Ptr () -> IO (CSize)
+darrayStringLen p = do
+    n <- (#{peek darray_string, size} p) :: IO CSize
+    return n
+
 -- geometry
 
 geometryAxisNamesGet' :: Geometry -> IO [CString]
@@ -53,6 +59,19 @@ foreign import ccall unsafe "hkl.h hkl_geometry_axis_get"
 
 geometryAxesGet :: Geometry -> IO [Parameter]
 geometryAxesGet g = geometryAxisNamesGet' g >>= mapM (geometryAxisGet g)
+
+geometryAxisValuesGet :: Geometry -> IO [Double]
+geometryAxisValuesGet (Geometry g) =
+  withForeignPtr g $ \gp -> do
+    darray <- c_hkl_geometry_axis_names_get gp
+    n <- darrayStringLen darray
+    let nn = fromEnum n
+    allocaArray nn $ \values -> do
+      c_hkl_geometry_axis_values_get gp values n unit
+      peekArray nn values
+
+foreign import ccall unsafe "hkl.h hkl_geometry_axis_values_get"
+  c_hkl_geometry_axis_values_get :: Ptr HklGeometry -> Ptr Double -> CSize -> CInt -> IO ()
 
 -- engine
 

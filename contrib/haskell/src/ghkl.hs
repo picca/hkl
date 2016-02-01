@@ -43,8 +43,10 @@ main = do
       Hkl.engineListInit engines geometry detector sample
       Hkl.engineListGet engines
       pseudoAxes <- Hkl.engineListPseudoAxesGet engines
+      values <- Hkl.geometryAxisValuesGet geometry
       print pseudoAxes
       print axes
+      print values
 
     -- builder <- builderNew
     -- ui <- getDataFileName ghklUi
