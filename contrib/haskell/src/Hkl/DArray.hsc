@@ -1,7 +1,9 @@
 {-# LANGUAGE ForeignFunctionInterface #-}
 {-# LANGUAGE CPP #-}
 
-module Hkl.DArray where
+module Hkl.DArray
+    ( engineListPseudoAxesGet
+    ) where
 
 import Control.Monad
 import Foreign
@@ -53,3 +55,8 @@ foreign import ccall unsafe "hkl.h hkl_engine_pseudo_axis_get"
 
 foreign import ccall unsafe "hkl.h hkl_parameter_name_get"
   c_hkl_parameter_name_get:: Ptr HklParameter -> IO CString
+
+engineListPseudoAxesGet :: EngineList -> IO [[Parameter]]
+engineListPseudoAxesGet e = do
+      engines <- engineListEnginesGet e
+      mapM enginePseudoAxesGet engines
