@@ -6,7 +6,7 @@ module Hkl.Lattice
        , busing
        ) where
 {-
-    Copyright  : Copyright (C) 2014-2015 Synchrotron Soleil
+    Copyright  : Copyright (C) 2014-2016 Synchrotron Soleil
     License    : GPL3+
 
     Maintainer : picca@synchrotron-soleil.fr
