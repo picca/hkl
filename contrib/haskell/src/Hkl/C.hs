@@ -2,6 +2,7 @@
 
 module Hkl.C where
 
+import Control.Applicative ((<$>))
 import Control.Monad ((>=>))
 import Data.Map.Strict as Map
 import Foreign
