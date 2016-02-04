@@ -5,6 +5,14 @@
 #+HTML_MATHJAX: path:"/usr/share/javascript/mathjax/MathJax.js"
 #+STYLE: <style>table.center {margin-left:auto; margin- right:auto;}</style>
 
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://www.pirilampo.org/styles/readtheorg/css/htmlize.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://www.pirilampo.org/styles/readtheorg/css/readtheorg.css"/>
+
+#+HTML_HEAD: <script src="http://code.jquery.com/jquery-2.2.0.min.js"></script>
+#+HTML_HEAD: <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="http://www.pirilampo.org/styles/lib/js/jquery.stickytableheaders.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="http://www.pirilampo.org/styles/readtheorg/js/readtheorg.js"></script>
+
 * Introduction
   The purpose of the library is to factorize single crystal
   diffraction angles computation for different kind of diffractometer
