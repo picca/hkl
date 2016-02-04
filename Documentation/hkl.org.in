@@ -641,12 +641,12 @@ git clone git://repo.or.cz/hkl.git
 
 *** Providing patches
 
-    you can send your patch to [[picca@synchrotron-soleil.fr][Picca
-    Frédéric-Emmanuel]] using =git=
+    you can send your patch to [[mailto:picca@synchrotron-soleil.fr][Picca Frédéric-Emmanuel]] using =git=
 
-    Here a minimalist exemple of the workflow to prepare and send a patch
-    for hkl. Suppose you wan to add a new feature to hkl create first a new
-    branch from the next one:
+    Here a minimalist example of the workflow to prepare and send
+    patches for integration into the hkl library. Suppose you wan to
+    add a new feature, you need first to create a new branch from the
+    =next= one:
 
     #+BEGIN_SRC sh
     git checkout -b my-next next
@@ -664,14 +664,31 @@ git clone git://repo.or.cz/hkl.git
     git commit -a
     #+END_SRC
 
-    now that your new feature is ready for a review, you can send by email
-    your work using git format-patch:
+    now that your new feature is ready, you can send by email your
+    work using =git format-patch= for review:
 
     #+BEGIN_SRC sh
     git format-patch origin/next
     #+END_SRC
 
-    and send generated files ~0001\_xxx~, ~0002\_xxx~, ... to the author.
+    which will generate a bunch of ~0001\_xxx~, ~0002\_xxx~,
+    ... patches
+
+    Then you can configure =git send-email= in order to send the
+    patches for review.
+
+    #+BEGIN_SRC sh
+    git config sendemail.to "picca@synchrotron-soleil.fr"
+    #+END_SRC
+
+    and send then with this command:
+
+    #+BEGIN_SRC sh
+    git send-email 0001-xxx.patch, 0002-xxx.patch, ...
+    #+END_SRC
+
+    If it does not work you can use your usually email software and
+    send these generated patches to the [[mailto:picca@synchrotron-soleil.fr][author]].
 
 ** Howto's
 *** Add a diffractometer
