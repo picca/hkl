@@ -4,5 +4,5 @@ CURRENT_YEAR=`date +%Y`
 let LAST_YEAR=CURRENT_YEAR-1
 MSG="upgrading copyright year from $LAST_YEAR to $CURRENT_YEAR"
 echo $MSG
-rgrep -w -l -I "* Copyright .*-$LAST_YEAR" .. | xargs sed -i "s,-$LAST_YEAR,-$CURRENT_YEAR,g"
+rgrep -w -l -I "Copyright .*-$LAST_YEAR" .. | xargs sed -i "s,-$LAST_YEAR,-$CURRENT_YEAR,g"
 echo $MSG > ../.git/GITGUI_BCK
