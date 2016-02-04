@@ -72,25 +72,29 @@ extern HklEngine *hkl_engine_emergence_new(HklEngineList *engines);
 			.range = { .min=-1, .max=1 },			\
 			}
 
-static const HklParameter surface_parameters[] = {
+static const HklParameter surface_parameters_y[] = {
 	SURFACE_PARAMETERS(0, 1, 0),
+};
+
+static const HklParameter surface_parameters_z[] = {
+	SURFACE_PARAMETERS(0, 0, 1),
 };
 
 #define P99_PROTECT(...) __VA_ARGS__
 
-#define HKL_MODE_INFO_incidence_DEFAULTS(_axes)				\
-	HKL_MODE_INFO_RO_WITH_PARAMS("incidence", (_axes), surface_parameters)
+#define HKL_MODE_INFO_incidence_DEFAULTS(_axes, _parameters)		\
+	HKL_MODE_INFO_RO_WITH_PARAMS("incidence", (_axes), (_parameters))
 
-#define HKL_MODE_INFO_emergence_DEFAULTS(_axes)				\
-	HKL_MODE_INFO_RO_WITH_PARAMS("emergence", (_axes), surface_parameters)
+#define HKL_MODE_INFO_emergence_DEFAULTS(_axes, _parameters)			\
+	HKL_MODE_INFO_RO_WITH_PARAMS("emergence", (_axes), (_parameters))
 
-#define REGISTER_READONLY(_engine, _func, _axes)			\
+#define REGISTER_READONLY(_engine, _func, _axes, _parameters)			\
 	static HklEngine* _func(HklEngineList *engines)			\
 	{								\
 		HklEngine *self = hkl_engine_ ## _engine ## _new(engines); \
 		static const char *axes[] = _axes;			\
 		static const HklModeInfo info = {			\
-			HKL_MODE_INFO_ ## _engine ## _DEFAULTS(axes),	\
+			HKL_MODE_INFO_ ## _engine ## _DEFAULTS(axes, _parameters), \
 		};							\
 		HklMode *default_mode = hkl_mode_ ## _engine ## _new(&info); \
 		hkl_engine_add_mode(self, default_mode);		\
@@ -98,7 +102,7 @@ static const HklParameter surface_parameters[] = {
 		return self;						\
 	}
 
-#define REGISTER_READONLY_INCIDENCE(_func, _axes) REGISTER_READONLY(incidence, _func, P99_PROTECT(_axes))
-#define REGISTER_READONLY_EMERGENCE(_func, _axes) REGISTER_READONLY(emergence, _func, P99_PROTECT(_axes))
+#define REGISTER_READONLY_INCIDENCE(_func, _axes, _parameters) REGISTER_READONLY(incidence, _func, P99_PROTECT(_axes), _parameters)
+#define REGISTER_READONLY_EMERGENCE(_func, _axes, _parameters) REGISTER_READONLY(emergence, _func, P99_PROTECT(_axes), _parameters)
 
 #endif

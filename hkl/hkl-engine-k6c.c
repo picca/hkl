@@ -652,10 +652,12 @@ static HklEngine *hkl_engine_k6c_psi_new(HklEngineList *engines)
 /*****************/
 
 REGISTER_READONLY_INCIDENCE(hkl_engine_k6c_incidence_new,
-			    P99_PROTECT({MU, KOMEGA, KAPPA, KPHI}));
+			    P99_PROTECT({MU, KOMEGA, KAPPA, KPHI}),
+			    surface_parameters_y);
 
 REGISTER_READONLY_EMERGENCE(hkl_engine_k6c_emergence_new,
-			    P99_PROTECT({MU, KOMEGA, KAPPA, KPHI, GAMMA, DELTA}));
+			    P99_PROTECT({MU, KOMEGA, KAPPA, KPHI, GAMMA, DELTA}),
+			    surface_parameters_y);
 
 #define HKL_GEOMETRY_KAPPA6C_DESCRIPTION				\
 	"For this geometry there is a special parameters called :math:`\\alpha` which is the\n" \

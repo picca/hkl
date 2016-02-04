@@ -87,6 +87,22 @@ static HklMode* reflectivity_2_2()
 				 TRUE);
 }
 
+static HklMode *emergence_fixed_2_2()
+{
+	static const char* axes_r[] = {BETA, MU, OMEGA, GAMMA, DELTA};
+	static const char* axes_w[] = {MU, OMEGA, GAMMA, DELTA};
+	static const HklFunction* functions[] = {&emergence_fixed_func};
+	static const HklParameter parameters[] = {
+		HKL_MODE_HKL_EMERGENCE_FIXED_PARAMETERS_DEFAULTS(0, 1, 0, 0),
+	};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO_WITH_PARAMS("emergence_fixed", axes_r, axes_w,
+					       functions, parameters),
+	};
+
+	return hkl_mode_hkl_emergence_fixed_new(&info);
+}
+
 static HklEngine *hkl_engine_soleil_sixs_med_2_2_hkl_new(HklEngineList *engines)
 {
 	HklEngine *self;
@@ -99,6 +115,7 @@ static HklEngine *hkl_engine_soleil_sixs_med_2_2_hkl_new(HklEngineList *engines)
 	hkl_engine_mode_set(self, default_mode);
 
 	hkl_engine_add_mode(self, reflectivity_2_2());
+	hkl_engine_add_mode(self, emergence_fixed_2_2());
 
 	return self;
 }
@@ -106,7 +123,13 @@ static HklEngine *hkl_engine_soleil_sixs_med_2_2_hkl_new(HklEngineList *engines)
 /* mode incidence */
 
 REGISTER_READONLY_INCIDENCE(hkl_engine_soleil_sixs_med_2_2_incidence_new,
-			    P99_PROTECT({BETA, MU, OMEGA}));
+			    P99_PROTECT({BETA, MU, OMEGA}),
+			    surface_parameters_y);
+
+REGISTER_READONLY_EMERGENCE(hkl_engine_soleil_sixs_med_2_2_emergence_new,
+                            P99_PROTECT({BETA, MU, OMEGA, GAMMA, DELTA}),
+			    surface_parameters_y);
+
 
 /*********************/
 /* MED 1+2 HklEngine */
@@ -158,8 +181,17 @@ static HklEngine *hkl_engine_soleil_sixs_med_1_2_hkl_new(HklEngineList *engines)
 
 /* mode incidence */
 
+static const HklParameter surface_parameters[] = {
+	SURFACE_PARAMETERS(0, 0, 1),
+};
+
 REGISTER_READONLY_INCIDENCE(hkl_engine_soleil_sixs_med_1_2_incidence_new,
-			    P99_PROTECT({PITCH, MU}));
+			    P99_PROTECT({PITCH, MU}),
+			    surface_parameters_z);
+
+REGISTER_READONLY_EMERGENCE(hkl_engine_soleil_sixs_med_1_2_emergence_new,
+			    P99_PROTECT({PITCH, MU, GAMMA, DELTA}),
+			    surface_parameters_z);
 
 /*********************/
 /* MED 2+3 HklEngine */
@@ -329,6 +361,22 @@ static HklMode* gamma_fixed_2_3()
 				 TRUE);
 }
 
+static HklMode *emergence_fixed_2_3()
+{
+	static const char* axes_r[] = {BETA, MU, OMEGA, GAMMA, DELTA, ETA_A};
+	static const char* axes_w[] = {MU, OMEGA, GAMMA, DELTA};
+	static const HklFunction* functions[] = {&emergence_fixed_func};
+	static const HklParameter parameters[] = {
+		HKL_MODE_HKL_EMERGENCE_FIXED_PARAMETERS_DEFAULTS(0, 1, 0, 0),
+	};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO_WITH_PARAMS("emergence_fixed", axes_r, axes_w,
+					       functions, parameters),
+	};
+
+	return hkl_mode_hkl_emergence_fixed_new(&info);
+}
+
 static HklEngine *hkl_engine_soleil_sixs_med_2_3_hkl_new(HklEngineList *engines)
 {
 	HklEngine *self;
@@ -341,6 +389,7 @@ static HklEngine *hkl_engine_soleil_sixs_med_2_3_hkl_new(HklEngineList *engines)
 	hkl_engine_mode_set(self, default_mode);
 
 	hkl_engine_add_mode(self, gamma_fixed_2_3());
+	hkl_engine_add_mode(self, emergence_fixed_2_3());
 
 	return self;
 }
@@ -392,6 +441,7 @@ static HklEngineList *hkl_engine_list_new_soleil_sixs_med_2_2(const HklFactory *
 	hkl_engine_qper_qpar_new(self);
 	hkl_engine_tth2_new(self);
 	hkl_engine_soleil_sixs_med_2_2_incidence_new(self);
+	hkl_engine_soleil_sixs_med_2_2_emergence_new(self);
 
 	return self;
 }
@@ -421,7 +471,6 @@ static HklGeometry *hkl_geometry_new_soleil_sixs_med_1_2(const HklFactory *facto
 {
 	HklGeometry *self = hkl_geometry_new(factory);
 	HklHolder *h;
-
 	h = hkl_geometry_add_holder(self);
 	hkl_holder_add_rotation_axis(h, PITCH, 0, -1, 0);
 	hkl_holder_add_rotation_axis(h, MU, 0, 0, 1);
@@ -443,6 +492,7 @@ static HklEngineList *hkl_engine_list_new_soleil_sixs_med_1_2(const HklFactory *
 	hkl_engine_qper_qpar_new(self);
 	hkl_engine_tth2_new(self);
 	hkl_engine_soleil_sixs_med_1_2_incidence_new(self);
+	hkl_engine_soleil_sixs_med_1_2_emergence_new(self);
 
 	return self;
 }
@@ -500,6 +550,7 @@ static HklEngineList *hkl_engine_list_new_soleil_sixs_med_2_3(const HklFactory *
 	hkl_engine_qper_qpar_new(self);
 	hkl_engine_tth2_new(self);
 	hkl_engine_soleil_sixs_med_2_2_incidence_new(self);
+	hkl_engine_soleil_sixs_med_2_2_emergence_new(self);
 
 	return self;
 }

@@ -191,10 +191,12 @@ static HklEngine *hkl_engine_e4c_psi_new(HklEngineList *engines)
 /*****************/
 
 REGISTER_READONLY_INCIDENCE(hkl_engine_e4c_incidence_new,
-			    P99_PROTECT({OMEGA, CHI, PHI}));
+			    P99_PROTECT({OMEGA, CHI, PHI}),
+			    surface_parameters_y);
 
 REGISTER_READONLY_EMERGENCE(hkl_engine_e4c_emergence_new,
-			    P99_PROTECT({OMEGA, CHI, PHI, TTH}));
+			    P99_PROTECT({OMEGA, CHI, PHI, TTH}),
+			    surface_parameters_y);
 
 /********/
 /* E4CV */

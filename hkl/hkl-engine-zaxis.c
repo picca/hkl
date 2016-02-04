@@ -105,10 +105,12 @@ static HklEngine *hkl_engine_zaxis_hkl_new(HklEngineList *engines)
 /*****************/
 
 REGISTER_READONLY_INCIDENCE(hkl_engine_zaxis_incidence_new,
-			    P99_PROTECT({MU, OMEGA}));
+			    P99_PROTECT({MU, OMEGA}),
+			    surface_parameters_y);
 
 REGISTER_READONLY_EMERGENCE(hkl_engine_zaxis_emergence_new,
-			    P99_PROTECT({MU, OMEGA, DELTA, GAMMA}));
+			    P99_PROTECT({MU, OMEGA, DELTA, GAMMA}),
+			    surface_parameters_y);
 
 /*********/
 /* ZAXIS */

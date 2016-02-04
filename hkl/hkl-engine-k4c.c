@@ -390,10 +390,12 @@ static HklEngine *hkl_engine_k4cv_psi_new(HklEngineList *engines)
 /*****************/
 
 REGISTER_READONLY_INCIDENCE(hkl_engine_kappa4C_vertical_incidence_new,
-			    P99_PROTECT({KOMEGA, KAPPA, KPHI}));
+			    P99_PROTECT({KOMEGA, KAPPA, KPHI}),
+			    surface_parameters_y);
 
 REGISTER_READONLY_EMERGENCE(hkl_engine_kappa4C_vertical_emergence_new,
-			    P99_PROTECT({KOMEGA, KAPPA, KPHI, TTH}));
+			    P99_PROTECT({KOMEGA, KAPPA, KPHI, TTH}),
+			    surface_parameters_y);
 
 /********/
 /* K4CV */

@@ -68,10 +68,12 @@ static HklEngine *hkl_engine_soleil_sirius_turret_hkl_new(HklEngineList *engines
 /*****************/
 
 REGISTER_READONLY_INCIDENCE(hkl_engine_soleil_sirius_turret_incidence_new,
-			    P99_PROTECT({THETAH, ALPHAY, ALPHAX}));
+			    P99_PROTECT({THETAH, ALPHAY, ALPHAX}),
+			    surface_parameters_z);
 
 REGISTER_READONLY_EMERGENCE(hkl_engine_soleil_sirius_turret_emergence_new,
-			    P99_PROTECT({THETAH, ALPHAY, ALPHAX, DELTA, GAMMA}));
+			    P99_PROTECT({THETAH, ALPHAY, ALPHAX, DELTA, GAMMA}),
+			    surface_parameters_z);
 
 /************************/
 /* SOLEIL SIRIUS TURRET */
