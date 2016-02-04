@@ -743,6 +743,16 @@ git clone git://repo.or.cz/hkl.git
 
 ** Python
 
+   You can test the binding directly from the source directory with
+   these commandes if ipython is installed.
+
+    #+BEGIN_SRC sh
+      cd tests/bindings
+      make ipython
+    #+END_SRC
+
+   then you have the Hkl module preloaded into the ipython environment.
+
    hkl computation:
 
    has you can see there is 4 available solutions.
