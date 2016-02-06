@@ -30,32 +30,31 @@ main = do
          return $ error $ "wrong diffractometer:" ++ show factories
   else do
     let factory = fromJust mfactory
-    engines <- Hkl.newEngineList factory
-    geometry <- Hkl.newGeometry factory
-    axes <- Hkl.geometryAxesGet geometry
-    detector <- Hkl.newDetector Hkl.DetectorType0D
+
     msample <- Hkl.newSample "test"
     if isNothing msample
     then
         return $ error "Please provide a valid sample name"
     else do
       let sample = fromJust msample
+
+      -- set the geometry parameters
+      geometry <- Hkl.newGeometry factory
+      Hkl.geometryWavelengthSet geometry 2
+
+      let positions = [1, 2, 3, 4, 5, 6]
+      Hkl.geometryAxisValuesSet geometry positions
+
+      -- detector
+      detector <- Hkl.newDetector Hkl.DetectorType0D
+
+      -- compute the pseudo axes values
+      engines <- Hkl.newEngineList factory
       Hkl.engineListInit engines geometry detector sample
       Hkl.engineListGet engines
       pseudoAxes <- Hkl.engineListPseudoAxesGet engines
-      values <- Hkl.geometryAxisValuesGet geometry
       print pseudoAxes
-      print axes
-      print values
-      let toto = [1, 2, 3, 4, 5, 6]
-      Hkl.geometryAxisValuesSet geometry toto
-      values <- Hkl.geometryAxisValuesGet geometry
-      print values
-      pseudoAxes <- Hkl.engineListPseudoAxesGet engines
-      print pseudoAxes
-      Hkl.engineListGet engines
-      pseudoAxes <- Hkl.engineListPseudoAxesGet engines
-      print pseudoAxes
+
     -- builder <- builderNew
     -- ui <- getDataFileName ghklUi
     -- builderAddFromFile builder tmpGhklUi

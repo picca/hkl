@@ -1,12 +1,7 @@
 {-# LANGUAGE ForeignFunctionInterface #-}
 {-# LANGUAGE CPP #-}
 
-module Hkl.DArray
-    ( engineListPseudoAxesGet
-    , geometryAxesGet
-    , geometryAxisValuesGet
-    , geometryAxisValuesSet
-    ) where
+module Hkl.DArray where
 
 import Control.Monad
 import Foreign
@@ -42,6 +37,31 @@ darrayStringLen p = do
     return n
 
 -- geometry
+
+
+geometryWavelengthGet :: Geometry -> IO Double
+geometryWavelengthGet (Geometry g) =
+  withForeignPtr g $ \gp -> do
+    (CDouble d) <- c_hkl_geometry_wavelength_get gp unit
+    return d
+
+foreign import ccall unsafe "hkl.h hkl_geometry_wavelength_get"
+  c_hkl_geometry_wavelength_get :: Ptr HklGeometry -- geometry
+                                -> CInt -- unit
+                                -> IO CDouble -- wavelength
+
+geometryWavelengthSet :: Geometry -> Double -> IO ()
+geometryWavelengthSet (Geometry g) w =
+  withForeignPtr g $ \gp -> do
+    let wavelength = CDouble w
+    c_hkl_geometry_wavelength_set gp wavelength unit nullPtr
+
+foreign import ccall unsafe "hkl.h hkl_geometry_wavelength_set"
+  c_hkl_geometry_wavelength_set :: Ptr HklGeometry -- geometry
+                                -> CDouble -- wavelength
+                                -> CInt -- unit
+                                -> Ptr () -- gerror
+                                -> IO () -- IO CInt but for now do not del with the errors
 
 geometryAxisNamesGet' :: Geometry -> IO [CString]
 geometryAxisNamesGet' (Geometry g) =
