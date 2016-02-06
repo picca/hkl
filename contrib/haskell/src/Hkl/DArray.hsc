@@ -60,15 +60,16 @@ foreign import ccall unsafe "hkl.h hkl_geometry_wavelength_set"
   c_hkl_geometry_wavelength_set :: Ptr HklGeometry -- geometry
                                 -> CDouble -- wavelength
                                 -> CInt -- unit
-                                -> Ptr () -- gerror
-                                -> IO () -- IO CInt but for now do not del with the errors
+                                -> Ptr () -- *gerror
+                                -> IO () -- IO CInt but for now do not deal with the errors
 
 geometryAxisNamesGet' :: Geometry -> IO [CString]
 geometryAxisNamesGet' (Geometry g) =
   withForeignPtr g (c_hkl_geometry_axis_names_get >=> peekDArrayString)
 
 foreign import ccall unsafe "hkl.h hkl_geometry_axis_names_get"
-  c_hkl_geometry_axis_names_get:: Ptr HklGeometry -> IO (Ptr ()) -- darray_string
+  c_hkl_geometry_axis_names_get :: Ptr HklGeometry -- goemetry
+                                -> IO (Ptr ()) -- darray_string
 
 geometryAxisGet :: Geometry -> CString -> IO Parameter
 geometryAxisGet (Geometry g) n =
@@ -76,7 +77,10 @@ geometryAxisGet (Geometry g) n =
         c_hkl_geometry_axis_get gp n nullPtr >>= peekParameter
 
 foreign import ccall unsafe "hkl.h hkl_geometry_axis_get"
-  c_hkl_geometry_axis_get :: Ptr HklGeometry -> CString -> Ptr () -> IO (Ptr HklParameter)
+  c_hkl_geometry_axis_get :: Ptr HklGeometry -- geometry
+                          -> CString -- axis name
+                          -> Ptr () -- gerror
+                          -> IO (Ptr HklParameter) -- parameter or nullPtr
 
 geometryAxesGet :: Geometry -> IO [Parameter]
 geometryAxesGet g = geometryAxisNamesGet' g >>= mapM (geometryAxisGet g)
@@ -92,7 +96,11 @@ geometryAxisValuesGet (Geometry g) =
       peekArray nn values
 
 foreign import ccall unsafe "hkl.h hkl_geometry_axis_values_get"
-  c_hkl_geometry_axis_values_get :: Ptr HklGeometry -> Ptr Double -> CSize -> CInt -> IO ()
+  c_hkl_geometry_axis_values_get :: Ptr HklGeometry -- geometry
+                                 -> Ptr Double -- axis values
+                                 -> CSize -- size of axis values
+                                 -> CInt -- unit
+                                 -> IO () -- IO CInt but for now do not deal with the errors
 
 geometryAxisValuesSet :: Geometry -> [Double] -> IO ()
 geometryAxisValuesSet (Geometry g) v =
@@ -103,7 +111,12 @@ geometryAxisValuesSet (Geometry g) v =
       c_hkl_geometry_axis_values_set gp values n unit nullPtr
 
 foreign import ccall unsafe "hkl.h hkl_geometry_axis_values_set"
-  c_hkl_geometry_axis_values_set :: Ptr HklGeometry -> Ptr Double -> CSize -> CInt -> Ptr () -> IO ()
+  c_hkl_geometry_axis_values_set :: Ptr HklGeometry -- geometry
+                                 -> Ptr Double -- axis values
+                                 -> CSize -- size of axis values
+                                 -> CInt -- unit
+                                 -> Ptr () -- gerror
+                                 -> IO () -- IO CInt but for now do not deal with the errors
 
 -- engine
 
