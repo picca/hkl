@@ -5,6 +5,7 @@ module Hkl.DArray
     ( engineListPseudoAxesGet
     , geometryAxesGet
     , geometryAxisValuesGet
+    , geometryAxisValuesSet
     ) where
 
 import Control.Monad
@@ -72,6 +73,17 @@ geometryAxisValuesGet (Geometry g) =
 
 foreign import ccall unsafe "hkl.h hkl_geometry_axis_values_get"
   c_hkl_geometry_axis_values_get :: Ptr HklGeometry -> Ptr Double -> CSize -> CInt -> IO ()
+
+geometryAxisValuesSet :: Geometry -> [Double] -> IO ()
+geometryAxisValuesSet (Geometry g) v =
+  withForeignPtr g $ \gp -> do
+    darray <- c_hkl_geometry_axis_names_get gp
+    n <- darrayStringLen darray
+    withArray v $ \values -> do
+      c_hkl_geometry_axis_values_set gp values n unit nullPtr
+
+foreign import ccall unsafe "hkl.h hkl_geometry_axis_values_set"
+  c_hkl_geometry_axis_values_set :: Ptr HklGeometry -> Ptr Double -> CSize -> CInt -> Ptr () -> IO ()
 
 -- engine
 

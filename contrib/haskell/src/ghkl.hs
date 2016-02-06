@@ -47,7 +47,15 @@ main = do
       print pseudoAxes
       print axes
       print values
-
+      let toto = [1, 2, 3, 4, 5, 6]
+      Hkl.geometryAxisValuesSet geometry toto
+      values <- Hkl.geometryAxisValuesGet geometry
+      print values
+      pseudoAxes <- Hkl.engineListPseudoAxesGet engines
+      print pseudoAxes
+      Hkl.engineListGet engines
+      pseudoAxes <- Hkl.engineListPseudoAxesGet engines
+      print pseudoAxes
     -- builder <- builderNew
     -- ui <- getDataFileName ghklUi
     -- builderAddFromFile builder tmpGhklUi
