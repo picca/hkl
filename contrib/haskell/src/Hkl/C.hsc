@@ -69,16 +69,9 @@ foreign import ccall unsafe "hkl.h hkl_factory_name_get"
 
 -- Sample
 
-newSample :: String -> IO (Maybe Sample)
-newSample name = withCString name $ \cname -> do
-                   ptr <- c_hkl_sample_new cname
-                   if ptr /= nullPtr
-                   then do
-                     foreignPtr <- newForeignPtr c_hkl_sample_free ptr
-                     let sample = Sample foreignPtr
-                     return $ Just sample
-                   else
-                     return Nothing
+newSample :: Sample -> IO (ForeignPtr HklSample)
+newSample (Sample name) =
+    withCString name (c_hkl_sample_new >=> newForeignPtr c_hkl_sample_free)
 
 foreign import ccall unsafe "hkl.h hkl_sample_new"
   c_hkl_sample_new:: CString -> IO (Ptr HklSample)
@@ -256,17 +249,18 @@ engineListPseudoAxesGet e =
   engineListEnginesGet e >>= mapM enginePseudoAxesGet
 
 compute :: Factory -> Geometry -> Detector -> Sample -> IO [[Parameter]]
-compute f g d (Sample fptr_s) = do
+compute f g d s = do
   fptr_e <- newEngineList f
   fptr_g <- newGeometry f g
   fptr_d <- newDetector d
+  fptr_s <- newSample s
   withForeignPtr fptr_s $ \sample ->
       withForeignPtr fptr_d $ \detector ->
           withForeignPtr fptr_g $ \geometry ->
               withForeignPtr fptr_e $ \engines -> do
-                c_hkl_engine_list_init engines geometry detector sample
-                c_hkl_engine_list_get engines
-                engineListPseudoAxesGet fptr_e
+                    c_hkl_engine_list_init engines geometry detector sample
+                    c_hkl_engine_list_get engines
+                    engineListPseudoAxesGet fptr_e
 
 foreign import ccall unsafe "hkl.h hkl_engine_list_init"
   c_hkl_engine_list_init:: Ptr HklEngineList -> Ptr HklGeometry -> Ptr HklDetector -> Ptr HklSample -> IO ()

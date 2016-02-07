@@ -39,7 +39,8 @@ data HklEngineList
 
 -- Sample
 data HklSample
-newtype Sample = Sample (ForeignPtr HklSample) deriving (Show)
+data Sample = Sample String
+            deriving (Show)
 
 -- Detector
 data DetectorType = DetectorType0D

@@ -29,21 +29,18 @@ main = do
       return $ error $ "wrong diffractometer:" ++ show factories
   else do
     let factory = fromJust mfactory
+    let sample = Hkl.Sample "test"
+    let geometry = Hkl.Geometry (Hkl.Source 1.54) [0, 30, 0, 0, 0, 60]
+    let detector = Hkl.Detector Hkl.DetectorType0D
 
-    msample <- Hkl.newSample "test"
-    if isNothing msample
-    then
-        return $ error "Please provide a valid sample name"
-    else do
-      let sample = fromJust msample
+    -- compute the pseudo axes values
+    pseudoAxes <- Hkl.compute factory geometry detector sample
 
-      -- set the geometry parameters
-      let geometry = Hkl.Geometry (Hkl.Source 1.54) [0, 30, 0, 0, 0, 60]
-      let detector = Hkl.Detector Hkl.DetectorType0D
-
-      -- compute the pseudo axes values
-      pseudoAxes <- Hkl.compute factory geometry detector sample
-      print pseudoAxes
+    print factory
+    print sample
+    print geometry
+    print detector
+    print pseudoAxes
 
     -- builder <- builderNew
     -- ui <- getDataFileName ghklUi
