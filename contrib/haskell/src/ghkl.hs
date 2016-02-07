@@ -38,9 +38,7 @@ main = do
       let sample = fromJust msample
 
       -- set the geometry parameters
-      geometry <- Hkl.newGeometry factory
-                                  (Hkl.Source 1.54)
-                                  [0, 30, 0, 0, 0, 60]
+      let geometry = Hkl.Geometry (Hkl.Source 1.54) [0, 30, 0, 0, 0, 60]
 
       print geometry
       -- detector

@@ -38,8 +38,8 @@ darrayStringLen p = do
 
 -- geometry
 
-newGeometry :: Factory -> Source -> [Double] -> IO Geometry
-newGeometry (Factory f) s@(Source w) vs = do
+newGeometry :: Factory -> Geometry -> IO (ForeignPtr HklGeometry)
+newGeometry (Factory f) (Geometry (Source w) vs) = do
   let wavelength = CDouble w
   geometry <- c_hkl_factory_create_new_geometry f
   c_hkl_geometry_wavelength_set geometry wavelength unit nullPtr
@@ -49,7 +49,7 @@ newGeometry (Factory f) s@(Source w) vs = do
       c_hkl_geometry_axis_values_set geometry values n unit nullPtr
 
   fptr <- newForeignPtr c_hkl_geometry_free geometry
-  return $ Geometry (fptr, s, vs)
+  return fptr
 
 foreign import ccall unsafe "hkl.h hkl_factory_create_new_geometry"
   c_hkl_factory_create_new_geometry :: Ptr HklFactory -> IO (Ptr HklGeometry)
@@ -72,15 +72,15 @@ foreign import ccall unsafe "hkl.h hkl_geometry_axis_values_set"
                                  -> Ptr () -- gerror
                                  -> IO () -- IO CInt but for now do not deal with the errors
 
-geometryName :: Geometry -> IO String
-geometryName (Geometry (g, _, _)) = withForeignPtr g (c_hkl_geometry_name_get >=> peekCString)
+geometryName :: ForeignPtr HklGeometry -> IO String
+geometryName g = withForeignPtr g (c_hkl_geometry_name_get >=> peekCString)
 
 foreign import ccall unsafe "hkl.h hkl_geometry_name_get"
   c_hkl_geometry_name_get :: Ptr HklGeometry -> IO CString
 
 
-geometryWavelengthGet :: Geometry -> IO Double
-geometryWavelengthGet (Geometry (g, _, _)) =
+geometryWavelengthGet :: ForeignPtr HklGeometry -> IO Double
+geometryWavelengthGet g =
   withForeignPtr g $ \gp -> do
     (CDouble d) <- c_hkl_geometry_wavelength_get gp unit
     return d
@@ -90,16 +90,16 @@ foreign import ccall unsafe "hkl.h hkl_geometry_wavelength_get"
                                 -> CInt -- unit
                                 -> IO CDouble -- wavelength
 
-geometryAxisNamesGet' :: Geometry -> IO [CString]
-geometryAxisNamesGet' (Geometry (g, _, _)) =
+geometryAxisNamesGet' :: ForeignPtr HklGeometry -> IO [CString]
+geometryAxisNamesGet' g =
   withForeignPtr g (c_hkl_geometry_axis_names_get >=> peekDArrayString)
 
 foreign import ccall unsafe "hkl.h hkl_geometry_axis_names_get"
   c_hkl_geometry_axis_names_get :: Ptr HklGeometry -- goemetry
                                 -> IO (Ptr ()) -- darray_string
 
-geometryAxisGet :: Geometry -> CString -> IO Parameter
-geometryAxisGet (Geometry (g, _, _)) n =
+geometryAxisGet :: ForeignPtr HklGeometry -> CString -> IO Parameter
+geometryAxisGet g n =
     withForeignPtr g $ \gp ->
         c_hkl_geometry_axis_get gp n nullPtr >>= peekParameter
 
@@ -109,11 +109,11 @@ foreign import ccall unsafe "hkl.h hkl_geometry_axis_get"
                           -> Ptr () -- gerror
                           -> IO (Ptr HklParameter) -- parameter or nullPtr
 
-geometryAxesGet :: Geometry -> IO [Parameter]
+geometryAxesGet :: ForeignPtr HklGeometry -> IO [Parameter]
 geometryAxesGet g = geometryAxisNamesGet' g >>= mapM (geometryAxisGet g)
 
-geometryAxisValuesGet :: Geometry -> IO [Double]
-geometryAxisValuesGet (Geometry (g, _, _)) =
+geometryAxisValuesGet :: ForeignPtr HklGeometry -> IO [Double]
+geometryAxisValuesGet g =
   withForeignPtr g $ \gp -> do
     darray <- c_hkl_geometry_axis_names_get gp
     n <- darrayStringLen darray
@@ -176,8 +176,8 @@ engineListGet (EngineList e) = withForeignPtr e c_hkl_engine_list_get
 foreign import ccall unsafe "hkl.h hkl_engine_list_get"
   c_hkl_engine_list_get:: Ptr HklEngineList -> IO ()
 
-engineListInit :: EngineList -> Geometry -> Detector -> Sample -> IO ()
-engineListInit (EngineList e) (Geometry (g, _, _)) (Detector d) (Sample s) =
+engineListInit :: EngineList -> ForeignPtr HklGeometry -> Detector -> Sample -> IO ()
+engineListInit (EngineList e) g (Detector d) (Sample s) =
   withForeignPtr s $ \sp ->
       withForeignPtr d $ \dp ->
           withForeignPtr g $ \gp ->
@@ -205,8 +205,9 @@ engineListPseudoAxesGet l@(EngineList e) =
       engineListEnginesGet l >>= mapM enginePseudoAxesGet
 
 compute :: Factory -> Geometry -> Detector -> Sample -> IO [[Parameter]]
-compute factory geometry detector sample = do
+compute factory g detector sample = do
   engines <- newEngineList factory
+  geometry <- newGeometry factory g
   engineListInit engines geometry detector sample
   engineListGet engines
   pss <- engineListPseudoAxesGet engines

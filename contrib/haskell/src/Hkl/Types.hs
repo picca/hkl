@@ -28,11 +28,8 @@ data Source = Source Double -- wavelength
 
 -- Geometry
 data HklGeometry
-newtype Geometry = Geometry ( ForeignPtr HklGeometry
-                            , Source
-                            , [Double]
-                            )
-                 deriving (Show)
+data Geometry = Geometry Source [Double]
+              deriving (Show)
 
 -- HklEngine -- should be private
 data HklEngine
