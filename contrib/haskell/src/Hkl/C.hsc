@@ -82,11 +82,19 @@ foreign import ccall unsafe "hkl.h hkl_factory_name_get"
 -- Sample
 
 newSample :: Sample -> IO (ForeignPtr HklSample)
-newSample (Sample name _lattice) =
-    withCString name (c_hkl_sample_new >=> newForeignPtr c_hkl_sample_free)
+newSample (Sample name l) =
+    withCString name $ \cname -> do
+      sample <- c_hkl_sample_new cname
+      fptr_l <- newLattice l
+      withForeignPtr fptr_l $ \lattice -> do
+          c_hkl_sample_lattice_set sample lattice
+          newForeignPtr c_hkl_sample_free sample
 
 foreign import ccall unsafe "hkl.h hkl_sample_new"
   c_hkl_sample_new:: CString -> IO (Ptr HklSample)
+
+foreign import ccall unsafe "hkl.h hkl_sample_lattice_set"
+  c_hkl_sample_lattice_set :: Ptr HklSample -> Ptr HklLattice -> IO ()
 
 foreign import ccall unsafe "hkl.h &hkl_sample_free"
   c_hkl_sample_free :: FunPtr (Ptr HklSample -> IO ())
