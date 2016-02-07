@@ -9,6 +9,8 @@ module Hkl.C
 
 import Control.Monad
 import Data.Map.Strict as Map
+import Numeric.Units.Dimensional.Prelude ( meter, degree, radian, nano
+                                         , (*~), (/~))
 import Foreign
 import Foreign.C
 
@@ -22,6 +24,7 @@ data HklDetector
 data HklEngine
 data HklEngineList
 data HklGeometry
+data HklLattice
 data HklParameter
 data HklSample
 
@@ -276,3 +279,71 @@ foreign import ccall unsafe "hkl.h hkl_engine_list_init"
 
 foreign import ccall unsafe "hkl.h hkl_engine_list_get"
   c_hkl_engine_list_get:: Ptr HklEngineList -> IO ()
+
+-- Lattice
+
+newLattice' :: CDouble
+            -> CDouble
+            -> CDouble
+            -> CDouble
+            -> CDouble
+            -> CDouble
+            -> IO (ForeignPtr HklLattice)
+newLattice' a b c alpha beta gamma = do
+  lattice <- c_hkl_lattice_new a b c alpha beta gamma nullPtr
+  newForeignPtr c_hkl_lattice_free lattice
+
+newLattice :: Lattice -> IO (ForeignPtr HklLattice)
+newLattice  (Cubic la) = do
+  let a = CDouble (la /~ (nano meter))
+  let alpha = CDouble ((90 *~ degree) /~ radian)
+  newLattice' a a a alpha alpha alpha
+newLattice (Tetragonal la lc) = do
+  let a = CDouble (la /~ (nano meter))
+  let c = CDouble (lc /~ (nano meter))
+  let alpha = CDouble ((90 *~ degree) /~ radian)
+  newLattice' a a c alpha alpha alpha
+newLattice  (Orthorhombic la lb lc) = do
+  let a = CDouble (la /~ (nano meter))
+  let b = CDouble (lb /~ (nano meter))
+  let c = CDouble (lc /~ (nano meter))
+  let alpha = CDouble ((90 *~ degree) /~ radian)
+  newLattice' a b c alpha alpha alpha
+newLattice (Rhombohedral la aalpha) = do
+  let a = CDouble (la /~ (nano meter))
+  let alpha = CDouble (aalpha /~ radian)
+  newLattice' a a a alpha alpha alpha
+newLattice (Hexagonal la lc) = do
+  let a = CDouble (la /~ (nano meter))
+  let c = CDouble (lc /~ (nano meter))
+  let alpha = CDouble ((90 *~ degree) /~ radian)
+  let gamma = CDouble ((120 *~ degree) /~ radian)
+  newLattice' a a c alpha alpha gamma
+newLattice (Monoclinic la lb lc abeta) = do
+  let a = CDouble (la /~ (nano meter))
+  let b = CDouble (lb /~ (nano meter))
+  let c = CDouble (lc /~ (nano meter))
+  let alpha = CDouble ((90 *~ degree) /~ radian)
+  let beta = CDouble (abeta /~ radian)
+  newLattice' a b c alpha beta alpha
+newLattice (Triclinic la lb lc aalpha abeta agamma) = do
+  let a = CDouble (la /~ (nano meter))
+  let b = CDouble (lb /~ (nano meter))
+  let c = CDouble (lc /~ (nano meter))
+  let alpha = CDouble (aalpha /~ radian)
+  let beta = CDouble (abeta /~ radian)
+  let gamma = CDouble (agamma /~ radian)
+  newLattice' a b c alpha beta gamma
+
+foreign import ccall unsafe "hkl.h hkl_lattice_new"
+  c_hkl_lattice_new :: CDouble -- a
+                    -> CDouble -- b
+                    -> CDouble -- c
+                    -> CDouble -- alpha
+                    -> CDouble -- beta
+                    -> CDouble -- gamma
+                    -> Ptr () -- *gerror
+                    -> IO (Ptr HklLattice)
+
+foreign import ccall unsafe "hkl.h &hkl_lattice_free"
+  c_hkl_lattice_free :: FunPtr (Ptr HklLattice -> IO ())
