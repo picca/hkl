@@ -1,7 +1,7 @@
 module Hkl
-       ( module Hkl.Types
-       , module Hkl.C
+       ( module Hkl.C
+       , module Hkl.Types
        ) where
 
-import Hkl.Types
 import Hkl.C
+import Hkl.Types

@@ -2,6 +2,7 @@
 
 module Hkl.Types where
 
+import Numeric.Units.Dimensional.Prelude (Length, Angle)
 import Foreign
 import Foreign.C
 
@@ -17,6 +18,17 @@ newtype Factory = Factory (Ptr HklFactory) deriving (Show, Storable)
 
 -- HklParameter -- should be private
 data HklParameter
+
+-- Lattice
+
+data Lattice = Cubic (Length Double) -- a = b = c, alpha = beta = gamma = 90
+             | Tetragonal (Length Double) (Length Double) -- a = b != c, alpha = beta = gamma = 90
+             | Orthorhombic (Length Double) (Length Double) (Length Double) -- a != b != c,  alpha = beta = gamma = 90
+             | Rhombohedral (Length Double) (Angle Double) -- a = b = c, alpha = beta = gamma != 90
+             | Hexagonal (Length Double) (Length Double) -- a = b != c, alpha = beta = 90, gamma = 120
+             | Monoclinic (Length Double) (Length Double) (Length Double) (Angle Double) -- a != b != c, alpha = gamma = 90, beta != 90
+             | Triclinic (Length Double) (Length Double) (Length Double) (Angle Double) (Angle Double) (Angle Double) -- a != b != c, alpha != beta != gamma != 90
+               deriving (Show)
 
 -- Parameter
 data Parameter = Parameter String Double Range -- name, value, range
@@ -41,6 +53,7 @@ data HklEngineList
 data HklSample
 data Sample = Sample String
             deriving (Show)
+
 
 -- Detector
 data DetectorType = DetectorType0D
