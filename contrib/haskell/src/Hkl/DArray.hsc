@@ -192,28 +192,6 @@ foreign import ccall unsafe "hkl.h hkl_factory_create_new_engine_list"
 foreign import ccall unsafe "hkl.h &hkl_engine_list_free"
   c_hkl_engine_list_free :: FunPtr (Ptr HklEngineList -> IO ())
 
-engineListGet :: ForeignPtr HklEngineList -> IO ()
-engineListGet e = withForeignPtr e c_hkl_engine_list_get
-
-foreign import ccall unsafe "hkl.h hkl_engine_list_get"
-  c_hkl_engine_list_get:: Ptr HklEngineList -> IO ()
-
-engineListInit :: ForeignPtr HklEngineList
-               -> ForeignPtr HklGeometry
-               -> ForeignPtr HklDetector
-               -> Sample
-               -> IO ()
-engineListInit e g d (Sample s) =
-  withForeignPtr s $ \sp ->
-      withForeignPtr d $ \dp ->
-          withForeignPtr g $ \gp ->
-              withForeignPtr e $ \ep ->
-                  c_hkl_engine_list_init ep gp dp sp
-
-
-foreign import ccall unsafe "hkl.h hkl_engine_list_init"
-  c_hkl_engine_list_init:: Ptr HklEngineList -> Ptr HklGeometry -> Ptr HklDetector -> Ptr HklSample -> IO ()
-
 engineListEnginesGet :: ForeignPtr HklEngineList -> IO [Ptr HklEngine]
 engineListEnginesGet e = withForeignPtr e $ \ep -> do
   pdarray <- c_hkl_engine_list_engines_get ep
@@ -229,11 +207,20 @@ engineListPseudoAxesGet e =
   engineListEnginesGet e >>= mapM enginePseudoAxesGet
 
 compute :: Factory -> Geometry -> Detector -> Sample -> IO [[Parameter]]
-compute factory g d sample = do
-  engines <- newEngineList factory
-  geometry <- newGeometry factory g
-  detector <- newDetector d
-  engineListInit engines geometry detector sample
-  engineListGet engines
-  pss <- engineListPseudoAxesGet engines
-  return pss
+compute f g d (Sample fptr_s) = do
+  fptr_e <- newEngineList f
+  fptr_g <- newGeometry f g
+  fptr_d <- newDetector d
+  withForeignPtr fptr_s $ \sample ->
+      withForeignPtr fptr_d $ \detector ->
+          withForeignPtr fptr_g $ \geometry ->
+              withForeignPtr fptr_e $ \engines -> do
+                c_hkl_engine_list_init engines geometry detector sample
+                c_hkl_engine_list_get engines
+                engineListPseudoAxesGet fptr_e
+
+foreign import ccall unsafe "hkl.h hkl_engine_list_init"
+  c_hkl_engine_list_init:: Ptr HklEngineList -> Ptr HklGeometry -> Ptr HklDetector -> Ptr HklSample -> IO ()
+
+foreign import ccall unsafe "hkl.h hkl_engine_list_get"
+  c_hkl_engine_list_get:: Ptr HklEngineList -> IO ()
