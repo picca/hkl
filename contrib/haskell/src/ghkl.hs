@@ -1,14 +1,13 @@
 module Main where
 
--- import Graphics.UI.Gtk
 import Control.Monad
-import Prelude hiding (lookup)
--- import System.FilePath ((</>))
 import Data.Map.Strict (lookup)
 import Data.Maybe (isNothing, fromJust)
-
--- import Paths_hkl
-import qualified Hkl
+import Hkl
+import Numeric.Units.Dimensional.Prelude (nano, meter, degree,
+                                          (*~),
+                                          (*~~), (/~~))
+import Prelude hiding (lookup)
 
 ghklUi :: FilePath
 ghklUi = "ghkl.ui"
@@ -22,19 +21,19 @@ tmpGhklUi = "../../gui/ghkl.ui"
 main :: IO ()
 main = do
   -- initGUI
-  factories <- Hkl.factories
+  factories <- factories
   let mfactory = lookup "E6C" factories
   if isNothing mfactory
   then
       return $ error $ "wrong diffractometer:" ++ show factories
   else do
     let factory = fromJust mfactory
-    let sample = Hkl.Sample "test"
-    let geometry = Hkl.Geometry (Hkl.Source 1.54) [0, 30, 0, 0, 0, 60]
-    let detector = Hkl.Detector Hkl.DetectorType0D
+    let sample = Sample "test" (Cubic (1.54 *~ nano meter))
+    let geometry = Geometry (Source 1.54) [0, 30, 0, 0, 0, 60]
+    let detector = Detector DetectorType0D
 
     -- compute the pseudo axes values
-    pseudoAxes <- Hkl.compute factory geometry detector sample
+    pseudoAxes <- compute factory geometry detector sample
 
     print factory
     print sample

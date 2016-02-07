@@ -16,6 +16,15 @@ import Hkl.Types
 
 #include "hkl.h"
 
+-- private types
+
+data HklDetector
+data HklEngine
+data HklEngineList
+data HklGeometry
+data HklParameter
+data HklSample
+
 -- helpers
 
 peekParameter :: Ptr HklParameter -> IO Parameter
@@ -70,7 +79,7 @@ foreign import ccall unsafe "hkl.h hkl_factory_name_get"
 -- Sample
 
 newSample :: Sample -> IO (ForeignPtr HklSample)
-newSample (Sample name) =
+newSample (Sample name _lattice) =
     withCString name (c_hkl_sample_new >=> newForeignPtr c_hkl_sample_free)
 
 foreign import ccall unsafe "hkl.h hkl_sample_new"
