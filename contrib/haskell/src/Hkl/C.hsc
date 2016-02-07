@@ -103,16 +103,15 @@ foreign import ccall unsafe "hkl.h &hkl_sample_free"
 
 newGeometry :: Factory -> Geometry -> IO (ForeignPtr HklGeometry)
 newGeometry (Factory f) (Geometry (Source lw) vs) = do
-  let wavelength = CDouble (lw /~ (nano meter))
+  let wavelength = CDouble (lw /~ nano meter)
   geometry <- c_hkl_factory_create_new_geometry f
   c_hkl_geometry_wavelength_set geometry wavelength unit nullPtr
   darray <- c_hkl_geometry_axis_names_get geometry
   n <- darrayStringLen darray
-  withArray vs $ \values -> do
+  withArray vs $ \values ->
       c_hkl_geometry_axis_values_set geometry values n unit nullPtr
 
-  fptr <- newForeignPtr c_hkl_geometry_free geometry
-  return fptr
+  newForeignPtr c_hkl_geometry_free geometry
 
 foreign import ccall unsafe "hkl.h hkl_factory_create_new_geometry"
   c_hkl_factory_create_new_geometry :: Ptr HklFactory -> IO (Ptr HklGeometry)
@@ -196,7 +195,7 @@ foreign import ccall unsafe "hkl.h hkl_geometry_axis_values_get"
 
 newDetector :: Detector -> IO (ForeignPtr HklDetector)
 newDetector (Detector t) =
-  (c_hkl_detector_new it >>= newForeignPtr c_hkl_detector_free)
+  c_hkl_detector_new it >>= newForeignPtr c_hkl_detector_free
       where
         it = case t of
              DetectorType0D -> 0
@@ -303,41 +302,41 @@ newLattice' a b c alpha beta gamma = do
 
 newLattice :: Lattice -> IO (ForeignPtr HklLattice)
 newLattice  (Cubic la) = do
-  let a = CDouble (la /~ (nano meter))
+  let a = CDouble (la /~ nano meter)
   let alpha = CDouble ((90 *~ degree) /~ radian)
   newLattice' a a a alpha alpha alpha
 newLattice (Tetragonal la lc) = do
-  let a = CDouble (la /~ (nano meter))
-  let c = CDouble (lc /~ (nano meter))
+  let a = CDouble (la /~ nano meter)
+  let c = CDouble (lc /~ nano meter)
   let alpha = CDouble ((90 *~ degree) /~ radian)
   newLattice' a a c alpha alpha alpha
 newLattice  (Orthorhombic la lb lc) = do
-  let a = CDouble (la /~ (nano meter))
-  let b = CDouble (lb /~ (nano meter))
-  let c = CDouble (lc /~ (nano meter))
+  let a = CDouble (la /~ nano meter)
+  let b = CDouble (lb /~ nano meter)
+  let c = CDouble (lc /~ nano meter)
   let alpha = CDouble ((90 *~ degree) /~ radian)
   newLattice' a b c alpha alpha alpha
 newLattice (Rhombohedral la aalpha) = do
-  let a = CDouble (la /~ (nano meter))
+  let a = CDouble (la /~ nano meter)
   let alpha = CDouble (aalpha /~ radian)
   newLattice' a a a alpha alpha alpha
 newLattice (Hexagonal la lc) = do
-  let a = CDouble (la /~ (nano meter))
-  let c = CDouble (lc /~ (nano meter))
+  let a = CDouble (la /~ nano meter)
+  let c = CDouble (lc /~ nano meter)
   let alpha = CDouble ((90 *~ degree) /~ radian)
   let gamma = CDouble ((120 *~ degree) /~ radian)
   newLattice' a a c alpha alpha gamma
 newLattice (Monoclinic la lb lc abeta) = do
-  let a = CDouble (la /~ (nano meter))
-  let b = CDouble (lb /~ (nano meter))
-  let c = CDouble (lc /~ (nano meter))
+  let a = CDouble (la /~ nano meter)
+  let b = CDouble (lb /~ nano meter)
+  let c = CDouble (lc /~ nano meter)
   let alpha = CDouble ((90 *~ degree) /~ radian)
   let beta = CDouble (abeta /~ radian)
   newLattice' a b c alpha beta alpha
 newLattice (Triclinic la lb lc aalpha abeta agamma) = do
-  let a = CDouble (la /~ (nano meter))
-  let b = CDouble (lb /~ (nano meter))
-  let c = CDouble (lc /~ (nano meter))
+  let a = CDouble (la /~ nano meter)
+  let b = CDouble (lb /~ nano meter)
+  let c = CDouble (lc /~ nano meter)
   let alpha = CDouble (aalpha /~ radian)
   let beta = CDouble (abeta /~ radian)
   let gamma = CDouble (agamma /~ radian)
