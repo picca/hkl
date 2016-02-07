@@ -145,19 +145,25 @@ foreign import ccall unsafe "hkl.h hkl_detector_new"
 foreign import ccall unsafe "hkl.h &hkl_detector_free"
   c_hkl_detector_free :: FunPtr (Ptr HklDetector -> IO ())
 
--- engine
+-- Engine
 
-enginePseudoAxisNamesGet' :: Engine -> IO [CString]
-enginePseudoAxisNamesGet' (Engine e) = c_hkl_engine_pseudo_axis_names_get e >>= peekDArrayString
+engineNameGet :: Ptr HklEngine -> IO String
+engineNameGet engine = c_hkl_engine_name_get engine >>= peekCString
+
+foreign import ccall unsafe "hkl.h hkl_engine_name_get"
+  c_hkl_engine_name_get :: Ptr HklEngine -> IO CString
+
+enginePseudoAxisNamesGet' :: Ptr HklEngine -> IO [CString]
+enginePseudoAxisNamesGet' e = c_hkl_engine_pseudo_axis_names_get e >>= peekDArrayString
 
 foreign import ccall unsafe "hkl.h hkl_engine_pseudo_axis_names_get"
   c_hkl_engine_pseudo_axis_names_get:: Ptr HklEngine -> IO (Ptr ()) -- darray_string
 
-enginePseudoAxisNamesGet :: Engine -> IO [String]
+enginePseudoAxisNamesGet :: Ptr HklEngine -> IO [String]
 enginePseudoAxisNamesGet e = enginePseudoAxisNamesGet' e >>= mapM peekCString
 
-enginePseudoAxisGet :: Engine -> CString -> IO Parameter
-enginePseudoAxisGet (Engine e) n = c_hkl_engine_pseudo_axis_get e n nullPtr >>= peekParameter
+enginePseudoAxisGet :: Ptr HklEngine -> CString -> IO Parameter
+enginePseudoAxisGet e n = c_hkl_engine_pseudo_axis_get e n nullPtr >>= peekParameter
 
 foreign import ccall unsafe "hkl.h hkl_engine_pseudo_axis_get"
   c_hkl_engine_pseudo_axis_get:: Ptr HklEngine -> CString -> Ptr () -> IO (Ptr HklParameter)
@@ -171,7 +177,7 @@ foreign import ccall unsafe "hkl.h hkl_parameter_value_get"
 foreign import ccall unsafe "hkl.h hkl_parameter_min_max_get"
   c_hkl_parameter_min_max_get :: Ptr HklParameter -> Ptr Double -> Ptr Double -> CInt -> IO ()
 
-enginePseudoAxesGet :: Engine -> IO [Parameter]
+enginePseudoAxesGet :: Ptr HklEngine -> IO [Parameter]
 enginePseudoAxesGet e = enginePseudoAxisNamesGet' e >>= mapM (enginePseudoAxisGet e)
 
 -- EngineList
@@ -208,13 +214,12 @@ engineListInit (EngineList e) g d (Sample s) =
 foreign import ccall unsafe "hkl.h hkl_engine_list_init"
   c_hkl_engine_list_init:: Ptr HklEngineList -> Ptr HklGeometry -> Ptr HklDetector -> Ptr HklSample -> IO ()
 
-engineListEnginesGet :: EngineList -> IO [Engine]
+engineListEnginesGet :: EngineList -> IO [Ptr HklEngine]
 engineListEnginesGet (EngineList e) = withForeignPtr e $ \ep -> do
   pdarray <- c_hkl_engine_list_engines_get ep
   n <- (#{peek darray_engine, size} pdarray) :: IO CSize
   engines <- #{peek darray_engine ,item} pdarray :: IO (Ptr (Ptr HklEngine))
-  es <- peekArray (fromEnum n) engines
-  return $ fmap Engine es
+  peekArray (fromEnum n) engines
 
 foreign import ccall unsafe "hkl.h hkl_engine_list_engines_get"
   c_hkl_engine_list_engines_get:: Ptr HklEngineList -> IO (Ptr ())

@@ -37,14 +37,6 @@ foreign import ccall unsafe "hkl.h hkl_factory_name_get"
   c_hkl_factory_name_get :: Ptr HklFactory -> IO CString
 
 
--- Engine
-
-engineNameGet :: Engine -> IO String
-engineNameGet (Engine engine) = c_hkl_engine_name_get engine >>= peekCString
-
-foreign import ccall unsafe "hkl.h hkl_engine_name_get"
-  c_hkl_engine_name_get :: Ptr HklEngine -> IO CString
-
 -- Sample
 
 newSample :: String -> IO (Maybe Sample)

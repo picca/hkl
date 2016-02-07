@@ -33,7 +33,6 @@ data Geometry = Geometry Source [Double]
 
 -- HklEngine -- should be private
 data HklEngine
-newtype Engine = Engine (Ptr HklEngine) deriving (Show, Storable)
 
 -- EngineList
 data HklEngineList
