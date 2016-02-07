@@ -22,10 +22,14 @@ data HklParameter
 data Parameter = Parameter String Double Range -- name, value, range
                deriving (Show)
 
+-- Source
+data Source = Source Double -- wavelength
+            deriving (Show)
 
 -- Geometry
 data HklGeometry
-newtype Geometry = Geometry (ForeignPtr HklGeometry) deriving (Show)
+newtype Geometry = Geometry (ForeignPtr HklGeometry, Source)
+                 deriving (Show)
 
 -- HklEngine -- should be private
 data HklEngine

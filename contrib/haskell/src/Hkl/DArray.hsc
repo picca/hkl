@@ -38,9 +38,8 @@ darrayStringLen p = do
 
 -- geometry
 
-
 geometryWavelengthGet :: Geometry -> IO Double
-geometryWavelengthGet (Geometry g) =
+geometryWavelengthGet (Geometry (g, _)) =
   withForeignPtr g $ \gp -> do
     (CDouble d) <- c_hkl_geometry_wavelength_get gp unit
     return d
@@ -50,21 +49,8 @@ foreign import ccall unsafe "hkl.h hkl_geometry_wavelength_get"
                                 -> CInt -- unit
                                 -> IO CDouble -- wavelength
 
-geometryWavelengthSet :: Geometry -> Double -> IO ()
-geometryWavelengthSet (Geometry g) w =
-  withForeignPtr g $ \gp -> do
-    let wavelength = CDouble w
-    c_hkl_geometry_wavelength_set gp wavelength unit nullPtr
-
-foreign import ccall unsafe "hkl.h hkl_geometry_wavelength_set"
-  c_hkl_geometry_wavelength_set :: Ptr HklGeometry -- geometry
-                                -> CDouble -- wavelength
-                                -> CInt -- unit
-                                -> Ptr () -- *gerror
-                                -> IO () -- IO CInt but for now do not deal with the errors
-
 geometryAxisNamesGet' :: Geometry -> IO [CString]
-geometryAxisNamesGet' (Geometry g) =
+geometryAxisNamesGet' (Geometry (g, _)) =
   withForeignPtr g (c_hkl_geometry_axis_names_get >=> peekDArrayString)
 
 foreign import ccall unsafe "hkl.h hkl_geometry_axis_names_get"
@@ -72,7 +58,7 @@ foreign import ccall unsafe "hkl.h hkl_geometry_axis_names_get"
                                 -> IO (Ptr ()) -- darray_string
 
 geometryAxisGet :: Geometry -> CString -> IO Parameter
-geometryAxisGet (Geometry g) n =
+geometryAxisGet (Geometry (g, _)) n =
     withForeignPtr g $ \gp ->
         c_hkl_geometry_axis_get gp n nullPtr >>= peekParameter
 
@@ -86,7 +72,7 @@ geometryAxesGet :: Geometry -> IO [Parameter]
 geometryAxesGet g = geometryAxisNamesGet' g >>= mapM (geometryAxisGet g)
 
 geometryAxisValuesGet :: Geometry -> IO [Double]
-geometryAxisValuesGet (Geometry g) =
+geometryAxisValuesGet (Geometry (g, _)) =
   withForeignPtr g $ \gp -> do
     darray <- c_hkl_geometry_axis_names_get gp
     n <- darrayStringLen darray
@@ -103,7 +89,7 @@ foreign import ccall unsafe "hkl.h hkl_geometry_axis_values_get"
                                  -> IO () -- IO CInt but for now do not deal with the errors
 
 geometryAxisValuesSet :: Geometry -> [Double] -> IO ()
-geometryAxisValuesSet (Geometry g) v =
+geometryAxisValuesSet (Geometry (g, _)) v =
   withForeignPtr g $ \gp -> do
     darray <- c_hkl_geometry_axis_names_get gp
     n <- darrayStringLen darray

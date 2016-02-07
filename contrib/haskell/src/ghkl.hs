@@ -39,8 +39,7 @@ main = do
       let sample = fromJust msample
 
       -- set the geometry parameters
-      geometry <- Hkl.newGeometry factory
-      Hkl.geometryWavelengthSet geometry 2
+      geometry <- Hkl.newGeometry factory (Hkl.Source 2)
 
       let positions = [1, 2, 3, 4, 5, 6]
       Hkl.geometryAxisValuesSet geometry positions
