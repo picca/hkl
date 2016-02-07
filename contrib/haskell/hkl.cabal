@@ -52,7 +52,7 @@ executable ghkl
   build-depends:       base >=4.6 && <4.9
                      , containers >=0.5 && <0.6
                      , filepath
-  other-modules:       Hkl, Hkl.Types, Hkl.C, Hkl.DArray
+  other-modules:       Hkl, Hkl.Types, Hkl.C
   hs-source-dirs:      src
   default-language:    Haskell2010
   pkgconfig-depends:   hkl
@@ -60,7 +60,7 @@ executable ghkl
 
 library
   -- Modules exported by the library.
-   exposed-modules:    Hkl, Hkl.Types, Hkl.C, Hkl.DArray
+   exposed-modules:    Hkl, Hkl.Types, Hkl.C
 
   -- Modules included in this library but not exported.
   -- other-modules:
