@@ -54,6 +54,6 @@ data Sample = Sample String Lattice
 
 -- Source
 
-data Source = Source Double -- wavelength
+data Source = Source (Length Double) -- wavelength
             deriving (Show)
 

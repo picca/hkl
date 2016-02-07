@@ -29,7 +29,7 @@ main = do
   else do
     let factory = fromJust mfactory
     let sample = Sample "test" (Cubic (1.54 *~ nano meter))
-    let geometry = Geometry (Source 1.54) [0, 30, 0, 0, 0, 60]
+    let geometry = Geometry (Source (1.54 *~ nano meter)) [0, 30, 0, 0, 0, 60]
     let detector = Detector DetectorType0D
 
     -- compute the pseudo axes values

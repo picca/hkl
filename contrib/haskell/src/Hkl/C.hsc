@@ -94,8 +94,8 @@ foreign import ccall unsafe "hkl.h &hkl_sample_free"
 -- Geometry
 
 newGeometry :: Factory -> Geometry -> IO (ForeignPtr HklGeometry)
-newGeometry (Factory f) (Geometry (Source w) vs) = do
-  let wavelength = CDouble w
+newGeometry (Factory f) (Geometry (Source lw) vs) = do
+  let wavelength = CDouble (lw /~ (nano meter))
   geometry <- c_hkl_factory_create_new_geometry f
   c_hkl_geometry_wavelength_set geometry wavelength unit nullPtr
   darray <- c_hkl_geometry_axis_names_get geometry
