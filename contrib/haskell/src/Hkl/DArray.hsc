@@ -38,8 +38,49 @@ darrayStringLen p = do
 
 -- geometry
 
+newGeometry :: Factory -> Source -> [Double] -> IO Geometry
+newGeometry (Factory f) s@(Source w) vs = do
+  let wavelength = CDouble w
+  geometry <- c_hkl_factory_create_new_geometry f
+  c_hkl_geometry_wavelength_set geometry wavelength unit nullPtr
+  darray <- c_hkl_geometry_axis_names_get geometry
+  n <- darrayStringLen darray
+  withArray vs $ \values -> do
+      c_hkl_geometry_axis_values_set geometry values n unit nullPtr
+
+  fptr <- newForeignPtr c_hkl_geometry_free geometry
+  return $ Geometry (fptr, s, vs)
+
+foreign import ccall unsafe "hkl.h hkl_factory_create_new_geometry"
+  c_hkl_factory_create_new_geometry :: Ptr HklFactory -> IO (Ptr HklGeometry)
+
+foreign import ccall unsafe "hkl.h &hkl_geometry_free"
+  c_hkl_geometry_free :: FunPtr (Ptr HklGeometry -> IO ())
+
+foreign import ccall unsafe "hkl.h hkl_geometry_wavelength_set"
+  c_hkl_geometry_wavelength_set :: Ptr HklGeometry -- geometry
+                                -> CDouble -- wavelength
+                                -> CInt -- unit
+                                -> Ptr () -- *gerror
+                                -> IO () -- IO CInt but for now do not deal with the errors
+
+foreign import ccall unsafe "hkl.h hkl_geometry_axis_values_set"
+  c_hkl_geometry_axis_values_set :: Ptr HklGeometry -- geometry
+                                 -> Ptr Double -- axis values
+                                 -> CSize -- size of axis values
+                                 -> CInt -- unit
+                                 -> Ptr () -- gerror
+                                 -> IO () -- IO CInt but for now do not deal with the errors
+
+geometryName :: Geometry -> IO String
+geometryName (Geometry (g, _, _)) = withForeignPtr g (c_hkl_geometry_name_get >=> peekCString)
+
+foreign import ccall unsafe "hkl.h hkl_geometry_name_get"
+  c_hkl_geometry_name_get :: Ptr HklGeometry -> IO CString
+
+
 geometryWavelengthGet :: Geometry -> IO Double
-geometryWavelengthGet (Geometry (g, _)) =
+geometryWavelengthGet (Geometry (g, _, _)) =
   withForeignPtr g $ \gp -> do
     (CDouble d) <- c_hkl_geometry_wavelength_get gp unit
     return d
@@ -50,7 +91,7 @@ foreign import ccall unsafe "hkl.h hkl_geometry_wavelength_get"
                                 -> IO CDouble -- wavelength
 
 geometryAxisNamesGet' :: Geometry -> IO [CString]
-geometryAxisNamesGet' (Geometry (g, _)) =
+geometryAxisNamesGet' (Geometry (g, _, _)) =
   withForeignPtr g (c_hkl_geometry_axis_names_get >=> peekDArrayString)
 
 foreign import ccall unsafe "hkl.h hkl_geometry_axis_names_get"
@@ -58,7 +99,7 @@ foreign import ccall unsafe "hkl.h hkl_geometry_axis_names_get"
                                 -> IO (Ptr ()) -- darray_string
 
 geometryAxisGet :: Geometry -> CString -> IO Parameter
-geometryAxisGet (Geometry (g, _)) n =
+geometryAxisGet (Geometry (g, _, _)) n =
     withForeignPtr g $ \gp ->
         c_hkl_geometry_axis_get gp n nullPtr >>= peekParameter
 
@@ -72,7 +113,7 @@ geometryAxesGet :: Geometry -> IO [Parameter]
 geometryAxesGet g = geometryAxisNamesGet' g >>= mapM (geometryAxisGet g)
 
 geometryAxisValuesGet :: Geometry -> IO [Double]
-geometryAxisValuesGet (Geometry (g, _)) =
+geometryAxisValuesGet (Geometry (g, _, _)) =
   withForeignPtr g $ \gp -> do
     darray <- c_hkl_geometry_axis_names_get gp
     n <- darrayStringLen darray
@@ -86,22 +127,6 @@ foreign import ccall unsafe "hkl.h hkl_geometry_axis_values_get"
                                  -> Ptr Double -- axis values
                                  -> CSize -- size of axis values
                                  -> CInt -- unit
-                                 -> IO () -- IO CInt but for now do not deal with the errors
-
-geometryAxisValuesSet :: Geometry -> [Double] -> IO ()
-geometryAxisValuesSet (Geometry (g, _)) v =
-  withForeignPtr g $ \gp -> do
-    darray <- c_hkl_geometry_axis_names_get gp
-    n <- darrayStringLen darray
-    withArray v $ \values -> do
-      c_hkl_geometry_axis_values_set gp values n unit nullPtr
-
-foreign import ccall unsafe "hkl.h hkl_geometry_axis_values_set"
-  c_hkl_geometry_axis_values_set :: Ptr HklGeometry -- geometry
-                                 -> Ptr Double -- axis values
-                                 -> CSize -- size of axis values
-                                 -> CInt -- unit
-                                 -> Ptr () -- gerror
                                  -> IO () -- IO CInt but for now do not deal with the errors
 
 -- engine

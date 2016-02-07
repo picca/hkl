@@ -37,35 +37,6 @@ foreign import ccall unsafe "hkl.h hkl_factory_name_get"
   c_hkl_factory_name_get :: Ptr HklFactory -> IO CString
 
 
--- data Geometry
-
-newGeometry :: Factory -> Source -> IO Geometry
-newGeometry (Factory f) s@(Source w) = do
-  geometry <- c_hkl_factory_create_new_geometry f
-  fptr <- newForeignPtr c_hkl_geometry_free geometry
-  let wavelength = CDouble w
-  c_hkl_geometry_wavelength_set geometry wavelength unit nullPtr
-  return $ Geometry (fptr, s)
-
-foreign import ccall unsafe "hkl.h hkl_factory_create_new_geometry"
-  c_hkl_factory_create_new_geometry :: Ptr HklFactory -> IO (Ptr HklGeometry)
-
-foreign import ccall unsafe "hkl.h &hkl_geometry_free"
-  c_hkl_geometry_free :: FunPtr (Ptr HklGeometry -> IO ())
-
-foreign import ccall unsafe "hkl.h hkl_geometry_wavelength_set"
-  c_hkl_geometry_wavelength_set :: Ptr HklGeometry -- geometry
-                                -> CDouble -- wavelength
-                                -> CInt -- unit
-                                -> Ptr () -- *gerror
-                                -> IO () -- IO CInt but for now do not deal with the errors
-
-geometryName :: Geometry -> IO String
-geometryName (Geometry (g, _)) = withForeignPtr g (c_hkl_geometry_name_get >=> peekCString)
-
-foreign import ccall unsafe "hkl.h hkl_geometry_name_get"
-  c_hkl_geometry_name_get :: Ptr HklGeometry -> IO CString
-
 -- Engine
 
 engineNameGet :: Engine -> IO String
@@ -94,7 +65,7 @@ foreign import ccall unsafe "hkl.h hkl_engine_list_get"
   c_hkl_engine_list_get:: Ptr HklEngineList -> IO ()
 
 engineListInit :: EngineList -> Geometry -> Detector -> Sample -> IO ()
-engineListInit (EngineList e) (Geometry (g, _)) (Detector d) (Sample s) =
+engineListInit (EngineList e) (Geometry (g, _, _)) (Detector d) (Sample s) =
   withForeignPtr s $ \sp ->
       withForeignPtr d $ \dp ->
           withForeignPtr g $ \gp ->
