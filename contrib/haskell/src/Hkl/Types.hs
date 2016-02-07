@@ -45,6 +45,8 @@ newtype Sample = Sample (ForeignPtr HklSample) deriving (Show)
 
 -- Detector
 data DetectorType = DetectorType0D
+                  deriving (Show)
 
 data HklDetector
-newtype Detector = Detector (ForeignPtr HklDetector) deriving (Show)
+data Detector = Detector DetectorType
+              deriving (Show)

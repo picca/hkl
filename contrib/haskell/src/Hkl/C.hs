@@ -63,18 +63,3 @@ foreign import ccall unsafe "hkl.h hkl_sample_new"
 
 foreign import ccall unsafe "hkl.h &hkl_sample_free"
   c_hkl_sample_free :: FunPtr (Ptr HklSample -> IO ())
-
--- Detector
-
-newDetector :: DetectorType -> IO Detector
-newDetector t =
-  Detector <$> (c_hkl_detector_new it >>= newForeignPtr c_hkl_detector_free)
-      where
-        it = case t of
-             DetectorType0D -> 0
-
-foreign import ccall unsafe "hkl.h hkl_detector_new"
-  c_hkl_detector_new:: CInt -> IO (Ptr HklDetector)
-
-foreign import ccall unsafe "hkl.h &hkl_detector_free"
-  c_hkl_detector_free :: FunPtr (Ptr HklDetector -> IO ())

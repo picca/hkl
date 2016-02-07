@@ -39,10 +39,7 @@ main = do
 
       -- set the geometry parameters
       let geometry = Hkl.Geometry (Hkl.Source 1.54) [0, 30, 0, 0, 0, 60]
-
-      print geometry
-      -- detector
-      detector <- Hkl.newDetector Hkl.DetectorType0D
+      let detector = Hkl.Detector Hkl.DetectorType0D
 
       -- compute the pseudo axes values
       pseudoAxes <- Hkl.compute factory geometry detector sample

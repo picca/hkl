@@ -1,7 +1,8 @@
 {-# LANGUAGE ForeignFunctionInterface #-}
 {-# LANGUAGE CPP #-}
 
-module Hkl.DArray where
+module Hkl.DArray
+       ( compute ) where
 
 import Control.Monad
 import Foreign
@@ -129,6 +130,21 @@ foreign import ccall unsafe "hkl.h hkl_geometry_axis_values_get"
                                  -> CInt -- unit
                                  -> IO () -- IO CInt but for now do not deal with the errors
 
+-- Detector
+
+newDetector :: Detector -> IO (ForeignPtr HklDetector)
+newDetector (Detector t) =
+  (c_hkl_detector_new it >>= newForeignPtr c_hkl_detector_free)
+      where
+        it = case t of
+             DetectorType0D -> 0
+
+foreign import ccall unsafe "hkl.h hkl_detector_new"
+  c_hkl_detector_new:: CInt -> IO (Ptr HklDetector)
+
+foreign import ccall unsafe "hkl.h &hkl_detector_free"
+  c_hkl_detector_free :: FunPtr (Ptr HklDetector -> IO ())
+
 -- engine
 
 enginePseudoAxisNamesGet' :: Engine -> IO [CString]
@@ -176,8 +192,12 @@ engineListGet (EngineList e) = withForeignPtr e c_hkl_engine_list_get
 foreign import ccall unsafe "hkl.h hkl_engine_list_get"
   c_hkl_engine_list_get:: Ptr HklEngineList -> IO ()
 
-engineListInit :: EngineList -> ForeignPtr HklGeometry -> Detector -> Sample -> IO ()
-engineListInit (EngineList e) g (Detector d) (Sample s) =
+engineListInit :: EngineList
+               -> ForeignPtr HklGeometry
+               -> ForeignPtr HklDetector
+               -> Sample
+               -> IO ()
+engineListInit (EngineList e) g d (Sample s) =
   withForeignPtr s $ \sp ->
       withForeignPtr d $ \dp ->
           withForeignPtr g $ \gp ->
@@ -205,9 +225,10 @@ engineListPseudoAxesGet l@(EngineList e) =
       engineListEnginesGet l >>= mapM enginePseudoAxesGet
 
 compute :: Factory -> Geometry -> Detector -> Sample -> IO [[Parameter]]
-compute factory g detector sample = do
+compute factory g d sample = do
   engines <- newEngineList factory
   geometry <- newGeometry factory g
+  detector <- newDetector d
   engineListInit engines geometry detector sample
   engineListGet engines
   pss <- engineListPseudoAxesGet engines
