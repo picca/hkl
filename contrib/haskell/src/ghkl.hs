@@ -19,7 +19,6 @@ tmpGhklUi = "../../gui/ghkl.ui"
 -- diffractometer :: Hkl.Diffractometer
 -- diffractometer = Hkl.Diffractometer "ZAXIS"
 
-
 main :: IO ()
 main = do
   -- initGUI
@@ -40,7 +39,7 @@ main = do
 
       -- set the geometry parameters
       geometry <- Hkl.newGeometry factory
-                                  (Hkl.Source 2)
+                                  (Hkl.Source 1.54)
                                   [0, 30, 0, 0, 0, 60]
 
       print geometry
@@ -48,10 +47,7 @@ main = do
       detector <- Hkl.newDetector Hkl.DetectorType0D
 
       -- compute the pseudo axes values
-      engines <- Hkl.newEngineList factory
-      Hkl.engineListInit engines geometry detector sample
-      Hkl.engineListGet engines
-      pseudoAxes <- Hkl.engineListPseudoAxesGet engines
+      pseudoAxes <- Hkl.compute factory geometry detector sample
       print pseudoAxes
 
     -- builder <- builderNew

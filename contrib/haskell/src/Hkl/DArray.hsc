@@ -158,7 +158,35 @@ foreign import ccall unsafe "hkl.h hkl_parameter_min_max_get"
 enginePseudoAxesGet :: Engine -> IO [Parameter]
 enginePseudoAxesGet e = enginePseudoAxisNamesGet' e >>= mapM (enginePseudoAxisGet e)
 
--- engineList
+-- EngineList
+
+newEngineList :: Factory -> IO EngineList
+newEngineList (Factory f) =
+  EngineList <$> (c_hkl_factory_create_new_engine_list f >>= newForeignPtr c_hkl_engine_list_free)
+
+foreign import ccall unsafe "hkl.h hkl_factory_create_new_engine_list"
+  c_hkl_factory_create_new_engine_list:: Ptr HklFactory -> IO (Ptr HklEngineList)
+
+foreign import ccall unsafe "hkl.h &hkl_engine_list_free"
+  c_hkl_engine_list_free :: FunPtr (Ptr HklEngineList -> IO ())
+
+engineListGet :: EngineList -> IO ()
+engineListGet (EngineList e) = withForeignPtr e c_hkl_engine_list_get
+
+foreign import ccall unsafe "hkl.h hkl_engine_list_get"
+  c_hkl_engine_list_get:: Ptr HklEngineList -> IO ()
+
+engineListInit :: EngineList -> Geometry -> Detector -> Sample -> IO ()
+engineListInit (EngineList e) (Geometry (g, _, _)) (Detector d) (Sample s) =
+  withForeignPtr s $ \sp ->
+      withForeignPtr d $ \dp ->
+          withForeignPtr g $ \gp ->
+              withForeignPtr e $ \ep ->
+                  c_hkl_engine_list_init ep gp dp sp
+
+
+foreign import ccall unsafe "hkl.h hkl_engine_list_init"
+  c_hkl_engine_list_init:: Ptr HklEngineList -> Ptr HklGeometry -> Ptr HklDetector -> Ptr HklSample -> IO ()
 
 engineListEnginesGet :: EngineList -> IO [Engine]
 engineListEnginesGet (EngineList e) = withForeignPtr e $ \ep -> do
@@ -175,3 +203,11 @@ engineListPseudoAxesGet :: EngineList -> IO [[Parameter]]
 engineListPseudoAxesGet l@(EngineList e) =
   withForeignPtr e $ \ep ->
       engineListEnginesGet l >>= mapM enginePseudoAxesGet
+
+compute :: Factory -> Geometry -> Detector -> Sample -> IO [[Parameter]]
+compute factory geometry detector sample = do
+  engines <- newEngineList factory
+  engineListInit engines geometry detector sample
+  engineListGet engines
+  pss <- engineListPseudoAxesGet engines
+  return pss
