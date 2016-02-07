@@ -13,37 +13,38 @@ import Hkl.Types
 
 -- data Factory
 
-factories :: IO (Map String HklFactory)
+factories :: IO (Map String Factory)
 factories = do
   fs <- factoryGetAll
   ns <- mapM factoryNameGet fs
   return $ fromList $ zip ns fs
 
 {-# NOINLINE factoryGetAll #-}
-factoryGetAll :: IO [HklFactory]
+factoryGetAll :: IO [Factory]
 factoryGetAll =  alloca $ \ptr -> do
                    fact <- c_hkl_factory_get_all ptr
                    n <- peek ptr
-                   peekArray n fact
+                   hklfactories <- peekArray n fact
+                   return $ fmap Factory hklfactories
 
 foreign import ccall unsafe "hkl.h hkl_factory_get_all"
-  c_hkl_factory_get_all :: Ptr Int -> IO (Ptr HklFactory)
+  c_hkl_factory_get_all :: Ptr Int -> IO (Ptr (Ptr HklFactory))
 
-factoryNameGet :: HklFactory -> IO String
-factoryNameGet factory = c_hkl_factory_name_get factory >>= peekCString
+factoryNameGet :: Factory -> IO String
+factoryNameGet (Factory factory) = c_hkl_factory_name_get factory >>= peekCString
 
 foreign import ccall unsafe "hkl.h hkl_factory_name_get"
-  c_hkl_factory_name_get :: HklFactory -> IO CString
+  c_hkl_factory_name_get :: Ptr HklFactory -> IO CString
 
 
 -- data Geometry
 
-newGeometry :: HklFactory -> IO Geometry
-newGeometry f =
+newGeometry :: Factory -> IO Geometry
+newGeometry (Factory f) =
   Geometry <$> (c_hkl_factory_create_new_geometry f >>= newForeignPtr c_hkl_geometry_free)
 
 foreign import ccall unsafe "hkl.h hkl_factory_create_new_geometry"
-  c_hkl_factory_create_new_geometry :: HklFactory -> IO (Ptr HklGeometry)
+  c_hkl_factory_create_new_geometry :: Ptr HklFactory -> IO (Ptr HklGeometry)
 
 foreign import ccall unsafe "hkl.h &hkl_geometry_free"
   c_hkl_geometry_free :: FunPtr (Ptr HklGeometry -> IO ())
@@ -56,21 +57,21 @@ foreign import ccall unsafe "hkl.h hkl_geometry_name_get"
 
 -- Engine
 
-engineNameGet :: HklEngine -> IO String
-engineNameGet engine = c_hkl_engine_name_get engine >>= peekCString
+engineNameGet :: Engine -> IO String
+engineNameGet (Engine engine) = c_hkl_engine_name_get engine >>= peekCString
 
 foreign import ccall unsafe "hkl.h hkl_engine_name_get"
-  c_hkl_engine_name_get :: HklEngine -> IO CString
+  c_hkl_engine_name_get :: Ptr HklEngine -> IO CString
 
 
 -- EngineList
 
-newEngineList :: HklFactory -> IO EngineList
-newEngineList f =
+newEngineList :: Factory -> IO EngineList
+newEngineList (Factory f) =
   EngineList <$> (c_hkl_factory_create_new_engine_list f >>= newForeignPtr c_hkl_engine_list_free)
 
 foreign import ccall unsafe "hkl.h hkl_factory_create_new_engine_list"
-  c_hkl_factory_create_new_engine_list:: HklFactory -> IO (Ptr HklEngineList)
+  c_hkl_factory_create_new_engine_list:: Ptr HklFactory -> IO (Ptr HklEngineList)
 
 foreign import ccall unsafe "hkl.h &hkl_engine_list_free"
   c_hkl_engine_list_free :: FunPtr (Ptr HklEngineList -> IO ())

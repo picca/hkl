@@ -11,7 +11,8 @@ unit = 1
 type Range = (Double, Double)
 
 -- HklFactory should be private
-newtype HklFactory = HklFactory (Ptr HklFactory) deriving (Show, Storable)
+data HklFactory
+newtype Factory = Factory (Ptr HklFactory) deriving (Show, Storable)
 
 -- HklParameter -- should be private
 data HklParameter
@@ -27,7 +28,8 @@ data HklGeometry
 newtype Geometry = Geometry (ForeignPtr HklGeometry) deriving (Show)
 
 -- HklEngine -- should be private
-newtype HklEngine = HklEngine (Ptr HklEngine) deriving (Show, Storable)
+data HklEngine
+newtype Engine = Engine (Ptr HklEngine) deriving (Show, Storable)
 
 -- EngineList
 data HklEngineList
