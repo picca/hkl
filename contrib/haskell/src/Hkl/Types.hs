@@ -8,7 +8,8 @@ import Foreign.C
 unit :: CInt
 unit = 1
 
-type Range = (Double, Double)
+data Range = Range Double Double -- min max
+           deriving (Show)
 
 -- HklFactory should be private
 data HklFactory
@@ -18,10 +19,9 @@ newtype Factory = Factory (Ptr HklFactory) deriving (Show, Storable)
 data HklParameter
 
 -- Parameter
-data Parameter = Parameter { parameterName :: String
-                           , parameterValue ::Double
-                           , parameterRange :: Range
-                           } deriving (Show)
+data Parameter = Parameter String Double Range -- name, value, range
+               deriving (Show)
+
 
 -- Geometry
 data HklGeometry

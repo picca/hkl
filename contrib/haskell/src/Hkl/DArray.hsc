@@ -23,7 +23,7 @@ peekParameter p =
           c_hkl_parameter_min_max_get p pmin pmax unit
           min <- peek pmin
           max <- peek pmax
-          return (Parameter name value (min, max))
+          return (Parameter name value (Range min max))
 
 peekDArrayString :: Ptr () -> IO [CString]
 peekDArrayString p = do

@@ -22,12 +22,12 @@ tmpGhklUi = "../../gui/ghkl.ui"
 
 main :: IO ()
 main = do
-    -- initGUI
+  -- initGUI
   factories <- Hkl.factories
   let mfactory = lookup "E6C" factories
   if isNothing mfactory
-     then
-         return $ error $ "wrong diffractometer:" ++ show factories
+  then
+      return $ error $ "wrong diffractometer:" ++ show factories
   else do
     let factory = fromJust mfactory
 
@@ -45,6 +45,7 @@ main = do
       let positions = [1, 2, 3, 4, 5, 6]
       Hkl.geometryAxisValuesSet geometry positions
 
+      print geometry
       -- detector
       detector <- Hkl.newDetector Hkl.DetectorType0D
 
