@@ -36,7 +36,6 @@ data HklEngine
 
 -- EngineList
 data HklEngineList
-newtype EngineList = EngineList (ForeignPtr HklEngineList) deriving (Show)
 
 -- Sample
 data HklSample
