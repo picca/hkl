@@ -42,6 +42,10 @@ class TestAPI(unittest.TestCase):
         self.assertTrue(type(v.data) == list)
         self.assertTrue(3 == len(v.data))
 
+        self.assertTrue(v.data == [0.0, 0.0, 0.0])
+        v.init(1, 2, 3)
+        self.assertTrue(v.data == [1.0, 2.0, 3.0])
+
         del v
 
     def test_quaternion_api(self):

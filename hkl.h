@@ -100,6 +100,8 @@ struct _HklVector
 	double data[3];
 };
 
+HKLAPI void hkl_vector_init(HklVector *self, double x, double y, double z);
+
 /**************/
 /* Quaternion */
 /**************/

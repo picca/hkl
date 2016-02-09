@@ -866,6 +866,8 @@ git clone git://repo.or.cz/hkl.git
 ** @VERSION@
 *** DONE =HklEngine= <2016-01-20 mer.>
     emergence_fixed for the SOLEIL SIX MED 2+2 geometry.
+*** DONE =HklVector= <2016-02-09 mar.>
+    The hkl_vector_init method is now public.
 ** 4.99.99.1955 <2015-07-15 mer.>
    Add the ccan_config.h public header. This header is generated with
    the ccan configurator program.

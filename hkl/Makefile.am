@@ -111,6 +111,7 @@ introspection_files = \
 	../hkl.h \
 	hkl-binding-private.h \
 	hkl-types.h \
+	hkl-vector.c \
 	hkl-matrix.c \
 	hkl-parameter.c \
 	hkl-axis.c \

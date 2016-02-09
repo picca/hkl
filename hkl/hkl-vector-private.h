@@ -31,8 +31,6 @@ HklVector* hkl_vector_dup(const HklVector* self);
 
 void hkl_vector_free(HklVector* self);
 
-extern void hkl_vector_init(HklVector *self, double x, double y, double z);
-
 extern void hkl_vector_fprintf(FILE *file, const HklVector *self);
 
 extern int hkl_vector_cmp(const HklVector *self, const HklVector *vector);
