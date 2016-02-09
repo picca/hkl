@@ -17,6 +17,14 @@ data Detector = Detector DetectorType
 data DetectorType = DetectorType0D
                   deriving (Show)
 
+-- Engine
+
+data Mode = Mode String [Parameter]
+          deriving (Show)
+
+data Engine = Engine String [Parameter] Mode
+              deriving (Show)
+
 -- HklFactory should be private
 
 data HklFactory
