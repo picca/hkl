@@ -5,9 +5,11 @@ module Hkl.C
        ( compute
        , factories
        , newSample
+       , solve
        ) where
 
 import Control.Monad
+import Control.Monad.Loops (unfoldrM)
 import Data.Map.Strict as Map
 import Numeric.Units.Dimensional.Prelude ( meter, degree, radian, nano
                                          , (*~), (/~))
@@ -24,6 +26,8 @@ data HklDetector
 data HklEngine
 data HklEngineList
 data HklGeometry
+data HklGeometryList
+data HklGeometryListItem
 data HklLattice
 data HklParameter
 data HklSample
@@ -52,6 +56,46 @@ darrayStringLen :: Ptr () -> IO (CSize)
 darrayStringLen p = do
     n <- (#{peek darray_string, size} p) :: IO CSize
     return n
+
+-- Engine
+
+solve :: Factory -> Geometry -> Detector -> Sample -> Engine -> IO [Geometry]
+solve f g d s (Engine name vs (Mode mode ps)) = do
+  f_sample <- newSample s
+  f_detector <- newDetector d
+  f_geometry <- newGeometry f g
+  f_engines <- newEngineList f
+  withForeignPtr f_sample $ \sample ->
+      withForeignPtr f_detector $ \detector ->
+          withForeignPtr f_geometry $ \geometry ->
+              withForeignPtr f_engines $ \engines -> do
+                c_hkl_engine_list_init engines geometry detector sample
+                withCString name $ \cname -> do
+                  engine <- c_hkl_engine_list_engine_get_by_name engines cname nullPtr
+                  n <- c_hkl_engine_pseudo_axis_names_get engine >>= darrayStringLen
+                  let positions = [v | (Parameter _ v _) <- vs]
+                  withArray positions $ \values ->
+                    (c_hkl_engine_pseudo_axis_values_set engine values n unit nullPtr)
+                    >>= newForeignPtr c_hkl_geometry_list_free
+                    >>= peekHklGeometryList
+
+
+foreign import ccall unsafe "hkl.h hkl_engine_list_engine_get_by_name"
+  c_hkl_engine_list_engine_get_by_name :: Ptr HklEngineList --engine list
+                                       -> CString -- engine name
+                                       -> Ptr () -- gerror need to deal about this
+                                       -> IO (Ptr HklEngine) -- the returned HklEngine
+
+foreign import ccall unsafe "hkl.h hkl_engine_pseudo_axis_values_set"
+  c_hkl_engine_pseudo_axis_values_set :: Ptr HklEngine
+                                      -> Ptr Double --values
+                                      -> CSize -- n_values
+                                      -> CInt -- unit_type
+                                      -> Ptr () --  GError **error
+                                      -> IO (Ptr HklGeometryList)
+
+foreign import ccall unsafe "hkl.h &hkl_geometry_list_free"
+  c_hkl_geometry_list_free :: FunPtr (Ptr HklGeometryList -> IO ())
 
 -- Factory
 
@@ -101,6 +145,30 @@ foreign import ccall unsafe "hkl.h &hkl_sample_free"
 
 -- Geometry
 
+peekGeometry :: Ptr HklGeometry -> IO (Geometry)
+peekGeometry gp = do
+  (CDouble w) <- c_hkl_geometry_wavelength_get gp unit
+  darray <- c_hkl_geometry_axis_names_get gp
+  n <- darrayStringLen darray
+  let nn = fromEnum n
+  allocaArray nn $ \values -> do
+    c_hkl_geometry_axis_values_get gp values n unit
+    vs <- peekArray nn values
+    return $ Geometry (Source (w *~ nano meter)) vs
+
+foreign import ccall unsafe "hkl.h hkl_geometry_wavelength_get"
+  c_hkl_geometry_wavelength_get :: Ptr HklGeometry -- geometry
+                                -> CInt -- unit
+                                -> IO CDouble -- wavelength
+
+
+foreign import ccall unsafe "hkl.h hkl_geometry_axis_values_get"
+  c_hkl_geometry_axis_values_get :: Ptr HklGeometry -- geometry
+                                 -> Ptr Double -- axis values
+                                 -> CSize -- size of axis values
+                                 -> CInt -- unit
+                                 -> IO () -- IO CInt but for now do not deal with the errors
+
 newGeometry :: Factory -> Geometry -> IO (ForeignPtr HklGeometry)
 newGeometry (Factory f) (Geometry (Source lw) vs) = do
   let wavelength = CDouble (lw /~ nano meter)
@@ -141,17 +209,6 @@ foreign import ccall unsafe "hkl.h hkl_geometry_name_get"
   c_hkl_geometry_name_get :: Ptr HklGeometry -> IO CString
 
 
-geometryWavelengthGet :: ForeignPtr HklGeometry -> IO Double
-geometryWavelengthGet g =
-  withForeignPtr g $ \gp -> do
-    (CDouble d) <- c_hkl_geometry_wavelength_get gp unit
-    return d
-
-foreign import ccall unsafe "hkl.h hkl_geometry_wavelength_get"
-  c_hkl_geometry_wavelength_get :: Ptr HklGeometry -- geometry
-                                -> CInt -- unit
-                                -> IO CDouble -- wavelength
-
 geometryAxisNamesGet' :: ForeignPtr HklGeometry -> IO [CString]
 geometryAxisNamesGet' g =
   withForeignPtr g (c_hkl_geometry_axis_names_get >=> peekDArrayString)
@@ -174,22 +231,36 @@ foreign import ccall unsafe "hkl.h hkl_geometry_axis_get"
 geometryAxesGet :: ForeignPtr HklGeometry -> IO [Parameter]
 geometryAxesGet g = geometryAxisNamesGet' g >>= mapM (geometryAxisGet g)
 
-geometryAxisValuesGet :: ForeignPtr HklGeometry -> IO [Double]
-geometryAxisValuesGet g =
-  withForeignPtr g $ \gp -> do
-    darray <- c_hkl_geometry_axis_names_get gp
-    n <- darrayStringLen darray
-    let nn = fromEnum n
-    allocaArray nn $ \values -> do
-      c_hkl_geometry_axis_values_get gp values n unit
-      peekArray nn values
+-- HklGeometryList
 
-foreign import ccall unsafe "hkl.h hkl_geometry_axis_values_get"
-  c_hkl_geometry_axis_values_get :: Ptr HklGeometry -- geometry
-                                 -> Ptr Double -- axis values
-                                 -> CSize -- size of axis values
-                                 -> CInt -- unit
-                                 -> IO () -- IO CInt but for now do not deal with the errors
+peekItems :: Ptr HklGeometryList -> IO [Ptr HklGeometryListItem]
+peekItems l = c_hkl_geometry_list_items_first_get l >>= unfoldrM go
+   where
+      go e
+         | e == nullPtr = return Nothing
+         | otherwise    = do
+               next <- c_hkl_geometry_list_items_next_get l e
+               return (Just (e, next))
+
+peekHklGeometryList :: ForeignPtr HklGeometryList -> IO [Geometry]
+peekHklGeometryList l = withForeignPtr l $ \ls -> do
+  items <- peekItems ls
+  mapM extract items
+    where
+      extract it = c_hkl_geometry_list_item_geometry_get it >>= peekGeometry
+
+foreign import ccall unsafe "hkl.h hkl_geometry_list_items_first_get"
+  c_hkl_geometry_list_items_first_get :: Ptr HklGeometryList
+                                      -> IO (Ptr HklGeometryListItem)
+
+foreign import ccall unsafe "hkl.h hkl_geometry_list_items_next_get"
+  c_hkl_geometry_list_items_next_get :: Ptr HklGeometryList
+                                     -> Ptr HklGeometryListItem
+                                     -> IO (Ptr HklGeometryListItem)
+
+foreign import ccall unsafe "hkl.h hkl_geometry_list_item_geometry_get"
+  c_hkl_geometry_list_item_geometry_get :: Ptr HklGeometryListItem
+                                        -> IO (Ptr HklGeometry)
 
 -- Detector
 

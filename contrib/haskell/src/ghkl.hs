@@ -25,6 +25,15 @@ main' = do
     -- compute the pseudo axes values
     pseudoAxes <- compute factory geometry detector sample
     print pseudoAxes
+
+    -- solve the pseudo axis problem
+    let engine = Engine "hkl" [ Parameter "h" 0.0 (Range (-1.0) 1.0)
+                              , Parameter "k" 0.0 (Range (-1.0) 1.0)
+                              , Parameter "l" 1.0 (Range (-1.0) 1.0)
+                              ]
+                 (Mode "bissector_vertical" [])
+    solutions <- solve factory geometry detector sample engine
+    print solutions
     return ()
 
 main :: IO ()
