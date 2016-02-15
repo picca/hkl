@@ -57,7 +57,7 @@ data Range = Range Double Double -- min max
 
 -- Sample
 
-data Sample = Sample String Lattice
+data Sample = Sample String Lattice Parameter Parameter Parameter -- name, lattice, ux, uy, uz
             deriving (Show)
 
 -- Source

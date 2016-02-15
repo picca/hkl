@@ -19,6 +19,10 @@ main' = do
   else do
     let factory = fromJust mfactory
     let sample = Sample "test" (Cubic (1.54 *~ nano meter))
+                   (Parameter "ux" 0.0 (Range (-180) 180))
+                   (Parameter "uy" 0.0 (Range (-180) 180))
+                   (Parameter "uz" 0.0 (Range (-180) 180))
+
     let geometry = Geometry (Source (1.54 *~ nano meter)) [0, 30, 0, 0, 0, 60]
     let detector = Detector DetectorType0D
 

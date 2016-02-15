@@ -34,18 +34,6 @@ data HklSample
 
 -- helpers
 
-peekParameter :: Ptr HklParameter -> IO Parameter
-peekParameter p =
-    alloca $ \pmin ->
-        alloca $ \pmax -> do
-          cname <- c_hkl_parameter_name_get p
-          name <- peekCString cname
-          value <- c_hkl_parameter_value_get p unit
-          c_hkl_parameter_min_max_get p pmin pmax unit
-          min <- peek pmin
-          max <- peek pmax
-          return (Parameter name value (Range min max))
-
 peekDArrayString :: Ptr () -> IO [CString]
 peekDArrayString p = do
   n <- (#{peek darray_string, size} p) :: IO CSize
@@ -83,7 +71,7 @@ solve f g d s (Engine name vs (Mode mode ps)) = do
 foreign import ccall unsafe "hkl.h hkl_engine_list_engine_get_by_name"
   c_hkl_engine_list_engine_get_by_name :: Ptr HklEngineList --engine list
                                        -> CString -- engine name
-                                       -> Ptr () -- gerror need to deal about this
+                                       -> Ptr () --  gerror need to deal about this
                                        -> IO (Ptr HklEngine) -- the returned HklEngine
 
 foreign import ccall unsafe "hkl.h hkl_engine_pseudo_axis_values_set"
@@ -122,26 +110,6 @@ factoryNameGet (Factory factory) = c_hkl_factory_name_get factory >>= peekCStrin
 foreign import ccall unsafe "hkl.h hkl_factory_name_get"
   c_hkl_factory_name_get :: Ptr HklFactory -> IO CString
 
-
--- Sample
-
-newSample :: Sample -> IO (ForeignPtr HklSample)
-newSample (Sample name l) =
-    withCString name $ \cname -> do
-      sample <- c_hkl_sample_new cname
-      fptr_l <- newLattice l
-      withForeignPtr fptr_l $ \lattice -> do
-          c_hkl_sample_lattice_set sample lattice
-          newForeignPtr c_hkl_sample_free sample
-
-foreign import ccall unsafe "hkl.h hkl_sample_new"
-  c_hkl_sample_new:: CString -> IO (Ptr HklSample)
-
-foreign import ccall unsafe "hkl.h hkl_sample_lattice_set"
-  c_hkl_sample_lattice_set :: Ptr HklSample -> Ptr HklLattice -> IO ()
-
-foreign import ccall unsafe "hkl.h &hkl_sample_free"
-  c_hkl_sample_free :: FunPtr (Ptr HklSample -> IO ())
 
 -- Geometry
 
@@ -328,15 +296,6 @@ enginePseudoAxisGet e n = c_hkl_engine_pseudo_axis_get e n nullPtr >>= peekParam
 foreign import ccall unsafe "hkl.h hkl_engine_pseudo_axis_get"
   c_hkl_engine_pseudo_axis_get:: Ptr HklEngine -> CString -> Ptr () -> IO (Ptr HklParameter)
 
-foreign import ccall unsafe "hkl.h hkl_parameter_name_get"
-  c_hkl_parameter_name_get:: Ptr HklParameter -> IO CString
-
-foreign import ccall unsafe "hkl.h hkl_parameter_value_get"
-  c_hkl_parameter_value_get:: Ptr HklParameter -> CInt -> IO Double
-
-foreign import ccall unsafe "hkl.h hkl_parameter_min_max_get"
-  c_hkl_parameter_min_max_get :: Ptr HklParameter -> Ptr Double -> Ptr Double -> CInt -> IO ()
-
 enginePseudoAxesGet :: Ptr HklEngine -> IO [Parameter]
 enginePseudoAxesGet e = enginePseudoAxisNamesGet' e >>= mapM (enginePseudoAxisGet e)
 
@@ -450,3 +409,107 @@ foreign import ccall unsafe "hkl.h hkl_lattice_new"
 
 foreign import ccall unsafe "hkl.h &hkl_lattice_free"
   c_hkl_lattice_free :: FunPtr (Ptr HklLattice -> IO ())
+
+-- Parameter
+
+peekParameter :: Ptr HklParameter -> IO Parameter
+peekParameter p =
+    alloca $ \pmin ->
+        alloca $ \pmax -> do
+          cname <- c_hkl_parameter_name_get p
+          name <- peekCString cname
+          value <- c_hkl_parameter_value_get p unit
+          c_hkl_parameter_min_max_get p pmin pmax unit
+          min <- peek pmin
+          max <- peek pmax
+          return (Parameter name value (Range min max))
+
+foreign import ccall unsafe "hkl.h hkl_parameter_name_get"
+  c_hkl_parameter_name_get:: Ptr HklParameter -> IO CString
+
+foreign import ccall unsafe "hkl.h hkl_parameter_value_get"
+  c_hkl_parameter_value_get:: Ptr HklParameter -> CInt -> IO Double
+
+foreign import ccall unsafe "hkl.h hkl_parameter_min_max_get"
+  c_hkl_parameter_min_max_get :: Ptr HklParameter -> Ptr Double -> Ptr Double -> CInt -> IO ()
+
+copyParameter :: Ptr HklParameter -> IO (ForeignPtr HklParameter)
+copyParameter p = newForeignPtr c_hkl_parameter_free =<< c_hkl_parameter_new_copy p
+
+foreign import ccall unsafe "hkl.h &hkl_parameter_free"
+  c_hkl_parameter_free :: FunPtr (Ptr HklParameter -> IO ())
+
+foreign import ccall unsafe "hkl.h hkl_parameter_new_copy"
+  c_hkl_parameter_new_copy:: Ptr HklParameter -> IO (Ptr HklParameter)
+
+pokeParameter :: Parameter -> Ptr HklParameter -> IO ()
+pokeParameter (Parameter name value (Range min max)) parameter = do
+  c_hkl_parameter_value_set parameter (CDouble value) unit nullPtr
+  c_hkl_parameter_min_max_set parameter (CDouble min) (CDouble max) unit nullPtr
+  return ()
+
+foreign import ccall unsafe "hkl.h hkl_parameter_value_set"
+  c_hkl_parameter_value_set:: Ptr HklParameter -> CDouble -> CInt -> Ptr () -> IO (CInt)
+
+foreign import ccall unsafe "hkl.h hkl_parameter_min_max_set"
+  c_hkl_parameter_min_max_set :: Ptr HklParameter -> CDouble -> CDouble -> CInt -> Ptr () -> IO (CInt)
+
+-- Sample
+
+newSample :: Sample -> IO (ForeignPtr HklSample)
+newSample (Sample name l ux uy uz) =
+    withCString name $ \cname -> do
+      sample <- c_hkl_sample_new cname
+      fptr_l <- newLattice l
+      withForeignPtr fptr_l $ \lattice -> do
+          c_hkl_sample_lattice_set sample lattice
+          go sample ux c_hkl_sample_ux_get c_hkl_sample_ux_set
+          go sample uy c_hkl_sample_uy_get c_hkl_sample_uy_set
+          go sample uz c_hkl_sample_uz_get c_hkl_sample_uz_set
+          newForeignPtr c_hkl_sample_free sample
+            where
+              go s p get set = do
+                fptr <- copyParameter =<< (get s)
+                withForeignPtr fptr $ \ptr -> do
+                  pokeParameter p ptr
+                  set s ptr nullPtr
+                  return ()
+
+foreign import ccall unsafe "hkl.h hkl_sample_new"
+  c_hkl_sample_new:: CString -> IO (Ptr HklSample)
+
+foreign import ccall unsafe "hkl.h hkl_sample_lattice_set"
+  c_hkl_sample_lattice_set :: Ptr HklSample -> Ptr HklLattice -> IO ()
+
+foreign import ccall unsafe "hkl.h &hkl_sample_free"
+  c_hkl_sample_free :: FunPtr (Ptr HklSample -> IO ())
+
+foreign import ccall unsafe "hkl.h hkl_sample_ux_get"
+  c_hkl_sample_ux_get :: Ptr HklSample
+                      -> IO (Ptr HklParameter)
+
+foreign import ccall unsafe "hkl.h hkl_sample_uy_get"
+  c_hkl_sample_uy_get :: Ptr HklSample
+                      -> IO (Ptr HklParameter)
+
+foreign import ccall unsafe "hkl.h hkl_sample_uz_get"
+  c_hkl_sample_uz_get :: Ptr HklSample
+                      -> IO (Ptr HklParameter)
+
+foreign import ccall unsafe "hkl.h hkl_sample_ux_set"
+  c_hkl_sample_ux_set :: Ptr HklSample
+                      -> Ptr HklParameter
+                      -> Ptr ()
+                      -> IO CInt
+
+foreign import ccall unsafe "hkl.h hkl_sample_uy_set"
+  c_hkl_sample_uy_set :: Ptr HklSample
+                      -> Ptr HklParameter
+                      -> Ptr ()
+                      -> IO CInt
+
+foreign import ccall unsafe "hkl.h hkl_sample_uz_set"
+  c_hkl_sample_uz_set :: Ptr HklSample
+                      -> Ptr HklParameter
+                      -> Ptr ()
+                      -> IO CInt
