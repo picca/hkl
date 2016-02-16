@@ -64,9 +64,9 @@ solve f g d s e@(Engine name _ _) = do
   withForeignPtr f_sample $ \sample ->
       withForeignPtr f_detector $ \detector ->
           withForeignPtr f_geometry $ \geometry ->
-              withForeignPtr f_engines $ \engines -> do
-                c_hkl_engine_list_init engines geometry detector sample
+              withForeignPtr f_engines $ \engines ->
                 withCString name $ \cname -> do
+                  c_hkl_engine_list_init engines geometry detector sample
                   engine <- c_hkl_engine_list_engine_get_by_name engines cname nullPtr
                   n <- c_hkl_engine_pseudo_axis_names_get engine >>= darrayStringLen
                   solve' engine n e >>= peekHklGeometryList
@@ -90,9 +90,9 @@ solveTraj f g d s es = do
   withForeignPtr f_sample $ \sample ->
       withForeignPtr f_detector $ \detector ->
           withForeignPtr f_geometry $ \geometry ->
-              withForeignPtr f_engines $ \engines -> do
-                c_hkl_engine_list_init engines geometry detector sample
+              withForeignPtr f_engines $ \engines ->
                 withCString name $ \cname -> do
+                  c_hkl_engine_list_init engines geometry detector sample
                   engine <- c_hkl_engine_list_engine_get_by_name engines cname nullPtr
                   n <- c_hkl_engine_pseudo_axis_names_get engine >>= darrayStringLen
                   mapM (\e -> solve' engine n e >>= getSolution0) es
