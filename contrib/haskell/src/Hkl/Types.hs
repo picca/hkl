@@ -65,3 +65,6 @@ data Sample = Sample String Lattice Parameter Parameter Parameter -- name, latti
 data Source = Source (Length Double) -- wavelength
             deriving (Show)
 
+-- Trajectory
+
+type Trajectory = [[Double]]

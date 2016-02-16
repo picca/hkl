@@ -1,3 +1,5 @@
+{-# LANGUAGE BangPatterns #-}
+
 module Main where
 
 import Control.Monad
@@ -30,14 +32,19 @@ main' = do
     pseudoAxes <- compute factory geometry detector sample
     print pseudoAxes
 
-    -- solve the pseudo axis problem
+    -- solve a pseudo axis problem for the given engine
     let engine = Engine "hkl" [ Parameter "h" 0.0 (Range (-1.0) 1.0)
                               , Parameter "k" 0.0 (Range (-1.0) 1.0)
                               , Parameter "l" 1.0 (Range (-1.0) 1.0)
                               ]
                  (Mode "bissector_vertical" [])
-    solutions <- solve factory geometry detector sample engine
-    print solutions
+
+    -- let trajectory = TrajectoryRaw [[0, 0, 1], [0, 1, 1]]
+    let trajectory = fromTo 100000 [0, 0, 1] [0, 1, 1]
+    let engines = enginesTrajectory engine trajectory
+
+    solutions <- mapM (solve0 factory geometry detector sample) engines
+
     return ()
 
 main :: IO ()

@@ -6,6 +6,7 @@ module Hkl.C
        , factories
        , newSample
        , solve
+       , solve0
        ) where
 
 import Control.Monad
@@ -84,6 +85,11 @@ foreign import ccall unsafe "hkl.h hkl_engine_pseudo_axis_values_set"
 
 foreign import ccall unsafe "hkl.h &hkl_geometry_list_free"
   c_hkl_geometry_list_free :: FunPtr (Ptr HklGeometryList -> IO ())
+
+solve0 :: Factory -> Geometry -> Detector -> Sample -> Engine -> IO Geometry
+solve0 f g d s e = do
+  solutions <- solve f g d s e
+  return $ head solutions
 
 -- Factory
 
