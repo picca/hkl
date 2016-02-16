@@ -6,7 +6,7 @@ module Hkl.C
        , factories
        , newSample
        , solve
-       , solve0
+       , solveTraj
        ) where
 
 import Control.Monad
@@ -48,8 +48,15 @@ darrayStringLen p = do
 
 -- Engine
 
+solve' :: Ptr HklEngine -> CSize -> Engine -> IO (ForeignPtr HklGeometryList)
+solve' engine n (Engine _ ps _) = do
+  let positions = [v | (Parameter _ v _) <- ps]
+  withArray positions $ \values ->
+      c_hkl_engine_pseudo_axis_values_set engine values n unit nullPtr
+      >>= newForeignPtr c_hkl_geometry_list_free
+
 solve :: Factory -> Geometry -> Detector -> Sample -> Engine -> IO [Geometry]
-solve f g d s (Engine name vs (Mode mode ps)) = do
+solve f g d s e@(Engine name _ _) = do
   f_sample <- newSample s
   f_detector <- newDetector d
   f_geometry <- newGeometry f g
@@ -62,12 +69,33 @@ solve f g d s (Engine name vs (Mode mode ps)) = do
                 withCString name $ \cname -> do
                   engine <- c_hkl_engine_list_engine_get_by_name engines cname nullPtr
                   n <- c_hkl_engine_pseudo_axis_names_get engine >>= darrayStringLen
-                  let positions = [v | (Parameter _ v _) <- vs]
-                  withArray positions $ \values ->
-                    (c_hkl_engine_pseudo_axis_values_set engine values n unit nullPtr)
-                    >>= newForeignPtr c_hkl_geometry_list_free
-                    >>= peekHklGeometryList
+                  solve' engine n e >>= peekHklGeometryList
 
+getSolution0 :: ForeignPtr HklGeometryList -> IO Geometry
+getSolution0 gl = withForeignPtr gl $ \solutions ->
+                  c_hkl_geometry_list_items_first_get solutions
+                  >>= c_hkl_geometry_list_item_geometry_get
+                  >>= peekGeometry
+
+engineName :: Engine -> String
+engineName (Engine name _ _) = name
+
+solveTraj :: Factory -> Geometry -> Detector -> Sample -> [Engine] -> IO [Geometry]
+solveTraj f g d s es = do
+  let name = engineName (head es)
+  f_sample <- newSample s
+  f_detector <- newDetector d
+  f_geometry <- newGeometry f g
+  f_engines <- newEngineList f
+  withForeignPtr f_sample $ \sample ->
+      withForeignPtr f_detector $ \detector ->
+          withForeignPtr f_geometry $ \geometry ->
+              withForeignPtr f_engines $ \engines -> do
+                c_hkl_engine_list_init engines geometry detector sample
+                withCString name $ \cname -> do
+                  engine <- c_hkl_engine_list_engine_get_by_name engines cname nullPtr
+                  n <- c_hkl_engine_pseudo_axis_names_get engine >>= darrayStringLen
+                  mapM (\e -> solve' engine n e >>= getSolution0) es
 
 foreign import ccall unsafe "hkl.h hkl_engine_list_engine_get_by_name"
   c_hkl_engine_list_engine_get_by_name :: Ptr HklEngineList --engine list
@@ -85,11 +113,6 @@ foreign import ccall unsafe "hkl.h hkl_engine_pseudo_axis_values_set"
 
 foreign import ccall unsafe "hkl.h &hkl_geometry_list_free"
   c_hkl_geometry_list_free :: FunPtr (Ptr HklGeometryList -> IO ())
-
-solve0 :: Factory -> Geometry -> Detector -> Sample -> Engine -> IO Geometry
-solve0 f g d s e = do
-  solutions <- solve f g d s e
-  return $ head solutions
 
 -- Factory
 

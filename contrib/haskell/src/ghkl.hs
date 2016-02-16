@@ -1,5 +1,3 @@
-{-# LANGUAGE BangPatterns #-}
-
 module Main where
 
 import Control.Monad
@@ -39,11 +37,13 @@ main' = do
                               ]
                  (Mode "bissector_vertical" [])
 
-    -- let trajectory = TrajectoryRaw [[0, 0, 1], [0, 1, 1]]
-    let trajectory = fromTo 100000 [0, 0, 1] [0, 1, 1]
+    print =<< solve factory geometry detector sample engine
+
+    -- solve a trajectory
+    let trajectory = fromTo 10 [0, 0, 1] [0, 1, 1]
     let engines = enginesTrajectory engine trajectory
 
-    solutions <- mapM (solve0 factory geometry detector sample) engines
+    print =<< solveTraj factory geometry detector sample engines
 
     return ()
 
