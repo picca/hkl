@@ -57,10 +57,9 @@ solve' engine n (Engine _ ps _) = do
 
 solve :: Factory -> Geometry -> Detector -> Sample -> Engine -> IO [Geometry]
 solve f g d s e@(Engine name _ _) = do
-  f_sample <- newSample s
   f_detector <- newDetector d
   f_engines <- newEngineList f
-  withForeignPtr f_sample $ \sample ->
+  withSample s $ \sample ->
       withForeignPtr f_detector $ \detector ->
           withGeometry f g $ \geometry ->
               withForeignPtr f_engines $ \engines ->
@@ -82,10 +81,9 @@ engineName (Engine name _ _) = name
 solveTraj :: Factory -> Geometry -> Detector -> Sample -> [Engine] -> IO [Geometry]
 solveTraj f g d s es = do
   let name = engineName (head es)
-  f_sample <- newSample s
   f_detector <- newDetector d
   f_engines <- newEngineList f
-  withForeignPtr f_sample $ \sample ->
+  withSample s $ \sample ->
       withForeignPtr f_detector $ \detector ->
           withGeometry f g $ \geometry ->
               withForeignPtr f_engines $ \engines ->
@@ -358,8 +356,7 @@ compute :: Factory -> Geometry -> Detector -> Sample -> IO [Engine]
 compute f g d s = do
   fptr_e <- newEngineList f
   fptr_d <- newDetector d
-  fptr_s <- newSample s
-  withForeignPtr fptr_s $ \sample ->
+  withSample s $ \sample ->
       withForeignPtr fptr_d $ \detector ->
           withGeometry f g $ \geometry ->
               withForeignPtr fptr_e $ \engines -> do
@@ -486,6 +483,11 @@ foreign import ccall unsafe "hkl.h hkl_parameter_min_max_set"
   c_hkl_parameter_min_max_set :: Ptr HklParameter -> CDouble -> CDouble -> CInt -> Ptr () -> IO (CInt)
 
 -- Sample
+
+withSample :: Sample -> (Ptr HklSample -> IO b) -> IO b
+withSample s fun = do
+  fptr <- newSample s
+  withForeignPtr fptr fun
 
 newSample :: Sample -> IO (ForeignPtr HklSample)
 newSample (Sample name l ux uy uz) =
