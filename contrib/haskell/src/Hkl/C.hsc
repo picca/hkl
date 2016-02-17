@@ -57,10 +57,9 @@ solve' engine n (Engine _ ps _) = do
 
 solve :: Factory -> Geometry -> Detector -> Sample -> Engine -> IO [Geometry]
 solve f g d s e@(Engine name _ _) = do
-  f_detector <- newDetector d
   f_engines <- newEngineList f
   withSample s $ \sample ->
-      withForeignPtr f_detector $ \detector ->
+      withDetector d $ \detector ->
           withGeometry f g $ \geometry ->
               withForeignPtr f_engines $ \engines ->
                 withCString name $ \cname -> do
@@ -81,10 +80,9 @@ engineName (Engine name _ _) = name
 solveTraj :: Factory -> Geometry -> Detector -> Sample -> [Engine] -> IO [Geometry]
 solveTraj f g d s es = do
   let name = engineName (head es)
-  f_detector <- newDetector d
   f_engines <- newEngineList f
   withSample s $ \sample ->
-      withForeignPtr f_detector $ \detector ->
+      withDetector d $ \detector ->
           withGeometry f g $ \geometry ->
               withForeignPtr f_engines $ \engines ->
                 withCString name $ \cname -> do
@@ -261,6 +259,10 @@ foreign import ccall unsafe "hkl.h hkl_geometry_list_item_geometry_get"
                                         -> IO (Ptr HklGeometry)
 
 -- Detector
+withDetector :: Detector -> (Ptr HklDetector -> IO b) -> IO b
+withDetector d func = do
+  fptr <- newDetector d
+  withForeignPtr fptr func
 
 newDetector :: Detector -> IO (ForeignPtr HklDetector)
 newDetector (Detector t) =
@@ -355,9 +357,8 @@ foreign import ccall unsafe "hkl.h hkl_engine_list_engines_get"
 compute :: Factory -> Geometry -> Detector -> Sample -> IO [Engine]
 compute f g d s = do
   fptr_e <- newEngineList f
-  fptr_d <- newDetector d
   withSample s $ \sample ->
-      withForeignPtr fptr_d $ \detector ->
+      withDetector d $ \detector ->
           withGeometry f g $ \geometry ->
               withForeignPtr fptr_e $ \engines -> do
                     c_hkl_engine_list_init engines geometry detector sample
