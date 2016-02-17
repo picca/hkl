@@ -374,6 +374,11 @@ foreign import ccall unsafe "hkl.h hkl_engine_list_get"
 
 -- Lattice
 
+withLattice :: Lattice -> (Ptr HklLattice -> IO b) -> IO b
+withLattice l func = do
+  fptr <- newLattice l
+  withForeignPtr fptr func
+
 newLattice' :: CDouble
             -> CDouble
             -> CDouble
@@ -495,8 +500,7 @@ newSample :: Sample -> IO (ForeignPtr HklSample)
 newSample (Sample name l ux uy uz) =
     withCString name $ \cname -> do
       sample <- c_hkl_sample_new cname
-      fptr_l <- newLattice l
-      withForeignPtr fptr_l $ \lattice -> do
+      withLattice l $ \lattice -> do
           c_hkl_sample_lattice_set sample lattice
           go sample ux c_hkl_sample_ux_get c_hkl_sample_ux_set
           go sample uy c_hkl_sample_uy_get c_hkl_sample_uy_set
