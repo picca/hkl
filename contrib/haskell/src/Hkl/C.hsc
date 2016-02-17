@@ -59,11 +59,10 @@ solve :: Factory -> Geometry -> Detector -> Sample -> Engine -> IO [Geometry]
 solve f g d s e@(Engine name _ _) = do
   f_sample <- newSample s
   f_detector <- newDetector d
-  f_geometry <- newGeometry f g
   f_engines <- newEngineList f
   withForeignPtr f_sample $ \sample ->
       withForeignPtr f_detector $ \detector ->
-          withForeignPtr f_geometry $ \geometry ->
+          withGeometry f g $ \geometry ->
               withForeignPtr f_engines $ \engines ->
                 withCString name $ \cname -> do
                   c_hkl_engine_list_init engines geometry detector sample
@@ -85,11 +84,10 @@ solveTraj f g d s es = do
   let name = engineName (head es)
   f_sample <- newSample s
   f_detector <- newDetector d
-  f_geometry <- newGeometry f g
   f_engines <- newEngineList f
   withForeignPtr f_sample $ \sample ->
       withForeignPtr f_detector $ \detector ->
-          withForeignPtr f_geometry $ \geometry ->
+          withGeometry f g $ \geometry ->
               withForeignPtr f_engines $ \engines ->
                 withCString name $ \cname -> do
                   c_hkl_engine_list_init engines geometry detector sample
@@ -165,6 +163,11 @@ foreign import ccall unsafe "hkl.h hkl_geometry_axis_values_get"
                                  -> CSize -- size of axis values
                                  -> CInt -- unit
                                  -> IO () -- IO CInt but for now do not deal with the errors
+
+withGeometry ::  Factory -> Geometry -> (Ptr HklGeometry -> IO b) -> IO b
+withGeometry f g fun = do
+  fptr <- newGeometry f g
+  withForeignPtr fptr fun
 
 newGeometry :: Factory -> Geometry -> IO (ForeignPtr HklGeometry)
 newGeometry (Factory f) (Geometry (Source lw) vs) = do
@@ -354,12 +357,11 @@ foreign import ccall unsafe "hkl.h hkl_engine_list_engines_get"
 compute :: Factory -> Geometry -> Detector -> Sample -> IO [Engine]
 compute f g d s = do
   fptr_e <- newEngineList f
-  fptr_g <- newGeometry f g
   fptr_d <- newDetector d
   fptr_s <- newSample s
   withForeignPtr fptr_s $ \sample ->
       withForeignPtr fptr_d $ \detector ->
-          withForeignPtr fptr_g $ \geometry ->
+          withGeometry f g $ \geometry ->
               withForeignPtr fptr_e $ \engines -> do
                     c_hkl_engine_list_init engines geometry detector sample
                     c_hkl_engine_list_get engines
