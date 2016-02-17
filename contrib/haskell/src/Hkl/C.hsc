@@ -12,12 +12,11 @@ module Hkl.C
 import Control.Monad
 import Control.Monad.Loops (unfoldrM)
 import Data.Map.Strict as Map
-import Numeric.Units.Dimensional.Prelude ( meter, degree, radian, nano
-                                         , (*~), (/~))
 import Foreign
 import Foreign.C
-
 import Hkl.Types
+import Numeric.Units.Dimensional.Prelude ( meter, degree, radian, nano
+                                         , (*~), (/~))
 
 #include "hkl.h"
 
@@ -57,12 +56,11 @@ solve' engine n (Engine _ ps _) = do
 
 solve :: Factory -> Geometry -> Detector -> Sample -> Engine -> IO [Geometry]
 solve f g d s e@(Engine name _ _) = do
-  f_engines <- newEngineList f
   withSample s $ \sample ->
       withDetector d $ \detector ->
           withGeometry f g $ \geometry ->
-              withForeignPtr f_engines $ \engines ->
-                withCString name $ \cname -> do
+              withEngineList f $ \engines ->
+                  withCString name $ \cname -> do
                   c_hkl_engine_list_init engines geometry detector sample
                   engine <- c_hkl_engine_list_engine_get_by_name engines cname nullPtr
                   n <- c_hkl_engine_pseudo_axis_names_get engine >>= darrayStringLen
@@ -80,11 +78,10 @@ engineName (Engine name _ _) = name
 solveTraj :: Factory -> Geometry -> Detector -> Sample -> [Engine] -> IO [Geometry]
 solveTraj f g d s es = do
   let name = engineName (head es)
-  f_engines <- newEngineList f
   withSample s $ \sample ->
       withDetector d $ \detector ->
           withGeometry f g $ \geometry ->
-              withForeignPtr f_engines $ \engines ->
+              withEngineList f $ \engines ->
                 withCString name $ \cname -> do
                   c_hkl_engine_list_init engines geometry detector sample
                   engine <- c_hkl_engine_list_engine_get_by_name engines cname nullPtr
@@ -333,6 +330,11 @@ enginePseudoAxesGet e = enginePseudoAxisNamesGet' e >>= mapM (enginePseudoAxisGe
 
 -- EngineList
 
+withEngineList :: Factory -> (Ptr HklEngineList -> IO b) -> IO b
+withEngineList f func = do
+  fptr <- newEngineList f
+  withForeignPtr fptr func
+
 newEngineList :: Factory -> IO (ForeignPtr HklEngineList)
 newEngineList (Factory f) =
   c_hkl_factory_create_new_engine_list f >>= newForeignPtr c_hkl_engine_list_free
@@ -343,9 +345,9 @@ foreign import ccall unsafe "hkl.h hkl_factory_create_new_engine_list"
 foreign import ccall unsafe "hkl.h &hkl_engine_list_free"
   c_hkl_engine_list_free :: FunPtr (Ptr HklEngineList -> IO ())
 
-engineListEnginesGet :: ForeignPtr HklEngineList -> IO [Engine]
-engineListEnginesGet e = withForeignPtr e $ \ep -> do
-  pdarray <- c_hkl_engine_list_engines_get ep
+engineListEnginesGet :: Ptr HklEngineList -> IO [Engine]
+engineListEnginesGet e = do
+  pdarray <- c_hkl_engine_list_engines_get e
   n <- (#{peek darray_engine, size} pdarray) :: IO CSize
   engines <- #{peek darray_engine ,item} pdarray :: IO (Ptr (Ptr HklEngine))
   enginess <- peekArray (fromEnum n) engines
@@ -356,14 +358,13 @@ foreign import ccall unsafe "hkl.h hkl_engine_list_engines_get"
 
 compute :: Factory -> Geometry -> Detector -> Sample -> IO [Engine]
 compute f g d s = do
-  fptr_e <- newEngineList f
   withSample s $ \sample ->
       withDetector d $ \detector ->
           withGeometry f g $ \geometry ->
-              withForeignPtr fptr_e $ \engines -> do
+              withEngineList f $ \engines -> do
                     c_hkl_engine_list_init engines geometry detector sample
                     c_hkl_engine_list_get engines
-                    engineListEnginesGet fptr_e
+                    engineListEnginesGet engines
 
 foreign import ccall unsafe "hkl.h hkl_engine_list_init"
   c_hkl_engine_list_init:: Ptr HklEngineList -> Ptr HklGeometry -> Ptr HklDetector -> Ptr HklSample -> IO ()
