@@ -7,6 +7,8 @@ import Hkl
 import Numeric.Units.Dimensional.Prelude (nano, meter, degree,
                                           (*~),
                                           (*~~), (/~~))
+import Pipes
+import qualified Pipes.Prelude as P
 import Prelude hiding (lookup)
 
 main' :: IO ()
@@ -28,7 +30,7 @@ main' = do
 
     -- compute the pseudo axes values
     pseudoAxes <- compute factory geometry detector sample
-    print pseudoAxes
+    -- print pseudoAxes
 
     -- solve a pseudo axis problem for the given engine
     let engine = Engine "hkl" [ Parameter "h" 0.0 (Range (-1.0) 1.0)
@@ -37,13 +39,16 @@ main' = do
                               ]
                  (Mode "bissector_vertical" [])
 
-    print =<< solve factory geometry detector sample engine
+    -- print =<< solve factory geometry detector sample engine
 
     -- solve a trajectory
-    let trajectory = fromTo 10 [0, 0, 1] [0, 1, 1]
+    let trajectory = fromTo 10000 [0, 0, 1] [0, 1, 1]
     let engines = enginesTrajectory engine trajectory
 
-    print =<< solveTraj factory geometry detector sample engines
+    runEffect $ each engines
+              >-> solveTrajPipe factory geometry detector sample
+              -- >-> P.print
+              >-> P.drain
 
     return ()
 

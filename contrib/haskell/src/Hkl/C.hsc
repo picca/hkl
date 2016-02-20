@@ -4,19 +4,22 @@
 module Hkl.C
        ( compute
        , factories
-       , newSample
        , solve
        , solveTraj
+       , solveTrajPipe
        ) where
 
-import Control.Monad
+import Control.Applicative ((<$>), (<*>))
+import Control.Monad ((>=>), forever)
 import Control.Monad.Loops (unfoldrM)
+import Control.Monad.Trans.State.Strict
 import Data.Map.Strict as Map
 import Foreign
 import Foreign.C
 import Hkl.Types
 import Numeric.Units.Dimensional.Prelude ( meter, degree, radian, nano
                                          , (*~), (/~))
+import Pipes
 
 #include "hkl.h"
 
@@ -87,6 +90,52 @@ solveTraj f g d s es = do
                   engine <- c_hkl_engine_list_engine_get_by_name engines cname nullPtr
                   n <- c_hkl_engine_pseudo_axis_names_get engine >>= darrayStringLen
                   mapM (\e -> solve' engine n e >>= getSolution0) es
+
+-- Pipe
+
+data Diffractometer = Diffractometer { difEngineList :: (ForeignPtr HklEngineList)
+                                     , difGeometry :: (ForeignPtr HklGeometry)
+                                     , difDetector :: (ForeignPtr HklDetector)
+                                     , difSample :: (ForeignPtr HklSample)
+                                     }
+                      deriving (Show)
+
+withDiffractometer :: Diffractometer -> (Ptr HklEngineList -> IO b) -> IO b
+withDiffractometer d fun = do
+  let f_engines = difEngineList d
+  withForeignPtr f_engines fun
+
+newDiffractometer :: Factory ->  Geometry -> Detector -> Sample -> IO Diffractometer
+newDiffractometer f g d s = do
+  f_engines <- newEngineList f
+  f_geometry <- newGeometry f g
+  f_detector <- newDetector d
+  f_sample <- newSample s
+  withForeignPtr f_sample $ \sample ->
+      withForeignPtr f_detector $ \detector ->
+          withForeignPtr f_geometry $ \geometry ->
+              withForeignPtr f_engines $ \engines -> do
+                  c_hkl_engine_list_init engines geometry detector sample
+                  return $ Diffractometer f_engines f_geometry f_detector f_sample
+
+solveTrajPipe :: Factory -> Geometry -> Detector -> Sample -> Pipe Engine Geometry IO ()
+solveTrajPipe f g d s = do
+  dif <- lift $ newDiffractometer f g d s
+  solveTrajPipe' dif
+
+solveTrajPipe' :: Diffractometer -> Pipe Engine Geometry IO ()
+solveTrajPipe' dif = flip evalStateT dif $ forever $ do
+    -- Inside here we are using `StateT Int (Consumer a IO) r`
+    e <- lift await
+    dif <- get
+    let name = engineName e
+    solutions <- lift . lift $ withDiffractometer dif $ \engines ->
+     withCString name $ \cname -> do
+       engine <- c_hkl_engine_list_engine_get_by_name engines cname nullPtr
+       n <- c_hkl_engine_pseudo_axis_names_get engine >>= darrayStringLen
+       solve' engine n e >>= getSolution0
+    put dif
+    lift $ yield solutions
 
 foreign import ccall unsafe "hkl.h hkl_engine_list_engine_get_by_name"
   c_hkl_engine_list_engine_get_by_name :: Ptr HklEngineList --engine list
