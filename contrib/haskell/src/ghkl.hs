@@ -43,9 +43,9 @@ main' = do
 
     -- solve a trajectory
     let trajectory = fromTo 10000 [0, 0, 1] [0, 1, 1]
-    let engines = enginesTrajectory engine trajectory
 
-    runEffect $ each engines
+    runEffect $ each trajectory
+              >-> enginesTrajectoryPipe engine
               >-> solveTrajPipe factory geometry detector sample
               -- >-> P.print
               >-> P.drain

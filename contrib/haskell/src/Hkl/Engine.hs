@@ -1,10 +1,13 @@
 module Hkl.Engine
     ( enginesTrajectory
+    , enginesTrajectoryPipe
     , fromTo )
     where
       
+import Control.Monad (forever)
 import Data.List (transpose)
 import Hkl.Types
+import Pipes
 
 linspace :: Int -> Double -> Double -> [Double]
 linspace n a b = add a $ scale s [0 .. fromIntegral n-1]
@@ -23,3 +26,8 @@ engineSetValues (Engine name ps mode) vs = Engine name nps mode
 
 enginesTrajectory :: Engine -> Trajectory -> [Engine]
 enginesTrajectory e = map (engineSetValues e)
+
+enginesTrajectoryPipe :: Engine -> Pipe [Double] Engine IO ()
+enginesTrajectoryPipe e = forever $ do
+                            vs <- await
+                            yield $ engineSetValues e vs
