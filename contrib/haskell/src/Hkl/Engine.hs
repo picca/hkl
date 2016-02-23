@@ -1,38 +1,25 @@
 module Hkl.Engine
-    ( enginesTrajectory
-    , enginesTrajectoryPipe
-    , fromTo
+    ( enginesTrajectoryPipe
     , fromToPipe
     )
     where
 
-import Control.Monad (forever, forM_)
-import Data.List (transpose)
-import Hkl.Types
-import Pipes
+import           Control.Monad (forever, forM_)
+import           Hkl.Types
+import           Numeric.LinearAlgebra.Data (Vector)
+import qualified Numeric.LinearAlgebra.Data as N
+import           Pipes
 
-linspace :: Int -> Double -> Double -> [Double]
-linspace n a b = add a $ scale s [0 .. fromIntegral n-1]
-    where scale _s = map (_s *)
-          add _a = map (_a +)
-          s = (b-a)/fromIntegral (n-1)
-
-fromTo :: Int -> [Double] -> [Double] -> Trajectory
-fromTo n f t = transpose (zipWith (linspace n) f t)
-
-engineSetValues :: Engine -> [Double] -> Engine
+engineSetValues :: Engine -> Vector Double -> Engine
 engineSetValues (Engine name ps mode) vs = Engine name nps mode
-    where nps = zipWith set ps vs
+    where nps = zipWith set ps (N.toList vs)
           set (Parameter n _ range) newValue =  Parameter n newValue range
 
-enginesTrajectory :: Engine -> Trajectory -> [Engine]
-enginesTrajectory e = map (engineSetValues e)
-
-fromToPipe :: Int -> [Double] -> [Double] -> Producer [Double] IO ()
+fromToPipe :: Int -> Vector Double -> Vector Double -> Producer (Vector Double) IO ()
 fromToPipe n from to = forM_ [0..n-1] $ \i -> yield $ vs i
     where
-      f i a b = a + fromIntegral i * (b - a) / (fromIntegral n - 1)
-      vs i = zipWith (f i) from to
+      vs i = from + step * fromIntegral i
+      step = (to - from) / (fromIntegral n - 1)
 
-enginesTrajectoryPipe :: Engine -> Pipe [Double] Engine IO ()
+enginesTrajectoryPipe :: Engine -> Pipe (Vector Double) Engine IO ()
 enginesTrajectoryPipe e = forever $ await >>= yield . engineSetValues e

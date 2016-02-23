@@ -4,6 +4,7 @@ import Control.Monad
 import Data.Map.Strict (lookup)
 import Data.Maybe (isNothing, fromJust)
 import Hkl
+import Numeric.LinearAlgebra.Data (fromList)
 import Numeric.Units.Dimensional.Prelude (nano, meter, degree,
                                           (*~),
                                           (*~~), (/~~))
@@ -40,9 +41,12 @@ main' = do
                  (Mode "bissector_vertical" [])
 
     -- print =<< solve factory geometry detector sample engine
-
+    let from = fromList [0, 0, 1 :: Double]
+    let to = fromList [0, 1, 1 :: Double]
+    runEffect $ fromToPipe 20 from to
+              >-> P.print
     -- solve a trajectory with Pipes
-    runEffect $ fromToPipe 1000000 [0, 0, 1] [0, 1, 1]
+    runEffect $ fromToPipe 1000 from to
               >-> enginesTrajectoryPipe engine
               >-> solveTrajPipe factory geometry detector sample
               -- >-> P.print
