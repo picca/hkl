@@ -1,10 +1,12 @@
 module Hkl.Engine
     ( enginesTrajectory
     , enginesTrajectoryPipe
-    , fromTo )
+    , fromTo
+    , fromToPipe
+    )
     where
-      
-import Control.Monad (forever)
+
+import Control.Monad (forever, forM_)
 import Data.List (transpose)
 import Hkl.Types
 import Pipes
@@ -23,11 +25,14 @@ engineSetValues (Engine name ps mode) vs = Engine name nps mode
     where nps = zipWith set ps vs
           set (Parameter n _ range) newValue =  Parameter n newValue range
 
-
 enginesTrajectory :: Engine -> Trajectory -> [Engine]
 enginesTrajectory e = map (engineSetValues e)
 
+fromToPipe :: Int -> [Double] -> [Double] -> Producer [Double] IO ()
+fromToPipe n from to = forM_ [1..n] $ \i -> yield $ vs i
+    where
+      f i a b = a + fromIntegral i * (b - a) / (fromIntegral n - 1)
+      vs i = zipWith (f i) from to
+
 enginesTrajectoryPipe :: Engine -> Pipe [Double] Engine IO ()
-enginesTrajectoryPipe e = forever $ do
-                            vs <- await
-                            yield $ engineSetValues e vs
+enginesTrajectoryPipe e = forever $ await >>= yield . engineSetValues e

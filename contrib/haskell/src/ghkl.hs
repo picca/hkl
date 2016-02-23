@@ -41,10 +41,8 @@ main' = do
 
     -- print =<< solve factory geometry detector sample engine
 
-    -- solve a trajectory
-    let trajectory = fromTo 10000 [0, 0, 1] [0, 1, 1]
-
-    runEffect $ each trajectory
+    -- solve a trajectory with Pipes
+    runEffect $ fromToPipe 1000000 [0, 0, 1] [0, 1, 1]
               >-> enginesTrajectoryPipe engine
               >-> solveTrajPipe factory geometry detector sample
               -- >-> P.print
