@@ -125,7 +125,7 @@ solveTrajPipe f g d s = do
 
 solveTrajPipe' :: Diffractometer -> Pipe Engine Geometry IO ()
 solveTrajPipe' dif = flip evalStateT dif $ forever $ do
-    -- Inside here we are using `StateT Int (Consumer a IO) r`
+    -- Inside here we are using `StateT Diffractometer (Pipe Engine Geometry IO ()) r`
     e <- lift await
     dif <- get
     let name = engineName e
