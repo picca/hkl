@@ -29,7 +29,7 @@ enginesTrajectory :: Engine -> Trajectory -> [Engine]
 enginesTrajectory e = map (engineSetValues e)
 
 fromToPipe :: Int -> [Double] -> [Double] -> Producer [Double] IO ()
-fromToPipe n from to = forM_ [1..n] $ \i -> yield $ vs i
+fromToPipe n from to = forM_ [0..n-1] $ \i -> yield $ vs i
     where
       f i a b = a + fromIntegral i * (b - a) / (fromIntegral n - 1)
       vs i = zipWith (f i) from to
