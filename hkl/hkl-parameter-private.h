@@ -79,6 +79,7 @@ struct _HklParameterOperations {
 	void                  (*set_value_smallest_in_range)(HklParameter *self);
 	void                  (*randomize)(HklParameter *self);
 	int                   (*is_valid)(const HklParameter *self);
+	int                   (*is_valid_range)(const HklParameter *self);
 	void                  (*fprintf)(FILE *f, const HklParameter *self);
 	const HklVector *     (*axis_v_get)(const HklParameter *self);
 	const HklQuaternion * (*quaternion_get)(const HklParameter *self);
@@ -93,6 +94,7 @@ struct _HklParameterOperations {
 		.set_value_smallest_in_range = hkl_parameter_value_set_smallest_in_range_real, \
 		.randomize = hkl_parameter_randomize_real,		\
 		.is_valid = hkl_parameter_is_valid_real,		\
+		.is_valid_range = hkl_parameter_is_valid_real,		\
 		.fprintf = hkl_parameter_fprintf_real,			\
 		.axis_v_get = hkl_parameter_axis_v_get_real,		\
 		.quaternion_get = hkl_parameter_quaternion_get_real
@@ -221,6 +223,8 @@ extern double hkl_parameter_value_get_closest(const HklParameter *self,
 extern void hkl_parameter_value_set_smallest_in_range(HklParameter *self);
 
 extern int hkl_parameter_is_valid(const HklParameter *self);
+
+extern int hkl_parameter_is_valid_range(const HklParameter *self);
 
 extern void hkl_parameter_fprintf(FILE *f, HklParameter *self);
 

@@ -831,6 +831,10 @@ git clone git://repo.or.cz/hkl.git
 ** @VERSION@
 *** DONE =HklEngine= <2016-01-20 mer.>
     emergence_fixed for the SOLEIL SIX MED 2+2 geometry.
+*** DONE =HklParameter= <2016-02-25 Thu>
+    at the end of the computation all solutions are filtered in order
+    to check that they are valid (min < value < range). BUT for a
+    rotation axis this check was instead (min < value % 2pi < max).
 ** 4.99.99.1955 <2015-07-15 mer.>
    Add the ccan_config.h public header. This header is generated with
    the ccan configurator program.

@@ -401,25 +401,25 @@ static void  list_remove_invalid(void)
 
 	res &= DIAG(hkl_geometry_set_values_v(g, HKL_UNIT_DEFAULT, NULL,
 					      185. * HKL_DEGTORAD,
-					      -185.* HKL_DEGTORAD,
+					      -185. * HKL_DEGTORAD,
 					      185. * HKL_DEGTORAD));
 	hkl_geometry_list_add(list, g);
 
 	res &= DIAG(hkl_geometry_set_values_v(g, HKL_UNIT_DEFAULT, NULL,
 					      -190. * HKL_DEGTORAD,
-					      -190.* HKL_DEGTORAD,
-					      -190.* HKL_DEGTORAD));
+					      -190. * HKL_DEGTORAD,
+					      -190. * HKL_DEGTORAD));
 	hkl_geometry_list_add(list, g);
 
 	res &= DIAG(hkl_geometry_set_values_v(g, HKL_UNIT_DEFAULT, NULL,
 					      180. * HKL_DEGTORAD,
-					      180.* HKL_DEGTORAD,
-					      180.* HKL_DEGTORAD));
+					      180. * HKL_DEGTORAD,
+					      180. * HKL_DEGTORAD));
 	hkl_geometry_list_add(list, g);
 
 	is_int(3, hkl_geometry_list_n_items_get(list), __func__);
 	hkl_geometry_list_remove_invalid(list);
-	is_int(2, hkl_geometry_list_n_items_get(list), __func__);
+	is_int(1, hkl_geometry_list_n_items_get(list), __func__);
 
 	ok(res, __func__);
 

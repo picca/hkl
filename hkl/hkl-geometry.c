@@ -734,6 +734,27 @@ int hkl_geometry_is_valid(const HklGeometry *self)
 }
 
 /**
+ * hkl_geometry_is_valid_range: (skip)
+ * @self:
+ *
+ * check if all axes of the #HklGeometry are valid.
+ * (there is a difference for axis)
+ *
+ * Returns:
+ **/
+int hkl_geometry_is_valid_range(const HklGeometry *self)
+{
+	HklParameter **axis;
+
+	darray_foreach(axis, self->axes){
+		if(!hkl_parameter_is_valid_range(*axis))
+			return FALSE;
+	}
+
+	return TRUE;
+}
+
+/**
  * hkl_geometry_closest_from_geometry_with_range: (skip)
  * @self:
  * @ref:
@@ -1158,7 +1179,7 @@ void hkl_geometry_list_remove_invalid(HklGeometryList *self)
 	HklGeometryListItem *item, *next;
 
 	list_for_each_safe(&self->items, item, next, list)
-		if(!hkl_geometry_is_valid(item->geometry)){
+		if(!hkl_geometry_is_valid_range(item->geometry)){
 			list_del(&item->list);
 			self->n_items--;
 			hkl_geometry_list_item_free(item);
