@@ -216,6 +216,12 @@ HklGeometryList *hkl_engine_pseudo_axis_values_set(HklEngine *self,
 
 	solutions = hkl_geometry_list_new_copy(self->engines->geometries);
 
+#if LOGGING
+	hkl_geometry_list_fprintf(stream, solutions);
+	fflush(stream);
+	g_message(msg);
+#endif
+
 clean_stream_out:
 #if LOGGING
 	fclose(stream);
