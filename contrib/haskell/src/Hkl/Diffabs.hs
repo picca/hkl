@@ -13,16 +13,20 @@ import System.FilePath.Posix
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
 
+type H5Path = String
+data ExtendDims = ExtendDims | StrictDims deriving (Show)
+data DataItem = DataItem H5Path ExtendDims deriving (Show)
+
 data DataFrameH5Path =
-  DataFrameH5Path { h5pImage :: String
-                  , h5pMu :: String
-                  , h5pKomega :: String
-                  , h5pKappa :: String
-                  , h5pKphi :: String
-                  , h5pGamma :: String
-                  , h5pDelta :: String
-                  , h5pWaveLength :: String
-                  , h5pDiffractometerType :: String
+  DataFrameH5Path { h5pImage :: DataItem
+                  , h5pMu :: DataItem
+                  , h5pKomega :: DataItem
+                  , h5pKappa :: DataItem
+                  , h5pKphi :: DataItem
+                  , h5pGamma :: DataItem
+                  , h5pDelta :: DataItem
+                  , h5pWaveLength :: DataItem
+                  , h5pDiffractometerType :: DataItem
                   } deriving (Show)
 
 data DataFrameH5 =
@@ -97,8 +101,9 @@ hkl_h5_open f dp = do
     <*> get file_id h5pWaveLength
     <*> get file_id h5pDiffractometerType
       where
-        get fi a = do
-          dataset@(HId_t status) <- withCString (a dp) (\dataset -> h5d_open2 fi dataset h5p_DEFAULT)
+        get fi accessor = do
+          let (DataItem name _) = accessor dp
+          dataset@(HId_t status) <- withCString name (\dataset -> h5d_open2 fi dataset h5p_DEFAULT)
           return $ if status < 0 then Nothing else Just dataset
 
 hkl_h5_is_valid :: DataFrameH5-> IO Bool
@@ -234,15 +239,15 @@ main_diffabs :: IO ()
 main_diffabs = do
   let root = "/tmp"
   let filename = "XRD18keV_27.nxs"
-  let dataframe_h5p = DataFrameH5Path { h5pImage = "scan_27/scan_data/data_53"
-                                      , h5pMu = "scan_27/DIFFABS/d13-1-cx1__EX__DIF.1-MU__#1/raw_value"
-                                      , h5pKomega = "scan_27/DIFFABS/d13-1-cx1__EX__DIF.1-KOMEGA__#1/raw_value"
-                                      , h5pKappa = "scan_27/DIFFABS/d13-1-cx1__EX__DIF.1-KAPPA__#1/raw_value"
-                                      , h5pKphi = "scan_27/DIFFABS/d13-1-cx1__EX__DIF.1-KPHI__#1/raw_value"
-                                      , h5pGamma = "scan_27/DIFFABS/d13-1-cx1__EX__DIF.1-GAMMA__#1/raw_value"
-                                      , h5pDelta = "scan_27/scan_data/trajectory_1_1"
-                                      , h5pWaveLength = "scan_27/DIFFABS/D13-1-C03__OP__MONO__#1/wavelength"
-                                      , h5pDiffractometerType = "scan_27/DIFFABS/I14-C-CX2__EX__DIFF-UHV__#1/type"
+  let dataframe_h5p = DataFrameH5Path { h5pImage = DataItem "scan_27/scan_data/data_53" StrictDims
+                                      , h5pMu = DataItem "scan_27/DIFFABS/d13-1-cx1__EX__DIF.1-MU__#1/raw_value" ExtendDims
+                                      , h5pKomega = DataItem "scan_27/DIFFABS/d13-1-cx1__EX__DIF.1-KOMEGA__#1/raw_value" ExtendDims
+                                      , h5pKappa = DataItem "scan_27/DIFFABS/d13-1-cx1__EX__DIF.1-KAPPA__#1/raw_value" ExtendDims
+                                      , h5pKphi = DataItem "scan_27/DIFFABS/d13-1-cx1__EX__DIF.1-KPHI__#1/raw_value" ExtendDims
+                                      , h5pGamma = DataItem "scan_27/DIFFABS/d13-1-cx1__EX__DIF.1-GAMMA__#1/raw_value" ExtendDims
+                                      , h5pDelta = DataItem "scan_27/scan_data/trajectory_1_1" ExtendDims
+                                      , h5pWaveLength = DataItem "scan_27/DIFFABS/D13-1-C03__OP__MONO__#1/wavelength" StrictDims
+                                      , h5pDiffractometerType = DataItem "scan_27/DIFFABS/I14-C-CX2__EX__DIFF-UHV__#1/type" StrictDims
                                       }
 
   dataframe_h5 <- hkl_h5_open (root </> filename) dataframe_h5p
