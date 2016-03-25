@@ -204,17 +204,23 @@ hkl_h5_close d = do
 getDataFrame' ::  DataFrameH5 -> Int -> IO DataFrame
 getDataFrame' d i = do
   mu <- get_position' (h5mu d) i
-  komega <- get_position' (h5komega d) 0
-  kappa <- get_position' (h5kappa d) 0
-  kphi <- get_position' (h5kphi d) 0
-  gamma <- get_position' (h5gamma d) 0
+  komega <- get_position' (h5komega d) i
+  kappa <- get_position' (h5kappa d) i
+  kphi <- get_position' (h5kphi d) i
+  gamma <- get_position' (h5gamma d) i
   delta <- get_position' (h5delta d) i
   return DataFrame { df_n = i
                    , df_image = mu ++ komega ++ kappa ++ kphi ++ gamma ++ delta
                    }
     where
-      get_position' (Just dataset) idx = get_position dataset idx
-      get_position' Nothing _ = return [0.0]
+      get_position' dataset idx = case dataset of
+        (Just dataset') -> do
+          (positions, HErr_t status) <- get_position dataset' idx
+          if status < 0 then do
+             (failovers, HErr_t status') <- get_position dataset' 0
+             return $ if status' < 0 then [0.0] else failovers
+          else return $ if status < 0 then [0.0] else positions
+        Nothing -> return [0.0]
 
 getDataFrame :: DataFrameH5 -> Producer DataFrame IO ()
 getDataFrame d = do

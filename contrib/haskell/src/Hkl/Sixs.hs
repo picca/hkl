@@ -4,11 +4,8 @@ module Hkl.Sixs
 
 import Bindings.HDF5.Raw
 import Control.Applicative
-import Control.Monad (forever, forM_)
+import Control.Monad (forM_)
 import Foreign.C.String
-import Foreign.C.Types
-import Foreign.Ptr
-import Foreign.Ptr.Conventions
 import Hkl.H5
 import Pipes
 import Pipes.Prelude
@@ -192,13 +189,18 @@ hkl_h5_close d = do
 
 getDataFrame' :: DataFrameH5 -> Int -> IO DataFrame
 getDataFrame' d i = do
-  mu <- get_position (h5mu d) i
-  omega <- get_position (h5omega d) i
-  delta <- get_position (h5delta d) i
-  gamma <- get_position (h5gamma d) i
+  mu <- get_position' (h5mu d) i
+  omega <- get_position' (h5omega d) i
+  delta <- get_position' (h5delta d) i
+  gamma <- get_position' (h5gamma d) i
   return DataFrame { df_n = i
                    , df_image = mu ++ omega ++ delta ++ gamma
                    }
+    where
+      get_position' dataset idx = do
+        (positions, err) <- get_position dataset idx
+        return $ case err of
+          (HErr_t status) -> if status < 0 then [0.0] else positions
                        
 getDataFrame :: DataFrameH5 -> Producer DataFrame IO ()
 getDataFrame d = do
@@ -221,7 +223,7 @@ main_sixs = do
 
   dataframe_h5 <- hkl_h5_open (root </> filename) dataframe_h5p
 
-  hkl_h5_is_valid dataframe_h5
+  status <- hkl_h5_is_valid dataframe_h5
                   
   runEffect $ getDataFrame dataframe_h5
             >->  Pipes.Prelude.print

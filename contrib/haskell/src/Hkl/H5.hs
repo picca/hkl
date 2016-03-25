@@ -13,6 +13,9 @@ import Foreign.C.Types
 -- import Foreign.Ptr
 import Foreign.Ptr.Conventions
 
+{-# ANN module "HLint: ignore Use camelCase" #-}
+
+
 -- static herr_t attribute_info(hid_t location_id, const char *attr_name, const H5A_info_t *ainfo, void *op_data)
 -- {
 -- 	printf("    Attribute: %d %s\n", location_id, attr_name);
@@ -60,7 +63,7 @@ check_ndims hid expected = do
   return $ expected == fromEnum ndims
 
 -- need to deal with the errors
-get_position :: HId_t -> Int -> IO [Double]
+get_position :: HId_t -> Int -> IO ([Double], HErr_t)
 get_position hid n = do
     mem_type_id <- h5d_get_type hid
     space_id <- h5d_get_space hid
@@ -73,13 +76,13 @@ get_position hid n = do
                     withInList [HSize_t 1] $ \maximum_dims ->
                         h5s_create_simple 1 current_dims maximum_dims
 
-    (positions, err_code) <- withOutList 1 $ \rdata ->
-                             h5d_read hid mem_type_id mem_space_id space_id h5p_DEFAULT rdata
+    res <- withOutList 1 $ \rdata ->
+      h5d_read hid mem_type_id mem_space_id space_id h5p_DEFAULT rdata
 
     h5s_close mem_space_id
     h5s_close space_id
     h5t_close mem_type_id
-    return positions
+    return res
 
 hkl_h5_len :: HId_t -> IO Int
 hkl_h5_len hid = do
