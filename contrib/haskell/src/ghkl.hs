@@ -4,7 +4,7 @@ import Control.Monad
 import Data.Map.Strict (lookup)
 import Data.Maybe (isNothing, fromJust)
 import Hkl
-import Numeric.LinearAlgebra.Data (fromList)
+import Numeric.LinearAlgebra (fromList)
 import Numeric.Units.Dimensional.Prelude (nano, meter, degree,
                                           (*~),
                                           (*~~), (/~~))

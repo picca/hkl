@@ -6,8 +6,8 @@ module Hkl.Engine
 
 import           Control.Monad (forever, forM_)
 import           Hkl.Types
-import           Numeric.LinearAlgebra.Data (Vector)
-import qualified Numeric.LinearAlgebra.Data as N
+import           Numeric.LinearAlgebra (Vector)
+import qualified Numeric.LinearAlgebra as N
 import           Pipes
 
 engineSetValues :: Engine -> Vector Double -> Engine
