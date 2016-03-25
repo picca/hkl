@@ -4,9 +4,8 @@ module Hkl.Diffabs
 
 import Bindings.HDF5.Raw
 import Control.Applicative
-import Control.Monad (forever, forM_)
+import Control.Monad (forM_)
 import Foreign.C.String
-import Foreign.Ptr.Conventions
 import Hkl.H5
 import Pipes
 import Pipes.Prelude
@@ -28,15 +27,15 @@ data DataFrameH5Path =
 
 data DataFrameH5 =
   DataFrameH5 { h5file :: HId_t
-              , h5image :: HId_t
-              , h5mu :: HId_t
-              , h5komega :: HId_t
-              , h5kappa :: HId_t
-              , h5kphi :: HId_t
-              , h5delta :: HId_t
-              , h5gamma :: HId_t
-              , h5wavelength :: HId_t
-              , h5dtype :: HId_t
+              , h5image :: Maybe HId_t
+              , h5mu :: Maybe HId_t
+              , h5komega :: Maybe HId_t
+              , h5kappa :: Maybe HId_t
+              , h5kphi :: Maybe HId_t
+              , h5gamma :: Maybe HId_t
+              , h5delta :: Maybe HId_t
+              , h5wavelength :: Maybe HId_t
+              , h5dtype :: Maybe HId_t
               } deriving (Show)
 
 data DataFrame =
@@ -98,30 +97,38 @@ hkl_h5_open f dp = do
     <*> get file_id h5pWaveLength
     <*> get file_id h5pDiffractometerType
       where
-        get fi a = withCString (a dp) (\dataset -> h5d_open2 fi dataset h5p_DEFAULT)
+        get fi a = do
+          dataset@(HId_t status) <- withCString (a dp) (\dataset -> h5d_open2 fi dataset h5p_DEFAULT)
+          return $ if status < 0 then Nothing else Just dataset
 
 hkl_h5_is_valid :: DataFrameH5-> IO Bool
 hkl_h5_is_valid d = do
-  check_ndims (h5mu d) 1
-  check_ndims (h5komega d) 1
-  check_ndims (h5kappa d) 1
-  check_ndims (h5kphi d) 1
-  check_ndims (h5gamma d) 1
-  check_ndims (h5delta d) 1
+  check_ndims' (h5mu d) 1
+  check_ndims' (h5komega d) 1
+  check_ndims' (h5kappa d) 1
+  check_ndims' (h5kphi d) 1
+  check_ndims' (h5gamma d) 1
+  check_ndims' (h5delta d) 1
+    where
+      check_ndims' (Just dataset) target = check_ndims dataset target
+      check_ndims' Nothing _ = return True
 
 hkl_h5_close :: DataFrameH5 -> IO ()
 hkl_h5_close d = do
-  h5d_close (h5image d)
-  h5d_close (h5mu d)
-  h5d_close (h5komega d)
-  h5d_close (h5kappa d)
-  h5d_close (h5kphi d)
-  h5d_close (h5gamma d)
-  h5d_close (h5delta d)
-  h5d_close (h5wavelength d)
-  h5d_close (h5dtype d)
+  h5d_close' (h5image d)
+  h5d_close' (h5mu d)
+  h5d_close' (h5komega d)
+  h5d_close' (h5kappa d)
+  h5d_close' (h5kphi d)
+  h5d_close' (h5gamma d)
+  h5d_close' (h5delta d)
+  h5d_close' (h5wavelength d)
+  h5d_close' (h5dtype d)
   h5f_close (h5file d)
   return ()
+    where
+      h5d_close' (Just dataset) = h5d_close dataset
+      h5d_close' Nothing = return $ HErr_t 0
 
 -- static herr_t hkl_dataframe_geometry_get(const HklDataframe dataframe, HklGeometry **geometry)
 -- {
@@ -196,20 +203,26 @@ hkl_h5_close d = do
 
 getDataFrame' ::  DataFrameH5 -> Int -> IO DataFrame
 getDataFrame' d i = do
-  mu <- get_position (h5mu d) i
-  komega <- get_position (h5komega d) i
-  kappa <- get_position (h5kappa d) i
-  kphi <- get_position (h5kphi d) i
-  gamma <- get_position (h5gamma d) i
-  delta <- get_position (h5delta d) i
+  mu <- get_position' (h5mu d) i
+  komega <- get_position' (h5komega d) 0
+  kappa <- get_position' (h5kappa d) 0
+  kphi <- get_position' (h5kphi d) 0
+  gamma <- get_position' (h5gamma d) 0
+  delta <- get_position' (h5delta d) i
   return DataFrame { df_n = i
                    , df_image = mu ++ komega ++ kappa ++ kphi ++ gamma ++ delta
                    }
+    where
+      get_position' (Just dataset) idx = get_position dataset idx
+      get_position' Nothing _ = return [0.0]
 
 getDataFrame :: DataFrameH5 -> Producer DataFrame IO ()
 getDataFrame d = do
-  n <- lift $ hkl_h5_len (h5mu d)
+  n <- lift $ hkl_h5_len' (h5delta d)
   forM_ [0..n-1] (\i -> lift (getDataFrame' d i) >>= yield)
+  where
+    hkl_h5_len' (Just dataset) = hkl_h5_len dataset
+    hkl_h5_len' Nothing = return 0
 
 main_diffabs :: IO ()
 main_diffabs = do
@@ -228,7 +241,7 @@ main_diffabs = do
 
   dataframe_h5 <- hkl_h5_open (root </> filename) dataframe_h5p
 
-  hkl_h5_is_valid dataframe_h5
+  status <- hkl_h5_is_valid dataframe_h5
 
   runEffect $ getDataFrame dataframe_h5
             >-> Pipes.Prelude.print
