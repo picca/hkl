@@ -4,6 +4,7 @@ module Hkl.Diffabs
 
 import Bindings.HDF5.Raw
 import Control.Applicative
+import Control.Exception
 import Control.Monad (forM_)
 import Foreign.C.String
 import Hkl.H5
@@ -87,19 +88,20 @@ data DataFrame =
 -- 	return 0;
 -- }
 
-hkl_h5_open :: FilePath -> DataFrameH5Path -> IO DataFrameH5
-hkl_h5_open f dp = do
-  file_id <- withCString f (\file -> h5f_open file h5f_ACC_RDONLY h5p_DEFAULT)
-  DataFrameH5 file_id
-    <$> get file_id h5pImage
-    <*> get file_id h5pMu
-    <*> get file_id h5pKomega
-    <*> get file_id h5pKappa
-    <*> get file_id h5pKphi
-    <*> get file_id h5pGamma
-    <*> get file_id h5pDelta
-    <*> get file_id h5pWaveLength
-    <*> get file_id h5pDiffractometerType
+withDataframeH5 :: HId_t -> DataFrameH5Path -> (DataFrameH5 -> IO r) -> IO r
+withDataframeH5 file_id dfp = bracket (hkl_h5_open file_id dfp) hkl_h5_close
+
+hkl_h5_open :: HId_t -> DataFrameH5Path -> IO DataFrameH5
+hkl_h5_open file_id dp = DataFrameH5 file_id
+  <$> get file_id h5pImage
+  <*> get file_id h5pMu
+  <*> get file_id h5pKomega
+  <*> get file_id h5pKappa
+  <*> get file_id h5pKphi
+  <*> get file_id h5pGamma
+  <*> get file_id h5pDelta
+  <*> get file_id h5pWaveLength
+  <*> get file_id h5pDiffractometerType
       where
         get fi accessor = do
           let (DataItem name _) = accessor dp
@@ -129,7 +131,6 @@ hkl_h5_close d = do
   h5d_close' (h5delta d)
   h5d_close' (h5wavelength d)
   h5d_close' (h5dtype d)
-  h5f_close (h5file d)
   return ()
     where
       h5d_close' (Just dataset) = h5d_close dataset
@@ -250,11 +251,9 @@ main_diffabs = do
                                       , h5pDiffractometerType = DataItem "scan_27/DIFFABS/I14-C-CX2__EX__DIFF-UHV__#1/type" StrictDims
                                       }
 
-  dataframe_h5 <- hkl_h5_open (root </> filename) dataframe_h5p
+  withH5File (root </> filename) $ \file_id ->
+    withDataframeH5 file_id dataframe_h5p $ \dataframe_h5 -> do
+      status <- hkl_h5_is_valid dataframe_h5
 
-  status <- hkl_h5_is_valid dataframe_h5
-
-  runEffect $ getDataFrame dataframe_h5
-            >-> Pipes.Prelude.print
-
-  hkl_h5_close dataframe_h5
+      runEffect $ getDataFrame dataframe_h5
+        >-> Pipes.Prelude.print

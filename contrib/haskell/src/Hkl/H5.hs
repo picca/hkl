@@ -2,13 +2,15 @@ module Hkl.H5
     ( check_ndims
     , get_position
     , hkl_h5_len
+    , withH5File
     )
     where
 
 import Bindings.HDF5.Raw
 -- import Control.Applicative
+import Control.Exception
 -- import Control.Monad (forever, forM_)
--- import Foreign.C.String
+import Foreign.C.String
 import Foreign.C.Types
 -- import Foreign.Ptr
 import Foreign.Ptr.Conventions
@@ -89,3 +91,6 @@ hkl_h5_len hid = do
   space_id <- h5d_get_space hid
   (HSSize_t n) <- h5s_get_simple_extent_npoints space_id
   return $ fromIntegral n
+
+withH5File :: FilePath -> (HId_t -> IO r) -> IO r
+withH5File name = bracket (withCString name (\file -> h5f_open file h5f_ACC_RDONLY h5p_DEFAULT)) h5f_close
