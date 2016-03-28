@@ -93,4 +93,13 @@ hkl_h5_len hid = do
   return $ fromIntegral n
 
 withH5File :: FilePath -> (HId_t -> IO r) -> IO r
-withH5File name = bracket (withCString name (\file -> h5f_open file h5f_ACC_RDONLY h5p_DEFAULT)) h5f_close
+withH5File fp f = do
+  mhid <- openH5File fp
+  case mhid of
+    Just hid -> bracket (return $ id hid) h5f_close f
+    Nothing -> error $ "Can not read the h5 file: " ++ fp
+
+openH5File :: FilePath -> IO (Maybe HId_t)
+openH5File fp = do
+  hid@(HId_t status) <- withCString fp (\file -> h5f_open file h5f_ACC_RDONLY h5p_DEFAULT)
+  return $ if status < 0 then Nothing else Just hid
