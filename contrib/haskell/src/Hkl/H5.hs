@@ -118,11 +118,21 @@ closeH5Dataset mhid = case mhid of
 
 -- | Dataspace
 
+withDataspace :: HId_t -> (Maybe HId_t -> IO r) -> IO r
+withDataspace hid f = bracket acquire release f
+  where
+    acquire = do
+      space_id@(HId_t status) <- h5d_get_space hid
+      return  $ if status < 0 then Nothing else (Just space_id)
+    release (Just shid) = h5s_close shid
+    release Nothing = return (HErr_t (-1))
+
 lenH5Dataspace :: Maybe HId_t -> IO (Maybe Int)
-lenH5Dataspace mhid = case mhid of
-  (Just hid) -> do
-    space_id@(HId_t status) <- h5d_get_space hid
-    if status < 0 then return Nothing else do
-      (HSSize_t n) <- h5s_get_simple_extent_npoints space_id
-      return $ (Just (fromIntegral n))
+lenH5Dataspace mhid =  case mhid of
+  (Just hid) -> withDataspace hid len
   Nothing -> return Nothing
+  where
+    len (Just space_id) = do
+      (HSSize_t n) <- h5s_get_simple_extent_npoints space_id
+      return $ if n < 0 then Nothing else (Just (fromIntegral n))
+    len Nothing = return Nothing
