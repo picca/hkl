@@ -2,6 +2,7 @@ module Hkl.H5
     ( check_ndims
     , get_position
     , hkl_h5_len
+    , openH5Dataset
     , withH5File
     )
     where
@@ -17,6 +18,7 @@ import Foreign.Ptr.Conventions
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
 
+type DatasetPath = String
 
 -- static herr_t attribute_info(hid_t location_id, const char *attr_name, const H5A_info_t *ainfo, void *op_data)
 -- {
@@ -102,4 +104,9 @@ withH5File fp f = do
 openH5File :: FilePath -> IO (Maybe HId_t)
 openH5File fp = do
   hid@(HId_t status) <- withCString fp (\file -> h5f_open file h5f_ACC_RDONLY h5p_DEFAULT)
+  return $ if status < 0 then Nothing else Just hid
+
+openH5Dataset :: HId_t -> DatasetPath -> IO (Maybe HId_t)
+openH5Dataset h dp = do
+  hid@(HId_t status) <- withCString dp (\dataset -> h5d_open2 h dataset h5p_DEFAULT)
   return $ if status < 0 then Nothing else Just hid

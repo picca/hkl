@@ -93,20 +93,17 @@ withDataframeH5 file_id dfp = bracket (hkl_h5_open file_id dfp) hkl_h5_close
 
 hkl_h5_open :: HId_t -> DataFrameH5Path -> IO DataFrameH5
 hkl_h5_open file_id dp = DataFrameH5 file_id
-  <$> get file_id h5pImage
-  <*> get file_id h5pMu
-  <*> get file_id h5pKomega
-  <*> get file_id h5pKappa
-  <*> get file_id h5pKphi
-  <*> get file_id h5pGamma
-  <*> get file_id h5pDelta
-  <*> get file_id h5pWaveLength
-  <*> get file_id h5pDiffractometerType
+  <$> openH5Dataset' file_id (h5pImage dp)
+  <*> openH5Dataset' file_id (h5pMu dp)
+  <*> openH5Dataset' file_id (h5pKomega dp)
+  <*> openH5Dataset' file_id (h5pKappa dp)
+  <*> openH5Dataset' file_id (h5pKphi dp)
+  <*> openH5Dataset' file_id (h5pGamma dp)
+  <*> openH5Dataset' file_id (h5pDelta dp)
+  <*> openH5Dataset' file_id (h5pWaveLength dp)
+  <*> openH5Dataset' file_id (h5pDiffractometerType dp)
       where
-        get fi accessor = do
-          let (DataItem name _) = accessor dp
-          dataset@(HId_t status) <- withCString name (\dataset -> h5d_open2 fi dataset h5p_DEFAULT)
-          return $ if status < 0 then Nothing else Just dataset
+        openH5Dataset' hid (DataItem name _) = openH5Dataset hid name
 
 hkl_h5_is_valid :: DataFrameH5-> IO Bool
 hkl_h5_is_valid d = do
