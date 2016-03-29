@@ -66,27 +66,35 @@ check_ndims hid expected = do
   (CInt ndims) <- h5s_get_simple_extent_ndims space_id
   return $ expected == fromEnum ndims
 
--- need to deal with the errors
+-- DataType
+
+withH5DataType :: HId_t -> (Maybe HId_t -> IO r) -> IO r
+withH5DataType hid = bracket acquire release
+  where
+    acquire = do
+      type_id@(HId_t status) <- h5d_get_type hid
+      return  $ if status < 0 then Nothing else (Just type_id)
+    release (Just thid) = h5t_close thid
+    release Nothing = return (HErr_t (-1))
+
 get_position :: HId_t -> Int -> IO ([Double], HErr_t)
-get_position hid n = do
-    mem_type_id <- h5d_get_type hid
-    space_id <- h5d_get_space hid
-    void $ withInList [HSize_t (fromIntegral n)] $ \start ->
-      withInList [HSize_t 1] $ \stride ->
-      withInList [HSize_t 1] $ \count ->
-      withInList [HSize_t 1] $ \block ->
-      h5s_select_hyperslab space_id h5s_SELECT_SET start stride count block
-    mem_space_id <- withInList [HSize_t 1] $ \current_dims ->
-                    withInList [HSize_t 1] $ \maximum_dims ->
-                        h5s_create_simple 1 current_dims maximum_dims
-
-    res <- withOutList 1 $ \rdata ->
-      h5d_read hid mem_type_id mem_space_id space_id h5p_DEFAULT rdata
-
-    void $ h5s_close mem_space_id
-    void $ h5s_close space_id
-    void $ h5t_close mem_type_id
-    return res
+get_position hid n =
+  withH5DataType hid $ \mmem_type_id -> case mmem_type_id of
+    (Just mem_type_id) -> withDataspace hid $ \mspace_id -> case mspace_id of
+        (Just space_id) -> do
+          void $ withInList [HSize_t (fromIntegral n)] $ \start ->
+            withInList [HSize_t 1] $ \stride ->
+            withInList [HSize_t 1] $ \count ->
+            withInList [HSize_t 1] $ \block ->
+            h5s_select_hyperslab space_id h5s_SELECT_SET start stride count block
+          withDataspace' $ \mmem_space_id -> case mmem_space_id of
+            (Just mem_space_id) -> withOutList 1 $ \rdata ->
+              h5d_read hid mem_type_id mem_space_id space_id h5p_DEFAULT rdata
+            Nothing -> return failed
+        Nothing -> return failed
+    Nothing -> return failed
+    where
+      failed = ([], HErr_t (-1))
 
 -- | File
 
@@ -117,6 +125,18 @@ closeH5Dataset mhid = case mhid of
   Nothing -> return ()
 
 -- | Dataspace
+-- check how to merge both methods
+
+withDataspace' :: (Maybe HId_t -> IO r) -> IO r
+withDataspace' f = bracket acquire release f
+  where
+    acquire = do
+      space_id@(HId_t status) <- withInList [HSize_t 1] $ \current_dims ->
+        withInList [HSize_t 1] $ \maximum_dims ->
+        h5s_create_simple 1 current_dims maximum_dims
+      return $ if status < 0 then Nothing else (Just space_id)
+    release (Just shid) = h5s_close shid
+    release Nothing = return (HErr_t (-1))
 
 withDataspace :: HId_t -> (Maybe HId_t -> IO r) -> IO r
 withDataspace hid f = bracket acquire release f
