@@ -2,7 +2,7 @@ module Hkl.H5
     ( check_ndims
     , closeH5Dataset
     , get_position
-    , hkl_h5_len
+    , lenH5Dataspace
     , openH5Dataset
     , withH5File
     )
@@ -88,12 +88,6 @@ get_position hid n = do
     void $ h5t_close mem_type_id
     return res
 
-hkl_h5_len :: HId_t -> IO Int
-hkl_h5_len hid = do
-  space_id <- h5d_get_space hid
-  (HSSize_t n) <- h5s_get_simple_extent_npoints space_id
-  return $ fromIntegral n
-
 -- | File
 
 withH5File :: FilePath -> (HId_t -> IO r) -> IO r
@@ -121,3 +115,14 @@ closeH5Dataset :: Maybe HId_t -> IO ()
 closeH5Dataset mhid = case mhid of
   (Just hid) -> void $ h5d_close hid
   Nothing -> return ()
+
+-- | Dataspace
+
+lenH5Dataspace :: Maybe HId_t -> IO (Maybe Int)
+lenH5Dataspace mhid = case mhid of
+  (Just hid) -> do
+    space_id@(HId_t status) <- h5d_get_space hid
+    if status < 0 then return Nothing else do
+      (HSSize_t n) <- h5s_get_simple_extent_npoints space_id
+      return $ (Just (fromIntegral n))
+  Nothing -> return Nothing

@@ -223,11 +223,8 @@ getDataFrame' d i = do
 
 getDataFrame :: DataFrameH5 -> Producer DataFrame IO ()
 getDataFrame d = do
-  n <- lift $ hkl_h5_len' (h5delta d)
+  (Just n) <- lift $ lenH5Dataspace (h5delta d)
   forM_ [0..n-1] (\i -> lift (getDataFrame' d i) >>= yield)
-  where
-    hkl_h5_len' (Just dataset) = hkl_h5_len dataset
-    hkl_h5_len' Nothing = return 0
 
 main_diffabs :: IO ()
 main_diffabs = do

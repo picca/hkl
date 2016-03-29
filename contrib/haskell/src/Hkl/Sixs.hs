@@ -204,7 +204,7 @@ getDataFrame' d i = do
                        
 getDataFrame :: DataFrameH5 -> Producer DataFrame IO ()
 getDataFrame d = do
-  n <- lift $ hkl_h5_len (h5mu d)
+  (Just n) <- lift $ lenH5Dataspace (Just (h5mu d))
   forM_ [0..n-1] (\i -> lift (getDataFrame' d i) >>= yield)
 
 main_sixs :: IO ()
