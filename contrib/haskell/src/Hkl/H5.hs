@@ -1,5 +1,6 @@
 module Hkl.H5
     ( check_ndims
+    , closeH5Dataset
     , get_position
     , hkl_h5_len
     , openH5Dataset
@@ -9,16 +10,15 @@ module Hkl.H5
 
 import Bindings.HDF5.Raw
 -- import Control.Applicative
-import Control.Exception
--- import Control.Monad (forever, forM_)
-import Foreign.C.String
-import Foreign.C.Types
+import Control.Exception (bracket)
+import Control.Monad (void)
+import Foreign.C.String (withCString)
+import Foreign.C.Types (CInt(..))
 -- import Foreign.Ptr
-import Foreign.Ptr.Conventions
+import Foreign.Ptr.Conventions (withInList, withOutList)
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
 
-type DatasetPath = String
 
 -- static herr_t attribute_info(hid_t location_id, const char *attr_name, const H5A_info_t *ainfo, void *op_data)
 -- {
@@ -71,11 +71,11 @@ get_position :: HId_t -> Int -> IO ([Double], HErr_t)
 get_position hid n = do
     mem_type_id <- h5d_get_type hid
     space_id <- h5d_get_space hid
-    status <- withInList [HSize_t (fromIntegral n)] $ \start ->
-              withInList [HSize_t 1] $ \stride -> 
-              withInList [HSize_t 1] $ \count ->
-              withInList [HSize_t 1] $ \block ->
-                  h5s_select_hyperslab space_id h5s_SELECT_SET start stride count block
+    void $ withInList [HSize_t (fromIntegral n)] $ \start ->
+      withInList [HSize_t 1] $ \stride ->
+      withInList [HSize_t 1] $ \count ->
+      withInList [HSize_t 1] $ \block ->
+      h5s_select_hyperslab space_id h5s_SELECT_SET start stride count block
     mem_space_id <- withInList [HSize_t 1] $ \current_dims ->
                     withInList [HSize_t 1] $ \maximum_dims ->
                         h5s_create_simple 1 current_dims maximum_dims
@@ -83,9 +83,9 @@ get_position hid n = do
     res <- withOutList 1 $ \rdata ->
       h5d_read hid mem_type_id mem_space_id space_id h5p_DEFAULT rdata
 
-    h5s_close mem_space_id
-    h5s_close space_id
-    h5t_close mem_type_id
+    void $ h5s_close mem_space_id
+    void $ h5s_close space_id
+    void $ h5t_close mem_type_id
     return res
 
 hkl_h5_len :: HId_t -> IO Int
@@ -93,6 +93,8 @@ hkl_h5_len hid = do
   space_id <- h5d_get_space hid
   (HSSize_t n) <- h5s_get_simple_extent_npoints space_id
   return $ fromIntegral n
+
+-- | File
 
 withH5File :: FilePath -> (HId_t -> IO r) -> IO r
 withH5File fp f = do
@@ -106,7 +108,16 @@ openH5File fp = do
   hid@(HId_t status) <- withCString fp (\file -> h5f_open file h5f_ACC_RDONLY h5p_DEFAULT)
   return $ if status < 0 then Nothing else Just hid
 
+-- | Dataset
+
+type DatasetPath = String
+
 openH5Dataset :: HId_t -> DatasetPath -> IO (Maybe HId_t)
 openH5Dataset h dp = do
   hid@(HId_t status) <- withCString dp (\dataset -> h5d_open2 h dataset h5p_DEFAULT)
   return $ if status < 0 then Nothing else Just hid
+
+closeH5Dataset :: Maybe HId_t -> IO ()
+closeH5Dataset mhid = case mhid of
+  (Just hid) -> void $ h5d_close hid
+  Nothing -> return ()

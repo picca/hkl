@@ -118,20 +118,16 @@ hkl_h5_is_valid d = do
       check_ndims' Nothing _ = return True
 
 hkl_h5_close :: DataFrameH5 -> IO ()
-hkl_h5_close d = do
-  h5d_close' (h5image d)
-  h5d_close' (h5mu d)
-  h5d_close' (h5komega d)
-  h5d_close' (h5kappa d)
-  h5d_close' (h5kphi d)
-  h5d_close' (h5gamma d)
-  h5d_close' (h5delta d)
-  h5d_close' (h5wavelength d)
-  h5d_close' (h5dtype d)
-  return ()
-    where
-      h5d_close' (Just dataset) = h5d_close dataset
-      h5d_close' Nothing = return $ HErr_t 0
+hkl_h5_close df = do
+  closeH5Dataset (h5image df)
+  closeH5Dataset (h5mu df)
+  closeH5Dataset (h5komega df)
+  closeH5Dataset (h5kappa df)
+  closeH5Dataset (h5kphi df)
+  closeH5Dataset (h5gamma df)
+  closeH5Dataset (h5delta df)
+  closeH5Dataset (h5wavelength df)
+  closeH5Dataset (h5dtype df)
 
 -- static herr_t hkl_dataframe_geometry_get(const HklDataframe dataframe, HklGeometry **geometry)
 -- {
