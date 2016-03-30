@@ -8,8 +8,9 @@ import Control.Exception (bracket)
 import Control.Monad (forM_)
 import Foreign.C.String
 import Hkl
+import Numeric.Units.Dimensional.Prelude (meter, nano, (*~))
 import Pipes
-import Pipes.Prelude
+import Pipes.Prelude (print)
 import System.FilePath.Posix
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
@@ -21,7 +22,7 @@ data DataFrameH5Path =
                   , h5pDelta :: DataItem
                   , h5pGamma :: DataItem
                   , h5pUB :: DataItem
-                  , h5pWaveLength :: DataItem
+                  , h5pWavelength :: DataItem
                   , h5pDiffractometerType :: DataItem
                   } deriving (Show)
 
@@ -39,7 +40,7 @@ data DataFrameH5 =
 
 data DataFrame =
   DataFrame { df_n :: Int
-            , df_image :: [Double]
+            , df_geometry :: Geometry
             } deriving (Show)
 
 -- static herr_t attribute_info(hid_t location_id, const char *attr_name, const H5A_info_t *ainfo, void *op_data)
@@ -92,7 +93,7 @@ hkl_h5_open file_id dp = DataFrameH5 file_id
     <*> openH5Dataset' file_id (h5pDelta dp)
     <*> openH5Dataset' file_id (h5pGamma dp)
     <*> openH5Dataset' file_id (h5pUB dp)
-    <*> openH5Dataset' file_id (h5pWaveLength dp)
+    <*> openH5Dataset' file_id (h5pWavelength dp)
     <*> openH5Dataset' file_id (h5pDiffractometerType dp)
       where
         openH5Dataset' hid (DataItem name _) = openH5Dataset hid name
@@ -194,8 +195,9 @@ getDataFrame' d i = do
   omega <- get_position' (h5omega d) i
   delta <- get_position' (h5delta d) i
   gamma <- get_position' (h5gamma d) i
+  wavelength <- get_position' (h5wavelength d) 0
   return DataFrame { df_n = i
-                   , df_image = mu ++ omega ++ delta ++ gamma
+                   , df_geometry = Geometry (Source (head wavelength *~ nano meter)) (mu ++ omega ++ delta ++ gamma)
                    }
     where
       get_position' dataset idx = case dataset of
@@ -222,7 +224,7 @@ main_sixs = do
                                       , h5pDelta = DataItem "com_113934/scan_data/UHV_DELTA" ExtendDims
                                       , h5pGamma = DataItem "com_113934/scan_data/UHV_GAMMA" ExtendDims
                                       , h5pUB = DataItem "com_113934/SIXS/I14-C-CX2__EX__DIFF-UHV__#1/UB" StrictDims
-                                      , h5pWaveLength = DataItem "com_113934/SIXS/Monochromator/wavelength" StrictDims
+                                      , h5pWavelength = DataItem "com_113934/SIXS/Monochromator/wavelength" StrictDims
                                       , h5pDiffractometerType = DataItem "com_113934/SIXS/I14-C-CX2__EX__DIFF-UHV__#1/type" StrictDims
                                       }
 
