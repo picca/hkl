@@ -199,15 +199,6 @@ getDataFrame' d i = do
   return DataFrame { df_n = i
                    , df_geometry = Geometry (Source (head wavelength *~ nano meter)) (mu ++ omega ++ delta ++ gamma)
                    }
-    where
-      get_position' dataset idx = case dataset of
-        (Just dataset') -> do
-          (positions, HErr_t status) <- get_position dataset' idx
-          if status < 0 then do
-             (failovers, HErr_t status') <- get_position dataset' 0
-             return $ if status' < 0 then [0.0] else failovers
-          else return $ if status < 0 then [0.0] else positions
-        Nothing -> return [0.0]
 
 getDataFrame :: DataFrameH5 -> Producer DataFrame IO ()
 getDataFrame d = do

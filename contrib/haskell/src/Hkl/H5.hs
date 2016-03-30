@@ -2,6 +2,7 @@ module Hkl.H5
     ( check_ndims
     , closeH5Dataset
     , get_position
+    , get_position'
     , lenH5Dataspace
     , openH5Dataset
     , withH5File
@@ -95,6 +96,16 @@ get_position hid n =
     Nothing -> return failed
     where
       failed = ([], HErr_t (-1))
+
+get_position' :: Maybe HId_t -> Int -> IO [Double]
+get_position' dataset idx = case dataset of
+        (Just dataset') -> do
+          (positions, HErr_t status) <- get_position dataset' idx
+          if status < 0 then do
+             (failovers, HErr_t status') <- get_position dataset' 0
+             return $ if status' < 0 then [0.0] else failovers
+          else return $ if status < 0 then [0.0] else positions
+        Nothing -> return [0.0]
 
 -- | File
 
