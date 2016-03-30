@@ -61,10 +61,6 @@ import Foreign.Ptr.Conventions (withInList, withOutList)
 -- 	return 0;
 -- }
 
-maybeIO :: b -> (a -> IO b) -> Maybe a -> IO b
-maybeIO n _ Nothing  = return n
-maybeIO _ f (Just x) = f x
-
 check_ndims :: HId_t -> Int -> IO Bool
 check_ndims hid expected = do
   space_id <- h5d_get_space hid
@@ -79,14 +75,14 @@ withH5DataType hid = bracket acquire release
     acquire = do
       type_id@(HId_t status) <- h5d_get_type hid
       return $ if status < 0 then Nothing else Just type_id
-    release = maybeIO (HErr_t (-1)) h5t_close
+    release = maybe (return $ HErr_t (-1)) h5t_close
 
 get_position :: HId_t -> Int -> IO ([Double], HErr_t)
 get_position hid n =
-  withH5DataType hid (maybeIO failed read''')
+  withH5DataType hid (maybe default_ read''')
           where
-            failed = ([], HErr_t (-1))
-            read''' mem_type_id = withDataspace hid (maybeIO failed read'')
+            default_ = return ([], HErr_t (-1))
+            read''' mem_type_id = withDataspace hid (maybe default_ read'')
                 where
                   read'' space_id = do
                     void $ withInList [HSize_t (fromIntegral n)] $ \start ->
@@ -94,14 +90,15 @@ get_position hid n =
                         withInList [HSize_t 1] $ \count ->
                         withInList [HSize_t 1] $ \block ->
                         h5s_select_hyperslab space_id h5s_SELECT_SET start stride count block
-                    withDataspace' (maybeIO failed read')
+                    withDataspace' (maybe default_ read')
                         where
                           read' mem_space_id = withOutList 1 $ \rdata ->
                                     h5d_read hid mem_type_id mem_space_id space_id h5p_DEFAULT rdata
 
 get_position' :: Maybe HId_t -> Int -> IO [Double]
-get_position' dataset idx = maybeIO [0.0] get_positions'' dataset
+get_position' dataset idx = maybe default_ get_positions'' dataset
     where
+      default_ = return [0.0]
       get_positions'' dataset_id = do
           (positions, HErr_t status) <- get_position dataset_id idx
           if status < 0 then do
@@ -114,7 +111,7 @@ get_position' dataset idx = maybeIO [0.0] get_positions'' dataset
 withH5File :: FilePath -> (HId_t -> IO r) -> IO r
 withH5File fp f = do
   mhid <- openH5File fp
-  maybeIO (error $ "Can not read the h5 file: " ++ fp) go mhid
+  maybe (return $ error $ "Can not read the h5 file: " ++ fp) go mhid
       where
         go hid = bracket (return hid) h5f_close f
 
@@ -133,7 +130,7 @@ openH5Dataset h dp = do
   return $ if status < 0 then Nothing else Just hid
 
 closeH5Dataset :: Maybe HId_t -> IO ()
-closeH5Dataset = maybeIO () (void . h5d_close)
+closeH5Dataset = maybe (return ()) (void . h5d_close)
 
 -- | Dataspace
 -- check how to merge both methods
@@ -146,7 +143,7 @@ withDataspace' = bracket acquire release
         withInList [HSize_t 1] $ \maximum_dims ->
         h5s_create_simple 1 current_dims maximum_dims
       return $ if status < 0 then Nothing else Just space_id
-    release = maybeIO (HErr_t (-1)) h5s_close
+    release = maybe  (return $ HErr_t (-1)) h5s_close
 
 withDataspace :: HId_t -> (Maybe HId_t -> IO r) -> IO r
 withDataspace hid = bracket acquire release
@@ -154,10 +151,10 @@ withDataspace hid = bracket acquire release
     acquire = do
       space_id@(HId_t status) <- h5d_get_space hid
       return  $ if status < 0 then Nothing else Just space_id
-    release = maybeIO (HErr_t (-1)) h5s_close
+    release = maybe (return $ HErr_t (-1)) h5s_close
 
 lenH5Dataspace :: Maybe HId_t -> IO (Maybe Int)
-lenH5Dataspace = maybeIO Nothing (withDataspace'' (maybeIO Nothing len))
+lenH5Dataspace = maybe (return Nothing) (withDataspace'' (maybe (return Nothing) len))
   where
     withDataspace'' f hid = withDataspace hid f
     len space_id = do
