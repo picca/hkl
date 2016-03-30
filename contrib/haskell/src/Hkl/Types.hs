@@ -68,3 +68,9 @@ data Source = Source (Length Double) -- wavelength
 -- Trajectory
 
 type Trajectory = [[Double]]
+
+-- Hdf5
+
+type H5Path = String
+data ExtendDims = ExtendDims | StrictDims deriving (Show)
+data DataItem = DataItem H5Path ExtendDims deriving (Show)

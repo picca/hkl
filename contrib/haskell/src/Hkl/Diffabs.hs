@@ -4,19 +4,15 @@ module Hkl.Diffabs
 
 import Bindings.HDF5.Raw
 import Control.Applicative
-import Control.Exception
+import Control.Exception (bracket)
 import Control.Monad (forM_)
 import Foreign.C.String
-import Hkl.H5
+import Hkl
 import Pipes
 import Pipes.Prelude
 import System.FilePath.Posix
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
-
-type H5Path = String
-data ExtendDims = ExtendDims | StrictDims deriving (Show)
-data DataItem = DataItem H5Path ExtendDims deriving (Show)
 
 data DataFrameH5Path =
   DataFrameH5Path { h5pImage :: DataItem

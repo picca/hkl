@@ -48,6 +48,7 @@ cabal-version:       >=1.10
 executable ghkl
   main-is:             ghkl.hs
   build-depends:       base >=4.6 && <4.9
+                     , bindings-hdf5 >= 1.8.12
                      , containers >=0.5 && <0.6
                      , dimensional >= 0.10
                      , hmatrix >= 0.15

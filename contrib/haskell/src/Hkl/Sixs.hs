@@ -4,9 +4,10 @@ module Hkl.Sixs
 
 import Bindings.HDF5.Raw
 import Control.Applicative
+import Control.Exception (bracket)
 import Control.Monad (forM_)
 import Foreign.C.String
-import Hkl.H5
+import Hkl
 import Pipes
 import Pipes.Prelude
 import System.FilePath.Posix
@@ -14,26 +15,26 @@ import System.FilePath.Posix
 {-# ANN module "HLint: ignore Use camelCase" #-}
 
 data DataFrameH5Path =
-  DataFrameH5Path { h5pImage :: String
-                  , h5pMu :: String
-                  , h5pOmega :: String
-                  , h5pDelta :: String
-                  , h5pGamma :: String
-                  , h5pUB :: String
-                  , h5pWaveLength :: String
-                  , h5pDiffractometerType :: String
+  DataFrameH5Path { h5pImage :: DataItem
+                  , h5pMu :: DataItem
+                  , h5pOmega :: DataItem
+                  , h5pDelta :: DataItem
+                  , h5pGamma :: DataItem
+                  , h5pUB :: DataItem
+                  , h5pWaveLength :: DataItem
+                  , h5pDiffractometerType :: DataItem
                   } deriving (Show)
 
 data DataFrameH5 =
   DataFrameH5 { h5file :: HId_t
-              , h5image :: HId_t
-              , h5mu :: HId_t
-              , h5omega :: HId_t
-              , h5delta :: HId_t
-              , h5gamma :: HId_t
-              , h5ub :: HId_t
-              , h5wavelength :: HId_t
-              , h5dtype :: HId_t
+              , h5image :: Maybe HId_t
+              , h5mu :: Maybe HId_t
+              , h5omega :: Maybe HId_t
+              , h5delta :: Maybe HId_t
+              , h5gamma :: Maybe HId_t
+              , h5ub :: Maybe HId_t
+              , h5wavelength :: Maybe HId_t
+              , h5dtype :: Maybe HId_t
               } deriving (Show)
 
 data DataFrame =
@@ -80,41 +81,42 @@ data DataFrame =
 
 -- 	return 0;
 -- }
+withDataframeH5 :: HId_t -> DataFrameH5Path -> (DataFrameH5 -> IO r) -> IO r
+withDataframeH5 file_id dfp = bracket (hkl_h5_open file_id dfp) hkl_h5_close
 
-hkl_h5_open :: FilePath -> DataFrameH5Path -> IO DataFrameH5
-hkl_h5_open f dp = do
-  file_id <- withCString f (\file -> h5f_open file h5f_ACC_RDONLY h5p_DEFAULT)
-  DataFrameH5 file_id
-    <$> get file_id h5pImage
-    <*> get file_id h5pMu
-    <*> get file_id h5pOmega
-    <*> get file_id h5pDelta
-    <*> get file_id h5pGamma
-    <*> get file_id h5pUB
-    <*> get file_id h5pWaveLength
-    <*> get file_id h5pDiffractometerType
-    where
-      get fi a = withCString (a dp) (\dataset -> h5d_open2 fi dataset h5p_DEFAULT)
+hkl_h5_open :: HId_t -> DataFrameH5Path -> IO DataFrameH5
+hkl_h5_open file_id dp = DataFrameH5 file_id
+    <$> openH5Dataset' file_id (h5pImage dp)
+    <*> openH5Dataset' file_id (h5pMu dp)
+    <*> openH5Dataset' file_id (h5pOmega dp)
+    <*> openH5Dataset' file_id (h5pDelta dp)
+    <*> openH5Dataset' file_id (h5pGamma dp)
+    <*> openH5Dataset' file_id (h5pUB dp)
+    <*> openH5Dataset' file_id (h5pWaveLength dp)
+    <*> openH5Dataset' file_id (h5pDiffractometerType dp)
+      where
+        openH5Dataset' hid (DataItem name _) = openH5Dataset hid name
 
 hkl_h5_is_valid :: DataFrameH5 -> IO Bool
-hkl_h5_is_valid d = do
-    check_ndims (h5mu d) 1
-    check_ndims (h5omega d) 1
-    check_ndims (h5delta d) 1
-    check_ndims (h5gamma d) 1
+hkl_h5_is_valid df = do
+    check_ndims' (h5mu df) 1
+    check_ndims' (h5omega df) 1
+    check_ndims' (h5delta df) 1
+    check_ndims' (h5gamma df) 1
+    where
+      check_ndims' (Just dataset) target = check_ndims dataset target
+      check_ndims' Nothing _ = return True
 
 hkl_h5_close :: DataFrameH5 -> IO ()
 hkl_h5_close d = do
-    h5d_close (h5image d)
-    h5d_close (h5mu d)
-    h5d_close (h5omega d)
-    h5d_close (h5delta d)
-    h5d_close (h5gamma d)
-    h5d_close (h5ub d)
-    h5d_close (h5wavelength d)
-    h5d_close (h5dtype d)
-    h5f_close (h5file d)
-    return ()
+    closeH5Dataset (h5image d)
+    closeH5Dataset (h5mu d)
+    closeH5Dataset (h5omega d)
+    closeH5Dataset (h5delta d)
+    closeH5Dataset (h5gamma d)
+    closeH5Dataset (h5ub d)
+    closeH5Dataset (h5wavelength d)
+    closeH5Dataset (h5dtype d)
 
 -- static herr_t hkl_dataframe_geometry_get(const HklDataframe dataframe, HklGeometry **geometry)
 -- {
@@ -186,8 +188,7 @@ hkl_h5_close d = do
 -- 	return -1;
 
 -- }
-
-getDataFrame' :: DataFrameH5 -> Int -> IO DataFrame
+getDataFrame' ::  DataFrameH5 -> Int -> IO DataFrame
 getDataFrame' d i = do
   mu <- get_position' (h5mu d) i
   omega <- get_position' (h5omega d) i
@@ -197,38 +198,40 @@ getDataFrame' d i = do
                    , df_image = mu ++ omega ++ delta ++ gamma
                    }
     where
-      get_position' dataset idx = do
-        (positions, err) <- get_position dataset idx
-        return $ case err of
-          (HErr_t status) -> if status < 0 then [0.0] else positions
-                       
+      get_position' dataset idx = case dataset of
+        (Just dataset') -> do
+          (positions, HErr_t status) <- get_position dataset' idx
+          if status < 0 then do
+             (failovers, HErr_t status') <- get_position dataset' 0
+             return $ if status' < 0 then [0.0] else failovers
+          else return $ if status < 0 then [0.0] else positions
+        Nothing -> return [0.0]
+
 getDataFrame :: DataFrameH5 -> Producer DataFrame IO ()
 getDataFrame d = do
-  (Just n) <- lift $ lenH5Dataspace (Just (h5mu d))
+  (Just n) <- lift $ lenH5Dataspace (h5mu d)
   forM_ [0..n-1] (\i -> lift (getDataFrame' d i) >>= yield)
 
 main_sixs :: IO ()
 main_sixs = do
   let root = "/nfs/ruche-sixs/sixs-soleil/com-sixs/2015/Shutdown4-5/XpadAu111/"
   let filename = "align_FLY2_omega_00045.nxs"
-  let dataframe_h5p = DataFrameH5Path { h5pImage = "com_113934/scan_data/xpad_image"
-                                      , h5pMu = "com_113934/scan_data/UHV_MU"
-                                      , h5pOmega = "com_113934/scan_data/UHV_OMEGA"
-                                      , h5pDelta = "com_113934/scan_data/UHV_DELTA"
-                                      , h5pGamma = "com_113934/scan_data/UHV_GAMMA"
-                                      , h5pUB = "com_113934/SIXS/I14-C-CX2__EX__DIFF-UHV__#1/UB"
-                                      , h5pWaveLength = "com_113934/SIXS/Monochromator/wavelength"
-                                      , h5pDiffractometerType = "com_113934/SIXS/I14-C-CX2__EX__DIFF-UHV__#1/type"
+  let dataframe_h5p = DataFrameH5Path { h5pImage = DataItem "com_113934/scan_data/xpad_image" StrictDims
+                                      , h5pMu = DataItem "com_113934/scan_data/UHV_MU" ExtendDims
+                                      , h5pOmega = DataItem "com_113934/scan_data/UHV_OMEGA" ExtendDims
+                                      , h5pDelta = DataItem "com_113934/scan_data/UHV_DELTA" ExtendDims
+                                      , h5pGamma = DataItem "com_113934/scan_data/UHV_GAMMA" ExtendDims
+                                      , h5pUB = DataItem "com_113934/SIXS/I14-C-CX2__EX__DIFF-UHV__#1/UB" StrictDims
+                                      , h5pWaveLength = DataItem "com_113934/SIXS/Monochromator/wavelength" StrictDims
+                                      , h5pDiffractometerType = DataItem "com_113934/SIXS/I14-C-CX2__EX__DIFF-UHV__#1/type" StrictDims
                                       }
 
-  dataframe_h5 <- hkl_h5_open (root </> filename) dataframe_h5p
+  withH5File (root </> filename) $ \file_id ->
+    withDataframeH5 file_id dataframe_h5p $ \dataframe_h5 -> do
+              status <- hkl_h5_is_valid dataframe_h5
 
-  status <- hkl_h5_is_valid dataframe_h5
-                  
-  runEffect $ getDataFrame dataframe_h5
-            >->  Pipes.Prelude.print
-
-  hkl_h5_close dataframe_h5
+              runEffect $ getDataFrame dataframe_h5
+                            >->  Pipes.Prelude.print
 
 -- int main (int argc, char ** argv)
 -- {
