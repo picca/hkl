@@ -24,6 +24,17 @@ import Foreign.Ptr.Conventions (withInList, withOutList)
 {-# ANN module "HLint: ignore Use camelCase" #-}
 
 
+class HId t where
+  toHId :: t -> HId_t
+  fromHId :: HId_t -> t
+  isError :: t -> Bool
+
+instance HId HId_t where
+  toHId = id
+  fromHId = id
+  isError = (< HId_t 0)
+
+
 -- static herr_t attribute_info(hid_t location_id, const char *attr_name, const H5A_info_t *ainfo, void *op_data)
 -- {
 -- 	printf("    Attribute: %d %s\n", location_id, attr_name);
@@ -113,16 +124,6 @@ get_position' md idx = maybe default_ get_positions'' md
       else return $ if status < 0 then [0.0] else positions
 
 -- | File
-
-class HId t where
-  toHId :: t -> HId_t
-  fromHId :: HId_t -> t
-  isError :: t -> Bool
-
-instance HId HId_t where
-  toHId = id
-  fromHId = id
-  isError = (< HId_t 0)
 
 newtype H5File = H5File HId_t
                deriving (Show, HId)
