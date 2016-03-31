@@ -213,9 +213,10 @@ getDataFrame' d i = do
   gamma <- get_position' (h5gamma d) i
   delta <- get_position' (h5delta d) i
   wavelength <- get_position' (h5wavelength d) 0
+  let source = Source (head wavelength *~ nano meter)
+  let positions = mu ++ komega ++ kappa ++ kphi ++ gamma ++ delta
   return DataFrame { df_n = i
-                   , df_geometry = Geometry
-                                   (Source (head wavelength *~ nano meter)) (mu ++ komega ++ kappa ++ kphi ++ gamma ++ delta)
+                   , df_geometry = Geometry source positions
                    }
 
 getDataFrame :: DataFrameH5 -> Producer DataFrame IO ()
