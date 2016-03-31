@@ -3,45 +3,45 @@ module Hkl.Sixs
        where
 
 import Bindings.HDF5.Raw
-import Control.Applicative
+import Control.Applicative ((<*>), (<$>))
 import Control.Exception (bracket)
 import Control.Monad (forM_)
-import Foreign.C.String
+import Foreign.C.String (withCString)
 import Hkl
 import Numeric.Units.Dimensional.Prelude (meter, nano, (*~))
-import Pipes
+import Pipes (Producer, runEffect, (>->), lift, yield)
 import Pipes.Prelude (print)
-import System.FilePath.Posix
+import System.FilePath.Posix ((</>))
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
 
-data DataFrameH5Path =
-  DataFrameH5Path { h5pImage :: DataItem
-                  , h5pMu :: DataItem
-                  , h5pOmega :: DataItem
-                  , h5pDelta :: DataItem
-                  , h5pGamma :: DataItem
-                  , h5pUB :: DataItem
-                  , h5pWavelength :: DataItem
-                  , h5pDiffractometerType :: DataItem
-                  } deriving (Show)
+data DataFrameH5Path = DataFrameH5Path
+                       { h5pImage :: DataItem
+                       , h5pMu :: DataItem
+                       , h5pOmega :: DataItem
+                       , h5pDelta :: DataItem
+                       , h5pGamma :: DataItem
+                       , h5pUB :: DataItem
+                       , h5pWavelength :: DataItem
+                       , h5pDiffractometerType :: DataItem
+                       } deriving (Show)
 
-data DataFrameH5 =
-  DataFrameH5 { h5file :: HId_t
-              , h5image :: Maybe HId_t
-              , h5mu :: Maybe HId_t
-              , h5omega :: Maybe HId_t
-              , h5delta :: Maybe HId_t
-              , h5gamma :: Maybe HId_t
-              , h5ub :: Maybe HId_t
-              , h5wavelength :: Maybe HId_t
-              , h5dtype :: Maybe HId_t
-              } deriving (Show)
+data DataFrameH5 = DataFrameH5
+                   { h5file :: HId_t
+                   , h5image :: Maybe HId_t
+                   , h5mu :: Maybe HId_t
+                   , h5omega :: Maybe HId_t
+                   , h5delta :: Maybe HId_t
+                   , h5gamma :: Maybe HId_t
+                   , h5ub :: Maybe HId_t
+                   , h5wavelength :: Maybe HId_t
+                   , h5dtype :: Maybe HId_t
+                   } deriving (Show)
 
-data DataFrame =
-  DataFrame { df_n :: Int
-            , df_geometry :: Geometry
-            } deriving (Show)
+data DataFrame = DataFrame
+                 { df_n :: Int
+                 , df_geometry :: Geometry
+                 } deriving (Show)
 
 -- static herr_t attribute_info(hid_t location_id, const char *attr_name, const H5A_info_t *ainfo, void *op_data)
 -- {
@@ -82,42 +82,43 @@ data DataFrame =
 
 -- 	return 0;
 -- }
+
 withDataframeH5 :: HId_t -> DataFrameH5Path -> (DataFrameH5 -> IO r) -> IO r
 withDataframeH5 file_id dfp = bracket (hkl_h5_open file_id dfp) hkl_h5_close
 
 hkl_h5_open :: HId_t -> DataFrameH5Path -> IO DataFrameH5
 hkl_h5_open file_id dp = DataFrameH5 file_id
-    <$> openH5Dataset' file_id (h5pImage dp)
-    <*> openH5Dataset' file_id (h5pMu dp)
-    <*> openH5Dataset' file_id (h5pOmega dp)
-    <*> openH5Dataset' file_id (h5pDelta dp)
-    <*> openH5Dataset' file_id (h5pGamma dp)
-    <*> openH5Dataset' file_id (h5pUB dp)
-    <*> openH5Dataset' file_id (h5pWavelength dp)
-    <*> openH5Dataset' file_id (h5pDiffractometerType dp)
-      where
-        openH5Dataset' hid (DataItem name _) = openH5Dataset hid name
+                         <$> openH5Dataset' file_id (h5pImage dp)
+                         <*> openH5Dataset' file_id (h5pMu dp)
+                         <*> openH5Dataset' file_id (h5pOmega dp)
+                         <*> openH5Dataset' file_id (h5pDelta dp)
+                         <*> openH5Dataset' file_id (h5pGamma dp)
+                         <*> openH5Dataset' file_id (h5pUB dp)
+                         <*> openH5Dataset' file_id (h5pWavelength dp)
+                         <*> openH5Dataset' file_id (h5pDiffractometerType dp)
+  where
+    openH5Dataset' hid (DataItem name _) = openH5Dataset hid name
 
 hkl_h5_is_valid :: DataFrameH5 -> IO Bool
 hkl_h5_is_valid df = do
-    check_ndims' (h5mu df) 1
-    check_ndims' (h5omega df) 1
-    check_ndims' (h5delta df) 1
-    check_ndims' (h5gamma df) 1
+  check_ndims' (h5mu df) 1
+  check_ndims' (h5omega df) 1
+  check_ndims' (h5delta df) 1
+  check_ndims' (h5gamma df) 1
     where
       check_ndims' (Just dataset) target = check_ndims dataset target
       check_ndims' Nothing _ = return True
 
 hkl_h5_close :: DataFrameH5 -> IO ()
 hkl_h5_close d = do
-    closeH5Dataset (h5image d)
-    closeH5Dataset (h5mu d)
-    closeH5Dataset (h5omega d)
-    closeH5Dataset (h5delta d)
-    closeH5Dataset (h5gamma d)
-    closeH5Dataset (h5ub d)
-    closeH5Dataset (h5wavelength d)
-    closeH5Dataset (h5dtype d)
+  closeH5Dataset (h5image d)
+  closeH5Dataset (h5mu d)
+  closeH5Dataset (h5omega d)
+  closeH5Dataset (h5delta d)
+  closeH5Dataset (h5gamma d)
+  closeH5Dataset (h5ub d)
+  closeH5Dataset (h5wavelength d)
+  closeH5Dataset (h5dtype d)
 
 -- static herr_t hkl_dataframe_geometry_get(const HklDataframe dataframe, HklGeometry **geometry)
 -- {
@@ -221,29 +222,6 @@ main_sixs = do
 
   withH5File (root </> filename) $ \file_id ->
     withDataframeH5 file_id dataframe_h5p $ \dataframe_h5 -> do
-              status <- hkl_h5_is_valid dataframe_h5
-
-              runEffect $ getDataFrame dataframe_h5
-                            >->  Pipes.Prelude.print
-
--- int main (int argc, char ** argv)
--- {
--- 	const char *filename =  ROOT FILENAME;
--- 	HklDataframeSixsUhv dataframe_h5 = hkl_h5_open(filename);
--- 	int res = hkl_h5_is_valid(&dataframe_h5);
--- 	/* fprintf(stdout, "h5file is valid : %d\n", res); */
--- 	HklGeometry *geometry = NULL;
-
--- 	for(HklDataframe dataframe =  hkl_dataframe_first(&dataframe_h5);
--- 	    hkl_dataframe_done(dataframe);
--- 	    dataframe = hkl_dataframe_next(dataframe))
--- 	{
--- 		hkl_dataframe_geometry_get(dataframe, &geometry);
--- 		/* fprintf(stdout, " %d", dataframe.i); */
--- 	}
-
--- 	hkl_geometry_free(geometry);
--- 	hkl_h5_close(&dataframe_h5);
-
--- 	return res;
--- }
+      status <- hkl_h5_is_valid dataframe_h5
+      runEffect $ getDataFrame dataframe_h5
+        >->  Pipes.Prelude.print
