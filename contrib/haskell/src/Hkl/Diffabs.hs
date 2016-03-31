@@ -91,20 +91,20 @@ data DataFrame =
 -- 	return 0;
 -- }
 
-withDataframeH5 :: HId_t -> DataFrameH5Path -> (DataFrameH5 -> IO r) -> IO r
-withDataframeH5 file_id dfp = bracket (hkl_h5_open file_id dfp) hkl_h5_close
+withDataframeH5 :: H5File -> DataFrameH5Path -> (DataFrameH5 -> IO r) -> IO r
+withDataframeH5 h5file dfp = bracket (hkl_h5_open h5file dfp) hkl_h5_close
 
-hkl_h5_open :: HId_t -> DataFrameH5Path -> IO DataFrameH5
-hkl_h5_open file_id dp = DataFrameH5
-                         <$> openH5Dataset' file_id (h5pImage dp)
-                         <*> openH5Dataset' file_id (h5pMu dp)
-                         <*> openH5Dataset' file_id (h5pKomega dp)
-                         <*> openH5Dataset' file_id (h5pKappa dp)
-                         <*> openH5Dataset' file_id (h5pKphi dp)
-                         <*> openH5Dataset' file_id (h5pGamma dp)
-                         <*> openH5Dataset' file_id (h5pDelta dp)
-                         <*> openH5Dataset' file_id (h5pWavelength dp)
-                         <*> openH5Dataset' file_id (h5pDiffractometerType dp)
+hkl_h5_open :: H5File -> DataFrameH5Path -> IO DataFrameH5
+hkl_h5_open h5file dp = DataFrameH5
+                         <$> openH5Dataset' h5file (h5pImage dp)
+                         <*> openH5Dataset' h5file (h5pMu dp)
+                         <*> openH5Dataset' h5file (h5pKomega dp)
+                         <*> openH5Dataset' h5file (h5pKappa dp)
+                         <*> openH5Dataset' h5file (h5pKphi dp)
+                         <*> openH5Dataset' h5file (h5pGamma dp)
+                         <*> openH5Dataset' h5file (h5pDelta dp)
+                         <*> openH5Dataset' h5file (h5pWavelength dp)
+                         <*> openH5Dataset' h5file (h5pDiffractometerType dp)
   where
     openH5Dataset' hid (DataItem name _) = openH5Dataset hid name
 
@@ -240,8 +240,8 @@ main_diffabs = do
                       , h5pDiffractometerType = DataItem "scan_27/DIFFABS/I14-C-CX2__EX__DIFF-UHV__#1/type" StrictDims
                       }
 
-  withH5File (root </> filename) $ \file_id ->
-    withDataframeH5 file_id dataframe_h5p $ \dataframe_h5 -> do
+  withH5File (root </> filename) $ \h5file ->
+    withDataframeH5 h5file dataframe_h5p $ \dataframe_h5 -> do
       True <- hkl_h5_is_valid dataframe_h5
 
       runEffect $ getDataFrame dataframe_h5
