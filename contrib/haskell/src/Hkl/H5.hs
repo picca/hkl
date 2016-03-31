@@ -72,13 +72,16 @@ check_ndims d expected = do
 
 -- DataType
 
-withH5DataType :: H5Dataset -> (Maybe HId_t -> IO r) -> IO r
+newtype H5DataType = H5DataType HId_t
+                   deriving (Show, HId)
+
+withH5DataType :: H5Dataset -> (Maybe H5DataType -> IO r) -> IO r
 withH5DataType d = bracket acquire release
   where
     acquire = do
       type_id <- h5d_get_type (toHId d)
       return $ if (isError type_id) then Nothing else Just (fromHId type_id)
-    release = maybe (return $ HErr_t (-1)) h5t_close
+    release = maybe (return $ HErr_t (-1)) (h5t_close . toHId)
 
 get_position :: H5Dataset -> Int -> IO ([Double], HErr_t)
 get_position d n = withH5DataType d (maybe default_ read''')
@@ -96,7 +99,7 @@ get_position d n = withH5DataType d (maybe default_ read''')
           withDataspace' (maybe default_ read')
             where
               read' mem_space_id = withOutList 1 $ \rdata ->
-                h5d_read (toHId d) mem_type_id mem_space_id space_id h5p_DEFAULT rdata
+                h5d_read (toHId d) (toHId mem_type_id) mem_space_id space_id h5p_DEFAULT rdata
 
 get_position' :: Maybe H5Dataset -> Int -> IO [Double]
 get_position' md idx = maybe default_ get_positions'' md
