@@ -9,7 +9,6 @@ import Prelude hiding (print)
 import Control.Applicative ((<$>), (<*>))
 #endif
 
-import Bindings.HDF5.Raw (HId_t)
 import Control.Exception (bracket)
 import Control.Monad (forM_)
 import Numeric.Units.Dimensional.Prelude (meter, nano, (*~))
@@ -35,15 +34,15 @@ data DataFrameH5Path =
                   } deriving (Show)
 
 data DataFrameH5 =
-  DataFrameH5 { h5image :: Maybe HId_t
-              , h5mu :: Maybe HId_t
-              , h5komega :: Maybe HId_t
-              , h5kappa :: Maybe HId_t
-              , h5kphi :: Maybe HId_t
-              , h5gamma :: Maybe HId_t
-              , h5delta :: Maybe HId_t
-              , h5wavelength :: Maybe HId_t
-              , h5dtype :: Maybe HId_t
+  DataFrameH5 { h5image :: Maybe H5Dataset
+              , h5mu :: Maybe H5Dataset
+              , h5komega :: Maybe H5Dataset
+              , h5kappa :: Maybe H5Dataset
+              , h5kphi :: Maybe H5Dataset
+              , h5gamma :: Maybe H5Dataset
+              , h5delta :: Maybe H5Dataset
+              , h5wavelength :: Maybe H5Dataset
+              , h5dtype :: Maybe H5Dataset
               } deriving (Show)
 
 data DataFrame =
