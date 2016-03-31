@@ -5,20 +5,19 @@ import Data.Map.Strict (lookup)
 import Data.Maybe (isNothing, fromJust)
 import Hkl
 import Numeric.LinearAlgebra (fromList)
-import Numeric.Units.Dimensional.Prelude (nano, meter, degree,
-                                          (*~),
-                                          (*~~), (/~~))
+import Numeric.Units.Dimensional.Prelude (nano, meter,
+                                          (*~))
 import Pipes
 import qualified Pipes.Prelude as P
 import Prelude hiding (lookup)
 
 main' :: IO ()
 main' = do
-  factories <- factories
-  let mfactory = lookup "E6C" factories
+  factories_ <- factories
+  let mfactory = lookup "E6C" factories_
   if isNothing mfactory
   then
-      return $ error $ "wrong diffractometer:" ++ show factories
+      return $ error $ "wrong diffractometer:" ++ show factories_
   else do
     let factory = fromJust mfactory
     let sample = Sample "test" (Cubic (1.54 *~ nano meter))
@@ -30,7 +29,7 @@ main' = do
     let detector = Detector DetectorType0D
 
     -- compute the pseudo axes values
-    pseudoAxes <- compute factory geometry detector sample
+    _pseudoAxes <- compute factory geometry detector sample
     -- print pseudoAxes
 
     -- solve a pseudo axis problem for the given engine

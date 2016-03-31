@@ -1,16 +1,24 @@
+{-# LANGUAGE CPP #-}
 module Hkl.Diffabs
     ( main_diffabs )
     where
 
-import Bindings.HDF5.Raw
-import Control.Applicative
+import Prelude hiding (print)
+
+#if __GLASGOW_HASKELL__ < 710
+import Control.Applicative ((<$>), (<*>))
+#endif
+
+import Bindings.HDF5.Raw (HId_t)
 import Control.Exception (bracket)
 import Control.Monad (forM_)
-import Foreign.C.String
-import Hkl
-import Pipes
-import Pipes.Prelude
-import System.FilePath.Posix
+import Pipes (Producer, lift, runEffect, yield,
+              (>->))
+import Pipes.Prelude (print)
+import System.FilePath.Posix ((</>))
+
+import Hkl.Types
+import Hkl.H5
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
 
@@ -27,8 +35,7 @@ data DataFrameH5Path =
                   } deriving (Show)
 
 data DataFrameH5 =
-  DataFrameH5 { h5file :: HId_t
-              , h5image :: Maybe HId_t
+  DataFrameH5 { h5image :: Maybe HId_t
               , h5mu :: Maybe HId_t
               , h5komega :: Maybe HId_t
               , h5kappa :: Maybe HId_t
@@ -88,27 +95,28 @@ withDataframeH5 :: HId_t -> DataFrameH5Path -> (DataFrameH5 -> IO r) -> IO r
 withDataframeH5 file_id dfp = bracket (hkl_h5_open file_id dfp) hkl_h5_close
 
 hkl_h5_open :: HId_t -> DataFrameH5Path -> IO DataFrameH5
-hkl_h5_open file_id dp = DataFrameH5 file_id
-  <$> openH5Dataset' file_id (h5pImage dp)
-  <*> openH5Dataset' file_id (h5pMu dp)
-  <*> openH5Dataset' file_id (h5pKomega dp)
-  <*> openH5Dataset' file_id (h5pKappa dp)
-  <*> openH5Dataset' file_id (h5pKphi dp)
-  <*> openH5Dataset' file_id (h5pGamma dp)
-  <*> openH5Dataset' file_id (h5pDelta dp)
-  <*> openH5Dataset' file_id (h5pWaveLength dp)
-  <*> openH5Dataset' file_id (h5pDiffractometerType dp)
-      where
-        openH5Dataset' hid (DataItem name _) = openH5Dataset hid name
+hkl_h5_open file_id dp = DataFrameH5
+                         <$> openH5Dataset' file_id (h5pImage dp)
+                         <*> openH5Dataset' file_id (h5pMu dp)
+                         <*> openH5Dataset' file_id (h5pKomega dp)
+                         <*> openH5Dataset' file_id (h5pKappa dp)
+                         <*> openH5Dataset' file_id (h5pKphi dp)
+                         <*> openH5Dataset' file_id (h5pGamma dp)
+                         <*> openH5Dataset' file_id (h5pDelta dp)
+                         <*> openH5Dataset' file_id (h5pWaveLength dp)
+                         <*> openH5Dataset' file_id (h5pDiffractometerType dp)
+  where
+    openH5Dataset' hid (DataItem name _) = openH5Dataset hid name
 
 hkl_h5_is_valid :: DataFrameH5-> IO Bool
 hkl_h5_is_valid d = do
-  check_ndims' (h5mu d) 1
-  check_ndims' (h5komega d) 1
-  check_ndims' (h5kappa d) 1
-  check_ndims' (h5kphi d) 1
-  check_ndims' (h5gamma d) 1
-  check_ndims' (h5delta d) 1
+  True <- check_ndims' (h5mu d) 1
+  True <- check_ndims' (h5komega d) 1
+  True <- check_ndims' (h5kappa d) 1
+  True <- check_ndims' (h5kphi d) 1
+  True <- check_ndims' (h5gamma d) 1
+  True <- check_ndims' (h5delta d) 1
+  return True
     where
       check_ndims' (Just dataset) target = check_ndims dataset target
       check_ndims' Nothing _ = return True
@@ -230,7 +238,7 @@ main_diffabs = do
 
   withH5File (root </> filename) $ \file_id ->
     withDataframeH5 file_id dataframe_h5p $ \dataframe_h5 -> do
-      status <- hkl_h5_is_valid dataframe_h5
+      True <- hkl_h5_is_valid dataframe_h5
 
       runEffect $ getDataFrame dataframe_h5
-        >-> Pipes.Prelude.print
+        >-> print

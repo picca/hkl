@@ -1,5 +1,4 @@
-import Hkl.Diffabs
-import Hkl.Sixs
+import Hkl
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
 

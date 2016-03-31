@@ -1,17 +1,24 @@
+{-# LANGUAGE CPP #-}
 module Hkl.Sixs
        ( main_sixs )
        where
 
-import Bindings.HDF5.Raw
-import Control.Applicative ((<*>), (<$>))
+import Prelude hiding (print)
+
+#if __GLASGOW_HASKELL__ < 710
+import Control.Applicative ((<$>), (<*>))
+#endif
+
+import Bindings.HDF5.Raw (HId_t)
 import Control.Exception (bracket)
 import Control.Monad (forM_)
-import Foreign.C.String (withCString)
-import Hkl
 import Numeric.Units.Dimensional.Prelude (meter, nano, (*~))
 import Pipes (Producer, runEffect, (>->), lift, yield)
 import Pipes.Prelude (print)
 import System.FilePath.Posix ((</>))
+
+import Hkl.Types
+import Hkl.H5
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
 
@@ -27,8 +34,7 @@ data DataFrameH5Path = DataFrameH5Path
                        } deriving (Show)
 
 data DataFrameH5 = DataFrameH5
-                   { h5file :: HId_t
-                   , h5image :: Maybe HId_t
+                   { h5image :: Maybe HId_t
                    , h5mu :: Maybe HId_t
                    , h5omega :: Maybe HId_t
                    , h5delta :: Maybe HId_t
@@ -87,7 +93,7 @@ withDataframeH5 :: HId_t -> DataFrameH5Path -> (DataFrameH5 -> IO r) -> IO r
 withDataframeH5 file_id dfp = bracket (hkl_h5_open file_id dfp) hkl_h5_close
 
 hkl_h5_open :: HId_t -> DataFrameH5Path -> IO DataFrameH5
-hkl_h5_open file_id dp = DataFrameH5 file_id
+hkl_h5_open file_id dp = DataFrameH5
                          <$> openH5Dataset' file_id (h5pImage dp)
                          <*> openH5Dataset' file_id (h5pMu dp)
                          <*> openH5Dataset' file_id (h5pOmega dp)
@@ -101,10 +107,11 @@ hkl_h5_open file_id dp = DataFrameH5 file_id
 
 hkl_h5_is_valid :: DataFrameH5 -> IO Bool
 hkl_h5_is_valid df = do
-  check_ndims' (h5mu df) 1
-  check_ndims' (h5omega df) 1
-  check_ndims' (h5delta df) 1
-  check_ndims' (h5gamma df) 1
+  True <- check_ndims' (h5mu df) 1
+  True <- check_ndims' (h5omega df) 1
+  True <- check_ndims' (h5delta df) 1
+  True <- check_ndims' (h5gamma df) 1
+  return True
     where
       check_ndims' (Just dataset) target = check_ndims dataset target
       check_ndims' Nothing _ = return True
@@ -222,6 +229,6 @@ main_sixs = do
 
   withH5File (root </> filename) $ \file_id ->
     withDataframeH5 file_id dataframe_h5p $ \dataframe_h5 -> do
-      status <- hkl_h5_is_valid dataframe_h5
+      True <- hkl_h5_is_valid dataframe_h5
       runEffect $ getDataFrame dataframe_h5
-        >->  Pipes.Prelude.print
+        >->  print
