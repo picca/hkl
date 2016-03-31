@@ -106,11 +106,11 @@ get_position d n = withH5DataType d (maybe default_ read''')
             withInList [HSize_t 1] $ \stride ->
             withInList [HSize_t 1] $ \count ->
             withInList [HSize_t 1] $ \block ->
-            h5s_select_hyperslab space_id h5s_SELECT_SET start stride count block
+            h5s_select_hyperslab (toHId space_id) h5s_SELECT_SET start stride count block
           withDataspace' (maybe default_ read')
             where
               read' mem_space_id = withOutList 1 $ \rdata ->
-                h5d_read (toHId d) (toHId mem_type_id) mem_space_id space_id h5p_DEFAULT rdata
+                h5d_read (toHId d) (toHId mem_type_id) (toHId mem_space_id) (toHId space_id) h5p_DEFAULT rdata
 
 get_position' :: Maybe H5Dataset -> Int -> IO [Double]
 get_position' md idx = maybe default_ get_positions'' md
@@ -156,31 +156,35 @@ closeH5Dataset :: Maybe H5Dataset -> IO ()
 closeH5Dataset = maybe (return ()) (void . h5d_close . toHId)
 
 -- | Dataspace
+
+newtype H5Dataspace = H5Dataspace HId_t
+                      deriving (Show, HId)
+
 -- check how to merge both methods
 
-withDataspace' :: (Maybe HId_t -> IO r) -> IO r
+withDataspace' :: (Maybe H5Dataspace -> IO r) -> IO r
 withDataspace' = bracket acquire release
   where
     acquire = do
-      space_id <-
+      hid <-
         withInList [HSize_t 1] $ \current_dims ->
         withInList [HSize_t 1] $ \maximum_dims ->
         h5s_create_simple 1 current_dims maximum_dims
-      return $ if (isError space_id) then Nothing else Just space_id
-    release = maybe  (return $ HErr_t (-1)) h5s_close
+      return $ if (isError hid) then Nothing else Just (fromHId hid)
+    release = maybe  (return $ HErr_t (-1)) (h5s_close . toHId)
 
-withDataspace :: H5Dataset -> (Maybe HId_t -> IO r) -> IO r
+withDataspace :: H5Dataset -> (Maybe H5Dataspace -> IO r) -> IO r
 withDataspace d = bracket acquire release
   where
     acquire = do
-      space_id <- h5d_get_space (toHId d)
-      return  $ if (isError space_id) then Nothing else Just space_id
-    release = maybe (return $ HErr_t (-1)) h5s_close
+      hid <- h5d_get_space (toHId d)
+      return  $ if (isError hid) then Nothing else Just (fromHId hid)
+    release = maybe (return $ HErr_t (-1)) (h5s_close . toHId)
 
 lenH5Dataspace :: Maybe H5Dataset -> IO (Maybe Int)
 lenH5Dataspace = maybe (return Nothing) (withDataspace'' (maybe (return Nothing) len))
   where
     withDataspace'' f d = withDataspace d f
     len space_id = do
-      (HSSize_t n) <- h5s_get_simple_extent_npoints space_id
+      (HSSize_t n) <- h5s_get_simple_extent_npoints (toHId space_id)
       return $ if n < 0 then Nothing else Just (fromIntegral n)
