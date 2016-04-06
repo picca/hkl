@@ -11,11 +11,6 @@ module Hkl.C
 
 import Prelude hiding (min, max)
 
-#if __GLASGOW_HASKELL__ < 710
-import Control.Applicative ((<$>), (<*>))
-import Control.Monad ((>=>))
-#endif
-
 import Control.Monad (void, forever)
 import Control.Monad.Loops (unfoldrM)
 import Control.Monad.Trans.State.Strict
