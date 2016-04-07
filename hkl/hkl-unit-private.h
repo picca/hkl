@@ -32,7 +32,8 @@ typedef enum _HklUnitType /*< unit,prefix=HKL >*/
 {
 	HKL_UNIT_ANGLE_DEG,
 	HKL_UNIT_ANGLE_RAD,
-	HKL_UNIT_LENGTH_NM
+	HKL_UNIT_LENGTH_NM,
+	HKL_UNIT_ANGLE_MRAD,
 } HklUnitType;
 
 struct _HklUnit
@@ -45,6 +46,7 @@ struct _HklUnit
 static HklUnit const hkl_unit_angle_deg = {HKL_UNIT_ANGLE_DEG, "Degree", "°"};
 static HklUnit const hkl_unit_angle_rad = {HKL_UNIT_ANGLE_RAD, "Radian", "rad"};
 static HklUnit const hkl_unit_length_nm = {HKL_UNIT_LENGTH_NM, "NanoMeter", "nm"};
+static HklUnit const hkl_unit_angle_mrad = {HKL_UNIT_ANGLE_MRAD, "Milli Radian", "mrad"};
 
 extern HklUnit *hkl_unit_dup(const HklUnit *self);
 extern void hkl_unit_free(HklUnit *self);

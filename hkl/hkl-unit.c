@@ -76,6 +76,7 @@ int hkl_unit_compatible(const HklUnit *self, const HklUnit *unit)
 			switch(unit->type){
 			case HKL_UNIT_ANGLE_DEG:
 			case HKL_UNIT_ANGLE_RAD:
+			case HKL_UNIT_ANGLE_MRAD:
 				break;
 			default:
 				res = FALSE;
@@ -86,6 +87,7 @@ int hkl_unit_compatible(const HklUnit *self, const HklUnit *unit)
 			switch(unit->type){
 			case HKL_UNIT_ANGLE_DEG:
 			case HKL_UNIT_ANGLE_RAD:
+			case HKL_UNIT_ANGLE_MRAD:
 				break;
 			default:
 				res = FALSE;
@@ -100,6 +102,18 @@ int hkl_unit_compatible(const HklUnit *self, const HklUnit *unit)
 				res = FALSE;
 				break;
 			}
+			break;
+		case HKL_UNIT_ANGLE_MRAD:
+			switch(unit->type){
+			case HKL_UNIT_ANGLE_DEG:
+			case HKL_UNIT_ANGLE_RAD:
+			case HKL_UNIT_ANGLE_MRAD:
+				break;
+			default:
+				res = FALSE;
+				break;
+			}
+			break;
 		}
 	}
 	return res;
@@ -128,6 +142,9 @@ double hkl_unit_factor(const HklUnit *self, const HklUnit *unit)
 			case HKL_UNIT_ANGLE_RAD:
 				factor = HKL_DEGTORAD;
 				break;
+			case HKL_UNIT_ANGLE_MRAD:
+				factor = HKL_DEGTORAD * 1e3;
+				break;
 			default:
 				factor = GSL_NAN;
 				break;
@@ -139,6 +156,9 @@ double hkl_unit_factor(const HklUnit *self, const HklUnit *unit)
 				factor = HKL_RADTODEG;
 				break;
 			case HKL_UNIT_ANGLE_RAD:
+				break;
+			case HKL_UNIT_ANGLE_MRAD:
+				factor = 1e3;
 				break;
 			default:
 				factor = GSL_NAN;
@@ -153,6 +173,22 @@ double hkl_unit_factor(const HklUnit *self, const HklUnit *unit)
 				factor = GSL_NAN;
 				break;
 			}
+			break;
+		case HKL_UNIT_ANGLE_MRAD:
+			switch(unit->type){
+			case HKL_UNIT_ANGLE_DEG:
+				factor = 1e-3 * HKL_RADTODEG;
+				break;
+			case HKL_UNIT_ANGLE_RAD:
+				factor = 1e-3;
+				break;
+			case HKL_UNIT_ANGLE_MRAD:
+				break;
+			default:
+				factor = GSL_NAN;
+				break;
+			}
+			break;
 		}
 	}
 	return factor;
