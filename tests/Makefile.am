@@ -24,7 +24,6 @@ all_tests = \
 	hkl-parameter-t \
 	hkl-pseudoaxis-k6c-t \
 	hkl-pseudoaxis-zaxis-t \
-	hkl-pseudoaxis-soleil-sirius-turret-t \
 	hkl-pseudoaxis-soleil-sixs-med-t
 
 AM_CPPFLAGS = -Wextra -D_BSD_SOURCE \
