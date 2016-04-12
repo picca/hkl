@@ -353,6 +353,20 @@ int hkl_parameter_is_valid(const HklParameter *self)
 }
 
 /**
+ * hkl_parameter_is_valid_range: (skip)
+ * @self:
+ *
+ * check if the value of the #HklParameter is in the min,max range
+ * strictly (min < value < max).
+ *
+ * Returns:
+ **/
+int hkl_parameter_is_valid_range(const HklParameter *self)
+{
+	return self->ops->is_valid_range(self);
+}
+
+/**
  * hkl_parameter_fprintf: (skip)
  * @f:
  * @self:

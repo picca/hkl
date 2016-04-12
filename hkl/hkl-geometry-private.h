@@ -124,6 +124,8 @@ extern int hkl_geometry_closest_from_geometry_with_range(HklGeometry *self,
 
 extern int hkl_geometry_is_valid(const HklGeometry *self);
 
+extern int hkl_geometry_is_valid_range(const HklGeometry *self);
+
 /*******************/
 /* HklGeometryList */
 /*******************/

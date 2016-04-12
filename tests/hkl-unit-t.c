@@ -33,6 +33,15 @@ static void compatible(void)
 	res &= DIAG(hkl_unit_compatible(&hkl_unit_angle_deg, &hkl_unit_angle_rad));
 	res &= DIAG(!hkl_unit_compatible(&hkl_unit_angle_deg, &hkl_unit_length_nm));
 	res &= DIAG(!hkl_unit_compatible(&hkl_unit_angle_rad, &hkl_unit_length_nm));
+
+	/* mrad */
+	res &= DIAG(hkl_unit_compatible(&hkl_unit_angle_mrad, &hkl_unit_angle_deg));
+	res &= DIAG(hkl_unit_compatible(&hkl_unit_angle_mrad, &hkl_unit_angle_rad));
+	res &= DIAG(hkl_unit_compatible(&hkl_unit_angle_deg, &hkl_unit_angle_mrad));
+	res &= DIAG(hkl_unit_compatible(&hkl_unit_angle_rad, &hkl_unit_angle_mrad));
+	res &= DIAG(!hkl_unit_compatible(&hkl_unit_angle_mrad, &hkl_unit_length_nm));
+	res &= DIAG(!hkl_unit_compatible(&hkl_unit_length_nm, &hkl_unit_angle_mrad));
+
 	res &= DIAG(hkl_unit_compatible(NULL, NULL));
 
 	ok(res == TRUE, __func__);
@@ -41,11 +50,15 @@ static void compatible(void)
 static void factor(void)
 {
 	is_double(HKL_DEGTORAD, hkl_unit_factor(&hkl_unit_angle_deg, &hkl_unit_angle_rad), HKL_EPSILON, __func__);
+	is_double(1e3, hkl_unit_factor(&hkl_unit_angle_rad, &hkl_unit_angle_mrad), HKL_EPSILON, __func__);
+	is_double(1.0,
+		  hkl_unit_factor(&hkl_unit_angle_rad, &hkl_unit_angle_mrad) * hkl_unit_factor(&hkl_unit_angle_mrad, &hkl_unit_angle_rad),
+		  HKL_EPSILON, __func__);
 }
 
 int main(void)
 {
-	plan(2);
+	plan(4);
 
 	compatible();
 	factor();
