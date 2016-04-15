@@ -292,6 +292,36 @@ static void wavelength(void)
 	hkl_geometry_free(geom);
 }
 
+static void  xxx_rotation_get(void)
+{
+	int res = TRUE;
+	size_t i, n;
+	HklFactory **factories;
+	HklDetector *detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
+	HklSample *sample = hkl_sample_new("test");
+
+	factories = hkl_factory_get_all(&n);
+	for(i=0; i<n && TRUE == res; i++){
+		HklGeometry *geometry = NULL;
+		HklQuaternion q_ref = {{1, 0, 0, 0}};
+		HklQuaternion qs;
+		HklQuaternion qd;
+
+		geometry = hkl_factory_create_new_geometry(factories[i]);
+		qs = hkl_geometry_sample_rotation_get(geometry, sample);
+		qd = hkl_geometry_detector_rotation_get(geometry, detector);
+
+		res &= DIAG(TRUE == hkl_quaternion_cmp(&q_ref, &qs));
+		res &= DIAG(TRUE == hkl_quaternion_cmp(&q_ref, &qd));
+
+		hkl_geometry_free(geometry);
+	}
+	ok(res, __func__);
+
+	hkl_detector_free(detector);
+	hkl_sample_free(sample);
+}
+
 static void list(void)
 {
 	int i = 0;
@@ -429,7 +459,7 @@ static void  list_remove_invalid(void)
 
 int main(void)
 {
-	plan(50);
+	plan(51);
 
 	add_holder();
 	get_axis();
@@ -439,6 +469,7 @@ int main(void)
 	distance();
 	is_valid();
 	wavelength();
+	xxx_rotation_get();
 
 	list();
 	list_multiply_from_range();

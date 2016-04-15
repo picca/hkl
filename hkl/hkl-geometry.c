@@ -31,6 +31,7 @@
 #include <sys/types.h>                  // for uint
 #include "hkl-factory-private.h"
 #include "hkl-axis-private.h"           // for HklAxis, etc
+#include "hkl-detector-private.h"
 #include "hkl-geometry-private.h"       // for _HklGeometry, etc
 #include "hkl-interval-private.h"       // for HklInterval
 #include "hkl-macros-private.h"         // for HKL_MALLOC
@@ -789,6 +790,39 @@ int hkl_geometry_closest_from_geometry_with_range(HklGeometry *self,
 	}
 	return ko;
 }
+
+
+/**
+ * hkl_geometry_sample_rotation_get:
+ * @self: the self @HklGeometry@
+ * @sample: the rotated sample.
+ *
+ * return the rotation part of the given sample in the laboratory basis.
+ *
+ * Returns: the rotation express as a quaternion.
+ **/
+HklQuaternion hkl_geometry_sample_rotation_get(const HklGeometry *self,
+					       const HklSample *sample)
+{
+	return darray_item(self->holders, 0)->q;
+}
+
+/**
+ * hkl_geometry_detector_rotation_get:
+ * @self: the self @HklGeometry@
+ * @detector: the @HklDetector@
+ *
+ * return the rotation part of the given detector in the laboratory
+ * basis.
+ *
+ * Returns: the rotation express as a quaternion.
+ **/
+HklQuaternion hkl_geometry_detector_rotation_get(const HklGeometry *self,
+						 const HklDetector *detector)
+{
+	return darray_item(self->holders, detector->idx)->q;
+}
+
 
 /**
  * hkl_geometry_fprintf: (skip)

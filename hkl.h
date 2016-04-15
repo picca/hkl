@@ -221,6 +221,7 @@ HKLAPI void hkl_detector_fprintf(FILE *f, const HklDetector *self) HKL_ARG_NONNU
 typedef struct _HklGeometry HklGeometry;
 typedef struct _HklGeometryList HklGeometryList;
 typedef struct _HklGeometryListItem HklGeometryListItem;
+typedef struct _HklSample HklSample; /* forwarded declaration */
 
 /* HklGeometry */
 
@@ -262,6 +263,12 @@ HKLAPI void hkl_geometry_randomize(HklGeometry *self) HKL_ARG_NONNULL(1);
 HKLAPI int hkl_geometry_set_values_v(HklGeometry *self, HklUnitEnum unit_type,
 				     GError **error, ...) HKL_ARG_NONNULL(1) HKL_WARN_UNUSED_RESULT;
 
+HKLAPI HklQuaternion hkl_geometry_sample_rotation_get(const HklGeometry *self,
+						      const HklSample *sample) HKL_ARG_NONNULL(1, 2);
+
+HKLAPI HklQuaternion hkl_geometry_detector_rotation_get(const HklGeometry *self,
+							const HklDetector *detector) HKL_ARG_NONNULL(1, 2);
+
 HKLAPI void hkl_geometry_fprintf(FILE *file, const HklGeometry *self) HKL_ARG_NONNULL(1, 2);
 
 /* HklGeometryList */
@@ -288,7 +295,6 @@ HKLAPI const HklGeometry *hkl_geometry_list_item_geometry_get(const HklGeometryL
 /**********/
 
 typedef struct _HklLattice HklLattice;
-typedef struct _HklSample HklSample;
 typedef struct _HklSampleReflection HklSampleReflection;
 
 /* Lattice */

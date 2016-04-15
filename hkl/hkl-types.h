@@ -69,6 +69,9 @@ HKLAPI GType hkl_unit_get_type (void) G_GNUC_CONST;
 #define TYPE_HKL_VECTOR (hkl_vector_get_type ())
 HKLAPI GType hkl_vector_get_type (void) G_GNUC_CONST;
 
+#define TYPE_HKL_QUATERNION (hkl_quaternion_get_type ())
+HKLAPI GType hkl_quaternion_get_type (void) G_GNUC_CONST;
+
 G_END_DECLS
 
 #endif

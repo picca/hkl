@@ -97,6 +97,8 @@ class TestAPI(unittest.TestCase):
         # corresponding HklGeometry
         factory = Hkl.factories()['K6C']
         geometry = factory.create_new_geometry()
+        detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))
+        sample = Hkl.Sample.new("toto")
 
         # source access
         wavelength = 1.
@@ -122,6 +124,15 @@ class TestAPI(unittest.TestCase):
             q = axis.quaternion_get()
             geometry.axis_set(name, axis)
 
+        # check xxx_rotation_get
+        q = geometry.sample_rotation_get(sample)
+        self.assertTrue(type(q) == Hkl.Quaternion)
+
+        q = geometry.detector_rotation_get(detector)
+        self.assertTrue(type(q) == Hkl.Quaternion)
+
+        del sample
+        del detector
         del geometry
 
     def test_engine_api(self):

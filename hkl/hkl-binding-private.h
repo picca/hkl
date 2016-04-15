@@ -45,6 +45,12 @@ HKLAPI const char **hkl_geometry_axis_names_get_binding(const HklGeometry *self,
 HKLAPI double* hkl_geometry_axis_values_get_binding(const HklGeometry *self, unsigned int *len,
 						    HklUnitEnum unit_type) HKL_ARG_NONNULL(1, 2);
 
+HKLAPI HklQuaternion *hkl_geometry_sample_rotation_get_binding(const HklGeometry *self,
+							       const HklSample *sample) HKL_ARG_NONNULL(1, 2);
+
+HKLAPI HklQuaternion *hkl_geometry_detector_rotation_get_binding(const HklGeometry *self,
+								 const HklDetector *detector) HKL_ARG_NONNULL(1, 2);
+
 /*******************/
 /* HklGeometryList */
 /*******************/

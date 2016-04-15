@@ -117,6 +117,44 @@ double *hkl_geometry_axis_values_get_binding(const HklGeometry *self, guint *len
 	return values;
 }
 
+/**
+ * hkl_geometry_sample_rotation_get_binding:
+ * @self: the self @HklGeometry@
+ * @sample: the rotated sample.
+ *
+ * return the rotation part of the given sample in the laboratory basis.
+ *
+ * Rename to: hkl_geometry_sample_rotation_get
+ *
+ * Returns: (transfer full): the rotation express as a quaternion.
+ **/
+HklQuaternion *hkl_geometry_sample_rotation_get_binding(const HklGeometry *self,
+							const HklSample *sample)
+{
+	HklQuaternion q = hkl_geometry_sample_rotation_get(self, sample);
+
+	return hkl_quaternion_dup(&q);
+}
+
+/**
+ * hkl_geometry_detector_rotation_get_binding:
+ * @self: the self @HklGeometry@
+ *
+ * return the rotation part of the given detector in the laboratory
+ * basis.
+ *
+ * Rename to: hkl_geometry_detector_rotation_get
+ *
+ * Returns: (transfer full): the rotation express as a quaternion.
+ **/
+HklQuaternion *hkl_geometry_detector_rotation_get_binding(const HklGeometry *self,
+							 const HklDetector *detector)
+{
+	HklQuaternion q = hkl_geometry_detector_rotation_get(self, detector);
+
+	return hkl_quaternion_dup(&q);
+}
+
 /*******************/
 /* HklGeometryList */
 /*******************/
