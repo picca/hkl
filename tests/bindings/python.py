@@ -126,9 +126,13 @@ class TestAPI(unittest.TestCase):
 
         # check xxx_rotation_get
         q = geometry.sample_rotation_get(sample)
+        m = q.to_matrix()
+        self.assertTrue(type(m) == Hkl.Matrix)
         self.assertTrue(type(q) == Hkl.Quaternion)
 
         q = geometry.detector_rotation_get(detector)
+        m = q.to_matrix()
+        self.assertTrue(type(m) == Hkl.Matrix)
         self.assertTrue(type(q) == Hkl.Quaternion)
 
         del sample

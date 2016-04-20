@@ -28,6 +28,12 @@
 
 G_BEGIN_DECLS
 
+/*****************/
+/* HklQuaternion */
+/*****************/
+
+HKLAPI HklMatrix *hkl_quaternion_to_matrix_binding(const HklQuaternion *self) HKL_ARG_NONNULL(1);
+
 /**************/
 /* HklFactory */
 /**************/

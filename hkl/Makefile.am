@@ -113,6 +113,7 @@ introspection_files = \
 	hkl-types.h \
 	hkl-vector.c \
 	hkl-matrix.c \
+	hkl-quaternion.c \
 	hkl-parameter.c \
 	hkl-axis.c \
 	hkl-geometry.c \

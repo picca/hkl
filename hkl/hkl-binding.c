@@ -33,6 +33,28 @@
 #include "hkl/ccan/darray/darray.h"     // for darray_foreach, darray_size
 #include "hkl/ccan/list/list.h"             // for list_for_each, list_head
 
+/*****************/
+/* HklQuaternion */
+/*****************/
+
+/**
+ * hkl_quaternion_to_matrix_binding:
+ * @self: the #HklQuaternion use to compute the #HklMatrix
+ *
+ * Rename to: hkl_quaternion_to_matrix
+ *
+ * Returns: (transfer full): the @HklQuaternion@ as a @HklMatrix@.
+ */
+HklMatrix *hkl_quaternion_to_matrix_binding(const HklQuaternion *self)
+{
+	HklMatrix *m = hkl_matrix_new();
+
+	hkl_quaternion_to_matrix(self, m);
+
+	return m;
+}
+
+
 /**************/
 /* HklFactory */
 /**************/

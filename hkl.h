@@ -107,6 +107,7 @@ HKLAPI void hkl_vector_init(HklVector *self, double x, double y, double z);
 /**************/
 
 typedef struct _HklQuaternion HklQuaternion;
+typedef struct _HklMatrix HklMatrix; /* forwarded declaration */
 
 struct _HklQuaternion
 {
@@ -115,11 +116,11 @@ struct _HklQuaternion
 
 typedef darray(const char *) darray_string;
 
+HKLAPI void hkl_quaternion_to_matrix(const HklQuaternion *self, HklMatrix *m) HKL_ARG_NONNULL(1, 2);
+
 /**********/
 /* Matrix */
 /**********/
-
-typedef struct _HklMatrix HklMatrix;
 
 HKLAPI HklMatrix *hkl_matrix_new(void);
 

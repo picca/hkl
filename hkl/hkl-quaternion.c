@@ -232,7 +232,7 @@ void hkl_quaternion_conjugate(HklQuaternion *self)
 /**
  * hkl_quaternion_to_matrix:
  * @self: the #HklQuaternion use to compute the #HklMatrix
- * @m: the #HklMatrix return.
+ * @m: (out caller-allocates): the #HklMatrix return.
  *
  * Compute the rotation matrix of a Quaternion.
  *

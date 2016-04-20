@@ -2,12 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import math
-import numpy
 import unittest
 
 from gi.repository import GLib
 from gi.repository import Hkl
-
+from numpy import (dot, empty)
 
 def new_sample(a, b, c, alpha, beta, gamma, ux, uy, uz):
     # sample
@@ -41,7 +40,7 @@ def new_geometry(dtype, init_values):
 
 
 def hkl_matrix_to_numpy(m):
-    M = numpy.empty((3, 3))
+    M = empty((3, 3))
     for i in range(3):
         for j in range(3):
             M[i, j] = m.get(i, j)
@@ -68,17 +67,17 @@ class Polarisation(unittest.TestCase):
         values_w = [0, 30, 0, 0, 0, 60]  # mu, omega, chi, phi, gamma, delta
         geometry = new_geometry("E6C", values_w)
 
-        # get rotation as quaternions
-        qs = geometry.sample_rotation_get(sample)
-        qd = geometry.detector_rotation_get(detector)
-
-        # R = hkl_matrix_to_numpy(geometry.R_get())  # get the full sample rotation matrix
-        # P = hkl_matrix_to_numpy(geometry.P_get())  # get the full detector sample rotation matrix
-
-        ki = [1, 0, 0]
-
+        # the hkl vector express in the laboratory basis.
         hkl = [1, 1, 1]
-        # v = numpy.dot(numpy.dot(R, UB), hkl) # the hkl vector express in the laboratory basis.
+        R = hkl_matrix_to_numpy(geometry.sample_rotation_get(sample).to_matrix())
+        v = dot(dot(R, UB), hkl)
+
+        # compute kf
+        ki = [1, 0, 0]
+        P =  hkl_matrix_to_numpy(geometry.detector_rotation_get(detector).to_matrix())
+        kf = dot(P, ki)
+
+        Q = kf - ki
 
         # print v
         self.assertTrue(True)
