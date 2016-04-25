@@ -872,6 +872,29 @@ git clone git://repo.or.cz/hkl.git
     at the end of the computation all solutions are filtered in order
     to check that they are valid (min < value < range). BUT for a
     rotation axis this check was instead (min < value % 2pi < max).
+*** DONE =HklGeometry= <2016-04-20 mer.>
+    Add hkl_geometry_[sample/detector]_rotation_get method. It is now
+    possible to get the sample or the detector rotation expressed as a
+    =HklQuaternion=.
+#+BEGIN_SRC python :export code
+  qr = geometry.sample_rotation_get(sample)
+  qd = geometry.detector_rotation_get(detector)
+#+END_SRC
+*** DONE =HklQuaternion= <2016-04-20 mer.>
+    Add hkl_quaternion_to_matrix in order to convert a =HklQuaternion=
+    into a =HklMatrix=. Then you just need to convert this HklMatrix
+    into a numpy array when used from the python binding
+#+BEGIN_SRC python :export code
+  def hkl_matrix_to_numpy(m):
+      M = empty((3, 3))
+      for i in range(3):
+          for j in range(3):
+              M[i, j] = m.get(i, j)
+      return M
+  
+  
+  M = hkl_matrix_to_numpy(q.to_matrix())
+#+END_SRC
 ** 4.99.99.1955 <2015-07-15 mer.>
    Add the ccan_config.h public header. This header is generated with
    the ccan configurator program.
