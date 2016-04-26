@@ -235,23 +235,21 @@ static HklParameterOperations hkl_parameter_operations_axis = {
 	.quaternion_get = hkl_axis_quaternion_get_real
 };
 
-HklParameter *hkl_parameter_new_axis(char const *name, HklVector const *axis_v)
+HklParameter *hkl_parameter_new_axis(const char *name, HklVector const *axis_v, const HklUnit *punit)
 {
-	HklAxis *self = NULL;
-	static HklAxis axis0 = {
-		.parameter = {
-			HKL_PARAMETER_DEFAULTS_ANGLE,
-			.ops = &hkl_parameter_operations_axis,
+	HklAxis axis0 = {
+		.parameter = { HKL_PARAMETER_DEFAULTS_ANGLE,
+			       .name = name,
+			       .punit = punit,
+			       .ops = &hkl_parameter_operations_axis,
 		},
-		.q = {{1, 0, 0, 0}},
+		.axis_v = *axis_v,
+		.q = {{1., 0., 0., 0.}},
 	};
 
-	self = HKL_MALLOC(HklAxis);
-
+	HklAxis *self =  HKL_MALLOC(HklAxis);
 
 	*self = axis0;
-	self->parameter.name = name;
-	self->axis_v = *axis_v;
 
 	return &self->parameter;
 }

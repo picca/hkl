@@ -25,6 +25,7 @@
 #include "hkl-pseudoaxis-common-tth-private.h"  // for hkl_engine_tth2_new, etc
 #include "hkl-pseudoaxis-common-readonly-private.h"
 
+#define BASEPITCH "basepitch"
 #define THETAH "thetah"
 #define ALPHAY "alphay"
 #define ALPHAX "alphax"
@@ -37,7 +38,7 @@
 
 static HklMode* lifting_detector_thetah()
 {
-	static const char *axes_r[] = {THETAH, ALPHAY, ALPHAX, DELTA, GAMMA};
+	static const char *axes_r[] = {BASEPITCH, THETAH, ALPHAY, ALPHAX, DELTA, GAMMA};
 	static const char* axes_w[] = {THETAH, DELTA, GAMMA};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklModeAutoInfo info = {
@@ -68,11 +69,11 @@ static HklEngine *hkl_engine_soleil_sirius_turret_hkl_new(HklEngineList *engines
 /*****************/
 
 REGISTER_READONLY_INCIDENCE(hkl_engine_soleil_sirius_turret_incidence_new,
-			    P99_PROTECT({THETAH, ALPHAY, ALPHAX}),
+			    P99_PROTECT({BASEPITCH, THETAH, ALPHAY, ALPHAX}),
 			    surface_parameters_z);
 
 REGISTER_READONLY_EMERGENCE(hkl_engine_soleil_sirius_turret_emergence_new,
-			    P99_PROTECT({THETAH, ALPHAY, ALPHAX, DELTA, GAMMA}),
+			    P99_PROTECT({BASEPITCH, THETAH, ALPHAY, ALPHAX, DELTA, GAMMA}),
 			    surface_parameters_z);
 
 /************************/
@@ -81,18 +82,20 @@ REGISTER_READONLY_EMERGENCE(hkl_engine_soleil_sirius_turret_emergence_new,
 
 #define HKL_GEOMETRY_TYPE_SOLEIL_SIRIUS_TURRET_DESCRIPTION		\
 	"+ xrays source fix allong the :math:`\\vec{x}` direction (1, 0, 0)\n" \
-	"+ 3 axes for the sample\n"					\
+	"+ 4 axes for the sample\n"					\
 	"\n"								\
+	"  + **" BASEPITCH "** : rotation around the :math:`\\vec{y}` direction (0, 1, 0)\n" \
 	"  + **" THETAH "** : rotation around the :math:`-\\vec{z}` direction (0, 0, -1)\n" \
 	"  + **" ALPHAY "** : rotation around the :math:`\\vec{y}` direction (0, 1, 0)\n" \
 	"  + **" ALPHAX "** : rotating around the :math:`\\vec{x}` direction (1, 0, 0)\n" \
 	"\n"								\
-	"+ 2 axis for the detector\n"					\
+	"+ 3 axis for the detector\n"					\
 	"\n"								\
+	"  + **" BASEPITCH "** : rotation around the :math:`\\vec{y}` direction (0, 1, 0)\n" \
 	"  + **" DELTA "** : rotation around the :math:`-\\vec{y}` direction (0, 0, -1)\n" \
 	"  + **" GAMMA "** : rotation around the :math:`\\vec{z}` direction (0, -1, 0)\n"
 
-static const char* hkl_geometry_soleil_sirius_turret_axes[] = {THETAH, ALPHAY, ALPHAX, DELTA, GAMMA};
+static const char* hkl_geometry_soleil_sirius_turret_axes[] = {BASEPITCH, THETAH, ALPHAY, ALPHAX, DELTA, GAMMA};
 
 static HklGeometry *hkl_geometry_new_soleil_sirius_turret(const HklFactory *factory)
 {
@@ -100,11 +103,13 @@ static HklGeometry *hkl_geometry_new_soleil_sirius_turret(const HklFactory *fact
 	HklHolder *h;
 
 	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis_with_punit(h, BASEPITCH, 0, 1, 0, &hkl_unit_angle_mrad);
 	hkl_holder_add_rotation_axis(h, THETAH, 0, 0, -1);
 	hkl_holder_add_rotation_axis(h, ALPHAY, 0, 1, 0);
 	hkl_holder_add_rotation_axis(h, ALPHAX, 1, 0, 0);
 
 	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis_with_punit(h, BASEPITCH, 0, 1, 0, &hkl_unit_angle_mrad);
 	hkl_holder_add_rotation_axis(h, DELTA, 0, 0, -1);
 	hkl_holder_add_rotation_axis(h, GAMMA, 0, -1, 0);
 

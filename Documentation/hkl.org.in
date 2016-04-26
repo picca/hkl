@@ -895,6 +895,8 @@ git clone git://repo.or.cz/hkl.git
   
   M = hkl_matrix_to_numpy(q.to_matrix())
 #+END_SRC
+*** DONE Soleil Sirius Turret <2016-04-26 mar.>
+    Add the =basepitch= axis which rotate around $\vec{y}$ in mrad.
 ** 4.99.99.1955 <2015-07-15 mer.>
    Add the ccan_config.h public header. This header is generated with
    the ccan configurator program.

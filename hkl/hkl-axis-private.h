@@ -34,10 +34,10 @@ typedef struct _HklAxis HklAxis;
 struct _HklAxis {
 	HklParameter parameter;
 	HklVector axis_v;
-	HklQuaternion q;
+	HklQuaternion q; /* internal */
 };
 
-extern HklParameter *hkl_parameter_new_axis(char const *name, HklVector const *axis_v);
+extern HklParameter *hkl_parameter_new_axis(const char* name, HklVector const *axis_v, const HklUnit *punit);
 
 G_END_DECLS
 
