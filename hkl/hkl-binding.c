@@ -38,10 +38,8 @@
 /*****************/
 
 /**
- * hkl_quaternion_to_matrix_binding:
+ * hkl_quaternion_to_matrix_binding: (rename-to hkl_quaternion_to_matrix)
  * @self: the #HklQuaternion use to compute the #HklMatrix
- *
- * Rename to: hkl_quaternion_to_matrix
  *
  * Returns: (transfer full): the @HklQuaternion@ as a @HklMatrix@.
  */
@@ -88,13 +86,11 @@ GHashTable *hkl_factories(void)
 /************/
 
 /**
- * hkl_geometry_axis_names_get_binding:
+ * hkl_geometry_axis_names_get_binding: (rename-to hkl_geometry_axis_names_get)
  * @self: the this ptr
  * @length: (out caller-allocates): the length of the returned array
  *
  * get all the axes of the given geometry.
- *
- * Rename to: hkl_geometry_axis_names_get
  *
  * Returns: (array length=length) (transfer none): array of the axes names.
  **/
@@ -109,12 +105,10 @@ const char **hkl_geometry_axis_names_get_binding(const HklGeometry *self,
 }
 
 /**
- * hkl_geometry_axis_values_get_binding:
+ * hkl_geometry_axis_values_get_binding: (rename-to hkl_geometry_axis_values_get)
  * @self: the this ptr
  * @len: (out caller-allocates): the length of the returned array
  * @unit_type: the unit type (default or user) of the returned value
- *
- * Rename to: hkl_geometry_axis_values_get
  *
  * Return value: (array length=len) (transfer container): list of axes values,
  *          free the list with free when done.
@@ -140,13 +134,11 @@ double *hkl_geometry_axis_values_get_binding(const HklGeometry *self, guint *len
 }
 
 /**
- * hkl_geometry_sample_rotation_get_binding:
+ * hkl_geometry_sample_rotation_get_binding: (rename-to hkl_geometry_sample_rotation_get)
  * @self: the self @HklGeometry@
  * @sample: the rotated sample.
  *
  * return the rotation part of the given sample in the laboratory basis.
- *
- * Rename to: hkl_geometry_sample_rotation_get
  *
  * Returns: (transfer full): the rotation express as a quaternion.
  **/
@@ -159,13 +151,11 @@ HklQuaternion *hkl_geometry_sample_rotation_get_binding(const HklGeometry *self,
 }
 
 /**
- * hkl_geometry_detector_rotation_get_binding:
+ * hkl_geometry_detector_rotation_get_binding: (rename-to hkl_geometry_detector_rotation_get)
  * @self: the self @HklGeometry@
  *
  * return the rotation part of the given detector in the laboratory
  * basis.
- *
- * Rename to: hkl_geometry_detector_rotation_get
  *
  * Returns: (transfer full): the rotation express as a quaternion.
  **/
@@ -204,11 +194,9 @@ GSList* hkl_geometry_list_items(HklGeometryList *self)
 /*************/
 
 /**
- * hkl_engine_modes_names_get_binding:
+ * hkl_engine_modes_names_get_binding: (rename-to hkl_engine_modes_names_get)
  * @self: the this ptr
  * @length: (out caller-allocates): return the length of the returned array.
- *
- * Rename to: hkl_engine_modes_names_get
  *
  * Return value: (array length=length) (transfer none): All the modes supported by the #HklEngine
  **/
@@ -219,11 +207,9 @@ const char **hkl_engine_modes_names_get_binding(const HklEngine *self, size_t *l
 }
 
 /**
- * hkl_engine_pseudo_axis_names_get_binding:
+ * hkl_engine_pseudo_axis_names_get_binding: (rename-to hkl_engine_pseudo_axis_names_get)
  * @self: the this ptr
  * @length: (out caller-allocates): return the length of the returned array.
- *
- * Rename to: hkl_engine_pseudo_axis_names_get
  *
  * Return value: (array length=length) (transfer none): All the pseudo_axes names of the #HklEngine
  *
@@ -235,11 +221,9 @@ const char **hkl_engine_pseudo_axis_names_get_binding(HklEngine *self, size_t *l
 }
 
 /**
- * hkl_engine_parameters_names_get_binding:
+ * hkl_engine_parameters_names_get_binding: (rename-to hkl_engine_parameters_names_get)
  * @self: the this ptr
  * @length: (out caller-allocates): return the length of the returned array.
- *
- * Rename to: hkl_engine_parameters_names_get
  *
  * Return value: (array length=length) (transfer none): All the parameters of #HklEngine.
  **/
@@ -250,12 +234,10 @@ const char **hkl_engine_parameters_names_get_binding(const HklEngine *self, size
 }
 
 /**
- * hkl_engine_axis_names_get_binding:
+ * hkl_engine_axis_names_get_binding: (rename-to hkl_engine_axis_names_get)
  * @self: the this ptr
  * @mode: the #HklEngineAxesNamesGet
  * @length: (out caller-allocates): return the length of the returned array.
- *
- * Rename to: hkl_engine_axis_names_get
  *
  * Return value: (array length=length) (transfer none): axes of the #HklEngine for the given mode.
  **/
@@ -271,12 +253,10 @@ const char **hkl_engine_axis_names_get_binding(const HklEngine *self,
 }
 
 /**
- * hkl_engine_parameters_values_get_binding:
+ * hkl_engine_parameters_values_get_binding: (rename-to hkl_engine_parameters_values_get)
  * @self: the this ptr
  * @len: (out caller-allocates): the length of the returned array
  * @unit_type: the unit type (default or user) of the returned value
- *
- * Rename to: hkl_engine_parameters_values_get
  *
  * Return value: (array length=len) (transfer container): list of parameters values,
  *          free the list with free when done.
@@ -302,12 +282,10 @@ double *hkl_engine_parameters_values_get_binding(const HklEngine *self, guint *l
 }
 
 /**
- * hkl_engine_pseudo_axis_values_get_binding:
+ * hkl_engine_pseudo_axis_values_get_binding: (rename-to hkl_engine_pseudo_axis_values_get)
  * @self: the this ptr
  * @len: (out caller-allocates): the length of the returned array
  * @unit_type: the unit type (default or user) of the returned value
- *
- * Rename to: hkl_engine_pseudo_axis_values_get
  *
  * Return value: (array length=len) (transfer container): list of pseudo axes values,
  *          free the list with free when done.
@@ -333,13 +311,11 @@ double *hkl_engine_pseudo_axis_values_get_binding(const HklEngine *self, guint *
 }
 
 /**
- * hkl_engine_list_engines_get_as_gslist:
+ * hkl_engine_list_engines_get_as_gslist: (rename-to hkl_engine_list_engines_get)
  * @self: the this ptr
  *
  * Return value: (element-type HklEngine) (transfer container): list of engines,
  *               free the list with g_slist_free when done.
- *
- * Rename to: hkl_engine_list_engines_get
  **/
 GSList* hkl_engine_list_engines_get_as_gslist(HklEngineList *self)
 {
@@ -377,7 +353,7 @@ GSList *hkl_sample_reflections_get(const HklSample *self)
 }
 
 /**
- * hkl_sample_add_reflection_binding:
+ * hkl_sample_add_reflection_binding: (rename-to hkl_sample_add_reflection)
  * @self: the this ptr
  * @geometry: the geometry of the HklSampleReflection
  * @detector: the detector of the HklSampleReflection
@@ -387,8 +363,6 @@ GSList *hkl_sample_reflections_get(const HklSample *self)
  * @error: return location for a GError, or NULL
  *
  * Return value: (transfer none): the newly created HklSampleReflection
- *
- * Rename to: hkl_sample_add_reflection
  **/
 HklSampleReflection *hkl_sample_add_reflection_binding(HklSample *self,
 						       const HklGeometry *geometry,

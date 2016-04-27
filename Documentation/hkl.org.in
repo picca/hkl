@@ -970,6 +970,13 @@ git clone git://repo.or.cz/hkl.git
 #+END_SRC
 * Todo
 ** hkl
+*** TODO [#A] =HklEngine= *q/q2*
+    Fix all these engines... This engine takes into account only the
+    *gamma* and *delta* axes.  so diffractometers with 3 axes for the
+    detector are wrong.  It would be nice to take into account all the
+    detector holder AND the position of the detecteor on the
+    diffractometer arms (for now the detector is always on the last
+    axis).
 *** TODO [#A] HklSource
     Create a parameter for the wavelength. This is just internally for
     the futur trajectory system, so no need to change the signature of
