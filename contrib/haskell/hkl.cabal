@@ -56,6 +56,7 @@ executable hkl3d
 library
    exposed-modules:    Hkl
                      , Hkl.C
+                     , Hkl.Calibration
                      , Hkl.Diffabs
                      , Hkl.Engine
                      , Hkl.H5

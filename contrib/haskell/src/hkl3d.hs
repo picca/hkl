@@ -3,5 +3,5 @@ import Hkl
 {-# ANN module "HLint: ignore Use camelCase" #-}
 
 main :: IO ()
--- main = main_diffabs
-main = main_sixs
+main = main_calibration
+-- main = main_sixs

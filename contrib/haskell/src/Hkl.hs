@@ -1,15 +1,9 @@
-module Hkl
-       ( module Hkl.C
-       , module Hkl.Diffabs
-       , module Hkl.Engine
-       , module Hkl.H5
-       , module Hkl.Sixs
-       , module Hkl.Types
-       ) where
+module Hkl (module X) where
 
-import Hkl.C
-import Hkl.Diffabs
-import Hkl.Engine
-import Hkl.H5
-import Hkl.Sixs
-import Hkl.Types
+import Hkl.C as X
+import Hkl.Calibration as X
+import Hkl.Diffabs as X
+import Hkl.Engine as X
+import Hkl.H5 as X
+import Hkl.Sixs as X
+import Hkl.Types as X
