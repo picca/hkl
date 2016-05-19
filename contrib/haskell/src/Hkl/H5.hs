@@ -34,47 +34,6 @@ instance HId HId_t where
   fromHId = id
   isError = (< HId_t 0)
 
-
--- static herr_t attribute_info(hid_t location_id, const char *attr_name, const H5A_info_t *ainfo, void *op_data)
--- {
--- 	printf("    Attribute: %d %s\n", location_id, attr_name);
-
--- 	return 0;
--- }
-
--- static herr_t file_info(hid_t loc_id, const char *name, const H5L_info_t *info, void *opdata)
--- {
--- 	H5O_info_t statbuf;
--- 	hsize_t n = 0;
-
--- 	/*
--- 	 * Get type of the object and display its name and type.
--- 	 * The name of the object is passed to this function by
--- 	 * the Library. Some magic :-)
--- 	 */
--- 	H5Oget_info_by_name(loc_id, name, &statbuf, H5P_DEFAULT);
--- 	switch (statbuf.type) {
--- 	case H5O_TYPE_UNKNOWN:
--- 		printf(" Object with name %s is an unknown type\n", name);
--- 		break;
--- 	case H5O_TYPE_GROUP:
--- 		printf(" Object with name %s is a group\n", name);
--- 		break;
--- 	case H5O_TYPE_DATASET:
--- 		printf(" Object with name %s is a dataset\n", name);
--- 		break;
--- 	case H5O_TYPE_NAMED_DATATYPE:
--- 		printf(" Object with name %s is a named datatype\n", name);
--- 		break;
--- 	default:
--- 		printf(" Unable to identify an object ");
--- 	}
-
--- 	H5Aiterate_by_name(loc_id,  name, H5_INDEX_NAME, H5_ITER_NATIVE, &n, attribute_info, NULL, H5P_DEFAULT);
-
--- 	return 0;
--- }
-
 check_ndims :: H5Dataset -> Int -> IO Bool
 check_ndims d expected = do
   space_id <- h5d_get_space (toHId d)
