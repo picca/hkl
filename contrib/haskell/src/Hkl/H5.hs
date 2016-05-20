@@ -1,7 +1,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Hkl.H5
     ( H5Dataset
-    , H5File
+    , File
     , check_ndims
     , closeH5Dataset
     , get_position
@@ -12,10 +12,14 @@ module Hkl.H5
     )
     where
 
+
+import Bindings.HDF5.File (File, AccFlags(ReadOnly), openFile, closeFile)
+import Bindings.HDF5.Core (hid)
 import Bindings.HDF5.Raw
 -- import Control.Applicative
 import Control.Exception (bracket)
 import Control.Monad (void)
+import Data.ByteString.Char8 (pack)
 import Foreign.C.String (withCString)
 import Foreign.C.Types (CInt(..))
 -- import Foreign.Ptr
@@ -50,7 +54,7 @@ withH5DataType d = bracket acquire release
   where
     acquire = do
       type_id <- h5d_get_type (toHId d)
-      return $ if (isError type_id) then Nothing else Just (fromHId type_id)
+      return $ if isError type_id then Nothing else Just (fromHId type_id)
     release = maybe (return $ HErr_t (-1)) (h5t_close . toHId)
 
 get_position :: H5Dataset -> Int -> IO ([Double], HErr_t)
@@ -84,20 +88,10 @@ get_position' md idx = maybe default_ get_positions'' md
 
 -- | File
 
-newtype H5File = H5File HId_t
-               deriving (Show, HId)
-
-withH5File :: FilePath -> (H5File -> IO r) -> IO r
+withH5File :: FilePath -> (File -> IO r) -> IO r
 withH5File fp f = do
-  mh5file <- openH5File fp
-  maybe (return $ error $ "Can not read the h5 file: " ++ fp) go mh5file
-    where
-      go h5file = bracket (return h5file) (h5f_close . toHId) f
-
-openH5File :: FilePath -> IO (Maybe H5File)
-openH5File fp = do
-  hid <- withCString fp (\file -> h5f_open file h5f_ACC_RDONLY h5p_DEFAULT)
-  return $ if (isError hid) then Nothing else Just (fromHId hid)
+  h5file <- openFile (pack fp) [ReadOnly] Nothing
+  bracket (return h5file) closeFile f
 
 -- | Dataset
 
@@ -106,10 +100,10 @@ newtype H5Dataset = H5Dataset HId_t
 
 type DatasetPath = String
 
-openH5Dataset :: H5File -> DatasetPath -> IO (Maybe H5Dataset)
+openH5Dataset :: File -> DatasetPath -> IO (Maybe H5Dataset)
 openH5Dataset h5file dp = do
-  hid <- withCString dp (\dataset -> h5d_open2 (toHId h5file) dataset h5p_DEFAULT)
-  return $ if (isError hid) then Nothing else Just (fromHId hid)
+  _hid <- withCString dp (\dataset -> h5d_open2 (hid h5file) dataset h5p_DEFAULT)
+  return $ if isError _hid then Nothing else Just (fromHId _hid)
 
 closeH5Dataset :: Maybe H5Dataset -> IO ()
 closeH5Dataset = maybe (return ()) (void . h5d_close . toHId)
@@ -125,19 +119,19 @@ withDataspace' :: (Maybe H5Dataspace -> IO r) -> IO r
 withDataspace' = bracket acquire release
   where
     acquire = do
-      hid <-
+      _hid <-
         withInList [HSize_t 1] $ \current_dims ->
         withInList [HSize_t 1] $ \maximum_dims ->
         h5s_create_simple 1 current_dims maximum_dims
-      return $ if (isError hid) then Nothing else Just (fromHId hid)
+      return $ if isError _hid then Nothing else Just (fromHId _hid)
     release = maybe  (return $ HErr_t (-1)) (h5s_close . toHId)
 
 withDataspace :: H5Dataset -> (Maybe H5Dataspace -> IO r) -> IO r
 withDataspace d = bracket acquire release
   where
     acquire = do
-      hid <- h5d_get_space (toHId d)
-      return  $ if (isError hid) then Nothing else Just (fromHId hid)
+      _hid <- h5d_get_space (toHId d)
+      return  $ if isError _hid then Nothing else Just (fromHId _hid)
     release = maybe (return $ HErr_t (-1)) (h5s_close . toHId)
 
 lenH5Dataspace :: Maybe H5Dataset -> IO (Maybe Int)

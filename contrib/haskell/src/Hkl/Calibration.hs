@@ -48,10 +48,10 @@ data DataFrame =
             , df_geometry :: Geometry
             } deriving (Show)
 
-withDataframeH5 :: H5File -> DataFrameH5Path -> (DataFrameH5 -> IO r) -> IO r
+withDataframeH5 :: File -> DataFrameH5Path -> (DataFrameH5 -> IO r) -> IO r
 withDataframeH5 h5file dfp = bracket (hkl_h5_open h5file dfp) hkl_h5_close
 
-hkl_h5_open :: H5File -> DataFrameH5Path -> IO DataFrameH5
+hkl_h5_open :: File -> DataFrameH5Path -> IO DataFrameH5
 hkl_h5_open h5file dp =
   DataFrameH5
   <$> openH5Dataset' h5file (h5pMu dp)
