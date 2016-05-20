@@ -36,7 +36,9 @@ import Bindings.HDF5.Dataspace ( Dataspace
                                , getSimpleDataspaceExtentNPoints
                                , selectHyperslab
                                )
-import Bindings.HDF5.Datatype ( Datatype, closeTypeID)
+import Bindings.HDF5.Datatype ( Datatype
+                              , closeTypeID
+                              )
 import Bindings.HDF5.Raw
 -- import Control.Applicative
 import Control.Exception (bracket)
@@ -46,17 +48,6 @@ import Foreign.C.Types (CInt(..))
 import Foreign.Ptr.Conventions (withOutList)
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
-
-
-class HId t where
-  toHId :: t -> HId_t
-  fromHId :: HId_t -> t
-  isError :: t -> Bool
-
-instance HId HId_t where
-  toHId = id
-  fromHId = id
-  isError = (< HId_t 0)
 
 check_ndims :: Dataset -> Int -> IO Bool
 check_ndims d expected = do
