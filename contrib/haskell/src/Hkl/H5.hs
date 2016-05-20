@@ -33,6 +33,7 @@ import Bindings.HDF5.Dataspace ( Dataspace
                                , closeDataspace
                                , createSimpleDataspace
                                , getSimpleDataspaceExtentNDims
+                               , getSimpleDataspaceExtentNPoints
                                , selectHyperslab
                                )
 import Bindings.HDF5.Datatype (Datatype)
@@ -126,5 +127,5 @@ lenH5Dataspace = withDataspace'' len
   where
     withDataspace'' f d = withDataspace d f
     len space_id = do
-      (HSSize_t n) <- h5s_get_simple_extent_npoints (hid space_id)
+      (HSize n) <- getSimpleDataspaceExtentNPoints space_id
       return $ if n < 0 then Nothing else Just (fromIntegral n)
