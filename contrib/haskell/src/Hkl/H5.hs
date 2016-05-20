@@ -14,15 +14,27 @@ module Hkl.H5
     where
 
 
-import Bindings.HDF5.Core (hid, uncheckedFromHId)
-import Bindings.HDF5.File (File, AccFlags(ReadOnly), openFile, closeFile)
-import Bindings.HDF5.Dataset (Dataset, openDataset, closeDataset, getDatasetSpace, getDatasetType)
-import Bindings.HDF5.Dataspace (Dataspace)
+import Bindings.HDF5.Core (hid, uncheckedFromHId, HSize(..))
+import Bindings.HDF5.File ( File
+                          , AccFlags(ReadOnly)
+                          , openFile
+                          , closeFile
+                          )
+import Bindings.HDF5.Dataset ( Dataset
+                             , openDataset
+                             , closeDataset
+                             , getDatasetSpace
+                             , getDatasetType
+                             )
+import Bindings.HDF5.Dataspace ( Dataspace
+                               , SelectionOperator(Set)
+                               , getSimpleDataspaceExtentNDims
+                               , selectHyperslab
+                               )
 import Bindings.HDF5.Datatype (Datatype)
 import Bindings.HDF5.Raw
 -- import Control.Applicative
 import Control.Exception (bracket)
-import Control.Monad (void)
 import Data.ByteString.Char8 (pack)
 import Foreign.C.Types (CInt(..))
 -- import Foreign.Ptr
@@ -44,7 +56,7 @@ instance HId HId_t where
 check_ndims :: Dataset -> Int -> IO Bool
 check_ndims d expected = do
   space_id <- getDatasetSpace d
-  (CInt ndims) <- h5s_get_simple_extent_ndims (hid space_id)
+  (CInt ndims) <- getSimpleDataspaceExtentNDims space_id
   return $ expected == fromEnum ndims
 
 -- DataType
@@ -64,12 +76,11 @@ get_position d n = withH5DataType d (maybe default_ read''')
     read''' mem_type_id = withDataspace d (maybe default_ read'')
       where
         read'' space_id = do
-          void $
-            withInList [HSize_t (fromIntegral n)] $ \start ->
-            withInList [HSize_t 1] $ \stride ->
-            withInList [HSize_t 1] $ \count ->
-            withInList [HSize_t 1] $ \block ->
-            h5s_select_hyperslab (hid space_id) h5s_SELECT_SET start stride count block
+          let start = HSize (fromIntegral n)
+          let stride = Just (HSize 1)
+          let count = HSize 1
+          let block = Just (HSize 1)
+          selectHyperslab space_id Set [(start, stride, count, block)]
           withDataspace' (maybe default_ read')
             where
               read' mem_space_id = withOutList 1 $ \rdata ->
