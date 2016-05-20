@@ -33,15 +33,15 @@ data DataFrameH5Path = DataFrameH5Path
                        } deriving (Show)
 
 data DataFrameH5 = DataFrameH5
-                   { h5image :: Maybe H5Dataset
-                   , h5mu :: Maybe H5Dataset
-                   , h5omega :: Maybe H5Dataset
-                   , h5delta :: Maybe H5Dataset
-                   , h5gamma :: Maybe H5Dataset
-                   , h5ub :: Maybe H5Dataset
-                   , h5wavelength :: Maybe H5Dataset
-                   , h5dtype :: Maybe H5Dataset
-                   } deriving (Show)
+                   { h5image :: Dataset
+                   , h5mu :: Dataset
+                   , h5omega :: Dataset
+                   , h5delta :: Dataset
+                   , h5gamma :: Dataset
+                   , h5ub :: Dataset
+                   , h5wavelength :: Dataset
+                   , h5dtype :: Dataset
+                   }
 
 data DataFrame = DataFrame
                  { df_n :: Int
@@ -53,38 +53,35 @@ withDataframeH5 h5file dfp = bracket (hkl_h5_open h5file dfp) hkl_h5_close
 
 hkl_h5_open :: File -> DataFrameH5Path -> IO DataFrameH5
 hkl_h5_open h5file dp = DataFrameH5
-                         <$> openH5Dataset' h5file (h5pImage dp)
-                         <*> openH5Dataset' h5file (h5pMu dp)
-                         <*> openH5Dataset' h5file (h5pOmega dp)
-                         <*> openH5Dataset' h5file (h5pDelta dp)
-                         <*> openH5Dataset' h5file (h5pGamma dp)
-                         <*> openH5Dataset' h5file (h5pUB dp)
-                         <*> openH5Dataset' h5file (h5pWavelength dp)
-                         <*> openH5Dataset' h5file (h5pDiffractometerType dp)
+                         <$> openDataset' h5file (h5pImage dp)
+                         <*> openDataset' h5file (h5pMu dp)
+                         <*> openDataset' h5file (h5pOmega dp)
+                         <*> openDataset' h5file (h5pDelta dp)
+                         <*> openDataset' h5file (h5pGamma dp)
+                         <*> openDataset' h5file (h5pUB dp)
+                         <*> openDataset' h5file (h5pWavelength dp)
+                         <*> openDataset' h5file (h5pDiffractometerType dp)
   where
-    openH5Dataset' hid (DataItem name _) = openH5Dataset hid name
+    openDataset' hid (DataItem name _) = openDataset hid (pack name) Nothing
 
 hkl_h5_is_valid :: DataFrameH5 -> IO Bool
 hkl_h5_is_valid df = do
-  True <- check_ndims' (h5mu df) 1
-  True <- check_ndims' (h5omega df) 1
-  True <- check_ndims' (h5delta df) 1
-  True <- check_ndims' (h5gamma df) 1
+  True <- check_ndims (h5mu df) 1
+  True <- check_ndims (h5omega df) 1
+  True <- check_ndims (h5delta df) 1
+  True <- check_ndims (h5gamma df) 1
   return True
-    where
-      check_ndims' (Just dataset) target = check_ndims dataset target
-      check_ndims' Nothing _ = return True
 
 hkl_h5_close :: DataFrameH5 -> IO ()
 hkl_h5_close d = do
-  closeH5Dataset (h5image d)
-  closeH5Dataset (h5mu d)
-  closeH5Dataset (h5omega d)
-  closeH5Dataset (h5delta d)
-  closeH5Dataset (h5gamma d)
-  closeH5Dataset (h5ub d)
-  closeH5Dataset (h5wavelength d)
-  closeH5Dataset (h5dtype d)
+  closeDataset (h5image d)
+  closeDataset (h5mu d)
+  closeDataset (h5omega d)
+  closeDataset (h5delta d)
+  closeDataset (h5gamma d)
+  closeDataset (h5ub d)
+  closeDataset (h5wavelength d)
+  closeDataset (h5dtype d)
 
 getDataFrame' ::  DataFrameH5 -> Int -> IO DataFrame
 getDataFrame' d i = do
