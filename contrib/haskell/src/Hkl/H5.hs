@@ -30,6 +30,7 @@ import Bindings.HDF5.Dataset ( Dataset
                              )
 import Bindings.HDF5.Dataspace ( Dataspace
                                , SelectionOperator(Set)
+                               , closeDataspace
                                , createSimpleDataspace
                                , getSimpleDataspaceExtentNDims
                                , selectHyperslab
@@ -76,7 +77,7 @@ get_position :: Dataset -> Int -> IO ([Double], HErr_t)
 get_position d n = withH5DataType d (maybe default_ read''')
   where
     default_ = return ([], HErr_t (-1))
-    read''' mem_type_id = withDataspace d (maybe default_ read'')
+    read''' mem_type_id = withDataspace d read''
       where
         read'' space_id = do
           let start = HSize (fromIntegral n)
@@ -84,7 +85,7 @@ get_position d n = withH5DataType d (maybe default_ read''')
           let count = HSize 1
           let block = Just (HSize 1)
           selectHyperslab space_id Set [(start, stride, count, block)]
-          withDataspace' (maybe default_ read')
+          withDataspace' read'
             where
               read' mem_space_id = withOutList 1 $ \rdata ->
                 h5d_read (hid d) (hid mem_type_id) (hid mem_space_id) (hid space_id) h5p_DEFAULT rdata
@@ -108,24 +109,20 @@ withH5File fp f = do
 
 -- check how to merge both methods
 
-withDataspace' :: (Maybe Dataspace -> IO r) -> IO r
+withDataspace' :: (Dataspace -> IO r) -> IO r
 withDataspace' = bracket acquire release
   where
-    acquire = do
-      dataspace_id <- createSimpleDataspace [HSize 1]
-      return $ if isError (hid dataspace_id) then Nothing else Just dataspace_id
-    release = maybe  (return $ HErr_t (-1)) (h5s_close . hid)
+    acquire = createSimpleDataspace [HSize 1]
+    release = closeDataspace
 
-withDataspace :: Dataset -> (Maybe Dataspace -> IO r) -> IO r
+withDataspace :: Dataset -> (Dataspace -> IO r) -> IO r
 withDataspace d = bracket acquire release
   where
-    acquire = do
-      space_id <- getDatasetSpace d
-      return  $ if isError (hid space_id) then Nothing else Just space_id
-    release = maybe (return $ HErr_t (-1)) (h5s_close . hid)
+    acquire = getDatasetSpace d
+    release = closeDataspace
 
 lenH5Dataspace :: Dataset -> IO (Maybe Int)
-lenH5Dataspace = withDataspace'' (maybe (return Nothing) len)
+lenH5Dataspace = withDataspace'' len
   where
     withDataspace'' f d = withDataspace d f
     len space_id = do
