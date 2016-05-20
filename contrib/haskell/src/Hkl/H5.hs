@@ -90,9 +90,10 @@ get_position' d idx = do
 -- | File
 
 withH5File :: FilePath -> (File -> IO r) -> IO r
-withH5File fp f = do
-  h5file <- openFile (pack fp) [ReadOnly] Nothing
-  bracket (return h5file) closeFile f
+withH5File fp = bracket acquire release
+    where
+      acquire = openFile (pack fp) [ReadOnly] Nothing
+      release = closeFile
 
 -- | Dataspace
 
