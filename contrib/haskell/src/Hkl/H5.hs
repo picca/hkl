@@ -36,7 +36,7 @@ import Bindings.HDF5.Dataspace ( Dataspace
                                , getSimpleDataspaceExtentNPoints
                                , selectHyperslab
                                )
-import Bindings.HDF5.Datatype (Datatype)
+import Bindings.HDF5.Datatype ( Datatype, closeTypeID)
 import Bindings.HDF5.Raw
 -- import Control.Applicative
 import Control.Exception (bracket)
@@ -66,18 +66,15 @@ check_ndims d expected = do
 
 -- DataType
 
-withH5DataType :: Dataset -> (Maybe Datatype -> IO r) -> IO r
+withH5DataType :: Dataset -> (Datatype -> IO r) -> IO r
 withH5DataType d = bracket acquire release
   where
-    acquire = do
-      type_id <- getDatasetType d
-      return $ if isError (hid type_id) then Nothing else Just type_id
-    release = maybe (return $ HErr_t (-1)) (h5t_close . hid)
+    acquire = getDatasetType d
+    release = closeTypeID
 
 get_position :: Dataset -> Int -> IO ([Double], HErr_t)
-get_position d n = withH5DataType d (maybe default_ read''')
+get_position d n = withH5DataType d read'''
   where
-    default_ = return ([], HErr_t (-1))
     read''' mem_type_id = withDataspace d read''
       where
         read'' space_id = do
