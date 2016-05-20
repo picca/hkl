@@ -14,7 +14,9 @@ module Hkl.H5
     where
 
 
-import Bindings.HDF5.Core (hid, uncheckedFromHId, HSize(..))
+import Bindings.HDF5.Core ( hid
+                          , HSize(..)
+                          )
 import Bindings.HDF5.File ( File
                           , AccFlags(ReadOnly)
                           , openFile
@@ -28,6 +30,7 @@ import Bindings.HDF5.Dataset ( Dataset
                              )
 import Bindings.HDF5.Dataspace ( Dataspace
                                , SelectionOperator(Set)
+                               , createSimpleDataspace
                                , getSimpleDataspaceExtentNDims
                                , selectHyperslab
                                )
@@ -38,7 +41,7 @@ import Control.Exception (bracket)
 import Data.ByteString.Char8 (pack)
 import Foreign.C.Types (CInt(..))
 -- import Foreign.Ptr
-import Foreign.Ptr.Conventions (withInList, withOutList)
+import Foreign.Ptr.Conventions (withOutList)
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
 
@@ -109,11 +112,8 @@ withDataspace' :: (Maybe Dataspace -> IO r) -> IO r
 withDataspace' = bracket acquire release
   where
     acquire = do
-      _hid <-
-        withInList [HSize_t 1] $ \current_dims ->
-        withInList [HSize_t 1] $ \maximum_dims ->
-        h5s_create_simple 1 current_dims maximum_dims
-      return $ if isError _hid then Nothing else Just (uncheckedFromHId _hid)
+      dataspace_id <- createSimpleDataspace [HSize 1]
+      return $ if isError (hid dataspace_id) then Nothing else Just dataspace_id
     release = maybe  (return $ HErr_t (-1)) (h5s_close . hid)
 
 withDataspace :: Dataset -> (Maybe Dataspace -> IO r) -> IO r
