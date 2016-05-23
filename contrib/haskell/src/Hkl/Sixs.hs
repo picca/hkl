@@ -3,12 +3,13 @@ module Hkl.Sixs
        ( main_sixs )
        where
 
-import Prelude hiding (print)
+import Prelude hiding (concat, head, print)
 
 #if __GLASGOW_HASKELL__ < 710
 import Control.Applicative ((<$>), (<*>))
 #endif
 
+import Data.Vector.Storable (concat, head)
 import Control.Exception (bracket)
 import Control.Monad (forM_)
 import Numeric.Units.Dimensional.Prelude (meter, nano, (*~))
@@ -90,7 +91,7 @@ getDataFrame' d i = do
   delta <- get_position (h5delta d) i
   gamma <- get_position (h5gamma d) i
   wavelength <- get_position (h5wavelength d) 0
-  let positions = mu ++ omega ++ delta ++ gamma
+  let positions = concat [mu, omega, delta, gamma]
   let source = Source (head wavelength *~ nano meter)
   return DataFrame { df_n = i
                    , df_geometry = Geometry source positions

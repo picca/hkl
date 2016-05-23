@@ -35,11 +35,9 @@ import Bindings.HDF5.Dataspace ( Dataspace
 
 import Control.Exception (bracket)
 import Data.ByteString.Char8 (pack)
-import Data.Vector.Storable (freeze, toList)
+import Data.Vector.Storable (Vector, freeze)
 import Data.Vector.Storable.Mutable (replicate)
-import Foreign.C.Types ( CDouble(..)
-                       , CInt(..)
-                       )
+import Foreign.C.Types (CInt(..))
 
 import Prelude hiding (replicate)
 
@@ -51,7 +49,7 @@ check_ndims d expected = do
   (CInt ndims) <- getSimpleDataspaceExtentNDims space_id
   return $ expected == fromEnum ndims
 
-get_position :: Dataset -> Int -> IO [Double]
+get_position :: Dataset -> Int -> IO (Vector Double)
 get_position dataset n =
     withDataspace dataset $ \dataspace -> do
       let start = HSize (fromIntegral n)
@@ -60,10 +58,9 @@ get_position dataset n =
       let block = Just (HSize 1)
       selectHyperslab dataspace Set [(start, stride, count, block)]
       withDataspace' $ \memspace -> do
-        data_out <- replicate 1 (0.0 :: CDouble)
+        data_out <- replicate 1 (0.0 :: Double)
         readDatasetInto dataset (Just memspace) (Just dataspace) Nothing data_out
-        data_out1 <- freeze data_out
-        return [d | (CDouble d) <- toList data_out1]
+        freeze data_out
 
 -- | File
 

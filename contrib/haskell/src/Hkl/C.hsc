@@ -16,7 +16,7 @@ import Control.Monad.Loops (unfoldrM)
 import Control.Monad.Trans.State.Strict
 import Data.Map.Strict as Map
 import Foreign ( ForeignPtr, FunPtr, Ptr,
-                 alloca, allocaArray,
+                 alloca,
                  peek, nullPtr,
                  newForeignPtr, withForeignPtr,
                  peekByteOff,
@@ -27,6 +27,9 @@ import Hkl.Types
 import Numeric.Units.Dimensional.Prelude ( meter, degree, radian, nano
                                          , (*~), (/~))
 import Pipes (Pipe, await, lift, yield)
+
+import qualified Data.Vector.Storable as V
+import qualified Data.Vector.Storable.Mutable as MV
 
 #include "hkl.h"
 
@@ -198,11 +201,11 @@ peekGeometry gp = do
   (CDouble w) <- c_hkl_geometry_wavelength_get gp unit
   darray <- c_hkl_geometry_axis_names_get gp
   n <- darrayStringLen darray
-  let nn = fromEnum n
-  allocaArray nn $ \values -> do
-    c_hkl_geometry_axis_values_get gp values n unit
-    vs <- peekArray nn values
-    return $ Geometry (Source (w *~ nano meter)) vs
+  v <- MV.new (fromEnum n)
+  MV.unsafeWith v $ \values ->
+      c_hkl_geometry_axis_values_get gp values n unit
+  vs <- V.freeze v
+  return $ Geometry (Source (w *~ nano meter)) vs
 
 foreign import ccall unsafe "hkl.h hkl_geometry_wavelength_get"
   c_hkl_geometry_wavelength_get :: Ptr HklGeometry -- geometry
@@ -229,7 +232,7 @@ newGeometry (Factory f) (Geometry (Source lw) vs) = do
   c_hkl_geometry_wavelength_set geometry wavelength unit nullPtr
   darray <- c_hkl_geometry_axis_names_get geometry
   n <- darrayStringLen darray
-  withArray vs $ \values ->
+  V.unsafeWith vs $ \values ->
       c_hkl_geometry_axis_values_set geometry values n unit nullPtr
 
   newForeignPtr c_hkl_geometry_free geometry

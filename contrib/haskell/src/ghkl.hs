@@ -3,6 +3,7 @@ module Main where
 import Control.Monad
 import Data.Map.Strict (lookup)
 import Data.Maybe (isNothing, fromJust)
+import Data.Vector.Storable (fromList)
 import Hkl
 -- import Numeric.LinearAlgebra (fromList)
 import Numeric.Units.Dimensional.Prelude (nano, meter,
@@ -28,7 +29,8 @@ main' = do
                    (Parameter "uy" 0.1733 (Range (-180) 180))
                    (Parameter "uz" (-84.0081) (Range (-180) 180))
 
-    let geometry = Geometry (Source (0.0672929 *~ nano meter)) [0.1794, -160.0013, 21.1381, 0.5194]
+    let geometry = Geometry (Source (0.0672929 *~ nano meter))
+                   (fromList [0.1794, -160.0013, 21.1381, 0.5194])
     let detector = Detector DetectorType0D
 
     -- compute the pseudo axes values

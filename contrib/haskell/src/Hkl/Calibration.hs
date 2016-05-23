@@ -3,7 +3,7 @@ module Hkl.Calibration
     ( main_calibration )
     where
 
-import Prelude hiding (print)
+import Prelude hiding (concat, head, print)
 
 #if __GLASGOW_HASKELL__ < 710
 import Control.Applicative ((<$>), (<*>))
@@ -11,6 +11,7 @@ import Control.Applicative ((<$>), (<*>))
 
 import Control.Exception (bracket)
 import Control.Monad (forM_)
+import Data.Vector.Storable (concat, head)
 import Numeric.Units.Dimensional.Prelude (meter, nano, (*~))
 import Pipes (Producer, lift, (>->), runEffect, yield)
 import Pipes.Prelude (print)
@@ -96,7 +97,7 @@ getDataFrame' d i = do
   delta <- get_position (h5delta d) i
   wavelength <- get_position (h5wavelength d) 0
   let source = Source (head wavelength *~ nano meter)
-  let positions = mu ++ komega ++ kappa ++ kphi ++ gamma ++ delta
+  let positions = concat [mu, komega, kappa, kphi, gamma, delta]
   return DataFrame { df_n = i
                    , df_geometry = Geometry source positions
                    }

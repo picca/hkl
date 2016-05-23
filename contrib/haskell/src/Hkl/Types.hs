@@ -2,6 +2,7 @@
 
 module Hkl.Types where
 
+import Data.Vector.Storable (Vector)
 import Numeric.Units.Dimensional.Prelude (Length, Angle)
 import Foreign
 import Foreign.C
@@ -40,7 +41,7 @@ newtype Factory = Factory (Ptr HklFactory) deriving (Show, Storable)
 -- | Geometry
 data Geometry = Geometry
                 Source -- ^ source
-                [Double] -- ^ axes position
+                (Vector Double) -- ^ axes position
               deriving (Show)
 
 -- | Lattice
