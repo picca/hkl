@@ -14,9 +14,7 @@ module Hkl.H5
     where
 
 
-import Bindings.HDF5.Core ( hid
-                          , HSize(..)
-                          )
+import Bindings.HDF5.Core ( HSize(..) )
 import Bindings.HDF5.File ( File
                           , AccFlags(ReadOnly)
                           , openFile
@@ -26,7 +24,7 @@ import Bindings.HDF5.Dataset ( Dataset
                              , openDataset
                              , closeDataset
                              , getDatasetSpace
-                             , getDatasetType
+                             , readDatasetInto
                              )
 import Bindings.HDF5.Dataspace ( Dataspace
                                , SelectionOperator(Set)
@@ -36,16 +34,17 @@ import Bindings.HDF5.Dataspace ( Dataspace
                                , getSimpleDataspaceExtentNPoints
                                , selectHyperslab
                                )
-import Bindings.HDF5.Datatype ( Datatype
-                              , closeTypeID
-                              )
+
 import Bindings.HDF5.Raw
--- import Control.Applicative
 import Control.Exception (bracket)
 import Data.ByteString.Char8 (pack)
-import Foreign.C.Types (CInt(..))
--- import Foreign.Ptr
-import Foreign.Ptr.Conventions (withOutList)
+import Data.Vector.Storable (freeze, toList)
+import Data.Vector.Storable.Mutable (replicate)
+import Foreign.C.Types ( CDouble(..)
+                       , CInt(..)
+                       )
+
+import Prelude hiding (replicate)
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
 
@@ -55,29 +54,22 @@ check_ndims d expected = do
   (CInt ndims) <- getSimpleDataspaceExtentNDims space_id
   return $ expected == fromEnum ndims
 
--- DataType
-
-withH5DataType :: Dataset -> (Datatype -> IO r) -> IO r
-withH5DataType d = bracket acquire release
-  where
-    acquire = getDatasetType d
-    release = closeTypeID
-
 get_position :: Dataset -> Int -> IO ([Double], HErr_t)
-get_position d n = withH5DataType d read'''
-  where
-    read''' mem_type_id = withDataspace d read''
-      where
-        read'' space_id = do
-          let start = HSize (fromIntegral n)
-          let stride = Just (HSize 1)
-          let count = HSize 1
-          let block = Just (HSize 1)
-          selectHyperslab space_id Set [(start, stride, count, block)]
-          withDataspace' read'
-            where
-              read' mem_space_id = withOutList 1 $ \rdata ->
-                h5d_read (hid d) (hid mem_type_id) (hid mem_space_id) (hid space_id) h5p_DEFAULT rdata
+get_position dataset n = withDataspace dataset read''
+    where
+      read'' dataspace = do
+        let start = HSize (fromIntegral n)
+        let stride = Just (HSize 1)
+        let count = HSize 1
+        let block = Just (HSize 1)
+        selectHyperslab dataspace Set [(start, stride, count, block)]
+        withDataspace' read'
+          where
+            read' memspace = do
+                           data_out <- replicate 1 (0.0 :: CDouble)
+                           readDatasetInto dataset (Just memspace) (Just dataspace) Nothing data_out
+                           data_out1 <- freeze data_out
+                           return ([d | (CDouble d) <- toList data_out1], HErr_t 0)
 
 get_position' :: Dataset -> Int -> IO [Double]
 get_position' d idx = do
