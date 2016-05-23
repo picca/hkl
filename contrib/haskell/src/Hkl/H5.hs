@@ -1,4 +1,3 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Hkl.H5
     ( Dataset
     , File
@@ -53,21 +52,18 @@ check_ndims d expected = do
   return $ expected == fromEnum ndims
 
 get_position :: Dataset -> Int -> IO [Double]
-get_position dataset n = withDataspace dataset read''
-    where
-      read'' dataspace = do
-        let start = HSize (fromIntegral n)
-        let stride = Just (HSize 1)
-        let count = HSize 1
-        let block = Just (HSize 1)
-        selectHyperslab dataspace Set [(start, stride, count, block)]
-        withDataspace' read'
-          where
-            read' memspace = do
-                           data_out <- replicate 1 (0.0 :: CDouble)
-                           readDatasetInto dataset (Just memspace) (Just dataspace) Nothing data_out
-                           data_out1 <- freeze data_out
-                           return [d | (CDouble d) <- toList data_out1]
+get_position dataset n =
+    withDataspace dataset $ \dataspace -> do
+      let start = HSize (fromIntegral n)
+      let stride = Just (HSize 1)
+      let count = HSize 1
+      let block = Just (HSize 1)
+      selectHyperslab dataspace Set [(start, stride, count, block)]
+      withDataspace' $ \memspace -> do
+        data_out <- replicate 1 (0.0 :: CDouble)
+        readDatasetInto dataset (Just memspace) (Just dataspace) Nothing data_out
+        data_out1 <- freeze data_out
+        return [d | (CDouble d) <- toList data_out1]
 
 -- | File
 
