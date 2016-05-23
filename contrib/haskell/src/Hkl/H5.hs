@@ -5,7 +5,6 @@ module Hkl.H5
     , check_ndims
     , closeDataset
     , get_position
-    , get_position'
     , lenH5Dataspace
     , openDataset
     , pack
@@ -35,7 +34,6 @@ import Bindings.HDF5.Dataspace ( Dataspace
                                , selectHyperslab
                                )
 
-import Bindings.HDF5.Raw
 import Control.Exception (bracket)
 import Data.ByteString.Char8 (pack)
 import Data.Vector.Storable (freeze, toList)
@@ -54,7 +52,7 @@ check_ndims d expected = do
   (CInt ndims) <- getSimpleDataspaceExtentNDims space_id
   return $ expected == fromEnum ndims
 
-get_position :: Dataset -> Int -> IO ([Double], HErr_t)
+get_position :: Dataset -> Int -> IO [Double]
 get_position dataset n = withDataspace dataset read''
     where
       read'' dataspace = do
@@ -69,15 +67,7 @@ get_position dataset n = withDataspace dataset read''
                            data_out <- replicate 1 (0.0 :: CDouble)
                            readDatasetInto dataset (Just memspace) (Just dataspace) Nothing data_out
                            data_out1 <- freeze data_out
-                           return ([d | (CDouble d) <- toList data_out1], HErr_t 0)
-
-get_position' :: Dataset -> Int -> IO [Double]
-get_position' d idx = do
-  (positions, HErr_t status) <- get_position d idx
-  if status < 0 then do
-                  (failovers, HErr_t status') <- get_position d 0
-                  return $ if status' < 0 then [0.0] else failovers
-  else return $ if status < 0 then [0.0] else positions
+                           return [d | (CDouble d) <- toList data_out1]
 
 -- | File
 

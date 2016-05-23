@@ -85,11 +85,11 @@ hkl_h5_close d = do
 
 getDataFrame' ::  DataFrameH5 -> Int -> IO DataFrame
 getDataFrame' d i = do
-  mu <- get_position' (h5mu d) i
-  omega <- get_position' (h5omega d) i
-  delta <- get_position' (h5delta d) i
-  gamma <- get_position' (h5gamma d) i
-  wavelength <- get_position' (h5wavelength d) 0
+  mu <- get_position (h5mu d) i
+  omega <- get_position (h5omega d) i
+  delta <- get_position (h5delta d) i
+  gamma <- get_position (h5gamma d) i
+  wavelength <- get_position (h5wavelength d) 0
   let positions = mu ++ omega ++ delta ++ gamma
   let source = Source (head wavelength *~ nano meter)
   return DataFrame { df_n = i
