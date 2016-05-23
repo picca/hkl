@@ -12,6 +12,7 @@ import Control.Applicative ((<$>), (<*>))
 import Data.Vector.Storable (concat, head)
 import Control.Exception (bracket)
 import Control.Monad (forM_)
+import Numeric.LinearAlgebra (Matrix)
 import Numeric.Units.Dimensional.Prelude (meter, nano, (*~))
 import Pipes (Producer, runEffect, (>->), lift, yield)
 import Pipes.Prelude (print)
@@ -47,6 +48,7 @@ data DataFrameH5 = DataFrameH5
 data DataFrame = DataFrame
                  { df_n :: Int
                  , df_geometry :: Geometry
+                 , df_ub :: Matrix Double
                  } deriving (Show)
 
 withDataframeH5 :: File -> DataFrameH5Path -> (DataFrameH5 -> IO r) -> IO r
@@ -91,10 +93,12 @@ getDataFrame' d i = do
   delta <- get_position (h5delta d) i
   gamma <- get_position (h5gamma d) i
   wavelength <- get_position (h5wavelength d) 0
+  ub <- get_ub (h5ub d)
   let positions = concat [mu, omega, delta, gamma]
   let source = Source (head wavelength *~ nano meter)
   return DataFrame { df_n = i
                    , df_geometry = Geometry source positions
+                   , df_ub = ub
                    }
 
 getDataFrame :: DataFrameH5 -> Producer DataFrame IO ()

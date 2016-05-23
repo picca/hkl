@@ -4,6 +4,7 @@ module Hkl.H5
     , check_ndims
     , closeDataset
     , get_position
+    , get_ub
     , lenH5Dataspace
     , openDataset
     , pack
@@ -22,6 +23,7 @@ import Bindings.HDF5.Dataset ( Dataset
                              , openDataset
                              , closeDataset
                              , getDatasetSpace
+                             , readDataset
                              , readDatasetInto
                              )
 import Bindings.HDF5.Dataspace ( Dataspace
@@ -38,7 +40,7 @@ import Data.ByteString.Char8 (pack)
 import Data.Vector.Storable (Vector, freeze)
 import Data.Vector.Storable.Mutable (replicate)
 import Foreign.C.Types (CInt(..))
-
+import Numeric.LinearAlgebra (Matrix, reshape)
 import Prelude hiding (replicate)
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
@@ -61,6 +63,11 @@ get_position dataset n =
         data_out <- replicate 1 (0.0 :: Double)
         readDatasetInto dataset (Just memspace) (Just dataspace) Nothing data_out
         freeze data_out
+
+get_ub :: Dataset -> IO (Matrix Double)
+get_ub dataset = do
+  v <- readDataset dataset Nothing Nothing
+  return $ reshape 3 v
 
 -- | File
 
