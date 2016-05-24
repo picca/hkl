@@ -60,16 +60,27 @@ class Polarisation(unittest.TestCase):
         sample = new_sample(1.54, 1.54, 1.54,
                             90, 90, 90,
                             -90, 0, 0)
-        UB = hkl_matrix_to_numpy(sample.UB_get())
 
         detector = Hkl.Detector.factory_new(Hkl.DetectorType(0))
 
+        # add reflection or0
         values_w = [0, 30, 0, 0, 0, 60]  # mu, omega, chi, phi, gamma, delta
         geometry = new_geometry("E6C", values_w)
+        or0 = sample.add_reflection(geometry, detector, 0, 0, 1)
+
+        # add reflection or1
+        values_w = [0, 30, 90, 0, 0, 60]  # mu, omega, chi, phi, gamma, delta
+        geometry.axis_values_set(values_w, Hkl.UnitEnum.USER)
+        or1 = sample.add_reflection(geometry, detector, 0, 1, 0)
+
+        # compute UB
+        sample.compute_UB_busing_levy(or0, or1)
+        UB = hkl_matrix_to_numpy(sample.UB_get())
 
         # the hkl vector express in the laboratory basis.
         hkl = [1, 1, 1]
         R = hkl_matrix_to_numpy(geometry.sample_rotation_get(sample).to_matrix())
+
         v = dot(dot(R, UB), hkl)
 
         # compute kf
