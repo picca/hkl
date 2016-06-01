@@ -6,7 +6,7 @@ import unittest
 
 from gi.repository import GLib
 from gi.repository import Hkl
-from numpy import (dot, empty)
+from numpy import (array, dot, empty)
 
 def new_sample(a, b, c, alpha, beta, gamma, ux, uy, uz):
     # sample
@@ -32,10 +32,11 @@ def new_sample(a, b, c, alpha, beta, gamma, ux, uy, uz):
     return sample
 
 
-def new_geometry(dtype, init_values):
+def new_geometry(dtype, wavelength, init_values):
     factory = Hkl.factories()[dtype]
     geometry = factory.create_new_geometry()
     geometry.axis_values_set(init_values, Hkl.UnitEnum.USER)
+    geometry.wavelength_set(wavelength, Hkl.UnitEnum.USER)
     return geometry
 
 
@@ -65,7 +66,8 @@ class Polarisation(unittest.TestCase):
 
         # add reflection or0
         values_w = [0, 30, 0, 0, 0, 60]  # mu, omega, chi, phi, gamma, delta
-        geometry = new_geometry("E6C", values_w)
+        wavelength = 1.4878
+        geometry = new_geometry("E6C", wavelength, values_w)
         or0 = sample.add_reflection(geometry, detector, 0, 0, 1)
 
         # add reflection or1
@@ -84,8 +86,8 @@ class Polarisation(unittest.TestCase):
         v = dot(dot(R, UB), hkl)
 
         # compute kf
-        ki = [1, 0, 0]
-        P =  hkl_matrix_to_numpy(geometry.detector_rotation_get(detector).to_matrix())
+        ki = array([1, 0, 0]) * math.pi * 2 / wavelength
+        P = hkl_matrix_to_numpy(geometry.detector_rotation_get(detector).to_matrix())
         kf = dot(P, ki)
 
         Q = kf - ki
