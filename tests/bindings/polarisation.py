@@ -40,6 +40,12 @@ def new_geometry(dtype, wavelength, init_values):
     return geometry
 
 
+def new_engines(dtype):
+    factory = Hkl.factories()[dtype]
+    engines = factory.create_new_engine_list()
+    return engines
+
+
 def hkl_matrix_to_numpy(m):
     M = empty((3, 3))
     for i in range(3):
@@ -54,8 +60,19 @@ def from_numpy_to_hkl_vector(v):
     return V
 
 
+def ca(hkl, engines, geometry, detector, sample, engine_name="hkl"):
+    engines.init(geometry, detector, sample)
+    engine = engines.engine_get_by_name(engine_name)
+    solutions = engine.pseudo_axis_values_set(hkl,
+                                              Hkl.UnitEnum.USER)
+    first_solution = solutions.items()[0]
+    values = first_solution.geometry_get().axis_values_get(Hkl.UnitEnum.USER)
+    return values
+
+
 class Polarisation(unittest.TestCase):
     def test_petraIII(self):
+        dtype = "E6C"
         # RUBh = kf - ki = (P ki - ki) = (P - I) ki
 
         sample = new_sample(1.54, 1.54, 1.54,
@@ -67,7 +84,7 @@ class Polarisation(unittest.TestCase):
         # add reflection or0
         values_w = [0, 30, 0, 0, 0, 60]  # mu, omega, chi, phi, gamma, delta
         wavelength = 1.4878
-        geometry = new_geometry("E6C", wavelength, values_w)
+        geometry = new_geometry(dtype, wavelength, values_w)
         or0 = sample.add_reflection(geometry, detector, 0, 0, 1)
 
         # add reflection or1
@@ -91,6 +108,10 @@ class Polarisation(unittest.TestCase):
         kf = dot(P, ki)
 
         Q = kf - ki
+
+        # compute hkl
+        engines = new_engines(dtype)
+        ca([1, 0, 0], engines, geometry, detector, sample)
 
         # print v
         self.assertTrue(True)
