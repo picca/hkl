@@ -172,6 +172,7 @@
                         <child>
                           <object class="GtkCellRendererText" id="cellrendererspin2">
                             <property name="editable">True</property>
+                            <signal name="edited" handler="cellrendererspin2_edited_cb" swapped="no"/>
                           </object>
                           <attributes>
                             <attribute name="text">2</attribute>
