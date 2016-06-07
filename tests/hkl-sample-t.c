@@ -38,10 +38,10 @@
 	}while(0)
 
 #define SET_UX_UY_UZ(_sample, _ux, _uy, _uz) do{	\
-	SET(_sample, ux, _ux);\
-	SET(_sample, uy, _uy);\
-	SET(_sample, uz, _uz);\
-}while(0)
+		SET(_sample, ux, _ux);			\
+		SET(_sample, uy, _uy);			\
+		SET(_sample, uz, _uz);			\
+	}while(0)
 
 #define CHECK(_sample, _param, _value) do{				\
 		is_double(_value,					\

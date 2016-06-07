@@ -52,21 +52,21 @@
 int
 is_double(double wanted, double seen, double epsilon, const char *format, ...)
 {
-    va_list args;
-    int success;
+	va_list args;
+	int success;
 
-    va_start(args, format);
-    fflush(stderr);
-    if ((isnan(wanted) && isnan(seen))
-        || (isinf(wanted) && isinf(wanted) == isinf(seen))
-        || fabs(wanted - seen) <= epsilon) {
-        success = 1;
-        okv(1, format, args);
-    } else {
-        success = 0;
-        diag("wanted: %g", wanted);
-        diag("  seen: %g", seen);
-        okv(0, format, args);
-    }
-    return success;
+	va_start(args, format);
+	fflush(stderr);
+	if ((isnan(wanted) && isnan(seen))
+	    || (isinf(wanted) && isinf(wanted) == isinf(seen))
+	    || fabs(wanted - seen) <= epsilon) {
+		success = 1;
+		okv(1, format, args);
+	} else {
+		success = 0;
+		diag("wanted: %g", wanted);
+		diag("  seen: %g", seen);
+		okv(0, format, args);
+	}
+	return success;
 }

@@ -182,8 +182,8 @@ void _filename_and_geometry(HklGui3D *self)
 
 			hkl_gui_3d_update_hkl3d_objects_TreeStore(self);
 			/* gtk_box_pack_start(GTK_BOX(priv->vbox1), */
-			/* 		   GTK_WIDGET(priv->scene), */
-			/* 		   TRUE, TRUE, 0); */
+			/*		   GTK_WIDGET(priv->scene), */
+			/*		   TRUE, TRUE, 0); */
 			/* gtk_widget_show_all(GTK_WIDGET(priv->vbox1)); */
 		}
 	}
@@ -799,43 +799,43 @@ hkl_gui_3d_draw_aabb(const HklGui3D *self)
 
 /* void hkl_gui_3d_draw_bullet_object(const Hkl3DObject *self) */
 /* { */
-/* 	int i; */
-/* 	int j; */
-/* 	btScalar m[16]; */
-/* 	btVector3 worldBoundsMin; */
-/* 	btVector3 worldBoundsMax; */
-/* 	btVector3 aabbMin,aabbMax; */
+/*	int i; */
+/*	int j; */
+/*	btScalar m[16]; */
+/*	btVector3 worldBoundsMin; */
+/*	btVector3 worldBoundsMax; */
+/*	btVector3 aabbMin,aabbMax; */
 
-/* 	/\* get the bounding box from bullet *\/ */
-/* 	hkl3d_get_bounding_boxes(_hkl3d, &worldBoundsMin, &worldBoundsMax); */
+/*	/\* get the bounding box from bullet *\/ */
+/*	hkl3d_get_bounding_boxes(_hkl3d, &worldBoundsMin, &worldBoundsMax); */
 
-/* 	object = _hkl3d->config->models[i]->objects[j]; */
-/* 	if(!object->hide){ */
-/* 		btCollisionObject *btObject; */
+/*	object = _hkl3d->config->models[i]->objects[j]; */
+/*	if(!object->hide){ */
+/*		btCollisionObject *btObject; */
 
-/* 		btObject = object->btObject; */
-/* 		btObject->getWorldTransform().getOpenGLMatrix( m ); */
-/* 		m_shapeDrawer.drawOpenGL(m, */
-/* 					 btObject->getCollisionShape(), */
-/* 					 *object->color, */
-/* 					 0, /\* debug mode *\/ */
-/* 					 worldBoundsMin, */
-/* 					 worldBoundsMax); */
-/* 	} */
-/* 	glFlush(); */
+/*		btObject = object->btObject; */
+/*		btObject->getWorldTransform().getOpenGLMatrix( m ); */
+/*		m_shapeDrawer.drawOpenGL(m, */
+/*					 btObject->getCollisionShape(), */
+/*					 *object->color, */
+/*					 0, /\* debug mode *\/ */
+/*					 worldBoundsMin, */
+/*					 worldBoundsMax); */
+/*	} */
+/*	glFlush(); */
 /* } */
 
 /* void */
 /* hkl_gui_3d_draw_bullet(const HklGui3D *self) */
 /* { */
-/* 	int i; */
-/* 	int j; */
-/* 	HklGui3DPrivate *priv = HKL_GUI_3D_GET_PRIVATE(self); */
+/*	int i; */
+/*	int j; */
+/*	HklGui3DPrivate *priv = HKL_GUI_3D_GET_PRIVATE(self); */
 
-/* 	for(i=0; i<priv->hkl3d->config->len; i++) */
-/* 		for(j=0; j<priv->hkl3d->config->models[i]->len; j++) */
-/* 			hkl_gui_3d_draw_bullet_object(priv->hkl3d->config->models[i]->objects[j]); */
-/* 	glFlush(); */
+/*	for(i=0; i<priv->hkl3d->config->len; i++) */
+/*		for(j=0; j<priv->hkl3d->config->models[i]->len; j++) */
+/*			hkl_gui_3d_draw_bullet_object(priv->hkl3d->config->models[i]->objects[j]); */
+/*	glFlush(); */
 /* } */
 
 gboolean
@@ -991,13 +991,13 @@ hkl_gui_3d_drawingarea1_motion_notify_event_cb(GtkWidget *drawing_area,
 			/* rotate view */
 			gfloat spin_quat[4];
 			g3d_quat_trackball(spin_quat,
-				(2.0 * priv->mouse.beginx - alloc.width) / alloc.width,
-				(alloc.height - 2.0 * priv->mouse.beginy) / alloc.height,
-				(2.0 * x - alloc.width) / alloc.width,
-				(alloc.height - 2.0 * y) / alloc.height,
-				0.8 /* trackball radius */);
+					   (2.0 * priv->mouse.beginx - alloc.width) / alloc.width,
+					   (alloc.height - 2.0 * priv->mouse.beginy) / alloc.height,
+					   (2.0 * x - alloc.width) / alloc.width,
+					   (alloc.height - 2.0 * y) / alloc.height,
+					   0.8 /* trackball radius */);
 			g3d_quat_add(priv->renderoptions.quat,
-				spin_quat, priv->renderoptions.quat);
+				     spin_quat, priv->renderoptions.quat);
 			/* normalize quat some times */
 			priv->renderoptions.norm_count ++;
 			if(priv->renderoptions.norm_count > 97) {
@@ -1006,9 +1006,9 @@ hkl_gui_3d_drawingarea1_motion_notify_event_cb(GtkWidget *drawing_area,
 			}
 
 			/* g3d_quat_to_rotation_xyz(priv->renderoptions.quat, */
-			/* 	&rx, &ry, &rz); */
+			/*	&rx, &ry, &rz); */
 			/* text = g_strdup_printf("%-.2f°, %-.2f°, %-.2f°", */
-			/* 	rx * 180.0 / G_PI, ry * 180.0 / G_PI, rz * 180.0 / G_PI); */
+			/*	rx * 180.0 / G_PI, ry * 180.0 / G_PI, rz * 180.0 / G_PI); */
 			/* gui_glade_status(priv, text); */
 			/* g_free(text); */
 		}

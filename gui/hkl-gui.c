@@ -1063,8 +1063,8 @@ hkl_gui_window_cellrendererspin1_edited_cb(GtkCellRendererText *renderer,
 					     &iter,
 					     path);
 	gtk_tree_model_get (GTK_TREE_MODEL(priv->liststore_axis), &iter,
-					   AXIS_COL_NAME, &axis,
-					   -1);
+			    AXIS_COL_NAME, &axis,
+			    -1);
 
 	value = atof(new_text); /* TODO need to check for the right conversion */
 
@@ -1122,8 +1122,8 @@ hkl_gui_window_cellrendererspin3_edited_cb(GtkCellRendererText *renderer,
 					     &iter,
 					     path);
 	gtk_tree_model_get (GTK_TREE_MODEL(priv->liststore_axis), &iter,
-					   AXIS_COL_NAME, &axis,
-					   -1);
+			    AXIS_COL_NAME, &axis,
+			    -1);
 
 	value = atof(new_text); /* TODO need to check for the right conversion */
 
@@ -1177,8 +1177,8 @@ hkl_gui_window_cellrendererspin4_edited_cb(GtkCellRendererText *renderer,
 					     &iter,
 					     path);
 	gtk_tree_model_get (GTK_TREE_MODEL(priv->liststore_axis), &iter,
-					   AXIS_COL_NAME, &axis,
-					   -1);
+			    AXIS_COL_NAME, &axis,
+			    -1);
 
 	value = atof(new_text); /* TODO need to check for the right conversion */
 
@@ -1421,7 +1421,7 @@ hkl_gui_window_toolbutton_add_reflection_clicked_cb(GtkToolButton* _sender,
 			flag = hkl_sample_reflection_flag_get(reflection);
 
 			n_rows = gtk_tree_model_iter_n_children(GTK_TREE_MODEL(priv->liststore_reflections),
-							NULL);
+								NULL);
 			gtk_list_store_insert_with_values (priv->liststore_reflections,
 							   &iter, -1,
 							   REFLECTION_COL_INDEX, n_rows,
@@ -1686,7 +1686,7 @@ update_ux_uy_uz (HklGuiWindow* self)
 		gtk_label_set_markup(priv->label_UB ## i ## j,		\
 				     g_ascii_formatd(text,		\
 						     G_ASCII_DTOSTR_BUF_SIZE, \
-						     "<tt> %+.4f </tt>",	\
+						     "<tt> %+.4f </tt>", \
 						     hkl_matrix_get(UB, i - 1, j - 1))); \
 	}while(0)
 
@@ -1908,7 +1908,7 @@ hkl_gui_window_toolbutton_del_crystal_clicked_cb (GtkToolButton* _sender, gpoint
 		HklParameter *p = hkl_parameter_new_copy(hkl_lattice_## parameter ##_get(lattice)); \
 		if(!hkl_parameter_min_max_set(p,			\
 					      gtk_spin_button_get_value(priv->spinbutton_## parameter ##_min), \
-					      gtk_spin_button_get_value(priv->spinbutton_## parameter ##_max),	\
+					      gtk_spin_button_get_value(priv->spinbutton_## parameter ##_max), \
 					      HKL_UNIT_USER, _error)){	\
 			raise_error(self, _error);			\
 			hkl_parameter_free(p);				\
@@ -2301,26 +2301,26 @@ TOGGLE_UX_UY_UZ(uz);
 
 /*
 
-static gboolean _hkl_gui_window_on_tree_view_crystals_key_press_event_gtk_widget_key_press_event (GtkWidget* _sender, GdkEventKey* event, gpointer self) {
-	gboolean result;
-	result = hkl_gui_window_on_tree_view_crystals_key_press_event (event, self);
+  static gboolean _hkl_gui_window_on_tree_view_crystals_key_press_event_gtk_widget_key_press_event (GtkWidget* _sender, GdkEventKey* event, gpointer self) {
+  gboolean result;
+  result = hkl_gui_window_on_tree_view_crystals_key_press_event (event, self);
 
-	return result;
+  return result;
 
-}
+  }
 
-static gboolean hkl_gui_window_on_tree_view_crystals_key_press_event (GdkEventKey* event, HklGuiWindow* self) {
-	gboolean result = FALSE;
+  static gboolean hkl_gui_window_on_tree_view_crystals_key_press_event (GdkEventKey* event, HklGuiWindow* self) {
+  gboolean result = FALSE;
 
-	g_return_val_if_fail (self != NULL, FALSE);
+  g_return_val_if_fail (self != NULL, FALSE);
 
-	g_return_val_if_fail (event != NULL, FALSE);
+  g_return_val_if_fail (event != NULL, FALSE);
 
-	result = TRUE;
+  result = TRUE;
 
-	return result;
+  return result;
 
-}
+  }
 
 */
 

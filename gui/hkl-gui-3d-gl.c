@@ -1,23 +1,23 @@
 /* $Id: gl.c 127 2009-09-05 19:45:12Z mmmaddd $ */
 
 /*
-	G3DViewer - 3D object viewer
+  G3DViewer - 3D object viewer
 
-	Copyright (C) 2005, 2006  Markus Dahms <mad@automagically.de>
+  Copyright (C) 2005, 2006  Markus Dahms <mad@automagically.de>
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 #include <stdlib.h>
@@ -167,16 +167,16 @@ void gl_load_texture(gpointer key, gpointer value, gpointer data)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-		GL_LINEAR_MIPMAP_NEAREST);
+			GL_LINEAR_MIPMAP_NEAREST);
 
 
 	switch(image->tex_env)
 	{
-		case G3D_TEXENV_BLEND: env = GL_BLEND; break;
-		case G3D_TEXENV_MODULATE: env = GL_MODULATE; break;
-		case G3D_TEXENV_DECAL: env = GL_DECAL; break;
-		case G3D_TEXENV_REPLACE: env = GL_REPLACE; break;
-		default: env = GL_MODULATE; break;
+	case G3D_TEXENV_BLEND: env = GL_BLEND; break;
+	case G3D_TEXENV_MODULATE: env = GL_MODULATE; break;
+	case G3D_TEXENV_DECAL: env = GL_DECAL; break;
+	case G3D_TEXENV_REPLACE: env = GL_REPLACE; break;
+	default: env = GL_MODULATE; break;
 	}
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, env);
 	gluBuild2DMipmaps(
@@ -190,7 +190,7 @@ void gl_load_texture(gpointer key, gpointer value, gpointer data)
 }
 
 static inline void gl_update_material(G3DGLRenderOptions *options,
-	G3DMaterial *material)
+				      G3DMaterial *material)
 {
 	GLenum facetype;
 	GLfloat normspec[4] = { 0.0, 0.0, 0.0, 1.0 };
@@ -225,8 +225,8 @@ static inline void gl_update_material(G3DGLRenderOptions *options,
 }
 
 static inline void gl_draw_face(G3DGLRenderOptions *options,
-	G3DObject *object, gint32 i, gfloat min_a, gfloat max_a,
-	gboolean *dont_render, gboolean *init, gboolean is_shadow)
+				G3DObject *object, gint32 i, gfloat min_a, gfloat max_a,
+				gboolean *dont_render, gboolean *init, gboolean is_shadow)
 {
 	gint32 j;
 
@@ -241,7 +241,7 @@ static inline void gl_draw_face(G3DGLRenderOptions *options,
 	if(!is_shadow && (options->state->prev_material != object->_materials[i]))
 	{
 		if((object->_materials[i]->a < min_a) ||
-			(object->_materials[i]->a >= max_a))
+		   (object->_materials[i]->a >= max_a))
 		{
 			*dont_render = TRUE;
 			return;
@@ -261,7 +261,7 @@ static inline void gl_draw_face(G3DGLRenderOptions *options,
 
 	/* texture stuff */
 	if(!is_shadow && (options->glflags & G3D_FLAG_GL_TEXTURES) &&
-		(object->_flags[i] & G3D_FLAG_FAC_TEXMAP))
+	   (object->_flags[i] & G3D_FLAG_FAC_TEXMAP))
 	{
 		/* if texture has changed update to new texture */
 		if(object->_tex_images[i] != options->state->prev_texid) {
@@ -279,7 +279,7 @@ static inline void gl_draw_face(G3DGLRenderOptions *options,
 	for(j = 0; j < 3; j ++)
 	{
 		if(!is_shadow && (options->glflags & G3D_FLAG_GL_TEXTURES) &&
-			(object->_flags[i] & G3D_FLAG_FAC_TEXMAP))
+		   (object->_flags[i] & G3D_FLAG_FAC_TEXMAP))
 		{
 			glTexCoord2f(
 				object->_tex_coords[(i * 3 + j) * 2 + 0],
@@ -316,8 +316,8 @@ static inline void gl_may_begin(gint32 ftype)
 }
 
 static inline void gl_draw_face_list(G3DGLRenderOptions *options,
-	G3DObject *object, gfloat min_a, gfloat max_a,
-	gboolean *init, gboolean is_shadow)
+				     G3DObject *object, gfloat min_a, gfloat max_a,
+				     gboolean *init, gboolean is_shadow)
 {
 	GSList *fitem;
 	G3DFace *face;
@@ -349,7 +349,7 @@ static inline void gl_draw_face_list(G3DGLRenderOptions *options,
 
 		/* texture stuff */
 		if(!is_shadow && (options->glflags & G3D_FLAG_GL_TEXTURES) &&
-			(face->flags & G3D_FLAG_FAC_TEXMAP)) {
+		   (face->flags & G3D_FLAG_FAC_TEXMAP)) {
 			/* if texture has changed update to new texture */
 			if(face->tex_image) {
 				if(face->tex_image->tex_id != options->state->prev_texid) {
@@ -366,14 +366,14 @@ static inline void gl_draw_face_list(G3DGLRenderOptions *options,
 		} /* texture stuff */
 
 		switch(face->vertex_count) {
-			case 3: ftype = GL_TRIANGLES; break;
-			case 4: ftype = GL_QUADS; break;
-			case 2: ftype = GL_LINES; break;
-			default: ftype = GL_POLYGON;
+		case 3: ftype = GL_TRIANGLES; break;
+		case 4: ftype = GL_QUADS; break;
+		case 2: ftype = GL_LINES; break;
+		default: ftype = GL_POLYGON;
 #if DEBUG > 0
-				g_debug("face vertex count: %d", face->vertex_count);
+			g_debug("face vertex count: %d", face->vertex_count);
 #endif
-				break;
+			break;
 		}
 		if(ftype != prev_ftype) {
 			gl_may_end(prev_ftype);
@@ -399,7 +399,7 @@ static inline void gl_draw_face_list(G3DGLRenderOptions *options,
 			index = face->vertex_indices[j];
 
 			if(!is_shadow && (options->glflags & G3D_FLAG_GL_TEXTURES) &&
-				(face->flags & G3D_FLAG_FAC_TEXMAP))
+			   (face->flags & G3D_FLAG_FAC_TEXMAP))
 			{
 				glTexCoord2f(
 					face->tex_vertex_data[j * 2 + 0],
@@ -424,7 +424,7 @@ static inline void gl_draw_face_list(G3DGLRenderOptions *options,
 
 
 static inline void gl_draw_objects(G3DGLRenderOptions *options,
-	GSList *objects, gfloat min_a, gfloat max_a, gboolean is_shadow)
+				   GSList *objects, gfloat min_a, gfloat max_a, gboolean is_shadow)
 {
 	GSList *olist;
 	int i;
@@ -468,7 +468,7 @@ static inline void gl_draw_objects(G3DGLRenderOptions *options,
 		for(i = 0; i < object->_num_faces; i ++)
 		{
 			gl_draw_face(options, object, i, min_a, max_a,
-				&dont_render, &init, is_shadow);
+				     &dont_render, &init, is_shadow);
 		} /* all faces */
 
 		glEnd();
@@ -547,7 +547,7 @@ static inline void gl_setup_view(G3DGLRenderOptions *options)
 }
 
 static void gl_setup_shadow_matrix(G3DGLRenderOptions *options,
-	G3DVector *l, G3DVector *p, G3DVector *n)
+				   G3DVector *l, G3DVector *p, G3DVector *n)
 {
 	G3DDouble c, d;
 	G3DMatrix *m = options->shadow_matrix;

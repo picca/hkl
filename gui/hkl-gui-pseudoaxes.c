@@ -32,12 +32,12 @@
 G_DEFINE_TYPE (HklGuiEngine, hkl_gui_engine, G_TYPE_OBJECT);
 
 enum {
-  PROP_0,
+	PROP_0,
 
-  PROP_ENGINE,
-  PROP_LISTSTORE,
+	PROP_ENGINE,
+	PROP_LISTSTORE,
 
-  N_PROPERTIES
+	N_PROPERTIES
 };
 
 /* Keep a pointer to the properties definition */

@@ -146,8 +146,8 @@ static void degenerated(void)
 
 		/* studdy this degenerated case */
 		geometries = hkl_engine_pseudo_axis_values_set(engine,
-								hkl, ARRAY_SIZE(hkl),
-								HKL_UNIT_DEFAULT, NULL);
+							       hkl, ARRAY_SIZE(hkl),
+							       HKL_UNIT_DEFAULT, NULL);
 		if (geometries){
 			const HklGeometryListItem *item;
 
@@ -206,8 +206,8 @@ static void q2(void)
 				HklGeometryList *geometries;
 
 				geometries = hkl_engine_pseudo_axis_values_set(engine,
-										values, ARRAY_SIZE(values),
-										HKL_UNIT_DEFAULT, NULL);
+									       values, ARRAY_SIZE(values),
+									       HKL_UNIT_DEFAULT, NULL);
 				if(geometries){
 					const HklGeometryListItem *item;
 
@@ -280,7 +280,7 @@ static void petra3(void)
 	/* set the mode parameters 0, 0, 1, 90. */
 	res &= DIAG(hkl_engine_parameters_values_set(hkl, hkl_p, ARRAY_SIZE(hkl_p), HKL_UNIT_DEFAULT, NULL));
 	geometries = hkl_engine_pseudo_axis_values_set(hkl, hkl_v, ARRAY_SIZE(hkl_v),
-							HKL_UNIT_DEFAULT, NULL);
+						       HKL_UNIT_DEFAULT, NULL);
 	if(geometries){
 		const HklGeometryListItem *item;
 

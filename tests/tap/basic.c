@@ -98,8 +98,8 @@ static int _aborted = 0;
  * passed a boolean value indicating whether all tests were successful.
  */
 struct cleanup_func {
-    test_cleanup_func func;
-    struct cleanup_func *next;
+	test_cleanup_func func;
+	struct cleanup_func *next;
 };
 static struct cleanup_func *cleanup_funcs = NULL;
 
@@ -110,11 +110,11 @@ static struct cleanup_func *cleanup_funcs = NULL;
  * the test output.
  */
 struct diag_file {
-    char *name;
-    FILE *file;
-    char *buffer;
-    size_t bufsize;
-    struct diag_file *next;
+	char *name;
+	FILE *file;
+	char *buffer;
+	size_t bufsize;
+	struct diag_file *next;
 };
 static struct diag_file *diag_files = NULL;
 
@@ -124,17 +124,17 @@ static struct diag_file *diag_files = NULL;
  * print_desc, which has to be done in a macro.  Assumes that format is the
  * argument immediately before the variadic arguments.
  */
-#define PRINT_DESC(prefix, format)              \
-    do {                                        \
-        if (format != NULL) {                   \
-            va_list args;                       \
-            if (prefix != NULL)                 \
-                printf("%s", prefix);           \
-            va_start(args, format);             \
-            vprintf(format, args);              \
-            va_end(args);                       \
-        }                                       \
-    } while (0)
+#define PRINT_DESC(prefix, format)			\
+	do {						\
+		if (format != NULL) {                   \
+			va_list args;			\
+			if (prefix != NULL)		\
+				printf("%s", prefix);	\
+			va_start(args, format);		\
+			vprintf(format, args);		\
+			va_end(args);			\
+		}                                       \
+	} while (0)
 
 
 /*
@@ -150,36 +150,36 @@ static struct diag_file *diag_files = NULL;
 static char *
 concat(const char *first, ...)
 {
-    va_list args;
-    char *result;
-    const char *string;
-    size_t offset;
-    size_t length = 0;
+	va_list args;
+	char *result;
+	const char *string;
+	size_t offset;
+	size_t length = 0;
 
-    /*
-     * Find the total memory required.  Ensure we don't overflow length.  See
-     * the comment for breallocarray for why we're using UINT_MAX here.
-     */
-    va_start(args, first);
-    for (string = first; string != NULL; string = va_arg(args, const char *)) {
-        if (length >= UINT_MAX - strlen(string))
-            bail("strings too long in concat");
-        length += strlen(string);
-    }
-    va_end(args);
-    length++;
+	/*
+	 * Find the total memory required.  Ensure we don't overflow length.  See
+	 * the comment for breallocarray for why we're using UINT_MAX here.
+	 */
+	va_start(args, first);
+	for (string = first; string != NULL; string = va_arg(args, const char *)) {
+		if (length >= UINT_MAX - strlen(string))
+			bail("strings too long in concat");
+		length += strlen(string);
+	}
+	va_end(args);
+	length++;
 
-    /* Create the string. */
-    result = bmalloc(length);
-    va_start(args, first);
-    offset = 0;
-    for (string = first; string != NULL; string = va_arg(args, const char *)) {
-        memcpy(result + offset, string, strlen(string));
-        offset += strlen(string);
-    }
-    va_end(args);
-    result[offset] = '\0';
-    return result;
+	/* Create the string. */
+	result = bmalloc(length);
+	va_start(args, first);
+	offset = 0;
+	for (string = first; string != NULL; string = va_arg(args, const char *)) {
+		memcpy(result + offset, string, strlen(string));
+		offset += strlen(string);
+	}
+	va_end(args);
+	result[offset] = '\0';
+	return result;
 }
 
 
@@ -190,70 +190,70 @@ concat(const char *first, ...)
 static void
 check_diag_files(void)
 {
-    struct diag_file *file;
-    fpos_t where;
-    size_t length;
-    int size, incomplete;
+	struct diag_file *file;
+	fpos_t where;
+	size_t length;
+	int size, incomplete;
 
-    /*
-     * Walk through each file and read each line of output available.  The
-     * general scheme here used is as follows: try to read a line of output at
-     * a time.  If we get NULL, check for EOF; on EOF, advance to the next
-     * file.
-     *
-     * If we get some data, see if it ends in a newline.  If it doesn't end in
-     * a newline, we have one of two cases: our buffer isn't large enough, in
-     * which case we resize it and try again, or we have incomplete data in
-     * the file, in which case we rewind the file and will try again next
-     * time.
-     */
-    for (file = diag_files; file != NULL; file = file->next) {
-        clearerr(file->file);
+	/*
+	 * Walk through each file and read each line of output available.  The
+	 * general scheme here used is as follows: try to read a line of output at
+	 * a time.  If we get NULL, check for EOF; on EOF, advance to the next
+	 * file.
+	 *
+	 * If we get some data, see if it ends in a newline.  If it doesn't end in
+	 * a newline, we have one of two cases: our buffer isn't large enough, in
+	 * which case we resize it and try again, or we have incomplete data in
+	 * the file, in which case we rewind the file and will try again next
+	 * time.
+	 */
+	for (file = diag_files; file != NULL; file = file->next) {
+		clearerr(file->file);
 
-        /* Store the current position in case we have to rewind. */
-        if (fgetpos(file->file, &where) < 0)
-            sysbail("cannot get position in %s", file->name);
+		/* Store the current position in case we have to rewind. */
+		if (fgetpos(file->file, &where) < 0)
+			sysbail("cannot get position in %s", file->name);
 
-        /* Continue until we get EOF or an incomplete line of data. */
-        incomplete = 0;
-        while (!feof(file->file) && !incomplete) {
-            size = file->bufsize > INT_MAX ? INT_MAX : (int) file->bufsize;
-            if (fgets(file->buffer, size, file->file) == NULL) {
-                if (ferror(file->file))
-                    sysbail("cannot read from %s", file->name);
-                continue;
-            }
+		/* Continue until we get EOF or an incomplete line of data. */
+		incomplete = 0;
+		while (!feof(file->file) && !incomplete) {
+			size = file->bufsize > INT_MAX ? INT_MAX : (int) file->bufsize;
+			if (fgets(file->buffer, size, file->file) == NULL) {
+				if (ferror(file->file))
+					sysbail("cannot read from %s", file->name);
+				continue;
+			}
 
-            /*
-             * See if the line ends in a newline.  If not, see which error
-             * case we have.  Use UINT_MAX as a substitute for SIZE_MAX (see
-             * the comment for breallocarray).
-             */
-            length = strlen(file->buffer);
-            if (file->buffer[length - 1] != '\n') {
-                if (length < file->bufsize - 1)
-                    incomplete = 1;
-                else {
-                    if (file->bufsize >= UINT_MAX - BUFSIZ)
-                        sysbail("line too long in %s", file->name);
-                    file->bufsize += BUFSIZ;
-                    file->buffer = brealloc(file->buffer, file->bufsize);
-                }
+			/*
+			 * See if the line ends in a newline.  If not, see which error
+			 * case we have.  Use UINT_MAX as a substitute for SIZE_MAX (see
+			 * the comment for breallocarray).
+			 */
+			length = strlen(file->buffer);
+			if (file->buffer[length - 1] != '\n') {
+				if (length < file->bufsize - 1)
+					incomplete = 1;
+				else {
+					if (file->bufsize >= UINT_MAX - BUFSIZ)
+						sysbail("line too long in %s", file->name);
+					file->bufsize += BUFSIZ;
+					file->buffer = brealloc(file->buffer, file->bufsize);
+				}
 
-                /*
-                 * On either incomplete lines or too small of a buffer, rewind
-                 * and read the file again (on the next pass, if incomplete).
-                 * It's simpler than trying to double-buffer the file.
-                 */
-                if (fsetpos(file->file, &where) < 0)
-                    sysbail("cannot set position in %s", file->name);
-                continue;
-            }
+				/*
+				 * On either incomplete lines or too small of a buffer, rewind
+				 * and read the file again (on the next pass, if incomplete).
+				 * It's simpler than trying to double-buffer the file.
+				 */
+				if (fsetpos(file->file, &where) < 0)
+					sysbail("cannot set position in %s", file->name);
+				continue;
+			}
 
-            /* We saw a complete line.  Print it out. */
-            printf("# %s", file->buffer);
-        }
-    }
+			/* We saw a complete line.  Print it out. */
+			printf("# %s", file->buffer);
+		}
+	}
 }
 
 
@@ -267,78 +267,78 @@ check_diag_files(void)
 static void
 finish(void)
 {
-    int success, primary;
-    struct cleanup_func *current;
-    unsigned long highest = testnum - 1;
-    struct diag_file *file, *tmp;
+	int success, primary;
+	struct cleanup_func *current;
+	unsigned long highest = testnum - 1;
+	struct diag_file *file, *tmp;
 
-    /* Check for pending diag_file output. */
-    check_diag_files();
+	/* Check for pending diag_file output. */
+	check_diag_files();
 
-    /* Free the diag_files. */
-    file = diag_files;
-    while (file != NULL) {
-        tmp = file;
-        file = file->next;
-        fclose(tmp->file);
-        free(tmp->name);
-        free(tmp->buffer);
-        free(tmp);
-    }
-    diag_files = NULL;
+	/* Free the diag_files. */
+	file = diag_files;
+	while (file != NULL) {
+		tmp = file;
+		file = file->next;
+		fclose(tmp->file);
+		free(tmp->name);
+		free(tmp->buffer);
+		free(tmp);
+	}
+	diag_files = NULL;
 
-    /*
-     * Determine whether all tests were successful, which is needed before
-     * calling cleanup functions since we pass that fact to the functions.
-     */
-    if (_planned == 0 && _lazy)
-        _planned = highest;
-    success = (!_aborted && _planned == highest && _failed == 0);
+	/*
+	 * Determine whether all tests were successful, which is needed before
+	 * calling cleanup functions since we pass that fact to the functions.
+	 */
+	if (_planned == 0 && _lazy)
+		_planned = highest;
+	success = (!_aborted && _planned == highest && _failed == 0);
 
-    /*
-     * If there are any registered cleanup functions, we run those first.  We
-     * always run them, even if we didn't run a test.  Don't do anything
-     * except free the diag_files and call cleanup functions if we aren't the
-     * primary process (the process in which plan or plan_lazy was called),
-     * and tell the cleanup functions that fact.
-     */
-    primary = (_process == 0 || getpid() == _process);
-    while (cleanup_funcs != NULL) {
-        cleanup_funcs->func(success, primary);
-        current = cleanup_funcs;
-        cleanup_funcs = cleanup_funcs->next;
-        free(current);
-    }
-    if (!primary)
-        return;
+	/*
+	 * If there are any registered cleanup functions, we run those first.  We
+	 * always run them, even if we didn't run a test.  Don't do anything
+	 * except free the diag_files and call cleanup functions if we aren't the
+	 * primary process (the process in which plan or plan_lazy was called),
+	 * and tell the cleanup functions that fact.
+	 */
+	primary = (_process == 0 || getpid() == _process);
+	while (cleanup_funcs != NULL) {
+		cleanup_funcs->func(success, primary);
+		current = cleanup_funcs;
+		cleanup_funcs = cleanup_funcs->next;
+		free(current);
+	}
+	if (!primary)
+		return;
 
-    /* Don't do anything further if we never planned a test. */
-    if (_planned == 0)
-        return;
+	/* Don't do anything further if we never planned a test. */
+	if (_planned == 0)
+		return;
 
-    /* If we're aborting due to bail, don't print summaries. */
-    if (_aborted)
-        return;
+	/* If we're aborting due to bail, don't print summaries. */
+	if (_aborted)
+		return;
 
-    /* Print out the lazy plan if needed. */
-    fflush(stderr);
-    if (_lazy && _planned > 0)
-        printf("1..%lu\n", _planned);
+	/* Print out the lazy plan if needed. */
+	fflush(stderr);
+	if (_lazy && _planned > 0)
+		printf("1..%lu\n", _planned);
 
-    /* Print out a summary of the results. */
-    if (_planned > highest)
-        diag("Looks like you planned %lu test%s but only ran %lu", _planned,
-             (_planned > 1 ? "s" : ""), highest);
-    else if (_planned < highest)
-        diag("Looks like you planned %lu test%s but ran %lu extra", _planned,
-             (_planned > 1 ? "s" : ""), highest - _planned);
-    else if (_failed > 0)
-        diag("Looks like you failed %lu test%s of %lu", _failed,
-             (_failed > 1 ? "s" : ""), _planned);
-    else if (_planned != 1)
-        diag("All %lu tests successful or skipped", _planned);
-    else
-        diag("%lu test successful or skipped", _planned);
+	/* Print out a summary of the results. */
+	if (_planned > highest)
+		diag("Looks like you planned %lu test%s but only ran %lu", _planned,
+		     (_planned > 1 ? "s" : ""), highest);
+	else if (_planned < highest)
+		diag("Looks like you planned %lu test%s but ran %lu extra", _planned,
+		     (_planned > 1 ? "s" : ""), highest - _planned);
+	else if (_failed > 0)
+		diag("Looks like you failed %lu test%s of %lu", _failed,
+		     (_failed > 1 ? "s" : ""), _planned);
+	else if (_planned != 1)
+		diag("All %lu tests successful or skipped", _planned);
+	else
+		diag("%lu test successful or skipped", _planned);
 }
 
 
@@ -350,17 +350,17 @@ finish(void)
 void
 plan(unsigned long count)
 {
-    if (setvbuf(stdout, NULL, _IOLBF, BUFSIZ) != 0)
-        sysdiag("cannot set stdout to line buffered");
-    fflush(stderr);
-    printf("1..%lu\n", count);
-    testnum = 1;
-    _planned = count;
-    _process = getpid();
-    if (atexit(finish) != 0) {
-        sysdiag("cannot register exit handler");
-        diag("cleanups will not be run");
-    }
+	if (setvbuf(stdout, NULL, _IOLBF, BUFSIZ) != 0)
+		sysdiag("cannot set stdout to line buffered");
+	fflush(stderr);
+	printf("1..%lu\n", count);
+	testnum = 1;
+	_planned = count;
+	_process = getpid();
+	if (atexit(finish) != 0) {
+		sysdiag("cannot register exit handler");
+		diag("cleanups will not be run");
+	}
 }
 
 
@@ -371,13 +371,13 @@ plan(unsigned long count)
 void
 plan_lazy(void)
 {
-    if (setvbuf(stdout, NULL, _IOLBF, BUFSIZ) != 0)
-        sysdiag("cannot set stdout to line buffered");
-    testnum = 1;
-    _process = getpid();
-    _lazy = 1;
-    if (atexit(finish) != 0)
-        sysbail("cannot register exit handler to display plan");
+	if (setvbuf(stdout, NULL, _IOLBF, BUFSIZ) != 0)
+		sysdiag("cannot set stdout to line buffered");
+	testnum = 1;
+	_process = getpid();
+	_lazy = 1;
+	if (atexit(finish) != 0)
+		sysbail("cannot register exit handler to display plan");
 }
 
 
@@ -389,11 +389,11 @@ plan_lazy(void)
 void
 skip_all(const char *format, ...)
 {
-    fflush(stderr);
-    printf("1..0 # skip");
-    PRINT_DESC(" ", format);
-    putchar('\n');
-    exit(0);
+	fflush(stderr);
+	printf("1..0 # skip");
+	PRINT_DESC(" ", format);
+	putchar('\n');
+	exit(0);
 }
 
 
@@ -404,14 +404,14 @@ skip_all(const char *format, ...)
 int
 ok(int success, const char *format, ...)
 {
-    fflush(stderr);
-    check_diag_files();
-    printf("%sok %lu", success ? "" : "not ", testnum++);
-    if (!success)
-        _failed++;
-    PRINT_DESC(" - ", format);
-    putchar('\n');
-    return success;
+	fflush(stderr);
+	check_diag_files();
+	printf("%sok %lu", success ? "" : "not ", testnum++);
+	if (!success)
+		_failed++;
+	PRINT_DESC(" - ", format);
+	putchar('\n');
+	return success;
 }
 
 
@@ -421,17 +421,17 @@ ok(int success, const char *format, ...)
 int
 okv(int success, const char *format, va_list args)
 {
-    fflush(stderr);
-    check_diag_files();
-    printf("%sok %lu", success ? "" : "not ", testnum++);
-    if (!success)
-        _failed++;
-    if (format != NULL) {
-        printf(" - ");
-        vprintf(format, args);
-    }
-    putchar('\n');
-    return success;
+	fflush(stderr);
+	check_diag_files();
+	printf("%sok %lu", success ? "" : "not ", testnum++);
+	if (!success)
+		_failed++;
+	if (format != NULL) {
+		printf(" - ");
+		vprintf(format, args);
+	}
+	putchar('\n');
+	return success;
 }
 
 
@@ -441,11 +441,11 @@ okv(int success, const char *format, va_list args)
 void
 skip(const char *reason, ...)
 {
-    fflush(stderr);
-    check_diag_files();
-    printf("ok %lu # skip", testnum++);
-    PRINT_DESC(" ", reason);
-    putchar('\n');
+	fflush(stderr);
+	check_diag_files();
+	printf("ok %lu # skip", testnum++);
+	PRINT_DESC(" ", reason);
+	putchar('\n');
 }
 
 
@@ -455,18 +455,18 @@ skip(const char *reason, ...)
 int
 ok_block(unsigned long count, int success, const char *format, ...)
 {
-    unsigned long i;
+	unsigned long i;
 
-    fflush(stderr);
-    check_diag_files();
-    for (i = 0; i < count; i++) {
-        printf("%sok %lu", success ? "" : "not ", testnum++);
-        if (!success)
-            _failed++;
-        PRINT_DESC(" - ", format);
-        putchar('\n');
-    }
-    return success;
+	fflush(stderr);
+	check_diag_files();
+	for (i = 0; i < count; i++) {
+		printf("%sok %lu", success ? "" : "not ", testnum++);
+		if (!success)
+			_failed++;
+		PRINT_DESC(" - ", format);
+		putchar('\n');
+	}
+	return success;
 }
 
 
@@ -476,15 +476,15 @@ ok_block(unsigned long count, int success, const char *format, ...)
 void
 skip_block(unsigned long count, const char *reason, ...)
 {
-    unsigned long i;
+	unsigned long i;
 
-    fflush(stderr);
-    check_diag_files();
-    for (i = 0; i < count; i++) {
-        printf("ok %lu # skip", testnum++);
-        PRINT_DESC(" ", reason);
-        putchar('\n');
-    }
+	fflush(stderr);
+	check_diag_files();
+	for (i = 0; i < count; i++) {
+		printf("ok %lu # skip", testnum++);
+		PRINT_DESC(" ", reason);
+		putchar('\n');
+	}
 }
 
 
@@ -495,22 +495,22 @@ skip_block(unsigned long count, const char *reason, ...)
 int
 is_int(long wanted, long seen, const char *format, ...)
 {
-    int success;
+	int success;
 
-    fflush(stderr);
-    check_diag_files();
-    success = (wanted == seen);
-    if (success)
-        printf("ok %lu", testnum++);
-    else {
-        diag("wanted: %ld", wanted);
-        diag("  seen: %ld", seen);
-        printf("not ok %lu", testnum++);
-        _failed++;
-    }
-    PRINT_DESC(" - ", format);
-    putchar('\n');
-    return success;
+	fflush(stderr);
+	check_diag_files();
+	success = (wanted == seen);
+	if (success)
+		printf("ok %lu", testnum++);
+	else {
+		diag("wanted: %ld", wanted);
+		diag("  seen: %ld", seen);
+		printf("not ok %lu", testnum++);
+		_failed++;
+	}
+	PRINT_DESC(" - ", format);
+	putchar('\n');
+	return success;
 }
 
 
@@ -521,26 +521,26 @@ is_int(long wanted, long seen, const char *format, ...)
 int
 is_string(const char *wanted, const char *seen, const char *format, ...)
 {
-    int success;
+	int success;
 
-    if (wanted == NULL)
-        wanted = "(null)";
-    if (seen == NULL)
-        seen = "(null)";
-    fflush(stderr);
-    check_diag_files();
-    success = (strcmp(wanted, seen) == 0);
-    if (success)
-        printf("ok %lu", testnum++);
-    else {
-        diag("wanted: %s", wanted);
-        diag("  seen: %s", seen);
-        printf("not ok %lu", testnum++);
-        _failed++;
-    }
-    PRINT_DESC(" - ", format);
-    putchar('\n');
-    return success;
+	if (wanted == NULL)
+		wanted = "(null)";
+	if (seen == NULL)
+		seen = "(null)";
+	fflush(stderr);
+	check_diag_files();
+	success = (strcmp(wanted, seen) == 0);
+	if (success)
+		printf("ok %lu", testnum++);
+	else {
+		diag("wanted: %s", wanted);
+		diag("  seen: %s", seen);
+		printf("not ok %lu", testnum++);
+		_failed++;
+	}
+	PRINT_DESC(" - ", format);
+	putchar('\n');
+	return success;
 }
 
 
@@ -551,22 +551,22 @@ is_string(const char *wanted, const char *seen, const char *format, ...)
 int
 is_hex(unsigned long wanted, unsigned long seen, const char *format, ...)
 {
-    int success;
+	int success;
 
-    fflush(stderr);
-    check_diag_files();
-    success = (wanted == seen);
-    if (success)
-        printf("ok %lu", testnum++);
-    else {
-        diag("wanted: %lx", (unsigned long) wanted);
-        diag("  seen: %lx", (unsigned long) seen);
-        printf("not ok %lu", testnum++);
-        _failed++;
-    }
-    PRINT_DESC(" - ", format);
-    putchar('\n');
-    return success;
+	fflush(stderr);
+	check_diag_files();
+	success = (wanted == seen);
+	if (success)
+		printf("ok %lu", testnum++);
+	else {
+		diag("wanted: %lx", (unsigned long) wanted);
+		diag("  seen: %lx", (unsigned long) seen);
+		printf("not ok %lu", testnum++);
+		_failed++;
+	}
+	PRINT_DESC(" - ", format);
+	putchar('\n');
+	return success;
 }
 
 
@@ -576,18 +576,18 @@ is_hex(unsigned long wanted, unsigned long seen, const char *format, ...)
 void
 bail(const char *format, ...)
 {
-    va_list args;
+	va_list args;
 
-    _aborted = 1;
-    fflush(stderr);
-    check_diag_files();
-    fflush(stdout);
-    printf("Bail out! ");
-    va_start(args, format);
-    vprintf(format, args);
-    va_end(args);
-    printf("\n");
-    exit(255);
+	_aborted = 1;
+	fflush(stderr);
+	check_diag_files();
+	fflush(stdout);
+	printf("Bail out! ");
+	va_start(args, format);
+	vprintf(format, args);
+	va_end(args);
+	printf("\n");
+	exit(255);
 }
 
 
@@ -597,19 +597,19 @@ bail(const char *format, ...)
 void
 sysbail(const char *format, ...)
 {
-    va_list args;
-    int oerrno = errno;
+	va_list args;
+	int oerrno = errno;
 
-    _aborted = 1;
-    fflush(stderr);
-    check_diag_files();
-    fflush(stdout);
-    printf("Bail out! ");
-    va_start(args, format);
-    vprintf(format, args);
-    va_end(args);
-    printf(": %s\n", strerror(oerrno));
-    exit(255);
+	_aborted = 1;
+	fflush(stderr);
+	check_diag_files();
+	fflush(stdout);
+	printf("Bail out! ");
+	va_start(args, format);
+	vprintf(format, args);
+	va_end(args);
+	printf(": %s\n", strerror(oerrno));
+	exit(255);
 }
 
 
@@ -620,17 +620,17 @@ sysbail(const char *format, ...)
 int
 diag(const char *format, ...)
 {
-    va_list args;
+	va_list args;
 
-    fflush(stderr);
-    check_diag_files();
-    fflush(stdout);
-    printf("# ");
-    va_start(args, format);
-    vprintf(format, args);
-    va_end(args);
-    printf("\n");
-    return 1;
+	fflush(stderr);
+	check_diag_files();
+	fflush(stdout);
+	printf("# ");
+	va_start(args, format);
+	vprintf(format, args);
+	va_end(args);
+	printf("\n");
+	return 1;
 }
 
 
@@ -641,18 +641,18 @@ diag(const char *format, ...)
 int
 sysdiag(const char *format, ...)
 {
-    va_list args;
-    int oerrno = errno;
+	va_list args;
+	int oerrno = errno;
 
-    fflush(stderr);
-    check_diag_files();
-    fflush(stdout);
-    printf("# ");
-    va_start(args, format);
-    vprintf(format, args);
-    va_end(args);
-    printf(": %s\n", strerror(oerrno));
-    return 1;
+	fflush(stderr);
+	check_diag_files();
+	fflush(stdout);
+	printf("# ");
+	va_start(args, format);
+	vprintf(format, args);
+	va_end(args);
+	printf(": %s\n", strerror(oerrno));
+	return 1;
 }
 
 
@@ -662,22 +662,22 @@ sysdiag(const char *format, ...)
 void
 diag_file_add(const char *name)
 {
-    struct diag_file *file, *prev;
+	struct diag_file *file, *prev;
 
-    file = bcalloc(1, sizeof(struct diag_file));
-    file->name = bstrdup(name);
-    file->file = fopen(file->name, "r");
-    if (file->file == NULL)
-        sysbail("cannot open %s", name);
-    file->buffer = bmalloc(BUFSIZ);
-    file->bufsize = BUFSIZ;
-    if (diag_files == NULL)
-        diag_files = file;
-    else {
-        for (prev = diag_files; prev->next != NULL; prev = prev->next)
-            ;
-        prev->next = file;
-    }
+	file = bcalloc(1, sizeof(struct diag_file));
+	file->name = bstrdup(name);
+	file->file = fopen(file->name, "r");
+	if (file->file == NULL)
+		sysbail("cannot open %s", name);
+	file->buffer = bmalloc(BUFSIZ);
+	file->bufsize = BUFSIZ;
+	if (diag_files == NULL)
+		diag_files = file;
+	else {
+		for (prev = diag_files; prev->next != NULL; prev = prev->next)
+			;
+		prev->next = file;
+	}
 }
 
 
@@ -690,20 +690,20 @@ diag_file_add(const char *name)
 void
 diag_file_remove(const char *name)
 {
-    struct diag_file *file;
-    struct diag_file **prev = &diag_files;
+	struct diag_file *file;
+	struct diag_file **prev = &diag_files;
 
-    for (file = diag_files; file != NULL; file = file->next) {
-        if (strcmp(file->name, name) == 0) {
-            *prev = file->next;
-            fclose(file->file);
-            free(file->name);
-            free(file->buffer);
-            free(file);
-            return;
-        }
-        prev = &file->next;
-    }
+	for (file = diag_files; file != NULL; file = file->next) {
+		if (strcmp(file->name, name) == 0) {
+			*prev = file->next;
+			fclose(file->file);
+			free(file->name);
+			free(file->buffer);
+			free(file);
+			return;
+		}
+		prev = &file->next;
+	}
 }
 
 
@@ -713,12 +713,12 @@ diag_file_remove(const char *name)
 void *
 bcalloc(size_t n, size_t size)
 {
-    void *p;
+	void *p;
 
-    p = calloc(n, size);
-    if (p == NULL)
-        sysbail("failed to calloc %lu", (unsigned long)(n * size));
-    return p;
+	p = calloc(n, size);
+	if (p == NULL)
+		sysbail("failed to calloc %lu", (unsigned long)(n * size));
+	return p;
 }
 
 
@@ -728,12 +728,12 @@ bcalloc(size_t n, size_t size)
 void *
 bmalloc(size_t size)
 {
-    void *p;
+	void *p;
 
-    p = malloc(size);
-    if (p == NULL)
-        sysbail("failed to malloc %lu", (unsigned long) size);
-    return p;
+	p = malloc(size);
+	if (p == NULL)
+		sysbail("failed to malloc %lu", (unsigned long) size);
+	return p;
 }
 
 
@@ -743,10 +743,10 @@ bmalloc(size_t size)
 void *
 brealloc(void *p, size_t size)
 {
-    p = realloc(p, size);
-    if (p == NULL)
-        sysbail("failed to realloc %lu bytes", (unsigned long) size);
-    return p;
+	p = realloc(p, size);
+	if (p == NULL)
+		sysbail("failed to realloc %lu bytes", (unsigned long) size);
+	return p;
 }
 
 
@@ -767,12 +767,12 @@ brealloc(void *p, size_t size)
 void *
 breallocarray(void *p, size_t n, size_t size)
 {
-    if (n > 0 && UINT_MAX / n <= size)
-        bail("reallocarray too large");
-    p = realloc(p, n * size);
-    if (p == NULL)
-        sysbail("failed to realloc %lu bytes", (unsigned long) (n * size));
-    return p;
+	if (n > 0 && UINT_MAX / n <= size)
+		bail("reallocarray too large");
+	p = realloc(p, n * size);
+	if (p == NULL)
+		sysbail("failed to realloc %lu bytes", (unsigned long) (n * size));
+	return p;
 }
 
 
@@ -782,15 +782,15 @@ breallocarray(void *p, size_t n, size_t size)
 char *
 bstrdup(const char *s)
 {
-    char *p;
-    size_t len;
+	char *p;
+	size_t len;
 
-    len = strlen(s) + 1;
-    p = malloc(len);
-    if (p == NULL)
-        sysbail("failed to strdup %lu bytes", (unsigned long) len);
-    memcpy(p, s, len);
-    return p;
+	len = strlen(s) + 1;
+	p = malloc(len);
+	if (p == NULL)
+		sysbail("failed to strdup %lu bytes", (unsigned long) len);
+	memcpy(p, s, len);
+	return p;
 }
 
 
@@ -802,20 +802,20 @@ bstrdup(const char *s)
 char *
 bstrndup(const char *s, size_t n)
 {
-    const char *p;
-    char *copy;
-    size_t length;
+	const char *p;
+	char *copy;
+	size_t length;
 
-    /* Don't assume that the source string is nul-terminated. */
-    for (p = s; (size_t) (p - s) < n && *p != '\0'; p++)
-        ;
-    length = (size_t) (p - s);
-    copy = malloc(length + 1);
-    if (p == NULL)
-        sysbail("failed to strndup %lu bytes", (unsigned long) length);
-    memcpy(copy, s, length);
-    copy[length] = '\0';
-    return copy;
+	/* Don't assume that the source string is nul-terminated. */
+	for (p = s; (size_t) (p - s) < n && *p != '\0'; p++)
+		;
+	length = (size_t) (p - s);
+	copy = malloc(length + 1);
+	if (p == NULL)
+		sysbail("failed to strndup %lu bytes", (unsigned long) length);
+	memcpy(copy, s, length);
+	copy[length] = '\0';
+	return copy;
 }
 
 
@@ -828,22 +828,22 @@ bstrndup(const char *s, size_t n)
 char *
 test_file_path(const char *file)
 {
-    char *base;
-    char *path = NULL;
-    const char *envs[] = { "BUILD", "SOURCE", NULL };
-    int i;
+	char *base;
+	char *path = NULL;
+	const char *envs[] = { "BUILD", "SOURCE", NULL };
+	int i;
 
-    for (i = 0; envs[i] != NULL; i++) {
-        base = getenv(envs[i]);
-        if (base == NULL)
-            continue;
-        path = concat(base, "/", file, (const char *) 0);
-        if (access(path, R_OK) == 0)
-            break;
-        free(path);
-        path = NULL;
-    }
-    return path;
+	for (i = 0; envs[i] != NULL; i++) {
+		base = getenv(envs[i]);
+		if (base == NULL)
+			continue;
+		path = concat(base, "/", file, (const char *) 0);
+		if (access(path, R_OK) == 0)
+			break;
+		free(path);
+		path = NULL;
+	}
+	return path;
 }
 
 
@@ -855,7 +855,7 @@ test_file_path(const char *file)
 void
 test_file_path_free(char *path)
 {
-    free(path);
+	free(path);
 }
 
 
@@ -872,17 +872,17 @@ test_file_path_free(char *path)
 char *
 test_tmpdir(void)
 {
-    const char *build;
-    char *path = NULL;
+	const char *build;
+	char *path = NULL;
 
-    build = getenv("BUILD");
-    if (build == NULL)
-        build = ".";
-    path = concat(build, "/tmp", (const char *) 0);
-    if (access(path, X_OK) < 0)
-        if (mkdir(path, 0777) < 0)
-            sysbail("error creating temporary directory %s", path);
-    return path;
+	build = getenv("BUILD");
+	if (build == NULL)
+		build = ".";
+	path = concat(build, "/tmp", (const char *) 0);
+	if (access(path, X_OK) < 0)
+		if (mkdir(path, 0777) < 0)
+			sysbail("error creating temporary directory %s", path);
+	return path;
 }
 
 
@@ -894,9 +894,9 @@ test_tmpdir(void)
 void
 test_tmpdir_free(char *path)
 {
-    if (path != NULL)
-        rmdir(path);
-    free(path);
+	if (path != NULL)
+		rmdir(path);
+	free(path);
 }
 
 
@@ -907,13 +907,13 @@ test_tmpdir_free(char *path)
 void
 test_cleanup_register(test_cleanup_func func)
 {
-    struct cleanup_func *cleanup, **last;
+	struct cleanup_func *cleanup, **last;
 
-    cleanup = bmalloc(sizeof(struct cleanup_func));
-    cleanup->func = func;
-    cleanup->next = NULL;
-    last = &cleanup_funcs;
-    while (*last != NULL)
-        last = &(*last)->next;
-    *last = cleanup;
+	cleanup = bmalloc(sizeof(struct cleanup_func));
+	cleanup->func = func;
+	cleanup->next = NULL;
+	last = &cleanup_funcs;
+	while (*last != NULL)
+		last = &(*last)->next;
+	*last = cleanup;
 }

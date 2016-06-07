@@ -49,59 +49,59 @@
 		ok(error == NULL, __func__);				\
 		hkl_parameter_free(p);					\
 	}while(0)
-				\
+\
 #define SET_LATTICE(_lattice, _a, _b, _c, _alpha, _beta, _gamma) do{	\
-		SET_PARAM(_lattice, a, _a);				\
-		SET_PARAM(_lattice, b, _b);				\
-		SET_PARAM(_lattice, c, _c);				\
-		SET_PARAM(_lattice, alpha, _alpha);			\
-		SET_PARAM(_lattice, beta, _beta);			\
-		SET_PARAM(_lattice, gamma, _gamma);			\
-	}while(0)
+								 SET_PARAM(_lattice, a, _a);				\
+								 SET_PARAM(_lattice, b, _b);				\
+								 SET_PARAM(_lattice, c, _c);				\
+								 SET_PARAM(_lattice, alpha, _alpha);			\
+								 SET_PARAM(_lattice, beta, _beta);			\
+								 SET_PARAM(_lattice, gamma, _gamma);			\
+								 }while(0)
 
-static void new(void)
-{
-	HklLattice *lattice;
-	GError *error;
+	static void new(void)
+	{
+		HklLattice *lattice;
+		GError *error;
 
-	/* can not set this lattice */
-	lattice = hkl_lattice_new(1.54, 1.54, 1.54,
-				  90*HKL_DEGTORAD, 10*HKL_DEGTORAD, 120*HKL_DEGTORAD,
-				  NULL);
-	ok(NULL == lattice, __func__);
+		/* can not set this lattice */
+		lattice = hkl_lattice_new(1.54, 1.54, 1.54,
+					  90*HKL_DEGTORAD, 10*HKL_DEGTORAD, 120*HKL_DEGTORAD,
+					  NULL);
+		ok(NULL == lattice, __func__);
 
-	/* check GError generation */
-	error = NULL;
-	lattice = hkl_lattice_new(1.54, 1.54, 1.54,
-				  90*HKL_DEGTORAD, 10*HKL_DEGTORAD, 120*HKL_DEGTORAD,
-				  &error);
-	ok(NULL == lattice, __func__);
-	ok(error != NULL, __func__);
-	g_clear_error(&error);
+		/* check GError generation */
+		error = NULL;
+		lattice = hkl_lattice_new(1.54, 1.54, 1.54,
+					  90*HKL_DEGTORAD, 10*HKL_DEGTORAD, 120*HKL_DEGTORAD,
+					  &error);
+		ok(NULL == lattice, __func__);
+		ok(error != NULL, __func__);
+		g_clear_error(&error);
 
-	/* but can create this one */
-	lattice = hkl_lattice_new(1.54, 1.54, 1.54,
-				  90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD,
-				  NULL);
-	ok(0 == !lattice, __func__);
+		/* but can create this one */
+		lattice = hkl_lattice_new(1.54, 1.54, 1.54,
+					  90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD,
+					  NULL);
+		ok(0 == !lattice, __func__);
 
-	CHECK_LATTICE(lattice,
-		      1.54, 1.54, 1.54,
-		      90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD);
+		CHECK_LATTICE(lattice,
+			      1.54, 1.54, 1.54,
+			      90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD);
 
-	/* but can create this one and no GError are produce */
-	lattice = hkl_lattice_new(1.54, 1.54, 1.54,
-				  90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD,
-				  &error);
-	ok(0 == !lattice, __func__);
-	ok(error == NULL, __func__);
+		/* but can create this one and no GError are produce */
+		lattice = hkl_lattice_new(1.54, 1.54, 1.54,
+					  90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD,
+					  &error);
+		ok(0 == !lattice, __func__);
+		ok(error == NULL, __func__);
 
-	CHECK_LATTICE(lattice,
-		      1.54, 1.54, 1.54,
-		      90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD);
+		CHECK_LATTICE(lattice,
+			      1.54, 1.54, 1.54,
+			      90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD);
 
-	hkl_lattice_free(lattice);
-}
+		hkl_lattice_free(lattice);
+	}
 
 static void new_copy(void)
 {
