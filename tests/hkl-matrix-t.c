@@ -56,6 +56,18 @@ static void cmp(void)
 	ok(FALSE == hkl_matrix_cmp(&m1, &m2), __func__);
 }
 
+static void dup(void)
+{
+	HklMatrix m1 = {{{0.0, 1.0, 2.0},
+			 {3.0, 4.0, 5.0},
+			 {6.0, 7.0, 8.0}}};
+	HklMatrix *m;
+
+	m = hkl_matrix_dup(&m1);
+	ok(TRUE == hkl_matrix_cmp(&m1, m), __func__);
+	hkl_matrix_free(m);
+}
+
 static void assignement(void)
 {
 	HklMatrix m1 = {{{0.0, 1.0, 2.0},
@@ -139,10 +151,11 @@ static void transpose(void)
 
 int main(void)
 {
-	plan(17);
+	plan(18);
 
 	init();
 	cmp();
+	dup();
 	assignement();
 	init_from_euler();
 	init_from_two_vector();
