@@ -97,7 +97,7 @@ getDataFrame' d i = do
   let positions = concat [mu, omega, delta, gamma]
   let source = Source (head wavelength *~ nano meter)
   return DataFrame { df_n = i
-                   , df_geometry = Geometry source positions
+                   , df_geometry = Geometry source positions Nothing
                    , df_ub = ub
                    }
 

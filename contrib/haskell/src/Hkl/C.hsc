@@ -17,12 +17,12 @@ import Control.Monad.Trans.State.Strict
 import Data.Map.Strict as Map
 import Foreign ( ForeignPtr, FunPtr, Ptr,
                  alloca,
-                 peek, nullPtr,
+                 nullPtr,
                  newForeignPtr, withForeignPtr,
-                 peekByteOff,
                  peekArray, withArray)
 import Foreign.C (CInt(..), CDouble(..), CSize(..), CString,
                  peekCString, withCString)
+import Foreign.Storable
 import Hkl.Types
 import Numeric.Units.Dimensional.Prelude ( meter, degree, radian, nano
                                          , (*~), (/~))
@@ -42,7 +42,6 @@ data HklGeometry
 data HklGeometryList
 data HklGeometryListItem
 data HklLattice
-data HklParameter
 data HklSample
 
 -- helpers
@@ -205,7 +204,13 @@ peekGeometry gp = do
   MV.unsafeWith v $ \values ->
       c_hkl_geometry_axis_values_get gp values n unit
   vs <- V.freeze v
-  return $ Geometry (Source (w *~ nano meter)) vs
+
+  axis_names <- peekDArrayString darray
+  ps <- mapM (getAxis gp) axis_names
+  return $ Geometry (Source (w *~ nano meter)) vs (Just ps)
+      where
+        getAxis :: Ptr HklGeometry -> CString -> IO Parameter
+        getAxis _g n = c_hkl_geometry_axis_get _g n nullPtr >>= peek
 
 foreign import ccall unsafe "hkl.h hkl_geometry_wavelength_get"
   c_hkl_geometry_wavelength_get :: Ptr HklGeometry -- geometry
@@ -220,13 +225,23 @@ foreign import ccall unsafe "hkl.h hkl_geometry_axis_values_get"
                                  -> CInt -- unit
                                  -> IO () -- IO CInt but for now do not deal with the errors
 
+foreign import ccall unsafe "hkl.h hkl_geometry_axis_names_get"
+  c_hkl_geometry_axis_names_get :: Ptr HklGeometry -- goemetry
+                                -> IO (Ptr ()) -- darray_string
+
+foreign import ccall unsafe "hkl.h hkl_geometry_axis_get"
+  c_hkl_geometry_axis_get :: Ptr HklGeometry -- geometry
+                          -> CString -- axis name
+                          -> Ptr () -- gerror
+                          -> IO (Ptr Parameter) -- parameter or nullPtr
+
 withGeometry ::  Factory -> Geometry -> (Ptr HklGeometry -> IO b) -> IO b
 withGeometry f g fun = do
   fptr <- newGeometry f g
   withForeignPtr fptr fun
 
 newGeometry :: Factory -> Geometry -> IO (ForeignPtr HklGeometry)
-newGeometry (Factory f) (Geometry (Source lw) vs) = do
+newGeometry (Factory f) (Geometry (Source lw) vs _ps) = do
   let wavelength = CDouble (lw /~ nano meter)
   geometry <- c_hkl_factory_create_new_geometry f
   c_hkl_geometry_wavelength_set geometry wavelength unit nullPtr
@@ -263,29 +278,6 @@ foreign import ccall unsafe "hkl.h hkl_geometry_axis_values_set"
 
 -- foreign import ccall unsafe "hkl.h hkl_geometry_name_get"
 --   c_hkl_geometry_name_get :: Ptr HklGeometry -> IO CString
-
-
--- geometryAxisNamesGet' :: ForeignPtr HklGeometry -> IO [CString]
--- geometryAxisNamesGet' g =
---   withForeignPtr g (c_hkl_geometry_axis_names_get >=> peekDArrayString)
-
-foreign import ccall unsafe "hkl.h hkl_geometry_axis_names_get"
-  c_hkl_geometry_axis_names_get :: Ptr HklGeometry -- goemetry
-                                -> IO (Ptr ()) -- darray_string
-
--- geometryAxisGet :: ForeignPtr HklGeometry -> CString -> IO Parameter
--- geometryAxisGet g n =
---     withForeignPtr g $ \gp ->
---         c_hkl_geometry_axis_get gp n nullPtr >>= peekParameter
-
--- foreign import ccall unsafe "hkl.h hkl_geometry_axis_get"
---   c_hkl_geometry_axis_get :: Ptr HklGeometry -- geometry
---                           -> CString -- axis name
---                           -> Ptr () -- gerror
---                           -> IO (Ptr HklParameter) -- parameter or nullPtr
-
--- geometryAxesGet :: ForeignPtr HklGeometry -> IO [Parameter]
--- geometryAxesGet g = geometryAxisNamesGet' g >>= mapM (geometryAxisGet g)
 
 -- HklGeometryList
 
@@ -347,7 +339,7 @@ peekMode e = do
                 >>= mapM f
   return (Mode name parameters)
   where
-    f n = (c_hkl_engine_parameter_get e n nullPtr >>= peekParameter)
+    f n = (c_hkl_engine_parameter_get e n nullPtr >>= peek)
 
 
 foreign import ccall unsafe "hkl.h hkl_engine_current_mode_get"
@@ -357,7 +349,7 @@ foreign import ccall unsafe "hkl.h hkl_engine_parameters_names_get"
   c_hkl_engine_parameters_names_get:: Ptr HklEngine -> IO (Ptr ()) -- darray_string
 
 foreign import ccall unsafe "hkl.h hkl_engine_parameter_get"
-  c_hkl_engine_parameter_get:: Ptr HklEngine -> CString -> Ptr () -> IO (Ptr HklParameter) -- darray_string
+  c_hkl_engine_parameter_get:: Ptr HklEngine -> CString -> Ptr () -> IO (Ptr Parameter) -- darray_string
 
 
 peekEngine :: Ptr HklEngine -> IO Engine
@@ -383,10 +375,10 @@ foreign import ccall unsafe "hkl.h hkl_engine_pseudo_axis_names_get"
 -- enginePseudoAxisNamesGet e = enginePseudoAxisNamesGet' e >>= mapM peekCString
 
 enginePseudoAxisGet :: Ptr HklEngine -> CString -> IO Parameter
-enginePseudoAxisGet e n = c_hkl_engine_pseudo_axis_get e n nullPtr >>= peekParameter
+enginePseudoAxisGet e n = c_hkl_engine_pseudo_axis_get e n nullPtr >>= peek
 
 foreign import ccall unsafe "hkl.h hkl_engine_pseudo_axis_get"
-  c_hkl_engine_pseudo_axis_get:: Ptr HklEngine -> CString -> Ptr () -> IO (Ptr HklParameter)
+  c_hkl_engine_pseudo_axis_get:: Ptr HklEngine -> CString -> Ptr () -> IO (Ptr Parameter)
 
 enginePseudoAxesGet :: Ptr HklEngine -> IO [Parameter]
 enginePseudoAxesGet e = enginePseudoAxisNamesGet' e >>= mapM (enginePseudoAxisGet e)
@@ -510,46 +502,45 @@ foreign import ccall unsafe "hkl.h &hkl_lattice_free"
 
 -- Parameter
 
-peekParameter :: Ptr HklParameter -> IO Parameter
-peekParameter p =
-    alloca $ \pmin ->
-        alloca $ \pmax -> do
-          cname <- c_hkl_parameter_name_get p
-          name <- peekCString cname
-          value <- c_hkl_parameter_value_get p unit
-          c_hkl_parameter_min_max_get p pmin pmax unit
-          min <- peek pmin
-          max <- peek pmax
-          return (Parameter name value (Range min max))
+instance Storable Parameter where
+    alignment _ = #{alignment int}
+    sizeOf _ = #{size int}
+    peek ptr = alloca $ \pmin ->
+               alloca $ \pmax -> do
+                              cname <- c_hkl_parameter_name_get ptr
+                              name <- peekCString cname
+                              value <- c_hkl_parameter_value_get ptr unit
+                              c_hkl_parameter_min_max_get ptr pmin pmax unit
+                              min <- peek pmin
+                              max <- peek pmax
+                              return (Parameter name value (Range min max))
+    poke ptr (Parameter _name value (Range min max)) = do
+                              void $ c_hkl_parameter_value_set ptr (CDouble value) unit nullPtr
+                              void $ c_hkl_parameter_min_max_set ptr (CDouble min) (CDouble max) unit nullPtr
 
 foreign import ccall unsafe "hkl.h hkl_parameter_name_get"
-  c_hkl_parameter_name_get:: Ptr HklParameter -> IO CString
+  c_hkl_parameter_name_get:: Ptr Parameter -> IO CString
 
 foreign import ccall unsafe "hkl.h hkl_parameter_value_get"
-  c_hkl_parameter_value_get:: Ptr HklParameter -> CInt -> IO Double
+  c_hkl_parameter_value_get:: Ptr Parameter -> CInt -> IO Double
 
 foreign import ccall unsafe "hkl.h hkl_parameter_min_max_get"
-  c_hkl_parameter_min_max_get :: Ptr HklParameter -> Ptr Double -> Ptr Double -> CInt -> IO ()
+  c_hkl_parameter_min_max_get :: Ptr Parameter -> Ptr Double -> Ptr Double -> CInt -> IO ()
 
-copyParameter :: Ptr HklParameter -> IO (ForeignPtr HklParameter)
+copyParameter :: Ptr Parameter -> IO (ForeignPtr Parameter)
 copyParameter p = newForeignPtr c_hkl_parameter_free =<< c_hkl_parameter_new_copy p
 
 foreign import ccall unsafe "hkl.h &hkl_parameter_free"
-  c_hkl_parameter_free :: FunPtr (Ptr HklParameter -> IO ())
+  c_hkl_parameter_free :: FunPtr (Ptr Parameter -> IO ())
 
 foreign import ccall unsafe "hkl.h hkl_parameter_new_copy"
-  c_hkl_parameter_new_copy:: Ptr HklParameter -> IO (Ptr HklParameter)
-
-pokeParameter :: Parameter -> Ptr HklParameter -> IO ()
-pokeParameter (Parameter _name value (Range min max)) parameter = do
-  void $ c_hkl_parameter_value_set parameter (CDouble value) unit nullPtr
-  void $ c_hkl_parameter_min_max_set parameter (CDouble min) (CDouble max) unit nullPtr
+  c_hkl_parameter_new_copy:: Ptr Parameter -> IO (Ptr Parameter)
 
 foreign import ccall unsafe "hkl.h hkl_parameter_value_set"
-  c_hkl_parameter_value_set:: Ptr HklParameter -> CDouble -> CInt -> Ptr () -> IO (CInt)
+  c_hkl_parameter_value_set:: Ptr Parameter -> CDouble -> CInt -> Ptr () -> IO (CInt)
 
 foreign import ccall unsafe "hkl.h hkl_parameter_min_max_set"
-  c_hkl_parameter_min_max_set :: Ptr HklParameter -> CDouble -> CDouble -> CInt -> Ptr () -> IO (CInt)
+  c_hkl_parameter_min_max_set :: Ptr Parameter -> CDouble -> CDouble -> CInt -> Ptr () -> IO (CInt)
 
 -- Sample
 
@@ -572,7 +563,7 @@ newSample (Sample name l ux uy uz) =
               go s p getter setter = do
                 fptr <- copyParameter =<< (getter s)
                 withForeignPtr fptr $ \ptr -> do
-                  pokeParameter p ptr
+                  poke ptr p
                   void $ setter s ptr nullPtr
 
 foreign import ccall unsafe "hkl.h hkl_sample_new"
@@ -586,30 +577,32 @@ foreign import ccall unsafe "hkl.h &hkl_sample_free"
 
 foreign import ccall unsafe "hkl.h hkl_sample_ux_get"
   c_hkl_sample_ux_get :: Ptr HklSample
-                      -> IO (Ptr HklParameter)
+                      -> IO (Ptr Parameter)
 
 foreign import ccall unsafe "hkl.h hkl_sample_uy_get"
   c_hkl_sample_uy_get :: Ptr HklSample
-                      -> IO (Ptr HklParameter)
+                      -> IO (Ptr Parameter)
 
 foreign import ccall unsafe "hkl.h hkl_sample_uz_get"
   c_hkl_sample_uz_get :: Ptr HklSample
-                      -> IO (Ptr HklParameter)
+                      -> IO (Ptr Parameter)
 
 foreign import ccall unsafe "hkl.h hkl_sample_ux_set"
   c_hkl_sample_ux_set :: Ptr HklSample
-                      -> Ptr HklParameter
+                      -> Ptr Parameter
                       -> Ptr ()
                       -> IO CInt
 
 foreign import ccall unsafe "hkl.h hkl_sample_uy_set"
   c_hkl_sample_uy_set :: Ptr HklSample
-                      -> Ptr HklParameter
+                      -> Ptr Parameter
                       -> Ptr ()
                       -> IO CInt
 
 foreign import ccall unsafe "hkl.h hkl_sample_uz_set"
   c_hkl_sample_uz_set :: Ptr HklSample
-                      -> Ptr HklParameter
+                      -> Ptr Parameter
                       -> Ptr ()
                       -> IO CInt
+
+#let alignment t = "%lu", (unsigned long)offsetof(struct {char x__; t (y__); }, y__)

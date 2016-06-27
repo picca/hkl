@@ -31,6 +31,10 @@ main' = do
 
     let geometry = Geometry (Source (0.0672929 *~ nano meter))
                    (fromList [0.1794, -160.0013, 21.1381, 0.5194])
+                   (Just [ Parameter "mu" 0.1794 (Range (-180) 180)
+                         , Parameter "omega" (-160.0013) (Range (-180) 180)
+                         , Parameter "delta" 21.1381 (Range (-180) 180)
+                         , Parameter "gamma" 0.5194 (Range (-180) 180)])
     let detector = Detector DetectorType0D
 
     -- compute the pseudo axes values

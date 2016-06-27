@@ -42,6 +42,7 @@ newtype Factory = Factory (Ptr HklFactory) deriving (Show, Storable)
 data Geometry = Geometry
                 Source -- ^ source
                 (Vector Double) -- ^ axes position
+                (Maybe [Parameter]) -- ^ axes configuration
               deriving (Show)
 
 -- | Lattice
