@@ -17,7 +17,8 @@ cabal-version:       >= 1.10
 
 executable ghkl
   main-is:             src/ghkl.hs
-  build-depends:       base >= 4.6 && < 4.9
+  build-depends:       attoparsec
+                     , base >= 4.6 && < 4.9
                      , bindings-hdf5 >= 1.8.12
                      , containers >= 0.5 && < 0.6
                      , dimensional >= 0.10
@@ -25,6 +26,7 @@ executable ghkl
                      , hmatrix >= 0.15
                      , monad-loops >= 0.4.2
                      , pipes >= 4.1.2
+                     , text
                      , transformers >= 0.3
                      , vector >= 0.10.0.1
   default-language:    Haskell2010
@@ -48,6 +50,7 @@ executable hkl3d
                      , hmatrix >= 0.15
                      , monad-loops >= 0.4.2
                      , pipes >= 4.1.2
+                     , text
                      , transformers >= 0.3
                      , vector >= 0.10.0.1
   default-language:    Haskell2010
@@ -62,6 +65,7 @@ library
                      , Hkl.Diffabs
                      , Hkl.Engine
                      , Hkl.H5
+                     , Hkl.PyFAI  
                      , Hkl.Sixs
                      , Hkl.Types
                      , Hkl.Types.Parameter
@@ -73,7 +77,8 @@ library
                      , FlexibleInstances
                      , FlexibleContexts
                      , RecordWildCards
-  build-depends:       base >= 4.6 && < 4.9
+  build-depends:       attoparsec
+                     , base >= 4.6 && < 4.9
                      , bindings-hdf5 >= 1.8.12
                      , bytestring >= 0.10.0.2
                      , containers >= 0.5 && < 0.6
@@ -83,6 +88,7 @@ library
                      , hmatrix >= 0.15
                      , monad-loops >= 0.4.2
                      , pipes >= 4.1.2
+                     , text
                      , transformers >= 0.3
                      , vector >= 0.10.0.1
   hs-source-dirs:      src

@@ -2,14 +2,21 @@ module Hkl.Types.PyFAI
        ( Poni(..)
        ) where
 
-import Numeric.Units.Dimensional.Prelude (Length, Angle)
+import Data.Text
+-- import Numeric.Units.Dimensional.Prelude (Length, Angle)
 
 -- | Poni
 
 data Poni = Poni
-            (Length Double) -- ^ distance
-            (Length Double) -- ^ poni1
-            (Length Double) -- ^ poni2
-            (Angle Double) -- ^ rot1
-            (Angle Double) -- ^ rot2
-            (Angle Double) -- ^ rot3
+            [Text] -- ^ header
+            Text -- ^ Detector
+            Double -- ^ pixels size 1
+            Double -- ^ pixels size 2
+            Double -- ^ distance
+            Double -- ^ poni1
+            Double -- ^ poni2
+            Double -- ^ rot1
+            Double -- ^ rot2
+            Double -- ^ rot3
+            Double -- ^ wavelength
+            deriving (Show)

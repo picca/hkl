@@ -10,7 +10,18 @@ import Numeric.Units.Dimensional.Prelude (nano, meter,
                                           (*~))
 -- import Pipes
 -- import qualified Pipes.Prelude as P
-import Prelude hiding (lookup)
+import Prelude hiding (lookup, readFile)
+
+
+import Data.Attoparsec.Text
+import Data.Text.IO (readFile)
+
+test_poni :: IO ()
+test_poni = do
+  content <- readFile "../cirpad/blender/test2.poni"
+  let poni = parse poniP content
+  print poni
+  
 
 main' :: IO ()
 main' = do
@@ -64,4 +75,5 @@ main' = do
     return ()
 
 main :: IO ()
-main = replicateM_ 1 main'
+-- main = replicateM_ 1 main'
+main = replicateM_ 1 test_poni
