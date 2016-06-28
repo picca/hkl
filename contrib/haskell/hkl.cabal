@@ -65,6 +65,7 @@ library
                      , Hkl.Sixs
                      , Hkl.Types
                      , Hkl.Types.Parameter
+                     , Hkl.Types.PyFAI
   other-extensions:    CPP
                      , ForeignFunctionInterface
                      , EmptyDataDecls

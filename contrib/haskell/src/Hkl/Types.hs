@@ -19,6 +19,7 @@ module Hkl.Types ( Detector(..)
                  ) where
 
 import Hkl.Types.Parameter as X
+import Hkl.Types.PyFAI as X
 
 import Data.Vector.Storable (Vector)
 import Numeric.Units.Dimensional.Prelude (Length, Angle)
