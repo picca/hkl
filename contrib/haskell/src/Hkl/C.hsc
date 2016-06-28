@@ -500,48 +500,6 @@ foreign import ccall unsafe "hkl.h hkl_lattice_new"
 foreign import ccall unsafe "hkl.h &hkl_lattice_free"
   c_hkl_lattice_free :: FunPtr (Ptr HklLattice -> IO ())
 
--- Parameter
-
-instance Storable Parameter where
-    alignment _ = #{alignment int}
-    sizeOf _ = #{size int}
-    peek ptr = alloca $ \pmin ->
-               alloca $ \pmax -> do
-                              cname <- c_hkl_parameter_name_get ptr
-                              name <- peekCString cname
-                              value <- c_hkl_parameter_value_get ptr unit
-                              c_hkl_parameter_min_max_get ptr pmin pmax unit
-                              min <- peek pmin
-                              max <- peek pmax
-                              return (Parameter name value (Range min max))
-    poke ptr (Parameter _name value (Range min max)) = do
-                              void $ c_hkl_parameter_value_set ptr (CDouble value) unit nullPtr
-                              void $ c_hkl_parameter_min_max_set ptr (CDouble min) (CDouble max) unit nullPtr
-
-foreign import ccall unsafe "hkl.h hkl_parameter_name_get"
-  c_hkl_parameter_name_get:: Ptr Parameter -> IO CString
-
-foreign import ccall unsafe "hkl.h hkl_parameter_value_get"
-  c_hkl_parameter_value_get:: Ptr Parameter -> CInt -> IO Double
-
-foreign import ccall unsafe "hkl.h hkl_parameter_min_max_get"
-  c_hkl_parameter_min_max_get :: Ptr Parameter -> Ptr Double -> Ptr Double -> CInt -> IO ()
-
-copyParameter :: Ptr Parameter -> IO (ForeignPtr Parameter)
-copyParameter p = newForeignPtr c_hkl_parameter_free =<< c_hkl_parameter_new_copy p
-
-foreign import ccall unsafe "hkl.h &hkl_parameter_free"
-  c_hkl_parameter_free :: FunPtr (Ptr Parameter -> IO ())
-
-foreign import ccall unsafe "hkl.h hkl_parameter_new_copy"
-  c_hkl_parameter_new_copy:: Ptr Parameter -> IO (Ptr Parameter)
-
-foreign import ccall unsafe "hkl.h hkl_parameter_value_set"
-  c_hkl_parameter_value_set:: Ptr Parameter -> CDouble -> CInt -> Ptr () -> IO (CInt)
-
-foreign import ccall unsafe "hkl.h hkl_parameter_min_max_set"
-  c_hkl_parameter_min_max_set :: Ptr Parameter -> CDouble -> CDouble -> CInt -> Ptr () -> IO (CInt)
-
 -- Sample
 
 withSample :: Sample -> (Ptr HklSample -> IO b) -> IO b
@@ -604,5 +562,3 @@ foreign import ccall unsafe "hkl.h hkl_sample_uz_set"
                       -> Ptr Parameter
                       -> Ptr ()
                       -> IO CInt
-
-#let alignment t = "%lu", (unsigned long)offsetof(struct {char x__; t (y__); }, y__)

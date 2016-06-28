@@ -4,7 +4,6 @@ module Hkl.Engine
        ) where
 
 import Control.Monad (forever, forM_)
-
 import Numeric.LinearAlgebra (Vector, toList)
 import Pipes
 

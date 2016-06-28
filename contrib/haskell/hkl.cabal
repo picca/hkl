@@ -64,6 +64,7 @@ library
                      , Hkl.H5
                      , Hkl.Sixs
                      , Hkl.Types
+                     , Hkl.Types.Parameter
   other-extensions:    CPP
                      , ForeignFunctionInterface
                      , EmptyDataDecls
@@ -87,4 +88,4 @@ library
   build-tools:         hsc2hs
   default-language:    Haskell2010
   pkgconfig-depends:   hkl
-  -- ghc-options:         -Wall -Werror
+  ghc-options:         -Wall -Werror

@@ -1,14 +1,29 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
-module Hkl.Types where
+module Hkl.Types ( Detector(..)
+                 , DetectorType(..)
+                 , Mode(..)
+                 , Engine(..)
+                 , HklFactory
+                 , Factory(..)
+                 , Geometry(..)
+                 , Lattice(..)
+                 , Sample(..)
+                 , Source(..)
+                 , Trajectory
+                   -- hdf5
+                 , H5Path
+                 , ExtendDims(..)
+                 , DataItem(..)
+                 , module X
+                 ) where
+
+import Hkl.Types.Parameter as X
 
 import Data.Vector.Storable (Vector)
 import Numeric.Units.Dimensional.Prelude (Length, Angle)
-import Foreign
-import Foreign.C
-
-unit :: CInt
-unit = 1
+import Foreign.Ptr
+import Foreign.Storable
 
 -- | Type describing a @Detector@
 data Detector = Detector DetectorType
@@ -75,23 +90,6 @@ data Lattice
     (Angle Double) -- ^ alpha
     (Angle Double) -- ^ beta
     (Angle Double) -- ^ gamma
-  deriving (Show)
-
--- | Parameter
-
-data Parameter
-  = Parameter
-    String -- ^ name
-    Double -- ^ value
-    Range -- ^ range
-  deriving (Show)
-
--- | Range
-
-data Range
-  = Range
-    Double -- ^ minimum value
-    Double -- ^ maximum value
   deriving (Show)
 
 -- | Sample
