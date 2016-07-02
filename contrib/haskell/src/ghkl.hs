@@ -18,7 +18,9 @@ import Data.Text.IO (readFile)
 
 test_poni :: IO ()
 test_poni = do
-  content <- readFile "../cirpad/blender/test2.poni"
+  let filename = "/home/picca/tmp/reguer/rocha/merged.poni"
+  -- let filename = "../cirpad/blender/test2.poni"
+  content <- readFile filename
   let poni = parse poniP content
   print poni
   

@@ -1,5 +1,6 @@
 module Hkl.Types.PyFAI
-       ( Poni(..)
+       ( PoniEntry(..)
+       , Poni
        ) where
 
 import Data.Text
@@ -7,9 +8,9 @@ import Data.Text
 
 -- | Poni
 
-data Poni = Poni
+data PoniEntry = PoniEntry
             [Text] -- ^ header
-            Text -- ^ Detector
+            (Maybe Text) -- ^ Detector
             Double -- ^ pixels size 1
             Double -- ^ pixels size 2
             Double -- ^ distance
@@ -18,5 +19,8 @@ data Poni = Poni
             Double -- ^ rot1
             Double -- ^ rot2
             Double -- ^ rot3
+            (Maybe Text) -- ^ spline file
             Double -- ^ wavelength
             deriving (Show)
+
+type Poni = [PoniEntry]
