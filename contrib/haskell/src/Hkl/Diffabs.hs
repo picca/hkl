@@ -1,6 +1,7 @@
 {-# LANGUAGE CPP #-}
 module Hkl.Diffabs
-    ( main_diffabs )
+    ( main_diffabs
+    , main_martinetto )
     where
 
 import Prelude hiding (concat, head, print)
@@ -19,6 +20,7 @@ import System.FilePath.Posix ((</>))
 
 import Hkl.Types
 import Hkl.H5
+import Hkl.Diffabs.Martinetto
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
 

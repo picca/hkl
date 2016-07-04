@@ -1,8 +1,6 @@
 module Main where
 
 import Control.Monad
-import Data.Either
-import Data.List (sort)
 import Data.Map.Strict (lookup)
 import Data.Maybe (isNothing, fromJust)
 import Data.Vector.Storable (fromList)
@@ -10,33 +8,10 @@ import Hkl
 -- import Numeric.LinearAlgebra (fromList)
 import Numeric.Units.Dimensional.Prelude (nano, meter,
                                           (*~))
-import System.FilePath
-import System.FilePath.Glob
 -- import Pipes
 -- import qualified Pipes.Prelude as P
 import Prelude hiding (lookup, readFile)
 
-
-import Data.Attoparsec.Text
-import Data.Text.IO (readFile)
-
-test_poni :: IO ()
-test_poni = do
-  let project = "/nfs/ruche-diffabs/diffabs-users/99160066/"
-  let published = project </> "published-data"
-  let calibration = published </> "calibration"
-  -- let filename = "/home/picca/tmp/reguer/rocha/merged.poni"
-  -- let filename = "../cirpad/blender/test2.poni"
-  filenames <- glob $ calibration </> "XRD18keV_26*.poni"
-  ponies <- mapM go (sort filenames)
-  print ponies
-  where
-     -- go :: FilePath -> IO Poni
-     go filename = do
-       content <- readFile filename
-       return $ case (parseOnly poniP content) of
-         Left _ -> error $ "Can not parse the " ++ filename ++ " poni file"
-         Right poni -> last poni
 
 main' :: IO ()
 main' = do
@@ -91,4 +66,4 @@ main' = do
 
 main :: IO ()
 -- main = replicateM_ 1 main'
-main = replicateM_ 1 test_poni
+main = replicateM_ 1 main_martinetto
