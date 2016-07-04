@@ -13,7 +13,7 @@ commentP :: Parser Text
 commentP =  "#" *> takeTill isEndOfLine <* endOfLine <?> "commentP"
 
 headerP :: Parser [Text]
-headerP = count 1 commentP <?> "headerP"
+headerP = many1 commentP <?> "headerP"
 
 doubleP :: Text -> Parser Double
 doubleP key = string key *> double <* endOfLine <?> "doubleP"
@@ -45,4 +45,4 @@ poniEntryP = PoniEntry
         <?> "poniEntryP"
 
 poniP :: Parser Poni
-poniP = many' poniEntryP
+poniP = many poniEntryP
