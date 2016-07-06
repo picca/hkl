@@ -1,8 +1,7 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE OverloadedStrings #-}
 module Hkl.Diffabs.Martinetto
-       ( main_diffabs
-       , main_martinetto ) where
+       ( main_martinetto ) where
 
 #if __GLASGOW_HASKELL__ < 710
 import Control.Applicative ((<$>), (<*>))
@@ -91,23 +90,6 @@ ponies fs = mapM extract (sort fs)
        return $ case (parseOnly poniP content) of
          Left _ -> error $ "Can not parse the " ++ filename ++ " poni file"
          Right poni -> last poni
-
-main_martinetto :: IO ()
-main_martinetto = do
-  let project = "/nfs/ruche-diffabs/diffabs-users/99160066/"
-  let published = project </> "published-data"
-  let calibration = published </> "calibration"
-  let output = calibration </> "ponies.txt"
-  -- let nxs = project </> "XRD18keV_26.nxs"
-  -- let filename = "/home/picca/tmp/reguer/rocha/merged.poni"
-  -- let filename = "../cirpad/blender/test2.poni"
-  filenames <- glob $ calibration </> "XRD18keV_26*.poni"
-  -- print $ sort filenames
-  -- print $ [0,3..39 :: Int] ++ [43 :: Int]
-  -- print nxs
-  entries <- ponies filenames
-  save output entries
-
 
 data DataFrame =
   DataFrame { df_n :: Int -- ^ index of the current frame
@@ -202,30 +184,47 @@ hkl_h5_is_valid d = do
 
 
 
-getDataFrame :: Frame a => a -> Producer DataFrame IO ()
-getDataFrame d = do
+frames :: Frame a => a -> Producer DataFrame IO ()
+frames d = do
   (Just n) <- lift $ len d
-  forM_ [0..n-1] (\i -> lift (row d i) >>= yield)
+  frames' d [0..n-1]
 
-main_diffabs :: IO ()
-main_diffabs = do
-  let root = "/tmp"
-  let filename = "XRD18keV_27.nxs"
+frames' :: Frame a => a -> [Int] -> Producer DataFrame IO ()
+frames' d idxs = do
+  forM_ idxs (\i -> lift (row d i) >>= yield)
+
+main_martinetto :: IO ()
+main_martinetto = do
+  let project = "/nfs/ruche-diffabs/diffabs-users/99160066/"
+  let published = project </> "published-data"
+  let calibration = published </> "calibration"
+  let output = calibration </> "ponies.txt"
+  let nxs = calibration </> "XRD18keV_26.nxs"
+  -- let filename = "/home/picca/tmp/reguer/rocha/merged.poni"
+  -- let filename = "../cirpad/blender/test2.poni"
+  filenames <- glob $ calibration </> "XRD18keV_26*.poni"
+  -- print $ sort filenames
+  -- print $ [0,3..39 :: Int] ++ [43 :: Int]
+  -- print nxs
+  entries <- ponies filenames
+  save output entries
+
+  let nxentry = "scan_26"
   let dataframe_h5p = DataFrameH5Path
-                      { h5pImage = DataItem "scan_27/scan_data/data_53" StrictDims
-                      , h5pMu = DataItem "scan_27/DIFFABS/d13-1-cx1__EX__DIF.1-MU__#1/raw_value" ExtendDims
-                      , h5pKomega = DataItem "scan_27/DIFFABS/d13-1-cx1__EX__DIF.1-KOMEGA__#1/raw_value" ExtendDims
-                      , h5pKappa = DataItem "scan_27/DIFFABS/d13-1-cx1__EX__DIF.1-KAPPA__#1/raw_value" ExtendDims
-                      , h5pKphi = DataItem "scan_27/DIFFABS/d13-1-cx1__EX__DIF.1-KPHI__#1/raw_value" ExtendDims
-                      , h5pGamma = DataItem "scan_27/DIFFABS/d13-1-cx1__EX__DIF.1-GAMMA__#1/raw_value" ExtendDims
-                      , h5pDelta = DataItem "scan_27/scan_data/trajectory_1_1" ExtendDims
-                      , h5pWavelength = DataItem "scan_27/DIFFABS/D13-1-C03__OP__MONO__#1/wavelength" StrictDims
-                      , h5pDiffractometerType = DataItem "scan_27/DIFFABS/I14-C-CX2__EX__DIFF-UHV__#1/type" StrictDims
+                      { h5pImage = DataItem (nxentry </> "scan_data/data_53") StrictDims
+                      , h5pMu = DataItem (nxentry </> "DIFFABS/d13-1-cx1__EX__DIF.1-MU__#1/raw_value") ExtendDims
+                      , h5pKomega = DataItem (nxentry </> "DIFFABS/d13-1-cx1__EX__DIF.1-KOMEGA__#1/raw_value") ExtendDims
+                      , h5pKappa = DataItem (nxentry </> "DIFFABS/d13-1-cx1__EX__DIF.1-KAPPA__#1/raw_value") ExtendDims
+                      , h5pKphi = DataItem (nxentry </> "DIFFABS/d13-1-cx1__EX__DIF.1-KPHI__#1/raw_value") ExtendDims
+                      , h5pGamma = DataItem (nxentry </> "DIFFABS/d13-1-cx1__EX__DIF.1-GAMMA__#1/raw_value") ExtendDims
+                      , h5pDelta = DataItem (nxentry </> "scan_data/trajectory_1_1") ExtendDims
+                      , h5pWavelength = DataItem (nxentry </> "DIFFABS/D13-1-C03__OP__MONO__#1/wavelength") StrictDims
+                      , h5pDiffractometerType = DataItem (nxentry </> "DIFFABS/I14-C-CX2__EX__DIFF-UHV__#1/type") StrictDims
                       }
 
-  withH5File (root </> filename) $ \h5file ->
+  withH5File nxs $ \h5file ->
     withDataframeH5 h5file dataframe_h5p $ \dataframe_h5 -> do
       True <- hkl_h5_is_valid dataframe_h5
 
-      runEffect $ getDataFrame dataframe_h5
+      runEffect $ frames dataframe_h5
         >-> print
