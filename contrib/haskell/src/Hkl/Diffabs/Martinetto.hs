@@ -110,8 +110,8 @@ main_martinetto = do
 
 
 data DataFrame =
-  DataFrame { df_n :: Int
-            , df_geometry :: Geometry
+  DataFrame { df_n :: Int -- ^ index of the current frame
+            , df_geometry :: Geometry -- ^ diffractometer geometry
             } deriving (Show)
 
 class Frame t where
@@ -144,6 +144,7 @@ data DataFrameH5 =
 
 instance Frame DataFrameH5 where
   len d =  lenH5Dataspace (h5delta d)
+
   row d idx = do
     mu <- get_position (h5mu d) idx
     komega <- get_position (h5komega d) idx
@@ -159,22 +160,35 @@ instance Frame DataFrameH5 where
                      }
 
 withDataframeH5 :: File -> DataFrameH5Path -> (DataFrameH5 -> IO r) -> IO r
-withDataframeH5 h5file dfp = bracket (hkl_h5_open h5file dfp) hkl_h5_close
-
-hkl_h5_open :: File -> DataFrameH5Path -> IO DataFrameH5
-hkl_h5_open h5file dp = DataFrameH5
-                         <$> openDataset' h5file (h5pImage dp)
-                         <*> openDataset' h5file (h5pMu dp)
-                         <*> openDataset' h5file (h5pKomega dp)
-                         <*> openDataset' h5file (h5pKappa dp)
-                         <*> openDataset' h5file (h5pKphi dp)
-                         <*> openDataset' h5file (h5pGamma dp)
-                         <*> openDataset' h5file (h5pDelta dp)
-                         <*> openDataset' h5file (h5pWavelength dp)
-                         <*> openDataset' h5file (h5pDiffractometerType dp)
+withDataframeH5 h5file dfp = bracket (acquire h5file dfp) release
   where
+    acquire :: File -> DataFrameH5Path -> IO DataFrameH5
+    acquire h d =  DataFrameH5
+                   <$> openDataset' h (h5pImage d)
+                   <*> openDataset' h (h5pMu d)
+                   <*> openDataset' h (h5pKomega d)
+                   <*> openDataset' h (h5pKappa d)
+                   <*> openDataset' h (h5pKphi d)
+                   <*> openDataset' h (h5pGamma d)
+                   <*> openDataset' h (h5pDelta d)
+                   <*> openDataset' h (h5pWavelength d)
+                   <*> openDataset' h (h5pDiffractometerType d)
+
+    release :: DataFrameH5 -> IO ()
+    release d = do
+      closeDataset (h5image d)
+      closeDataset (h5mu d)
+      closeDataset (h5komega d)
+      closeDataset (h5kappa d)
+      closeDataset (h5kphi d)
+      closeDataset (h5gamma d)
+      closeDataset (h5delta d)
+      closeDataset (h5wavelength d)
+      closeDataset (h5dtype d)
+
     openDataset' :: File -> DataItem -> IO Dataset
     openDataset' hid (DataItem name _) = openDataset hid (Data.ByteString.Char8.pack name) Nothing
+
 
 hkl_h5_is_valid :: DataFrameH5-> IO Bool
 hkl_h5_is_valid d = do
@@ -186,19 +200,9 @@ hkl_h5_is_valid d = do
   True <- check_ndims (h5delta d) 1
   return True
 
-hkl_h5_close :: DataFrameH5 -> IO ()
-hkl_h5_close df = do
-  closeDataset (h5image df)
-  closeDataset (h5mu df)
-  closeDataset (h5komega df)
-  closeDataset (h5kappa df)
-  closeDataset (h5kphi df)
-  closeDataset (h5gamma df)
-  closeDataset (h5delta df)
-  closeDataset (h5wavelength df)
-  closeDataset (h5dtype df)
 
-getDataFrame :: DataFrameH5 -> Producer DataFrame IO ()
+
+getDataFrame :: Frame a => a -> Producer DataFrame IO ()
 getDataFrame d = do
   (Just n) <- lift $ len d
   forM_ [0..n-1] (\i -> lift (row d i) >>= yield)
