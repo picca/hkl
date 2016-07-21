@@ -192,6 +192,10 @@ main_martinetto = do
   entries <- ponies filenames
   save output entries
 
+  -- lire le poni de référence ainsi que la géométrie associée.
+
+  -- calculer et écrire pour chaque point d'un scan un poni correspondant à la bonne géométries.
+  
   let nxentry = "scan_26"
   let beamline = "DIFFABS"
   let dataframe_h5p = DataFrameH5Path
@@ -206,3 +210,9 @@ main_martinetto = do
 
       runEffect $ frames dataframe_h5
         >-> print
+
+  -- créer le script python d'intégration multi géométrie
+
+  -- l'executer pour faire l'intégration.
+
+  -- plot de la figure. (script python ou autre ?)
