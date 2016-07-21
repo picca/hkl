@@ -12,9 +12,11 @@ import Data.Attoparsec.Text
 import Data.ByteString.Char8 (pack)
 import Data.Either
 import Data.List (sort)
+import Data.Packed.Matrix (Matrix)
 import Data.Text (Text, intercalate, pack)
 import Data.Text.IO
 import Data.Vector.Storable (concat, head)
+import Hkl.C (geometryDetectorRotationGet)
 import Hkl.H5 ( Dataset
               , File
               , check_ndims
@@ -23,8 +25,8 @@ import Hkl.H5 ( Dataset
               , lenH5Dataspace
               , openDataset
               , withH5File )
-import Hkl.Types
 import Hkl.PyFAI
+import Hkl.Types
 import Numeric.Units.Dimensional.Prelude (meter, degree, nano, (/~), (*~))
 import System.FilePath ((</>))
 import System.FilePath.Glob
@@ -94,6 +96,7 @@ ponies fs = mapM extract (sort fs)
 data DataFrame =
   DataFrame { df_n :: Int -- ^ index of the current frame
             , df_geometry :: Geometry -- ^ diffractometer geometry
+            , df_m :: Matrix Double -- ^ the detector orientation matrix
             } deriving (Show)
 
 class Frame t where
@@ -102,43 +105,37 @@ class Frame t where
 
 data DataFrameH5Path =
   DataFrameH5Path { h5pImage :: DataItem
-                  , h5pMu :: DataItem
-                  , h5pKomega :: DataItem
-                  , h5pKappa :: DataItem
-                  , h5pKphi :: DataItem
                   , h5pGamma :: DataItem
                   , h5pDelta :: DataItem
                   , h5pWavelength :: DataItem
-                  , h5pDiffractometerType :: DataItem
                   } deriving (Show)
 
 data DataFrameH5 =
   DataFrameH5 { h5image :: Dataset
-              , h5mu :: Dataset
-              , h5komega :: Dataset
-              , h5kappa :: Dataset
-              , h5kphi :: Dataset
               , h5gamma :: Dataset
               , h5delta :: Dataset
               , h5wavelength :: Dataset
-              , h5dtype :: Dataset
               }
 
 instance Frame DataFrameH5 where
   len d =  lenH5Dataspace (h5delta d)
 
   row d idx = do
-    mu <- get_position (h5mu d) idx
-    komega <- get_position (h5komega d) idx
-    kappa <- get_position (h5kappa d) idx
-    kphi <- get_position (h5kphi d) idx
-    gamma <- get_position (h5gamma d) idx
+    let mu = 0.0
+    let komega = 0.0
+    let kappa = 0.0
+    let kphi = 0.0
+    gamma <- get_position (h5gamma d) 0
     delta <- get_position (h5delta d) idx
     wavelength <- get_position (h5wavelength d) 0
     let source = Source (head wavelength *~ nano meter)
     let positions = concat [mu, komega, kappa, kphi, gamma, delta]
+    let geometry =  Geometry source positions Nothing
+    let detector = Detector DetectorType0D
+    m <- geometryDetectorRotationGet K6c geometry detector
     return DataFrame { df_n = idx
-                     , df_geometry = Geometry source positions Nothing
+                     , df_geometry = geometry
+                     , df_m = m
                      }
 
 withDataframeH5 :: File -> DataFrameH5Path -> (DataFrameH5 -> IO r) -> IO r
@@ -147,26 +144,16 @@ withDataframeH5 h5file dfp = bracket (acquire h5file dfp) release
     acquire :: File -> DataFrameH5Path -> IO DataFrameH5
     acquire h d =  DataFrameH5
                    <$> openDataset' h (h5pImage d)
-                   <*> openDataset' h (h5pMu d)
-                   <*> openDataset' h (h5pKomega d)
-                   <*> openDataset' h (h5pKappa d)
-                   <*> openDataset' h (h5pKphi d)
                    <*> openDataset' h (h5pGamma d)
                    <*> openDataset' h (h5pDelta d)
                    <*> openDataset' h (h5pWavelength d)
-                   <*> openDataset' h (h5pDiffractometerType d)
 
     release :: DataFrameH5 -> IO ()
     release d = do
       closeDataset (h5image d)
-      closeDataset (h5mu d)
-      closeDataset (h5komega d)
-      closeDataset (h5kappa d)
-      closeDataset (h5kphi d)
       closeDataset (h5gamma d)
       closeDataset (h5delta d)
       closeDataset (h5wavelength d)
-      closeDataset (h5dtype d)
 
     openDataset' :: File -> DataItem -> IO Dataset
     openDataset' hid (DataItem name _) = openDataset hid (Data.ByteString.Char8.pack name) Nothing
@@ -174,10 +161,6 @@ withDataframeH5 h5file dfp = bracket (acquire h5file dfp) release
 
 hkl_h5_is_valid :: DataFrameH5-> IO Bool
 hkl_h5_is_valid d = do
-  True <- check_ndims (h5mu d) 1
-  True <- check_ndims (h5komega d) 1
-  True <- check_ndims (h5kappa d) 1
-  True <- check_ndims (h5kphi d) 1
   True <- check_ndims (h5gamma d) 1
   True <- check_ndims (h5delta d) 1
   return True
@@ -210,18 +193,13 @@ main_martinetto = do
   save output entries
 
   let nxentry = "scan_26"
+  let beamline = "DIFFABS"
   let dataframe_h5p = DataFrameH5Path
                       { h5pImage = DataItem (nxentry </> "scan_data/data_53") StrictDims
-                      , h5pMu = DataItem (nxentry </> "DIFFABS/d13-1-cx1__EX__DIF.1-MU__#1/raw_value") ExtendDims
-                      , h5pKomega = DataItem (nxentry </> "DIFFABS/d13-1-cx1__EX__DIF.1-KOMEGA__#1/raw_value") ExtendDims
-                      , h5pKappa = DataItem (nxentry </> "DIFFABS/d13-1-cx1__EX__DIF.1-KAPPA__#1/raw_value") ExtendDims
-                      , h5pKphi = DataItem (nxentry </> "DIFFABS/d13-1-cx1__EX__DIF.1-KPHI__#1/raw_value") ExtendDims
-                      , h5pGamma = DataItem (nxentry </> "DIFFABS/d13-1-cx1__EX__DIF.1-GAMMA__#1/raw_value") ExtendDims
+                      , h5pGamma = DataItem (nxentry </> beamline </> "d13-1-cx1__EX__DIF.1-GAMMA__#1/raw_value") ExtendDims
                       , h5pDelta = DataItem (nxentry </> "scan_data/trajectory_1_1") ExtendDims
-                      , h5pWavelength = DataItem (nxentry </> "DIFFABS/D13-1-C03__OP__MONO__#1/wavelength") StrictDims
-                      , h5pDiffractometerType = DataItem (nxentry </> "DIFFABS/I14-C-CX2__EX__DIFF-UHV__#1/type") StrictDims
+                      , h5pWavelength = DataItem (nxentry </> beamline </> "D13-1-C03__OP__MONO__#1/wavelength") StrictDims
                       }
-
   withH5File nxs $ \h5file ->
     withDataframeH5 h5file dataframe_h5p $ \dataframe_h5 -> do
       True <- hkl_h5_is_valid dataframe_h5

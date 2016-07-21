@@ -91,9 +91,9 @@ rotatePoniEntry :: PoniEntry -> Matrix Double -> Matrix Double -> PoniEntry
 rotatePoniEntry (PoniEntry header detector px1 px2 distance poni1 poni2 rot1 rot2 rot3 spline wavelength) m1 m2 = PoniEntry header detector px1 px2 distance poni1 poni2 new_rot1 new_rot2 new_rot3 spline wavelength
   where
     rotations = map (uncurry fromAxisAndAngle)
-                [ (fromList [0, 0, 1], rot1)
+                [ (fromList [0, 0, 1], rot3)
                 , (fromList [0, 1, 0], rot2)
-                , (fromList [1, 0, 0], rot3)]
+                , (fromList [1, 0, 0], rot1)]
     -- M1 . R0 = R1
     r1 = foldl (<>) (ident 3) rotations
     -- M2 . R0 = R2

@@ -4,7 +4,6 @@ module Hkl.Types ( Detector(..)
                  , DetectorType(..)
                  , Mode(..)
                  , Engine(..)
-                 , HklFactory
                  , Factory(..)
                  , Geometry(..)
                  , Lattice(..)
@@ -23,8 +22,6 @@ import Hkl.Types.PyFAI as X
 
 import Data.Vector.Storable (Vector)
 import Numeric.Units.Dimensional.Prelude (Length, Angle)
-import Foreign.Ptr
-import Foreign.Storable
 
 -- | Type describing a @Detector@
 data Detector = Detector DetectorType
@@ -49,12 +46,18 @@ data Engine
     Mode -- ^ current Mode
   deriving (Show)
 
--- | HklFactory should be private
+-- | Factory
 
-data HklFactory
-newtype Factory = Factory (Ptr HklFactory) deriving (Show, Storable)
+data Factory = K6c | Uhv | MedH | MedV
+
+instance Show Factory where
+  show K6c = "K6C"
+  show Uhv = "todo"
+  show MedH = "todo"
+  show MedV = "todo"
 
 -- | Geometry
+
 data Geometry = Geometry
                 Source -- ^ source
                 (Vector Double) -- ^ axes position
