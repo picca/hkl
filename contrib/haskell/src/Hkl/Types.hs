@@ -10,6 +10,8 @@ module Hkl.Types ( Beamline(..)
                  , Sample(..)
                  , Source(..)
                  , Trajectory
+                   -- factory
+                 , factoryFromString
                    -- hdf5
                  , H5Path
                  , ExtendDims(..)
@@ -64,9 +66,18 @@ instance Show Factory where
   show MedH = "todo"
   show MedV = "todo"
 
+factoryFromString :: String -> Factory
+factoryFromString s
+  | s == "K6C"  = K6c
+  | s == "todo" = Uhv
+  | s == "todo" = MedH
+  | s == "todo" = MedV
+  | otherwise   = error $ "unknown diffractometer type:" ++ s
+
 -- | Geometry
 
 data Geometry = Geometry
+                Factory -- ^ the type of diffractometer
                 Source -- ^ source
                 (Vector Double) -- ^ axes position
                 (Maybe [Parameter]) -- ^ axes configuration

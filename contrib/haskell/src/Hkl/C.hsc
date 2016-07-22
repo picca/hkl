@@ -72,11 +72,11 @@ solve' engine n (Engine _ ps _) = do
       c_hkl_engine_pseudo_axis_values_set engine values n unit nullPtr
       >>= newForeignPtr c_hkl_geometry_list_free
 
-solve :: Factory -> Geometry -> Detector -> Sample -> Engine -> IO [Geometry]
-solve f g d s e@(Engine name _ _) = do
+solve :: Geometry -> Detector -> Sample -> Engine -> IO [Geometry]
+solve g@(Geometry f _ _ _) d s e@(Engine name _ _) = do
   withSample s $ \sample ->
       withDetector d $ \detector ->
-          withGeometry f g $ \geometry ->
+          withGeometry g $ \geometry ->
               withEngineList f $ \engines ->
                   withCString name $ \cname -> do
                   c_hkl_engine_list_init engines geometry detector sample
@@ -93,12 +93,12 @@ getSolution0 gl = withForeignPtr gl $ \solutions ->
 engineName :: Engine -> String
 engineName (Engine name _ _) = name
 
-solveTraj :: Factory -> Geometry -> Detector -> Sample -> [Engine] -> IO [Geometry]
-solveTraj f g d s es = do
+solveTraj :: Geometry -> Detector -> Sample -> [Engine] -> IO [Geometry]
+solveTraj g@(Geometry f _ _ _) d s es = do
   let name = engineName (head es)
   withSample s $ \sample ->
       withDetector d $ \detector ->
-          withGeometry f g $ \geometry ->
+          withGeometry g $ \geometry ->
               withEngineList f $ \engines ->
                 withCString name $ \cname -> do
                   c_hkl_engine_list_init engines geometry detector sample
@@ -120,10 +120,10 @@ withDiffractometer d fun = do
   let f_engines = difEngineList d
   withForeignPtr f_engines fun
 
-newDiffractometer :: Factory ->  Geometry -> Detector -> Sample -> IO Diffractometer
-newDiffractometer f g d s = do
+newDiffractometer :: Geometry -> Detector -> Sample -> IO Diffractometer
+newDiffractometer g@(Geometry f _ _ _) d s = do
   f_engines <- newEngineList f
-  f_geometry <- newGeometry f g
+  f_geometry <- newGeometry g
   f_detector <- newDetector d
   f_sample <- newSample s
   withForeignPtr f_sample $ \sample ->
@@ -137,9 +137,9 @@ newDiffractometer f g d s = do
                               , difSample = f_sample
                               }
 
-solveTrajPipe :: Factory -> Geometry -> Detector -> Sample -> Pipe Engine Geometry IO ()
-solveTrajPipe f g d s = do
-  dif <- lift $ newDiffractometer f g d s
+solveTrajPipe :: Geometry -> Detector -> Sample -> Pipe Engine Geometry IO ()
+solveTrajPipe g d s = do
+  dif <- lift $ newDiffractometer g d s
   solveTrajPipe' dif
 
 solveTrajPipe' :: Diffractometer -> Pipe Engine Geometry IO ()
@@ -186,6 +186,8 @@ foreign import ccall unsafe "hkl.h hkl_factory_get_by_name"
 
 peekGeometry :: Ptr HklGeometry -> IO (Geometry)
 peekGeometry gp = do
+  f_name <- c_hkl_geometry_name_get gp >>= peekCString
+  let factory = factoryFromString f_name
   (CDouble w) <- c_hkl_geometry_wavelength_get gp unit
   darray <- c_hkl_geometry_axis_names_get gp
   n <- darrayStringLen darray
@@ -196,7 +198,7 @@ peekGeometry gp = do
 
   axis_names <- peekDArrayString darray
   ps <- mapM (getAxis gp) axis_names
-  return $ Geometry (Source (w *~ nano meter)) vs (Just ps)
+  return $ Geometry factory (Source (w *~ nano meter)) vs (Just ps)
       where
         getAxis :: Ptr HklGeometry -> CString -> IO Parameter
         getAxis _g n = c_hkl_geometry_axis_get _g n nullPtr >>= peek
@@ -224,13 +226,17 @@ foreign import ccall unsafe "hkl.h hkl_geometry_axis_get"
                           -> Ptr () -- gerror
                           -> IO (Ptr Parameter) -- parameter or nullPtr
 
-withGeometry ::  Factory -> Geometry -> (Ptr HklGeometry -> IO b) -> IO b
-withGeometry f g fun = do
-  fptr <- newGeometry f g
+foreign import ccall unsafe "hkl.h hkl_geometry_name_get"
+  c_hkl_geometry_name_get :: Ptr HklGeometry -> IO CString
+
+
+withGeometry ::  Geometry -> (Ptr HklGeometry -> IO b) -> IO b
+withGeometry g fun = do
+  fptr <- newGeometry g
   withForeignPtr fptr fun
 
-newGeometry :: Factory -> Geometry -> IO (ForeignPtr HklGeometry)
-newGeometry f (Geometry (Source lw) vs _ps) = do
+newGeometry :: Geometry -> IO (ForeignPtr HklGeometry)
+newGeometry (Geometry f (Source lw) vs _ps) = do
   let wavelength = CDouble (lw /~ nano meter)
   factory <- newFactory f
   geometry <- c_hkl_factory_create_new_geometry factory
@@ -266,9 +272,6 @@ foreign import ccall unsafe "hkl.h hkl_geometry_axis_values_set"
 -- geometryName :: ForeignPtr HklGeometry -> IO String
 -- geometryName g = withForeignPtr g (c_hkl_geometry_name_get >=> peekCString)
 
--- foreign import ccall unsafe "hkl.h hkl_geometry_name_get"
---   c_hkl_geometry_name_get :: Ptr HklGeometry -> IO CString
-
 -- HklGeometryList
 
 buildMatrix' :: Element a => CInt -> CInt -> ((CInt, CInt) -> IO a) -> IO (Matrix a)
@@ -281,9 +284,9 @@ buildMatrix' rc cc f = do
     -- fromLists $ map (map f)
     --     $ map (\ ri -> map (\ ci -> (ri, ci)) [0 .. (cc - 1)]) [0 .. (rc - 1)]
 
-geometryDetectorRotationGet :: Factory -> Geometry -> Detector -> IO (Matrix Double)
-geometryDetectorRotationGet f g d  = do
-  f_geometry <- newGeometry f g
+geometryDetectorRotationGet :: Geometry -> Detector -> IO (Matrix Double)
+geometryDetectorRotationGet g d  = do
+  f_geometry <- newGeometry g
   f_detector <- newDetector d
   withForeignPtr f_detector $ \detector ->
     withForeignPtr f_geometry $ \geometry -> do
@@ -451,11 +454,11 @@ engineListEnginesGet e = do
 foreign import ccall unsafe "hkl.h hkl_engine_list_engines_get"
   c_hkl_engine_list_engines_get:: Ptr HklEngineList -> IO (Ptr ())
 
-compute :: Factory -> Geometry -> Detector -> Sample -> IO [Engine]
-compute f g d s = do
+compute :: Geometry -> Detector -> Sample -> IO [Engine]
+compute g@(Geometry f _ _ _) d s = do
   withSample s $ \sample ->
       withDetector d $ \detector ->
-          withGeometry f g $ \geometry ->
+          withGeometry g $ \geometry ->
               withEngineList f $ \engines -> do
                     c_hkl_engine_list_init engines geometry detector sample
                     c_hkl_engine_list_get engines

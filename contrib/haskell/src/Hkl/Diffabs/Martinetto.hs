@@ -128,9 +128,9 @@ instance Frame DataFrameH5 where
     wavelength <- get_position (h5wavelength d) 0
     let source = Source (head wavelength *~ nano meter)
     let positions = concat [mu, komega, kappa, kphi, gamma, delta]
-    let geometry =  Geometry source positions Nothing
+    let geometry =  Geometry K6c source positions Nothing
     let detector = Detector DetectorType0D
-    m <- geometryDetectorRotationGet K6c geometry detector
+    m <- geometryDetectorRotationGet geometry detector
     return DifTomoFrame { df_n = idx
                         , df_geometry = geometry
                         , df_m = m

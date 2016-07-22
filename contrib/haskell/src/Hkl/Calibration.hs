@@ -99,7 +99,7 @@ getDataFrame' d i = do
   let source = Source (head wavelength *~ nano meter)
   let positions = concat [mu, komega, kappa, kphi, gamma, delta]
   return DataFrame { df_n = i
-                   , df_geometry = Geometry source positions Nothing
+                   , df_geometry = Geometry K6c source positions Nothing
                    }
 
 getDataFrame :: DataFrameH5 -> Producer DataFrame IO ()
