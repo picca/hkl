@@ -38,7 +38,7 @@ import Pipes (Producer, lift, (>->), runEffect, yield)
 import Pipes.Prelude (print)
 
 
--- {-# ANN module "HLint: ignore Use camelCase" #-}
+{-# ANN module "HLint: ignore Use camelCase" #-}
 
 
 -- import Graphics.Rendering.Chart.Easy
@@ -73,13 +73,10 @@ toText (PoniEntry _ _ _ _ d p1 p2 rot1 rot2 rot3 _ _) =
                                , rot2 /~ degree
                                , rot3 /~ degree])
 
-
-
 save :: FilePath -> [PoniEntry] -> IO ()
-save f ps = do
-  withFile f WriteMode $ \handler -> do
-    hPutStrLn handler title
-    mapM_ (put handler) ps
+save f ps = withFile f WriteMode $ \handler -> do
+  hPutStrLn handler title
+  mapM_ (put handler) ps
     where
       put h p = hPutStrLn h (toText p)
 
@@ -89,7 +86,7 @@ ponies fs = mapM extract (sort fs)
      extract :: FilePath -> IO PoniEntry
      extract filename = do
        content <- readFile filename
-       return $ case (parseOnly poniP content) of
+       return $ case parseOnly poniP content of
          Left _ -> error $ "Can not parse the " ++ filename ++ " poni file"
          Right poni -> last poni
 
@@ -173,8 +170,7 @@ frames d = do
   frames' d [0..n-1]
 
 frames' :: Frame a => a -> [Int] -> Producer DataFrame IO ()
-frames' d idxs = do
-  forM_ idxs (\i -> lift (row d i) >>= yield)
+frames' d idxs = forM_ idxs (\i -> lift (row d i) >>= yield)
 
 main_martinetto :: IO ()
 main_martinetto = do

@@ -1,5 +1,3 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-
 module Hkl.Types ( Detector(..)
                  , DetectorType(..)
                  , Mode(..)
