@@ -1,10 +1,12 @@
-module Hkl.Types ( Detector(..)
+module Hkl.Types ( Beamline(..)
+                 , Detector(..)
                  , DetectorType(..)
                  , Mode(..)
                  , Engine(..)
                  , Factory(..)
                  , Geometry(..)
                  , Lattice(..)
+                 , PoniExt(..)
                  , Sample(..)
                  , Source(..)
                  , Trajectory
@@ -20,6 +22,14 @@ import Hkl.Types.PyFAI as X
 
 import Data.Vector.Storable (Vector)
 import Numeric.Units.Dimensional.Prelude (Length, Angle)
+
+-- | Beamline
+
+data Beamline = Diffabs | Sixs
+
+instance Show Beamline where
+  show Diffabs = "diffabs"
+  show Sixs = "sixs"
 
 -- | Type describing a @Detector@
 data Detector = Detector DetectorType
@@ -121,3 +131,7 @@ type Trajectory = [[Double]]
 type H5Path = String
 data ExtendDims = ExtendDims | StrictDims deriving (Show)
 data DataItem = DataItem H5Path ExtendDims deriving (Show)
+
+
+-- | pyFAI
+data PoniExt = PoniExt Poni Factory Geometry

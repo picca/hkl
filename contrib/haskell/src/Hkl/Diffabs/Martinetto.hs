@@ -1,5 +1,5 @@
 {-# LANGUAGE CPP #-}
-{-# LANGUAGE OverloadedStrings #-}
+-- {-# LANGUAGE OverloadedStrings #-}
 module Hkl.Diffabs.Martinetto
        ( main_martinetto ) where
 
@@ -10,6 +10,7 @@ import Control.Exception (bracket)
 import Control.Monad (forM_)
 import Data.Attoparsec.Text
 import Data.ByteString.Char8 (pack)
+import Data.Char (toUpper)
 import Data.Either
 import Data.List (sort)
 import Data.Packed.Matrix (Matrix)
@@ -32,13 +33,13 @@ import System.FilePath ((</>))
 import System.FilePath.Glob
 import System.IO (withFile, IOMode(WriteMode) )
 
-import Prelude hiding (concat, head, lookup, print, readFile)
+import Prelude hiding (concat, head, lookup, readFile)
 
 import Pipes (Producer, lift, (>->), runEffect, yield)
-import Pipes.Prelude (print)
+import Pipes.Prelude (print, toListM)
 
 
-{-# ANN module "HLint: ignore Use camelCase" #-}
+-- {-# ANN module "HLint: ignore Use camelCase" #-}
 
 
 -- import Graphics.Rendering.Chart.Easy
@@ -90,15 +91,15 @@ ponies fs = mapM extract (sort fs)
          Left _ -> error $ "Can not parse the " ++ filename ++ " poni file"
          Right poni -> last poni
 
-data DataFrame =
-  DataFrame { df_n :: Int -- ^ index of the current frame
-            , df_geometry :: Geometry -- ^ diffractometer geometry
-            , df_m :: Matrix Double -- ^ the detector orientation matrix
-            } deriving (Show)
+data DifTomoFrame =
+  DifTomoFrame { df_n :: Int -- ^ index of the current frame
+               , df_geometry :: Geometry -- ^ diffractometer geometry
+               , df_m :: Matrix Double -- ^ the detector orientation matrix
+               } deriving (Show)
 
 class Frame t where
   len :: t -> IO (Maybe Int)
-  row :: t -> Int -> IO DataFrame
+  row :: t -> Int -> IO DifTomoFrame
 
 data DataFrameH5Path =
   DataFrameH5Path { h5pImage :: DataItem
@@ -130,10 +131,10 @@ instance Frame DataFrameH5 where
     let geometry =  Geometry source positions Nothing
     let detector = Detector DetectorType0D
     m <- geometryDetectorRotationGet K6c geometry detector
-    return DataFrame { df_n = idx
-                     , df_geometry = geometry
-                     , df_m = m
-                     }
+    return DifTomoFrame { df_n = idx
+                        , df_geometry = geometry
+                        , df_m = m
+                        }
 
 withDataframeH5 :: File -> DataFrameH5Path -> (DataFrameH5 -> IO r) -> IO r
 withDataframeH5 h5file dfp = bracket (acquire h5file dfp) release
@@ -164,13 +165,25 @@ hkl_h5_is_valid d = do
 
 
 
-frames :: Frame a => a -> Producer DataFrame IO ()
+frames :: Frame a => a -> Producer DifTomoFrame IO ()
 frames d = do
   (Just n) <- lift $ len d
   frames' d [0..n-1]
 
-frames' :: Frame a => a -> [Int] -> Producer DataFrame IO ()
+frames' :: Frame a => a -> [Int] -> Producer DifTomoFrame IO ()
 frames' d idxs = forM_ idxs (\i -> lift (row d i) >>= yield)
+
+type NxEntry = String
+
+newDataFrameH5PathPoni :: Beamline -> NxEntry -> DataFrameH5Path
+newDataFrameH5PathPoni b nxentry = DataFrameH5Path
+    { h5pImage = DataItem (nxentry </> "scan_data/data_53") StrictDims
+    , h5pGamma = DataItem (nxentry </> beamline </> "d13-1-cx1__EX__DIF.1-GAMMA__#1/raw_value") ExtendDims
+    , h5pDelta = DataItem (nxentry </> "scan_data/trajectory_1_1") ExtendDims
+    , h5pWavelength = DataItem (nxentry </> beamline </> "D13-1-C03__OP__MONO__#1/wavelength") StrictDims
+    }
+    where
+      beamline = [toUpper x | x <- show b]
 
 main_martinetto :: IO ()
 main_martinetto = do
@@ -190,22 +203,19 @@ main_martinetto = do
 
   -- lire le poni de référence ainsi que la géométrie associée.
 
+  poniRefs <- withH5File (calibration </> "XRD18keV_26.nxs") $ \h5file ->
+    withDataframeH5 h5file (newDataFrameH5PathPoni Diffabs "scan_26") $ \dataframe_h5 ->
+      toListM (frames' dataframe_h5 [0])
+  Prelude.print poniRefs
+
   -- calculer et écrire pour chaque point d'un scan un poni correspondant à la bonne géométries.
   
-  let nxentry = "scan_26"
-  let beamline = "DIFFABS"
-  let dataframe_h5p = DataFrameH5Path
-                      { h5pImage = DataItem (nxentry </> "scan_data/data_53") StrictDims
-                      , h5pGamma = DataItem (nxentry </> beamline </> "d13-1-cx1__EX__DIF.1-GAMMA__#1/raw_value") ExtendDims
-                      , h5pDelta = DataItem (nxentry </> "scan_data/trajectory_1_1") ExtendDims
-                      , h5pWavelength = DataItem (nxentry </> beamline </> "D13-1-C03__OP__MONO__#1/wavelength") StrictDims
-                      }
   withH5File nxs $ \h5file ->
-    withDataframeH5 h5file dataframe_h5p $ \dataframe_h5 -> do
+    withDataframeH5 h5file (newDataFrameH5PathPoni Diffabs "scan_26") $ \dataframe_h5 -> do
       True <- hkl_h5_is_valid dataframe_h5
 
       runEffect $ frames dataframe_h5
-        >-> print
+        >-> Pipes.Prelude.print
 
   -- créer le script python d'intégration multi géométrie
 
