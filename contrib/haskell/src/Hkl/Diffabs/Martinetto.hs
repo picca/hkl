@@ -42,7 +42,7 @@ import Text.Printf (printf)
 type NxEntry = String
 type PoniGenerator = Int -> IO Poni
 
-data PoniExt = PoniExt Poni (Matrix Double) deriving (Show)
+data PoniExt = PoniExt Poni (MyMatrix Double) deriving (Show)
 
 data DifTomoFrame =
   DifTomoFrame { df_n :: Int -- ^ index of the current frame
@@ -86,7 +86,7 @@ instance Frame DataFrameH5 where
     let detector = Detector DetectorType0D
     m <- geometryDetectorRotationGet geometry detector
     poni <- (ponigen d) $ idx
-    let poniext = PoniExt poni m
+    let poniext = PoniExt poni (MyMatrix HklB m)
     return DifTomoFrame { df_n = idx
                         , df_geometry = geometry
                         , df_poniext = poniext
@@ -193,13 +193,13 @@ newDataFrameH5PathPoni b nxentry = DataFrameH5Path
     where
       beamline = [toUpper x | x <- show b]
 
-computeNewPoni :: PoniExt -> Matrix Double -> PoniExt
-computeNewPoni (PoniExt p1 m1) m2 = PoniExt p2 m2
+computeNewPoni :: PoniExt -> MyMatrix Double -> PoniExt
+computeNewPoni (PoniExt p1 mym1) mym2 = PoniExt p2 mym2
   where
     p2 = map rotate p1
 
     rotate :: PoniEntry -> PoniEntry
-    rotate e = rotatePoniEntry e m1 m2
+    rotate e = rotatePoniEntry e mym1 mym2
 
 main_martinetto :: IO ()
 main_martinetto = do

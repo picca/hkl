@@ -10,7 +10,7 @@ import Data.Text (Text)
 import Hkl.Types
 import Numeric.LinearAlgebra ( Matrix, Vector
                              , ident, fromList, fromLists
-                             , scalar, trans
+                             , inv, scalar, trans
                              , (@>), (@@>), (<>))
 import Numeric.Units.Dimensional.Prelude (Angle, Length, (*~), (/~), one, meter, radian)
 
@@ -32,7 +32,7 @@ angleP :: Text -> Parser (Angle Double)
 angleP key = do
     value <-doubleP key
     pure $ value *~ radian
-      
+
 poniEntryP :: Parser PoniEntry
 poniEntryP = PoniEntry
         <$> headerP
@@ -87,16 +87,35 @@ toEulerians m
     c = cos rot2
 
 
-rotatePoniEntry :: PoniEntry -> Matrix Double -> Matrix Double -> PoniEntry
-rotatePoniEntry (PoniEntry header detector px1 px2 distance poni1 poni2 rot1 rot2 rot3 spline wavelength) m1 m2 = PoniEntry header detector px1 px2 distance poni1 poni2 new_rot1 new_rot2 new_rot3 spline wavelength
+rotatePoniEntry :: PoniEntry -> MyMatrix Double -> MyMatrix Double -> PoniEntry
+rotatePoniEntry (PoniEntry header detector px1 px2 distance poni1 poni2 rot1 rot2 rot3 spline wavelength) (MyMatrix _b1 m1) (MyMatrix _b2 m2) = PoniEntry header detector px1 px2 distance poni1 poni2 new_rot1 new_rot2 new_rot3 spline wavelength
   where
     rotations = map (uncurry fromAxisAndAngle)
                 [ (fromList [0, 0, 1], rot3)
                 , (fromList [0, 1, 0], rot2)
                 , (fromList [1, 0, 0], rot1)]
     -- M1 . R0 = R1
-    r1 = foldl (<>) (ident 3) rotations
+    r1 = foldl (<>) (ident 3) rotations -- pyFAIB
     -- M2 . R0 = R2
     -- R2 = M2 . M1.T . R1
     r2 = foldl (<>) m2 [trans m1, r1]
     (new_rot1, new_rot2, new_rot3) = toEulerians r2
+
+    changeBase :: MyMatrix Double -> Basis -> MyMatrix Double
+    changeBase (MyMatrix PyFAIB m2) HklB = MyMatrix HklB (passage m2 p2)
+    changeBase (MyMatrix HklB m1) PyFAIB = MyMatrix PyFAIB (passage m1 p1)
+    changeBase mym1@(MyMatrix PyFAIB _) PyFAIB = mym1
+    changeBase mym1@(MyMatrix HklB _) HklB = mym1
+
+    passage :: Matrix Double -> Matrix Double -> Matrix Double
+    passage r p = inv p <> r <> p
+
+    p1 :: Matrix Double -- hkl -> pyFAI
+    p1 = fromLists [ [0,  0, -1]
+                   , [0, -1,  0]
+                   , [1,  0,  0]]
+
+    p2 :: Matrix Double -- pyFAI -> hkl:
+    p2 = fromLists [ [ 0,  0, 1]
+                   , [ 0, -1, 0]
+                   , [-1,  0, 0]]
