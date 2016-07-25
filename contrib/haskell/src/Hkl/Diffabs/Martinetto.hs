@@ -7,7 +7,7 @@ module Hkl.Diffabs.Martinetto
 import Control.Applicative ((<$>), (<*>))
 #endif
 import Control.Exception (bracket)
-import Control.Monad (forM_)
+import Control.Monad (forM_, forever)
 import Data.Attoparsec.Text
 import Data.ByteString.Char8 (pack)
 import Data.Char (toUpper)
@@ -35,7 +35,7 @@ import System.IO (withFile, IOMode(WriteMode) )
 
 import Prelude hiding (concat, lookup, readFile)
 
-import Pipes (Producer, lift, (>->), runEffect, yield)
+import Pipes (Consumer, Producer, lift, (>->), runEffect, await, yield)
 import Pipes.Prelude (toListM, print)
 import Text.Printf (printf)
 
@@ -170,6 +170,14 @@ hkl_h5_is_valid d = do
   True <- check_ndims (h5delta d) 1
   return True
 
+saves  :: Consumer DifTomoFrame IO ()
+saves = forever $ do
+  f <- await
+  lift $ Prelude.print $ poniToText (go $ df_poniext f)
+    where
+      go (PoniExt poni _) = poni
+
+
 frames :: Frame a => a -> Producer DifTomoFrame IO ()
 frames d = do
   (Just n) <- lift $ len d
@@ -234,7 +242,7 @@ main_martinetto = do
       True <- hkl_h5_is_valid dataframe_h5
 
       runEffect $ frames dataframe_h5
-        >-> Pipes.Prelude.print
+        >-> saves
 
   -- créer le script python d'intégration multi géométrie
 

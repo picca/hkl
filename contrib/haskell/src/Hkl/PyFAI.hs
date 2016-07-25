@@ -2,11 +2,12 @@
 
 module Hkl.PyFAI
        ( poniP
+       , poniToText
        , rotatePoniEntry ) where
 
 import Control.Applicative
 import Data.Attoparsec.Text
-import Data.Text (Text)
+import Data.Text (Text, append, concat, intercalate, pack)
 import Hkl.Types
 import Numeric.LinearAlgebra ( Matrix, Vector
                              , ident, fromList, fromLists
@@ -52,6 +53,27 @@ poniEntryP = PoniEntry
 poniP :: Parser Poni
 poniP = many poniEntryP
 
+poniToText :: Poni -> Text
+poniToText p = Data.Text.intercalate (Data.Text.pack "\n") (map poniEntryToText p)
+
+poniEntryToText :: PoniEntry -> Text
+poniEntryToText (PoniEntry h md p1 p2 d poni1 poni2 rot1 rot2 rot3 ms w) =
+  intercalate (Data.Text.pack "\n") $
+    map (Data.Text.append "#") h
+    ++ maybe [] (poniLine "Detector: ") md
+    ++ poniLine "PixelSize1: " (p1 /~ meter)
+    ++ poniLine "PixelSize2: " (p2 /~ meter)
+    ++ poniLine "Distance: " (d /~ meter)
+    ++ poniLine "Poni1: " (poni1 /~ meter)
+    ++ poniLine "Poni2: " (poni2 /~ meter)
+    ++ poniLine "Rot1: " (rot1 /~ radian)
+    ++ poniLine "Rot2: " (rot2 /~ radian)
+    ++ poniLine "Rot3: " (rot3 /~ radian)
+    ++ maybe [] (poniLine "SplineFile: ") ms
+    ++ poniLine "Wavelength: " (w /~ meter)
+  where
+    poniLine :: Show a => String -> a -> [Text]
+    poniLine key v = [Data.Text.append (Data.Text.pack key) (Data.Text.pack $ show v)]
 
 crossprod :: Vector Double -> Matrix Double
 crossprod axis = fromLists [[ 0, -z,  y],
