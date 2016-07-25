@@ -36,8 +36,61 @@ import System.IO (withFile, IOMode(WriteMode) )
 import Prelude hiding (concat, head, lookup, readFile)
 
 import Pipes (Producer, lift, (>->), runEffect, yield)
-import Pipes.Prelude (print, toListM)
+import Pipes.Prelude (toListM, drain)
+import Text.Printf (printf)
 
+type NxEntry = String
+type PoniGenerator = Int -> IO Poni
+
+data PoniExt = PoniExt Poni (Matrix Double) deriving (Show)
+
+data DifTomoFrame =
+  DifTomoFrame { df_n :: Int -- ^ index of the current frame
+               , df_geometry :: Geometry -- ^ diffractometer geometry
+               , df_poniext :: PoniExt -- ^ the corresponding poni
+               } deriving (Show)
+
+class Frame t where
+  len :: t -> IO (Maybe Int)
+  row :: t -> Int -> IO DifTomoFrame
+
+data DataFrameH5Path =
+  DataFrameH5Path { h5pImage :: DataItem
+                  , h5pGamma :: DataItem
+                  , h5pDelta :: DataItem
+                  , h5pWavelength :: DataItem
+                  } deriving (Show)
+
+data DataFrameH5 =
+  DataFrameH5 { h5image :: Dataset
+              , h5gamma :: Dataset
+              , h5delta :: Dataset
+              , h5wavelength :: Dataset
+              , ponigen :: PoniGenerator
+              }
+
+instance Frame DataFrameH5 where
+  len d =  lenH5Dataspace (h5delta d)
+
+  row d idx = do
+    let mu = 0.0
+    let komega = 0.0
+    let kappa = 0.0
+    let kphi = 0.0
+    gamma <- get_position (h5gamma d) 0
+    delta <- get_position (h5delta d) idx
+    wavelength <- get_position (h5wavelength d) 0
+    let source = Source (head wavelength *~ nano meter)
+    let positions = concat [mu, komega, kappa, kphi, gamma, delta]
+    let geometry =  Geometry K6c source positions Nothing
+    let detector = Detector DetectorType0D
+    m <- geometryDetectorRotationGet geometry detector
+    poni <- (ponigen d) $ idx
+    let poniext = PoniExt poni m
+    return DifTomoFrame { df_n = idx
+                        , df_geometry = geometry
+                        , df_poniext = poniext
+                        }
 
 -- {-# ANN module "HLint: ignore Use camelCase" #-}
 
@@ -81,63 +134,21 @@ save f ps = withFile f WriteMode $ \handler -> do
     where
       put h p = hPutStrLn h (toText p)
 
+poniFromFile :: FilePath -> IO Poni
+poniFromFile filename = do
+  content <- readFile filename
+  return $ case parseOnly poniP content of
+    Left _     -> error $ "Can not parse the " ++ filename ++ " poni file"
+    Right poni -> poni
+
 ponies :: [FilePath] -> IO [PoniEntry]
 ponies fs = mapM extract (sort fs)
   where
      extract :: FilePath -> IO PoniEntry
-     extract filename = do
-       content <- readFile filename
-       return $ case parseOnly poniP content of
-         Left _ -> error $ "Can not parse the " ++ filename ++ " poni file"
-         Right poni -> last poni
+     extract filename = poniFromFile filename >>= return . last
 
-data DifTomoFrame =
-  DifTomoFrame { df_n :: Int -- ^ index of the current frame
-               , df_geometry :: Geometry -- ^ diffractometer geometry
-               , df_m :: Matrix Double -- ^ the detector orientation matrix
-               } deriving (Show)
-
-class Frame t where
-  len :: t -> IO (Maybe Int)
-  row :: t -> Int -> IO DifTomoFrame
-
-data DataFrameH5Path =
-  DataFrameH5Path { h5pImage :: DataItem
-                  , h5pGamma :: DataItem
-                  , h5pDelta :: DataItem
-                  , h5pWavelength :: DataItem
-                  } deriving (Show)
-
-data DataFrameH5 =
-  DataFrameH5 { h5image :: Dataset
-              , h5gamma :: Dataset
-              , h5delta :: Dataset
-              , h5wavelength :: Dataset
-              }
-
-instance Frame DataFrameH5 where
-  len d =  lenH5Dataspace (h5delta d)
-
-  row d idx = do
-    let mu = 0.0
-    let komega = 0.0
-    let kappa = 0.0
-    let kphi = 0.0
-    gamma <- get_position (h5gamma d) 0
-    delta <- get_position (h5delta d) idx
-    wavelength <- get_position (h5wavelength d) 0
-    let source = Source (head wavelength *~ nano meter)
-    let positions = concat [mu, komega, kappa, kphi, gamma, delta]
-    let geometry =  Geometry K6c source positions Nothing
-    let detector = Detector DetectorType0D
-    m <- geometryDetectorRotationGet geometry detector
-    return DifTomoFrame { df_n = idx
-                        , df_geometry = geometry
-                        , df_m = m
-                        }
-
-withDataframeH5 :: File -> DataFrameH5Path -> (DataFrameH5 -> IO r) -> IO r
-withDataframeH5 h5file dfp = bracket (acquire h5file dfp) release
+withDataframeH5 :: File -> DataFrameH5Path -> PoniGenerator -> (DataFrameH5 -> IO r) -> IO r
+withDataframeH5 h5file dfp gen = bracket (acquire h5file dfp) release
   where
     acquire :: File -> DataFrameH5Path -> IO DataFrameH5
     acquire h d =  DataFrameH5
@@ -145,6 +156,7 @@ withDataframeH5 h5file dfp = bracket (acquire h5file dfp) release
                    <*> openDataset' h (h5pGamma d)
                    <*> openDataset' h (h5pDelta d)
                    <*> openDataset' h (h5pWavelength d)
+                   <*> (return gen)
 
     release :: DataFrameH5 -> IO ()
     release d = do
@@ -163,8 +175,6 @@ hkl_h5_is_valid d = do
   True <- check_ndims (h5delta d) 1
   return True
 
-
-
 frames :: Frame a => a -> Producer DifTomoFrame IO ()
 frames d = do
   (Just n) <- lift $ len d
@@ -172,8 +182,6 @@ frames d = do
 
 frames' :: Frame a => a -> [Int] -> Producer DifTomoFrame IO ()
 frames' d idxs = forM_ idxs (\i -> lift (row d i) >>= yield)
-
-type NxEntry = String
 
 newDataFrameH5PathPoni :: Beamline -> NxEntry -> DataFrameH5Path
 newDataFrameH5PathPoni b nxentry = DataFrameH5Path
@@ -184,6 +192,11 @@ newDataFrameH5PathPoni b nxentry = DataFrameH5Path
     }
     where
       beamline = [toUpper x | x <- show b]
+
+-- computeNewPoni :: PoniExt -> Matrix Double -> PoniExt
+-- computeNewPoni ref@{PoniExt p1 g1) hkl = PoniExt p2 g2
+--   where
+--     p2 = rotatePoniEntry (last p1) :: PoniEntry -> Matrix Double -> Matrix Double -> PoniEntry
 
 main_martinetto :: IO ()
 main_martinetto = do
@@ -201,24 +214,29 @@ main_martinetto = do
   entries <- ponies filenames
   save output entries
 
-  -- lire le poni de référence ainsi que la géométrie associée.
+  -- lire le ou les ponis de référence ainsi que leur géométrie
+  -- associée.
 
   poniRefs <- withH5File (calibration </> "XRD18keV_26.nxs") $ \h5file ->
-    withDataframeH5 h5file (newDataFrameH5PathPoni Diffabs "scan_26") $ \dataframe_h5 ->
+    withDataframeH5 h5file (newDataFrameH5PathPoni Diffabs "scan_26") (gen calibration) $ \dataframe_h5 ->
       toListM (frames' dataframe_h5 [0])
   Prelude.print poniRefs
 
   -- calculer et écrire pour chaque point d'un scan un poni correspondant à la bonne géométries.
-  
-  withH5File nxs $ \h5file ->
-    withDataframeH5 h5file (newDataFrameH5PathPoni Diffabs "scan_26") $ \dataframe_h5 -> do
-      True <- hkl_h5_is_valid dataframe_h5
 
-      runEffect $ frames dataframe_h5
-        >-> Pipes.Prelude.print
+  -- withH5File nxs $ \h5file ->
+  --   withDataframeH5 h5file (newDataFrameH5PathPoni Diffabs "scan_26") gen2 $ \dataframe_h5 -> do
+  --     True <- hkl_h5_is_valid dataframe_h5
+
+  --     runEffect $ frames dataframe_h5
+  --       >-> drain
 
   -- créer le script python d'intégration multi géométrie
 
   -- l'executer pour faire l'intégration.
 
   -- plot de la figure. (script python ou autre ?)
+
+  where
+    gen :: FilePath -> Int -> IO Poni
+    gen root idx = poniFromFile $ root </> "XRD18keV_26.nxs_" ++ (printf "%02d" idx) ++ ".poni"

@@ -74,9 +74,9 @@ fromAxisAndAngle axis angle = ident 3 + s * q + c * (q <> q)
 toEulerians :: Matrix Double -> (Angle Double, Angle Double, Angle Double)
 toEulerians m
   | abs c > epsilon = ( atan2 ((m @@> (2, 1)) / c) ((m @@> (2, 2)) / c) *~ radian
-                       , rot2 *~ radian
-                       , atan2 ((m @@> (1, 0)) / c) ((m @@> (0, 0)) / c) *~ radian
-                       )
+                      , rot2 *~ radian
+                      , atan2 ((m @@> (1, 0)) / c) ((m @@> (0, 0)) / c) *~ radian
+                      )
   | otherwise        = ( 0 *~ radian
                        , rot2 *~ radian
                        , atan2 (-(m @@> (0, 1))) (m @@> (1, 1)) *~ radian

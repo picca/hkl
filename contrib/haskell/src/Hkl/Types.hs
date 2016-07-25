@@ -6,7 +6,6 @@ module Hkl.Types ( Beamline(..)
                  , Factory(..)
                  , Geometry(..)
                  , Lattice(..)
-                 , PoniExt(..)
                  , Sample(..)
                  , Source(..)
                  , Trajectory
@@ -142,7 +141,3 @@ type Trajectory = [[Double]]
 type H5Path = String
 data ExtendDims = ExtendDims | StrictDims deriving (Show)
 data DataItem = DataItem H5Path ExtendDims deriving (Show)
-
-
--- | pyFAI
-data PoniExt = PoniExt Poni Factory Geometry

@@ -34,7 +34,7 @@ executable ghkl
   default-language:    Haskell2010
   pkgconfig-depends:   hkl
   build-tools:         hsc2hs
-  ghc-options:         -Wall -Werror
+  -- ghc-options:         -Wall -Werror
   -- ghc-options:
   --   -O2
   --   -threaded
@@ -58,7 +58,7 @@ executable hkl3d
   default-language:    Haskell2010
   pkgconfig-depends:   hkl
   build-tools:         hsc2hs
-  ghc-options:         -Wall -Werror
+  -- ghc-options:         -Wall -Werror
 
 library
    exposed-modules:    Hkl
@@ -99,4 +99,4 @@ library
   build-tools:         hsc2hs
   default-language:    Haskell2010
   pkgconfig-depends:   hkl
-  ghc-options:         -Wall -Werror
+  -- ghc-options:         -Wall -Werror
