@@ -33,21 +33,21 @@ import System.FilePath ((</>))
 import System.FilePath.Glob
 import System.IO (withFile, IOMode(WriteMode) )
 
-import Prelude hiding (concat, head, lookup, readFile)
+import Prelude hiding (concat, lookup, readFile)
 
 import Pipes (Producer, lift, (>->), runEffect, yield)
-import Pipes.Prelude (toListM, drain)
+import Pipes.Prelude (toListM, print)
 import Text.Printf (printf)
 
 type NxEntry = String
-type PoniGenerator = Int -> IO Poni
+type PoniGenerator = MyMatrix Double -> Int -> IO PoniExt
 
 data PoniExt = PoniExt Poni (MyMatrix Double) deriving (Show)
 
 data DifTomoFrame =
   DifTomoFrame { df_n :: Int -- ^ index of the current frame
                , df_geometry :: Geometry -- ^ diffractometer geometry
-               , df_poniext :: PoniExt -- ^ the corresponding poni
+               , df_poniext :: PoniExt -- ^ the ref poniext
                } deriving (Show)
 
 class Frame t where
@@ -55,15 +55,13 @@ class Frame t where
   row :: t -> Int -> IO DifTomoFrame
 
 data DataFrameH5Path =
-  DataFrameH5Path { h5pImage :: DataItem
-                  , h5pGamma :: DataItem
+  DataFrameH5Path { h5pGamma :: DataItem
                   , h5pDelta :: DataItem
                   , h5pWavelength :: DataItem
                   } deriving (Show)
 
 data DataFrameH5 =
-  DataFrameH5 { h5image :: Dataset
-              , h5gamma :: Dataset
+  DataFrameH5 { h5gamma :: Dataset
               , h5delta :: Dataset
               , h5wavelength :: Dataset
               , ponigen :: PoniGenerator
@@ -80,13 +78,12 @@ instance Frame DataFrameH5 where
     gamma <- get_position (h5gamma d) 0
     delta <- get_position (h5delta d) idx
     wavelength <- get_position (h5wavelength d) 0
-    let source = Source (head wavelength *~ nano meter)
+    let source = Source (Data.Vector.Storable.head wavelength *~ nano meter)
     let positions = concat [mu, komega, kappa, kphi, gamma, delta]
     let geometry =  Geometry K6c source positions Nothing
     let detector = Detector DetectorType0D
     m <- geometryDetectorRotationGet geometry detector
-    poni <- (ponigen d) $ idx
-    let poniext = PoniExt poni (MyMatrix HklB m)
+    poniext <- (ponigen d) (MyMatrix HklB m) idx
     return DifTomoFrame { df_n = idx
                         , df_geometry = geometry
                         , df_poniext = poniext
@@ -152,15 +149,13 @@ withDataframeH5 h5file dfp gen = bracket (acquire h5file dfp) release
   where
     acquire :: File -> DataFrameH5Path -> IO DataFrameH5
     acquire h d =  DataFrameH5
-                   <$> openDataset' h (h5pImage d)
-                   <*> openDataset' h (h5pGamma d)
+                   <$> openDataset' h (h5pGamma d)
                    <*> openDataset' h (h5pDelta d)
                    <*> openDataset' h (h5pWavelength d)
                    <*> (return gen)
 
     release :: DataFrameH5 -> IO ()
     release d = do
-      closeDataset (h5image d)
       closeDataset (h5gamma d)
       closeDataset (h5delta d)
       closeDataset (h5wavelength d)
@@ -183,10 +178,13 @@ frames d = do
 frames' :: Frame a => a -> [Int] -> Producer DifTomoFrame IO ()
 frames' d idxs = forM_ idxs (\i -> lift (row d i) >>= yield)
 
-newDataFrameH5PathPoni :: Beamline -> NxEntry -> DataFrameH5Path
-newDataFrameH5PathPoni b nxentry = DataFrameH5Path
-    { h5pImage = DataItem (nxentry </> "scan_data/data_53") StrictDims
-    , h5pGamma = DataItem (nxentry </> beamline </> "d13-1-cx1__EX__DIF.1-GAMMA__#1/raw_value") ExtendDims
+data MySample = Calibration | N27T2
+
+newDataFrameH5PathPoni :: Beamline -> NxEntry -> MySample -> DataFrameH5Path
+newDataFrameH5PathPoni b nxentry s = DataFrameH5Path
+    { h5pGamma = case s of
+         Calibration -> DataItem (nxentry </> beamline </> "d13-1-cx1__EX__DIF.1-GAMMA__#1/raw_value") ExtendDims
+         N27T2 ->  DataItem (nxentry </> beamline </> "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value") ExtendDims
     , h5pDelta = DataItem (nxentry </> "scan_data/trajectory_1_1") ExtendDims
     , h5pWavelength = DataItem (nxentry </> beamline </> "D13-1-C03__OP__MONO__#1/wavelength") StrictDims
     }
@@ -208,6 +206,9 @@ main_martinetto = do
   let calibration = published </> "calibration"
   let output = calibration </> "ponies.txt"
   let nxs = calibration </> "XRD18keV_26.nxs"
+  let n27t2 = project </> "2016" </> "Run2" </> "2016-03-27" </> "N27T2_14.nxs"
+  Prelude.print n27t2
+
   -- let filename = "/home/picca/tmp/reguer/rocha/merged.poni"
   -- let filename = "../cirpad/blender/test2.poni"
   filenames <- glob $ calibration </> "XRD18keV_26*.poni"
@@ -220,19 +221,20 @@ main_martinetto = do
   -- lire le ou les ponis de référence ainsi que leur géométrie
   -- associée.
 
-  poniRefs <- withH5File (calibration </> "XRD18keV_26.nxs") $ \h5file ->
-    withDataframeH5 h5file (newDataFrameH5PathPoni Diffabs "scan_26") (gen calibration) $ \dataframe_h5 ->
+  poniExtRefs <- withH5File (calibration </> "XRD18keV_26.nxs") $ \h5file ->
+    withDataframeH5 h5file (newDataFrameH5PathPoni Diffabs "scan_26" Calibration) (gen calibration) $ \dataframe_h5 ->
       toListM (frames' dataframe_h5 [0])
-  Prelude.print poniRefs
+  let poniextref = df_poniext (Prelude.head poniExtRefs)
+  Prelude.print poniextref
 
   -- calculer et écrire pour chaque point d'un scan un poni correspondant à la bonne géométries.
 
-  -- withH5File nxs $ \h5file ->
-  --   withDataframeH5 h5file (newDataFrameH5PathPoni Diffabs "scan_26") gen2 $ \dataframe_h5 -> do
-  --     True <- hkl_h5_is_valid dataframe_h5
+  withH5File n27t2 $ \h5file ->
+    withDataframeH5 h5file (newDataFrameH5PathPoni Diffabs "scan_14" N27T2) (gen2 poniextref) $ \dataframe_h5 -> do
+      True <- hkl_h5_is_valid dataframe_h5
 
-  --     runEffect $ frames dataframe_h5
-  --       >-> drain
+      runEffect $ frames dataframe_h5
+        >-> Pipes.Prelude.print
 
   -- créer le script python d'intégration multi géométrie
 
@@ -241,5 +243,10 @@ main_martinetto = do
   -- plot de la figure. (script python ou autre ?)
 
   where
-    gen :: FilePath -> Int -> IO Poni
-    gen root idx = poniFromFile $ root </> "XRD18keV_26.nxs_" ++ (printf "%02d" idx) ++ ".poni"
+    gen :: FilePath -> MyMatrix Double -> Int -> IO PoniExt
+    gen root m idx = do
+      poni <- poniFromFile $ root </> "XRD18keV_26.nxs_" ++ (printf "%02d" idx) ++ ".poni"
+      return $ PoniExt poni m
+
+    gen2 :: PoniExt -> MyMatrix Double -> Int -> IO PoniExt
+    gen2 ref m _idx = return $ computeNewPoni ref m
