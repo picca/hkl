@@ -193,10 +193,13 @@ newDataFrameH5PathPoni b nxentry = DataFrameH5Path
     where
       beamline = [toUpper x | x <- show b]
 
--- computeNewPoni :: PoniExt -> Matrix Double -> PoniExt
--- computeNewPoni ref@{PoniExt p1 g1) hkl = PoniExt p2 g2
---   where
---     p2 = rotatePoniEntry (last p1) :: PoniEntry -> Matrix Double -> Matrix Double -> PoniEntry
+computeNewPoni :: PoniExt -> Matrix Double -> PoniExt
+computeNewPoni (PoniExt p1 m1) m2 = PoniExt p2 m2
+  where
+    p2 = map rotate p1
+
+    rotate :: PoniEntry -> PoniEntry
+    rotate e = rotatePoniEntry e m1 m2
 
 main_martinetto :: IO ()
 main_martinetto = do
