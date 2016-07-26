@@ -218,7 +218,8 @@ plotPoni pattern output = do
 
 -- Sample definitions
 
-project = "/nfs/ruche-diffabs/diffabs-users/99160066/"
+-- project = "/nfs/ruche-diffabs/diffabs-users/99160066/"
+project = "/home/experiences/instrumentation/picca/data/99160066"
 published = project </> "published-data"
 calibration = published </> "calibration"
 
@@ -249,10 +250,214 @@ calibration'= XRFRef "calibration"
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
 
-n27t2' = XRFSample "N27T2"
-         (published </> "N27T2")
-         [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "N27T2_14.nxs") "scan_14" h5path
-         , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "N27T2_17.nxs") "scan_17" h5path ]
+n27t2 = XRFSample "N27T2"
+        (published </> "N27T2")
+        [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "N27T2_14.nxs") "scan_14" h5path
+        , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "N27T2_17.nxs") "scan_17" h5path
+        ]
+  where
+    beamline :: String
+    beamline = beamlineUpper Diffabs
+
+    gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
+    delta = "scan_data/trajectory_1_1"
+    wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
+
+    h5path :: NxEntry -> DataFrameH5Path
+    h5path nxentry =
+      DataFrameH5Path { h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
+                      , h5pDelta = DataItem (nxentry </> delta) ExtendDims
+                      , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
+                      }
+
+r34n1 = XRFSample "R34N1"
+        (published </> "R34N1")
+         [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R34N1_28.nxs") "scan_28" h5path
+         , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R34N1_37.nxs") "scan_37" h5path
+         ]
+  where
+    beamline :: String
+    beamline = beamlineUpper Diffabs
+
+    gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
+    delta = "scan_data/trajectory_1_1"
+    wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
+
+    h5path :: NxEntry -> DataFrameH5Path
+    h5path nxentry =
+      DataFrameH5Path { h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
+                      , h5pDelta = DataItem (nxentry </> delta) ExtendDims
+                      , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
+                      }
+
+r23 = XRFSample "R23"
+        (published </> "R23")
+         [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R23_6.nxs") "scan_6" h5path
+         , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R23_12.nxs") "scan_12" h5path
+         ]
+  where
+    beamline :: String
+    beamline = beamlineUpper Diffabs
+
+    gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
+    delta = "scan_data/trajectory_1_1"
+    wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
+
+    h5path :: NxEntry -> DataFrameH5Path
+    h5path nxentry =
+      DataFrameH5Path { h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
+                      , h5pDelta = DataItem (nxentry </> delta) ExtendDims
+                      , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
+                      }
+
+r18 = XRFSample "R18"
+        (published </> "R18")
+         [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R18_20.nxs") "scan_20" h5path
+         , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R18_24.nxs") "scan_24" h5path
+         ]
+  where
+    beamline :: String
+    beamline = beamlineUpper Diffabs
+
+    gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
+    delta = "scan_data/trajectory_1_1"
+    wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
+
+    h5path :: NxEntry -> DataFrameH5Path
+    h5path nxentry =
+      DataFrameH5Path { h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
+                      , h5pDelta = DataItem (nxentry </> delta) ExtendDims
+                      , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
+                      }
+
+a3 = XRFSample "A3"
+        (published </> "A3")
+         [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "A3_13.nxs") "scan_13" h5path
+         , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "A3_14.nxs") "scan_14" h5path
+         , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "A3_15.nxs") "scan_15" h5path
+         ]
+  where
+    beamline :: String
+    beamline = beamlineUpper Diffabs
+
+    gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
+    delta = "scan_data/trajectory_1_1"
+    wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
+
+    h5path :: NxEntry -> DataFrameH5Path
+    h5path nxentry =
+      DataFrameH5Path { h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
+                      , h5pDelta = DataItem (nxentry </> delta) ExtendDims
+                      , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
+                      }
+
+a2 = XRFSample "A2"
+        (published </> "A2")
+         [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "A2_14.nxs") "scan_14" h5path
+         , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "A2_17.nxs") "scan_17" h5path
+         ]
+  where
+    beamline :: String
+    beamline = beamlineUpper Diffabs
+
+    gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
+    delta = "scan_data/trajectory_1_1"
+    wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
+
+    h5path :: NxEntry -> DataFrameH5Path
+    h5path nxentry =
+      DataFrameH5Path { h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
+                      , h5pDelta = DataItem (nxentry </> delta) ExtendDims
+                      , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
+                      }
+
+d2 = XRFSample "D2"
+        (published </> "D2")
+         [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D2_16.nxs") "scan_16" h5path
+         , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D2_17.nxs") "scan_17" h5path
+         ]
+  where
+    beamline :: String
+    beamline = beamlineUpper Diffabs
+
+    gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
+    delta = "scan_data/trajectory_1_1"
+    wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
+
+    h5path :: NxEntry -> DataFrameH5Path
+    h5path nxentry =
+      DataFrameH5Path { h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
+                      , h5pDelta = DataItem (nxentry </> delta) ExtendDims
+                      , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
+                      }
+
+d3 = XRFSample "D3"
+        (published </> "D3")
+         [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D3_14.nxs") "scan_14" h5path
+         , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D3_15.nxs") "scan_15" h5path
+         ]
+  where
+    beamline :: String
+    beamline = beamlineUpper Diffabs
+
+    gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
+    delta = "scan_data/trajectory_1_1"
+    wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
+
+    h5path :: NxEntry -> DataFrameH5Path
+    h5path nxentry =
+      DataFrameH5Path { h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
+                      , h5pDelta = DataItem (nxentry </> delta) ExtendDims
+                      , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
+                      }
+
+r11 = XRFSample "R11"
+        (published </> "R11")
+         [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R11_5.nxs") "scan_5" h5path
+         , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R11_6.nxs") "scan_6" h5path
+         , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R11_7.nxs") "scan_7" h5path
+         ]
+  where
+    beamline :: String
+    beamline = beamlineUpper Diffabs
+
+    gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
+    delta = "scan_data/trajectory_1_1"
+    wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
+
+    h5path :: NxEntry -> DataFrameH5Path
+    h5path nxentry =
+      DataFrameH5Path { h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
+                      , h5pDelta = DataItem (nxentry </> delta) ExtendDims
+                      , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
+                      }
+
+d16 = XRFSample "D16"
+        (published </> "D16")
+         [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D16_12.nxs") "scan_12" h5path
+         , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D16_15.nxs") "scan_15" h5path
+         , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D16_17.nxs") "scan_17" h5path
+         ]
+  where
+    beamline :: String
+    beamline = beamlineUpper Diffabs
+
+    gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
+    delta = "scan_data/trajectory_1_1"
+    wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
+
+    h5path :: NxEntry -> DataFrameH5Path
+    h5path nxentry =
+      DataFrameH5Path { h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
+                      , h5pDelta = DataItem (nxentry </> delta) ExtendDims
+                      , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
+                      }
+
+k9a2 = XRFSample "K9A2"
+       (published </> "K9A2")
+       [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "K9A2_1_31.nxs") "scan_31" h5path
+       , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "K9A2_1_32.nxs") "scan_32" h5path
+       ]
   where
     beamline :: String
     beamline = beamlineUpper Diffabs
@@ -287,6 +492,7 @@ createPonies ref (XRFSample _ output nxss) = mapM_ (createPonies' ref output) nx
 
 createPonies' :: PoniExt -> OutputBaseDir -> Nxs -> IO ()
 createPonies' ref output (Nxs f e h5path) = do
+  Prelude.print f
   withH5File f $ \h5file ->
     withDataframeH5 h5file h5path (gen ref) $ \dataframe_h5 -> do
       True <- hkl_h5_is_valid dataframe_h5
@@ -304,8 +510,6 @@ createPonies' ref output (Nxs f e h5path) = do
 
 main_martinetto :: IO ()
 main_martinetto = do
-  Prelude.print n27t2
-
   -- lire le ou les ponis de référence ainsi que leur géométrie
   -- associée.
 
@@ -313,17 +517,12 @@ main_martinetto = do
 
   -- calculer et écrire pour chaque point d'un scan un poni correspondant à la bonne géométries.
 
-  mapM_ (createPonies poniextref) [ n27t2' ]
+  mapM_ (createPonies poniextref) [n27t2, r34n1, r23, r18, a2, a3, d2, d3, r11, d16, k9a2]
 
-  plotPoni "/tmp/*.poni" "/tmp/plot.txt"
+  -- plotPoni "/tmp/*.poni" "/tmp/plot.txt"
 
   -- créer le script python d'intégration multi géométrie
 
   -- l'executer pour faire l'intégration.
 
   -- plot de la figure. (script python ou autre ?)
-
-  where
-    output = calibration </> "ponies.txt"
-    nxs = calibration </> "XRD18keV_26.nxs"
-    n27t2 = project </> "2016" </> "Run2" </> "2016-03-27" </> "N27T2_14.nxs"
