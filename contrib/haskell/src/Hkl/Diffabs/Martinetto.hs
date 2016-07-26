@@ -15,7 +15,7 @@ import Data.Either
 import Data.List (sort)
 import Data.Packed.Matrix (Matrix)
 import Data.Text (Text, intercalate, pack)
-import Data.Text.IO
+import Data.Text.IO (hPutStrLn, readFile, writeFile)
 import Data.Vector.Storable (concat, head)
 import Hkl.C (geometryDetectorRotationGet)
 import Hkl.H5 ( Dataset
@@ -29,11 +29,11 @@ import Hkl.H5 ( Dataset
 import Hkl.PyFAI
 import Hkl.Types
 import Numeric.Units.Dimensional.Prelude (meter, degree, nano, (/~), (*~))
-import System.FilePath ((</>))
+import System.FilePath ((</>), dropExtension, takeFileName)
 import System.FilePath.Glob
 import System.IO (withFile, IOMode(WriteMode) )
 
-import Prelude hiding (concat, lookup, readFile)
+import Prelude hiding (concat, lookup, readFile, writeFile)
 
 import Pipes (Consumer, Producer, lift, (>->), runEffect, await, yield)
 import Pipes.Prelude (toListM, print)
@@ -170,12 +170,15 @@ hkl_h5_is_valid d = do
   True <- check_ndims (h5delta d) 1
   return True
 
-saves  :: Consumer DifTomoFrame IO ()
-saves = forever $ do
+saves  :: (Int -> FilePath) -> Consumer DifTomoFrame IO ()
+saves g = forever $ do
   f <- await
-  lift $ Prelude.print $ poniToText (go $ df_poniext f)
+  let filename = g (df_n f)
+  lift $ writeFile filename (content (df_poniext f))
     where
-      go (PoniExt poni _) = poni
+      content :: PoniExt -> Text
+      content (PoniExt poni _) = poniToText poni
+
 
 
 frames :: Frame a => a -> Producer DifTomoFrame IO ()
@@ -207,6 +210,15 @@ computeNewPoni (PoniExt p1 mym1) mym2 = PoniExt p2 mym2
     rotate :: PoniEntry -> PoniEntry
     rotate e = rotatePoniEntry e mym1 mym2
 
+plotPoni :: String -> FilePath -> IO ()
+plotPoni pattern output = do
+  filenames <- glob $ pattern
+  -- print $ sort filenames
+  -- print $ [0,3..39 :: Int] ++ [43 :: Int]
+  -- print nxs
+  entries <- ponies filenames
+  save output entries
+
 main_martinetto :: IO ()
 main_martinetto = do
   let project = "/nfs/ruche-diffabs/diffabs-users/99160066/"
@@ -216,15 +228,6 @@ main_martinetto = do
   let nxs = calibration </> "XRD18keV_26.nxs"
   let n27t2 = project </> "2016" </> "Run2" </> "2016-03-27" </> "N27T2_14.nxs"
   Prelude.print n27t2
-
-  -- let filename = "/home/picca/tmp/reguer/rocha/merged.poni"
-  -- let filename = "../cirpad/blender/test2.poni"
-  filenames <- glob $ calibration </> "XRD18keV_26*.poni"
-  -- print $ sort filenames
-  -- print $ [0,3..39 :: Int] ++ [43 :: Int]
-  -- print nxs
-  entries <- ponies filenames
-  save output entries
 
   -- lire le ou les ponis de référence ainsi que leur géométrie
   -- associée.
@@ -242,7 +245,10 @@ main_martinetto = do
       True <- hkl_h5_is_valid dataframe_h5
 
       runEffect $ frames dataframe_h5
-        >-> saves
+        >-> saves (pgen n27t2)
+
+
+  plotPoni "/tmp/*.poni" "/tmp/plot.txt"
 
   -- créer le script python d'intégration multi géométrie
 
@@ -258,3 +264,6 @@ main_martinetto = do
 
     gen2 :: PoniExt -> MyMatrix Double -> Int -> IO PoniExt
     gen2 ref m _idx = return $ computeNewPoni ref m
+
+    pgen :: FilePath -> Int -> FilePath
+    pgen nxs idx = "tmp" </> ((dropExtension . takeFileName) nxs) ++ printf "_%02d.poni" idx
