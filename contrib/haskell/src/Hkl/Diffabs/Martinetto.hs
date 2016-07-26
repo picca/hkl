@@ -1,5 +1,5 @@
 {-# LANGUAGE CPP #-}
--- {-# LANGUAGE OverloadedStrings #-}
+
 module Hkl.Diffabs.Martinetto
        ( main_martinetto ) where
 
@@ -39,6 +39,8 @@ import Prelude hiding (concat, lookup, readFile, writeFile)
 import Pipes (Consumer, Producer, lift, (>->), runEffect, await, yield)
 import Pipes.Prelude (toListM, print)
 import Text.Printf (printf)
+
+-- | Types
 
 type NxEntry = String
 type OutputBaseDir = FilePath
@@ -98,130 +100,11 @@ instance Frame DataFrameH5 where
                         , df_poniext = poniext
                         }
 
--- {-# ANN module "HLint: ignore Use camelCase" #-}
-
-
--- import Graphics.Rendering.Chart.Easy
--- import Graphics.Rendering.Chart.Backend.Diagrams
-
--- plotPonies :: FilePath -> [PoniEntry] -> IO ()
--- plotPonies f entries = toFile def f $ do
---     layout_title .= "Ponies"
---     setColors [opaque blue]
---     let values = map extract entries
---     plot (line "am" [values [0,(0.5)..400]])
---     -- plot (points "am points" (signal [0,7..400]))
---     where
---       extract (PoniEntry _ _ (Length poni1) _ _ _ _ _ _) = poni1
-
-title :: Text
-title = intercalate (Data.Text.pack "\t")
-        (map Data.Text.pack [ "# distance"
-                            , "poni1"
-                            , "poni2"
-                            , "rot1"
-                            , "rot2"
-                            , "rot3" ])
-
-toText :: PoniEntry -> Text
-toText (PoniEntry _ _ _ _ d p1 p2 rot1 rot2 rot3 _ _) =
-  intercalate (Data.Text.pack "\t")
-  (map (Data.Text.pack . show) [ d /~ meter
-                               , p1 /~ meter
-                               , p2 /~ meter
-                               , rot1 /~ degree
-                               , rot2 /~ degree
-                               , rot3 /~ degree])
-
-save :: FilePath -> [PoniEntry] -> IO ()
-save f ps = withFile f WriteMode $ \handler -> do
-  hPutStrLn handler title
-  mapM_ (put handler) ps
-    where
-      put h p = hPutStrLn h (toText p)
-
-poniFromFile :: FilePath -> IO Poni
-poniFromFile filename = do
-  content <- readFile filename
-  return $ case parseOnly poniP content of
-    Left _     -> error $ "Can not parse the " ++ filename ++ " poni file"
-    Right poni -> poni
-
-ponies :: [FilePath] -> IO [PoniEntry]
-ponies fs = mapM extract (sort fs)
-  where
-     extract :: FilePath -> IO PoniEntry
-     extract filename = poniFromFile filename >>= return . last
-
-withDataframeH5 :: File -> DataFrameH5Path -> PoniGenerator -> (DataFrameH5 -> IO r) -> IO r
-withDataframeH5 h5file dfp gen = bracket (acquire h5file dfp) release
-  where
-    acquire :: File -> DataFrameH5Path -> IO DataFrameH5
-    acquire h d =  DataFrameH5
-                   <$> openDataset' h (h5pGamma d)
-                   <*> openDataset' h (h5pDelta d)
-                   <*> openDataset' h (h5pWavelength d)
-                   <*> (return gen)
-
-    release :: DataFrameH5 -> IO ()
-    release d = do
-      closeDataset (h5gamma d)
-      closeDataset (h5delta d)
-      closeDataset (h5wavelength d)
-
-    openDataset' :: File -> DataItem -> IO Dataset
-    openDataset' hid (DataItem name _) = openDataset hid (Data.ByteString.Char8.pack name) Nothing
-
-
-hkl_h5_is_valid :: DataFrameH5-> IO Bool
-hkl_h5_is_valid d = do
-  True <- check_ndims (h5gamma d) 1
-  True <- check_ndims (h5delta d) 1
-  return True
-
-saves  :: (Int -> FilePath) -> Consumer DifTomoFrame IO ()
-saves g = forever $ do
-  f <- await
-  let filename = g (df_n f)
-  lift $ createDirectoryIfMissing True (takeDirectory filename)
-  lift $ writeFile filename (content (df_poniext f))
-    where
-      content :: PoniExt -> Text
-      content (PoniExt poni _) = poniToText poni
-
-
-
-frames :: Frame a => a -> Producer DifTomoFrame IO ()
-frames d = do
-  (Just n) <- lift $ len d
-  frames' d [0..n-1]
-
-frames' :: Frame a => a -> [Int] -> Producer DifTomoFrame IO ()
-frames' d idxs = forM_ idxs (\i -> lift (row d i) >>= yield)
-
-computeNewPoni :: PoniExt -> MyMatrix Double -> PoniExt
-computeNewPoni (PoniExt p1 mym1) mym2 = PoniExt p2 mym2
-  where
-    p2 = map rotate p1
-
-    rotate :: PoniEntry -> PoniEntry
-    rotate e = rotatePoniEntry e mym1 mym2
-
-plotPoni :: String -> FilePath -> IO ()
-plotPoni pattern output = do
-  filenames <- glob $ pattern
-  -- print $ sort filenames
-  -- print $ [0,3..39 :: Int] ++ [43 :: Int]
-  -- print nxs
-  entries <- ponies filenames
-  save output entries
-
--- Sample definitions
+-- | Samples
 
 -- project = "/nfs/ruche-diffabs/diffabs-users/99160066/"
 project = "/home/experiences/instrumentation/picca/data/99160066"
 published = project </> "published-data"
-calibration = published </> "calibration"
 
 beamlineUpper :: Beamline -> String
 beamlineUpper b = [toUpper x | x <- show b]
@@ -230,11 +113,11 @@ nxs :: FilePath -> NxEntry -> (NxEntry -> DataFrameH5Path ) -> Nxs
 nxs f e h5path = Nxs f e (h5path e)
 
 
-calibration' :: XRFRef
-calibration'= XRFRef "calibration"
-               calibration
-               (nxs (calibration </> "XRD18keV_26.nxs") "scan_26" h5path)
-               0
+calibration :: XRFRef
+calibration = XRFRef "calibration"
+              (published </> "calibration")
+              (nxs (published </> "calibration" </> "XRD18keV_26.nxs") "scan_26" h5path)
+              0
   where
     beamline :: String
     beamline = beamlineUpper Diffabs
@@ -473,19 +356,112 @@ k9a2 = XRFSample "K9A2"
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
 
+-- {-# ANN module "HLint: ignore Use camelCase" #-}
+
+
+-- import Graphics.Rendering.Chart.Easy
+-- import Graphics.Rendering.Chart.Backend.Diagrams
+
+-- plotPonies :: FilePath -> [PoniEntry] -> IO ()
+-- plotPonies f entries = toFile def f $ do
+--     layout_title .= "Ponies"
+--     setColors [opaque blue]
+--     let values = map extract entries
+--     plot (line "am" [values [0,(0.5)..400]])
+--     -- plot (points "am points" (signal [0,7..400]))
+--     where
+--       extract (PoniEntry _ _ (Length poni1) _ _ _ _ _ _) = poni1
+
+-- | Usual methods
+
+title :: Text
+title = intercalate (Data.Text.pack "\t")
+        (map Data.Text.pack [ "# distance"
+                            , "poni1"
+                            , "poni2"
+                            , "rot1"
+                            , "rot2"
+                            , "rot3" ])
+
+toText :: PoniEntry -> Text
+toText (PoniEntry _ _ _ _ d p1 p2 rot1 rot2 rot3 _ _) =
+  intercalate (Data.Text.pack "\t")
+  (map (Data.Text.pack . show) [ d /~ meter
+                               , p1 /~ meter
+                               , p2 /~ meter
+                               , rot1 /~ degree
+                               , rot2 /~ degree
+                               , rot3 /~ degree])
+
+save :: FilePath -> [PoniEntry] -> IO ()
+save f ps = withFile f WriteMode $ \handler -> do
+  hPutStrLn handler title
+  mapM_ (put handler) ps
+    where
+      put h p = hPutStrLn h (toText p)
+
+poniFromFile :: FilePath -> IO Poni
+poniFromFile filename = do
+  content <- readFile filename
+  return $ case parseOnly poniP content of
+    Left _     -> error $ "Can not parse the " ++ filename ++ " poni file"
+    Right poni -> poni
+
+ponies :: [FilePath] -> IO [PoniEntry]
+ponies fs = mapM extract (sort fs)
+  where
+     extract :: FilePath -> IO PoniEntry
+     extract filename = poniFromFile filename >>= return . last
+
+withDataframeH5 :: File -> DataFrameH5Path -> PoniGenerator -> (DataFrameH5 -> IO r) -> IO r
+withDataframeH5 h5file dfp gen = bracket (acquire h5file dfp) release
+  where
+    acquire :: File -> DataFrameH5Path -> IO DataFrameH5
+    acquire h d =  DataFrameH5
+                   <$> openDataset' h (h5pGamma d)
+                   <*> openDataset' h (h5pDelta d)
+                   <*> openDataset' h (h5pWavelength d)
+                   <*> (return gen)
+
+    release :: DataFrameH5 -> IO ()
+    release d = do
+      closeDataset (h5gamma d)
+      closeDataset (h5delta d)
+      closeDataset (h5wavelength d)
+
+    openDataset' :: File -> DataItem -> IO Dataset
+    openDataset' hid (DataItem name _) = openDataset hid (Data.ByteString.Char8.pack name) Nothing
+
+
+hkl_h5_is_valid :: DataFrameH5-> IO Bool
+hkl_h5_is_valid d = do
+  True <- check_ndims (h5gamma d) 1
+  True <- check_ndims (h5delta d) 1
+  return True
+
+plotPoni :: String -> FilePath -> IO ()
+plotPoni pattern output = do
+  filenames <- glob $ pattern
+  -- print $ sort filenames
+  -- print $ [0,3..39 :: Int] ++ [43 :: Int]
+  -- print nxs
+  entries <- ponies filenames
+  save output entries
+
+
 getPoniExtRef :: XRFRef -> IO PoniExt
-getPoniExtRef (XRFRef _ _ (Nxs f e h5path) idx) = do
+getPoniExtRef (XRFRef _ output (Nxs f e h5path) idx) = do
   poniExtRefs <- withH5File f $ \h5file ->
-    withDataframeH5 h5file h5path (gen calibration) $ \dataframe_h5 ->
+    withDataframeH5 h5file h5path (gen output f) $ \dataframe_h5 ->
       toListM (frames' dataframe_h5 [idx])
   return $ df_poniext (Prelude.head poniExtRefs)
   where
-    gen :: FilePath -> MyMatrix Double -> Int -> IO PoniExt
-    gen root m idx = do
-      poni <- poniFromFile $ root </> "XRD18keV_26.nxs_" ++ (printf "%02d" idx) ++ ".poni"
+    gen :: FilePath -> FilePath -> MyMatrix Double -> Int -> IO PoniExt
+    gen root nxs m idx = do
+      poni <- poniFromFile $ root </> scandir ++ printf "_%02d.poni" idx
       return $ PoniExt poni m
-
-
+      where
+        scandir = (dropExtension . takeFileName) nxs
 
 createPonies :: PoniExt -> XRFSample -> IO ()
 createPonies ref (XRFSample _ output nxss) = mapM_ (createPonies' ref output) nxss
@@ -508,12 +484,43 @@ createPonies' ref output (Nxs f e h5path) = do
       where
         scandir = (dropExtension . takeFileName) nxs
 
+computeNewPoni :: PoniExt -> MyMatrix Double -> PoniExt
+computeNewPoni (PoniExt p1 mym1) mym2 = PoniExt p2 mym2
+  where
+    p2 = map rotate p1
+
+    rotate :: PoniEntry -> PoniEntry
+    rotate e = rotatePoniEntry e mym1 mym2
+
+-- | Pipes
+
+saves  :: (Int -> FilePath) -> Consumer DifTomoFrame IO ()
+saves g = forever $ do
+  f <- await
+  let filename = g (df_n f)
+  lift $ createDirectoryIfMissing True (takeDirectory filename)
+  lift $ writeFile filename (content (df_poniext f))
+    where
+      content :: PoniExt -> Text
+      content (PoniExt poni _) = poniToText poni
+
+frames :: Frame a => a -> Producer DifTomoFrame IO ()
+frames d = do
+  (Just n) <- lift $ len d
+  frames' d [0..n-1]
+
+frames' :: Frame a => a -> [Int] -> Producer DifTomoFrame IO ()
+frames' d idxs = forM_ idxs (\i -> lift (row d i) >>= yield)
+
+
+-- | Main
+
 main_martinetto :: IO ()
 main_martinetto = do
   -- lire le ou les ponis de référence ainsi que leur géométrie
   -- associée.
 
-  poniextref <- getPoniExtRef calibration'
+  poniextref <- getPoniExtRef calibration
 
   -- calculer et écrire pour chaque point d'un scan un poni correspondant à la bonne géométries.
 
