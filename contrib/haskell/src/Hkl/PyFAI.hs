@@ -110,7 +110,7 @@ toEulerians m
 
 
 rotatePoniEntry :: PoniEntry -> MyMatrix Double -> MyMatrix Double -> PoniEntry
-rotatePoniEntry (PoniEntry header detector px1 px2 distance poni1 poni2 rot1 rot2 rot3 spline wavelength) (MyMatrix _b1 m1) (MyMatrix _b2 m2) = PoniEntry header detector px1 px2 distance poni1 poni2 new_rot1 new_rot2 new_rot3 spline wavelength
+rotatePoniEntry (PoniEntry header detector px1 px2 distance poni1 poni2 rot1 rot2 rot3 spline wavelength) mym1 mym2 = PoniEntry header detector px1 px2 distance poni1 poni2 new_rot1 new_rot2 new_rot3 spline wavelength
   where
     rotations = map (uncurry fromAxisAndAngle)
                 [ (fromList [0, 0, 1], rot3)
@@ -141,3 +141,6 @@ rotatePoniEntry (PoniEntry header detector px1 px2 distance poni1 poni2 rot1 rot
     p2 = fromLists [ [ 0,  0, 1]
                    , [ 0, -1, 0]
                    , [-1,  0, 0]]
+
+    (MyMatrix _ m1) = changeBase mym1 PyFAIB
+    (MyMatrix _ m2) = changeBase mym2 PyFAIB
