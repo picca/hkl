@@ -29,7 +29,8 @@ import Hkl.H5 ( Dataset
 import Hkl.PyFAI
 import Hkl.Types
 import Numeric.Units.Dimensional.Prelude (meter, degree, nano, (/~), (*~))
-import System.FilePath ((</>), dropExtension, takeFileName)
+import System.Directory (createDirectoryIfMissing)
+import System.FilePath ((</>), dropExtension, takeFileName, takeDirectory)
 import System.FilePath.Glob
 import System.IO (withFile, IOMode(WriteMode) )
 
@@ -40,7 +41,15 @@ import Pipes.Prelude (toListM, print)
 import Text.Printf (printf)
 
 type NxEntry = String
+type OutputBaseDir = FilePath
 type PoniGenerator = MyMatrix Double -> Int -> IO PoniExt
+type SampleName = String
+
+data XRFRef = XRFRef SampleName OutputBaseDir Nxs Int
+
+data XRFSample = XRFSample SampleName OutputBaseDir [Nxs]-- ^ nxss
+
+data Nxs = Nxs FilePath NxEntry DataFrameH5Path
 
 data PoniExt = PoniExt Poni (MyMatrix Double) deriving (Show)
 
@@ -174,6 +183,7 @@ saves  :: (Int -> FilePath) -> Consumer DifTomoFrame IO ()
 saves g = forever $ do
   f <- await
   let filename = g (df_n f)
+  lift $ createDirectoryIfMissing True (takeDirectory filename)
   lift $ writeFile filename (content (df_poniext f))
     where
       content :: PoniExt -> Text
@@ -188,19 +198,6 @@ frames d = do
 
 frames' :: Frame a => a -> [Int] -> Producer DifTomoFrame IO ()
 frames' d idxs = forM_ idxs (\i -> lift (row d i) >>= yield)
-
-data MySample = Calibration | N27T2
-
-newDataFrameH5PathPoni :: Beamline -> NxEntry -> MySample -> DataFrameH5Path
-newDataFrameH5PathPoni b nxentry s = DataFrameH5Path
-    { h5pGamma = case s of
-         Calibration -> DataItem (nxentry </> beamline </> "d13-1-cx1__EX__DIF.1-GAMMA__#1/raw_value") ExtendDims
-         N27T2 ->  DataItem (nxentry </> beamline </> "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value") ExtendDims
-    , h5pDelta = DataItem (nxentry </> "scan_data/trajectory_1_1") ExtendDims
-    , h5pWavelength = DataItem (nxentry </> beamline </> "D13-1-C03__OP__MONO__#1/wavelength") StrictDims
-    }
-    where
-      beamline = [toUpper x | x <- show b]
 
 computeNewPoni :: PoniExt -> MyMatrix Double -> PoniExt
 computeNewPoni (PoniExt p1 mym1) mym2 = PoniExt p2 mym2
@@ -219,34 +216,104 @@ plotPoni pattern output = do
   entries <- ponies filenames
   save output entries
 
+-- Sample definitions
+
+project = "/nfs/ruche-diffabs/diffabs-users/99160066/"
+published = project </> "published-data"
+calibration = published </> "calibration"
+
+beamlineUpper :: Beamline -> String
+beamlineUpper b = [toUpper x | x <- show b]
+
+nxs :: FilePath -> NxEntry -> (NxEntry -> DataFrameH5Path ) -> Nxs
+nxs f e h5path = Nxs f e (h5path e)
+
+
+calibration' :: XRFRef
+calibration'= XRFRef "calibration"
+               calibration
+               (nxs (calibration </> "XRD18keV_26.nxs") "scan_26" h5path)
+               0
+  where
+    beamline :: String
+    beamline = beamlineUpper Diffabs
+
+    gamma = "d13-1-cx1__EX__DIF.1-GAMMA__#1/raw_value"
+    delta = "scan_data/trajectory_1_1"
+    wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
+
+    h5path :: NxEntry -> DataFrameH5Path
+    h5path nxentry =
+      DataFrameH5Path { h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
+                      , h5pDelta = DataItem (nxentry </> delta) ExtendDims
+                      , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
+                      }
+
+n27t2' = XRFSample "N27T2"
+         (published </> "N27T2")
+         [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "N27T2_14.nxs") "scan_14" h5path
+         , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "N27T2_17.nxs") "scan_17" h5path ]
+  where
+    beamline :: String
+    beamline = beamlineUpper Diffabs
+
+    gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
+    delta = "scan_data/trajectory_1_1"
+    wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
+
+    h5path :: NxEntry -> DataFrameH5Path
+    h5path nxentry =
+      DataFrameH5Path { h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
+                      , h5pDelta = DataItem (nxentry </> delta) ExtendDims
+                      , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
+                      }
+
+getPoniExtRef :: XRFRef -> IO PoniExt
+getPoniExtRef (XRFRef _ _ (Nxs f e h5path) idx) = do
+  poniExtRefs <- withH5File f $ \h5file ->
+    withDataframeH5 h5file h5path (gen calibration) $ \dataframe_h5 ->
+      toListM (frames' dataframe_h5 [idx])
+  return $ df_poniext (Prelude.head poniExtRefs)
+  where
+    gen :: FilePath -> MyMatrix Double -> Int -> IO PoniExt
+    gen root m idx = do
+      poni <- poniFromFile $ root </> "XRD18keV_26.nxs_" ++ (printf "%02d" idx) ++ ".poni"
+      return $ PoniExt poni m
+
+
+
+createPonies :: PoniExt -> XRFSample -> IO ()
+createPonies ref (XRFSample _ output nxss) = mapM_ (createPonies' ref output) nxss
+
+createPonies' :: PoniExt -> OutputBaseDir -> Nxs -> IO ()
+createPonies' ref output (Nxs f e h5path) = do
+  withH5File f $ \h5file ->
+    withDataframeH5 h5file h5path (gen ref) $ \dataframe_h5 -> do
+      True <- hkl_h5_is_valid dataframe_h5
+
+      runEffect $ frames dataframe_h5
+        >-> saves (pgen output f)
+  where
+    gen :: PoniExt -> MyMatrix Double -> Int -> IO PoniExt
+    gen ref m _idx = return $ computeNewPoni ref m
+
+    pgen :: OutputBaseDir -> FilePath -> Int -> FilePath
+    pgen o nxs idx = o </> scandir </>  scandir ++ printf "_%02d.poni" idx
+      where
+        scandir = (dropExtension . takeFileName) nxs
+
 main_martinetto :: IO ()
 main_martinetto = do
-  let project = "/nfs/ruche-diffabs/diffabs-users/99160066/"
-  let published = project </> "published-data"
-  let calibration = published </> "calibration"
-  let output = calibration </> "ponies.txt"
-  let nxs = calibration </> "XRD18keV_26.nxs"
-  let n27t2 = project </> "2016" </> "Run2" </> "2016-03-27" </> "N27T2_14.nxs"
   Prelude.print n27t2
 
   -- lire le ou les ponis de référence ainsi que leur géométrie
   -- associée.
 
-  poniExtRefs <- withH5File (calibration </> "XRD18keV_26.nxs") $ \h5file ->
-    withDataframeH5 h5file (newDataFrameH5PathPoni Diffabs "scan_26" Calibration) (gen calibration) $ \dataframe_h5 ->
-      toListM (frames' dataframe_h5 [0])
-  let poniextref = df_poniext (Prelude.head poniExtRefs)
-  Prelude.print poniextref
+  poniextref <- getPoniExtRef calibration'
 
   -- calculer et écrire pour chaque point d'un scan un poni correspondant à la bonne géométries.
 
-  withH5File n27t2 $ \h5file ->
-    withDataframeH5 h5file (newDataFrameH5PathPoni Diffabs "scan_14" N27T2) (gen2 poniextref) $ \dataframe_h5 -> do
-      True <- hkl_h5_is_valid dataframe_h5
-
-      runEffect $ frames dataframe_h5
-        >-> saves (pgen n27t2)
-
+  mapM_ (createPonies poniextref) [ n27t2' ]
 
   plotPoni "/tmp/*.poni" "/tmp/plot.txt"
 
@@ -257,13 +324,6 @@ main_martinetto = do
   -- plot de la figure. (script python ou autre ?)
 
   where
-    gen :: FilePath -> MyMatrix Double -> Int -> IO PoniExt
-    gen root m idx = do
-      poni <- poniFromFile $ root </> "XRD18keV_26.nxs_" ++ (printf "%02d" idx) ++ ".poni"
-      return $ PoniExt poni m
-
-    gen2 :: PoniExt -> MyMatrix Double -> Int -> IO PoniExt
-    gen2 ref m _idx = return $ computeNewPoni ref m
-
-    pgen :: FilePath -> Int -> FilePath
-    pgen nxs idx = "tmp" </> ((dropExtension . takeFileName) nxs) ++ printf "_%02d.poni" idx
+    output = calibration </> "ponies.txt"
+    nxs = calibration </> "XRD18keV_26.nxs"
+    n27t2 = project </> "2016" </> "Run2" </> "2016-03-27" </> "N27T2_14.nxs"
