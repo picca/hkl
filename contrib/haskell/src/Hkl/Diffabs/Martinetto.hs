@@ -94,7 +94,7 @@ instance Frame DataFrameH5 where
     let geometry =  Geometry K6c source positions Nothing
     let detector = Detector DetectorType0D
     m <- geometryDetectorRotationGet geometry detector
-    poniext <- (ponigen d) (MyMatrix HklB m) idx
+    poniext <- ponigen d (MyMatrix HklB m) idx
     return DifTomoFrame { df_n = idx
                         , df_geometry = geometry
                         , df_poniext = poniext
@@ -103,7 +103,8 @@ instance Frame DataFrameH5 where
 -- | Samples
 
 -- project = "/nfs/ruche-diffabs/diffabs-users/99160066/"
-project = "/home/experiences/instrumentation/picca/data/99160066"
+-- project = "/home/experiences/instrumentation/picca/data/99160066"
+project = "/home/picca/data/99160066"
 published = project </> "published-data"
 
 beamlineUpper :: Beamline -> String
@@ -461,7 +462,7 @@ getPoniExtRef (XRFRef _ output (Nxs f e h5path) idx) = do
       poni <- poniFromFile $ root </> scandir ++ printf "_%02d.poni" idx
       return $ PoniExt poni m
       where
-        scandir = (dropExtension . takeFileName) nxs
+        scandir = takeFileName nxs
 
 createPonies :: PoniExt -> XRFSample -> IO ()
 createPonies ref (XRFSample _ output nxss) = mapM_ (createPonies' ref output) nxss
@@ -520,11 +521,13 @@ main_martinetto = do
   -- lire le ou les ponis de référence ainsi que leur géométrie
   -- associée.
 
+  let samples = [n27t2, r34n1, r23, r18, a2, a3, d2, d3, r11, d16, k9a2]
+
   poniextref <- getPoniExtRef calibration
 
   -- calculer et écrire pour chaque point d'un scan un poni correspondant à la bonne géométries.
 
-  mapM_ (createPonies poniextref) [n27t2, r34n1, r23, r18, a2, a3, d2, d3, r11, d16, k9a2]
+  mapM_ (createPonies poniextref) samples
 
   -- plotPoni "/tmp/*.poni" "/tmp/plot.txt"
 
