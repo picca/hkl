@@ -7,7 +7,7 @@ module Hkl.Diffabs.Martinetto
 import Control.Applicative ((<$>), (<*>))
 #endif
 import Control.Exception (bracket)
-import Control.Monad (forM_, forever)
+import Control.Monad (forM_, forever, liftM)
 import Data.Attoparsec.Text
 import Data.ByteString.Char8 (pack)
 import Data.Char (toUpper)
@@ -31,13 +31,13 @@ import Hkl.Types
 import Numeric.Units.Dimensional.Prelude (meter, degree, nano, (/~), (*~))
 import System.Directory (createDirectoryIfMissing)
 import System.FilePath ((</>), dropExtension, takeFileName, takeDirectory)
-import System.FilePath.Glob
+import System.FilePath.Glob (glob)
 import System.IO (withFile, IOMode(WriteMode) )
 
 import Prelude hiding (concat, lookup, readFile, writeFile)
 
-import Pipes (Consumer, Producer, lift, (>->), runEffect, await, yield)
-import Pipes.Prelude (toListM, print)
+import Pipes (Consumer, Pipe, Producer, lift, (>->), runEffect, await, yield)
+import Pipes.Prelude (toListM, drain, print)
 import Text.Printf (printf)
 
 -- | Types
@@ -412,7 +412,7 @@ ponies :: [FilePath] -> IO [PoniEntry]
 ponies fs = mapM extract (sort fs)
   where
      extract :: FilePath -> IO PoniEntry
-     extract filename = poniFromFile filename >>= return . last
+     extract filename = liftM last (poniFromFile filename)
 
 withDataframeH5 :: File -> DataFrameH5Path -> PoniGenerator -> (DataFrameH5 -> IO r) -> IO r
 withDataframeH5 h5file dfp gen = bracket (acquire h5file dfp) release
@@ -422,7 +422,7 @@ withDataframeH5 h5file dfp gen = bracket (acquire h5file dfp) release
                    <$> openDataset' h (h5pGamma d)
                    <*> openDataset' h (h5pDelta d)
                    <*> openDataset' h (h5pWavelength d)
-                   <*> (return gen)
+                   <*> return gen
 
     release :: DataFrameH5 -> IO ()
     release d = do
@@ -442,7 +442,7 @@ hkl_h5_is_valid d = do
 
 plotPoni :: String -> FilePath -> IO ()
 plotPoni pattern output = do
-  filenames <- glob $ pattern
+  filenames <- glob pattern
   -- print $ sort filenames
   -- print $ [0,3..39 :: Int] ++ [43 :: Int]
   -- print nxs
@@ -475,7 +475,8 @@ createPonies' ref output (Nxs f e h5path) = do
       True <- hkl_h5_is_valid dataframe_h5
 
       runEffect $ frames dataframe_h5
-        >-> saves (pgen output f)
+        >-> savePonies (pgen output f)
+        >-> drain
   where
     gen :: PoniExt -> MyMatrix Double -> Int -> IO PoniExt
     gen ref m _idx = return $ computeNewPoni ref m
@@ -495,12 +496,13 @@ computeNewPoni (PoniExt p1 mym1) mym2 = PoniExt p2 mym2
 
 -- | Pipes
 
-saves  :: (Int -> FilePath) -> Consumer DifTomoFrame IO ()
-saves g = forever $ do
+savePonies  :: (Int -> FilePath) -> Pipe DifTomoFrame DifTomoFrame IO ()
+savePonies g = forever $ do
   f <- await
   let filename = g (df_n f)
   lift $ createDirectoryIfMissing True (takeDirectory filename)
   lift $ writeFile filename (content (df_poniext f))
+  yield f
     where
       content :: PoniExt -> Text
       content (PoniExt poni _) = poniToText poni
