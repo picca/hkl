@@ -51,28 +51,36 @@ data XRFRef = XRFRef SampleName OutputBaseDir Nxs Int
 
 data XRFSample = XRFSample SampleName OutputBaseDir [Nxs]-- ^ nxss
 
-data Nxs = Nxs FilePath NxEntry DataFrameH5Path
+data Nxs = Nxs FilePath NxEntry DataFrameH5Path deriving (Show)
 
 data PoniExt = PoniExt Poni (MyMatrix Double) deriving (Show)
 
 data DifTomoFrame =
-  DifTomoFrame { df_n :: Int -- ^ index of the current frame
+  DifTomoFrame { df_nxs :: Nxs -- ^ nexus of the current frame
+               , df_n :: Int -- ^ index of the current frame
                , df_geometry :: Geometry -- ^ diffractometer geometry
                , df_poniext :: PoniExt -- ^ the ref poniext
                } deriving (Show)
+
+data DifTomoFrame2 =
+  DifTomoFrame2 { df_frame :: DifTomoFrame
+                , df_poni_filename :: FilePath
+                } deriving (Show)
 
 class Frame t where
   len :: t -> IO (Maybe Int)
   row :: t -> Int -> IO DifTomoFrame
 
 data DataFrameH5Path =
-  DataFrameH5Path { h5pGamma :: DataItem
+  DataFrameH5Path { h5pImage :: DataItem
+                  , h5pGamma :: DataItem
                   , h5pDelta :: DataItem
                   , h5pWavelength :: DataItem
                   } deriving (Show)
 
 data DataFrameH5 =
-  DataFrameH5 { h5gamma :: Dataset
+  DataFrameH5 { h5nxs :: Nxs
+              , h5gamma :: Dataset
               , h5delta :: Dataset
               , h5wavelength :: Dataset
               , ponigen :: PoniGenerator
@@ -82,6 +90,7 @@ instance Frame DataFrameH5 where
   len d =  lenH5Dataspace (h5delta d)
 
   row d idx = do
+    let nxs = h5nxs d
     let mu = 0.0
     let komega = 0.0
     let kappa = 0.0
@@ -95,7 +104,8 @@ instance Frame DataFrameH5 where
     let detector = Detector DetectorType0D
     m <- geometryDetectorRotationGet geometry detector
     poniext <- ponigen d (MyMatrix HklB m) idx
-    return DifTomoFrame { df_n = idx
+    return DifTomoFrame { df_nxs = nxs
+                        , df_n = idx
                         , df_geometry = geometry
                         , df_poniext = poniext
                         }
@@ -123,13 +133,15 @@ calibration = XRFRef "calibration"
     beamline :: String
     beamline = beamlineUpper Diffabs
 
+    image = "scan_data/data_53"
     gamma = "d13-1-cx1__EX__DIF.1-GAMMA__#1/raw_value"
     delta = "scan_data/trajectory_1_1"
     wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
 
     h5path :: NxEntry -> DataFrameH5Path
     h5path nxentry =
-      DataFrameH5Path { h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
+      DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
+                      , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
                       , h5pDelta = DataItem (nxentry </> delta) ExtendDims
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
@@ -143,13 +155,15 @@ n27t2 = XRFSample "N27T2"
     beamline :: String
     beamline = beamlineUpper Diffabs
 
+    image = "scan_data/data_53"
     gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
     delta = "scan_data/trajectory_1_1"
     wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
 
     h5path :: NxEntry -> DataFrameH5Path
     h5path nxentry =
-      DataFrameH5Path { h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
+      DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
+                      , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
                       , h5pDelta = DataItem (nxentry </> delta) ExtendDims
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
@@ -163,13 +177,15 @@ r34n1 = XRFSample "R34N1"
     beamline :: String
     beamline = beamlineUpper Diffabs
 
+    image = "scan_data/data_53"
     gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
     delta = "scan_data/trajectory_1_1"
     wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
 
     h5path :: NxEntry -> DataFrameH5Path
     h5path nxentry =
-      DataFrameH5Path { h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
+      DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
+                      , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
                       , h5pDelta = DataItem (nxentry </> delta) ExtendDims
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
@@ -183,13 +199,15 @@ r23 = XRFSample "R23"
     beamline :: String
     beamline = beamlineUpper Diffabs
 
+    image = "scan_data/data_53"
     gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
     delta = "scan_data/trajectory_1_1"
     wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
 
     h5path :: NxEntry -> DataFrameH5Path
     h5path nxentry =
-      DataFrameH5Path { h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
+      DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
+                      , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
                       , h5pDelta = DataItem (nxentry </> delta) ExtendDims
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
@@ -203,13 +221,15 @@ r18 = XRFSample "R18"
     beamline :: String
     beamline = beamlineUpper Diffabs
 
+    image = "scan_data/data_53"
     gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
     delta = "scan_data/trajectory_1_1"
     wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
 
     h5path :: NxEntry -> DataFrameH5Path
     h5path nxentry =
-      DataFrameH5Path { h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
+      DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
+                      , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
                       , h5pDelta = DataItem (nxentry </> delta) ExtendDims
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
@@ -224,13 +244,15 @@ a3 = XRFSample "A3"
     beamline :: String
     beamline = beamlineUpper Diffabs
 
+    image = "scan_data/data_53"
     gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
     delta = "scan_data/trajectory_1_1"
     wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
 
     h5path :: NxEntry -> DataFrameH5Path
     h5path nxentry =
-      DataFrameH5Path { h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
+      DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
+                      , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
                       , h5pDelta = DataItem (nxentry </> delta) ExtendDims
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
@@ -244,13 +266,15 @@ a2 = XRFSample "A2"
     beamline :: String
     beamline = beamlineUpper Diffabs
 
+    image = "scan_data/data_53"
     gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
     delta = "scan_data/trajectory_1_1"
     wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
 
     h5path :: NxEntry -> DataFrameH5Path
     h5path nxentry =
-      DataFrameH5Path { h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
+      DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
+                      , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
                       , h5pDelta = DataItem (nxentry </> delta) ExtendDims
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
@@ -264,13 +288,15 @@ d2 = XRFSample "D2"
     beamline :: String
     beamline = beamlineUpper Diffabs
 
+    image = "scan_data/data_53"
     gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
     delta = "scan_data/trajectory_1_1"
     wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
 
     h5path :: NxEntry -> DataFrameH5Path
     h5path nxentry =
-      DataFrameH5Path { h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
+      DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
+                      , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
                       , h5pDelta = DataItem (nxentry </> delta) ExtendDims
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
@@ -284,13 +310,15 @@ d3 = XRFSample "D3"
     beamline :: String
     beamline = beamlineUpper Diffabs
 
+    image = "scan_data/data_53"
     gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
     delta = "scan_data/trajectory_1_1"
     wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
 
     h5path :: NxEntry -> DataFrameH5Path
     h5path nxentry =
-      DataFrameH5Path { h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
+      DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
+                      , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
                       , h5pDelta = DataItem (nxentry </> delta) ExtendDims
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
@@ -305,13 +333,15 @@ r11 = XRFSample "R11"
     beamline :: String
     beamline = beamlineUpper Diffabs
 
+    image = "scan_data/data_53"
     gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
     delta = "scan_data/trajectory_1_1"
     wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
 
     h5path :: NxEntry -> DataFrameH5Path
     h5path nxentry =
-      DataFrameH5Path { h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
+      DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
+                      , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
                       , h5pDelta = DataItem (nxentry </> delta) ExtendDims
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
@@ -326,13 +356,15 @@ d16 = XRFSample "D16"
     beamline :: String
     beamline = beamlineUpper Diffabs
 
+    image = "scan_data/data_53"
     gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
     delta = "scan_data/trajectory_1_1"
     wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
 
     h5path :: NxEntry -> DataFrameH5Path
     h5path nxentry =
-      DataFrameH5Path { h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
+      DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
+                      , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
                       , h5pDelta = DataItem (nxentry </> delta) ExtendDims
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
@@ -346,13 +378,15 @@ k9a2 = XRFSample "K9A2"
     beamline :: String
     beamline = beamlineUpper Diffabs
 
+    image = "scan_data/data_53"
     gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
     delta = "scan_data/trajectory_1_1"
     wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
 
     h5path :: NxEntry -> DataFrameH5Path
     h5path nxentry =
-      DataFrameH5Path { h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
+      DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
+                      , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
                       , h5pDelta = DataItem (nxentry </> delta) ExtendDims
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
@@ -414,12 +448,13 @@ ponies fs = mapM extract (sort fs)
      extract :: FilePath -> IO PoniEntry
      extract filename = liftM last (poniFromFile filename)
 
-withDataframeH5 :: File -> DataFrameH5Path -> PoniGenerator -> (DataFrameH5 -> IO r) -> IO r
-withDataframeH5 h5file dfp gen = bracket (acquire h5file dfp) release
+withDataframeH5 :: File -> DataFrameH5Path -> PoniGenerator -> Nxs -> (DataFrameH5 -> IO r) -> IO r
+withDataframeH5 h5file dfp gen nxs = bracket (acquire h5file dfp) release
   where
     acquire :: File -> DataFrameH5Path -> IO DataFrameH5
     acquire h d =  DataFrameH5
-                   <$> openDataset' h (h5pGamma d)
+                   <$> return nxs
+                   <*> openDataset' h (h5pGamma d)
                    <*> openDataset' h (h5pDelta d)
                    <*> openDataset' h (h5pWavelength d)
                    <*> return gen
@@ -451,9 +486,9 @@ plotPoni pattern output = do
 
 
 getPoniExtRef :: XRFRef -> IO PoniExt
-getPoniExtRef (XRFRef _ output (Nxs f e h5path) idx) = do
+getPoniExtRef (XRFRef _ output nxs@(Nxs f e h5path) idx) = do
   poniExtRefs <- withH5File f $ \h5file ->
-    withDataframeH5 h5file h5path (gen output f) $ \dataframe_h5 ->
+    withDataframeH5 h5file h5path (gen output f) nxs $ \dataframe_h5 ->
       toListM (frames' dataframe_h5 [idx])
   return $ df_poniext (Prelude.head poniExtRefs)
   where
@@ -464,18 +499,19 @@ getPoniExtRef (XRFRef _ output (Nxs f e h5path) idx) = do
       where
         scandir = takeFileName nxs
 
-createPonies :: PoniExt -> XRFSample -> IO ()
-createPonies ref (XRFSample _ output nxss) = mapM_ (createPonies' ref output) nxss
+integrate :: PoniExt -> XRFSample -> IO ()
+integrate ref (XRFSample _ output nxss) = mapM_ (integrate' ref output) nxss
 
-createPonies' :: PoniExt -> OutputBaseDir -> Nxs -> IO ()
-createPonies' ref output (Nxs f e h5path) = do
+integrate' :: PoniExt -> OutputBaseDir -> Nxs -> IO ()
+integrate' ref output nxs@(Nxs f e h5path) = do
   Prelude.print f
   withH5File f $ \h5file ->
-    withDataframeH5 h5file h5path (gen ref) $ \dataframe_h5 -> do
+    withDataframeH5 h5file h5path (gen ref) nxs $ \dataframe_h5 -> do
       True <- hkl_h5_is_valid dataframe_h5
 
       runEffect $ frames dataframe_h5
         >-> savePonies (pgen output f)
+        >-> savePy 300
         >-> drain
   where
     gen :: PoniExt -> MyMatrix Double -> Int -> IO PoniExt
@@ -494,18 +530,56 @@ computeNewPoni (PoniExt p1 mym1) mym2 = PoniExt p2 mym2
     rotate :: PoniEntry -> PoniEntry
     rotate e = rotatePoniEntry e mym1 mym2
 
+createPy :: Int -> DifTomoFrame2 -> Text
+createPy nb f2@(DifTomoFrame2 f poniFileName) =
+  intercalate (Data.Text.pack "\n") $
+  map Data.Text.pack ["#!/bin/env python"
+                     , ""
+                     , "from h5py import File"
+                     , "from pyFAI import load"
+                     , ""
+                     , "PONIFILE = " ++ show p
+                     , "NEXUSFILE = " ++ show nxs
+                     , "IMAGEPATH = " ++ show i
+                     , "IDX = " ++ show idx
+                     , "N = " ++ show nb
+                     , "OUTPUT = " ++ show out
+                     , ""
+                     , "ai = load(PONIFILE)"
+                     , "with File(NEXUSFILE) as f:"
+                     , "    img = f[IMAGEPATH][IDX]"
+                     , "    ai.integrate1d(img, N, filename=OUTPUT)"
+                     ]
+  where
+    p = takeFileName poniFileName
+    (Nxs nxs nxentry h5path) = df_nxs f
+    (DataItem i _) = h5pImage h5path
+    idx = df_n f
+    out = (dropExtension . takeFileName) poniFileName ++ ".dat"
+
 -- | Pipes
 
-savePonies  :: (Int -> FilePath) -> Pipe DifTomoFrame DifTomoFrame IO ()
+savePonies :: (Int -> FilePath) -> Pipe DifTomoFrame DifTomoFrame2 IO ()
 savePonies g = forever $ do
   f <- await
   let filename = g (df_n f)
   lift $ createDirectoryIfMissing True (takeDirectory filename)
   lift $ writeFile filename (content (df_poniext f))
-  yield f
+  lift $ Prelude.print $ "--> " ++ filename
+  yield $ DifTomoFrame2 f filename
     where
       content :: PoniExt -> Text
       content (PoniExt poni _) = poniToText poni
+
+savePy :: Int-> Pipe DifTomoFrame2 DifTomoFrame2 IO ()
+savePy n = forever $ do
+  f2@(DifTomoFrame2 _ poniFileName) <- await
+  let directory = takeDirectory poniFileName
+  let pyFileName = (dropExtension poniFileName) ++ ".py"
+  lift $ createDirectoryIfMissing True directory
+  lift $ writeFile pyFileName (createPy n f2)
+  lift $ Prelude.print $ "--> " ++ pyFileName
+  yield f2
 
 frames :: Frame a => a -> Producer DifTomoFrame IO ()
 frames d = do
@@ -529,7 +603,7 @@ main_martinetto = do
 
   -- calculer et écrire pour chaque point d'un scan un poni correspondant à la bonne géométries.
 
-  mapM_ (createPonies poniextref) samples
+  mapM_ (integrate poniextref) samples
 
   -- plotPoni "/tmp/*.poni" "/tmp/plot.txt"
 

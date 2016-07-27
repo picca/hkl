@@ -60,7 +60,7 @@ poniEntryToText :: PoniEntry -> Text
 poniEntryToText (PoniEntry h md p1 p2 d poni1 poni2 rot1 rot2 rot3 ms w) =
   intercalate (Data.Text.pack "\n") $
     map (Data.Text.append "#") h
-    ++ maybe [] (poniLine "Detector: ") md
+    ++ maybe [] (poniLine' "Detector: ") md
     ++ poniLine "PixelSize1: " (p1 /~ meter)
     ++ poniLine "PixelSize2: " (p2 /~ meter)
     ++ poniLine "Distance: " (d /~ meter)
@@ -69,11 +69,14 @@ poniEntryToText (PoniEntry h md p1 p2 d poni1 poni2 rot1 rot2 rot3 ms w) =
     ++ poniLine "Rot1: " (rot1 /~ radian)
     ++ poniLine "Rot2: " (rot2 /~ radian)
     ++ poniLine "Rot3: " (rot3 /~ radian)
-    ++ maybe [] (poniLine "SplineFile: ") ms
+    ++ maybe [] (poniLine' "SplineFile: ") ms
     ++ poniLine "Wavelength: " (w /~ meter)
   where
     poniLine :: Show a => String -> a -> [Text]
     poniLine key v = [Data.Text.append (Data.Text.pack key) (Data.Text.pack $ show v)]
+
+    poniLine' :: String -> Text -> [Text]
+    poniLine' key v = [Data.Text.append (Data.Text.pack key) v]
 
 crossprod :: Vector Double -> Matrix Double
 crossprod axis = fromLists [[ 0, -z,  y],
