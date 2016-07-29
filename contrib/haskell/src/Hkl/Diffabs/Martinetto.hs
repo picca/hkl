@@ -1,4 +1,5 @@
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Hkl.Diffabs.Martinetto
        ( main_martinetto ) where
@@ -410,17 +411,16 @@ k9a2 = XRFSample "K9A2"
 -- | Usual methods
 
 title :: Text
-title = intercalate (Data.Text.pack "\t")
-        (map Data.Text.pack [ "# distance"
-                            , "poni1"
-                            , "poni2"
-                            , "rot1"
-                            , "rot2"
-                            , "rot3" ])
+title = intercalate "\t" [ "# distance"
+                         , "poni1"
+                         , "poni2"
+                         , "rot1"
+                         , "rot2"
+                         , "rot3" ]
 
 toText :: PoniEntry -> Text
 toText (PoniEntry _ _ _ _ d p1 p2 rot1 rot2 rot3 _ _) =
-  intercalate (Data.Text.pack "\t")
+  intercalate "\t"
   (map (Data.Text.pack . show) [ d /~ meter
                                , p1 /~ meter
                                , p2 /~ meter
@@ -532,7 +532,7 @@ computeNewPoni (PoniExt p1 mym1) mym2 = PoniExt p2 mym2
 
 createPy :: Int -> DifTomoFrame2 -> Text
 createPy nb f2@(DifTomoFrame2 f poniFileName) =
-  intercalate (Data.Text.pack "\n") $
+  intercalate "\n" $
   map Data.Text.pack ["#!/bin/env python"
                      , ""
                      , "from h5py import File"
