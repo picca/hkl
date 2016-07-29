@@ -544,8 +544,10 @@ createPy nb f2@(DifTomoFrame2 f poniFileName) =
                      , "IDX = " ++ show idx
                      , "N = " ++ show nb
                      , "OUTPUT = " ++ show out
+                     , "WAVELENGTH = " ++ show (w /~ meter)
                      , ""
                      , "ai = load(PONIFILE)"
+                     , "ai.wavelength = WAVELENGTH"
                      , "with File(NEXUSFILE) as f:"
                      , "    img = f[IMAGEPATH][IDX]"
                      , "    ai.integrate1d(img, N, filename=OUTPUT)"
@@ -556,6 +558,7 @@ createPy nb f2@(DifTomoFrame2 f poniFileName) =
     (DataItem i _) = h5pImage h5path
     idx = df_n f
     out = (dropExtension . takeFileName) poniFileName ++ ".dat"
+    (Geometry _ (Source w) _ _) = df_geometry f
 
 -- | Pipes
 
