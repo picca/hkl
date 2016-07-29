@@ -13,7 +13,7 @@ import Data.ByteString.Char8 (pack)
 import Data.Char (toUpper)
 import Data.Either
 import Data.List (sort)
-import Data.Packed.Matrix (Matrix)
+import Numeric.LinearAlgebra hiding (row)
 import Data.Text (Text, intercalate, pack)
 import Data.Text.IO (hPutStrLn, readFile, writeFile)
 import Data.Vector.Storable (concat, head)

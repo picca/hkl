@@ -5,7 +5,7 @@ module Hkl.Types.PyFAI
        , Poni
        ) where
 
-import Data.Packed.Matrix (Matrix)
+import Numeric.LinearAlgebra
 import Data.Text
 import Numeric.Units.Dimensional.Prelude
 

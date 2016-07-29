@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Hkl.PyFAI
@@ -9,10 +10,11 @@ import Control.Applicative
 import Data.Attoparsec.Text
 import Data.Text (Text, append, concat, intercalate, pack)
 import Hkl.Types
-import Numeric.LinearAlgebra ( Matrix, Vector
-                             , ident, fromList, fromLists
-                             , inv, scalar, trans
-                             , (@>), (@@>), (<>))
+import Numeric.LinearAlgebra hiding (double)
+#if !MIN_VERSION_hmatrix(0, 17, 0)
+tr = trans
+#endif
+
 import Numeric.Units.Dimensional.Prelude (Angle, Length, (*~), (/~), one, meter, radian)
 
 commentP :: Parser Text
@@ -83,9 +85,9 @@ crossprod axis = fromLists [[ 0, -z,  y],
                             [ z,  0, -x],
                             [-y,  x,  0]]
     where
-      x = axis @> 0
-      y = axis @> 1
-      z = axis @> 2
+      x = axis `atIndex` 0
+      y = axis `atIndex` 1
+      z = axis `atIndex` 2
 
 
 fromAxisAndAngle :: Vector Double -> Angle Double -> Matrix Double
@@ -98,17 +100,17 @@ fromAxisAndAngle axis angle = ident 3 + s * q + c * (q <> q)
 
 toEulerians :: Matrix Double -> (Angle Double, Angle Double, Angle Double)
 toEulerians m
-  | abs c > epsilon = ( atan2 ((m @@> (2, 1)) / c) ((m @@> (2, 2)) / c) *~ radian
+  | abs c > epsilon = ( atan2 ((m `atIndex` (2, 1)) / c) ((m `atIndex` (2, 2)) / c) *~ radian
                       , rot2 *~ radian
-                      , atan2 ((m @@> (1, 0)) / c) ((m @@> (0, 0)) / c) *~ radian
+                      , atan2 ((m `atIndex` (1, 0)) / c) ((m `atIndex` (0, 0)) / c) *~ radian
                       )
   | otherwise        = ( 0 *~ radian
                        , rot2 *~ radian
-                       , atan2 (-(m @@> (0, 1))) (m @@> (1, 1)) *~ radian
+                       , atan2 (-(m `atIndex` (0, 1))) (m `atIndex` (1, 1)) *~ radian
                        )
   where
     epsilon = 1e-10
-    rot2 = asin (-(m @@> (2, 0)))
+    rot2 = asin (-(m `atIndex` (2, 0)))
     c = cos rot2
 
 
@@ -123,7 +125,7 @@ rotatePoniEntry (PoniEntry header detector px1 px2 distance poni1 poni2 rot1 rot
     r1 = foldl (<>) (ident 3) rotations -- pyFAIB
     -- M2 . R0 = R2
     -- R2 = M2 . M1.T . R1
-    r2 = foldl (<>) m2 [trans m1, r1]
+    r2 = foldl (<>) m2 [tr m1, r1]
     (new_rot1, new_rot2, new_rot3) = toEulerians r2
 
     changeBase :: MyMatrix Double -> Basis -> MyMatrix Double

@@ -14,7 +14,7 @@ import Prelude hiding (min, max)
 import Control.Monad (void, forever)
 import Control.Monad.Loops (unfoldrM)
 import Control.Monad.Trans.State.Strict
-import Data.Packed.Matrix
+import Numeric.LinearAlgebra
 import Foreign ( ForeignPtr
                , FunPtr
                , Ptr
