@@ -9,6 +9,8 @@ import Control.Applicative ((<$>), (<*>))
 #endif
 import Control.Exception (bracket)
 import Control.Monad (forM_, forever, liftM)
+import Control.Monad.IO.Class (liftIO)
+import Control.Monad.Morph (hoist)
 import Data.Attoparsec.Text
 import Data.ByteString.Char8 (pack)
 import Data.Char (toUpper)
@@ -37,8 +39,9 @@ import System.IO (withFile, IOMode(WriteMode) )
 
 import Prelude hiding (concat, lookup, readFile, writeFile)
 
-import Pipes (Consumer, Pipe, Producer, lift, (>->), runEffect, await, yield)
+import Pipes (Pipe, Producer, lift, (>->), runEffect, await, yield, for , cat)
 import Pipes.Prelude (toListM, drain, print)
+import Pipes.Safe (SafeT, runSafeT, bracket)
 import Text.Printf (printf)
 
 -- | Types
@@ -446,28 +449,7 @@ ponies :: [FilePath] -> IO [PoniEntry]
 ponies fs = mapM extract (sort fs)
   where
      extract :: FilePath -> IO PoniEntry
-     extract filename = liftM last (poniFromFile filename)
-
-withDataframeH5 :: File -> DataFrameH5Path -> PoniGenerator -> Nxs -> (DataFrameH5 -> IO r) -> IO r
-withDataframeH5 h5file dfp gen nxs = bracket (acquire h5file dfp) release
-  where
-    acquire :: File -> DataFrameH5Path -> IO DataFrameH5
-    acquire h d =  DataFrameH5
-                   <$> return nxs
-                   <*> openDataset' h (h5pGamma d)
-                   <*> openDataset' h (h5pDelta d)
-                   <*> openDataset' h (h5pWavelength d)
-                   <*> return gen
-
-    release :: DataFrameH5 -> IO ()
-    release d = do
-      closeDataset (h5gamma d)
-      closeDataset (h5delta d)
-      closeDataset (h5wavelength d)
-
-    openDataset' :: File -> DataItem -> IO Dataset
-    openDataset' hid (DataItem name _) = openDataset hid (Data.ByteString.Char8.pack name) Nothing
-
+     extract filename = fmap last (poniFromFile filename)
 
 hkl_h5_is_valid :: DataFrameH5-> IO Bool
 hkl_h5_is_valid d = do
@@ -476,8 +458,8 @@ hkl_h5_is_valid d = do
   return True
 
 plotPoni :: String -> FilePath -> IO ()
-plotPoni pattern output = do
-  filenames <- glob pattern
+plotPoni patter output = do
+  filenames <- glob patter
   -- print $ sort filenames
   -- print $ [0,3..39 :: Int] ++ [43 :: Int]
   -- print nxs
@@ -488,8 +470,8 @@ plotPoni pattern output = do
 getPoniExtRef :: XRFRef -> IO PoniExt
 getPoniExtRef (XRFRef _ output nxs@(Nxs f e h5path) idx) = do
   poniExtRefs <- withH5File f $ \h5file ->
-    withDataframeH5 h5file h5path (gen output f) nxs $ \dataframe_h5 ->
-      toListM (frames' dataframe_h5 [idx])
+    runSafeT $ toListM ( with h5file h5path (gen output f) nxs
+                         >-> hoist lift (frames' [idx]))
   return $ df_poniext (Prelude.head poniExtRefs)
   where
     gen :: FilePath -> FilePath -> MyMatrix Double -> Int -> IO PoniExt
@@ -506,12 +488,9 @@ integrate' :: PoniExt -> OutputBaseDir -> Nxs -> IO ()
 integrate' ref output nxs@(Nxs f e h5path) = do
   Prelude.print f
   withH5File f $ \h5file ->
-    withDataframeH5 h5file h5path (gen ref) nxs $ \dataframe_h5 -> do
-      True <- hkl_h5_is_valid dataframe_h5
-
-      runEffect $ frames dataframe_h5
-        >-> savePonies (pgen output f)
-        >-> savePy 300
+      runSafeT $ runEffect $
+        with h5file h5path (gen ref) nxs
+        >-> hoist lift (frames >-> savePonies (pgen output f) >-> savePy 300)
         >-> drain
   where
     gen :: PoniExt -> MyMatrix Double -> Int -> IO PoniExt
@@ -562,6 +541,26 @@ createPy nb f2@(DifTomoFrame2 f poniFileName) =
 
 -- | Pipes
 
+with :: File -> DataFrameH5Path -> PoniGenerator -> Nxs -> Producer DataFrameH5 (SafeT IO) ()
+with h5file dfp gen nxs = Pipes.Safe.bracket (before h5file dfp) after yield
+  where
+    -- before :: File -> DataFrameH5Path -> m DataFrameH5
+    before h d =  DataFrameH5
+                   <$> return nxs
+                   <*> openDataset' h (h5pGamma d)
+                   <*> openDataset' h (h5pDelta d)
+                   <*> openDataset' h (h5pWavelength d)
+                   <*> return gen
+
+    -- after :: DataFrameH5 -> m ()
+    after d = do
+      closeDataset (h5gamma d)
+      closeDataset (h5delta d)
+      closeDataset (h5wavelength d)
+
+    -- openDataset' :: File -> DataItem -> IO Dataset
+    openDataset' hid (DataItem name _) = openDataset hid (Data.ByteString.Char8.pack name) Nothing
+
 savePonies :: (Int -> FilePath) -> Pipe DifTomoFrame DifTomoFrame2 IO ()
 savePonies g = forever $ do
   f <- await
@@ -578,20 +577,26 @@ savePy :: Int-> Pipe DifTomoFrame2 DifTomoFrame2 IO ()
 savePy n = forever $ do
   f2@(DifTomoFrame2 _ poniFileName) <- await
   let directory = takeDirectory poniFileName
-  let pyFileName = (dropExtension poniFileName) ++ ".py"
+  let pyFileName = dropExtension poniFileName ++ ".py"
   lift $ createDirectoryIfMissing True directory
   lift $ writeFile pyFileName (createPy n f2)
   lift $ Prelude.print $ "--> " ++ pyFileName
   yield f2
 
-frames :: Frame a => a -> Producer DifTomoFrame IO ()
-frames d = do
+frames :: (Frame a) => Pipe a DifTomoFrame IO ()
+frames = do
+  d <- await
   (Just n) <- lift $ len d
-  frames' d [0..n-1]
+  forM_ [0..n-1] (\i -> do
+                     f <- lift $ row d i
+                     yield f)
 
-frames' :: Frame a => a -> [Int] -> Producer DifTomoFrame IO ()
-frames' d idxs = forM_ idxs (\i -> lift (row d i) >>= yield)
-
+frames' :: (Frame a) => [Int] -> Pipe a DifTomoFrame IO ()
+frames' idxs = do
+  d <- await
+  forM_ idxs (\i -> do
+                 f <- lift $ row d i
+                 yield f)
 
 -- | Main
 
