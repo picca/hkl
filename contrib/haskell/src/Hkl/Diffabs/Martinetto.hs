@@ -44,9 +44,9 @@ type OutputBaseDir = FilePath
 type PoniGenerator = MyMatrix Double -> Int -> IO PoniExt
 type SampleName = String
 
-data XRFRef = XRFRef SampleName OutputBaseDir Nxs Int
+data XRDRef = XRDRef SampleName OutputBaseDir Nxs Int
 
-data XRFSample = XRFSample SampleName OutputBaseDir [Nxs]-- ^ nxss
+data XRDSample = XRDSample SampleName OutputBaseDir [Nxs]-- ^ nxss
 
 data Nxs = Nxs FilePath NxEntry DataFrameH5Path deriving (Show)
 
@@ -118,8 +118,8 @@ beamlineUpper b = [toUpper x | x <- show b]
 nxs :: FilePath -> NxEntry -> (NxEntry -> DataFrameH5Path ) -> Nxs
 nxs f e h5path = Nxs f e (h5path e)
 
-calibration :: XRFRef
-calibration = XRFRef "calibration"
+calibration :: XRDRef
+calibration = XRDRef "calibration"
               (published </> "calibration")
               (nxs (published </> "calibration" </> "XRD18keV_26.nxs") "scan_26" h5path)
               0
@@ -140,8 +140,8 @@ calibration = XRFRef "calibration"
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
 
-n27t2 :: XRFSample
-n27t2 = XRFSample "N27T2"
+n27t2 :: XRDSample
+n27t2 = XRDSample "N27T2"
         (published </> "N27T2")
         [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "N27T2_14.nxs") "scan_14" h5path
         , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "N27T2_17.nxs") "scan_17" h5path
@@ -163,8 +163,8 @@ n27t2 = XRFSample "N27T2"
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
 
-r34n1 :: XRFSample
-r34n1 = XRFSample "R34N1"
+r34n1 :: XRDSample
+r34n1 = XRDSample "R34N1"
         (published </> "R34N1")
          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R34N1_28.nxs") "scan_28" h5path
          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R34N1_37.nxs") "scan_37" h5path
@@ -186,8 +186,8 @@ r34n1 = XRFSample "R34N1"
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
 
-r23 :: XRFSample
-r23 = XRFSample "R23"
+r23 :: XRDSample
+r23 = XRDSample "R23"
         (published </> "R23")
          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R23_6.nxs") "scan_6" h5path
          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R23_12.nxs") "scan_12" h5path
@@ -209,8 +209,8 @@ r23 = XRFSample "R23"
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
 
-r18 :: XRFSample
-r18 = XRFSample "R18"
+r18 :: XRDSample
+r18 = XRDSample "R18"
         (published </> "R18")
          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R18_20.nxs") "scan_20" h5path
          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R18_24.nxs") "scan_24" h5path
@@ -232,8 +232,8 @@ r18 = XRFSample "R18"
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
 
-a3 :: XRFSample
-a3 = XRFSample "A3"
+a3 :: XRDSample
+a3 = XRDSample "A3"
         (published </> "A3")
          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "A3_13.nxs") "scan_13" h5path
          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "A3_14.nxs") "scan_14" h5path
@@ -256,8 +256,8 @@ a3 = XRFSample "A3"
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
 
-a2 :: XRFSample
-a2 = XRFSample "A2"
+a2 :: XRDSample
+a2 = XRDSample "A2"
         (published </> "A2")
          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "A2_14.nxs") "scan_14" h5path
          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "A2_17.nxs") "scan_17" h5path
@@ -279,8 +279,8 @@ a2 = XRFSample "A2"
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
 
-d2 :: XRFSample
-d2 = XRFSample "D2"
+d2 :: XRDSample
+d2 = XRDSample "D2"
         (published </> "D2")
          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D2_16.nxs") "scan_16" h5path
          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D2_17.nxs") "scan_17" h5path
@@ -302,8 +302,8 @@ d2 = XRFSample "D2"
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
 
-d3 :: XRFSample
-d3 = XRFSample "D3"
+d3 :: XRDSample
+d3 = XRDSample "D3"
         (published </> "D3")
          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D3_14.nxs") "scan_14" h5path
          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D3_15.nxs") "scan_15" h5path
@@ -325,8 +325,8 @@ d3 = XRFSample "D3"
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
 
-r11 :: XRFSample
-r11 = XRFSample "R11"
+r11 :: XRDSample
+r11 = XRDSample "R11"
         (published </> "R11")
          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R11_5.nxs") "scan_5" h5path
          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R11_6.nxs") "scan_6" h5path
@@ -349,8 +349,8 @@ r11 = XRFSample "R11"
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
 
-d16 :: XRFSample
-d16 = XRFSample "D16"
+d16 :: XRDSample
+d16 = XRDSample "D16"
         (published </> "D16")
          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D16_12.nxs") "scan_12" h5path
          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D16_15.nxs") "scan_15" h5path
@@ -373,8 +373,8 @@ d16 = XRFSample "D16"
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
 
-k9a2 :: XRFSample
-k9a2 = XRFSample "K9A2"
+k9a2 :: XRDSample
+k9a2 = XRDSample "K9A2"
        (published </> "K9A2")
        [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "K9A2_1_31.nxs") "scan_31" h5path
        , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "K9A2_1_32.nxs") "scan_32" h5path
@@ -422,8 +422,8 @@ poniFromFile filename = do
     Left _     -> error $ "Can not parse the " ++ filename ++ " poni file"
     Right poni -> poni
 
-getPoniExtRef :: XRFRef -> IO PoniExt
-getPoniExtRef (XRFRef _ output nxs'@(Nxs f _ _) idx) = do
+getPoniExtRef :: XRDRef -> IO PoniExt
+getPoniExtRef (XRDRef _ output nxs'@(Nxs f _ _) idx) = do
   poniExtRefs <- withH5File f $ \h5file ->
     runSafeT $ toListM ( withDataFrameH5 h5file nxs' (gen output f) yield
                          >-> hoist lift (frames' [idx]))
@@ -436,8 +436,8 @@ getPoniExtRef (XRFRef _ output nxs'@(Nxs f _ _) idx) = do
       where
         scandir = takeFileName nxs''
 
-integrate :: PoniExt -> XRFSample -> IO ()
-integrate ref (XRFSample _ output nxss) = mapM_ (integrate' ref output) nxss
+integrate :: PoniExt -> XRDSample -> IO ()
+integrate ref (XRDSample _ output nxss) = mapM_ (integrate' ref output) nxss
 
 integrate' :: PoniExt -> OutputBaseDir -> Nxs -> IO ()
 integrate' ref output nxs'@(Nxs f _ _) = do
