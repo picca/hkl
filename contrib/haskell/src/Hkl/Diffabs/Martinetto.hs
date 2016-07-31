@@ -116,12 +116,12 @@ beamlineUpper :: Beamline -> String
 beamlineUpper b = [toUpper x | x <- show b]
 
 nxs :: FilePath -> NxEntry -> (NxEntry -> DataFrameH5Path ) -> Nxs
-nxs f e h5path = Nxs f e (h5path e)
+nxs f e h = Nxs f e (h e)
 
 calibration :: XRDRef
 calibration = XRDRef "calibration"
               (published </> "calibration")
-              (nxs (published </> "calibration" </> "XRD18keV_26.nxs") "scan_26" h5path)
+              (nxs (published </> "calibration" </> "XRD18keV_26.nxs") "scan_26" h5path')
               0
   where
     beamline :: String
@@ -132,13 +132,30 @@ calibration = XRDRef "calibration"
     delta = "scan_data/trajectory_1_1"
     wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
 
-    h5path :: NxEntry -> DataFrameH5Path
-    h5path nxentry =
+    h5path' :: NxEntry -> DataFrameH5Path
+    h5path' nxentry =
       DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
                       , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
                       , h5pDelta = DataItem (nxentry </> delta) ExtendDims
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
+
+
+h5path :: NxEntry -> DataFrameH5Path
+h5path nxentry =
+  DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
+                  , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
+                  , h5pDelta = DataItem (nxentry </> delta) ExtendDims
+                  , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
+                  }
+  where
+    beamline :: String
+    beamline = beamlineUpper Diffabs
+
+    image = "scan_data/data_53"
+    gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
+    delta = "scan_data/trajectory_1_1"
+    wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
 
 n27t2 :: XRDSample
 n27t2 = XRDSample "N27T2"
@@ -146,22 +163,6 @@ n27t2 = XRDSample "N27T2"
         [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "N27T2_14.nxs") "scan_14" h5path
         , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "N27T2_17.nxs") "scan_17" h5path
         ]
-  where
-    beamline :: String
-    beamline = beamlineUpper Diffabs
-
-    image = "scan_data/data_53"
-    gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
-    delta = "scan_data/trajectory_1_1"
-    wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
-
-    h5path :: NxEntry -> DataFrameH5Path
-    h5path nxentry =
-      DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
-                      , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
-                      , h5pDelta = DataItem (nxentry </> delta) ExtendDims
-                      , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
-                      }
 
 r34n1 :: XRDSample
 r34n1 = XRDSample "R34N1"
@@ -169,22 +170,6 @@ r34n1 = XRDSample "R34N1"
          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R34N1_28.nxs") "scan_28" h5path
          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R34N1_37.nxs") "scan_37" h5path
          ]
-  where
-    beamline :: String
-    beamline = beamlineUpper Diffabs
-
-    image = "scan_data/data_53"
-    gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
-    delta = "scan_data/trajectory_1_1"
-    wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
-
-    h5path :: NxEntry -> DataFrameH5Path
-    h5path nxentry =
-      DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
-                      , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
-                      , h5pDelta = DataItem (nxentry </> delta) ExtendDims
-                      , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
-                      }
 
 r23 :: XRDSample
 r23 = XRDSample "R23"
@@ -192,22 +177,6 @@ r23 = XRDSample "R23"
          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R23_6.nxs") "scan_6" h5path
          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R23_12.nxs") "scan_12" h5path
          ]
-  where
-    beamline :: String
-    beamline = beamlineUpper Diffabs
-
-    image = "scan_data/data_53"
-    gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
-    delta = "scan_data/trajectory_1_1"
-    wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
-
-    h5path :: NxEntry -> DataFrameH5Path
-    h5path nxentry =
-      DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
-                      , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
-                      , h5pDelta = DataItem (nxentry </> delta) ExtendDims
-                      , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
-                      }
 
 r18 :: XRDSample
 r18 = XRDSample "R18"
@@ -215,22 +184,6 @@ r18 = XRDSample "R18"
          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R18_20.nxs") "scan_20" h5path
          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R18_24.nxs") "scan_24" h5path
          ]
-  where
-    beamline :: String
-    beamline = beamlineUpper Diffabs
-
-    image = "scan_data/data_53"
-    gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
-    delta = "scan_data/trajectory_1_1"
-    wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
-
-    h5path :: NxEntry -> DataFrameH5Path
-    h5path nxentry =
-      DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
-                      , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
-                      , h5pDelta = DataItem (nxentry </> delta) ExtendDims
-                      , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
-                      }
 
 a3 :: XRDSample
 a3 = XRDSample "A3"
@@ -239,22 +192,6 @@ a3 = XRDSample "A3"
          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "A3_14.nxs") "scan_14" h5path
          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "A3_15.nxs") "scan_15" h5path
          ]
-  where
-    beamline :: String
-    beamline = beamlineUpper Diffabs
-
-    image = "scan_data/data_53"
-    gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
-    delta = "scan_data/trajectory_1_1"
-    wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
-
-    h5path :: NxEntry -> DataFrameH5Path
-    h5path nxentry =
-      DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
-                      , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
-                      , h5pDelta = DataItem (nxentry </> delta) ExtendDims
-                      , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
-                      }
 
 a2 :: XRDSample
 a2 = XRDSample "A2"
@@ -262,22 +199,6 @@ a2 = XRDSample "A2"
          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "A2_14.nxs") "scan_14" h5path
          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "A2_17.nxs") "scan_17" h5path
          ]
-  where
-    beamline :: String
-    beamline = beamlineUpper Diffabs
-
-    image = "scan_data/data_53"
-    gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
-    delta = "scan_data/trajectory_1_1"
-    wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
-
-    h5path :: NxEntry -> DataFrameH5Path
-    h5path nxentry =
-      DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
-                      , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
-                      , h5pDelta = DataItem (nxentry </> delta) ExtendDims
-                      , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
-                      }
 
 d2 :: XRDSample
 d2 = XRDSample "D2"
@@ -285,22 +206,6 @@ d2 = XRDSample "D2"
          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D2_16.nxs") "scan_16" h5path
          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D2_17.nxs") "scan_17" h5path
          ]
-  where
-    beamline :: String
-    beamline = beamlineUpper Diffabs
-
-    image = "scan_data/data_53"
-    gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
-    delta = "scan_data/trajectory_1_1"
-    wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
-
-    h5path :: NxEntry -> DataFrameH5Path
-    h5path nxentry =
-      DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
-                      , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
-                      , h5pDelta = DataItem (nxentry </> delta) ExtendDims
-                      , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
-                      }
 
 d3 :: XRDSample
 d3 = XRDSample "D3"
@@ -308,22 +213,6 @@ d3 = XRDSample "D3"
          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D3_14.nxs") "scan_14" h5path
          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D3_15.nxs") "scan_15" h5path
          ]
-  where
-    beamline :: String
-    beamline = beamlineUpper Diffabs
-
-    image = "scan_data/data_53"
-    gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
-    delta = "scan_data/trajectory_1_1"
-    wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
-
-    h5path :: NxEntry -> DataFrameH5Path
-    h5path nxentry =
-      DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
-                      , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
-                      , h5pDelta = DataItem (nxentry </> delta) ExtendDims
-                      , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
-                      }
 
 r11 :: XRDSample
 r11 = XRDSample "R11"
@@ -332,22 +221,6 @@ r11 = XRDSample "R11"
          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R11_6.nxs") "scan_6" h5path
          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R11_7.nxs") "scan_7" h5path
          ]
-  where
-    beamline :: String
-    beamline = beamlineUpper Diffabs
-
-    image = "scan_data/data_53"
-    gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
-    delta = "scan_data/trajectory_1_1"
-    wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
-
-    h5path :: NxEntry -> DataFrameH5Path
-    h5path nxentry =
-      DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
-                      , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
-                      , h5pDelta = DataItem (nxentry </> delta) ExtendDims
-                      , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
-                      }
 
 d16 :: XRDSample
 d16 = XRDSample "D16"
@@ -356,22 +229,6 @@ d16 = XRDSample "D16"
          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D16_15.nxs") "scan_15" h5path
          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D16_17.nxs") "scan_17" h5path
          ]
-  where
-    beamline :: String
-    beamline = beamlineUpper Diffabs
-
-    image = "scan_data/data_53"
-    gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
-    delta = "scan_data/trajectory_1_1"
-    wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
-
-    h5path :: NxEntry -> DataFrameH5Path
-    h5path nxentry =
-      DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
-                      , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
-                      , h5pDelta = DataItem (nxentry </> delta) ExtendDims
-                      , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
-                      }
 
 k9a2 :: XRDSample
 k9a2 = XRDSample "K9A2"
@@ -379,22 +236,6 @@ k9a2 = XRDSample "K9A2"
        [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "K9A2_1_31.nxs") "scan_31" h5path
        , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "K9A2_1_32.nxs") "scan_32" h5path
        ]
-  where
-    beamline :: String
-    beamline = beamlineUpper Diffabs
-
-    image = "scan_data/data_53"
-    gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
-    delta = "scan_data/trajectory_1_1"
-    wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
-
-    h5path :: NxEntry -> DataFrameH5Path
-    h5path nxentry =
-      DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
-                      , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
-                      , h5pDelta = DataItem (nxentry </> delta) ExtendDims
-                      , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
-                      }
 
 -- {-# ANN module "HLint: ignore Use camelCase" #-}
 
@@ -489,8 +330,8 @@ createPy nb (f, poniFileName) =
                      ]
   where
     p = takeFileName poniFileName
-    (Nxs nxs' _ h5path) = df_nxs f
-    (DataItem i _) = h5pImage h5path
+    (Nxs nxs' _ h5path') = df_nxs f
+    (DataItem i _) = h5pImage h5path'
     idx = df_n f
     out = (dropExtension . takeFileName) poniFileName ++ ".dat"
     (Geometry _ (Source w) _ _) = df_geometry f
