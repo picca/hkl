@@ -7,23 +7,19 @@ module Hkl.Diffabs.Martinetto
 #if __GLASGOW_HASKELL__ < 710
 import Control.Applicative ((<$>), (<*>))
 #endif
-import Control.Exception (bracket)
-import Control.Monad (forM_, forever, liftM)
+import Control.Monad (forM_, forever)
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Morph (hoist)
 import Data.Attoparsec.Text
 import Data.ByteString.Char8 (pack)
 import Data.Char (toUpper)
 import Data.Either
-import Data.List (sort)
-import Numeric.LinearAlgebra hiding (row)
 import Data.Text (Text, intercalate, pack)
-import Data.Text.IO (hPutStrLn, readFile, writeFile)
+import Data.Text.IO (readFile, writeFile)
 import Data.Vector.Storable (concat, head)
 import Hkl.C (geometryDetectorRotationGet)
 import Hkl.H5 ( Dataset
               , File
-              , check_ndims
               , closeDataset
               , get_position
               , lenH5Dataspace
@@ -31,17 +27,14 @@ import Hkl.H5 ( Dataset
               , withH5File )
 import Hkl.PyFAI
 import Hkl.Types
-import Numeric.Units.Dimensional.Prelude (meter, degree, nano, (/~), (*~))
+import Numeric.Units.Dimensional.Prelude (meter, nano, (/~), (*~))
 import System.Directory (createDirectoryIfMissing)
 import System.FilePath ((</>), dropExtension, takeFileName, takeDirectory)
-import System.FilePath.Glob (glob)
-import System.IO (withFile, IOMode(WriteMode) )
-
 import Prelude hiding (concat, lookup, readFile, writeFile)
 
-import Pipes (Pipe, Producer, lift, (>->), runEffect, await, yield, for , cat)
-import Pipes.Prelude (toListM, drain, print)
-import Pipes.Safe (SafeT, runSafeT, bracket)
+import Pipes (Consumer, Pipe, lift, (>->), runEffect, await, yield)
+import Pipes.Prelude (toListM)
+import Pipes.Safe (MonadSafe(..), runSafeT, bracket)
 import Text.Printf (printf)
 
 -- | Types
@@ -66,11 +59,6 @@ data DifTomoFrame =
                , df_poniext :: PoniExt -- ^ the ref poniext
                } deriving (Show)
 
-data DifTomoFrame2 =
-  DifTomoFrame2 { df_frame :: DifTomoFrame
-                , df_poni_filename :: FilePath
-                } deriving (Show)
-
 class Frame t where
   len :: t -> IO (Maybe Int)
   row :: t -> Int -> IO DifTomoFrame
@@ -94,7 +82,7 @@ instance Frame DataFrameH5 where
   len d =  lenH5Dataspace (h5delta d)
 
   row d idx = do
-    let nxs = h5nxs d
+    let nxs' = h5nxs d
     let mu = 0.0
     let komega = 0.0
     let kappa = 0.0
@@ -108,7 +96,7 @@ instance Frame DataFrameH5 where
     let detector = Detector DetectorType0D
     m <- geometryDetectorRotationGet geometry detector
     poniext <- ponigen d (MyMatrix HklB m) idx
-    return DifTomoFrame { df_nxs = nxs
+    return DifTomoFrame { df_nxs = nxs'
                         , df_n = idx
                         , df_geometry = geometry
                         , df_poniext = poniext
@@ -118,7 +106,10 @@ instance Frame DataFrameH5 where
 
 -- project = "/nfs/ruche-diffabs/diffabs-users/99160066/"
 -- project = "/home/experiences/instrumentation/picca/data/99160066"
+project :: FilePath
 project = "/home/picca/data/99160066"
+
+published :: FilePath
 published = project </> "published-data"
 
 beamlineUpper :: Beamline -> String
@@ -126,7 +117,6 @@ beamlineUpper b = [toUpper x | x <- show b]
 
 nxs :: FilePath -> NxEntry -> (NxEntry -> DataFrameH5Path ) -> Nxs
 nxs f e h5path = Nxs f e (h5path e)
-
 
 calibration :: XRFRef
 calibration = XRFRef "calibration"
@@ -150,6 +140,7 @@ calibration = XRFRef "calibration"
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
 
+n27t2 :: XRFSample
 n27t2 = XRFSample "N27T2"
         (published </> "N27T2")
         [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "N27T2_14.nxs") "scan_14" h5path
@@ -172,6 +163,7 @@ n27t2 = XRFSample "N27T2"
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
 
+r34n1 :: XRFSample
 r34n1 = XRFSample "R34N1"
         (published </> "R34N1")
          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R34N1_28.nxs") "scan_28" h5path
@@ -194,6 +186,7 @@ r34n1 = XRFSample "R34N1"
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
 
+r23 :: XRFSample
 r23 = XRFSample "R23"
         (published </> "R23")
          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R23_6.nxs") "scan_6" h5path
@@ -216,6 +209,7 @@ r23 = XRFSample "R23"
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
 
+r18 :: XRFSample
 r18 = XRFSample "R18"
         (published </> "R18")
          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R18_20.nxs") "scan_20" h5path
@@ -238,6 +232,7 @@ r18 = XRFSample "R18"
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
 
+a3 :: XRFSample
 a3 = XRFSample "A3"
         (published </> "A3")
          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "A3_13.nxs") "scan_13" h5path
@@ -261,6 +256,7 @@ a3 = XRFSample "A3"
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
 
+a2 :: XRFSample
 a2 = XRFSample "A2"
         (published </> "A2")
          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "A2_14.nxs") "scan_14" h5path
@@ -283,6 +279,7 @@ a2 = XRFSample "A2"
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
 
+d2 :: XRFSample
 d2 = XRFSample "D2"
         (published </> "D2")
          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D2_16.nxs") "scan_16" h5path
@@ -305,6 +302,7 @@ d2 = XRFSample "D2"
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
 
+d3 :: XRFSample
 d3 = XRFSample "D3"
         (published </> "D3")
          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D3_14.nxs") "scan_14" h5path
@@ -327,6 +325,7 @@ d3 = XRFSample "D3"
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
 
+r11 :: XRFSample
 r11 = XRFSample "R11"
         (published </> "R11")
          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R11_5.nxs") "scan_5" h5path
@@ -350,6 +349,7 @@ r11 = XRFSample "R11"
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
 
+d16 :: XRFSample
 d16 = XRFSample "D16"
         (published </> "D16")
          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D16_12.nxs") "scan_12" h5path
@@ -373,6 +373,7 @@ d16 = XRFSample "D16"
                       , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                       }
 
+k9a2 :: XRFSample
 k9a2 = XRFSample "K9A2"
        (published </> "K9A2")
        [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "K9A2_1_31.nxs") "scan_31" h5path
@@ -413,30 +414,6 @@ k9a2 = XRFSample "K9A2"
 
 -- | Usual methods
 
-title :: Text
-title = intercalate "\t" [ "# distance"
-                         , "poni1"
-                         , "poni2"
-                         , "rot1"
-                         , "rot2"
-                         , "rot3" ]
-
-toText :: PoniEntry -> Text
-toText (PoniEntry _ _ _ _ d p1 p2 rot1 rot2 rot3 _ _) =
-  intercalate "\t"
-  (map (Data.Text.pack . show) [ d /~ meter
-                               , p1 /~ meter
-                               , p2 /~ meter
-                               , rot1 /~ degree
-                               , rot2 /~ degree
-                               , rot3 /~ degree])
-
-save :: FilePath -> [PoniEntry] -> IO ()
-save f ps = withFile f WriteMode $ \handler -> do
-  hPutStrLn handler title
-  mapM_ (put handler) ps
-    where
-      put h p = hPutStrLn h (toText p)
 
 poniFromFile :: FilePath -> IO Poni
 poniFromFile filename = do
@@ -445,61 +422,40 @@ poniFromFile filename = do
     Left _     -> error $ "Can not parse the " ++ filename ++ " poni file"
     Right poni -> poni
 
-ponies :: [FilePath] -> IO [PoniEntry]
-ponies fs = mapM extract (sort fs)
-  where
-     extract :: FilePath -> IO PoniEntry
-     extract filename = fmap last (poniFromFile filename)
-
-hkl_h5_is_valid :: DataFrameH5-> IO Bool
-hkl_h5_is_valid d = do
-  True <- check_ndims (h5gamma d) 1
-  True <- check_ndims (h5delta d) 1
-  return True
-
-plotPoni :: String -> FilePath -> IO ()
-plotPoni patter output = do
-  filenames <- glob patter
-  -- print $ sort filenames
-  -- print $ [0,3..39 :: Int] ++ [43 :: Int]
-  -- print nxs
-  entries <- ponies filenames
-  save output entries
-
-
 getPoniExtRef :: XRFRef -> IO PoniExt
-getPoniExtRef (XRFRef _ output nxs@(Nxs f e h5path) idx) = do
+getPoniExtRef (XRFRef _ output nxs'@(Nxs f _ _) idx) = do
   poniExtRefs <- withH5File f $ \h5file ->
-    runSafeT $ toListM ( with h5file h5path (gen output f) nxs
+    runSafeT $ toListM ( withDataFrameH5 h5file nxs' (gen output f) yield
                          >-> hoist lift (frames' [idx]))
   return $ df_poniext (Prelude.head poniExtRefs)
   where
     gen :: FilePath -> FilePath -> MyMatrix Double -> Int -> IO PoniExt
-    gen root nxs m idx = do
-      poni <- poniFromFile $ root </> scandir ++ printf "_%02d.poni" idx
+    gen root nxs'' m idx' = do
+      poni <- poniFromFile $ root </> scandir ++ printf "_%02d.poni" idx'
       return $ PoniExt poni m
       where
-        scandir = takeFileName nxs
+        scandir = takeFileName nxs''
 
 integrate :: PoniExt -> XRFSample -> IO ()
 integrate ref (XRFSample _ output nxss) = mapM_ (integrate' ref output) nxss
 
 integrate' :: PoniExt -> OutputBaseDir -> Nxs -> IO ()
-integrate' ref output nxs@(Nxs f e h5path) = do
+integrate' ref output nxs'@(Nxs f _ _) = do
   Prelude.print f
   withH5File f $ \h5file ->
       runSafeT $ runEffect $
-        with h5file h5path (gen ref) nxs
-        >-> hoist lift (frames >-> savePonies (pgen output f) >-> savePy 300)
-        >-> drain
+        withDataFrameH5 h5file nxs' (gen ref) yield
+        >-> hoist lift (frames
+                        >-> savePonies (pgen output f)
+                        >-> savePy 300)
   where
     gen :: PoniExt -> MyMatrix Double -> Int -> IO PoniExt
-    gen ref m _idx = return $ computeNewPoni ref m
+    gen ref' m _idx = return $ computeNewPoni ref' m
 
     pgen :: OutputBaseDir -> FilePath -> Int -> FilePath
-    pgen o nxs idx = o </> scandir </>  scandir ++ printf "_%02d.poni" idx
+    pgen o nxs'' idx = o </> scandir </>  scandir ++ printf "_%02d.poni" idx
       where
-        scandir = (dropExtension . takeFileName) nxs
+        scandir = (dropExtension . takeFileName) nxs''
 
 computeNewPoni :: PoniExt -> MyMatrix Double -> PoniExt
 computeNewPoni (PoniExt p1 mym1) mym2 = PoniExt p2 mym2
@@ -509,8 +465,8 @@ computeNewPoni (PoniExt p1 mym1) mym2 = PoniExt p2 mym2
     rotate :: PoniEntry -> PoniEntry
     rotate e = rotatePoniEntry e mym1 mym2
 
-createPy :: Int -> DifTomoFrame2 -> Text
-createPy nb f2@(DifTomoFrame2 f poniFileName) =
+createPy :: Int -> (DifTomoFrame, FilePath) -> Text
+createPy nb (f, poniFileName) =
   intercalate "\n" $
   map Data.Text.pack ["#!/bin/env python"
                      , ""
@@ -518,7 +474,7 @@ createPy nb f2@(DifTomoFrame2 f poniFileName) =
                      , "from pyFAI import load"
                      , ""
                      , "PONIFILE = " ++ show p
-                     , "NEXUSFILE = " ++ show nxs
+                     , "NEXUSFILE = " ++ show nxs'
                      , "IMAGEPATH = " ++ show i
                      , "IDX = " ++ show idx
                      , "N = " ++ show nb
@@ -533,7 +489,7 @@ createPy nb f2@(DifTomoFrame2 f poniFileName) =
                      ]
   where
     p = takeFileName poniFileName
-    (Nxs nxs nxentry h5path) = df_nxs f
+    (Nxs nxs' _ h5path) = df_nxs f
     (DataItem i _) = h5pImage h5path
     idx = df_n f
     out = (dropExtension . takeFileName) poniFileName ++ ".dat"
@@ -541,47 +497,47 @@ createPy nb f2@(DifTomoFrame2 f poniFileName) =
 
 -- | Pipes
 
-with :: File -> DataFrameH5Path -> PoniGenerator -> Nxs -> Producer DataFrameH5 (SafeT IO) ()
-with h5file dfp gen nxs = Pipes.Safe.bracket (before h5file dfp) after yield
+withDataFrameH5 :: (MonadSafe m) => File -> Nxs -> PoniGenerator -> (DataFrameH5 -> m r) -> m r
+withDataFrameH5 h nxs'@(Nxs _ _ d) gen = Pipes.Safe.bracket (liftIO $ before) (liftIO . after)
   where
     -- before :: File -> DataFrameH5Path -> m DataFrameH5
-    before h d =  DataFrameH5
-                   <$> return nxs
-                   <*> openDataset' h (h5pGamma d)
-                   <*> openDataset' h (h5pDelta d)
-                   <*> openDataset' h (h5pWavelength d)
-                   <*> return gen
+    before :: IO DataFrameH5
+    before =  DataFrameH5
+              <$> return nxs'
+              <*> openDataset' h (h5pGamma d)
+              <*> openDataset' h (h5pDelta d)
+              <*> openDataset' h (h5pWavelength d)
+              <*> return gen
 
-    -- after :: DataFrameH5 -> m ()
-    after d = do
-      closeDataset (h5gamma d)
-      closeDataset (h5delta d)
-      closeDataset (h5wavelength d)
+    -- after :: DataFrameH5 -> IO ()
+    after d' = do
+      closeDataset (h5gamma d')
+      closeDataset (h5delta d')
+      closeDataset (h5wavelength d')
 
     -- openDataset' :: File -> DataItem -> IO Dataset
     openDataset' hid (DataItem name _) = openDataset hid (Data.ByteString.Char8.pack name) Nothing
 
-savePonies :: (Int -> FilePath) -> Pipe DifTomoFrame DifTomoFrame2 IO ()
+savePonies :: (Int -> FilePath) -> Pipe DifTomoFrame (DifTomoFrame, FilePath) IO ()
 savePonies g = forever $ do
   f <- await
   let filename = g (df_n f)
   lift $ createDirectoryIfMissing True (takeDirectory filename)
   lift $ writeFile filename (content (df_poniext f))
   lift $ Prelude.print $ "--> " ++ filename
-  yield $ DifTomoFrame2 f filename
+  yield (f, filename)
     where
       content :: PoniExt -> Text
       content (PoniExt poni _) = poniToText poni
 
-savePy :: Int-> Pipe DifTomoFrame2 DifTomoFrame2 IO ()
+savePy :: Int-> Consumer (DifTomoFrame, FilePath) IO ()
 savePy n = forever $ do
-  f2@(DifTomoFrame2 _ poniFileName) <- await
+  f@(_, poniFileName) <- await
   let directory = takeDirectory poniFileName
   let pyFileName = dropExtension poniFileName ++ ".py"
   lift $ createDirectoryIfMissing True directory
-  lift $ writeFile pyFileName (createPy n f2)
+  lift $ writeFile pyFileName (createPy n f)
   lift $ Prelude.print $ "--> " ++ pyFileName
-  yield f2
 
 frames :: (Frame a) => Pipe a DifTomoFrame IO ()
 frames = do

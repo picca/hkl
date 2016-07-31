@@ -102,4 +102,4 @@ library
   build-tools:         hsc2hs
   default-language:    Haskell2010
   pkgconfig-depends:   hkl
-  -- ghc-options:         -Wall -Werror
+  ghc-options:         -Wall -Werror
