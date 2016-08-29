@@ -104,10 +104,10 @@ instance Frame DataFrameH5 where
 
 -- | Samples
 
--- project = "/nfs/ruche-diffabs/diffabs-users/99160066/"
 -- project = "/home/experiences/instrumentation/picca/data/99160066"
 project :: FilePath
-project = "/home/picca/data/99160066"
+project = "/nfs/ruche-diffabs/diffabs-users/99160066/"
+-- project = "/home/picca/data/99160066"
 
 published :: FilePath
 published = project </> "published-data"

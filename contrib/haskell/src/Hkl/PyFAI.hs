@@ -8,14 +8,15 @@ module Hkl.PyFAI
 
 import Control.Applicative
 import Data.Attoparsec.Text
-import Data.Text (Text, append, concat, intercalate, pack)
+import Data.Text (Text, append, intercalate, pack)
 import Hkl.Types
 import Numeric.LinearAlgebra hiding (double)
+import Numeric.Units.Dimensional.Prelude (Angle, Length, (*~), (/~), one, meter, radian)
+
 #if !MIN_VERSION_hmatrix(0, 17, 0)
+tr:: Matrix t -> Matrix t
 tr = trans
 #endif
-
-import Numeric.Units.Dimensional.Prelude (Angle, Length, (*~), (/~), one, meter, radian)
 
 commentP :: Parser Text
 commentP =  "#" *> takeTill isEndOfLine <* endOfLine <?> "commentP"
@@ -129,10 +130,10 @@ rotatePoniEntry (PoniEntry header detector px1 px2 distance poni1 poni2 rot1 rot
     (new_rot1, new_rot2, new_rot3) = toEulerians r2
 
     changeBase :: MyMatrix Double -> Basis -> MyMatrix Double
-    changeBase (MyMatrix PyFAIB m2) HklB = MyMatrix HklB (passage m2 p2)
-    changeBase (MyMatrix HklB m1) PyFAIB = MyMatrix PyFAIB (passage m1 p1)
-    changeBase mym1@(MyMatrix PyFAIB _) PyFAIB = mym1
-    changeBase mym1@(MyMatrix HklB _) HklB = mym1
+    changeBase (MyMatrix PyFAIB m) HklB = MyMatrix HklB (passage m p2)
+    changeBase (MyMatrix HklB m) PyFAIB = MyMatrix PyFAIB (passage m p1)
+    changeBase m@(MyMatrix PyFAIB _) PyFAIB = m
+    changeBase m@(MyMatrix HklB _) HklB = m
 
     passage :: Matrix Double -> Matrix Double -> Matrix Double
     passage r p = inv p <> r <> p

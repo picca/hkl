@@ -297,8 +297,8 @@ geometryDetectorRotationGet g d  = do
           buildMatrix' 3 3 (getV matrix)
           where
             getV :: Ptr HklMatrix -> (CInt, CInt) -> IO Double
-            getV m (i, j) = do
-              (CDouble v) <- c_hkl_matrix_get m i j
+            getV m (i', j') = do
+              (CDouble v) <- c_hkl_matrix_get m i' j'
               return v
 
 foreign import ccall unsafe "hkl.h hkl_geometry_detector_rotation_get_binding"
