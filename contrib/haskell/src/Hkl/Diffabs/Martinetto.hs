@@ -7,6 +7,7 @@ module Hkl.Diffabs.Martinetto
 #if __GLASGOW_HASKELL__ < 710
 import Control.Applicative ((<$>), (<*>))
 #endif
+import Control.Concurrent.Async
 import Control.Monad (forM_, forever)
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Morph (hoist)
@@ -35,6 +36,7 @@ import Prelude hiding (concat, lookup, readFile, writeFile)
 import Pipes (Consumer, Pipe, lift, (>->), runEffect, await, yield)
 import Pipes.Prelude (toListM)
 import Pipes.Safe (MonadSafe(..), runSafeT, bracket)
+import System.Process
 import Text.Printf (printf)
 
 -- | Types
@@ -152,7 +154,7 @@ h5path nxentry =
     beamline :: String
     beamline = beamlineUpper Diffabs
 
-    image = "scan_data/data_53"
+    image = "scan_data/data_58"
     gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
     delta = "scan_data/trajectory_1_1"
     wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
@@ -278,7 +280,9 @@ getPoniExtRef (XRDRef _ output nxs'@(Nxs f _ _) idx) = do
         scandir = takeFileName nxs''
 
 integrate :: PoniExt -> XRDSample -> IO ()
-integrate ref (XRDSample _ output nxss) = mapM_ (integrate' ref output) nxss
+integrate ref (XRDSample _ output nxss) = do
+  _ <- mapConcurrently (integrate' ref output) nxss
+  return ()
 
 integrate' :: PoniExt -> OutputBaseDir -> Nxs -> IO ()
 integrate' ref output nxs'@(Nxs f _ _) = do
@@ -288,7 +292,7 @@ integrate' ref output nxs'@(Nxs f _ _) = do
         withDataFrameH5 h5file nxs' (gen ref) yield
         >-> hoist lift (frames
                         >-> savePonies (pgen output f)
-                        >-> savePy 300)
+                        >-> savePy 300 500)
   where
     gen :: PoniExt -> MyMatrix Double -> Int -> IO PoniExt
     gen ref' m _idx = return $ computeNewPoni ref' m
@@ -306,11 +310,12 @@ computeNewPoni (PoniExt p1 mym1) mym2 = PoniExt p2 mym2
     rotate :: PoniEntry -> PoniEntry
     rotate e = rotatePoniEntry e mym1 mym2
 
-createPy :: Int -> (DifTomoFrame, FilePath) -> Text
-createPy nb (f, poniFileName) =
+createPy :: Int -> Int -> (DifTomoFrame, FilePath) -> Text
+createPy nb t (f, poniFileName) =
   intercalate "\n" $
   map Data.Text.pack ["#!/bin/env python"
                      , ""
+                     , "import numpy"
                      , "from h5py import File"
                      , "from pyFAI import load"
                      , ""
@@ -321,12 +326,14 @@ createPy nb (f, poniFileName) =
                      , "N = " ++ show nb
                      , "OUTPUT = " ++ show out
                      , "WAVELENGTH = " ++ show (w /~ meter)
+                     , "THRESHOLD = " ++ show t
                      , ""
                      , "ai = load(PONIFILE)"
                      , "ai.wavelength = WAVELENGTH"
                      , "with File(NEXUSFILE) as f:"
                      , "    img = f[IMAGEPATH][IDX]"
-                     , "    ai.integrate1d(img, N, filename=OUTPUT)"
+                     , "    mask = numpy.where(img > THRESHOLD, True, False)"
+                     , "    ai.integrate1d(img, N, filename=OUTPUT, unit=\"2th_deg\", error_model=\"poisson\", correctSolidAngle=False, method=\"numpy\", mask=mask)"
                      ]
   where
     p = takeFileName poniFileName
@@ -371,14 +378,15 @@ savePonies g = forever $ do
       content :: PoniExt -> Text
       content (PoniExt poni _) = poniToText poni
 
-savePy :: Int-> Consumer (DifTomoFrame, FilePath) IO ()
-savePy n = forever $ do
+savePy :: Int-> Int -> Consumer (DifTomoFrame, FilePath) IO ()
+savePy n t = forever $ do
   f@(_, poniFileName) <- await
   let directory = takeDirectory poniFileName
   let pyFileName = dropExtension poniFileName ++ ".py"
   lift $ createDirectoryIfMissing True directory
-  lift $ writeFile pyFileName (createPy n f)
+  lift $ writeFile pyFileName (createPy n t f)
   lift $ Prelude.print $ "--> " ++ pyFileName
+  lift $ system (unwords ["cd ", directory, "&&",  "python", pyFileName])
 
 frames :: (Frame a) => Pipe a DifTomoFrame IO ()
 frames = do
