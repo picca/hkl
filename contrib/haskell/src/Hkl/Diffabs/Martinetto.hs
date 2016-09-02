@@ -46,9 +46,17 @@ type OutputBaseDir = FilePath
 type PoniGenerator = MyMatrix Double -> Int -> IO PoniExt
 type SampleName = String
 
+data Bins = Bins Int
+          deriving (Show)
+
+data Threshold = Threshold Int
+               deriving (Show)
+
 data XRDRef = XRDRef SampleName OutputBaseDir Nxs Int
 
-data XRDSample = XRDSample SampleName OutputBaseDir [Nxs]-- ^ nxss
+data XRDSample = XRDSample SampleName OutputBaseDir [XrdNxs]-- ^ nxss
+
+data XrdNxs = XrdNxs Bins Threshold Nxs deriving (Show)
 
 data Nxs = Nxs FilePath NxEntry DataFrameH5Path deriving (Show)
 
@@ -124,14 +132,14 @@ calibration :: XRDRef
 calibration = XRDRef "calibration"
               (published </> "calibration")
               (nxs (published </> "calibration" </> "XRD18keV_26.nxs") "scan_26" h5path')
-              0
+              3
   where
     beamline :: String
     beamline = beamlineUpper Diffabs
 
     image = "scan_data/data_53"
     gamma = "d13-1-cx1__EX__DIF.1-GAMMA__#1/raw_value"
-    delta = "scan_data/trajectory_1_1"
+    delta = "scan_data/actuator_1_1"
     wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
 
     h5path' :: NxEntry -> DataFrameH5Path
@@ -156,88 +164,116 @@ h5path nxentry =
 
     image = "scan_data/data_58"
     gamma = "D13-1-CX1__EX__DIF.1-GAMMA__#1/raw_value"
-    delta = "scan_data/trajectory_1_1"
+    delta = "scan_data/actuator_1_1"
     wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
+
+bins :: Bins
+bins = Bins 2000
+
+threshold :: Threshold
+threshold = Threshold 500
 
 n27t2 :: XRDSample
 n27t2 = XRDSample "N27T2"
         (published </> "N27T2")
-        [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "N27T2_14.nxs") "scan_14" h5path
-        , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "N27T2_17.nxs") "scan_17" h5path
+        [ XrdNxs bins threshold n | n <-
+          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "N27T2_14.nxs") "scan_14" h5path
+          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "N27T2_17.nxs") "scan_17" h5path
+          ]
         ]
 
 r34n1 :: XRDSample
 r34n1 = XRDSample "R34N1"
         (published </> "R34N1")
-         [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R34N1_28.nxs") "scan_28" h5path
-         , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R34N1_37.nxs") "scan_37" h5path
-         ]
+        [ XrdNxs bins threshold n | n <-
+          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R34N1_28.nxs") "scan_28" h5path
+          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R34N1_37.nxs") "scan_37" h5path
+          ]
+        ]
 
 r23 :: XRDSample
 r23 = XRDSample "R23"
         (published </> "R23")
-         [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R23_6.nxs") "scan_6" h5path
-         , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R23_12.nxs") "scan_12" h5path
-         ]
+        [ XrdNxs bins threshold n | n <-
+          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R23_6.nxs") "scan_6" h5path
+          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R23_12.nxs") "scan_12" h5path
+          ]
+        ]
 
 r18 :: XRDSample
 r18 = XRDSample "R18"
         (published </> "R18")
-         [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R18_20.nxs") "scan_20" h5path
-         , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R18_24.nxs") "scan_24" h5path
-         ]
+        [ XrdNxs bins threshold n | n <-
+          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R18_20.nxs") "scan_20" h5path
+          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R18_24.nxs") "scan_24" h5path
+          ]
+        ]
 
 a3 :: XRDSample
 a3 = XRDSample "A3"
         (published </> "A3")
-         [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "A3_13.nxs") "scan_13" h5path
-         , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "A3_14.nxs") "scan_14" h5path
-         , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "A3_15.nxs") "scan_15" h5path
-         ]
+        [ XrdNxs bins threshold n | n <-
+          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "A3_13.nxs") "scan_13" h5path
+          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "A3_14.nxs") "scan_14" h5path
+          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "A3_15.nxs") "scan_15" h5path
+          ]
+        ]
 
 a2 :: XRDSample
 a2 = XRDSample "A2"
         (published </> "A2")
+        [ XrdNxs bins threshold n | n <-
          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "A2_14.nxs") "scan_14" h5path
          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "A2_17.nxs") "scan_17" h5path
          ]
+        ]
 
 d2 :: XRDSample
 d2 = XRDSample "D2"
         (published </> "D2")
-         [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D2_16.nxs") "scan_16" h5path
-         , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D2_17.nxs") "scan_17" h5path
-         ]
+        [ XrdNxs bins threshold n | n <-
+          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D2_16.nxs") "scan_16" h5path
+          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D2_17.nxs") "scan_17" h5path
+          ]
+        ]
 
 d3 :: XRDSample
 d3 = XRDSample "D3"
         (published </> "D3")
-         [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D3_14.nxs") "scan_14" h5path
-         , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D3_15.nxs") "scan_15" h5path
-         ]
+        [ XrdNxs bins threshold n | n <-
+          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D3_14.nxs") "scan_14" h5path
+          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D3_15.nxs") "scan_15" h5path
+          ]
+        ]
 
 r11 :: XRDSample
 r11 = XRDSample "R11"
         (published </> "R11")
-         [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R11_5.nxs") "scan_5" h5path
-         , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R11_6.nxs") "scan_6" h5path
-         , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R11_7.nxs") "scan_7" h5path
-         ]
+        [ XrdNxs bins threshold n | n <-
+          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R11_5.nxs") "scan_5" h5path
+          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R11_6.nxs") "scan_6" h5path
+          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R11_7.nxs") "scan_7" h5path
+          ]
+        ]
 
 d16 :: XRDSample
 d16 = XRDSample "D16"
         (published </> "D16")
-         [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D16_12.nxs") "scan_12" h5path
-         , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D16_15.nxs") "scan_15" h5path
-         , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D16_17.nxs") "scan_17" h5path
-         ]
+        [ XrdNxs bins threshold n | n <-
+          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D16_12.nxs") "scan_12" h5path
+          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D16_15.nxs") "scan_15" h5path
+          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D16_17.nxs") "scan_17" h5path
+          ]
+        ]
 
 k9a2 :: XRDSample
 k9a2 = XRDSample "K9A2"
        (published </> "K9A2")
-       [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "K9A2_1_31.nxs") "scan_31" h5path
-       , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "K9A2_1_32.nxs") "scan_32" h5path
-       ]
+        [ XrdNxs bins threshold n | n <-
+          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "K9A2_1_31.nxs") "scan_31" h5path
+          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "K9A2_1_32.nxs") "scan_32" h5path
+          ]
+        ]
 
 -- {-# ANN module "HLint: ignore Use camelCase" #-}
 
@@ -284,15 +320,15 @@ integrate ref (XRDSample _ output nxss) = do
   _ <- mapConcurrently (integrate' ref output) nxss
   return ()
 
-integrate' :: PoniExt -> OutputBaseDir -> Nxs -> IO ()
-integrate' ref output nxs'@(Nxs f _ _) = do
+integrate' :: PoniExt -> OutputBaseDir -> XrdNxs -> IO ()
+integrate' ref output (XrdNxs b t nxs'@(Nxs f _ _)) = do
   Prelude.print f
   withH5File f $ \h5file ->
       runSafeT $ runEffect $
         withDataFrameH5 h5file nxs' (gen ref) yield
         >-> hoist lift (frames
                         >-> savePonies (pgen output f)
-                        >-> savePy 300 500)
+                        >-> savePy b t)
   where
     gen :: PoniExt -> MyMatrix Double -> Int -> IO PoniExt
     gen ref' m _idx = return $ computeNewPoni ref' m
@@ -310,8 +346,8 @@ computeNewPoni (PoniExt p1 mym1) mym2 = PoniExt p2 mym2
     rotate :: PoniEntry -> PoniEntry
     rotate e = rotatePoniEntry e mym1 mym2
 
-createPy :: Int -> Int -> (DifTomoFrame, FilePath) -> Text
-createPy nb t (f, poniFileName) =
+createPy :: Bins -> Threshold -> (DifTomoFrame, FilePath) -> Text
+createPy (Bins b) (Threshold t) (f, poniFileName) =
   intercalate "\n" $
   map Data.Text.pack ["#!/bin/env python"
                      , ""
@@ -323,7 +359,7 @@ createPy nb t (f, poniFileName) =
                      , "NEXUSFILE = " ++ show nxs'
                      , "IMAGEPATH = " ++ show i
                      , "IDX = " ++ show idx
-                     , "N = " ++ show nb
+                     , "N = " ++ show b
                      , "OUTPUT = " ++ show out
                      , "WAVELENGTH = " ++ show (w /~ meter)
                      , "THRESHOLD = " ++ show t
@@ -346,7 +382,7 @@ createPy nb t (f, poniFileName) =
 -- | Pipes
 
 withDataFrameH5 :: (MonadSafe m) => File -> Nxs -> PoniGenerator -> (DataFrameH5 -> m r) -> m r
-withDataFrameH5 h nxs'@(Nxs _ _ d) gen = Pipes.Safe.bracket (liftIO $ before) (liftIO . after)
+withDataFrameH5 h nxs'@(Nxs _ _ d) gen = Pipes.Safe.bracket (liftIO before) (liftIO . after)
   where
     -- before :: File -> DataFrameH5Path -> m DataFrameH5
     before :: IO DataFrameH5
@@ -378,13 +414,13 @@ savePonies g = forever $ do
       content :: PoniExt -> Text
       content (PoniExt poni _) = poniToText poni
 
-savePy :: Int-> Int -> Consumer (DifTomoFrame, FilePath) IO ()
-savePy n t = forever $ do
+savePy :: Bins -> Threshold -> Consumer (DifTomoFrame, FilePath) IO ()
+savePy b t = forever $ do
   f@(_, poniFileName) <- await
   let directory = takeDirectory poniFileName
   let pyFileName = dropExtension poniFileName ++ ".py"
   lift $ createDirectoryIfMissing True directory
-  lift $ writeFile pyFileName (createPy n t f)
+  lift $ writeFile pyFileName (createPy b t f)
   lift $ Prelude.print $ "--> " ++ pyFileName
   lift $ system (unwords ["cd ", directory, "&&",  "python", pyFileName])
 
