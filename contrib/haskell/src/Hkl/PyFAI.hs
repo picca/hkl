@@ -4,14 +4,15 @@
 module Hkl.PyFAI
        ( poniP
        , poniToText
-       , rotatePoniEntry ) where
+       , rotatePoniEntry
+       , flipPoniEntry ) where
 
 import Control.Applicative
 import Data.Attoparsec.Text
 import Data.Text (Text, append, intercalate, pack)
 import Hkl.Types
 import Numeric.LinearAlgebra hiding (double)
-import Numeric.Units.Dimensional.Prelude (Angle, Length, (*~), (/~), one, meter, radian)
+import Numeric.Units.Dimensional.Prelude (Angle, Length, (+), (*~), (/~), one, meter, radian, degree)
 
 #if !MIN_VERSION_hmatrix(0, 17, 0)
 tr:: Matrix t -> Matrix t
@@ -92,7 +93,7 @@ crossprod axis = fromLists [[ 0, -z,  y],
 
 
 fromAxisAndAngle :: Vector Double -> Angle Double -> Matrix Double
-fromAxisAndAngle axis angle = ident 3 + s * q + c * (q <> q)
+fromAxisAndAngle axis angle = ident 3 Prelude.+ s * q Prelude.+ c * (q <> q)
     where
       c = scalar (1 - cos (angle /~ one))
       s = scalar (sin (angle /~ one))
@@ -150,3 +151,9 @@ rotatePoniEntry (PoniEntry header detector px1 px2 distance poni1 poni2 rot1 rot
 
     (MyMatrix _ m1) = changeBase mym1 PyFAIB
     (MyMatrix _ m2) = changeBase mym2 PyFAIB
+
+flipPoniEntry :: PoniEntry -> PoniEntry
+flipPoniEntry (PoniEntry header detector px1 px2 distance poni1 poni2 rot1 rot2 rot3 spline wavelength) =
+  PoniEntry header detector px1 px2 distance poni1 poni2 rot1 rot2 new_rot3 spline wavelength
+  where
+    new_rot3 = rot3 Numeric.Units.Dimensional.Prelude.+ 180 *~ degree
