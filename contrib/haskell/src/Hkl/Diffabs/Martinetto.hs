@@ -450,9 +450,10 @@ main_martinetto = do
 
   poniextref <- getPoniExtRef calibration
 
-  -- calculer et écrire pour chaque point d'un scan un poni correspondant à la bonne géométries.
+  -- let poniextref = flip poniextref
 
-  mapM_ (integrate poniextref) samples
+  -- calculer et écrire pour chaque point d'un scan un poni correspondant à la bonne géométries.
+  _ <- mapConcurrently (integrate poniextref) samples
 
   -- plotPoni "/tmp/*.poni" "/tmp/plot.txt"
 
@@ -461,3 +462,4 @@ main_martinetto = do
   -- l'executer pour faire l'intégration.
 
   -- plot de la figure. (script python ou autre ?)
+  return ()
