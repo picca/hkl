@@ -15,7 +15,7 @@ import Data.Attoparsec.Text
 import Data.ByteString.Char8 (pack)
 import Data.Char (toUpper)
 import Data.Either
-import Data.Text (Text, intercalate, pack)
+import Data.Text (Text, pack, unlines)
 import Data.Text.IO (readFile, writeFile)
 import Data.Vector.Storable (concat, head)
 import Hkl.C (geometryDetectorRotationGet)
@@ -132,7 +132,7 @@ calibration :: XRDRef
 calibration = XRDRef "calibration"
               (published </> "calibration")
               (nxs (published </> "calibration" </> "XRD18keV_26.nxs") "scan_26" h5path')
-              3
+              18
   where
     beamline :: String
     beamline = beamlineUpper Diffabs
@@ -168,10 +168,10 @@ h5path nxentry =
     wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
 
 bins :: Bins
-bins = Bins 2000
+bins = Bins 8000
 
 threshold :: Threshold
-threshold = Threshold 500
+threshold = Threshold 800
 
 n27t2 :: XRDSample
 n27t2 = XRDSample "N27T2"
@@ -347,8 +347,7 @@ computeNewPoni (PoniExt p1 mym1) mym2 = PoniExt p2 mym2
     rotate e = rotatePoniEntry e mym1 mym2
 
 createPy :: Bins -> Threshold -> (DifTomoFrame, FilePath) -> Text
-createPy (Bins b) (Threshold t) (f, poniFileName) =
-  intercalate "\n" $
+createPy (Bins b) (Threshold t) (f, poniFileName) = Data.Text.unlines $
   map Data.Text.pack ["#!/bin/env python"
                      , ""
                      , "import numpy"
@@ -366,10 +365,16 @@ createPy (Bins b) (Threshold t) (f, poniFileName) =
                      , ""
                      , "ai = load(PONIFILE)"
                      , "ai.wavelength = WAVELENGTH"
+                     , "ai._empty = numpy.nan"
+                     , "mask_det = ai.detector.mask"
+                     , "#mask_module = numpy.zeros_like(mask_det)"
+                     , "#mask_module[0:120, :] = True"
                      , "with File(NEXUSFILE) as f:"
                      , "    img = f[IMAGEPATH][IDX]"
                      , "    mask = numpy.where(img > THRESHOLD, True, False)"
-                     , "    ai.integrate1d(img, N, filename=OUTPUT, unit=\"2th_deg\", error_model=\"poisson\", correctSolidAngle=False, method=\"numpy\", mask=mask)"
+                     , "    mask = numpy.logical_or(mask, mask_det)"
+                     , "    #mask = numpy.logical_or(mask, mask_module)"
+                     , "    ai.integrate1d(img, N, filename=OUTPUT, unit=\"2th_deg\", error_model=\"poisson\", correctSolidAngle=False, method=\"lut\", mask=mask)"
                      ]
   where
     p = takeFileName poniFileName
@@ -452,7 +457,7 @@ main_martinetto = do
 
   -- flip the ref poni in order to fit the reality
 
-  let poniextref = PoniExt [flipPoniEntry e | e <- p] m
+  let poniextref = PoniExt [flipPoniEntry e | e <- p] m
 
   -- calculer et écrire pour chaque point d'un scan un poni correspondant à la bonne géométries.
   _ <- mapConcurrently (integrate poniextref) samples
