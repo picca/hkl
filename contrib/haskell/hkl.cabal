@@ -69,7 +69,8 @@ library
                      , Hkl.Diffabs.Martinetto
                      , Hkl.Engine
                      , Hkl.H5
-                     , Hkl.PyFAI  
+                     , Hkl.PyFAI
+                     , Hkl.PyFAI.Poni
                      , Hkl.Sixs
                      , Hkl.Types
                      , Hkl.Types.Parameter
