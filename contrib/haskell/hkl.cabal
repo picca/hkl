@@ -74,6 +74,7 @@ library
                      , Hkl.Types
                      , Hkl.Types.Parameter
                      , Hkl.Types.PyFAI
+                     , Hkl.XRD
   other-extensions:    CPP
                      , ForeignFunctionInterface
                      , EmptyDataDecls
