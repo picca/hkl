@@ -13,6 +13,7 @@ import Hkl.Types
 import Hkl.XRD
 import System.FilePath ((</>))
 import Prelude hiding (concat, lookup, readFile, writeFile)
+import Text.Printf (printf)
 
 -- | Samples
 
@@ -198,5 +199,10 @@ main_martinetto = do
   return ()
 
 main_calibration' :: IO ()
-main_calibration' = nptFromFile (published </> "calibration" </> "XRD18keV_26.nxs_03.npt")
-                    >>= print
+main_calibration' = do
+  let idxs = [3 :: Int, 6, 9, 15, 18, 21, 24, 27, 30, 33, 36, 39, 43]
+  let filenames =  [ published </> "calibration" </> printf "XRD18keV_26.nxs_%02d.npt" idx
+                     | idx <- idxs ]
+  npts <- mapM nptFromFile filenames
+  print npts
+  return ()
