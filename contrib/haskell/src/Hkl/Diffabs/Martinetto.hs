@@ -2,7 +2,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Hkl.Diffabs.Martinetto
-       ( main_martinetto ) where
+       ( main_martinetto
+       , main_calibration'
+       ) where
 
 import Control.Concurrent.Async
 import Data.Char (toUpper)
@@ -187,17 +189,14 @@ main_martinetto = do
   (PoniExt p m) <- getPoniExtRef calibration
 
   -- flip the ref poni in order to fit the reality
-
   let poniextref = PoniExt [flipPoniEntry e | e <- p] m
 
-  -- calculer et écrire pour chaque point d'un scan un poni correspondant à la bonne géométries.
+  -- integrate each step of the scan
   _ <- mapConcurrently (integrate poniextref) samples
-
-  -- plotPoni "/tmp/*.poni" "/tmp/plot.txt"
-
-  -- créer le script python d'intégration multi géométrie
-
-  -- l'executer pour faire l'intégration.
 
   -- plot de la figure. (script python ou autre ?)
   return ()
+
+main_calibration' :: IO ()
+main_calibration' = nptFromFile (published </> "calibration" </> "XRD18keV_26.nxs_03.npt")
+                    >>= print

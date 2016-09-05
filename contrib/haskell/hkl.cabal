@@ -71,6 +71,7 @@ library
                      , Hkl.H5
                      , Hkl.PyFAI
                      , Hkl.PyFAI.Poni
+                     , Hkl.PyFAI.Npt
                      , Hkl.Sixs
                      , Hkl.Types
                      , Hkl.Types.Parameter
