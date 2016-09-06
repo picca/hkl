@@ -31,11 +31,11 @@ beamlineUpper b = [toUpper x | x <- show b]
 nxs :: FilePath -> NxEntry -> (NxEntry -> DataFrameH5Path) -> Nxs
 nxs f e h = Nxs f e (h e)
 
-calibration :: XRDRef
-calibration = XRDRef "calibration"
-              (published </> "calibration")
-              (nxs (published </> "calibration" </> "XRD18keV_26.nxs") "scan_26" h5path')
-              18
+sampleRef :: XRDRef
+sampleRef = XRDRef "calibration"
+            (published </> "calibration")
+            (nxs (published </> "calibration" </> "XRD18keV_26.nxs") "scan_26" h5path')
+            18
   where
     beamline :: String
     beamline = beamlineUpper Diffabs
@@ -187,7 +187,7 @@ main_martinetto = do
 
   let samples = [n27t2, r34n1, r23, r18, a2, a3, d2, d3, r11, d16, k9a2]
 
-  (PoniExt p m) <- getPoniExtRef calibration
+  (PoniExt p m) <- getPoniExtRef sampleRef
 
   -- flip the ref poni in order to fit the reality
   let poniextref = PoniExt [flipPoniEntry e | e <- p] m
