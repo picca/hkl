@@ -155,7 +155,7 @@ getPoniExtRef (XRDRef _ output nxs'@(Nxs f _ _) idx) = do
   poniExtRefs <- withH5File f $ \h5file ->
     runSafeT $ toListM ( withDataFrameH5 h5file nxs' (gen output f) yield
                          >-> hoist lift (frames' [idx]))
-  return $ df_poniext (Prelude.head poniExtRefs)
+  return $ df_poniext (Prelude.last poniExtRefs)
   where
     gen :: FilePath -> FilePath -> MyMatrix Double -> Int -> IO PoniExt
     gen root nxs'' m idx' = do
