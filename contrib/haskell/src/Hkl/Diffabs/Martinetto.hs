@@ -15,6 +15,38 @@ import System.FilePath ((</>))
 import Prelude hiding (concat, lookup, readFile, writeFile)
 import Text.Printf (printf)
 
+sampleCalibration :: XRDCalibration
+sampleCalibration = XRDCalibration { xrdCalibrationName = "calibration"
+                                   , xrdCalibrationOutputDir = published </> "calibration"
+                                   , xrdCalibrationEntries = entries
+                                   }
+    where
+      beamline :: String
+      beamline = beamlineUpper Diffabs
+
+      image = "scan_data/data_53"
+      gamma = "d13-1-cx1__EX__DIF.1-GAMMA__#1/raw_value"
+      delta = "scan_data/actuator_1_1"
+      wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
+
+      idxs = [3 :: Int, 6, 9, 15, 18, 21, 24, 27, 30, 33, 36, 39, 43]
+
+      h5path' :: NxEntry -> DataFrameH5Path
+      h5path' nxentry =
+          DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
+                          , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
+                          , h5pDelta = DataItem (nxentry </> delta) ExtendDims
+                          , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
+                          }
+
+      entry i = XRDCalibrationEntry
+                { xrdCalibrationEntryNxs = nxs (published </> "calibration" </> "XRD18keV_26.nxs") "scan_26" h5path'
+                , xrdCalibrationEntryIdx = i
+                , xrdCalibrationEntryNptPath = published </> "calibration" </> printf "XRD18keV_26.nxs_%02d.npt" i
+                }
+
+      entries = [ entry i | i <- idxs]
+
 -- | Samples
 
 -- project = "/home/experiences/instrumentation/picca/data/99160066"
@@ -26,13 +58,13 @@ published :: FilePath
 published = project </> "published-data"
 
 beamlineUpper :: Beamline -> String
-beamlineUpper b = [toUpper x | x <- show b]
+beamlineUpper b = [Data.Char.toUpper x | x <- show b]
 
 nxs :: FilePath -> NxEntry -> (NxEntry -> DataFrameH5Path) -> Nxs
 nxs f e h = Nxs f e (h e)
 
 sampleRef :: XRDRef
-sampleRef = XRDRef "calibration"
+sampleRef = XRDRef "reference"
             (published </> "calibration")
             (nxs (published </> "calibration" </> "XRD18keV_26.nxs") "scan_26" h5path')
             18
@@ -200,9 +232,6 @@ main_martinetto = do
 
 main_calibration' :: IO ()
 main_calibration' = do
-  let idxs = [3 :: Int, 6, 9, 15, 18, 21, 24, 27, 30, 33, 36, 39, 43]
-  let filenames =  [ published </> "calibration" </> printf "XRD18keV_26.nxs_%02d.npt" idx
-                     | idx <- idxs ]
-  npts <- mapM nptFromFile filenames
-  print npts
+  npts <- calibrate sampleCalibration
+  -- print npts
   return ()

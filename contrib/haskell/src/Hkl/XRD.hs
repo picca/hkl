@@ -12,9 +12,15 @@ module Hkl.XRD
        , Threshold(..)
        , XrdNxs(..)
        , PoniExt(..)
-         -- methods
+         -- reference
        , getPoniExtRef
+         -- integration
        , integrate
+         -- calibration
+       , NptExt(..)
+       , XRDCalibrationEntry(..)
+       , XRDCalibration(..)
+       , calibrate
        ) where
 
 #if __GLASGOW_HASKELL__ < 710
@@ -292,3 +298,63 @@ frames' idxs = do
   forM_ idxs (\i -> do
                  f <- lift $ row d i
                  yield f)
+
+-- | Calibration
+
+data NptExt = NptExt { nptExtNpt :: Npt
+                     , nptExtMyMatrix :: MyMatrix Double
+                     }
+              deriving (Show)
+
+data XRDCalibrationEntry = XRDCalibrationEntry { xrdCalibrationEntryNxs :: Nxs
+                                               , xrdCalibrationEntryIdx :: Int
+                                               , xrdCalibrationEntryNptPath :: FilePath
+                                               }
+                           deriving (Show)
+
+data XRDCalibration = XRDCalibration { xrdCalibrationName :: Text
+                                     , xrdCalibrationOutputDir :: FilePath
+                                     , xrdCalibrationEntries :: [XRDCalibrationEntry]
+                                     }
+                      deriving (Show)
+
+withDataItem :: MonadSafe m => File -> DataItem -> (Dataset -> m r) -> m r
+withDataItem hid (DataItem name _) = Pipes.Safe.bracket (liftIO $ acquire') (liftIO . release')
+    where
+      acquire' :: IO Dataset
+      acquire' = openDataset hid (Data.ByteString.Char8.pack name) Nothing
+
+      release' :: Dataset -> IO ()
+      release' = closeDataset
+
+getM :: File -> DataFrameH5Path -> Int -> IO (MyMatrix Double)
+getM f p i = runSafeT $
+    withDataItem f (h5pGamma p) $ \g' ->
+    withDataItem f (h5pDelta p) $ \d' ->
+    withDataItem f (h5pWavelength p) $ \w' -> liftIO $ do
+      let mu = 0.0
+      let komega = 0.0
+      let kappa = 0.0
+      let kphi = 0.0
+      gamma <- get_position g' 0
+      delta <- get_position d' i
+      wavelength <- get_position w' 0
+      let source = Source (Data.Vector.Storable.head wavelength *~ nano meter)
+      let positions = concat [mu, komega, kappa, kphi, gamma, delta]
+      let geometry =  Geometry K6c source positions Nothing
+      let detector = Detector DetectorType0D
+      m <- geometryDetectorRotationGet geometry detector
+      return (MyMatrix HklB m)
+
+readXRDCalibrationEntry :: XRDCalibrationEntry -> IO NptExt
+readXRDCalibrationEntry e =
+    withH5File f $ \h5file -> do
+      m <- getM h5file p idx
+      npt <- nptFromFile (xrdCalibrationEntryNptPath e)
+      return (NptExt npt m)
+    where
+      idx = xrdCalibrationEntryIdx e
+      (Nxs f _ p) = xrdCalibrationEntryNxs e
+
+calibrate :: XRDCalibration -> IO [NptExt]
+calibrate c =  mapM readXRDCalibrationEntry (xrdCalibrationEntries c)
