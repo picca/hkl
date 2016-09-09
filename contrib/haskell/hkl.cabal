@@ -69,6 +69,7 @@ library
                      , Hkl.Diffabs.Martinetto
                      , Hkl.Engine
                      , Hkl.H5
+                     , Hkl.MyMatrix
                      , Hkl.PyFAI
                      , Hkl.PyFAI.Poni
                      , Hkl.PyFAI.Npt

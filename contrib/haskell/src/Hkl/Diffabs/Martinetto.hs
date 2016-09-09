@@ -8,12 +8,14 @@ module Hkl.Diffabs.Martinetto
 
 import Control.Concurrent.Async
 import Data.Char (toUpper)
-import Hkl.PyFAI
-import Hkl.Types
-import Hkl.XRD
+import Numeric.Units.Dimensional.Prelude (meter, nano, (*~))
 import System.FilePath ((</>))
 import Prelude hiding (concat, lookup, readFile, writeFile)
 import Text.Printf (printf)
+
+import Hkl.PyFAI
+import Hkl.Types
+import Hkl.XRD
 
 sampleCalibration :: XRDCalibration
 sampleCalibration = XRDCalibration { xrdCalibrationName = "calibration"
@@ -232,6 +234,8 @@ main_martinetto = do
 
 main_calibration' :: IO ()
 main_calibration' = do
-  npts <- calibrate sampleCalibration
-  -- print npts
+  p <- getPoniExtRef sampleRef
+  print p
+  npts <- calibrate sampleCalibration (1.54 *~ nano meter)
+  print npts
   return ()

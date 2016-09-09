@@ -2,7 +2,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Hkl.PyFAI.Poni
-       ( poniP
+       ( fromAxisAndAngle
+       , poniEntryFromList
+       , poniP
        , poniToText
        , rotatePoniEntry
        , flipPoniEntry ) where
@@ -11,6 +13,7 @@ import Control.Applicative
 import Data.Attoparsec.Text
 import Data.Text (Text, append, intercalate, pack)
 import Hkl.Types
+import Hkl.MyMatrix
 import Numeric.LinearAlgebra hiding (double)
 import Numeric.Units.Dimensional.Prelude (Angle, Length, (+), (*~), (/~), one, meter, radian, degree)
 
@@ -60,6 +63,21 @@ poniP = many poniEntryP
 poniToText :: Poni -> Text
 poniToText p = Data.Text.intercalate (Data.Text.pack "\n") (map poniEntryToText p)
 
+poniEntryFromList :: [Double] -> Length Double -> PoniEntry
+poniEntryFromList [rot1, rot2, rot3, d, poni1, poni2] w =
+    (PoniEntry h md p1 p2 d' p1 p2 r1 r2 r3 ms w)
+        where
+          h = [Data.Text.pack ""]
+          md = Just (Data.Text.pack "xpad_flat")
+          p1 = poni1 *~ meter
+          p2 = poni2 *~ meter
+          d' = d *~ meter
+          r1 = rot1 *~ radian
+          r2 = rot2 *~ radian
+          r3 = rot3 *~ radian
+          ms = Nothing
+poniEntryFromList _ _ = error "Can not convert to a PoniEntry" 
+    
 poniEntryToText :: PoniEntry -> Text
 poniEntryToText (PoniEntry h md p1 p2 d poni1 poni2 rot1 rot2 rot3 ms w) =
   intercalate (Data.Text.pack "\n") $
@@ -129,25 +147,6 @@ rotatePoniEntry (PoniEntry header detector px1 px2 distance poni1 poni2 rot1 rot
     -- R2 = M2 . M1.T . R1
     r2 = foldl (<>) m2 [tr m1, r1]
     (new_rot1, new_rot2, new_rot3) = toEulerians r2
-
-    changeBase :: MyMatrix Double -> Basis -> MyMatrix Double
-    changeBase (MyMatrix PyFAIB m) HklB = MyMatrix HklB (passage m p2)
-    changeBase (MyMatrix HklB m) PyFAIB = MyMatrix PyFAIB (passage m p1)
-    changeBase m@(MyMatrix PyFAIB _) PyFAIB = m
-    changeBase m@(MyMatrix HklB _) HklB = m
-
-    passage :: Matrix Double -> Matrix Double -> Matrix Double
-    passage r p = inv p <> r <> p
-
-    p1 :: Matrix Double -- hkl -> pyFAI
-    p1 = fromLists [ [0,  0, -1]
-                   , [0, -1,  0]
-                   , [1,  0,  0]]
-
-    p2 :: Matrix Double -- pyFAI -> hkl:
-    p2 = fromLists [ [ 0,  0, 1]
-                   , [ 0, -1, 0]
-                   , [-1,  0, 0]]
 
     (MyMatrix _ m1) = changeBase mym1 PyFAIB
     (MyMatrix _ m2) = changeBase mym2 PyFAIB

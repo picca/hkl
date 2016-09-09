@@ -1,17 +1,10 @@
 module Hkl.Types.PyFAI
-       ( Basis(..)
-       , MyMatrix(..)
-       , PoniEntry(..)
+       ( PoniEntry(..)
        , Poni
        ) where
 
-import Numeric.LinearAlgebra
 import Data.Text
 import Numeric.Units.Dimensional.Prelude
-
-data Basis = PyFAIB | HklB deriving (Show)
-
-data MyMatrix a = MyMatrix Basis (Matrix a) deriving (Show)
 
 -- | Poni
 
