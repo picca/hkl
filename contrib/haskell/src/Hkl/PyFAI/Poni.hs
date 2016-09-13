@@ -15,7 +15,7 @@ import Data.Text (Text, append, intercalate, pack)
 import Hkl.Types
 import Hkl.MyMatrix
 import Numeric.LinearAlgebra hiding (double)
-import Numeric.Units.Dimensional.Prelude (Angle, Length, (+), (*~), (/~), one, meter, radian, degree)
+import Numeric.Units.Dimensional.Prelude (Angle, Length, (+), (*~), (/~), one, micro, meter, radian, degree)
 
 #if !MIN_VERSION_hmatrix(0, 17, 0)
 tr:: Matrix t -> Matrix t
@@ -65,12 +65,14 @@ poniToText p = Data.Text.intercalate (Data.Text.pack "\n") (map poniEntryToText 
 
 poniEntryFromList :: [Double] -> Length Double -> PoniEntry
 poniEntryFromList [rot1, rot2, rot3, d, poni1, poni2] w =
-    (PoniEntry h md p1 p2 d' p1 p2 r1 r2 r3 ms w)
+    (PoniEntry h md p1 p2 d' pon1 pon2 r1 r2 r3 ms w)
         where
           h = [Data.Text.pack ""]
           md = Just (Data.Text.pack "xpad_flat")
-          p1 = poni1 *~ meter
-          p2 = poni2 *~ meter
+          p1 = 130 *~ micro meter
+          p2 = 130 *~ micro meter
+          pon1 = poni1 *~ meter
+          pon2 = poni2 *~ meter
           d' = d *~ meter
           r1 = rot1 *~ radian
           r2 = rot2 *~ radian

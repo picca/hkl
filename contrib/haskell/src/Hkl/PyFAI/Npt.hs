@@ -34,7 +34,7 @@ data Npt = Npt { nptComment :: [Text]
                , npdDSpacing :: [Length Double]
                , nptEntries :: [NptEntry]
                }
-           deriving (Show)
+         deriving (Show)
 
 commentP :: Parser Text
 commentP =  "#" *> takeTill isEndOfLine <* endOfLine <?> "commentP"
@@ -84,12 +84,12 @@ nptEntryP = NptEntry
 
 nptP :: Parser Npt
 nptP = Npt
-       <$> headerP
-       <*> calibrantP
-       <*> lengthP "wavelength: "
-       <*> dspacingP
-       <*> many1 nptEntryP
-       <?> "nptP"
+         <$> headerP
+         <*> calibrantP
+         <*> lengthP "wavelength: "
+         <*> dspacingP
+         <*> many1 nptEntryP
+         <?> "nptP"
 
 nptFromFile :: FilePath -> IO Npt
 nptFromFile filename = do

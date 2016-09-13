@@ -35,8 +35,9 @@ import Data.ByteString.Char8 (pack)
 import Data.Either
 import Data.Text (Text, pack, unlines)
 import Data.Text.IO (readFile, writeFile)
-import Data.Vector.Storable (concat, head, Vector, fromList)
+import Data.Vector.Storable (concat, head, fromList)
 import Hkl.C (geometryDetectorRotationGet)
+import Hkl.Detector
 import Hkl.H5 ( Dataset
               , File
               , closeDataset
@@ -49,6 +50,7 @@ import Hkl.Types
 import Hkl.MyMatrix
 import Numeric.LinearAlgebra ((<>), ident, atIndex)
 import Numeric.GSL.Minimization
+-- import Graphics.Plot
 import Numeric.Units.Dimensional.Prelude (Angle, Length, meter, radian, nano, (/~), (*~))
 import System.Directory (createDirectoryIfMissing)
 import System.FilePath ((</>), dropExtension, takeFileName, takeDirectory)
@@ -124,7 +126,7 @@ instance Frame DataFrameH5 where
     let source = Source (Data.Vector.Storable.head wavelength *~ nano meter)
     let positions = concat [mu, komega, kappa, kphi, gamma, delta]
     let geometry =  Geometry K6c source positions Nothing
-    let detector = Detector DetectorType0D
+    let detector = DetectorZeroD
     m <- geometryDetectorRotationGet geometry detector
     poniext <- ponigen d (MyMatrix HklB m) idx
     return DifTomoFrame { df_nxs = nxs'
@@ -304,9 +306,10 @@ frames' idxs = do
 
 -- | Calibration
 
-data NptExt = NptExt { nptExtNpt :: Npt
-                     , nptExtMyMatrix :: MyMatrix Double
-                     }
+data NptExt a = NptExt { nptExtNpt :: Npt
+                       , nptExtMyMatrix :: MyMatrix Double
+                       , nptExtDetector :: Detector a
+                       }
               deriving (Show)
 
 data XRDCalibrationEntry = XRDCalibrationEntry { xrdCalibrationEntryNxs :: Nxs
@@ -345,51 +348,50 @@ getM f p i = runSafeT $
       let source = Source (Data.Vector.Storable.head wavelength *~ nano meter)
       let positions = concat [mu, komega, kappa, kphi, gamma, delta]
       let geometry = Geometry K6c source positions Nothing
-      let detector = Detector DetectorType0D
+      let detector = DetectorZeroD
       m <- geometryDetectorRotationGet geometry detector
       return (MyMatrix HklB m)
 
-readXRDCalibrationEntry :: XRDCalibrationEntry -> IO NptExt
-readXRDCalibrationEntry e =
+readXRDCalibrationEntry :: Detector a -> XRDCalibrationEntry -> IO (NptExt a)
+readXRDCalibrationEntry d e =
     withH5File f $ \h5file -> do
       m <- getM h5file p idx
       npt <- nptFromFile (xrdCalibrationEntryNptPath e)
-      return (NptExt npt m)
+      return (NptExt npt m d)
     where
       idx = xrdCalibrationEntryIdx e
       (Nxs f _ p) = xrdCalibrationEntryNxs e
 
-calibrate :: XRDCalibration -> Length Double -> IO PoniExt
-calibrate c w =  do
+calibrate :: XRDCalibration -> Length Double -> Detector a -> IO PoniExt
+calibrate c w d =  do
   -- read all the NptExt
-  npts <- mapM readXRDCalibrationEntry (xrdCalibrationEntries c)
-  let (solution, _p) = minimize NMSimplex2 1E-7 30 box (f npts) guess
+  npts <- mapM (readXRDCalibrationEntry d) (xrdCalibrationEntries c)
+  let (solution, _p) = minimize NMSimplex2 1E-7 3000 box (f npts) guess
+  -- mplot $ drop 3 (toColumns p)
   return $ PoniExt [poniEntryFromList solution w] (MyMatrix HklB (ident 3))
     where
       box :: [Double]
-      box = [1, 1, 1, 1, 1, 1]
+      box = [0.1, 0.1, 0.1, 0.01, 0.01, 0.01]
 
       guess :: [Double]
-      guess = [0, 0, 0, 0, 0, 0]
+      guess = [0, 0, 0, 0.3, 0, 0]
         
-      f :: [NptExt] -> [Double] -> Double
+      f :: [NptExt a] -> [Double] -> Double
       f ns params = foldl (f' params) 0 ns
 
-      f' :: [Double] -> Double -> NptExt -> Double
-      f' params x (NptExt n m) = foldl (f'' params m (nptWavelength n) ) x (nptEntries n)
+      f' :: [Double] -> Double -> NptExt a -> Double
+      f' params x (NptExt n m d') = foldl (f'' params m (nptWavelength n) d') x (nptEntries n)
 
-      f'' :: [Double] -> MyMatrix Double -> Length Double -> Double -> NptEntry -> Double
-      f'' params m w' x (NptEntry _ tth _ points) = foldl (f''' params m tth w') x points
+      f'' :: [Double] -> MyMatrix Double -> Length Double -> Detector a -> Double -> NptEntry -> Double
+      f'' params m w' d' x (NptEntry _ tth _ points) = foldl (f''' params m tth w' d') x points
 
-      f''' :: [Double] -> MyMatrix Double -> Angle Double -> Length Double -> Double -> NptPoint -> Double
-      f''' params m tth w' x point =
-          x + (tth /~ radian) - computeTth params m w' point
+      f''' :: [Double] -> MyMatrix Double -> Angle Double -> Length Double -> Detector a -> Double -> NptPoint -> Double
+      f''' params m tth w' detector x point = x + dtth * dtth
+          where
+            dtth = (tth /~ radian) - computeTth params m w' point detector
 
-detectorCoordinates :: NptPoint -> Vector Double
-detectorCoordinates (NptPoint x y) = fromList [x, y, 0]  * 130e-6
-  
-computeTth :: [Double] -> MyMatrix Double -> Length Double -> NptPoint -> Double
-computeTth [rot1, rot2, rot3, d, poni1, poni2] m _w point = atan2 (sqrt (x*x + y*y)) z
+computeTth :: [Double] -> MyMatrix Double -> Length Double -> NptPoint -> Detector a -> Double
+computeTth [rot1, rot2, rot3, d, poni1, poni2] m _w point detector = atan2 (sqrt (x*x + y*y)) z
     where
       (MyMatrix _ m') = changeBase m PyFAIB
       rotations = map (uncurry fromAxisAndAngle)
@@ -398,9 +400,9 @@ computeTth [rot1, rot2, rot3, d, poni1, poni2] m _w point = atan2 (sqrt (x*x + y
                   , (fromList [1, 0, 0], rot1 *~ radian)]
       -- M1 . R0 = R1
       r = foldl (<>) m' rotations -- pyFAIB
-      xyz = detectorCoordinates point
+      xyz = coordinates detector point
       kf = r <> (xyz + fromList [-poni1, -poni2, d])
       x = kf `atIndex` 0
       y = kf `atIndex` 1
       z = kf `atIndex` 2
-computeTth _ _ _ _ = error "Wrong number of parameters, can not use as poni"
+computeTth _ _ _ _ _ = error "Wrong number of parameters, can not use as poni"

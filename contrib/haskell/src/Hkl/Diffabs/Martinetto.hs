@@ -16,6 +16,7 @@ import Text.Printf (printf)
 import Hkl.PyFAI
 import Hkl.Types
 import Hkl.XRD
+import Hkl.Detector
 
 sampleCalibration :: XRDCalibration
 sampleCalibration = XRDCalibration { xrdCalibrationName = "calibration"
@@ -234,8 +235,13 @@ main_martinetto = do
 
 main_calibration' :: IO ()
 main_calibration' = do
+  -- let samples = [n27t2, r34n1, r23, r18, a2, a3, d2, d3, r11, d16, k9a2]
+
   p <- getPoniExtRef sampleRef
   print p
-  npts <- calibrate sampleCalibration (1.54 *~ nano meter)
-  print npts
+  poniextref <- calibrate sampleCalibration (0.068877 *~ nano meter) DetectorXpad32
+  print poniextref
+
+  -- integrate each step of the scan
+  -- _ <- mapConcurrently (integrate poniextref) samples
   return ()

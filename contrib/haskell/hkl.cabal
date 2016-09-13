@@ -65,6 +65,7 @@ library
    exposed-modules:    Hkl
                      , Hkl.C
                      , Hkl.Calibration
+                     , Hkl.Detector
                      , Hkl.Diffabs
                      , Hkl.Diffabs.Martinetto
                      , Hkl.Engine

@@ -1,6 +1,4 @@
 module Hkl.Types ( Beamline(..)
-                 , Detector(..)
-                 , DetectorType(..)
                  , Mode(..)
                  , Engine(..)
                  , Factory(..)
@@ -31,14 +29,6 @@ data Beamline = Diffabs | Sixs
 instance Show Beamline where
   show Diffabs = "diffabs"
   show Sixs = "sixs"
-
--- | Type describing a @Detector@
-data Detector = Detector DetectorType
-              deriving (Show)
-
--- | Type used to define Detector type
-data DetectorType = DetectorType0D
-                  deriving (Show)
 
 -- | Engine
 

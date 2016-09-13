@@ -1,4 +1,5 @@
 {-# LANGUAGE ForeignFunctionInterface #-}
+{-# LANGUAGE GADTs #-}
 {-# LANGUAGE CPP #-}
 
 module Hkl.C
@@ -27,6 +28,7 @@ import Foreign.C (CInt(..), CDouble(..), CSize(..), CString,
                  peekCString, withCString)
 import Foreign.Storable
 import Hkl.Types
+import Hkl.Detector
 import Numeric.Units.Dimensional.Prelude ( meter, degree, radian, nano
                                          , (*~), (/~))
 import Pipes (Pipe, await, lift, yield)
@@ -72,7 +74,7 @@ solve' engine n (Engine _ ps _) = do
       c_hkl_engine_pseudo_axis_values_set engine values n unit nullPtr
       >>= newForeignPtr c_hkl_geometry_list_free
 
-solve :: Geometry -> Detector -> Sample -> Engine -> IO [Geometry]
+solve :: Geometry -> Detector a -> Sample -> Engine -> IO [Geometry]
 solve g@(Geometry f _ _ _) d s e@(Engine name _ _) = do
   withSample s $ \sample ->
       withDetector d $ \detector ->
@@ -93,7 +95,7 @@ getSolution0 gl = withForeignPtr gl $ \solutions ->
 engineName :: Engine -> String
 engineName (Engine name _ _) = name
 
-solveTraj :: Geometry -> Detector -> Sample -> [Engine] -> IO [Geometry]
+solveTraj :: Geometry -> Detector a -> Sample -> [Engine] -> IO [Geometry]
 solveTraj g@(Geometry f _ _ _) d s es = do
   let name = engineName (head es)
   withSample s $ \sample ->
@@ -120,7 +122,7 @@ withDiffractometer d fun = do
   let f_engines = difEngineList d
   withForeignPtr f_engines fun
 
-newDiffractometer :: Geometry -> Detector -> Sample -> IO Diffractometer
+newDiffractometer :: Geometry -> Detector a -> Sample -> IO Diffractometer
 newDiffractometer g@(Geometry f _ _ _) d s = do
   f_engines <- newEngineList f
   f_geometry <- newGeometry g
@@ -137,7 +139,7 @@ newDiffractometer g@(Geometry f _ _ _) d s = do
                               , difSample = f_sample
                               }
 
-solveTrajPipe :: Geometry -> Detector -> Sample -> Pipe Engine Geometry IO ()
+solveTrajPipe :: Geometry -> Detector a -> Sample -> Pipe Engine Geometry IO ()
 solveTrajPipe g d s = do
   dif <- lift $ newDiffractometer g d s
   solveTrajPipe' dif
@@ -276,15 +278,15 @@ foreign import ccall unsafe "hkl.h hkl_geometry_axis_values_set"
 
 buildMatrix' :: Element a => CInt -> CInt -> ((CInt, CInt) -> IO a) -> IO (Matrix a)
 buildMatrix' rc cc f = do
-   let coordinates = map (\ ri -> map (\ ci -> (ri, ci)) [0 .. (cc - 1)]) [0 .. (rc - 1)]
-   l <- mapM (mapM f) coordinates
+   let coordinates' = map (\ ri -> map (\ ci -> (ri, ci)) [0 .. (cc - 1)]) [0 .. (rc - 1)]
+   l <- mapM (mapM f) coordinates'
    return $ fromLists l
 
 
     -- fromLists $ map (map f)
     --     $ map (\ ri -> map (\ ci -> (ri, ci)) [0 .. (cc - 1)]) [0 .. (rc - 1)]
 
-geometryDetectorRotationGet :: Geometry -> Detector -> IO (Matrix Double)
+geometryDetectorRotationGet :: Geometry -> Detector a -> IO (Matrix Double)
 geometryDetectorRotationGet g d  = do
   f_geometry <- newGeometry g
   f_detector <- newDetector d
@@ -353,17 +355,14 @@ foreign import ccall unsafe "hkl.h hkl_geometry_list_item_geometry_get"
                                         -> IO (Ptr HklGeometry)
 
 -- Detector
-withDetector :: Detector -> (Ptr HklDetector -> IO b) -> IO b
+withDetector :: Detector a -> (Ptr HklDetector -> IO b) -> IO b
 withDetector d func = do
   fptr <- newDetector d
   withForeignPtr fptr func
 
-newDetector :: Detector -> IO (ForeignPtr HklDetector)
-newDetector (Detector t) =
-  c_hkl_detector_new it >>= newForeignPtr c_hkl_detector_free
-      where
-        it = case t of
-             DetectorType0D -> 0
+newDetector :: Detector a -> IO (ForeignPtr HklDetector)
+newDetector DetectorXpad32 = error "Can not use 2D detector with the hkl library"
+newDetector DetectorZeroD = c_hkl_detector_new 0 >>= newForeignPtr c_hkl_detector_free
 
 foreign import ccall unsafe "hkl.h hkl_detector_new"
   c_hkl_detector_new:: CInt -> IO (Ptr HklDetector)
@@ -454,7 +453,7 @@ engineListEnginesGet e = do
 foreign import ccall unsafe "hkl.h hkl_engine_list_engines_get"
   c_hkl_engine_list_engines_get:: Ptr HklEngineList -> IO (Ptr ())
 
-compute :: Geometry -> Detector -> Sample -> IO [Engine]
+compute :: Geometry -> Detector a -> Sample -> IO [Engine]
 compute g@(Geometry f _ _ _) d s = do
   withSample s $ \sample ->
       withDetector d $ \detector ->
