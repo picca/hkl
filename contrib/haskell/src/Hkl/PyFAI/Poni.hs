@@ -79,19 +79,19 @@ poniToText p = Data.Text.intercalate (Data.Text.pack "\n") (map poniEntryToText 
 
 poniEntryFromList :: [Double] -> Length Double -> PoniEntry
 poniEntryFromList [rot1, rot2, rot3, d, poni1, poni2] w =
-    (PoniEntry h md p1 p2 d' pon1 pon2 r1 r2 r3 ms w)
-        where
-          h = [Data.Text.pack ""]
-          md = Just (Data.Text.pack "xpad_flat")
-          p1 = 130 *~ micro meter
-          p2 = 130 *~ micro meter
-          pon1 = poni1 *~ meter
-          pon2 = poni2 *~ meter
-          d' = d *~ meter
-          r1 = rot1 *~ radian
-          r2 = rot2 *~ radian
-          r3 = rot3 *~ radian
-          ms = Nothing
+  PoniEntry { poniEntryHeader = [Data.Text.pack ""]
+            , poniEntryDetector = Just (Data.Text.pack "xpad_flat")
+            , poniEntryPixelSize1 = 130 *~ micro meter
+            , poniEntryPixelSize2 = 130 *~ micro meter
+            , poniEntryDistance = d *~ meter
+            , poniEntryPoni1 = poni1 *~ meter
+            , poniEntryPoni2 = poni2 *~ meter
+            , poniEntryRot1 = rot1 *~ radian
+            , poniEntryRot2 = rot2 *~ radian
+            , poniEntryRot3 = rot3 *~ radian
+            , poniEntrySpline = Nothing
+            , poniEntryWavelength = w
+            }
 poniEntryFromList _ _ = error "Can not convert to a PoniEntry" 
 
 poniEntryToList :: PoniEntry -> ([Double], Length Double)
@@ -106,20 +106,19 @@ poniEntryToList p = ( [ poniEntryRot1 p /~ radian
                     )
 
 poniEntryToText :: PoniEntry -> Text
-poniEntryToText (PoniEntry h md p1 p2 d poni1 poni2 rot1 rot2 rot3 ms w) =
-  intercalate (Data.Text.pack "\n") $
-    map (Data.Text.append "#") h
-    ++ maybe [] (poniLine' "Detector: ") md
-    ++ poniLine "PixelSize1: " (p1 /~ meter)
-    ++ poniLine "PixelSize2: " (p2 /~ meter)
-    ++ poniLine "Distance: " (d /~ meter)
-    ++ poniLine "Poni1: " (poni1 /~ meter)
-    ++ poniLine "Poni2: " (poni2 /~ meter)
-    ++ poniLine "Rot1: " (rot1 /~ radian)
-    ++ poniLine "Rot2: " (rot2 /~ radian)
-    ++ poniLine "Rot3: " (rot3 /~ radian)
-    ++ maybe [] (poniLine' "SplineFile: ") ms
-    ++ poniLine "Wavelength: " (w /~ meter)
+poniEntryToText p = intercalate (Data.Text.pack "\n") $
+                    map (Data.Text.append "#") (poniEntryHeader p)
+                    ++ maybe [] (poniLine' "Detector: ") (poniEntryDetector p)
+                    ++ poniLine "PixelSize1: " (poniEntryPixelSize1 p /~ meter)
+                    ++ poniLine "PixelSize2: " (poniEntryPixelSize2 p /~ meter)
+                    ++ poniLine "Distance: " (poniEntryDistance p /~ meter)
+                    ++ poniLine "Poni1: " (poniEntryPoni1 p /~ meter)
+                    ++ poniLine "Poni2: " (poniEntryPoni2 p /~ meter)
+                    ++ poniLine "Rot1: " (poniEntryRot1 p /~ radian)
+                    ++ poniLine "Rot2: " (poniEntryRot2 p /~ radian)
+                    ++ poniLine "Rot3: " (poniEntryRot3 p /~ radian)
+                    ++ maybe [] (poniLine' "SplineFile: ") (poniEntrySpline p)
+                    ++ poniLine "Wavelength: " (poniEntryWavelength p /~ meter)
   where
     poniLine :: Show a => String -> a -> [Text]
     poniLine key v = [Data.Text.append (Data.Text.pack key) (Data.Text.pack $ show v)]
@@ -144,7 +143,7 @@ fromAxisAndAngle axis angle = ident 3 Prelude.+ s * q Prelude.+ c * (q <> q)
       q = crossprod axis
 
 flipPoniEntry :: PoniEntry -> PoniEntry
-flipPoniEntry (PoniEntry header detector px1 px2 distance poni1 poni2 rot1 rot2 rot3 spline wavelength) =
-  PoniEntry header detector px1 px2 distance poni1 poni2 rot1 rot2 new_rot3 spline wavelength
+flipPoniEntry p = p { poniEntryRot3 = new_rot3 }
   where
+    rot3 = poniEntryRot3 p
     new_rot3 = rot3 Numeric.Units.Dimensional.Prelude.+ 180 *~ degree

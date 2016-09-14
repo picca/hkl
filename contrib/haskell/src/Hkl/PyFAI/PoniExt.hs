@@ -1,10 +1,10 @@
 {-# LANGUAGE CPP #-}
-{-# LANGUAGE OverloadedStrings #-}
 
 module Hkl.PyFAI.PoniExt
        ( PoniExt(..)
        , Pose
        , setPose
+       , Hkl.PyFAI.PoniExt.flip
        ) where
 
 import Data.Vector.Storable
@@ -53,3 +53,6 @@ setPose :: PoniExt -> Pose -> PoniExt
 setPose (PoniExt p1 mym1) mym2 = PoniExt p2 mym2
   where
     p2 = Prelude.map (setPoniEntryPose mym1 mym2) p1
+
+flip :: PoniExt -> PoniExt
+flip p = p { poniExtPoni = [flipPoniEntry e | e <- (poniExtPoni p)] }

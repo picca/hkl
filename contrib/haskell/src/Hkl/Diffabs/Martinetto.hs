@@ -15,7 +15,6 @@ import Text.Printf (printf)
 import Prelude hiding (concat, lookup, readFile, writeFile)
 
 import Hkl.MyMatrix
-import Hkl.PyFAI.Poni
 import Hkl.PyFAI.PoniExt
 import Hkl.Types
 import Hkl.XRD
@@ -225,10 +224,10 @@ main_martinetto = do
 
   let samples = [n27t2, r34n1, r23, r18, a2, a3, d2, d3, r11, d16, k9a2]
 
-  (PoniExt p m) <- getPoniExtRef sampleRef
+  p <- getPoniExtRef sampleRef
 
   -- flip the ref poni in order to fit the reality
-  let poniextref = PoniExt [flipPoniEntry e | e <- p] m
+  let poniextref = Hkl.PyFAI.PoniExt.flip p
 
   -- integrate each step of the scan
   _ <- mapConcurrently (integrate poniextref) samples
@@ -238,12 +237,12 @@ main_martinetto = do
 
 main_calibration' :: IO ()
 main_calibration' = do
-  let samples = [n27t2, r34n1, r23, r18, a2, a3, d2, d3, r11, d16, k9a2]
+  -- let samples = [n27t2, r34n1, r23, r18, a2, a3, d2, d3, r11, d16, k9a2]
 
-  (PoniExt p m) <- getPoniExtRef sampleRef
+  p <- getPoniExtRef sampleRef
 
   -- flip the ref poni in order to fit the reality
-  let poniextref = setPose (PoniExt [flipPoniEntry e | e <- p] m) (MyMatrix HklB (ident 3))
+  let poniextref = setPose (Hkl.PyFAI.PoniExt.flip p) (MyMatrix HklB (ident 3))
   print poniextref
 
   -- full calibration
@@ -251,5 +250,5 @@ main_calibration' = do
   print poniextref'
 
   -- integrate each step of the scan
-  _ <- mapConcurrently (integrate poniextref') samples
+  -- _ <- mapConcurrently (integrate poniextref') samples
   return ()
