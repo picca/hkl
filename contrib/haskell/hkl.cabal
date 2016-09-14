@@ -73,11 +73,11 @@ library
                      , Hkl.MyMatrix
                      , Hkl.PyFAI
                      , Hkl.PyFAI.Poni
+                     , Hkl.PyFAI.PoniExt
                      , Hkl.PyFAI.Npt
                      , Hkl.Sixs
                      , Hkl.Types
                      , Hkl.Types.Parameter
-                     , Hkl.Types.PyFAI
                      , Hkl.XRD
   other-extensions:    CPP
                      , ForeignFunctionInterface

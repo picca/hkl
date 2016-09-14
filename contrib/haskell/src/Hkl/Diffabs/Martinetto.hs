@@ -8,12 +8,15 @@ module Hkl.Diffabs.Martinetto
 
 import Control.Concurrent.Async
 import Data.Char (toUpper)
-import Numeric.Units.Dimensional.Prelude (meter, nano, (*~))
+import Numeric.LinearAlgebra
 import System.FilePath ((</>))
-import Prelude hiding (concat, lookup, readFile, writeFile)
 import Text.Printf (printf)
 
-import Hkl.PyFAI
+import Prelude hiding (concat, lookup, readFile, writeFile)
+
+import Hkl.MyMatrix
+import Hkl.PyFAI.Poni
+import Hkl.PyFAI.PoniExt
 import Hkl.Types
 import Hkl.XRD
 import Hkl.Detector
@@ -42,13 +45,13 @@ sampleCalibration = XRDCalibration { xrdCalibrationName = "calibration"
                           , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
                           }
 
-      entry i = XRDCalibrationEntry
+      entry idx = XRDCalibrationEntry
                 { xrdCalibrationEntryNxs = nxs (published </> "calibration" </> "XRD18keV_26.nxs") "scan_26" h5path'
-                , xrdCalibrationEntryIdx = i
-                , xrdCalibrationEntryNptPath = published </> "calibration" </> printf "XRD18keV_26.nxs_%02d.npt" i
+                , xrdCalibrationEntryIdx = idx
+                , xrdCalibrationEntryNptPath = published </> "calibration" </> printf "XRD18keV_26.nxs_%02d.npt" idx
                 }
 
-      entries = [ entry i | i <- idxs]
+      entries = [ entry idx | idx <- idxs]
 
 -- | Samples
 
@@ -235,13 +238,18 @@ main_martinetto = do
 
 main_calibration' :: IO ()
 main_calibration' = do
-  -- let samples = [n27t2, r34n1, r23, r18, a2, a3, d2, d3, r11, d16, k9a2]
+  let samples = [n27t2, r34n1, r23, r18, a2, a3, d2, d3, r11, d16, k9a2]
 
-  p <- getPoniExtRef sampleRef
-  print p
-  poniextref <- calibrate sampleCalibration (0.068877 *~ nano meter) DetectorXpad32
+  (PoniExt p m) <- getPoniExtRef sampleRef
+
+  -- flip the ref poni in order to fit the reality
+  let poniextref = setPose (PoniExt [flipPoniEntry e | e <- p] m) (MyMatrix HklB (ident 3))
   print poniextref
 
+  -- full calibration
+  poniextref' <- calibrate sampleCalibration poniextref DetectorXpad32
+  print poniextref'
+
   -- integrate each step of the scan
-  -- _ <- mapConcurrently (integrate poniextref) samples
+  _ <- mapConcurrently (integrate poniextref') samples
   return ()

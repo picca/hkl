@@ -46,8 +46,9 @@ import Hkl.H5 ( Dataset
               , openDataset
               , withH5File )
 import Hkl.PyFAI
-import Hkl.Types
 import Hkl.MyMatrix
+import Hkl.PyFAI.PoniExt
+import Hkl.Types
 import Numeric.LinearAlgebra ((<>), ident, atIndex)
 import Numeric.GSL.Minimization
 -- import Graphics.Plot
@@ -66,7 +67,7 @@ import Text.Printf (printf)
 
 type NxEntry = String
 type OutputBaseDir = FilePath
-type PoniGenerator = MyMatrix Double -> Int -> IO PoniExt
+type PoniGenerator = Pose -> Int -> IO PoniExt
 type SampleName = String
 
 data Bins = Bins Int
@@ -82,8 +83,6 @@ data XRDSample = XRDSample SampleName OutputBaseDir [XrdNxs]-- ^ nxss
 data XrdNxs = XrdNxs Bins Threshold Nxs deriving (Show)
 
 data Nxs = Nxs FilePath NxEntry DataFrameH5Path deriving (Show)
-
-data PoniExt = PoniExt Poni (MyMatrix Double) deriving (Show)
 
 data DifTomoFrame =
   DifTomoFrame { df_nxs :: Nxs -- ^ nexus of the current frame
@@ -190,21 +189,13 @@ integrate' ref output (XrdNxs b t nxs'@(Nxs f _ _)) = do
                         >-> savePonies (pgen output f)
                         >-> savePy b t)
   where
-    gen :: PoniExt -> MyMatrix Double -> Int -> IO PoniExt
-    gen ref' m _idx = return $ computeNewPoni ref' m
+    gen :: PoniExt -> Pose -> Int -> IO PoniExt
+    gen ref' m _idx = return $ setPose ref' m
 
     pgen :: OutputBaseDir -> FilePath -> Int -> FilePath
     pgen o nxs'' idx = o </> scandir </>  scandir ++ printf "_%02d.poni" idx
       where
         scandir = (dropExtension . takeFileName) nxs''
-
-computeNewPoni :: PoniExt -> MyMatrix Double -> PoniExt
-computeNewPoni (PoniExt p1 mym1) mym2 = PoniExt p2 mym2
-  where
-    p2 = map rotate p1
-
-    rotate :: PoniEntry -> PoniEntry
-    rotate e = rotatePoniEntry e mym1 mym2
 
 createPy :: Bins -> Threshold -> (DifTomoFrame, FilePath) -> Text
 createPy (Bins b) (Threshold t) (f, poniFileName) = Data.Text.unlines $
@@ -362,20 +353,19 @@ readXRDCalibrationEntry d e =
       idx = xrdCalibrationEntryIdx e
       (Nxs f _ p) = xrdCalibrationEntryNxs e
 
-calibrate :: XRDCalibration -> Length Double -> Detector a -> IO PoniExt
-calibrate c w d =  do
+calibrate :: XRDCalibration -> PoniExt -> Detector a -> IO PoniExt
+calibrate c (PoniExt p _) d =  do
+  let (guess, w) = poniEntryToList (last p)
   -- read all the NptExt
   npts <- mapM (readXRDCalibrationEntry d) (xrdCalibrationEntries c)
-  let (solution, _p) = minimize NMSimplex2 1E-7 3000 box (f npts) guess
+  let (solution, _p) = minimize NMSimplex2 1E-7 100 box (f npts) guess
   -- mplot $ drop 3 (toColumns p)
+  print _p
   return $ PoniExt [poniEntryFromList solution w] (MyMatrix HklB (ident 3))
     where
       box :: [Double]
       box = [0.1, 0.1, 0.1, 0.01, 0.01, 0.01]
 
-      guess :: [Double]
-      guess = [0, 0, 0, 0.3, 0, 0]
-        
       f :: [NptExt a] -> [Double] -> Double
       f ns params = foldl (f' params) 0 ns
 

@@ -2,25 +2,39 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Hkl.PyFAI.Poni
-       ( fromAxisAndAngle
+       ( Poni
+       , PoniEntry(..)
+       , fromAxisAndAngle
        , poniEntryFromList
+       , poniEntryToList
        , poniP
        , poniToText
-       , rotatePoniEntry
        , flipPoniEntry ) where
 
 import Control.Applicative
 import Data.Attoparsec.Text
 import Data.Text (Text, append, intercalate, pack)
-import Hkl.Types
-import Hkl.MyMatrix
 import Numeric.LinearAlgebra hiding (double)
 import Numeric.Units.Dimensional.Prelude (Angle, Length, (+), (*~), (/~), one, micro, meter, radian, degree)
 
-#if !MIN_VERSION_hmatrix(0, 17, 0)
-tr:: Matrix t -> Matrix t
-tr = trans
-#endif
+-- | Poni
+
+data PoniEntry = PoniEntry { poniEntryHeader :: [Text]
+                           , poniEntryDetector :: (Maybe Text) -- ^ Detector Name
+                           , poniEntryPixelSize1 :: (Length Double) -- ^ pixels size 1
+                           , poniEntryPixelSize2 :: (Length Double) -- ^ pixels size 1
+                           , poniEntryDistance :: (Length Double) -- ^ pixels size 2
+                           , poniEntryPoni1 :: (Length Double) -- ^ poni1
+                           , poniEntryPoni2 :: (Length Double) -- ^ poni2
+                           , poniEntryRot1 :: (Angle Double) -- ^ rot1
+                           , poniEntryRot2 :: (Angle Double) -- ^ rot2
+                           , poniEntryRot3 :: (Angle Double) -- ^ rot3
+                           , poniEntrySpline :: (Maybe Text) -- ^ spline file
+                           , poniEntryWavelength :: (Length Double) -- ^ wavelength
+                           }
+                 deriving (Show)
+
+type Poni = [PoniEntry]
 
 commentP :: Parser Text
 commentP =  "#" *> takeTill isEndOfLine <* endOfLine <?> "commentP"
@@ -79,7 +93,18 @@ poniEntryFromList [rot1, rot2, rot3, d, poni1, poni2] w =
           r3 = rot3 *~ radian
           ms = Nothing
 poniEntryFromList _ _ = error "Can not convert to a PoniEntry" 
-    
+
+poniEntryToList :: PoniEntry -> ([Double], Length Double)
+poniEntryToList p = ( [ poniEntryRot1 p /~ radian
+                      , poniEntryRot2 p /~ radian
+                      , poniEntryRot3 p /~ radian
+                      , poniEntryDistance p /~ meter
+                      , poniEntryPoni1 p /~ meter
+                      , poniEntryPoni2 p /~ meter
+                      ]
+                    , poniEntryWavelength p
+                    )
+
 poniEntryToText :: PoniEntry -> Text
 poniEntryToText (PoniEntry h md p1 p2 d poni1 poni2 rot1 rot2 rot3 ms w) =
   intercalate (Data.Text.pack "\n") $
@@ -111,47 +136,12 @@ crossprod axis = fromLists [[ 0, -z,  y],
       y = axis `atIndex` 1
       z = axis `atIndex` 2
 
-
 fromAxisAndAngle :: Vector Double -> Angle Double -> Matrix Double
 fromAxisAndAngle axis angle = ident 3 Prelude.+ s * q Prelude.+ c * (q <> q)
     where
       c = scalar (1 - cos (angle /~ one))
       s = scalar (sin (angle /~ one))
       q = crossprod axis
-
-
-toEulerians :: Matrix Double -> (Angle Double, Angle Double, Angle Double)
-toEulerians m
-  | abs c > epsilon = ( atan2 ((m `atIndex` (2, 1)) / c) ((m `atIndex` (2, 2)) / c) *~ radian
-                      , rot2 *~ radian
-                      , atan2 ((m `atIndex` (1, 0)) / c) ((m `atIndex` (0, 0)) / c) *~ radian
-                      )
-  | otherwise        = ( 0 *~ radian
-                       , rot2 *~ radian
-                       , atan2 (-(m `atIndex` (0, 1))) (m `atIndex` (1, 1)) *~ radian
-                       )
-  where
-    epsilon = 1e-10
-    rot2 = asin (-(m `atIndex` (2, 0)))
-    c = cos rot2
-
-
-rotatePoniEntry :: PoniEntry -> MyMatrix Double -> MyMatrix Double -> PoniEntry
-rotatePoniEntry (PoniEntry header detector px1 px2 distance poni1 poni2 rot1 rot2 rot3 spline wavelength) mym1 mym2 = PoniEntry header detector px1 px2 distance poni1 poni2 new_rot1 new_rot2 new_rot3 spline wavelength
-  where
-    rotations = map (uncurry fromAxisAndAngle)
-                [ (fromList [0, 0, 1], rot3)
-                , (fromList [0, 1, 0], rot2)
-                , (fromList [1, 0, 0], rot1)]
-    -- M1 . R0 = R1
-    r1 = foldl (<>) (ident 3) rotations -- pyFAIB
-    -- M2 . R0 = R2
-    -- R2 = M2 . M1.T . R1
-    r2 = foldl (<>) m2 [tr m1, r1]
-    (new_rot1, new_rot2, new_rot3) = toEulerians r2
-
-    (MyMatrix _ m1) = changeBase mym1 PyFAIB
-    (MyMatrix _ m2) = changeBase mym2 PyFAIB
 
 flipPoniEntry :: PoniEntry -> PoniEntry
 flipPoniEntry (PoniEntry header detector px1 px2 distance poni1 poni2 rot1 rot2 rot3 spline wavelength) =

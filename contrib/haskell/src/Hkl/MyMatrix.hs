@@ -2,9 +2,11 @@ module Hkl.MyMatrix
        ( Basis(..)
        , MyMatrix(..)
        , changeBase
+       , toEulerians
        ) where
 
 import Numeric.LinearAlgebra
+import Numeric.Units.Dimensional.Prelude (Angle, (*~), radian)
 
 data Basis = PyFAIB | HklB deriving (Show)
 
@@ -28,3 +30,19 @@ p2 :: Matrix Double -- pyFAI -> hkl:
 p2 = fromLists [ [ 0,  0, 1]
                , [ 0, -1, 0]
                , [-1,  0, 0]]
+
+toEulerians :: Matrix Double -> (Angle Double, Angle Double, Angle Double)
+toEulerians m
+  | abs c > epsilon = ( atan2 ((m `atIndex` (2, 1)) / c) ((m `atIndex` (2, 2)) / c) *~ radian
+                      , rot2 *~ radian
+                      , atan2 ((m `atIndex` (1, 0)) / c) ((m `atIndex` (0, 0)) / c) *~ radian
+                      )
+  | otherwise        = ( 0 *~ radian
+                       , rot2 *~ radian
+                       , atan2 (-(m `atIndex` (0, 1))) (m `atIndex` (1, 1)) *~ radian
+                       )
+  where
+    epsilon = 1e-10
+    rot2 = asin (-(m `atIndex` (2, 0)))
+    c = cos rot2
+
