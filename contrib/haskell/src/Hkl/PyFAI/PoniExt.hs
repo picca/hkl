@@ -50,9 +50,10 @@ setPoniEntryPose mym1 mym2 e = e { poniEntryRot1 = new_rot1
     (MyMatrix _ m2) = changeBase mym2 PyFAIB
 
 setPose :: PoniExt -> Pose -> PoniExt
-setPose (PoniExt p1 mym1) mym2 = PoniExt p2 mym2
-  where
-    p2 = Prelude.map (setPoniEntryPose mym1 mym2) p1
+setPose (PoniExt p1 mym1) mym2 =
+  PoniExt { poniExtPoni = Prelude.map (setPoniEntryPose mym1 mym2) p1
+          , poniExtPose = mym2
+          }
 
 flip :: PoniExt -> PoniExt
 flip p = p { poniExtPoni = [flipPoniEntry e | e <- (poniExtPoni p)] }
