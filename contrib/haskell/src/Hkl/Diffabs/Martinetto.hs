@@ -227,8 +227,8 @@ main_martinetto = do
   p <- getPoniExtRef sampleRef
 
   -- flip the ref poni in order to fit the reality
-  let poniextref = Hkl.PyFAI.PoniExt.flip p
-
+  -- let poniextref = Hkl.PyFAI.PoniExt.flip p
+  let poniextref = p
   -- integrate each step of the scan
   _ <- mapConcurrently (integrate poniextref) samples
 

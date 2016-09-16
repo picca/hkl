@@ -22,14 +22,14 @@ passage :: Matrix Double -> Matrix Double -> Matrix Double
 passage r p = inv p <> r <> p
 
 p1 :: Matrix Double -- hkl -> pyFAI
-p1 = fromLists [ [0,  0, -1]
-               , [0, -1,  0]
-               , [1,  0,  0]]
+p1 = fromLists [ [0,  0, 1]
+               , [0, -1, 0]
+               , [1,  0, 0]]
 
 p2 :: Matrix Double -- pyFAI -> hkl:
 p2 = fromLists [ [ 0,  0, 1]
                , [ 0, -1, 0]
-               , [-1,  0, 0]]
+               , [ 1,  0, 0]]
 
 toEulerians :: Matrix Double -> (Angle Double, Angle Double, Angle Double)
 toEulerians m
