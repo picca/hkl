@@ -125,7 +125,7 @@ instance Frame DataFrameH5 where
     let source = Source (Data.Vector.Storable.head wavelength *~ nano meter)
     let positions = concat [mu, komega, kappa, kphi, gamma, delta]
     let geometry =  Geometry K6c source positions Nothing
-    let detector = DetectorZeroD
+    let detector = ZeroD
     m <- geometryDetectorRotationGet geometry detector
     poniext <- ponigen d (MyMatrix HklB m) idx
     return DifTomoFrame { df_nxs = nxs'
@@ -339,7 +339,7 @@ getM f p i = runSafeT $
       let source = Source (Data.Vector.Storable.head wavelength *~ nano meter)
       let positions = concat [mu, komega, kappa, kphi, gamma, delta]
       let geometry = Geometry K6c source positions Nothing
-      let detector = DetectorZeroD
+      let detector = ZeroD
       m <- geometryDetectorRotationGet geometry detector
       return (MyMatrix HklB m)
 
@@ -355,13 +355,14 @@ readXRDCalibrationEntry d e =
 
 calibrate :: XRDCalibration -> PoniExt -> Detector a -> IO PoniExt
 calibrate c (PoniExt p _) d =  do
-  let (guess, w) = poniEntryToList (last p)
+  let entry = last p
+  let guess = poniEntryToList entry
   -- read all the NptExt
   npts <- mapM (readXRDCalibrationEntry d) (xrdCalibrationEntries c)
-  let (solution, _p) = minimize NMSimplex2 1E-7 100 box (f npts) guess
+  let (solution, _p) = minimize NMSimplex2 1E-7 3000 box (f npts) guess
   -- mplot $ drop 3 (toColumns p)
   print _p
-  return $ PoniExt [poniEntryFromList solution w] (MyMatrix HklB (ident 3))
+  return $ PoniExt [poniEntryFromList entry solution] (MyMatrix HklB (ident 3))
     where
       box :: [Double]
       box = [0.1, 0.1, 0.1, 0.01, 0.01, 0.01]

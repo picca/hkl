@@ -77,33 +77,25 @@ poniP = many poniEntryP
 poniToText :: Poni -> Text
 poniToText p = Data.Text.intercalate (Data.Text.pack "\n") (map poniEntryToText p)
 
-poniEntryFromList :: [Double] -> Length Double -> PoniEntry
-poniEntryFromList [rot1, rot2, rot3, d, poni1, poni2] w =
-  PoniEntry { poniEntryHeader = [Data.Text.pack ""]
-            , poniEntryDetector = Just (Data.Text.pack "xpad_flat")
-            , poniEntryPixelSize1 = 130 *~ micro meter
-            , poniEntryPixelSize2 = 130 *~ micro meter
-            , poniEntryDistance = d *~ meter
-            , poniEntryPoni1 = poni1 *~ meter
-            , poniEntryPoni2 = poni2 *~ meter
-            , poniEntryRot1 = rot1 *~ radian
-            , poniEntryRot2 = rot2 *~ radian
-            , poniEntryRot3 = rot3 *~ radian
-            , poniEntrySpline = Nothing
-            , poniEntryWavelength = w
-            }
+poniEntryFromList :: PoniEntry -> [Double] -> PoniEntry
+poniEntryFromList p [rot1, rot2, rot3, d, poni1, poni2] =
+  p { poniEntryDistance = d *~ meter
+    , poniEntryPoni1 = poni1 *~ meter
+    , poniEntryPoni2 = poni2 *~ meter
+    , poniEntryRot1 = rot1 *~ radian
+    , poniEntryRot2 = rot2 *~ radian
+    , poniEntryRot3 = rot3 *~ radian
+    }
 poniEntryFromList _ _ = error "Can not convert to a PoniEntry" 
 
-poniEntryToList :: PoniEntry -> ([Double], Length Double)
-poniEntryToList p = ( [ poniEntryRot1 p /~ radian
-                      , poniEntryRot2 p /~ radian
-                      , poniEntryRot3 p /~ radian
-                      , poniEntryDistance p /~ meter
-                      , poniEntryPoni1 p /~ meter
-                      , poniEntryPoni2 p /~ meter
-                      ]
-                    , poniEntryWavelength p
-                    )
+poniEntryToList :: PoniEntry -> [Double]
+poniEntryToList p = [ poniEntryRot1 p /~ radian
+                    , poniEntryRot2 p /~ radian
+                    , poniEntryRot3 p /~ radian
+                    , poniEntryDistance p /~ meter
+                    , poniEntryPoni1 p /~ meter
+                    , poniEntryPoni2 p /~ meter
+                    ]
 
 poniEntryToText :: PoniEntry -> Text
 poniEntryToText p = intercalate (Data.Text.pack "\n") $
@@ -114,8 +106,8 @@ poniEntryToText p = intercalate (Data.Text.pack "\n") $
                     ++ poniLine "Distance: " (poniEntryDistance p /~ meter)
                     ++ poniLine "Poni1: " (poniEntryPoni1 p /~ meter)
                     ++ poniLine "Poni2: " (poniEntryPoni2 p /~ meter)
-                    ++ poniLine "Rot1: " (poniEntryRot1 p /~ radian)
-                    ++ poniLine "Rot2: " (poniEntryRot2 p /~ radian)
+                    ++ poniLine "Rot1: " (poniEntryRot2 p /~ radian)
+                    ++ poniLine "Rot2: " (poniEntryRot1 p /~ radian)
                     ++ poniLine "Rot3: " (poniEntryRot3 p /~ radian)
                     ++ maybe [] (poniLine' "SplineFile: ") (poniEntrySpline p)
                     ++ poniLine "Wavelength: " (poniEntryWavelength p /~ meter)

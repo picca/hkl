@@ -237,18 +237,20 @@ main_martinetto = do
 
 main_calibration' :: IO ()
 main_calibration' = do
-  -- let samples = [n27t2, r34n1, r23, r18, a2, a3, d2, d3, r11, d16, k9a2]
+  let samples = [n27t2, r34n1, r23, r18, a2, a3, d2, d3, r11, d16, k9a2]
 
   p <- getPoniExtRef sampleRef
 
   -- flip the ref poni in order to fit the reality
-  let poniextref = setPose (Hkl.PyFAI.PoniExt.flip p) (MyMatrix HklB (ident 3))
-  print poniextref
+  let poniextref = setPose p (MyMatrix HklB (ident 3))
+  -- let poniextref = setPose (Hkl.PyFAI.PoniExt.flip p) (MyMatrix HklB (ident 3))
 
   -- full calibration
-  poniextref' <- calibrate sampleCalibration poniextref DetectorXpad32
+  poniextref' <- calibrate sampleCalibration poniextref Xpad32
+  print p
+  print poniextref
   print poniextref'
 
   -- integrate each step of the scan
-  -- _ <- mapConcurrently (integrate poniextref') samples
+  _ <- mapConcurrently (integrate poniextref') samples
   return ()

@@ -8,7 +8,9 @@ module Hkl.MyMatrix
 import Numeric.LinearAlgebra
 import Numeric.Units.Dimensional.Prelude (Angle, (*~), radian)
 
-data Basis = PyFAIB | HklB deriving (Show)
+data Basis = PyFAIB -- the pyFAI (1, 2, 3) detector coordinates
+           | HklB -- the hkl coordinates
+           deriving (Show)
 
 data MyMatrix a = MyMatrix Basis (Matrix a) deriving (Show)
 
