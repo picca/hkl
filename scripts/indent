@@ -7,7 +7,7 @@ fi
 
 for i in $@; do
     echo Loading $i
-    emacs --batch --load ~/.emacs --file $i \
+    emacs --batch --load ../Documentation/hkl-default.el --file $i \
 	-f c-mode --eval "(indent-region (point-min) (point-max) nil)" -f save-buffer
 done
 

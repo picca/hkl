@@ -85,10 +85,10 @@ static const HklParameter surface_parameters_z[] = {
 #define HKL_MODE_INFO_incidence_DEFAULTS(_axes, _parameters)		\
 	HKL_MODE_INFO_RO_WITH_PARAMS("incidence", (_axes), (_parameters))
 
-#define HKL_MODE_INFO_emergence_DEFAULTS(_axes, _parameters)			\
+#define HKL_MODE_INFO_emergence_DEFAULTS(_axes, _parameters)		\
 	HKL_MODE_INFO_RO_WITH_PARAMS("emergence", (_axes), (_parameters))
 
-#define REGISTER_READONLY(_engine, _func, _axes, _parameters)			\
+#define REGISTER_READONLY(_engine, _func, _axes, _parameters)		\
 	static HklEngine* _func(HklEngineList *engines)			\
 	{								\
 		HklEngine *self = hkl_engine_ ## _engine ## _new(engines); \

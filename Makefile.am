@@ -31,8 +31,21 @@ if HKL3D
 noinst_DATA = hkl3d.pc
 endif
 
+release:
+	git fetch
+	git checkout next
+	cd scripts && ./clean-all
+	git commit -a -m "pre-release"
+	git checkout maint
+	git merge -m "release" next
+	./autogen.sh
+	$(MAKE) distcheck
+	git tag v`./configure -V | head -n 1 | awk '{print $$3}'`
+	git checkout next
+
+
 ## lcov part
-.PHONY: lcov genlcov lcov-clean
+.PHONY: lcov genlcov lcov-clean release
 # use recursive makes in order to ignore errors during check
 lcov:
 	-$(MAKE) $(AM_MAKEFLAGS) -k check

@@ -63,7 +63,7 @@ void plan_lazy(void);
 
 /* Skip the entire test suite.  Call instead of plan. */
 void skip_all(const char *format, ...)
-    __attribute__((__noreturn__, __format__(printf, 1, 2)));
+	__attribute__((__noreturn__, __format__(printf, 1, 2)));
 
 /*
  * Basic reporting functions.  The okv() function is the same as ok() but
@@ -72,43 +72,43 @@ void skip_all(const char *format, ...)
  * value of the success argument.
  */
 int ok(int success, const char *format, ...)
-    __attribute__((__format__(printf, 2, 3)));
+	__attribute__((__format__(printf, 2, 3)));
 int okv(int success, const char *format, va_list args)
-    __attribute__((__format__(printf, 2, 0)));
+	__attribute__((__format__(printf, 2, 0)));
 void skip(const char *reason, ...)
-    __attribute__((__format__(printf, 1, 2)));
+	__attribute__((__format__(printf, 1, 2)));
 
 /*
  * Report the same status on, or skip, the next count tests.  ok_block()
  * returns the value of the success argument.
  */
 int ok_block(unsigned long count, int success, const char *format, ...)
-    __attribute__((__format__(printf, 3, 4)));
+	__attribute__((__format__(printf, 3, 4)));
 void skip_block(unsigned long count, const char *reason, ...)
-    __attribute__((__format__(printf, 2, 3)));
+	__attribute__((__format__(printf, 2, 3)));
 
 /*
  * Check an expected value against a seen value.  Returns true if the test
  * passes and false if it fails.
  */
 int is_int(long wanted, long seen, const char *format, ...)
-    __attribute__((__format__(printf, 3, 4)));
+	__attribute__((__format__(printf, 3, 4)));
 int is_string(const char *wanted, const char *seen, const char *format, ...)
-    __attribute__((__format__(printf, 3, 4)));
+	__attribute__((__format__(printf, 3, 4)));
 int is_hex(unsigned long wanted, unsigned long seen, const char *format, ...)
-    __attribute__((__format__(printf, 3, 4)));
+	__attribute__((__format__(printf, 3, 4)));
 
 /* Bail out with an error.  sysbail appends strerror(errno). */
 void bail(const char *format, ...)
-    __attribute__((__noreturn__, __nonnull__, __format__(printf, 1, 2)));
+	__attribute__((__noreturn__, __nonnull__, __format__(printf, 1, 2)));
 void sysbail(const char *format, ...)
-    __attribute__((__noreturn__, __nonnull__, __format__(printf, 1, 2)));
+	__attribute__((__noreturn__, __nonnull__, __format__(printf, 1, 2)));
 
 /* Report a diagnostic to stderr prefixed with #. */
 int diag(const char *format, ...)
-    __attribute__((__nonnull__, __format__(printf, 1, 2)));
+	__attribute__((__nonnull__, __format__(printf, 1, 2)));
 int sysdiag(const char *format, ...)
-    __attribute__((__nonnull__, __format__(printf, 1, 2)));
+	__attribute__((__nonnull__, __format__(printf, 1, 2)));
 
 /*
  * Register or unregister a file that contains supplementary diagnostics.
@@ -118,30 +118,30 @@ int sysdiag(const char *format, ...)
  * truncated output.
  */
 void diag_file_add(const char *file)
-    __attribute__((__nonnull__));
+	__attribute__((__nonnull__));
 void diag_file_remove(const char *file)
-    __attribute__((__nonnull__));
+	__attribute__((__nonnull__));
 
 /* Allocate memory, reporting a fatal error with bail on failure. */
 void *bcalloc(size_t, size_t)
-    __attribute__((__alloc_size__(1, 2), __malloc__, __warn_unused_result__));
+__attribute__((__alloc_size__(1, 2), __malloc__, __warn_unused_result__));
 void *bmalloc(size_t)
-    __attribute__((__alloc_size__(1), __malloc__, __warn_unused_result__));
+__attribute__((__alloc_size__(1), __malloc__, __warn_unused_result__));
 void *breallocarray(void *, size_t, size_t)
-    __attribute__((__alloc_size__(2, 3), __malloc__, __warn_unused_result__));
+__attribute__((__alloc_size__(2, 3), __malloc__, __warn_unused_result__));
 void *brealloc(void *, size_t)
-    __attribute__((__alloc_size__(2), __malloc__, __warn_unused_result__));
+__attribute__((__alloc_size__(2), __malloc__, __warn_unused_result__));
 char *bstrdup(const char *)
-    __attribute__((__malloc__, __nonnull__, __warn_unused_result__));
+__attribute__((__malloc__, __nonnull__, __warn_unused_result__));
 char *bstrndup(const char *, size_t)
-    __attribute__((__malloc__, __nonnull__, __warn_unused_result__));
+__attribute__((__malloc__, __nonnull__, __warn_unused_result__));
 
 /*
  * Find a test file under BUILD or SOURCE, returning the full path.  The
  * returned path should be freed with test_file_path_free().
  */
 char *test_file_path(const char *file)
-    __attribute__((__malloc__, __nonnull__, __warn_unused_result__));
+__attribute__((__malloc__, __nonnull__, __warn_unused_result__));
 void test_file_path_free(char *path);
 
 /*
@@ -149,7 +149,7 @@ void test_file_path_free(char *path);
  * returned path should be freed with test_tmpdir_free.
  */
 char *test_tmpdir(void)
-    __attribute__((__malloc__, __warn_unused_result__));
+__attribute__((__malloc__, __warn_unused_result__));
 void test_tmpdir_free(char *path);
 
 /*
@@ -164,7 +164,7 @@ void test_tmpdir_free(char *path);
  */
 typedef void (*test_cleanup_func)(int, int);
 void test_cleanup_register(test_cleanup_func)
-    __attribute__((__nonnull__));
+__attribute__((__nonnull__));
 
 END_DECLS
 

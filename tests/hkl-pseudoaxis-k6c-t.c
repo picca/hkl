@@ -81,8 +81,8 @@ static void degenerated(void)
 
 		/* studdy this degenerated case */
 		geometries = hkl_engine_pseudo_axis_values_set(engine,
-								hkl, ARRAY_SIZE(hkl),
-								HKL_UNIT_DEFAULT, NULL);
+							       hkl, ARRAY_SIZE(hkl),
+							       HKL_UNIT_DEFAULT, NULL);
 		if (geometries){
 			const HklGeometryListItem *item;
 

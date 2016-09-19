@@ -34,8 +34,8 @@ BEGIN_DECLS
 
 /* Check an expected value against a seen value within epsilon. */
 int is_double(double wanted, double seen, double epsilon,
-               const char *format, ...)
-    __attribute__((__format__(printf, 4, 5)));
+	      const char *format, ...)
+	__attribute__((__format__(printf, 4, 5)));
 
 END_DECLS
 

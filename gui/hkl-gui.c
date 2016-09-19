@@ -1063,8 +1063,8 @@ hkl_gui_window_cellrendererspin1_edited_cb(GtkCellRendererText *renderer,
 					     &iter,
 					     path);
 	gtk_tree_model_get (GTK_TREE_MODEL(priv->liststore_axis), &iter,
-					   AXIS_COL_NAME, &axis,
-					   -1);
+			    AXIS_COL_NAME, &axis,
+			    -1);
 
 	value = atof(new_text); /* TODO need to check for the right conversion */
 
@@ -1122,8 +1122,8 @@ hkl_gui_window_cellrendererspin3_edited_cb(GtkCellRendererText *renderer,
 					     &iter,
 					     path);
 	gtk_tree_model_get (GTK_TREE_MODEL(priv->liststore_axis), &iter,
-					   AXIS_COL_NAME, &axis,
-					   -1);
+			    AXIS_COL_NAME, &axis,
+			    -1);
 
 	value = atof(new_text); /* TODO need to check for the right conversion */
 
@@ -1177,8 +1177,8 @@ hkl_gui_window_cellrendererspin4_edited_cb(GtkCellRendererText *renderer,
 					     &iter,
 					     path);
 	gtk_tree_model_get (GTK_TREE_MODEL(priv->liststore_axis), &iter,
-					   AXIS_COL_NAME, &axis,
-					   -1);
+			    AXIS_COL_NAME, &axis,
+			    -1);
 
 	value = atof(new_text); /* TODO need to check for the right conversion */
 
@@ -1421,7 +1421,7 @@ hkl_gui_window_toolbutton_add_reflection_clicked_cb(GtkToolButton* _sender,
 			flag = hkl_sample_reflection_flag_get(reflection);
 
 			n_rows = gtk_tree_model_iter_n_children(GTK_TREE_MODEL(priv->liststore_reflections),
-							NULL);
+								NULL);
 			gtk_list_store_insert_with_values (priv->liststore_reflections,
 							   &iter, -1,
 							   REFLECTION_COL_INDEX, n_rows,
@@ -1686,7 +1686,7 @@ update_ux_uy_uz (HklGuiWindow* self)
 		gtk_label_set_markup(priv->label_UB ## i ## j,		\
 				     g_ascii_formatd(text,		\
 						     G_ASCII_DTOSTR_BUF_SIZE, \
-						     "<tt> %+.4f </tt>",	\
+						     "<tt> %+.4f </tt>", \
 						     hkl_matrix_get(UB, i - 1, j - 1))); \
 	}while(0)
 
@@ -1908,7 +1908,7 @@ hkl_gui_window_toolbutton_del_crystal_clicked_cb (GtkToolButton* _sender, gpoint
 		HklParameter *p = hkl_parameter_new_copy(hkl_lattice_## parameter ##_get(lattice)); \
 		if(!hkl_parameter_min_max_set(p,			\
 					      gtk_spin_button_get_value(priv->spinbutton_## parameter ##_min), \
-					      gtk_spin_button_get_value(priv->spinbutton_## parameter ##_max),	\
+					      gtk_spin_button_get_value(priv->spinbutton_## parameter ##_max), \
 					      HKL_UNIT_USER, _error)){	\
 			raise_error(self, _error);			\
 			hkl_parameter_free(p);				\
@@ -2166,88 +2166,88 @@ hkl_gui_window_toolbutton_setUB_clicked_cb(GtkToolButton* _sender, gpointer user
 	hkl_matrix_free(UB);
 }
 
-void
-hkl_gui_window_toolbutton_computeUB_clicked_cb (GtkToolButton* _sender, gpointer user_data)
-{
-	HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
-	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
-	GtkTreeSelection* selection = NULL;
-	guint nb_rows = 0U;
+				 void
+				 hkl_gui_window_toolbutton_computeUB_clicked_cb (GtkToolButton* _sender, gpointer user_data)
+				 {
+					 HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
+					 HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
+					 GtkTreeSelection* selection = NULL;
+					 guint nb_rows = 0U;
 
-	selection = gtk_tree_view_get_selection (priv->treeview_reflections);
-	nb_rows = gtk_tree_selection_count_selected_rows (selection);
-	if (nb_rows > 1) {
-		GtkTreeModel* model = NULL;
-		GList* list;
-		GtkTreeIter iter = {0};
-		GtkTreePath *path;
-		HklSampleReflection *ref1, *ref2;
-		GError *error = NULL;
+					 selection = gtk_tree_view_get_selection (priv->treeview_reflections);
+					 nb_rows = gtk_tree_selection_count_selected_rows (selection);
+					 if (nb_rows > 1) {
+						 GtkTreeModel* model = NULL;
+						 GList* list;
+						 GtkTreeIter iter = {0};
+						 GtkTreePath *path;
+						 HklSampleReflection *ref1, *ref2;
+						 GError *error = NULL;
 
-		model = GTK_TREE_MODEL(priv->liststore_reflections);
-		list = gtk_tree_selection_get_selected_rows (selection, &model);
+						 model = GTK_TREE_MODEL(priv->liststore_reflections);
+						 list = gtk_tree_selection_get_selected_rows (selection, &model);
 
-		/* get the first reflection */
-		path = g_list_nth_data(list, 0);
-		gtk_tree_model_get_iter (GTK_TREE_MODEL(priv->liststore_reflections),
-					 &iter,
-					 path);
-		gtk_tree_model_get (GTK_TREE_MODEL(priv->liststore_reflections), &iter,
-				    REFLECTION_COL_REFLECTION, &ref1,
-				    -1);
+						 /* get the first reflection */
+						 path = g_list_nth_data(list, 0);
+						 gtk_tree_model_get_iter (GTK_TREE_MODEL(priv->liststore_reflections),
+									  &iter,
+									  path);
+						 gtk_tree_model_get (GTK_TREE_MODEL(priv->liststore_reflections), &iter,
+								     REFLECTION_COL_REFLECTION, &ref1,
+								     -1);
 
-		/* get the second one */
-		path = g_list_nth_data(list, 1);
-		gtk_tree_model_get_iter (GTK_TREE_MODEL(priv->liststore_reflections),
-					 &iter,
-					 path);
-		gtk_tree_model_get (GTK_TREE_MODEL(priv->liststore_reflections), &iter,
-				    REFLECTION_COL_REFLECTION, &ref2,
-				    -1);
+						 /* get the second one */
+						 path = g_list_nth_data(list, 1);
+						 gtk_tree_model_get_iter (GTK_TREE_MODEL(priv->liststore_reflections),
+									  &iter,
+									  path);
+						 gtk_tree_model_get (GTK_TREE_MODEL(priv->liststore_reflections), &iter,
+								     REFLECTION_COL_REFLECTION, &ref2,
+								     -1);
 
-		if(!hkl_sample_compute_UB_busing_levy(priv->sample,
-						      ref1, ref2, &error)){
-			raise_error(self, &error);
-		}else{
-			if(priv->diffractometer)
-				diffractometer_set_sample(priv->diffractometer,
-							  priv->sample);
+						 if(!hkl_sample_compute_UB_busing_levy(priv->sample,
+										       ref1, ref2, &error)){
+							 raise_error(self, &error);
+						 }else{
+							 if(priv->diffractometer)
+								 diffractometer_set_sample(priv->diffractometer,
+											   priv->sample);
 
-			update_UB (self);
-			update_ux_uy_uz (self);
-			update_pseudo_axes (self);
-			update_pseudo_axes_frames (self);
-		}
-		g_list_free_full (list, (GDestroyNotify) gtk_tree_path_free);
-	} else {
-		gtk_statusbar_push (priv->statusbar, 0,
-				    "Please select at least two reflection.");
-	}
-}
+							 update_UB (self);
+							 update_ux_uy_uz (self);
+							 update_pseudo_axes (self);
+							 update_pseudo_axes_frames (self);
+						 }
+						 g_list_free_full (list, (GDestroyNotify) gtk_tree_path_free);
+					 } else {
+						 gtk_statusbar_push (priv->statusbar, 0,
+								     "Please select at least two reflection.");
+					 }
+				 }
 
-void
-hkl_gui_window_toolbutton_affiner_clicked_cb (GtkToolButton* _sender, gpointer user_data)
-{
-	HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
-	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
-	GError *error = NULL;
+				 void
+				 hkl_gui_window_toolbutton_affiner_clicked_cb (GtkToolButton* _sender, gpointer user_data)
+				 {
+					 HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
+					 HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
+					 GError *error = NULL;
 
-	if(!hkl_sample_affine (priv->sample, &error)){
-		raise_error(self, &error);
-	}else{
-		if(priv->diffractometer)
-			diffractometer_set_sample(priv->diffractometer,
-						  priv->sample);
+					 if(!hkl_sample_affine (priv->sample, &error)){
+						 raise_error(self, &error);
+					 }else{
+						 if(priv->diffractometer)
+							 diffractometer_set_sample(priv->diffractometer,
+										   priv->sample);
 
-		update_lattice (self);
-		update_crystal_model (self);
-		update_reciprocal_lattice (self);
-		update_UB (self);
-		update_ux_uy_uz (self);
-		update_pseudo_axes (self);
-		update_pseudo_axes_frames (self);
-	}
-}
+						 update_lattice (self);
+						 update_crystal_model (self);
+						 update_reciprocal_lattice (self);
+						 update_UB (self);
+						 update_ux_uy_uz (self);
+						 update_pseudo_axes (self);
+						 update_pseudo_axes_frames (self);
+					 }
+				 }
 
 #define TOGGLE_LATTICE_CB(_parameter)					\
 	void hkl_gui_window_checkbutton_ ## _parameter ## _toggled_cb(GtkCheckButton *checkbutton, \
@@ -2301,26 +2301,26 @@ TOGGLE_UX_UY_UZ(uz);
 
 /*
 
-static gboolean _hkl_gui_window_on_tree_view_crystals_key_press_event_gtk_widget_key_press_event (GtkWidget* _sender, GdkEventKey* event, gpointer self) {
-	gboolean result;
-	result = hkl_gui_window_on_tree_view_crystals_key_press_event (event, self);
+  static gboolean _hkl_gui_window_on_tree_view_crystals_key_press_event_gtk_widget_key_press_event (GtkWidget* _sender, GdkEventKey* event, gpointer self) {
+  gboolean result;
+  result = hkl_gui_window_on_tree_view_crystals_key_press_event (event, self);
 
-	return result;
+  return result;
 
-}
+  }
 
-static gboolean hkl_gui_window_on_tree_view_crystals_key_press_event (GdkEventKey* event, HklGuiWindow* self) {
-	gboolean result = FALSE;
+  static gboolean hkl_gui_window_on_tree_view_crystals_key_press_event (GdkEventKey* event, HklGuiWindow* self) {
+  gboolean result = FALSE;
 
-	g_return_val_if_fail (self != NULL, FALSE);
+  g_return_val_if_fail (self != NULL, FALSE);
 
-	g_return_val_if_fail (event != NULL, FALSE);
+  g_return_val_if_fail (event != NULL, FALSE);
 
-	result = TRUE;
+  result = TRUE;
 
-	return result;
+  return result;
 
-}
+  }
 
 */
 

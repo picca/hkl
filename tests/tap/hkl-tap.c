@@ -107,7 +107,7 @@ int check_pseudoaxes(HklEngine *engine,
 /**
  * hkl_engine_set_values_v: (skip)
  * @self: the Engine
- * @values: the values to set 
+ * @values: the values to set
  *
  * set the values of the PseudoAxes with the given values. This method
  * is only available for test as it is sort of brittle.
@@ -122,10 +122,10 @@ HklGeometryList *hkl_engine_set_values_v(HklEngine *self, ...)
 	va_start(ap, self);
 	for(i=0; i<len; ++i)
 		values[i] = va_arg(ap, double);
-		
+
 	va_end(ap);
 	return hkl_engine_pseudo_axis_values_set(self, values, len,
-						  HKL_UNIT_DEFAULT, NULL);
+						 HKL_UNIT_DEFAULT, NULL);
 }
 
 /**

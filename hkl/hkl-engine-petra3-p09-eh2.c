@@ -173,6 +173,62 @@ static HklMode *fourc_constant_phi_horizontal()
 				 TRUE);
 }
 
+static HklMode *lifting_detector_mu()
+{
+	static const char *axes_r[] = {MU, OMEGA, CHI, PHI, DELTA, GAMMA};
+	static const char *axes_w[] = {MU, DELTA, GAMMA};
+	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO("lifting detector mu", axes_r, axes_w, functions),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_full_mode_operations,
+				 TRUE);
+}
+
+static HklMode *lifting_detector_omega()
+{
+	static const char *axes_r[] = {MU, OMEGA, CHI, PHI, DELTA, GAMMA};
+	static const char *axes_w[] = {OMEGA, DELTA, GAMMA};
+	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO("lifting detector omega", axes_r, axes_w, functions),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_full_mode_operations,
+				 TRUE);
+}
+
+static HklMode *lifting_detector_chi()
+{
+	static const char *axes_r[] = {MU, OMEGA, CHI, PHI, DELTA, GAMMA};
+	static const char *axes_w[] = {CHI, DELTA, GAMMA};
+	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO("lifting detector chi", axes_r, axes_w, functions),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_full_mode_operations,
+				 TRUE);
+}
+
+static HklMode *lifting_detector_phi()
+{
+	static const char *axes_r[] = {MU, OMEGA, CHI, PHI, DELTA, GAMMA};
+	static const char *axes_w[] = {PHI, DELTA, GAMMA};
+	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
+	static const HklModeAutoInfo info = {
+		HKL_MODE_AUTO_INFO("lifting detector phi", axes_r, axes_w, functions),
+	};
+
+	return hkl_mode_auto_new(&info,
+				 &hkl_full_mode_operations,
+				 TRUE);
+}
+
 /**********************/
 /* pseudo axis engine */
 /**********************/
@@ -194,6 +250,10 @@ static HklEngine *hkl_engine_petra3_p09_eh2_hkl_new(HklEngineList *engines)
 	hkl_engine_add_mode(self, fourc_constant_omega_horizontal());
 	hkl_engine_add_mode(self, fourc_constant_chi_horizontal());
 	hkl_engine_add_mode(self, fourc_constant_phi_horizontal());
+	hkl_engine_add_mode(self, lifting_detector_mu());
+	hkl_engine_add_mode(self, lifting_detector_omega());
+	hkl_engine_add_mode(self, lifting_detector_chi());
+	hkl_engine_add_mode(self, lifting_detector_phi());
 
 	return self;
 }

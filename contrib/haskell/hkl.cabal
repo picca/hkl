@@ -17,19 +17,25 @@ cabal-version:       >= 1.10
 
 executable ghkl
   main-is:             src/ghkl.hs
-  build-depends:       base >= 4.6 && < 4.9
+  build-depends:       attoparsec
+                     , base >= 4.6 && < 4.9
                      , bindings-hdf5 >= 1.8.12
                      , containers >= 0.5 && < 0.6
                      , dimensional >= 0.10
+                     , filepath >= 1.3.0
+                     , Glob >= 0.7.5
                      , hkl
                      , hmatrix >= 0.15
                      , monad-loops >= 0.4.2
                      , pipes >= 4.1.2
+                     , text
                      , transformers >= 0.3
+                     , vector >= 0.10.0.1
   default-language:    Haskell2010
   pkgconfig-depends:   hkl
   build-tools:         hsc2hs
-  ghc-options:         -Wall -Werror
+  ghc-options:         -Wall -threaded -O2
+  -- ghc-options:         -Wall -Werror
   -- ghc-options:
   --   -O2
   --   -threaded
@@ -47,20 +53,32 @@ executable hkl3d
                      , hmatrix >= 0.15
                      , monad-loops >= 0.4.2
                      , pipes >= 4.1.2
+                     , text
                      , transformers >= 0.3
+                     , vector >= 0.10.0.1
   default-language:    Haskell2010
   pkgconfig-depends:   hkl
   build-tools:         hsc2hs
-  ghc-options:         -Wall -Werror
+  -- ghc-options:         -Wall -Werror
 
 library
    exposed-modules:    Hkl
                      , Hkl.C
+                     , Hkl.Calibration
+                     , Hkl.Detector
                      , Hkl.Diffabs
+                     , Hkl.Diffabs.Martinetto
                      , Hkl.Engine
                      , Hkl.H5
+                     , Hkl.MyMatrix
+                     , Hkl.PyFAI
+                     , Hkl.PyFAI.Poni
+                     , Hkl.PyFAI.PoniExt
+                     , Hkl.PyFAI.Npt
                      , Hkl.Sixs
                      , Hkl.Types
+                     , Hkl.Types.Parameter
+                     , Hkl.XRD
   other-extensions:    CPP
                      , ForeignFunctionInterface
                      , EmptyDataDecls
@@ -68,17 +86,28 @@ library
                      , FlexibleInstances
                      , FlexibleContexts
                      , RecordWildCards
-  build-depends:       base >= 4.6 && < 4.9
+  build-depends:       async
+                     , attoparsec
+                     , base >= 4.6 && < 4.9
                      , bindings-hdf5 >= 1.8.12
+                     , bytestring >= 0.10.0.2
                      , containers >= 0.5 && < 0.6
                      , dimensional >= 0.10
+                     , directory >= 1.2.0
                      , filepath >= 1.3.0
+                     , Glob >= 0.7.5
+                     , hdf5
                      , hmatrix >= 0.15
+                     , mmorph >= 1.0.3
                      , monad-loops >= 0.4.2
                      , pipes >= 4.1.2
+                     , pipes-safe >= 2.2.0
+                     , process >= 1.1
+                     , text
                      , transformers >= 0.3
+                     , vector >= 0.10.0.1
   hs-source-dirs:      src
   build-tools:         hsc2hs
   default-language:    Haskell2010
   pkgconfig-depends:   hkl
-  ghc-options:         -Wall -Werror
+  ghc-options:         -Wall -threaded -O2

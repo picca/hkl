@@ -32,12 +32,12 @@
 G_DEFINE_TYPE (HklGuiEngine, hkl_gui_engine, G_TYPE_OBJECT);
 
 enum {
-  PROP_0,
+	PROP_0,
 
-  PROP_ENGINE,
-  PROP_LISTSTORE,
+	PROP_ENGINE,
+	PROP_LISTSTORE,
 
-  N_PROPERTIES
+	N_PROPERTIES
 };
 
 /* Keep a pointer to the properties definition */
@@ -342,6 +342,42 @@ cell_tree_view_pseudo_axis_value_edited_cb (GtkCellRendererText* renderer,
 		gtk_list_store_set (priv->store_pseudo,
 				    &iter,
 				    PSEUDO_COL_VALUE, value,
+				    -1);
+	}
+}
+
+/* mode parameters */
+void
+cellrendererspin2_edited_cb (GtkCellRendererText* renderer,
+			     const gchar* path,
+			     const gchar* new_text,
+			     HklGuiEngine* self)
+{
+	HklGuiEnginePrivate *priv = HKL_GUI_ENGINE_GET_PRIVATE(self);
+	GtkTreeIter iter = {0};
+
+	if (gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(priv->store_mode_parameter),
+						 &iter, path)) {
+		const darray_string *parameters = hkl_engine_parameters_names_get(priv->engine);
+		unsigned int n_values = darray_size(*parameters);
+		double values[n_values];
+		int idx;
+		gdouble new_value = 0.0;
+
+		new_value = atof(new_text);
+
+		/* set the mode parameter value */
+		hkl_engine_parameters_values_get(priv->engine, values, n_values, HKL_UNIT_USER);
+		gtk_tree_model_get (GTK_TREE_MODEL(priv->store_mode_parameter), &iter,
+				    PSEUDO_COL_IDX, &idx,
+				    -1);
+		values[idx] = new_value;
+		hkl_engine_parameters_values_set(priv->engine, values, n_values, HKL_UNIT_USER, NULL);
+
+		/* set the store */
+		gtk_list_store_set (priv->store_mode_parameter,
+				    &iter,
+				    PSEUDO_COL_VALUE, new_value,
 				    -1);
 	}
 }

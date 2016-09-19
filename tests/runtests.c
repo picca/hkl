@@ -82,7 +82,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
-*/
+ */
 
 /* Required for fdopen(), getopt(), and putenv(). */
 #if defined(__STRICT_ANSI__) || defined(PEDANTIC)
@@ -148,24 +148,24 @@
 
 /* Test status codes. */
 enum test_status {
-    TEST_FAIL,
-    TEST_PASS,
-    TEST_SKIP,
-    TEST_INVALID
+	TEST_FAIL,
+	TEST_PASS,
+	TEST_SKIP,
+	TEST_INVALID
 };
 
 /* Really, just a boolean, but this is more self-documenting. */
 enum test_verbose {
-    CONCISE = 0,
-    VERBOSE = 1
+	CONCISE = 0,
+	VERBOSE = 1
 };
 
 /* Indicates the state of our plan. */
 enum plan_status {
-    PLAN_INIT,                  /* Nothing seen yet. */
-    PLAN_FIRST,                 /* Plan seen before any tests. */
-    PLAN_PENDING,               /* Test seen and no plan yet. */
-    PLAN_FINAL                  /* Plan seen after some tests. */
+	PLAN_INIT,                  /* Nothing seen yet. */
+	PLAN_FIRST,                 /* Plan seen before any tests. */
+	PLAN_PENDING,               /* Test seen and no plan yet. */
+	PLAN_FINAL                  /* Plan seen after some tests. */
 };
 
 /* Error exit statuses for test processes. */
@@ -176,28 +176,28 @@ enum plan_status {
 
 /* Structure to hold data for a set of tests. */
 struct testset {
-    char *file;                 /* The file name of the test. */
-    char *path;                 /* The path to the test program. */
-    enum plan_status plan;      /* The status of our plan. */
-    unsigned long count;        /* Expected count of tests. */
-    unsigned long current;      /* The last seen test number. */
-    unsigned int length;        /* The length of the last status message. */
-    unsigned long passed;       /* Count of passing tests. */
-    unsigned long failed;       /* Count of failing lists. */
-    unsigned long skipped;      /* Count of skipped tests (passed). */
-    unsigned long allocated;    /* The size of the results table. */
-    enum test_status *results;  /* Table of results by test number. */
-    unsigned int aborted;       /* Whether the set was aborted. */
-    int reported;               /* Whether the results were reported. */
-    int status;                 /* The exit status of the test. */
-    unsigned int all_skipped;   /* Whether all tests were skipped. */
-    char *reason;               /* Why all tests were skipped. */
+	char *file;                 /* The file name of the test. */
+	char *path;                 /* The path to the test program. */
+	enum plan_status plan;      /* The status of our plan. */
+	unsigned long count;        /* Expected count of tests. */
+	unsigned long current;      /* The last seen test number. */
+	unsigned int length;        /* The length of the last status message. */
+	unsigned long passed;       /* Count of passing tests. */
+	unsigned long failed;       /* Count of failing lists. */
+	unsigned long skipped;      /* Count of skipped tests (passed). */
+	unsigned long allocated;    /* The size of the results table. */
+	enum test_status *results;  /* Table of results by test number. */
+	unsigned int aborted;       /* Whether the set was aborted. */
+	int reported;               /* Whether the results were reported. */
+	int status;                 /* The exit status of the test. */
+	unsigned int all_skipped;   /* Whether all tests were skipped. */
+	char *reason;               /* Why all tests were skipped. */
 };
 
 /* Structure to hold a linked list of test sets. */
 struct testlist {
-    struct testset *ts;
-    struct testlist *next;
+	struct testset *ts;
+	struct testlist *next;
 };
 
 /*
@@ -240,8 +240,8 @@ Failed Set                 Fail/Total (%) Skip Stat  Failing Tests\n\
 #define xcalloc(n, size)      x_calloc((n), (size), __FILE__, __LINE__)
 #define xmalloc(size)         x_malloc((size), __FILE__, __LINE__)
 #define xstrdup(p)            x_strdup((p), __FILE__, __LINE__)
-#define xreallocarray(p, n, size) \
-    x_reallocarray((p), (n), (size), __FILE__, __LINE__)
+#define xreallocarray(p, n, size)				\
+	x_reallocarray((p), (n), (size), __FILE__, __LINE__)
 
 /*
  * __attribute__ is available in gcc 2.5 and later, but only with gcc 2.7
@@ -281,15 +281,15 @@ Failed Set                 Fail/Total (%) Skip Stat  Failing Tests\n\
 
 /* Declare internal functions that benefit from compiler attributes. */
 static void sysdie(const char *, ...)
-    __attribute__((__nonnull__, __noreturn__, __format__(printf, 1, 2)));
+__attribute__((__nonnull__, __noreturn__, __format__(printf, 1, 2)));
 static void *x_calloc(size_t, size_t, const char *, int)
-    __attribute__((__alloc_size__(1, 2), __malloc__, __nonnull__));
+	__attribute__((__alloc_size__(1, 2), __malloc__, __nonnull__));
 static void *x_malloc(size_t, const char *, int)
-    __attribute__((__alloc_size__(1), __malloc__, __nonnull__));
+	__attribute__((__alloc_size__(1), __malloc__, __nonnull__));
 static void *x_reallocarray(void *, size_t, size_t, const char *, int)
-    __attribute__((__alloc_size__(2, 3), __malloc__, __nonnull__(4)));
+	__attribute__((__alloc_size__(2, 3), __malloc__, __nonnull__(4)));
 static char *x_strdup(const char *, const char *, int)
-    __attribute__((__malloc__, __nonnull__));
+	__attribute__((__malloc__, __nonnull__));
 
 
 /*
@@ -298,17 +298,17 @@ static char *x_strdup(const char *, const char *, int)
 static void
 sysdie(const char *format, ...)
 {
-    int oerrno;
-    va_list args;
+	int oerrno;
+	va_list args;
 
-    oerrno = errno;
-    fflush(stdout);
-    fprintf(stderr, "runtests: ");
-    va_start(args, format);
-    vfprintf(stderr, format, args);
-    va_end(args);
-    fprintf(stderr, ": %s\n", strerror(oerrno));
-    exit(1);
+	oerrno = errno;
+	fflush(stdout);
+	fprintf(stderr, "runtests: ");
+	va_start(args, format);
+	vfprintf(stderr, format, args);
+	va_end(args);
+	fprintf(stderr, ": %s\n", strerror(oerrno));
+	exit(1);
 }
 
 
@@ -318,15 +318,15 @@ sysdie(const char *format, ...)
 static void *
 x_calloc(size_t n, size_t size, const char *file, int line)
 {
-    void *p;
+	void *p;
 
-    n = (n > 0) ? n : 1;
-    size = (size > 0) ? size : 1;
-    p = calloc(n, size);
-    if (p == NULL)
-        sysdie("failed to calloc %lu bytes at %s line %d",
-               (unsigned long) size, file, line);
-    return p;
+	n = (n > 0) ? n : 1;
+	size = (size > 0) ? size : 1;
+	p = calloc(n, size);
+	if (p == NULL)
+		sysdie("failed to calloc %lu bytes at %s line %d",
+		       (unsigned long) size, file, line);
+	return p;
 }
 
 
@@ -336,13 +336,13 @@ x_calloc(size_t n, size_t size, const char *file, int line)
 static void *
 x_malloc(size_t size, const char *file, int line)
 {
-    void *p;
+	void *p;
 
-    p = malloc(size);
-    if (p == NULL)
-        sysdie("failed to malloc %lu bytes at %s line %d",
-               (unsigned long) size, file, line);
-    return p;
+	p = malloc(size);
+	if (p == NULL)
+		sysdie("failed to malloc %lu bytes at %s line %d",
+		       (unsigned long) size, file, line);
+	return p;
 }
 
 
@@ -362,13 +362,13 @@ x_malloc(size_t size, const char *file, int line)
 static void *
 x_reallocarray(void *p, size_t n, size_t size, const char *file, int line)
 {
-    if (n > 0 && UINT_MAX / n <= size)
-        sysdie("realloc too large at %s line %d", file, line);
-    p = realloc(p, n * size);
-    if (p == NULL)
-        sysdie("failed to realloc %lu bytes at %s line %d",
-               (unsigned long) (n * size), file, line);
-    return p;
+	if (n > 0 && UINT_MAX / n <= size)
+		sysdie("realloc too large at %s line %d", file, line);
+	p = realloc(p, n * size);
+	if (p == NULL)
+		sysdie("failed to realloc %lu bytes at %s line %d",
+		       (unsigned long) (n * size), file, line);
+	return p;
 }
 
 
@@ -378,16 +378,16 @@ x_reallocarray(void *p, size_t n, size_t size, const char *file, int line)
 static char *
 x_strdup(const char *s, const char *file, int line)
 {
-    char *p;
-    size_t len;
+	char *p;
+	size_t len;
 
-    len = strlen(s) + 1;
-    p = malloc(len);
-    if (p == NULL)
-        sysdie("failed to strdup %lu bytes at %s line %d",
-               (unsigned long) len, file, line);
-    memcpy(p, s, len);
-    return p;
+	len = strlen(s) + 1;
+	p = malloc(len);
+	if (p == NULL)
+		sysdie("failed to strdup %lu bytes at %s line %d",
+		       (unsigned long) len, file, line);
+	memcpy(p, s, len);
+	return p;
 }
 
 
@@ -404,39 +404,39 @@ x_strdup(const char *s, const char *file, int line)
 static char *
 concat(const char *first, ...)
 {
-    va_list args;
-    char *result;
-    const char *string;
-    size_t offset;
-    size_t length = 0;
+	va_list args;
+	char *result;
+	const char *string;
+	size_t offset;
+	size_t length = 0;
 
-    /*
-     * Find the total memory required.  Ensure we don't overflow length.  We
-     * aren't guaranteed to have SIZE_MAX, so use UINT_MAX as an acceptable
-     * substitute (see the x_nrealloc comments).
-     */
-    va_start(args, first);
-    for (string = first; string != NULL; string = va_arg(args, const char *)) {
-        if (length >= UINT_MAX - strlen(string)) {
-            errno = EINVAL;
-            sysdie("strings too long in concat");
-        }
-        length += strlen(string);
-    }
-    va_end(args);
-    length++;
+	/*
+	 * Find the total memory required.  Ensure we don't overflow length.  We
+	 * aren't guaranteed to have SIZE_MAX, so use UINT_MAX as an acceptable
+	 * substitute (see the x_nrealloc comments).
+	 */
+	va_start(args, first);
+	for (string = first; string != NULL; string = va_arg(args, const char *)) {
+		if (length >= UINT_MAX - strlen(string)) {
+			errno = EINVAL;
+			sysdie("strings too long in concat");
+		}
+		length += strlen(string);
+	}
+	va_end(args);
+	length++;
 
-    /* Create the string. */
-    result = xmalloc(length);
-    va_start(args, first);
-    offset = 0;
-    for (string = first; string != NULL; string = va_arg(args, const char *)) {
-        memcpy(result + offset, string, strlen(string));
-        offset += strlen(string);
-    }
-    va_end(args);
-    result[offset] = '\0';
-    return result;
+	/* Create the string. */
+	result = xmalloc(length);
+	va_start(args, first);
+	offset = 0;
+	for (string = first; string != NULL; string = va_arg(args, const char *)) {
+		memcpy(result + offset, string, strlen(string));
+		offset += strlen(string);
+	}
+	va_end(args);
+	result[offset] = '\0';
+	return result;
 }
 
 
@@ -447,7 +447,7 @@ concat(const char *first, ...)
 static double
 tv_seconds(const struct timeval *tv)
 {
-    return difftime(tv->tv_sec, 0) + tv->tv_usec * 1e-6;
+	return difftime(tv->tv_sec, 0) + tv->tv_usec * 1e-6;
 }
 
 
@@ -457,7 +457,7 @@ tv_seconds(const struct timeval *tv)
 static double
 tv_diff(const struct timeval *tv1, const struct timeval *tv0)
 {
-    return tv_seconds(tv1) - tv_seconds(tv0);
+	return tv_seconds(tv1) - tv_seconds(tv0);
 }
 
 
@@ -467,7 +467,7 @@ tv_diff(const struct timeval *tv1, const struct timeval *tv0)
 static double
 tv_sum(const struct timeval *tv1, const struct timeval *tv2)
 {
-    return tv_seconds(tv1) + tv_seconds(tv2);
+	return tv_seconds(tv1) + tv_seconds(tv2);
 }
 
 
@@ -478,9 +478,9 @@ tv_sum(const struct timeval *tv1, const struct timeval *tv2)
 static const char *
 skip_whitespace(const char *p)
 {
-    while (isspace((unsigned char)(*p)))
-        p++;
-    return p;
+	while (isspace((unsigned char)(*p)))
+		p++;
+	return p;
 }
 
 
@@ -492,65 +492,65 @@ skip_whitespace(const char *p)
 static pid_t
 test_start(const char *path, int *fd)
 {
-    int fds[2], infd, errfd;
-    pid_t child;
+	int fds[2], infd, errfd;
+	pid_t child;
 
-    /* Create a pipe used to capture the output from the test program. */
-    if (pipe(fds) == -1) {
-        puts("ABORTED");
-        fflush(stdout);
-        sysdie("can't create pipe");
-    }
+	/* Create a pipe used to capture the output from the test program. */
+	if (pipe(fds) == -1) {
+		puts("ABORTED");
+		fflush(stdout);
+		sysdie("can't create pipe");
+	}
 
-    /* Fork a child process, massage the file descriptors, and exec. */
-    child = fork();
-    switch (child) {
-    case -1:
-        puts("ABORTED");
-        fflush(stdout);
-        sysdie("can't fork");
+	/* Fork a child process, massage the file descriptors, and exec. */
+	child = fork();
+	switch (child) {
+	case -1:
+		puts("ABORTED");
+		fflush(stdout);
+		sysdie("can't fork");
 
-    /* In the child.  Set up our standard output. */
-    case 0:
-        close(fds[0]);
-        close(STDOUT_FILENO);
-        if (dup2(fds[1], STDOUT_FILENO) < 0)
-            _exit(CHILDERR_DUP);
-        close(fds[1]);
+		/* In the child.  Set up our standard output. */
+	case 0:
+		close(fds[0]);
+		close(STDOUT_FILENO);
+		if (dup2(fds[1], STDOUT_FILENO) < 0)
+			_exit(CHILDERR_DUP);
+		close(fds[1]);
 
-        /* Point standard input at /dev/null. */
-        close(STDIN_FILENO);
-        infd = open("/dev/null", O_RDONLY);
-        if (infd < 0)
-            _exit(CHILDERR_STDIN);
-        if (infd != STDIN_FILENO) {
-            if (dup2(infd, STDIN_FILENO) < 0)
-                _exit(CHILDERR_DUP);
-            close(infd);
-        }
+		/* Point standard input at /dev/null. */
+		close(STDIN_FILENO);
+		infd = open("/dev/null", O_RDONLY);
+		if (infd < 0)
+			_exit(CHILDERR_STDIN);
+		if (infd != STDIN_FILENO) {
+			if (dup2(infd, STDIN_FILENO) < 0)
+				_exit(CHILDERR_DUP);
+			close(infd);
+		}
 
-        /* Point standard error at /dev/null. */
-        close(STDERR_FILENO);
-        errfd = open("/dev/null", O_WRONLY);
-        if (errfd < 0)
-            _exit(CHILDERR_STDERR);
-        if (errfd != STDERR_FILENO) {
-            if (dup2(errfd, STDERR_FILENO) < 0)
-                _exit(CHILDERR_DUP);
-            close(errfd);
-        }
+		/* Point standard error at /dev/null. */
+		close(STDERR_FILENO);
+		errfd = open("/dev/null", O_WRONLY);
+		if (errfd < 0)
+			_exit(CHILDERR_STDERR);
+		if (errfd != STDERR_FILENO) {
+			if (dup2(errfd, STDERR_FILENO) < 0)
+				_exit(CHILDERR_DUP);
+			close(errfd);
+		}
 
-        /* Now, exec our process. */
-        if (execl(path, path, (char *) 0) == -1)
-            _exit(CHILDERR_EXEC);
+		/* Now, exec our process. */
+		if (execl(path, path, (char *) 0) == -1)
+			_exit(CHILDERR_EXEC);
 
-    /* In parent.  Close the extra file descriptor. */
-    default:
-        close(fds[1]);
-        break;
-    }
-    *fd = fds[0];
-    return child;
+		/* In parent.  Close the extra file descriptor. */
+	default:
+		close(fds[1]);
+		break;
+	}
+	*fd = fds[0];
+	return child;
 }
 
 
@@ -560,17 +560,17 @@ test_start(const char *path, int *fd)
 static void
 test_backspace(struct testset *ts)
 {
-    unsigned int i;
+	unsigned int i;
 
-    if (!isatty(STDOUT_FILENO))
-        return;
-    for (i = 0; i < ts->length; i++)
-        putchar('\b');
-    for (i = 0; i < ts->length; i++)
-        putchar(' ');
-    for (i = 0; i < ts->length; i++)
-        putchar('\b');
-    ts->length = 0;
+	if (!isatty(STDOUT_FILENO))
+		return;
+	for (i = 0; i < ts->length; i++)
+		putchar('\b');
+	for (i = 0; i < ts->length; i++)
+		putchar(' ');
+	for (i = 0; i < ts->length; i++)
+		putchar('\b');
+	ts->length = 0;
 }
 
 
@@ -581,30 +581,30 @@ test_backspace(struct testset *ts)
 static void
 resize_results(struct testset *ts, unsigned long n)
 {
-    unsigned long i;
-    size_t s;
+	unsigned long i;
+	size_t s;
 
-    /* If there's already enough space, return quickly. */
-    if (n <= ts->allocated)
-        return;
+	/* If there's already enough space, return quickly. */
+	if (n <= ts->allocated)
+		return;
 
-    /*
-     * If no space has been allocated, do the initial allocation.  Otherwise,
-     * resize.  Start with 32 test cases and then add 1024 with each resize to
-     * try to reduce the number of reallocations.
-     */
-    if (ts->allocated == 0) {
-        s = (n > 32) ? n : 32;
-        ts->results = xcalloc(s, sizeof(enum test_status));
-    } else {
-        s = (n > ts->allocated + 1024) ? n : ts->allocated + 1024;
-        ts->results = xreallocarray(ts->results, s, sizeof(enum test_status));
-    }
+	/*
+	 * If no space has been allocated, do the initial allocation.  Otherwise,
+	 * resize.  Start with 32 test cases and then add 1024 with each resize to
+	 * try to reduce the number of reallocations.
+	 */
+	if (ts->allocated == 0) {
+		s = (n > 32) ? n : 32;
+		ts->results = xcalloc(s, sizeof(enum test_status));
+	} else {
+		s = (n > ts->allocated + 1024) ? n : ts->allocated + 1024;
+		ts->results = xreallocarray(ts->results, s, sizeof(enum test_status));
+	}
 
-    /* Set the results for the newly-allocated test array. */
-    for (i = ts->allocated; i < s; i++)
-        ts->results[i] = TEST_INVALID;
-    ts->allocated = s;
+	/* Set the results for the newly-allocated test array. */
+	for (i = ts->allocated; i < s; i++)
+		ts->results[i] = TEST_INVALID;
+	ts->allocated = s;
 }
 
 
@@ -615,11 +615,11 @@ resize_results(struct testset *ts, unsigned long n)
 static void
 invalid_test_number(struct testset *ts, long n, enum test_verbose verbose)
 {
-    if (!verbose)
-        test_backspace(ts);
-    printf("ABORTED (invalid test number %ld)\n", n);
-    ts->aborted = 1;
-    ts->reported = 1;
+	if (!verbose)
+		test_backspace(ts);
+	printf("ABORTED (invalid test number %ld)\n", n);
+	ts->aborted = 1;
+	ts->reported = 1;
 }
 
 
@@ -632,76 +632,76 @@ invalid_test_number(struct testset *ts, long n, enum test_verbose verbose)
 static int
 test_plan(const char *line, struct testset *ts, enum test_verbose verbose)
 {
-    long n;
+	long n;
 
-    /*
-     * Accept a plan without the leading 1.. for compatibility with older
-     * versions of runtests.  This will only be allowed if we've not yet seen
-     * a test result.
-     */
-    line = skip_whitespace(line);
-    if (strncmp(line, "1..", 3) == 0)
-        line += 3;
+	/*
+	 * Accept a plan without the leading 1.. for compatibility with older
+	 * versions of runtests.  This will only be allowed if we've not yet seen
+	 * a test result.
+	 */
+	line = skip_whitespace(line);
+	if (strncmp(line, "1..", 3) == 0)
+		line += 3;
 
-    /*
-     * Get the count and check it for validity.
-     *
-     * If we have something of the form "1..0 # skip foo", the whole file was
-     * skipped; record that.  If we do skip the whole file, zero out all of
-     * our statistics, since they're no longer relevant.
-     *
-     * strtol is called with a second argument to advance the line pointer
-     * past the count to make it simpler to detect the # skip case.
-     */
-    n = strtol(line, (char **) &line, 10);
-    if (n == 0) {
-        line = skip_whitespace(line);
-        if (*line == '#') {
-            line = skip_whitespace(line + 1);
-            if (strncasecmp(line, "skip", 4) == 0) {
-                line = skip_whitespace(line + 4);
-                if (*line != '\0') {
-                    ts->reason = xstrdup(line);
-                    ts->reason[strlen(ts->reason) - 1] = '\0';
-                }
-                ts->all_skipped = 1;
-                ts->aborted = 1;
-                ts->count = 0;
-                ts->passed = 0;
-                ts->skipped = 0;
-                ts->failed = 0;
-                return 0;
-            }
-        }
-    }
-    if (n <= 0) {
-        puts("ABORTED (invalid test count)");
-        ts->aborted = 1;
-        ts->reported = 1;
-        return 0;
-    }
+	/*
+	 * Get the count and check it for validity.
+	 *
+	 * If we have something of the form "1..0 # skip foo", the whole file was
+	 * skipped; record that.  If we do skip the whole file, zero out all of
+	 * our statistics, since they're no longer relevant.
+	 *
+	 * strtol is called with a second argument to advance the line pointer
+	 * past the count to make it simpler to detect the # skip case.
+	 */
+	n = strtol(line, (char **) &line, 10);
+	if (n == 0) {
+		line = skip_whitespace(line);
+		if (*line == '#') {
+			line = skip_whitespace(line + 1);
+			if (strncasecmp(line, "skip", 4) == 0) {
+				line = skip_whitespace(line + 4);
+				if (*line != '\0') {
+					ts->reason = xstrdup(line);
+					ts->reason[strlen(ts->reason) - 1] = '\0';
+				}
+				ts->all_skipped = 1;
+				ts->aborted = 1;
+				ts->count = 0;
+				ts->passed = 0;
+				ts->skipped = 0;
+				ts->failed = 0;
+				return 0;
+			}
+		}
+	}
+	if (n <= 0) {
+		puts("ABORTED (invalid test count)");
+		ts->aborted = 1;
+		ts->reported = 1;
+		return 0;
+	}
 
-    /*
-     * If we are doing lazy planning, check the plan against the largest test
-     * number that we saw and fail now if we saw a check outside the plan
-     * range.
-     */
-    if (ts->plan == PLAN_PENDING && (unsigned long) n < ts->count) {
-        invalid_test_number(ts, (long) ts->count, verbose);
-        return 0;
-    }
+	/*
+	 * If we are doing lazy planning, check the plan against the largest test
+	 * number that we saw and fail now if we saw a check outside the plan
+	 * range.
+	 */
+	if (ts->plan == PLAN_PENDING && (unsigned long) n < ts->count) {
+		invalid_test_number(ts, (long) ts->count, verbose);
+		return 0;
+	}
 
-    /*
-     * Otherwise, allocated or resize the results if needed and update count,
-     * and then record that we've seen a plan.
-     */
-    resize_results(ts, (unsigned long) n);
-    ts->count = (unsigned long) n;
-    if (ts->plan == PLAN_INIT)
-        ts->plan = PLAN_FIRST;
-    else if (ts->plan == PLAN_PENDING)
-        ts->plan = PLAN_FINAL;
-    return 1;
+	/*
+	 * Otherwise, allocated or resize the results if needed and update count,
+	 * and then record that we've seen a plan.
+	 */
+	resize_results(ts, (unsigned long) n);
+	ts->count = (unsigned long) n;
+	if (ts->plan == PLAN_INIT)
+		ts->plan = PLAN_FIRST;
+	else if (ts->plan == PLAN_PENDING)
+		ts->plan = PLAN_FINAL;
+	return 1;
 }
 
 
@@ -715,134 +715,134 @@ static void
 test_checkline(const char *line, struct testset *ts,
                enum test_verbose verbose)
 {
-    enum test_status status = TEST_PASS;
-    const char *bail;
-    char *end;
-    long number;
-    unsigned long current;
-    int outlen;
+	enum test_status status = TEST_PASS;
+	const char *bail;
+	char *end;
+	long number;
+	unsigned long current;
+	int outlen;
 
-    /* Before anything, check for a test abort. */
-    bail = strstr(line, "Bail out!");
-    if (bail != NULL) {
-        bail = skip_whitespace(bail + strlen("Bail out!"));
-        if (*bail != '\0') {
-            size_t length;
+	/* Before anything, check for a test abort. */
+	bail = strstr(line, "Bail out!");
+	if (bail != NULL) {
+		bail = skip_whitespace(bail + strlen("Bail out!"));
+		if (*bail != '\0') {
+			size_t length;
 
-            length = strlen(bail);
-            if (bail[length - 1] == '\n')
-                length--;
-            if (!verbose)
-                test_backspace(ts);
-            printf("ABORTED (%.*s)\n", (int) length, bail);
-            ts->reported = 1;
-        }
-        ts->aborted = 1;
-        return;
-    }
+			length = strlen(bail);
+			if (bail[length - 1] == '\n')
+				length--;
+			if (!verbose)
+				test_backspace(ts);
+			printf("ABORTED (%.*s)\n", (int) length, bail);
+			ts->reported = 1;
+		}
+		ts->aborted = 1;
+		return;
+	}
 
-    /*
-     * If the given line isn't newline-terminated, it was too big for an
-     * fgets(), which means ignore it.
-     */
-    if (line[strlen(line) - 1] != '\n')
-        return;
+	/*
+	 * If the given line isn't newline-terminated, it was too big for an
+	 * fgets(), which means ignore it.
+	 */
+	if (line[strlen(line) - 1] != '\n')
+		return;
 
-    /* If the line begins with a hash mark, ignore it. */
-    if (line[0] == '#')
-        return;
+	/* If the line begins with a hash mark, ignore it. */
+	if (line[0] == '#')
+		return;
 
-    /* If we haven't yet seen a plan, look for one. */
-    if (ts->plan == PLAN_INIT && isdigit((unsigned char)(*line))) {
-        if (!test_plan(line, ts, verbose))
-            return;
-    } else if (strncmp(line, "1..", 3) == 0) {
-        if (ts->plan == PLAN_PENDING) {
-            if (!test_plan(line, ts, verbose))
-                return;
-        } else {
-            if (!verbose)
-                test_backspace(ts);
-            puts("ABORTED (multiple plans)");
-            ts->aborted = 1;
-            ts->reported = 1;
-            return;
-        }
-    }
+	/* If we haven't yet seen a plan, look for one. */
+	if (ts->plan == PLAN_INIT && isdigit((unsigned char)(*line))) {
+		if (!test_plan(line, ts, verbose))
+			return;
+	} else if (strncmp(line, "1..", 3) == 0) {
+		if (ts->plan == PLAN_PENDING) {
+			if (!test_plan(line, ts, verbose))
+				return;
+		} else {
+			if (!verbose)
+				test_backspace(ts);
+			puts("ABORTED (multiple plans)");
+			ts->aborted = 1;
+			ts->reported = 1;
+			return;
+		}
+	}
 
-    /* Parse the line, ignoring something we can't parse. */
-    if (strncmp(line, "not ", 4) == 0) {
-        status = TEST_FAIL;
-        line += 4;
-    }
-    if (strncmp(line, "ok", 2) != 0)
-        return;
-    line = skip_whitespace(line + 2);
-    errno = 0;
-    number = strtol(line, &end, 10);
-    if (errno != 0 || end == line)
-        current = ts->current + 1;
-    else if (number <= 0) {
-        invalid_test_number(ts, number, verbose);
-        return;
-    } else
-        current = (unsigned long) number;
-    if (current > ts->count && ts->plan == PLAN_FIRST) {
-        invalid_test_number(ts, (long) current, verbose);
-        return;
-    }
+	/* Parse the line, ignoring something we can't parse. */
+	if (strncmp(line, "not ", 4) == 0) {
+		status = TEST_FAIL;
+		line += 4;
+	}
+	if (strncmp(line, "ok", 2) != 0)
+		return;
+	line = skip_whitespace(line + 2);
+	errno = 0;
+	number = strtol(line, &end, 10);
+	if (errno != 0 || end == line)
+		current = ts->current + 1;
+	else if (number <= 0) {
+		invalid_test_number(ts, number, verbose);
+		return;
+	} else
+		current = (unsigned long) number;
+	if (current > ts->count && ts->plan == PLAN_FIRST) {
+		invalid_test_number(ts, (long) current, verbose);
+		return;
+	}
 
-    /* We have a valid test result.  Tweak the results array if needed. */
-    if (ts->plan == PLAN_INIT || ts->plan == PLAN_PENDING) {
-        ts->plan = PLAN_PENDING;
-        resize_results(ts, current);
-        if (current > ts->count)
-            ts->count = current;
-    }
+	/* We have a valid test result.  Tweak the results array if needed. */
+	if (ts->plan == PLAN_INIT || ts->plan == PLAN_PENDING) {
+		ts->plan = PLAN_PENDING;
+		resize_results(ts, current);
+		if (current > ts->count)
+			ts->count = current;
+	}
 
-    /*
-     * Handle directives.  We should probably do something more interesting
-     * with unexpected passes of todo tests.
-     */
-    while (isdigit((unsigned char)(*line)))
-        line++;
-    line = skip_whitespace(line);
-    if (*line == '#') {
-        line = skip_whitespace(line + 1);
-        if (strncasecmp(line, "skip", 4) == 0)
-            status = TEST_SKIP;
-        if (strncasecmp(line, "todo", 4) == 0)
-            status = (status == TEST_FAIL) ? TEST_SKIP : TEST_FAIL;
-    }
+	/*
+	 * Handle directives.  We should probably do something more interesting
+	 * with unexpected passes of todo tests.
+	 */
+	while (isdigit((unsigned char)(*line)))
+		line++;
+	line = skip_whitespace(line);
+	if (*line == '#') {
+		line = skip_whitespace(line + 1);
+		if (strncasecmp(line, "skip", 4) == 0)
+			status = TEST_SKIP;
+		if (strncasecmp(line, "todo", 4) == 0)
+			status = (status == TEST_FAIL) ? TEST_SKIP : TEST_FAIL;
+	}
 
-    /* Make sure that the test number is in range and not a duplicate. */
-    if (ts->results[current - 1] != TEST_INVALID) {
-        if (!verbose)
-            test_backspace(ts);
-        printf("ABORTED (duplicate test number %lu)\n", current);
-        ts->aborted = 1;
-        ts->reported = 1;
-        return;
-    }
+	/* Make sure that the test number is in range and not a duplicate. */
+	if (ts->results[current - 1] != TEST_INVALID) {
+		if (!verbose)
+			test_backspace(ts);
+		printf("ABORTED (duplicate test number %lu)\n", current);
+		ts->aborted = 1;
+		ts->reported = 1;
+		return;
+	}
 
-    /* Good results.  Increment our various counters. */
-    switch (status) {
+	/* Good results.  Increment our various counters. */
+	switch (status) {
         case TEST_PASS: ts->passed++;   break;
         case TEST_FAIL: ts->failed++;   break;
         case TEST_SKIP: ts->skipped++;  break;
         case TEST_INVALID:              break;
-    }
-    ts->current = current;
-    ts->results[current - 1] = status;
-    if (!verbose && isatty(STDOUT_FILENO)) {
-        test_backspace(ts);
-        if (ts->plan == PLAN_PENDING)
-            outlen = printf("%lu/?", current);
-        else
-            outlen = printf("%lu/%lu", current, ts->count);
-        ts->length = (outlen >= 0) ? (unsigned int) outlen : 0;
-        fflush(stdout);
-    }
+	}
+	ts->current = current;
+	ts->results[current - 1] = status;
+	if (!verbose && isatty(STDOUT_FILENO)) {
+		test_backspace(ts);
+		if (ts->plan == PLAN_PENDING)
+			outlen = printf("%lu/?", current);
+		else
+			outlen = printf("%lu/%lu", current, ts->count);
+		ts->length = (outlen >= 0) ? (unsigned int) outlen : 0;
+		fflush(stdout);
+	}
 }
 
 
@@ -859,36 +859,36 @@ static unsigned int
 test_print_range(unsigned long first, unsigned long last, unsigned long chars,
                  unsigned int limit)
 {
-    unsigned int needed = 0;
-    unsigned long n;
+	unsigned int needed = 0;
+	unsigned long n;
 
-    for (n = first; n > 0; n /= 10)
-        needed++;
-    if (last > first) {
-        for (n = last; n > 0; n /= 10)
-            needed++;
-        needed++;
-    }
-    if (chars > 0)
-        needed += 2;
-    if (limit > 0 && chars + needed > limit) {
-        needed = 0;
-        if (chars <= limit) {
-            if (chars > 0) {
-                printf(", ");
-                needed += 2;
-            }
-            printf("...");
-            needed += 3;
-        }
-    } else {
-        if (chars > 0)
-            printf(", ");
-        if (last > first)
-            printf("%lu-", first);
-        printf("%lu", last);
-    }
-    return needed;
+	for (n = first; n > 0; n /= 10)
+		needed++;
+	if (last > first) {
+		for (n = last; n > 0; n /= 10)
+			needed++;
+		needed++;
+	}
+	if (chars > 0)
+		needed += 2;
+	if (limit > 0 && chars + needed > limit) {
+		needed = 0;
+		if (chars <= limit) {
+			if (chars > 0) {
+				printf(", ");
+				needed += 2;
+			}
+			printf("...");
+			needed += 3;
+		}
+	} else {
+		if (chars > 0)
+			printf(", ");
+		if (last > first)
+			printf("%lu-", first);
+		printf("%lu", last);
+	}
+	return needed;
 }
 
 
@@ -901,71 +901,71 @@ test_print_range(unsigned long first, unsigned long last, unsigned long chars,
 static void
 test_summarize(struct testset *ts, int status)
 {
-    unsigned long i;
-    unsigned long missing = 0;
-    unsigned long failed = 0;
-    unsigned long first = 0;
-    unsigned long last = 0;
+	unsigned long i;
+	unsigned long missing = 0;
+	unsigned long failed = 0;
+	unsigned long first = 0;
+	unsigned long last = 0;
 
-    if (ts->aborted) {
-        fputs("ABORTED", stdout);
-        if (ts->count > 0)
-            printf(" (passed %lu/%lu)", ts->passed, ts->count - ts->skipped);
-    } else {
-        for (i = 0; i < ts->count; i++) {
-            if (ts->results[i] == TEST_INVALID) {
-                if (missing == 0)
-                    fputs("MISSED ", stdout);
-                if (first && i == last)
-                    last = i + 1;
-                else {
-                    if (first)
-                        test_print_range(first, last, missing - 1, 0);
-                    missing++;
-                    first = i + 1;
-                    last = i + 1;
-                }
-            }
-        }
-        if (first)
-            test_print_range(first, last, missing - 1, 0);
-        first = 0;
-        last = 0;
-        for (i = 0; i < ts->count; i++) {
-            if (ts->results[i] == TEST_FAIL) {
-                if (missing && !failed)
-                    fputs("; ", stdout);
-                if (failed == 0)
-                    fputs("FAILED ", stdout);
-                if (first && i == last)
-                    last = i + 1;
-                else {
-                    if (first)
-                        test_print_range(first, last, failed - 1, 0);
-                    failed++;
-                    first = i + 1;
-                    last = i + 1;
-                }
-            }
-        }
-        if (first)
-            test_print_range(first, last, failed - 1, 0);
-        if (!missing && !failed) {
-            fputs(!status ? "ok" : "dubious", stdout);
-            if (ts->skipped > 0) {
-                if (ts->skipped == 1)
-                    printf(" (skipped %lu test)", ts->skipped);
-                else
-                    printf(" (skipped %lu tests)", ts->skipped);
-            }
-        }
-    }
-    if (status > 0)
-        printf(" (exit status %d)", status);
-    else if (status < 0)
-        printf(" (killed by signal %d%s)", -status,
-               WCOREDUMP(ts->status) ? ", core dumped" : "");
-    putchar('\n');
+	if (ts->aborted) {
+		fputs("ABORTED", stdout);
+		if (ts->count > 0)
+			printf(" (passed %lu/%lu)", ts->passed, ts->count - ts->skipped);
+	} else {
+		for (i = 0; i < ts->count; i++) {
+			if (ts->results[i] == TEST_INVALID) {
+				if (missing == 0)
+					fputs("MISSED ", stdout);
+				if (first && i == last)
+					last = i + 1;
+				else {
+					if (first)
+						test_print_range(first, last, missing - 1, 0);
+					missing++;
+					first = i + 1;
+					last = i + 1;
+				}
+			}
+		}
+		if (first)
+			test_print_range(first, last, missing - 1, 0);
+		first = 0;
+		last = 0;
+		for (i = 0; i < ts->count; i++) {
+			if (ts->results[i] == TEST_FAIL) {
+				if (missing && !failed)
+					fputs("; ", stdout);
+				if (failed == 0)
+					fputs("FAILED ", stdout);
+				if (first && i == last)
+					last = i + 1;
+				else {
+					if (first)
+						test_print_range(first, last, failed - 1, 0);
+					failed++;
+					first = i + 1;
+					last = i + 1;
+				}
+			}
+		}
+		if (first)
+			test_print_range(first, last, failed - 1, 0);
+		if (!missing && !failed) {
+			fputs(!status ? "ok" : "dubious", stdout);
+			if (ts->skipped > 0) {
+				if (ts->skipped == 1)
+					printf(" (skipped %lu test)", ts->skipped);
+				else
+					printf(" (skipped %lu tests)", ts->skipped);
+			}
+		}
+	}
+	if (status > 0)
+		printf(" (exit status %d)", status);
+	else if (status < 0)
+		printf(" (killed by signal %d%s)", -status,
+		       WCOREDUMP(ts->status) ? ", core dumped" : "");
+	putchar('\n');
 }
 
 
@@ -978,45 +978,45 @@ test_summarize(struct testset *ts, int status)
 static int
 test_analyze(struct testset *ts)
 {
-    if (ts->reported)
-        return 0;
-    if (ts->all_skipped) {
-        if (ts->reason == NULL)
-            puts("skipped");
-        else
-            printf("skipped (%s)\n", ts->reason);
-        return 1;
-    } else if (WIFEXITED(ts->status) && WEXITSTATUS(ts->status) != 0) {
-        switch (WEXITSTATUS(ts->status)) {
-        case CHILDERR_DUP:
-            if (!ts->reported)
-                puts("ABORTED (can't dup file descriptors)");
-            break;
-        case CHILDERR_EXEC:
-            if (!ts->reported)
-                puts("ABORTED (execution failed -- not found?)");
-            break;
-        case CHILDERR_STDIN:
-        case CHILDERR_STDERR:
-            if (!ts->reported)
-                puts("ABORTED (can't open /dev/null)");
-            break;
-        default:
-            test_summarize(ts, WEXITSTATUS(ts->status));
-            break;
-        }
-        return 0;
-    } else if (WIFSIGNALED(ts->status)) {
-        test_summarize(ts, -WTERMSIG(ts->status));
-        return 0;
-    } else if (ts->plan != PLAN_FIRST && ts->plan != PLAN_FINAL) {
-        puts("ABORTED (no valid test plan)");
-        ts->aborted = 1;
-        return 0;
-    } else {
-        test_summarize(ts, 0);
-        return (ts->failed == 0);
-    }
+	if (ts->reported)
+		return 0;
+	if (ts->all_skipped) {
+		if (ts->reason == NULL)
+			puts("skipped");
+		else
+			printf("skipped (%s)\n", ts->reason);
+		return 1;
+	} else if (WIFEXITED(ts->status) && WEXITSTATUS(ts->status) != 0) {
+		switch (WEXITSTATUS(ts->status)) {
+		case CHILDERR_DUP:
+			if (!ts->reported)
+				puts("ABORTED (can't dup file descriptors)");
+			break;
+		case CHILDERR_EXEC:
+			if (!ts->reported)
+				puts("ABORTED (execution failed -- not found?)");
+			break;
+		case CHILDERR_STDIN:
+		case CHILDERR_STDERR:
+			if (!ts->reported)
+				puts("ABORTED (can't open /dev/null)");
+			break;
+		default:
+			test_summarize(ts, WEXITSTATUS(ts->status));
+			break;
+		}
+		return 0;
+	} else if (WIFSIGNALED(ts->status)) {
+		test_summarize(ts, -WTERMSIG(ts->status));
+		return 0;
+	} else if (ts->plan != PLAN_FIRST && ts->plan != PLAN_FINAL) {
+		puts("ABORTED (no valid test plan)");
+		ts->aborted = 1;
+		return 0;
+	} else {
+		test_summarize(ts, 0);
+		return (ts->failed == 0);
+	}
 }
 
 
@@ -1028,65 +1028,65 @@ test_analyze(struct testset *ts)
 static int
 test_run(struct testset *ts, enum test_verbose verbose)
 {
-    pid_t testpid, child;
-    int outfd, status;
-    unsigned long i;
-    FILE *output;
-    char buffer[BUFSIZ];
+	pid_t testpid, child;
+	int outfd, status;
+	unsigned long i;
+	FILE *output;
+	char buffer[BUFSIZ];
 
-    /* Run the test program. */
-    testpid = test_start(ts->path, &outfd);
-    output = fdopen(outfd, "r");
-    if (!output) {
-        puts("ABORTED");
-        fflush(stdout);
-        sysdie("fdopen failed");
-    }
+	/* Run the test program. */
+	testpid = test_start(ts->path, &outfd);
+	output = fdopen(outfd, "r");
+	if (!output) {
+		puts("ABORTED");
+		fflush(stdout);
+		sysdie("fdopen failed");
+	}
 
-    /*
-     * Pass each line of output to test_checkline(), and print the line if
-     * verbosity is requested.
-     */
-    while (!ts->aborted && fgets(buffer, sizeof(buffer), output)) {
-        if (verbose)
-            printf("%s", buffer);
-        test_checkline(buffer, ts, verbose);
-    }
-    if (ferror(output) || ts->plan == PLAN_INIT)
-        ts->aborted = 1;
-    if (!verbose)
-        test_backspace(ts);
+	/*
+	 * Pass each line of output to test_checkline(), and print the line if
+	 * verbosity is requested.
+	 */
+	while (!ts->aborted && fgets(buffer, sizeof(buffer), output)) {
+		if (verbose)
+			printf("%s", buffer);
+		test_checkline(buffer, ts, verbose);
+	}
+	if (ferror(output) || ts->plan == PLAN_INIT)
+		ts->aborted = 1;
+	if (!verbose)
+		test_backspace(ts);
 
-    /*
-     * Consume the rest of the test output, close the output descriptor,
-     * retrieve the exit status, and pass that information to test_analyze()
-     * for eventual output.
-     */
-    while (fgets(buffer, sizeof(buffer), output))
-        if (verbose)
-            printf("%s", buffer);
-    fclose(output);
-    child = waitpid(testpid, &ts->status, 0);
-    if (child == (pid_t) -1) {
-        if (!ts->reported) {
-            puts("ABORTED");
-            fflush(stdout);
-        }
-        sysdie("waitpid for %u failed", (unsigned int) testpid);
-    }
-    if (ts->all_skipped)
-        ts->aborted = 0;
-    status = test_analyze(ts);
+	/*
+	 * Consume the rest of the test output, close the output descriptor,
+	 * retrieve the exit status, and pass that information to test_analyze()
+	 * for eventual output.
+	 */
+	while (fgets(buffer, sizeof(buffer), output))
+		if (verbose)
+			printf("%s", buffer);
+	fclose(output);
+	child = waitpid(testpid, &ts->status, 0);
+	if (child == (pid_t) -1) {
+		if (!ts->reported) {
+			puts("ABORTED");
+			fflush(stdout);
+		}
+		sysdie("waitpid for %u failed", (unsigned int) testpid);
+	}
+	if (ts->all_skipped)
+		ts->aborted = 0;
+	status = test_analyze(ts);
 
-    /* Convert missing tests to failed tests. */
-    for (i = 0; i < ts->count; i++) {
-        if (ts->results[i] == TEST_INVALID) {
-            ts->failed++;
-            ts->results[i] = TEST_FAIL;
-            status = 0;
-        }
-    }
-    return status;
+	/* Convert missing tests to failed tests. */
+	for (i = 0; i < ts->count; i++) {
+		if (ts->results[i] == TEST_INVALID) {
+			ts->failed++;
+			ts->results[i] = TEST_FAIL;
+			status = 0;
+		}
+	}
+	return status;
 }
 
 
@@ -1094,47 +1094,47 @@ test_run(struct testset *ts, enum test_verbose verbose)
 static void
 test_fail_summary(const struct testlist *fails)
 {
-    struct testset *ts;
-    unsigned int chars;
-    unsigned long i, first, last, total;
+	struct testset *ts;
+	unsigned int chars;
+	unsigned long i, first, last, total;
 
-    puts(header);
+	puts(header);
 
-    /* Failed Set                 Fail/Total (%) Skip Stat  Failing (25)
-       -------------------------- -------------- ---- ----  -------------- */
-    for (; fails; fails = fails->next) {
-        ts = fails->ts;
-        total = ts->count - ts->skipped;
-        printf("%-26.26s %4lu/%-4lu %3.0f%% %4lu ", ts->file, ts->failed,
-               total, total ? (ts->failed * 100.0) / total : 0,
-               ts->skipped);
-        if (WIFEXITED(ts->status))
-            printf("%4d  ", WEXITSTATUS(ts->status));
-        else
-            printf("  --  ");
-        if (ts->aborted) {
-            puts("aborted");
-            continue;
-        }
-        chars = 0;
-        first = 0;
-        last = 0;
-        for (i = 0; i < ts->count; i++) {
-            if (ts->results[i] == TEST_FAIL) {
-                if (first != 0 && i == last)
-                    last = i + 1;
-                else {
-                    if (first != 0)
-                        chars += test_print_range(first, last, chars, 19);
-                    first = i + 1;
-                    last = i + 1;
-                }
-            }
-        }
-        if (first != 0)
-            test_print_range(first, last, chars, 19);
-        putchar('\n');
-    }
+	/* Failed Set                 Fail/Total (%) Skip Stat  Failing (25)
+	   -------------------------- -------------- ---- ----  -------------- */
+	for (; fails; fails = fails->next) {
+		ts = fails->ts;
+		total = ts->count - ts->skipped;
+		printf("%-26.26s %4lu/%-4lu %3.0f%% %4lu ", ts->file, ts->failed,
+		       total, total ? (ts->failed * 100.0) / total : 0,
+		       ts->skipped);
+		if (WIFEXITED(ts->status))
+			printf("%4d  ", WEXITSTATUS(ts->status));
+		else
+			printf("  --  ");
+		if (ts->aborted) {
+			puts("aborted");
+			continue;
+		}
+		chars = 0;
+		first = 0;
+		last = 0;
+		for (i = 0; i < ts->count; i++) {
+			if (ts->results[i] == TEST_FAIL) {
+				if (first != 0 && i == last)
+					last = i + 1;
+				else {
+					if (first != 0)
+						chars += test_print_range(first, last, chars, 19);
+					first = i + 1;
+					last = i + 1;
+				}
+			}
+		}
+		if (first != 0)
+			test_print_range(first, last, chars, 19);
+		putchar('\n');
+	}
 }
 
 
@@ -1145,15 +1145,15 @@ test_fail_summary(const struct testlist *fails)
 static int
 is_valid_test(const char *path)
 {
-    struct stat st;
+	struct stat st;
 
-    if (access(path, X_OK) < 0)
-        return 0;
-    if (stat(path, &st) < 0)
-        return 0;
-    if (!S_ISREG(st.st_mode))
-        return 0;
-    return 1;
+	if (access(path, X_OK) < 0)
+		return 0;
+	if (stat(path, &st) < 0)
+		return 0;
+	if (!S_ISREG(st.st_mode))
+		return 0;
+	return 1;
 }
 
 
@@ -1172,33 +1172,33 @@ is_valid_test(const char *path)
 static char *
 find_test(const char *name, const char *source, const char *build)
 {
-    char *path = NULL;
-    const char *bases[3], *suffix, *base;
-    unsigned int i, j;
-    const char *suffixes[3] = { "-t", ".t", "" };
+	char *path = NULL;
+	const char *bases[3], *suffix, *base;
+	unsigned int i, j;
+	const char *suffixes[3] = { "-t", ".t", "" };
 
-    /* Possible base directories. */
-    bases[0] = ".";
-    bases[1] = build;
-    bases[2] = source;
+	/* Possible base directories. */
+	bases[0] = ".";
+	bases[1] = build;
+	bases[2] = source;
 
-    /* Try each suffix with each base. */
-    for (i = 0; i < ARRAY_SIZE(suffixes); i++) {
-        suffix = suffixes[i];
-        for (j = 0; j < ARRAY_SIZE(bases); j++) {
-            base = bases[j];
-            if (base == NULL)
-                continue;
-            path = concat(base, "/", name, suffix, (const char *) 0);
-            if (is_valid_test(path))
-                return path;
-            free(path);
-            path = NULL;
-        }
-    }
-    if (path == NULL)
-        path = xstrdup(name);
-    return path;
+	/* Try each suffix with each base. */
+	for (i = 0; i < ARRAY_SIZE(suffixes); i++) {
+		suffix = suffixes[i];
+		for (j = 0; j < ARRAY_SIZE(bases); j++) {
+			base = bases[j];
+			if (base == NULL)
+				continue;
+			path = concat(base, "/", name, suffix, (const char *) 0);
+			if (is_valid_test(path))
+				return path;
+			free(path);
+			path = NULL;
+		}
+	}
+	if (path == NULL)
+		path = xstrdup(name);
+	return path;
 }
 
 
@@ -1210,56 +1210,56 @@ find_test(const char *name, const char *source, const char *build)
 static struct testlist *
 read_test_list(const char *filename)
 {
-    FILE *file;
-    unsigned int line;
-    size_t length;
-    char buffer[BUFSIZ];
-    const char *testname;
-    struct testlist *listhead, *current;
+	FILE *file;
+	unsigned int line;
+	size_t length;
+	char buffer[BUFSIZ];
+	const char *testname;
+	struct testlist *listhead, *current;
 
-    /* Create the initial container list that will hold our results. */
-    listhead = xcalloc(1, sizeof(struct testlist));
-    current = NULL;
+	/* Create the initial container list that will hold our results. */
+	listhead = xcalloc(1, sizeof(struct testlist));
+	current = NULL;
 
-    /*
-     * Open our file of tests to run and read it line by line, creating a new
-     * struct testlist and struct testset for each line.
-     */
-    file = fopen(filename, "r");
-    if (file == NULL)
-        sysdie("can't open %s", filename);
-    line = 0;
-    while (fgets(buffer, sizeof(buffer), file)) {
-        line++;
-        length = strlen(buffer) - 1;
-        if (buffer[length] != '\n') {
-            fprintf(stderr, "%s:%u: line too long\n", filename, line);
-            exit(1);
-        }
-        buffer[length] = '\0';
+	/*
+	 * Open our file of tests to run and read it line by line, creating a new
+	 * struct testlist and struct testset for each line.
+	 */
+	file = fopen(filename, "r");
+	if (file == NULL)
+		sysdie("can't open %s", filename);
+	line = 0;
+	while (fgets(buffer, sizeof(buffer), file)) {
+		line++;
+		length = strlen(buffer) - 1;
+		if (buffer[length] != '\n') {
+			fprintf(stderr, "%s:%u: line too long\n", filename, line);
+			exit(1);
+		}
+		buffer[length] = '\0';
 
-        /* Skip comments, leading spaces, and blank lines. */
-        testname = skip_whitespace(buffer);
-        if (strlen(testname) == 0)
-            continue;
-        if (testname[0] == '#')
-            continue;
+		/* Skip comments, leading spaces, and blank lines. */
+		testname = skip_whitespace(buffer);
+		if (strlen(testname) == 0)
+			continue;
+		if (testname[0] == '#')
+			continue;
 
-        /* Allocate the new testset structure. */
-        if (current == NULL)
-            current = listhead;
-        else {
-            current->next = xcalloc(1, sizeof(struct testlist));
-            current = current->next;
-        }
-        current->ts = xcalloc(1, sizeof(struct testset));
-        current->ts->plan = PLAN_INIT;
-        current->ts->file = xstrdup(testname);
-    }
-    fclose(file);
+		/* Allocate the new testset structure. */
+		if (current == NULL)
+			current = listhead;
+		else {
+			current->next = xcalloc(1, sizeof(struct testlist));
+			current = current->next;
+		}
+		current->ts = xcalloc(1, sizeof(struct testset));
+		current->ts->plan = PLAN_INIT;
+		current->ts->file = xstrdup(testname);
+	}
+	fclose(file);
 
-    /* Return the results. */
-    return listhead;
+	/* Return the results. */
+	return listhead;
 }
 
 
@@ -1271,28 +1271,28 @@ read_test_list(const char *filename)
 static struct testlist *
 build_test_list(char *argv[], int argc)
 {
-    int i;
-    struct testlist *listhead, *current;
+	int i;
+	struct testlist *listhead, *current;
 
-    /* Create the initial container list that will hold our results. */
-    listhead = xcalloc(1, sizeof(struct testlist));
-    current = NULL;
+	/* Create the initial container list that will hold our results. */
+	listhead = xcalloc(1, sizeof(struct testlist));
+	current = NULL;
 
-    /* Walk the list of arguments and create test sets for them. */
-    for (i = 0; i < argc; i++) {
-        if (current == NULL)
-            current = listhead;
-        else {
-            current->next = xcalloc(1, sizeof(struct testlist));
-            current = current->next;
-        }
-        current->ts = xcalloc(1, sizeof(struct testset));
-        current->ts->plan = PLAN_INIT;
-        current->ts->file = xstrdup(argv[i]);
-    }
+	/* Walk the list of arguments and create test sets for them. */
+	for (i = 0; i < argc; i++) {
+		if (current == NULL)
+			current = listhead;
+		else {
+			current->next = xcalloc(1, sizeof(struct testlist));
+			current = current->next;
+		}
+		current->ts = xcalloc(1, sizeof(struct testset));
+		current->ts->plan = PLAN_INIT;
+		current->ts->file = xstrdup(argv[i]);
+	}
 
-    /* Return the results. */
-    return listhead;
+	/* Return the results. */
+	return listhead;
 }
 
 
@@ -1300,11 +1300,11 @@ build_test_list(char *argv[], int argc)
 static void
 free_testset(struct testset *ts)
 {
-    free(ts->file);
-    free(ts->path);
-    free(ts->results);
-    free(ts->reason);
-    free(ts);
+	free(ts->file);
+	free(ts->path);
+	free(ts->results);
+	free(ts->reason);
+	free(ts);
 }
 
 
@@ -1319,133 +1319,133 @@ static int
 test_batch(struct testlist *tests, const char *source, const char *build,
            enum test_verbose verbose)
 {
-    size_t length, i;
-    size_t longest = 0;
-    unsigned int count = 0;
-    struct testset *ts;
-    struct timeval start, end;
-    struct rusage stats;
-    struct testlist *failhead = NULL;
-    struct testlist *failtail = NULL;
-    struct testlist *current, *next;
-    int succeeded;
-    unsigned long total = 0;
-    unsigned long passed = 0;
-    unsigned long skipped = 0;
-    unsigned long failed = 0;
-    unsigned long aborted = 0;
+	size_t length, i;
+	size_t longest = 0;
+	unsigned int count = 0;
+	struct testset *ts;
+	struct timeval start, end;
+	struct rusage stats;
+	struct testlist *failhead = NULL;
+	struct testlist *failtail = NULL;
+	struct testlist *current, *next;
+	int succeeded;
+	unsigned long total = 0;
+	unsigned long passed = 0;
+	unsigned long skipped = 0;
+	unsigned long failed = 0;
+	unsigned long aborted = 0;
 
-    /* Walk the list of tests to find the longest name. */
-    for (current = tests; current != NULL; current = current->next) {
-        length = strlen(current->ts->file);
-        if (length > longest)
-            longest = length;
-    }
+	/* Walk the list of tests to find the longest name. */
+	for (current = tests; current != NULL; current = current->next) {
+		length = strlen(current->ts->file);
+		if (length > longest)
+			longest = length;
+	}
 
-    /*
-     * Add two to longest and round up to the nearest tab stop.  This is how
-     * wide the column for printing the current test name will be.
-     */
-    longest += 2;
-    if (longest % 8)
-        longest += 8 - (longest % 8);
+	/*
+	 * Add two to longest and round up to the nearest tab stop.  This is how
+	 * wide the column for printing the current test name will be.
+	 */
+	longest += 2;
+	if (longest % 8)
+		longest += 8 - (longest % 8);
 
-    /* Start the wall clock timer. */
-    gettimeofday(&start, NULL);
+	/* Start the wall clock timer. */
+	gettimeofday(&start, NULL);
 
-    /* Now, plow through our tests again, running each one. */
-    for (current = tests; current != NULL; current = current->next) {
-        ts = current->ts;
+	/* Now, plow through our tests again, running each one. */
+	for (current = tests; current != NULL; current = current->next) {
+		ts = current->ts;
 
-        /* Print out the name of the test file. */
-        fputs(ts->file, stdout);
-        if (verbose)
-            fputs("\n\n", stdout);
-        else
-            for (i = strlen(ts->file); i < longest; i++)
-                putchar('.');
-        if (isatty(STDOUT_FILENO))
-            fflush(stdout);
+		/* Print out the name of the test file. */
+		fputs(ts->file, stdout);
+		if (verbose)
+			fputs("\n\n", stdout);
+		else
+			for (i = strlen(ts->file); i < longest; i++)
+				putchar('.');
+		if (isatty(STDOUT_FILENO))
+			fflush(stdout);
 
-        /* Run the test. */
-        ts->path = find_test(ts->file, source, build);
-        succeeded = test_run(ts, verbose);
-        fflush(stdout);
-        if (verbose)
-            putchar('\n');
+		/* Run the test. */
+		ts->path = find_test(ts->file, source, build);
+		succeeded = test_run(ts, verbose);
+		fflush(stdout);
+		if (verbose)
+			putchar('\n');
 
-        /* Record cumulative statistics. */
-        aborted += ts->aborted;
-        total += ts->count + ts->all_skipped;
-        passed += ts->passed;
-        skipped += ts->skipped + ts->all_skipped;
-        failed += ts->failed;
-        count++;
+		/* Record cumulative statistics. */
+		aborted += ts->aborted;
+		total += ts->count + ts->all_skipped;
+		passed += ts->passed;
+		skipped += ts->skipped + ts->all_skipped;
+		failed += ts->failed;
+		count++;
 
-        /* If the test fails, we shuffle it over to the fail list. */
-        if (!succeeded) {
-            if (failhead == NULL) {
-                failhead = xmalloc(sizeof(struct testset));
-                failtail = failhead;
-            } else {
-                failtail->next = xmalloc(sizeof(struct testset));
-                failtail = failtail->next;
-            }
-            failtail->ts = ts;
-            failtail->next = NULL;
-        }
-    }
-    total -= skipped;
+		/* If the test fails, we shuffle it over to the fail list. */
+		if (!succeeded) {
+			if (failhead == NULL) {
+				failhead = xmalloc(sizeof(struct testset));
+				failtail = failhead;
+			} else {
+				failtail->next = xmalloc(sizeof(struct testset));
+				failtail = failtail->next;
+			}
+			failtail->ts = ts;
+			failtail->next = NULL;
+		}
+	}
+	total -= skipped;
 
-    /* Stop the timer and get our child resource statistics. */
-    gettimeofday(&end, NULL);
-    getrusage(RUSAGE_CHILDREN, &stats);
+	/* Stop the timer and get our child resource statistics. */
+	gettimeofday(&end, NULL);
+	getrusage(RUSAGE_CHILDREN, &stats);
 
-    /* Summarize the failures and free the failure list. */
-    if (failhead != NULL) {
-        test_fail_summary(failhead);
-        while (failhead != NULL) {
-            next = failhead->next;
-            free(failhead);
-            failhead = next;
-        }
-    }
+	/* Summarize the failures and free the failure list. */
+	if (failhead != NULL) {
+		test_fail_summary(failhead);
+		while (failhead != NULL) {
+			next = failhead->next;
+			free(failhead);
+			failhead = next;
+		}
+	}
 
-    /* Free the memory used by the test lists. */
-    while (tests != NULL) {
-        next = tests->next;
-        free_testset(tests->ts);
-        free(tests);
-        tests = next;
-    }
+	/* Free the memory used by the test lists. */
+	while (tests != NULL) {
+		next = tests->next;
+		free_testset(tests->ts);
+		free(tests);
+		tests = next;
+	}
 
-    /* Print out the final test summary. */
-    putchar('\n');
-    if (aborted != 0) {
-        if (aborted == 1)
-            printf("Aborted %lu test set", aborted);
-        else
-            printf("Aborted %lu test sets", aborted);
-        printf(", passed %lu/%lu tests", passed, total);
-    }
-    else if (failed == 0)
-        fputs("All tests successful", stdout);
-    else
-        printf("Failed %lu/%lu tests, %.2f%% okay", failed, total,
-               (total - failed) * 100.0 / total);
-    if (skipped != 0) {
-        if (skipped == 1)
-            printf(", %lu test skipped", skipped);
-        else
-            printf(", %lu tests skipped", skipped);
-    }
-    puts(".");
-    printf("Files=%u,  Tests=%lu", count, total);
-    printf(",  %.2f seconds", tv_diff(&end, &start));
-    printf(" (%.2f usr + %.2f sys = %.2f CPU)\n",
-           tv_seconds(&stats.ru_utime), tv_seconds(&stats.ru_stime),
-           tv_sum(&stats.ru_utime, &stats.ru_stime));
-    return (failed == 0 && aborted == 0);
+	/* Print out the final test summary. */
+	putchar('\n');
+	if (aborted != 0) {
+		if (aborted == 1)
+			printf("Aborted %lu test set", aborted);
+		else
+			printf("Aborted %lu test sets", aborted);
+		printf(", passed %lu/%lu tests", passed, total);
+	}
+	else if (failed == 0)
+		fputs("All tests successful", stdout);
+	else
+		printf("Failed %lu/%lu tests, %.2f%% okay", failed, total,
+		       (total - failed) * 100.0 / total);
+	if (skipped != 0) {
+		if (skipped == 1)
+			printf(", %lu test skipped", skipped);
+		else
+			printf(", %lu tests skipped", skipped);
+	}
+	puts(".");
+	printf("Files=%u,  Tests=%lu", count, total);
+	printf(",  %.2f seconds", tv_diff(&end, &start));
+	printf(" (%.2f usr + %.2f sys = %.2f CPU)\n",
+	       tv_seconds(&stats.ru_utime), tv_seconds(&stats.ru_stime),
+	       tv_sum(&stats.ru_utime, &stats.ru_stime));
+	return (failed == 0 && aborted == 0);
 }
 
 
@@ -1456,11 +1456,11 @@ test_batch(struct testlist *tests, const char *source, const char *build,
 static void
 test_single(const char *program, const char *source, const char *build)
 {
-    char *path;
+	char *path;
 
-    path = find_test(program, source, build);
-    if (execl(path, path, (char *) 0) == -1)
-        sysdie("cannot exec %s", path);
+	path = find_test(program, source, build);
+	if (execl(path, path, (char *) 0) == -1)
+		sysdie("cannot exec %s", path);
 }
 
 
@@ -1471,95 +1471,95 @@ test_single(const char *program, const char *source, const char *build)
 int
 main(int argc, char *argv[])
 {
-    int option;
-    int status = 0;
-    int single = 0;
-    enum test_verbose verbose = CONCISE;
-    char *source_env = NULL;
-    char *build_env = NULL;
-    const char *program;
-    const char *shortlist;
-    const char *list = NULL;
-    const char *source = SOURCE;
-    const char *build = BUILD;
-    struct testlist *tests;
+	int option;
+	int status = 0;
+	int single = 0;
+	enum test_verbose verbose = CONCISE;
+	char *source_env = NULL;
+	char *build_env = NULL;
+	const char *program;
+	const char *shortlist;
+	const char *list = NULL;
+	const char *source = SOURCE;
+	const char *build = BUILD;
+	struct testlist *tests;
 
-    program = argv[0];
-    while ((option = getopt(argc, argv, "b:hl:os:v")) != EOF) {
-        switch (option) {
-        case 'b':
-            build = optarg;
-            break;
-        case 'h':
-            printf(usage_message, program, program, program, usage_extra);
-            exit(0);
-        case 'l':
-            list = optarg;
-            break;
-        case 'o':
-            single = 1;
-            break;
-        case 's':
-            source = optarg;
-            break;
-        case 'v':
-            verbose = VERBOSE;
-            break;
-        default:
-            exit(1);
-        }
-    }
-    argv += optind;
-    argc -= optind;
-    if ((list == NULL && argc < 1) || (list != NULL && argc > 0)) {
-        fprintf(stderr, usage_message, program, program, program, usage_extra);
-        exit(1);
-    }
+	program = argv[0];
+	while ((option = getopt(argc, argv, "b:hl:os:v")) != EOF) {
+		switch (option) {
+		case 'b':
+			build = optarg;
+			break;
+		case 'h':
+			printf(usage_message, program, program, program, usage_extra);
+			exit(0);
+		case 'l':
+			list = optarg;
+			break;
+		case 'o':
+			single = 1;
+			break;
+		case 's':
+			source = optarg;
+			break;
+		case 'v':
+			verbose = VERBOSE;
+			break;
+		default:
+			exit(1);
+		}
+	}
+	argv += optind;
+	argc -= optind;
+	if ((list == NULL && argc < 1) || (list != NULL && argc > 0)) {
+		fprintf(stderr, usage_message, program, program, program, usage_extra);
+		exit(1);
+	}
 
-    /*
-     * If C_TAP_VERBOSE is set in the environment, that also turns on verbose
-     * mode.
-     */
-    if (getenv("C_TAP_VERBOSE") != NULL)
-        verbose = VERBOSE;
+	/*
+	 * If C_TAP_VERBOSE is set in the environment, that also turns on verbose
+	 * mode.
+	 */
+	if (getenv("C_TAP_VERBOSE") != NULL)
+		verbose = VERBOSE;
 
-    /* Set SOURCE and BUILD environment variables. */
-    if (source != NULL) {
-        source_env = concat("SOURCE=", source, (const char *) 0);
-        if (putenv(source_env) != 0)
-            sysdie("cannot set SOURCE in the environment");
-    }
-    if (build != NULL) {
-        build_env = concat("BUILD=", build, (const char *) 0);
-        if (putenv(build_env) != 0)
-            sysdie("cannot set BUILD in the environment");
-    }
+	/* Set SOURCE and BUILD environment variables. */
+	if (source != NULL) {
+		source_env = concat("SOURCE=", source, (const char *) 0);
+		if (putenv(source_env) != 0)
+			sysdie("cannot set SOURCE in the environment");
+	}
+	if (build != NULL) {
+		build_env = concat("BUILD=", build, (const char *) 0);
+		if (putenv(build_env) != 0)
+			sysdie("cannot set BUILD in the environment");
+	}
 
-    /* Run the tests as instructed. */
-    if (single)
-        test_single(argv[0], source, build);
-    else if (list != NULL) {
-        shortlist = strrchr(list, '/');
-        if (shortlist == NULL)
-            shortlist = list;
-        else
-            shortlist++;
-        printf(banner, shortlist);
-        tests = read_test_list(list);
-        status = test_batch(tests, source, build, verbose) ? 0 : 1;
-    } else {
-        tests = build_test_list(argv, argc);
-        status = test_batch(tests, source, build, verbose) ? 0 : 1;
-    }
+	/* Run the tests as instructed. */
+	if (single)
+		test_single(argv[0], source, build);
+	else if (list != NULL) {
+		shortlist = strrchr(list, '/');
+		if (shortlist == NULL)
+			shortlist = list;
+		else
+			shortlist++;
+		printf(banner, shortlist);
+		tests = read_test_list(list);
+		status = test_batch(tests, source, build, verbose) ? 0 : 1;
+	} else {
+		tests = build_test_list(argv, argc);
+		status = test_batch(tests, source, build, verbose) ? 0 : 1;
+	}
 
-    /* For valgrind cleanliness, free all our memory. */
-    if (source_env != NULL) {
-        putenv((char *) "SOURCE=");
-        free(source_env);
-    }
-    if (build_env != NULL) {
-        putenv((char *) "BUILD=");
-        free(build_env);
-    }
-    exit(status);
+	/* For valgrind cleanliness, free all our memory. */
+	if (source_env != NULL) {
+		putenv((char *) "SOURCE=");
+		free(source_env);
+	}
+	if (build_env != NULL) {
+		putenv((char *) "BUILD=");
+		free(build_env);
+	}
+	exit(status);
 }

@@ -1,9 +1,10 @@
 {-# LANGUAGE ForeignFunctionInterface #-}
+{-# LANGUAGE GADTs #-}
 {-# LANGUAGE CPP #-}
 
 module Hkl.C
        ( compute
-       , factories
+       , geometryDetectorRotationGet
        , solve
        , solveTraj
        , solveTrajPipe
@@ -14,19 +15,26 @@ import Prelude hiding (min, max)
 import Control.Monad (void, forever)
 import Control.Monad.Loops (unfoldrM)
 import Control.Monad.Trans.State.Strict
-import Data.Map.Strict as Map
-import Foreign ( ForeignPtr, FunPtr, Ptr,
-                 alloca, allocaArray,
-                 peek, nullPtr,
-                 newForeignPtr, withForeignPtr,
-                 peekByteOff,
-                 peekArray, withArray)
+import Numeric.LinearAlgebra
+import Foreign ( ForeignPtr
+               , FunPtr
+               , Ptr
+               , nullPtr
+               , newForeignPtr
+               , withForeignPtr
+               , peekArray
+               , withArray)
 import Foreign.C (CInt(..), CDouble(..), CSize(..), CString,
                  peekCString, withCString)
+import Foreign.Storable
 import Hkl.Types
+import Hkl.Detector
 import Numeric.Units.Dimensional.Prelude ( meter, degree, radian, nano
                                          , (*~), (/~))
 import Pipes (Pipe, await, lift, yield)
+
+import qualified Data.Vector.Storable as V
+import qualified Data.Vector.Storable.Mutable as MV
 
 #include "hkl.h"
 
@@ -35,11 +43,13 @@ import Pipes (Pipe, await, lift, yield)
 data HklDetector
 data HklEngine
 data HklEngineList
+data HklFactory
 data HklGeometry
 data HklGeometryList
 data HklGeometryListItem
 data HklLattice
-data HklParameter
+data HklMatrix
+data HklQuaternion
 data HklSample
 
 -- helpers
@@ -64,11 +74,11 @@ solve' engine n (Engine _ ps _) = do
       c_hkl_engine_pseudo_axis_values_set engine values n unit nullPtr
       >>= newForeignPtr c_hkl_geometry_list_free
 
-solve :: Factory -> Geometry -> Detector -> Sample -> Engine -> IO [Geometry]
-solve f g d s e@(Engine name _ _) = do
+solve :: Geometry -> Detector a -> Sample -> Engine -> IO [Geometry]
+solve g@(Geometry f _ _ _) d s e@(Engine name _ _) = do
   withSample s $ \sample ->
       withDetector d $ \detector ->
-          withGeometry f g $ \geometry ->
+          withGeometry g $ \geometry ->
               withEngineList f $ \engines ->
                   withCString name $ \cname -> do
                   c_hkl_engine_list_init engines geometry detector sample
@@ -85,12 +95,12 @@ getSolution0 gl = withForeignPtr gl $ \solutions ->
 engineName :: Engine -> String
 engineName (Engine name _ _) = name
 
-solveTraj :: Factory -> Geometry -> Detector -> Sample -> [Engine] -> IO [Geometry]
-solveTraj f g d s es = do
+solveTraj :: Geometry -> Detector a -> Sample -> [Engine] -> IO [Geometry]
+solveTraj g@(Geometry f _ _ _) d s es = do
   let name = engineName (head es)
   withSample s $ \sample ->
       withDetector d $ \detector ->
-          withGeometry f g $ \geometry ->
+          withGeometry g $ \geometry ->
               withEngineList f $ \engines ->
                 withCString name $ \cname -> do
                   c_hkl_engine_list_init engines geometry detector sample
@@ -101,21 +111,21 @@ solveTraj f g d s es = do
 -- Pipe
 
 data Diffractometer = Diffractometer { difEngineList :: (ForeignPtr HklEngineList)
-                                      , difGeometry :: (ForeignPtr HklGeometry)
-                                      , difDetector :: (ForeignPtr HklDetector)
-                                      , difSample :: (ForeignPtr HklSample)
+                                     , difGeometry :: (ForeignPtr HklGeometry)
+                                     , difDetector :: (ForeignPtr HklDetector)
+                                     , difSample :: (ForeignPtr HklSample)
                                      }
-                      deriving (Show)
+                    deriving (Show)
 
 withDiffractometer :: Diffractometer -> (Ptr HklEngineList -> IO b) -> IO b
 withDiffractometer d fun = do
   let f_engines = difEngineList d
   withForeignPtr f_engines fun
 
-newDiffractometer :: Factory ->  Geometry -> Detector -> Sample -> IO Diffractometer
-newDiffractometer f g d s = do
+newDiffractometer :: Geometry -> Detector a -> Sample -> IO Diffractometer
+newDiffractometer g@(Geometry f _ _ _) d s = do
   f_engines <- newEngineList f
-  f_geometry <- newGeometry f g
+  f_geometry <- newGeometry g
   f_detector <- newDetector d
   f_sample <- newSample s
   withForeignPtr f_sample $ \sample ->
@@ -129,9 +139,9 @@ newDiffractometer f g d s = do
                               , difSample = f_sample
                               }
 
-solveTrajPipe :: Factory -> Geometry -> Detector -> Sample -> Pipe Engine Geometry IO ()
-solveTrajPipe f g d s = do
-  dif <- lift $ newDiffractometer f g d s
+solveTrajPipe :: Geometry -> Detector a -> Sample -> Pipe Engine Geometry IO ()
+solveTrajPipe g d s = do
+  dif <- lift $ newDiffractometer g d s
   solveTrajPipe' dif
 
 solveTrajPipe' :: Diffractometer -> Pipe Engine Geometry IO ()
@@ -167,42 +177,33 @@ foreign import ccall unsafe "hkl.h &hkl_geometry_list_free"
 
 -- Factory
 
-factories :: IO (Map String Factory)
-factories = do
-  fs <- factoryGetAll
-  ns <- mapM factoryNameGet fs
-  return $ fromList $ zip ns fs
+newFactory :: Factory -> IO (Ptr HklFactory)
+newFactory f = withCString (show f) $ \cname -> c_hkl_factory_get_by_name cname nullPtr
 
-{-# NOINLINE factoryGetAll #-}
-factoryGetAll :: IO [Factory]
-factoryGetAll =  alloca $ \ptr -> do
-                   fact <- c_hkl_factory_get_all ptr
-                   n <- peek ptr
-                   hklfactories <- peekArray n fact
-                   return $ fmap Factory hklfactories
-
-foreign import ccall unsafe "hkl.h hkl_factory_get_all"
-  c_hkl_factory_get_all :: Ptr Int -> IO (Ptr (Ptr HklFactory))
-
-factoryNameGet :: Factory -> IO String
-factoryNameGet (Factory factory) = c_hkl_factory_name_get factory >>= peekCString
-
-foreign import ccall unsafe "hkl.h hkl_factory_name_get"
-  c_hkl_factory_name_get :: Ptr HklFactory -> IO CString
-
-
+foreign import ccall unsafe "hkl.h hkl_factory_get_by_name"
+  c_hkl_factory_get_by_name :: CString  -- ^ name
+                            -> Ptr () -- ^ GError (null for now)
+                            -> IO (Ptr HklFactory)
 -- Geometry
 
 peekGeometry :: Ptr HklGeometry -> IO (Geometry)
 peekGeometry gp = do
+  f_name <- c_hkl_geometry_name_get gp >>= peekCString
+  let factory = factoryFromString f_name
   (CDouble w) <- c_hkl_geometry_wavelength_get gp unit
   darray <- c_hkl_geometry_axis_names_get gp
   n <- darrayStringLen darray
-  let nn = fromEnum n
-  allocaArray nn $ \values -> do
-    c_hkl_geometry_axis_values_get gp values n unit
-    vs <- peekArray nn values
-    return $ Geometry (Source (w *~ nano meter)) vs
+  v <- MV.new (fromEnum n)
+  MV.unsafeWith v $ \values ->
+      c_hkl_geometry_axis_values_get gp values n unit
+  vs <- V.freeze v
+
+  axis_names <- peekDArrayString darray
+  ps <- mapM (getAxis gp) axis_names
+  return $ Geometry factory (Source (w *~ nano meter)) vs (Just ps)
+      where
+        getAxis :: Ptr HklGeometry -> CString -> IO Parameter
+        getAxis _g n = c_hkl_geometry_axis_get _g n nullPtr >>= peek
 
 foreign import ccall unsafe "hkl.h hkl_geometry_wavelength_get"
   c_hkl_geometry_wavelength_get :: Ptr HklGeometry -- geometry
@@ -217,19 +218,34 @@ foreign import ccall unsafe "hkl.h hkl_geometry_axis_values_get"
                                  -> CInt -- unit
                                  -> IO () -- IO CInt but for now do not deal with the errors
 
-withGeometry ::  Factory -> Geometry -> (Ptr HklGeometry -> IO b) -> IO b
-withGeometry f g fun = do
-  fptr <- newGeometry f g
+foreign import ccall unsafe "hkl.h hkl_geometry_axis_names_get"
+  c_hkl_geometry_axis_names_get :: Ptr HklGeometry -- goemetry
+                                -> IO (Ptr ()) -- darray_string
+
+foreign import ccall unsafe "hkl.h hkl_geometry_axis_get"
+  c_hkl_geometry_axis_get :: Ptr HklGeometry -- geometry
+                          -> CString -- axis name
+                          -> Ptr () -- gerror
+                          -> IO (Ptr Parameter) -- parameter or nullPtr
+
+foreign import ccall unsafe "hkl.h hkl_geometry_name_get"
+  c_hkl_geometry_name_get :: Ptr HklGeometry -> IO CString
+
+
+withGeometry ::  Geometry -> (Ptr HklGeometry -> IO b) -> IO b
+withGeometry g fun = do
+  fptr <- newGeometry g
   withForeignPtr fptr fun
 
-newGeometry :: Factory -> Geometry -> IO (ForeignPtr HklGeometry)
-newGeometry (Factory f) (Geometry (Source lw) vs) = do
+newGeometry :: Geometry -> IO (ForeignPtr HklGeometry)
+newGeometry (Geometry f (Source lw) vs _ps) = do
   let wavelength = CDouble (lw /~ nano meter)
-  geometry <- c_hkl_factory_create_new_geometry f
+  factory <- newFactory f
+  geometry <- c_hkl_factory_create_new_geometry factory
   c_hkl_geometry_wavelength_set geometry wavelength unit nullPtr
   darray <- c_hkl_geometry_axis_names_get geometry
   n <- darrayStringLen darray
-  withArray vs $ \values ->
+  V.unsafeWith vs $ \values ->
       c_hkl_geometry_axis_values_set geometry values n unit nullPtr
 
   newForeignPtr c_hkl_geometry_free geometry
@@ -258,33 +274,56 @@ foreign import ccall unsafe "hkl.h hkl_geometry_axis_values_set"
 -- geometryName :: ForeignPtr HklGeometry -> IO String
 -- geometryName g = withForeignPtr g (c_hkl_geometry_name_get >=> peekCString)
 
--- foreign import ccall unsafe "hkl.h hkl_geometry_name_get"
---   c_hkl_geometry_name_get :: Ptr HklGeometry -> IO CString
-
-
--- geometryAxisNamesGet' :: ForeignPtr HklGeometry -> IO [CString]
--- geometryAxisNamesGet' g =
---   withForeignPtr g (c_hkl_geometry_axis_names_get >=> peekDArrayString)
-
-foreign import ccall unsafe "hkl.h hkl_geometry_axis_names_get"
-  c_hkl_geometry_axis_names_get :: Ptr HklGeometry -- goemetry
-                                -> IO (Ptr ()) -- darray_string
-
--- geometryAxisGet :: ForeignPtr HklGeometry -> CString -> IO Parameter
--- geometryAxisGet g n =
---     withForeignPtr g $ \gp ->
---         c_hkl_geometry_axis_get gp n nullPtr >>= peekParameter
-
--- foreign import ccall unsafe "hkl.h hkl_geometry_axis_get"
---   c_hkl_geometry_axis_get :: Ptr HklGeometry -- geometry
---                           -> CString -- axis name
---                           -> Ptr () -- gerror
---                           -> IO (Ptr HklParameter) -- parameter or nullPtr
-
--- geometryAxesGet :: ForeignPtr HklGeometry -> IO [Parameter]
--- geometryAxesGet g = geometryAxisNamesGet' g >>= mapM (geometryAxisGet g)
-
 -- HklGeometryList
+
+buildMatrix' :: Element a => CInt -> CInt -> ((CInt, CInt) -> IO a) -> IO (Matrix a)
+buildMatrix' rc cc f = do
+   let coordinates' = map (\ ri -> map (\ ci -> (ri, ci)) [0 .. (cc - 1)]) [0 .. (rc - 1)]
+   l <- mapM (mapM f) coordinates'
+   return $ fromLists l
+
+
+    -- fromLists $ map (map f)
+    --     $ map (\ ri -> map (\ ci -> (ri, ci)) [0 .. (cc - 1)]) [0 .. (rc - 1)]
+
+geometryDetectorRotationGet :: Geometry -> Detector a -> IO (Matrix Double)
+geometryDetectorRotationGet g d  = do
+  f_geometry <- newGeometry g
+  f_detector <- newDetector d
+  withForeignPtr f_detector $ \detector ->
+    withForeignPtr f_geometry $ \geometry -> do
+      f_q <- newForeignPtr c_hkl_quaternion_free =<< c_hkl_geometry_detector_rotation_get_binding geometry detector
+      withForeignPtr f_q $ \quaternion -> do
+        f_m <- newForeignPtr c_hkl_matrix_free =<< c_hkl_quaternion_to_matrix_binding quaternion
+        withForeignPtr f_m $ \matrix ->
+          buildMatrix' 3 3 (getV matrix)
+          where
+            getV :: Ptr HklMatrix -> (CInt, CInt) -> IO Double
+            getV m (i', j') = do
+              (CDouble v) <- c_hkl_matrix_get m i' j'
+              return v
+
+foreign import ccall unsafe "hkl.h hkl_geometry_detector_rotation_get_binding"
+  c_hkl_geometry_detector_rotation_get_binding :: Ptr HklGeometry
+                                               -> Ptr HklDetector
+                                               -> IO (Ptr HklQuaternion)
+
+foreign import ccall unsafe "hkl.h hkl_quaternion_to_matrix_binding"
+  c_hkl_quaternion_to_matrix_binding :: Ptr HklQuaternion
+                                     -> IO (Ptr HklMatrix)
+
+foreign import ccall unsafe "hkl.h &hkl_quaternion_free"
+  c_hkl_quaternion_free :: FunPtr (Ptr HklQuaternion -> IO ())
+
+foreign import ccall unsafe "hkl.h &hkl_matrix_free"
+  c_hkl_matrix_free :: FunPtr (Ptr HklMatrix -> IO ())
+
+foreign import ccall unsafe "hkl.h hkl_matrix_get"
+  c_hkl_matrix_get :: Ptr HklMatrix
+                   -> CInt
+                   -> CInt
+                   -> IO CDouble
+
 
 peekItems :: Ptr HklGeometryList -> IO [Ptr HklGeometryListItem]
 peekItems l = c_hkl_geometry_list_items_first_get l >>= unfoldrM go
@@ -316,17 +355,14 @@ foreign import ccall unsafe "hkl.h hkl_geometry_list_item_geometry_get"
                                         -> IO (Ptr HklGeometry)
 
 -- Detector
-withDetector :: Detector -> (Ptr HklDetector -> IO b) -> IO b
+withDetector :: Detector a -> (Ptr HklDetector -> IO b) -> IO b
 withDetector d func = do
   fptr <- newDetector d
   withForeignPtr fptr func
 
-newDetector :: Detector -> IO (ForeignPtr HklDetector)
-newDetector (Detector t) =
-  c_hkl_detector_new it >>= newForeignPtr c_hkl_detector_free
-      where
-        it = case t of
-             DetectorType0D -> 0
+newDetector :: Detector a -> IO (ForeignPtr HklDetector)
+newDetector Xpad32 = error "Can not use 2D detector with the hkl library"
+newDetector ZeroD = c_hkl_detector_new 0 >>= newForeignPtr c_hkl_detector_free
 
 foreign import ccall unsafe "hkl.h hkl_detector_new"
   c_hkl_detector_new:: CInt -> IO (Ptr HklDetector)
@@ -344,7 +380,7 @@ peekMode e = do
                 >>= mapM f
   return (Mode name parameters)
   where
-    f n = (c_hkl_engine_parameter_get e n nullPtr >>= peekParameter)
+    f n = (c_hkl_engine_parameter_get e n nullPtr >>= peek)
 
 
 foreign import ccall unsafe "hkl.h hkl_engine_current_mode_get"
@@ -354,7 +390,7 @@ foreign import ccall unsafe "hkl.h hkl_engine_parameters_names_get"
   c_hkl_engine_parameters_names_get:: Ptr HklEngine -> IO (Ptr ()) -- darray_string
 
 foreign import ccall unsafe "hkl.h hkl_engine_parameter_get"
-  c_hkl_engine_parameter_get:: Ptr HklEngine -> CString -> Ptr () -> IO (Ptr HklParameter) -- darray_string
+  c_hkl_engine_parameter_get:: Ptr HklEngine -> CString -> Ptr () -> IO (Ptr Parameter) -- darray_string
 
 
 peekEngine :: Ptr HklEngine -> IO Engine
@@ -380,10 +416,10 @@ foreign import ccall unsafe "hkl.h hkl_engine_pseudo_axis_names_get"
 -- enginePseudoAxisNamesGet e = enginePseudoAxisNamesGet' e >>= mapM peekCString
 
 enginePseudoAxisGet :: Ptr HklEngine -> CString -> IO Parameter
-enginePseudoAxisGet e n = c_hkl_engine_pseudo_axis_get e n nullPtr >>= peekParameter
+enginePseudoAxisGet e n = c_hkl_engine_pseudo_axis_get e n nullPtr >>= peek
 
 foreign import ccall unsafe "hkl.h hkl_engine_pseudo_axis_get"
-  c_hkl_engine_pseudo_axis_get:: Ptr HklEngine -> CString -> Ptr () -> IO (Ptr HklParameter)
+  c_hkl_engine_pseudo_axis_get:: Ptr HklEngine -> CString -> Ptr () -> IO (Ptr Parameter)
 
 enginePseudoAxesGet :: Ptr HklEngine -> IO [Parameter]
 enginePseudoAxesGet e = enginePseudoAxisNamesGet' e >>= mapM (enginePseudoAxisGet e)
@@ -396,8 +432,9 @@ withEngineList f func = do
   withForeignPtr fptr func
 
 newEngineList :: Factory -> IO (ForeignPtr HklEngineList)
-newEngineList (Factory f) =
-  c_hkl_factory_create_new_engine_list f >>= newForeignPtr c_hkl_engine_list_free
+newEngineList f = newFactory f
+                  >>= c_hkl_factory_create_new_engine_list
+                  >>= newForeignPtr c_hkl_engine_list_free
 
 foreign import ccall unsafe "hkl.h hkl_factory_create_new_engine_list"
   c_hkl_factory_create_new_engine_list:: Ptr HklFactory -> IO (Ptr HklEngineList)
@@ -416,11 +453,11 @@ engineListEnginesGet e = do
 foreign import ccall unsafe "hkl.h hkl_engine_list_engines_get"
   c_hkl_engine_list_engines_get:: Ptr HklEngineList -> IO (Ptr ())
 
-compute :: Factory -> Geometry -> Detector -> Sample -> IO [Engine]
-compute f g d s = do
+compute :: Geometry -> Detector a -> Sample -> IO [Engine]
+compute g@(Geometry f _ _ _) d s = do
   withSample s $ \sample ->
       withDetector d $ \detector ->
-          withGeometry f g $ \geometry ->
+          withGeometry g $ \geometry ->
               withEngineList f $ \engines -> do
                     c_hkl_engine_list_init engines geometry detector sample
                     c_hkl_engine_list_get engines
@@ -505,49 +542,6 @@ foreign import ccall unsafe "hkl.h hkl_lattice_new"
 foreign import ccall unsafe "hkl.h &hkl_lattice_free"
   c_hkl_lattice_free :: FunPtr (Ptr HklLattice -> IO ())
 
--- Parameter
-
-peekParameter :: Ptr HklParameter -> IO Parameter
-peekParameter p =
-    alloca $ \pmin ->
-        alloca $ \pmax -> do
-          cname <- c_hkl_parameter_name_get p
-          name <- peekCString cname
-          value <- c_hkl_parameter_value_get p unit
-          c_hkl_parameter_min_max_get p pmin pmax unit
-          min <- peek pmin
-          max <- peek pmax
-          return (Parameter name value (Range min max))
-
-foreign import ccall unsafe "hkl.h hkl_parameter_name_get"
-  c_hkl_parameter_name_get:: Ptr HklParameter -> IO CString
-
-foreign import ccall unsafe "hkl.h hkl_parameter_value_get"
-  c_hkl_parameter_value_get:: Ptr HklParameter -> CInt -> IO Double
-
-foreign import ccall unsafe "hkl.h hkl_parameter_min_max_get"
-  c_hkl_parameter_min_max_get :: Ptr HklParameter -> Ptr Double -> Ptr Double -> CInt -> IO ()
-
-copyParameter :: Ptr HklParameter -> IO (ForeignPtr HklParameter)
-copyParameter p = newForeignPtr c_hkl_parameter_free =<< c_hkl_parameter_new_copy p
-
-foreign import ccall unsafe "hkl.h &hkl_parameter_free"
-  c_hkl_parameter_free :: FunPtr (Ptr HklParameter -> IO ())
-
-foreign import ccall unsafe "hkl.h hkl_parameter_new_copy"
-  c_hkl_parameter_new_copy:: Ptr HklParameter -> IO (Ptr HklParameter)
-
-pokeParameter :: Parameter -> Ptr HklParameter -> IO ()
-pokeParameter (Parameter _name value (Range min max)) parameter = do
-  void $ c_hkl_parameter_value_set parameter (CDouble value) unit nullPtr
-  void $ c_hkl_parameter_min_max_set parameter (CDouble min) (CDouble max) unit nullPtr
-
-foreign import ccall unsafe "hkl.h hkl_parameter_value_set"
-  c_hkl_parameter_value_set:: Ptr HklParameter -> CDouble -> CInt -> Ptr () -> IO (CInt)
-
-foreign import ccall unsafe "hkl.h hkl_parameter_min_max_set"
-  c_hkl_parameter_min_max_set :: Ptr HklParameter -> CDouble -> CDouble -> CInt -> Ptr () -> IO (CInt)
-
 -- Sample
 
 withSample :: Sample -> (Ptr HklSample -> IO b) -> IO b
@@ -569,7 +563,7 @@ newSample (Sample name l ux uy uz) =
               go s p getter setter = do
                 fptr <- copyParameter =<< (getter s)
                 withForeignPtr fptr $ \ptr -> do
-                  pokeParameter p ptr
+                  poke ptr p
                   void $ setter s ptr nullPtr
 
 foreign import ccall unsafe "hkl.h hkl_sample_new"
@@ -583,30 +577,30 @@ foreign import ccall unsafe "hkl.h &hkl_sample_free"
 
 foreign import ccall unsafe "hkl.h hkl_sample_ux_get"
   c_hkl_sample_ux_get :: Ptr HklSample
-                      -> IO (Ptr HklParameter)
+                      -> IO (Ptr Parameter)
 
 foreign import ccall unsafe "hkl.h hkl_sample_uy_get"
   c_hkl_sample_uy_get :: Ptr HklSample
-                      -> IO (Ptr HklParameter)
+                      -> IO (Ptr Parameter)
 
 foreign import ccall unsafe "hkl.h hkl_sample_uz_get"
   c_hkl_sample_uz_get :: Ptr HklSample
-                      -> IO (Ptr HklParameter)
+                      -> IO (Ptr Parameter)
 
 foreign import ccall unsafe "hkl.h hkl_sample_ux_set"
   c_hkl_sample_ux_set :: Ptr HklSample
-                      -> Ptr HklParameter
+                      -> Ptr Parameter
                       -> Ptr ()
                       -> IO CInt
 
 foreign import ccall unsafe "hkl.h hkl_sample_uy_set"
   c_hkl_sample_uy_set :: Ptr HklSample
-                      -> Ptr HklParameter
+                      -> Ptr Parameter
                       -> Ptr ()
                       -> IO CInt
 
 foreign import ccall unsafe "hkl.h hkl_sample_uz_set"
   c_hkl_sample_uz_set :: Ptr HklSample
-                      -> Ptr HklParameter
+                      -> Ptr Parameter
                       -> Ptr ()
                       -> IO CInt

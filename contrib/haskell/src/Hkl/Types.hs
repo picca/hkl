@@ -1,21 +1,33 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+module Hkl.Types ( Beamline(..)
+                 , Mode(..)
+                 , Engine(..)
+                 , Factory(..)
+                 , Geometry(..)
+                 , Lattice(..)
+                 , Sample(..)
+                 , Source(..)
+                 , Trajectory
+                   -- factory
+                 , factoryFromString
+                   -- hdf5
+                 , H5Path
+                 , ExtendDims(..)
+                 , DataItem(..)
+                 , module X
+                 ) where
 
-module Hkl.Types where
+import Hkl.Types.Parameter as X
 
+import Data.Vector.Storable (Vector)
 import Numeric.Units.Dimensional.Prelude (Length, Angle)
-import Foreign
-import Foreign.C
 
-unit :: CInt
-unit = 1
+-- | Beamline
 
--- | Type describing a @Detector@
-data Detector = Detector DetectorType
-              deriving (Show)
+data Beamline = Diffabs | Sixs
 
--- | Type used to define Detector type
-data DetectorType = DetectorType0D
-                  deriving (Show)
+instance Show Beamline where
+  show Diffabs = "diffabs"
+  show Sixs = "sixs"
 
 -- | Engine
 
@@ -32,15 +44,31 @@ data Engine
     Mode -- ^ current Mode
   deriving (Show)
 
--- | HklFactory should be private
+-- | Factory
 
-data HklFactory
-newtype Factory = Factory (Ptr HklFactory) deriving (Show, Storable)
+data Factory = K6c | Uhv | MedH | MedV
+
+instance Show Factory where
+  show K6c = "K6C"
+  show Uhv = "todo"
+  show MedH = "todo"
+  show MedV = "todo"
+
+factoryFromString :: String -> Factory
+factoryFromString s
+  | s == "K6C"  = K6c
+  | s == "todo" = Uhv
+  | s == "todo" = MedH
+  | s == "todo" = MedV
+  | otherwise   = error $ "unknown diffractometer type:" ++ s
 
 -- | Geometry
+
 data Geometry = Geometry
+                Factory -- ^ the type of diffractometer
                 Source -- ^ source
-                [Double] -- ^ axes position
+                (Vector Double) -- ^ axes position
+                (Maybe [Parameter]) -- ^ axes configuration
               deriving (Show)
 
 -- | Lattice
@@ -73,23 +101,6 @@ data Lattice
     (Angle Double) -- ^ alpha
     (Angle Double) -- ^ beta
     (Angle Double) -- ^ gamma
-  deriving (Show)
-
--- | Parameter
-
-data Parameter
-  = Parameter
-    String -- ^ name
-    Double -- ^ value
-    Range -- ^ range
-  deriving (Show)
-
--- | Range
-
-data Range
-  = Range
-    Double -- ^ minimum value
-    Double -- ^ maximum value
   deriving (Show)
 
 -- | Sample

@@ -864,6 +864,13 @@ git clone git://repo.or.cz/hkl.git
    #+END_QUOTE
 * Releases
 ** @VERSION@
+*** DONE Fix for multiarch (headers) <2016-05-04 mer.>
+    The =ccan_config.h= generated file is arch specific. It is then
+    necessary to install this file under /usr/include/<triplet> on
+    Debian like systems. This way it will be possible to co-installa
+    32/64 bit version of hkl, or to do cross-compilation (arm on
+    x86_64, etc...)
+** 5.0.0.2080 <2016-04-27 mer.>
 *** DONE =HklEngine= <2016-01-20 mer.>
     emergence_fixed for the SOLEIL SIX MED 2+2 geometry.
 *** DONE =HklVector= <2016-02-09 mar.>

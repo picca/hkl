@@ -73,8 +73,8 @@ extern HklEngine *hkl_engine_hkl_new(HklEngineList *engines);
 	HKL_MODE_OPERATIONS_AUTO_DEFAULTS,	\
 		.get = hkl_mode_get_hkl_real
 
-#define HKL_MODE_OPERATIONS_HKL_FULL_DEFAULTS		\
-	HKL_MODE_OPERATIONS_HKL_DEFAULTS,		\
+#define HKL_MODE_OPERATIONS_HKL_FULL_DEFAULTS	\
+	HKL_MODE_OPERATIONS_HKL_DEFAULTS,	\
 		.set = hkl_mode_set_hkl_real
 
 static const HklModeOperations hkl_mode_operations = {

@@ -160,7 +160,7 @@ HklQuaternion *hkl_geometry_sample_rotation_get_binding(const HklGeometry *self,
  * Returns: (transfer full): the rotation express as a quaternion.
  **/
 HklQuaternion *hkl_geometry_detector_rotation_get_binding(const HklGeometry *self,
-							 const HklDetector *detector)
+							  const HklDetector *detector)
 {
 	HklQuaternion q = hkl_geometry_detector_rotation_get(self, detector);
 

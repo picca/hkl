@@ -421,8 +421,8 @@ HKLAPI int hkl_sample_compute_UB_busing_levy(HklSample *self,
 					     GError **error) HKL_ARG_NONNULL(1, 2, 3) HKL_WARN_UNUSED_RESULT;
 
 HKLAPI double hkl_sample_get_reflection_measured_angle(const HklSample *self,
-						      const HklSampleReflection *r1,
-						      const HklSampleReflection *r2) HKL_ARG_NONNULL(1, 2, 3);
+						       const HklSampleReflection *r1,
+						       const HklSampleReflection *r2) HKL_ARG_NONNULL(1, 2, 3);
 
 HKLAPI double hkl_sample_get_reflection_theoretical_angle(const HklSample *self,
 							  const HklSampleReflection *r1,

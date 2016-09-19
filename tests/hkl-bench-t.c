@@ -162,8 +162,8 @@ static void hkl_test_bench_eulerians(void)
 
 		/* studdy this degenerated case */
 		solutions = hkl_engine_pseudo_axis_values_set(engine,
-							       values, ARRAY_SIZE(values),
-							       HKL_UNIT_DEFAULT, NULL);
+							      values, ARRAY_SIZE(values),
+							      HKL_UNIT_DEFAULT, NULL);
 		if (solutions) {
 			const HklGeometryListItem *item;
 

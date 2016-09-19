@@ -3,14 +3,16 @@ module Hkl.Sixs
        ( main_sixs )
        where
 
-import Prelude hiding (print)
+import Prelude hiding (concat, head, print)
 
 #if __GLASGOW_HASKELL__ < 710
 import Control.Applicative ((<$>), (<*>))
 #endif
 
+import Data.Vector.Storable (concat, head)
 import Control.Exception (bracket)
 import Control.Monad (forM_)
+import Numeric.LinearAlgebra (Matrix)
 import Numeric.Units.Dimensional.Prelude (meter, nano, (*~))
 import Pipes (Producer, runEffect, (>->), lift, yield)
 import Pipes.Prelude (print)
@@ -33,180 +35,70 @@ data DataFrameH5Path = DataFrameH5Path
                        } deriving (Show)
 
 data DataFrameH5 = DataFrameH5
-                   { h5image :: Maybe H5Dataset
-                   , h5mu :: Maybe H5Dataset
-                   , h5omega :: Maybe H5Dataset
-                   , h5delta :: Maybe H5Dataset
-                   , h5gamma :: Maybe H5Dataset
-                   , h5ub :: Maybe H5Dataset
-                   , h5wavelength :: Maybe H5Dataset
-                   , h5dtype :: Maybe H5Dataset
-                   } deriving (Show)
+                   { h5image :: Dataset
+                   , h5mu :: Dataset
+                   , h5omega :: Dataset
+                   , h5delta :: Dataset
+                   , h5gamma :: Dataset
+                   , h5ub :: Dataset
+                   , h5wavelength :: Dataset
+                   , h5dtype :: Dataset
+                   }
 
 data DataFrame = DataFrame
                  { df_n :: Int
                  , df_geometry :: Geometry
+                 , df_ub :: Matrix Double
                  } deriving (Show)
 
--- static herr_t attribute_info(hid_t location_id, const char *attr_name, const H5A_info_t *ainfo, void *op_data)
--- {
--- 	printf("    Attribute: %d %s\n", location_id, attr_name);
-
--- 	return 0;
--- }
-
--- static herr_t file_info(hid_t loc_id, const char *name, const H5L_info_t *info, void *opdata)
--- {
--- 	H5O_info_t statbuf;
--- 	hsize_t n = 0;
-
--- 	/*
--- 	 * Get type of the object and display its name and type.
--- 	 * The name of the object is passed to this function by
--- 	 * the Library. Some magic :-)
--- 	 */
--- 	H5Oget_info_by_name(loc_id, name, &statbuf, H5P_DEFAULT);
--- 	switch (statbuf.type) {
--- 	case H5O_TYPE_UNKNOWN:
--- 		printf(" Object with name %s is an unknown type\n", name);
--- 		break;
--- 	case H5O_TYPE_GROUP:
--- 		printf(" Object with name %s is a group\n", name);
--- 		break;
--- 	case H5O_TYPE_DATASET:
--- 		printf(" Object with name %s is a dataset\n", name);
--- 		break;
--- 	case H5O_TYPE_NAMED_DATATYPE:
--- 		printf(" Object with name %s is a named datatype\n", name);
--- 		break;
--- 	default:
--- 		printf(" Unable to identify an object ");
--- 	}
-
--- 	H5Aiterate_by_name(loc_id,  name, H5_INDEX_NAME, H5_ITER_NATIVE, &n, attribute_info, NULL, H5P_DEFAULT);
-
--- 	return 0;
--- }
-
-withDataframeH5 :: H5File -> DataFrameH5Path -> (DataFrameH5 -> IO r) -> IO r
+withDataframeH5 :: File -> DataFrameH5Path -> (DataFrameH5 -> IO r) -> IO r
 withDataframeH5 h5file dfp = bracket (hkl_h5_open h5file dfp) hkl_h5_close
 
-hkl_h5_open :: H5File -> DataFrameH5Path -> IO DataFrameH5
+hkl_h5_open :: File -> DataFrameH5Path -> IO DataFrameH5
 hkl_h5_open h5file dp = DataFrameH5
-                         <$> openH5Dataset' h5file (h5pImage dp)
-                         <*> openH5Dataset' h5file (h5pMu dp)
-                         <*> openH5Dataset' h5file (h5pOmega dp)
-                         <*> openH5Dataset' h5file (h5pDelta dp)
-                         <*> openH5Dataset' h5file (h5pGamma dp)
-                         <*> openH5Dataset' h5file (h5pUB dp)
-                         <*> openH5Dataset' h5file (h5pWavelength dp)
-                         <*> openH5Dataset' h5file (h5pDiffractometerType dp)
+                         <$> openDataset' h5file (h5pImage dp)
+                         <*> openDataset' h5file (h5pMu dp)
+                         <*> openDataset' h5file (h5pOmega dp)
+                         <*> openDataset' h5file (h5pDelta dp)
+                         <*> openDataset' h5file (h5pGamma dp)
+                         <*> openDataset' h5file (h5pUB dp)
+                         <*> openDataset' h5file (h5pWavelength dp)
+                         <*> openDataset' h5file (h5pDiffractometerType dp)
   where
-    openH5Dataset' hid (DataItem name _) = openH5Dataset hid name
+    openDataset' hid (DataItem name _) = openDataset hid (pack name) Nothing
 
 hkl_h5_is_valid :: DataFrameH5 -> IO Bool
 hkl_h5_is_valid df = do
-  True <- check_ndims' (h5mu df) 1
-  True <- check_ndims' (h5omega df) 1
-  True <- check_ndims' (h5delta df) 1
-  True <- check_ndims' (h5gamma df) 1
+  True <- check_ndims (h5mu df) 1
+  True <- check_ndims (h5omega df) 1
+  True <- check_ndims (h5delta df) 1
+  True <- check_ndims (h5gamma df) 1
   return True
-    where
-      check_ndims' (Just dataset) target = check_ndims dataset target
-      check_ndims' Nothing _ = return True
 
 hkl_h5_close :: DataFrameH5 -> IO ()
 hkl_h5_close d = do
-  closeH5Dataset (h5image d)
-  closeH5Dataset (h5mu d)
-  closeH5Dataset (h5omega d)
-  closeH5Dataset (h5delta d)
-  closeH5Dataset (h5gamma d)
-  closeH5Dataset (h5ub d)
-  closeH5Dataset (h5wavelength d)
-  closeH5Dataset (h5dtype d)
+  closeDataset (h5image d)
+  closeDataset (h5mu d)
+  closeDataset (h5omega d)
+  closeDataset (h5delta d)
+  closeDataset (h5gamma d)
+  closeDataset (h5ub d)
+  closeDataset (h5wavelength d)
+  closeDataset (h5dtype d)
 
--- static herr_t hkl_dataframe_geometry_get(const HklDataframe dataframe, HklGeometry **geometry)
--- {
--- 	herr_t status = 0;
--- 	hid_t datatype;
--- 	double wavelength;
--- 	double axes[4];
-
--- 	/* create the HklGeometry */
--- 	if((*geometry) == NULL){
--- 		char *name;
--- 		size_t n;
--- 		HklFactory *factory;
-
--- 		/* read the diffractometer type from the hdf5 file */
--- 		datatype = H5Dget_type(dataframe._dataframe->dtype);
--- 		n = H5Tget_size(datatype);
--- 		name = malloc(n+1);
--- 		status = H5Dread(dataframe._dataframe->dtype,
--- 				 datatype,
--- 				 H5S_ALL, H5S_ALL,
--- 				 H5P_DEFAULT, name);
--- 		if(status >= 0){
--- 			/* remove the last "\n" char */
--- 			name[n-1] = 0;
-
--- 			factory = hkl_factory_get_by_name(name, NULL);
--- 			*geometry = hkl_factory_create_new_geometry(factory);
--- 		}
--- 		free(name);
--- 		H5Tclose(datatype);
--- 	}
-
--- 	/* read the wavelength double */
--- 	/* TODO check the right size */
--- 	/* TODO how to obtain the unit of the  wavelength */
--- 	datatype = H5Dget_type(dataframe._dataframe->wavelength);
--- 	status = H5Dread(dataframe._dataframe->wavelength,
--- 			 datatype,
--- 			 H5S_ALL, H5S_ALL,
--- 			 H5P_DEFAULT, &wavelength);
--- 	if(status >= 0)
--- 		hkl_geometry_wavelength_set(*geometry, wavelength, HKL_UNIT_USER, NULL);
--- 	H5Tclose(datatype);
-
--- 	/* read the axis positions of the ith dataframe */
--- 	/* check how to decide about the dataset connection and the hkl axes connection */
--- 	/* TODO check the right size */
--- 	/* TODO how to obtain the unit of the axes position */
--- 	if (get_position(dataframe._dataframe->mu,
--- 			 dataframe.i, &axes[0]) < 0)
--- 		goto out;
--- 	if (get_position(dataframe._dataframe->omega,
--- 			 dataframe.i, &axes[1]) < 0)
--- 		goto out;
--- 	if (get_position(dataframe._dataframe->gamma,
--- 			 dataframe.i, &axes[2]) < 0)
--- 		goto out;
--- 	if (get_position(dataframe._dataframe->delta,
--- 			 dataframe.i, &axes[3]) < 0)
--- 		goto out;
-
--- 	hkl_geometry_axis_values_set(*geometry, axes, 4, HKL_UNIT_USER, NULL);
--- 	/* hkl_geometry_fprintf(stdout, *geometry); */
--- 	/* fprintf(stdout, "\n"); */
-
--- 	return 0;
--- out:
--- 	return -1;
-
--- }
 getDataFrame' ::  DataFrameH5 -> Int -> IO DataFrame
 getDataFrame' d i = do
-  mu <- get_position' (h5mu d) i
-  omega <- get_position' (h5omega d) i
-  delta <- get_position' (h5delta d) i
-  gamma <- get_position' (h5gamma d) i
-  wavelength <- get_position' (h5wavelength d) 0
-  let positions = mu ++ omega ++ delta ++ gamma
+  mu <- get_position (h5mu d) i
+  omega <- get_position (h5omega d) i
+  delta <- get_position (h5delta d) i
+  gamma <- get_position (h5gamma d) i
+  wavelength <- get_position (h5wavelength d) 0
+  ub <- get_ub (h5ub d)
+  let positions = concat [mu, omega, delta, gamma]
   let source = Source (head wavelength *~ nano meter)
   return DataFrame { df_n = i
-                   , df_geometry = Geometry source positions
+                   , df_geometry = Geometry Uhv source positions Nothing
+                   , df_ub = ub
                    }
 
 getDataFrame :: DataFrameH5 -> Producer DataFrame IO ()
