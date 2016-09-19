@@ -34,6 +34,11 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(inhibit-startup-screen t)
+ '(c-default-style
+   (quote
+    ((c-mode . "linux")
+     (c++-mode . "linux")
+     (other . "gnu"))))
  '(org-babel-load-languages
    (quote
     ((latex . t)

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 import math
 import unittest
 
@@ -132,6 +133,21 @@ def new_hkl_diffractometer(config):
 # Config parser #
 #################
 
+def find(filename):
+    if os.path.exists(filename):
+        return filename
+    else:
+        datadir = os.getenv('DATADIR')
+        if datadir:
+            filename = os.path.join(datadir, filename)
+            if os.path.exists(filename):
+                return filename
+            else:
+                raise Exception("Can not find: " + filename)
+        else:
+            raise Exception("Cannot find: " + filename)
+
+
 def parse_reflection(line):
     ref = line.split()
     hkl = [float(x) for x in ref[2:5]]
@@ -213,7 +229,7 @@ class Polarisation(unittest.TestCase):
         dtype = "E6C"
         # RUBh = kf - ki = (P ki - ki) = (P - I) ki
 
-        config = parse('crystal.ini', dtype)
+        config = parse(find('crystal.ini'), dtype)
         print config
 
         gaga = ca(config, [0.5, 14.5, 0.43])
