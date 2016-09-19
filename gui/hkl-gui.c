@@ -2166,88 +2166,88 @@ hkl_gui_window_toolbutton_setUB_clicked_cb(GtkToolButton* _sender, gpointer user
 	hkl_matrix_free(UB);
 }
 
-void
-hkl_gui_window_toolbutton_computeUB_clicked_cb (GtkToolButton* _sender, gpointer user_data)
-{
-	HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
-	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
-	GtkTreeSelection* selection = NULL;
-	guint nb_rows = 0U;
+				 void
+				 hkl_gui_window_toolbutton_computeUB_clicked_cb (GtkToolButton* _sender, gpointer user_data)
+				 {
+					 HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
+					 HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
+					 GtkTreeSelection* selection = NULL;
+					 guint nb_rows = 0U;
 
-	selection = gtk_tree_view_get_selection (priv->treeview_reflections);
-	nb_rows = gtk_tree_selection_count_selected_rows (selection);
-	if (nb_rows > 1) {
-		GtkTreeModel* model = NULL;
-		GList* list;
-		GtkTreeIter iter = {0};
-		GtkTreePath *path;
-		HklSampleReflection *ref1, *ref2;
-		GError *error = NULL;
+					 selection = gtk_tree_view_get_selection (priv->treeview_reflections);
+					 nb_rows = gtk_tree_selection_count_selected_rows (selection);
+					 if (nb_rows > 1) {
+						 GtkTreeModel* model = NULL;
+						 GList* list;
+						 GtkTreeIter iter = {0};
+						 GtkTreePath *path;
+						 HklSampleReflection *ref1, *ref2;
+						 GError *error = NULL;
 
-		model = GTK_TREE_MODEL(priv->liststore_reflections);
-		list = gtk_tree_selection_get_selected_rows (selection, &model);
+						 model = GTK_TREE_MODEL(priv->liststore_reflections);
+						 list = gtk_tree_selection_get_selected_rows (selection, &model);
 
-		/* get the first reflection */
-		path = g_list_nth_data(list, 0);
-		gtk_tree_model_get_iter (GTK_TREE_MODEL(priv->liststore_reflections),
-					 &iter,
-					 path);
-		gtk_tree_model_get (GTK_TREE_MODEL(priv->liststore_reflections), &iter,
-				    REFLECTION_COL_REFLECTION, &ref1,
-				    -1);
+						 /* get the first reflection */
+						 path = g_list_nth_data(list, 0);
+						 gtk_tree_model_get_iter (GTK_TREE_MODEL(priv->liststore_reflections),
+									  &iter,
+									  path);
+						 gtk_tree_model_get (GTK_TREE_MODEL(priv->liststore_reflections), &iter,
+								     REFLECTION_COL_REFLECTION, &ref1,
+								     -1);
 
-		/* get the second one */
-		path = g_list_nth_data(list, 1);
-		gtk_tree_model_get_iter (GTK_TREE_MODEL(priv->liststore_reflections),
-					 &iter,
-					 path);
-		gtk_tree_model_get (GTK_TREE_MODEL(priv->liststore_reflections), &iter,
-				    REFLECTION_COL_REFLECTION, &ref2,
-				    -1);
+						 /* get the second one */
+						 path = g_list_nth_data(list, 1);
+						 gtk_tree_model_get_iter (GTK_TREE_MODEL(priv->liststore_reflections),
+									  &iter,
+									  path);
+						 gtk_tree_model_get (GTK_TREE_MODEL(priv->liststore_reflections), &iter,
+								     REFLECTION_COL_REFLECTION, &ref2,
+								     -1);
 
-		if(!hkl_sample_compute_UB_busing_levy(priv->sample,
-						      ref1, ref2, &error)){
-			raise_error(self, &error);
-		}else{
-			if(priv->diffractometer)
-				diffractometer_set_sample(priv->diffractometer,
-							  priv->sample);
+						 if(!hkl_sample_compute_UB_busing_levy(priv->sample,
+										       ref1, ref2, &error)){
+							 raise_error(self, &error);
+						 }else{
+							 if(priv->diffractometer)
+								 diffractometer_set_sample(priv->diffractometer,
+											   priv->sample);
 
-			update_UB (self);
-			update_ux_uy_uz (self);
-			update_pseudo_axes (self);
-			update_pseudo_axes_frames (self);
-		}
-		g_list_free_full (list, (GDestroyNotify) gtk_tree_path_free);
-	} else {
-		gtk_statusbar_push (priv->statusbar, 0,
-				    "Please select at least two reflection.");
-	}
-}
+							 update_UB (self);
+							 update_ux_uy_uz (self);
+							 update_pseudo_axes (self);
+							 update_pseudo_axes_frames (self);
+						 }
+						 g_list_free_full (list, (GDestroyNotify) gtk_tree_path_free);
+					 } else {
+						 gtk_statusbar_push (priv->statusbar, 0,
+								     "Please select at least two reflection.");
+					 }
+				 }
 
-void
-hkl_gui_window_toolbutton_affiner_clicked_cb (GtkToolButton* _sender, gpointer user_data)
-{
-	HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
-	HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
-	GError *error = NULL;
+				 void
+				 hkl_gui_window_toolbutton_affiner_clicked_cb (GtkToolButton* _sender, gpointer user_data)
+				 {
+					 HklGuiWindow *self = HKL_GUI_WINDOW(user_data);
+					 HklGuiWindowPrivate *priv = HKL_GUI_WINDOW_GET_PRIVATE(user_data);
+					 GError *error = NULL;
 
-	if(!hkl_sample_affine (priv->sample, &error)){
-		raise_error(self, &error);
-	}else{
-		if(priv->diffractometer)
-			diffractometer_set_sample(priv->diffractometer,
-						  priv->sample);
+					 if(!hkl_sample_affine (priv->sample, &error)){
+						 raise_error(self, &error);
+					 }else{
+						 if(priv->diffractometer)
+							 diffractometer_set_sample(priv->diffractometer,
+										   priv->sample);
 
-		update_lattice (self);
-		update_crystal_model (self);
-		update_reciprocal_lattice (self);
-		update_UB (self);
-		update_ux_uy_uz (self);
-		update_pseudo_axes (self);
-		update_pseudo_axes_frames (self);
-	}
-}
+						 update_lattice (self);
+						 update_crystal_model (self);
+						 update_reciprocal_lattice (self);
+						 update_UB (self);
+						 update_ux_uy_uz (self);
+						 update_pseudo_axes (self);
+						 update_pseudo_axes_frames (self);
+					 }
+				 }
 
 #define TOGGLE_LATTICE_CB(_parameter)					\
 	void hkl_gui_window_checkbutton_ ## _parameter ## _toggled_cb(GtkCheckButton *checkbutton, \
