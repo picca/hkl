@@ -72,7 +72,7 @@ sampleRef :: XRDRef
 sampleRef = XRDRef "reference"
             (published </> "calibration")
             (nxs (published </> "calibration" </> "XRD18keV_26.nxs") "scan_26" h5path')
-            18
+            6 -- BEWARE only the 6th poni was generated with the right Xpad_flat geometry.
   where
     beamline :: String
     beamline = beamlineUpper Diffabs
@@ -223,6 +223,7 @@ main_martinetto = do
   -- associée.
 
   let samples = [n27t2, r34n1, r23, r18, a2, a3, d2, d3, r11, d16, k9a2]
+  -- let samples = [n27t2]
 
   p <- getPoniExtRef sampleRef
 
