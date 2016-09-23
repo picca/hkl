@@ -30,10 +30,11 @@ import Control.Concurrent.Async
 import Control.Monad (forM_, forever)
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Morph (hoist)
+import Control.Monad.Trans.State.Strict
 import Data.Attoparsec.Text
 import Data.ByteString.Char8 (pack)
 import Data.Either
-import Data.Text (Text, pack, unlines)
+import Data.Text (Text, pack, unlines, append, unwords, intercalate)
 import Data.Text.IO (readFile, writeFile)
 import Data.Vector.Storable (concat, head, fromList)
 import Hkl.C (geometryDetectorRotationGet)
@@ -58,8 +59,10 @@ import System.FilePath ((</>), dropExtension, takeFileName, takeDirectory)
 import Prelude hiding (concat, lookup, readFile, writeFile)
 
 import Pipes (Consumer, Pipe, lift, (>->), runEffect, await, yield)
+import Pipes.Lift
 import Pipes.Prelude (toListM)
 import Pipes.Safe (MonadSafe(..), runSafeT, bracket)
+import System.Exit
 import System.Process
 import Text.Printf (printf)
 
@@ -85,10 +88,10 @@ data XrdNxs = XrdNxs Bins Threshold Nxs deriving (Show)
 data Nxs = Nxs FilePath NxEntry DataFrameH5Path deriving (Show)
 
 data DifTomoFrame =
-  DifTomoFrame { df_nxs :: Nxs -- ^ nexus of the current frame
-               , df_n :: Int -- ^ index of the current frame
-               , df_geometry :: Geometry -- ^ diffractometer geometry
-               , df_poniext :: PoniExt -- ^ the ref poniext
+  DifTomoFrame { difTomoFrameNxs :: Nxs -- ^ nexus of the current frame
+               , difTomoFrameIdx :: Int -- ^ index of the current frame
+               , difTomoFrameGeometry :: Geometry -- ^ diffractometer geometry
+               , difTomoFramePoniExt :: PoniExt -- ^ the ref poniext
                } deriving (Show)
 
 class Frame t where
@@ -128,10 +131,10 @@ instance Frame DataFrameH5 where
     let detector = ZeroD
     m <- geometryDetectorRotationGet geometry detector
     poniext <- ponigen d (MyMatrix HklB m) idx
-    return DifTomoFrame { df_nxs = nxs'
-                        , df_n = idx
-                        , df_geometry = geometry
-                        , df_poniext = poniext
+    return DifTomoFrame { difTomoFrameNxs = nxs'
+                        , difTomoFrameIdx = idx
+                        , difTomoFrameGeometry = geometry
+                        , difTomoFramePoniExt = poniext
                         }
 
 -- {-# ANN module "HLint: ignore Use camelCase" #-}
@@ -165,7 +168,7 @@ getPoniExtRef (XRDRef _ output nxs'@(Nxs f _ _) idx) = do
   poniExtRefs <- withH5File f $ \h5file ->
     runSafeT $ toListM ( withDataFrameH5 h5file nxs' (gen output f) yield
                          >-> hoist lift (frames' [idx]))
-  return $ df_poniext (Prelude.last poniExtRefs)
+  return $ difTomoFramePoniExt (Prelude.last poniExtRefs)
   where
     gen :: FilePath -> FilePath -> MyMatrix Double -> Int -> IO PoniExt
     gen root nxs'' m idx' = do
@@ -187,7 +190,8 @@ integrate' ref output (XrdNxs b t nxs'@(Nxs f _ _)) = do
         withDataFrameH5 h5file nxs' (gen ref) yield
         >-> hoist lift (frames
                         >-> savePonies (pgen output f)
-                        >-> savePy b t)
+                        >-> savePy b t
+                        >-> saveGnuplot)
   where
     gen :: PoniExt -> Pose -> Int -> IO PoniExt
     gen ref' m _idx = return $ setPose ref' m
@@ -197,43 +201,44 @@ integrate' ref output (XrdNxs b t nxs'@(Nxs f _ _)) = do
       where
         scandir = (dropExtension . takeFileName) nxs''
 
-createPy :: Bins -> Threshold -> (DifTomoFrame, FilePath) -> Text
-createPy (Bins b) (Threshold t) (f, poniFileName) = Data.Text.unlines $
-  map Data.Text.pack ["#!/bin/env python"
-                     , ""
-                     , "import numpy"
-                     , "from h5py import File"
-                     , "from pyFAI import load"
-                     , ""
-                     , "PONIFILE = " ++ show p
-                     , "NEXUSFILE = " ++ show nxs'
-                     , "IMAGEPATH = " ++ show i
-                     , "IDX = " ++ show idx
-                     , "N = " ++ show b
-                     , "OUTPUT = " ++ show out
-                     , "WAVELENGTH = " ++ show (w /~ meter)
-                     , "THRESHOLD = " ++ show t
-                     , ""
-                     , "ai = load(PONIFILE)"
-                     , "ai.wavelength = WAVELENGTH"
-                     , "ai._empty = numpy.nan"
-                     , "mask_det = ai.detector.mask"
-                     , "#mask_module = numpy.zeros_like(mask_det)"
-                     , "#mask_module[0:120, :] = True"
-                     , "with File(NEXUSFILE) as f:"
-                     , "    img = f[IMAGEPATH][IDX]"
-                     , "    mask = numpy.where(img > THRESHOLD, True, False)"
-                     , "    mask = numpy.logical_or(mask, mask_det)"
-                     , "    #mask = numpy.logical_or(mask, mask_module)"
-                     , "    ai.integrate1d(img, N, filename=OUTPUT, unit=\"2th_deg\", error_model=\"poisson\", correctSolidAngle=False, method=\"lut\", mask=mask)"
-                     ]
-  where
-    p = takeFileName poniFileName
-    (Nxs nxs' _ h5path') = df_nxs f
-    (DataItem i _) = h5pImage h5path'
-    idx = df_n f
-    out = (dropExtension . takeFileName) poniFileName ++ ".dat"
-    (Geometry _ (Source w) _ _) = df_geometry f
+createPy :: Bins -> Threshold -> DifTomoFrame' -> (Text, FilePath)
+createPy (Bins b) (Threshold t) (DifTomoFrame' f poniPath) = (script, output)
+    where
+      script = Data.Text.unlines $
+               map Data.Text.pack ["#!/bin/env python"
+                                  , ""
+                                  , "import numpy"
+                                  , "from h5py import File"
+                                  , "from pyFAI import load"
+                                  , ""
+                                  , "PONIFILE = " ++ show p
+                                  , "NEXUSFILE = " ++ show nxs'
+                                  , "IMAGEPATH = " ++ show i
+                                  , "IDX = " ++ show idx
+                                  , "N = " ++ show b
+                                  , "OUTPUT = " ++ show output
+                                  , "WAVELENGTH = " ++ show (w /~ meter)
+                                  , "THRESHOLD = " ++ show t
+                                  , ""
+                                  , "ai = load(PONIFILE)"
+                                  , "ai.wavelength = WAVELENGTH"
+                                  , "ai._empty = numpy.nan"
+                                  , "mask_det = ai.detector.mask"
+                                  , "#mask_module = numpy.zeros_like(mask_det)"
+                                  , "#mask_module[0:120, :] = True"
+                                  , "with File(NEXUSFILE) as f:"
+                                  , "    img = f[IMAGEPATH][IDX]"
+                                  , "    mask = numpy.where(img > THRESHOLD, True, False)"
+                                  , "    mask = numpy.logical_or(mask, mask_det)"
+                                  , "    #mask = numpy.logical_or(mask, mask_module)"
+                                  , "    ai.integrate1d(img, N, filename=OUTPUT, unit=\"2th_deg\", error_model=\"poisson\", correctSolidAngle=False, method=\"lut\", mask=mask)"
+                                  ]
+      p = takeFileName poniPath
+      (Nxs nxs' _ h5path') = difTomoFrameNxs f
+      (DataItem i _) = h5pImage h5path'
+      idx = difTomoFrameIdx f
+      output = (dropExtension . takeFileName) poniPath ++ ".dat"
+      (Geometry _ (Source w) _ _) = difTomoFrameGeometry f
 
 -- | Pipes
 
@@ -258,27 +263,68 @@ withDataFrameH5 h nxs'@(Nxs _ _ d) gen = Pipes.Safe.bracket (liftIO before) (lif
     -- openDataset' :: File -> DataItem -> IO Dataset
     openDataset' hid (DataItem name _) = openDataset hid (Data.ByteString.Char8.pack name) Nothing
 
-savePonies :: (Int -> FilePath) -> Pipe DifTomoFrame (DifTomoFrame, FilePath) IO ()
+data DifTomoFrame' = DifTomoFrame' { difTomoFrame'DifTomoFrame :: DifTomoFrame
+                                   , difTomoFrame'PoniPath :: FilePath
+                                   }
+
+savePonies :: (Int -> FilePath) -> Pipe DifTomoFrame DifTomoFrame' IO ()
 savePonies g = forever $ do
   f <- await
-  let filename = g (df_n f)
+  let filename = g (difTomoFrameIdx f)
   lift $ createDirectoryIfMissing True (takeDirectory filename)
-  lift $ writeFile filename (content (df_poniext f))
+  lift $ writeFile filename (content (difTomoFramePoniExt f))
   lift $ Prelude.print $ "--> " ++ filename
-  yield (f, filename)
+  yield $ DifTomoFrame' f filename
     where
       content :: PoniExt -> Text
       content (PoniExt poni _) = poniToText poni
 
-savePy :: Bins -> Threshold -> Consumer (DifTomoFrame, FilePath) IO ()
+data DifTomoFrame'' = DifTomoFrame'' { difTomoFrame''DifTomoFrame' :: DifTomoFrame'
+                                     , difTomoFrame''PySCript :: Text
+                                     , difTomoFrame''PySCriptPath :: FilePath
+                                     , difTomoFrame''DataPath :: FilePath
+                                     }
+
+savePy :: Bins -> Threshold -> Pipe DifTomoFrame' DifTomoFrame'' IO ()
 savePy b t = forever $ do
-  f@(_, poniFileName) <- await
-  let directory = takeDirectory poniFileName
-  let pyFileName = dropExtension poniFileName ++ ".py"
+  f@(DifTomoFrame' difTomoFrame poniPath) <- await
+  let directory = takeDirectory poniPath
+  let scriptPath = dropExtension poniPath ++ ".py"
+  let (script, dataPath) = createPy b t f
   lift $ createDirectoryIfMissing True directory
-  lift $ writeFile pyFileName (createPy b t f)
-  lift $ Prelude.print $ "--> " ++ pyFileName
-  lift $ system (unwords ["cd ", directory, "&&",  "python", pyFileName])
+  lift $ writeFile scriptPath script
+  lift $ Prelude.print $ "--> " ++ scriptPath
+  ExitSuccess <- lift $ system (Prelude.unwords ["cd ", directory, "&&",  "python", scriptPath])
+  yield $ DifTomoFrame'' f script scriptPath dataPath
+
+saveGnuplot' :: Consumer DifTomoFrame'' (StateT [FilePath] IO) r
+saveGnuplot' = forever $ do
+  curves <- lift get
+  (DifTomoFrame'' _ _ _ dataPath) <- await
+  let directory = takeDirectory dataPath
+  let filename = directory </> "plot.gnuplot"
+  lift . lift $ createDirectoryIfMissing True directory
+  lift . lift $ writeFile filename (new_content curves)
+  lift $ put $! (curves ++ [dataPath])
+    where
+      new_content :: [FilePath] -> Text
+      new_content cs = Data.Text.unlines (lines cs)
+
+      lines :: [FilePath] -> [Text]
+      lines cs = ["plot"]
+                 ++ [Data.Text.intercalate "\\\n" [ Data.Text.pack (show (takeFileName c)) | c <- cs ]]
+                 ++ ["pause -1"]
+
+saveGnuplot :: Consumer DifTomoFrame'' IO r
+saveGnuplot = evalStateP [] saveGnuplot'
+
+-- createGnuplot :: FilePath -> Text
+-- createGnuplot f = Data.Text.unline $
+--                   map Data.Text.pack ["plot for [i=0:" ++ n ++ "] sprintf(\"" ++ N27T2_14_ ++ "%02d.dat\", i) u 1:2 w l"
+--                                      , "pause -1"
+--                                      ]
+--                       where
+--                         n =
 
 frames :: (Frame a) => Pipe a DifTomoFrame IO ()
 frames = do
