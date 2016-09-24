@@ -34,9 +34,9 @@ import Control.Monad.Trans.State.Strict
 import Data.Attoparsec.Text
 import Data.ByteString.Char8 (pack)
 import Data.Either
-import Data.Text (Text, pack, unlines, append, unwords, intercalate)
+import Data.Text (Text, unlines, pack, intercalate)
 import Data.Text.IO (readFile, writeFile)
-import Data.Vector.Storable (concat, head, fromList)
+import Data.Vector.Storable (concat, head)
 import Hkl.C (geometryDetectorRotationGet)
 import Hkl.Detector
 import Hkl.H5 ( Dataset
@@ -50,13 +50,13 @@ import Hkl.PyFAI
 import Hkl.MyMatrix
 import Hkl.PyFAI.PoniExt
 import Hkl.Types
-import Numeric.LinearAlgebra ((<>), ident, atIndex)
+import Numeric.LinearAlgebra
 import Numeric.GSL.Minimization
 -- import Graphics.Plot
 import Numeric.Units.Dimensional.Prelude (Angle, Length, meter, radian, nano, (/~), (*~))
 import System.Directory (createDirectoryIfMissing)
 import System.FilePath ((</>), dropExtension, takeFileName, takeDirectory)
-import Prelude hiding (concat, lookup, readFile, writeFile)
+import Prelude hiding (concat, lookup, readFile, writeFile, unlines)
 
 import Pipes (Consumer, Pipe, lift, (>->), runEffect, await, yield)
 import Pipes.Lift
@@ -126,7 +126,7 @@ instance Frame DataFrameH5 where
     delta <- get_position (h5delta d) idx
     wavelength <- get_position (h5wavelength d) 0
     let source = Source (Data.Vector.Storable.head wavelength *~ nano meter)
-    let positions = concat [mu, komega, kappa, kphi, gamma, delta]
+    let positions = Data.Vector.Storable.concat [mu, komega, kappa, kphi, gamma, delta]
     let geometry =  Geometry K6c source positions Nothing
     let detector = ZeroD
     m <- geometryDetectorRotationGet geometry detector
@@ -204,7 +204,7 @@ integrate' ref output (XrdNxs b t nxs'@(Nxs f _ _)) = do
 createPy :: Bins -> Threshold -> DifTomoFrame' -> (Text, FilePath)
 createPy (Bins b) (Threshold t) (DifTomoFrame' f poniPath) = (script, output)
     where
-      script = Data.Text.unlines $
+      script = unlines $
                map Data.Text.pack ["#!/bin/env python"
                                   , ""
                                   , "import numpy"
@@ -308,11 +308,11 @@ saveGnuplot' = forever $ do
   lift $ put $! (curves ++ [dataPath])
     where
       new_content :: [FilePath] -> Text
-      new_content cs = Data.Text.unlines (lines cs)
+      new_content cs = Data.Text.unlines (lines' cs)
 
-      lines :: [FilePath] -> [Text]
-      lines cs = ["plot"]
-                 ++ [Data.Text.intercalate "\\\n" [ Data.Text.pack (show (takeFileName c)) | c <- cs ]]
+      lines' :: [FilePath] -> [Text]
+      lines' cs = ["plot"]
+                 ++ [intercalate "\\\n" [ Data.Text.pack (show (takeFileName c)) | c <- cs ]]
                  ++ ["pause -1"]
 
 saveGnuplot :: Consumer DifTomoFrame'' IO r
@@ -331,15 +331,15 @@ frames = do
   d <- await
   (Just n) <- lift $ len d
   forM_ [0..n-1] (\i -> do
-                     f <- lift $ row d i
+                     f <- lift $ Hkl.XRD.row d i
                      yield f)
 
 frames' :: (Frame a) => [Int] -> Pipe a DifTomoFrame IO ()
-frames' idxs = do
+frames' is = do
   d <- await
-  forM_ idxs (\i -> do
-                 f <- lift $ row d i
-                 yield f)
+  forM_ is (\i -> do
+              f <- lift $ Hkl.XRD.row d i
+              yield f)
 
 -- | Calibration
 
@@ -362,7 +362,7 @@ data XRDCalibration = XRDCalibration { xrdCalibrationName :: Text
                       deriving (Show)
 
 withDataItem :: MonadSafe m => File -> DataItem -> (Dataset -> m r) -> m r
-withDataItem hid (DataItem name _) = Pipes.Safe.bracket (liftIO $ acquire') (liftIO . release')
+withDataItem hid (DataItem name _) = Pipes.Safe.bracket (liftIO acquire') (liftIO . release')
     where
       acquire' :: IO Dataset
       acquire' = openDataset hid (Data.ByteString.Char8.pack name) Nothing
@@ -383,7 +383,7 @@ getM f p i = runSafeT $
       delta <- get_position d' i
       wavelength <- get_position w' 0
       let source = Source (Data.Vector.Storable.head wavelength *~ nano meter)
-      let positions = concat [mu, komega, kappa, kphi, gamma, delta]
+      let positions = Data.Vector.Storable.concat [mu, komega, kappa, kphi, gamma, delta]
       let geometry = Geometry K6c source positions Nothing
       let detector = ZeroD
       m <- geometryDetectorRotationGet geometry detector
@@ -401,7 +401,7 @@ readXRDCalibrationEntry d e =
 
 calibrate :: XRDCalibration -> PoniExt -> Detector a -> IO PoniExt
 calibrate c (PoniExt p _) d =  do
-  let entry = last p
+  let entry = Prelude.last p
   let guess = poniEntryToList entry
   -- read all the NptExt
   npts <- mapM (readXRDCalibrationEntry d) (xrdCalibrationEntries c)
@@ -414,13 +414,13 @@ calibrate c (PoniExt p _) d =  do
       box = [0.1, 0.1, 0.1, 0.01, 0.01, 0.01]
 
       f :: [NptExt a] -> [Double] -> Double
-      f ns params = foldl (f' params) 0 ns
+      f ns params = Prelude.foldl (f' params) 0 ns
 
       f' :: [Double] -> Double -> NptExt a -> Double
-      f' params x (NptExt n m d') = foldl (f'' params m (nptWavelength n) d') x (nptEntries n)
+      f' params x (NptExt n m d') = Prelude.foldl (f'' params m (nptWavelength n) d') x (nptEntries n)
 
       f'' :: [Double] -> MyMatrix Double -> Length Double -> Detector a -> Double -> NptEntry -> Double
-      f'' params m w' d' x (NptEntry _ tth _ points) = foldl (f''' params m tth w' d') x points
+      f'' params m w' d' x (NptEntry _ tth _ points) = Prelude.foldl (f''' params m tth w' d') x points
 
       f''' :: [Double] -> MyMatrix Double -> Angle Double -> Length Double -> Detector a -> Double -> NptPoint -> Double
       f''' params m tth w' detector x point = x + dtth * dtth
@@ -431,14 +431,23 @@ computeTth :: [Double] -> MyMatrix Double -> Length Double -> NptPoint -> Detect
 computeTth [rot1, rot2, rot3, d, poni1, poni2] m _w point detector = atan2 (sqrt (x*x + y*y)) z
     where
       (MyMatrix _ m') = changeBase m PyFAIB
-      rotations = map (uncurry fromAxisAndAngle)
+      rotations = Prelude.map (uncurry fromAxisAndAngle)
                   [ (fromList [0, 0, 1], rot3 *~ radian)
                   , (fromList [0, 1, 0], rot2 *~ radian)
                   , (fromList [1, 0, 0], rot1 *~ radian)]
       -- M1 . R0 = R1
-      r = foldl (<>) m' rotations -- pyFAIB
+      r :: Matrix Double
+      r = Prelude.foldl (<>) m' rotations -- pyFAIB
+
+      xyz :: Vector Double
       xyz = coordinates detector point
-      kf = r <> (xyz + fromList [-poni1, -poni2, d])
+
+      xyz' :: Vector Double
+      xyz' = xyz + fromList [-poni1, -poni2, d]
+
+      kf :: Vector Double
+      kf = r #> xyz'
+
       x = kf `atIndex` 0
       y = kf `atIndex` 1
       z = kf `atIndex` 2
