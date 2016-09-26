@@ -98,7 +98,7 @@ library
                      , Glob >= 0.7.5
                      , hdf5
                      , hmatrix >= 0.15
-                     , hmatrix-gsl >= 0.16
+                     -- , hmatrix-gsl >= 0.16
                      , mmorph >= 1.0.3
                      , monad-loops >= 0.4.2
                      , pipes >= 4.1.2

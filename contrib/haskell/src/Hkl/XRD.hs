@@ -66,6 +66,11 @@ import System.Exit
 import System.Process
 import Text.Printf (printf)
 
+#if !MIN_VERSION_hmatrix(0, 17, 0)
+(#>) :: Matrix Double -> Vector Double -> Vector Double
+(#>) = (<>)
+#endif
+
 -- | Types
 
 type NxEntry = String
@@ -213,7 +218,7 @@ createPy (Bins b) (Threshold t) (DifTomoFrame' f poniPath) = (script, output)
                                   , ""
                                   , "PONIFILE = " ++ show p
                                   , "NEXUSFILE = " ++ show nxs'
-                                  , "IMAGEPATH = " ++ show i
+                                  , "IMAGEPATH = " ++ show i'
                                   , "IDX = " ++ show idx
                                   , "N = " ++ show b
                                   , "OUTPUT = " ++ show output
@@ -235,7 +240,7 @@ createPy (Bins b) (Threshold t) (DifTomoFrame' f poniPath) = (script, output)
                                   ]
       p = takeFileName poniPath
       (Nxs nxs' _ h5path') = difTomoFrameNxs f
-      (DataItem i _) = h5pImage h5path'
+      (DataItem i' _) = h5pImage h5path'
       idx = difTomoFrameIdx f
       output = (dropExtension . takeFileName) poniPath ++ ".dat"
       (Geometry _ (Source w) _ _) = difTomoFrameGeometry f
@@ -330,15 +335,15 @@ frames :: (Frame a) => Pipe a DifTomoFrame IO ()
 frames = do
   d <- await
   (Just n) <- lift $ len d
-  forM_ [0..n-1] (\i -> do
-                     f <- lift $ Hkl.XRD.row d i
+  forM_ [0..n-1] (\i' -> do
+                     f <- lift $ Hkl.XRD.row d i'
                      yield f)
 
 frames' :: (Frame a) => [Int] -> Pipe a DifTomoFrame IO ()
 frames' is = do
   d <- await
-  forM_ is (\i -> do
-              f <- lift $ Hkl.XRD.row d i
+  forM_ is (\i' -> do
+              f <- lift $ Hkl.XRD.row d i'
               yield f)
 
 -- | Calibration
@@ -371,7 +376,7 @@ withDataItem hid (DataItem name _) = Pipes.Safe.bracket (liftIO acquire') (liftI
       release' = closeDataset
 
 getM :: File -> DataFrameH5Path -> Int -> IO (MyMatrix Double)
-getM f p i = runSafeT $
+getM f p i' = runSafeT $
     withDataItem f (h5pGamma p) $ \g' ->
     withDataItem f (h5pDelta p) $ \d' ->
     withDataItem f (h5pWavelength p) $ \w' -> liftIO $ do
@@ -380,7 +385,7 @@ getM f p i = runSafeT $
       let kappa = 0.0
       let kphi = 0.0
       gamma <- get_position g' 0
-      delta <- get_position d' i
+      delta <- get_position d' i'
       wavelength <- get_position w' 0
       let source = Source (Data.Vector.Storable.head wavelength *~ nano meter)
       let positions = Data.Vector.Storable.concat [mu, komega, kappa, kphi, gamma, delta]
