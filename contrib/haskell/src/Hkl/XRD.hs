@@ -408,39 +408,46 @@ readXRDCalibrationEntry d e =
 calibrate :: XRDCalibration -> PoniExt -> Detector a -> IO PoniExt
 calibrate c (PoniExt p _) d =  do
   let entry = Prelude.last p
-  let guess = poniEntryToList entry
+  let guess = fromList $ poniEntryToList entry
   -- read all the NptExt
   npts <- mapM (readXRDCalibrationEntry d) (xrdCalibrationEntries c)
-  let (solution, _p) = minimize NMSimplex2 1E-7 3000 box (f npts) guess
+  let (solution, _p) = minimizeV NMSimplex2 1E-7 3000 box (f npts) guess
   -- mplot $ drop 3 (toColumns p)
   print _p
-  return $ PoniExt [poniEntryFromList entry solution] (MyMatrix HklB (ident 3))
+  return $ PoniExt [poniEntryFromList entry (toList solution)] (MyMatrix HklB (ident 3))
     where
-      box :: [Double]
-      box = [0.1, 0.1, 0.1, 0.01, 0.01, 0.01]
+      box :: Vector Double
+      box = fromList [0.1, 0.1, 0.1, 0.01, 0.01, 0.01]
 
-      f :: [NptExt a] -> [Double] -> Double
+      f :: [NptExt a] -> Vector Double -> Double
       {-# INLINE f #-}
       f ns params = Prelude.foldl (f' params) 0 ns
 
-      f' :: [Double] -> Double -> NptExt a -> Double
+      f' :: Vector Double -> Double -> NptExt a -> Double
       {-# INLINE f' #-}
       f' params x (NptExt n m d') = Prelude.foldl (f'' params m (nptWavelength n) d') x (nptEntries n)
 
-      f'' :: [Double] -> MyMatrix Double -> Length Double -> Detector a -> Double -> NptEntry -> Double
+      f'' :: Vector Double -> MyMatrix Double -> Length Double -> Detector a -> Double -> NptEntry -> Double
       {-# INLINE f'' #-}
       f'' params m w' d' x (NptEntry _ tth _ points) = Prelude.foldl (f''' params m tth w' d') x points
 
-      f''' :: [Double] -> MyMatrix Double -> Angle Double -> Length Double -> Detector a -> Double -> NptPoint -> Double
+      f''' :: Vector Double -> MyMatrix Double -> Angle Double -> Length Double -> Detector a -> Double -> NptPoint -> Double
       {-# INLINE f''' #-}
       f''' params m tth w' detector x point = x + dtth * dtth
           where
             dtth = (tth /~ radian) - computeTth params m w' point detector
 
-computeTth :: [Double] -> MyMatrix Double -> Length Double -> NptPoint -> Detector a -> Double
+computeTth :: Vector Double -> MyMatrix Double -> Length Double -> NptPoint -> Detector a -> Double
 {-# INLINE computeTth #-}
-computeTth [rot1, rot2, rot3, d, poni1, poni2] m _w point detector = atan2 (sqrt (x*x + y*y)) (-z)
+computeTth params m _w point detector = atan2 (sqrt (x*x + y*y)) (-z)
     where
+      rot1 = params `atIndex` 0
+      rot2 = params `atIndex` 1
+      rot3 = params `atIndex` 2
+      d = params `atIndex` 3
+      poni1 = params `atIndex` 4
+      poni2 = params `atIndex` 5
+
       (MyMatrix _ m') = changeBase m PyFAIB
       rotations = Prelude.map (uncurry fromAxisAndAngle)
                   [ (fromList [0, 0, 1], rot3 *~ radian)
@@ -462,4 +469,3 @@ computeTth [rot1, rot2, rot3, d, poni1, poni2] m _w point detector = atan2 (sqrt
       x = kf `atIndex` 0
       y = kf `atIndex` 1
       z = kf `atIndex` 2
-computeTth _ _ _ _ _ = error "Wrong number of parameters, can not use as poni"
