@@ -1,5 +1,6 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE BangPatterns #-}
 
 module Hkl.XRD
        ( XRDRef(..)
@@ -419,21 +420,26 @@ calibrate c (PoniExt p _) d =  do
       box = [0.1, 0.1, 0.1, 0.01, 0.01, 0.01]
 
       f :: [NptExt a] -> [Double] -> Double
+      {-# INLINE f #-}
       f ns params = Prelude.foldl (f' params) 0 ns
 
       f' :: [Double] -> Double -> NptExt a -> Double
+      {-# INLINE f' #-}
       f' params x (NptExt n m d') = Prelude.foldl (f'' params m (nptWavelength n) d') x (nptEntries n)
 
       f'' :: [Double] -> MyMatrix Double -> Length Double -> Detector a -> Double -> NptEntry -> Double
+      {-# INLINE f'' #-}
       f'' params m w' d' x (NptEntry _ tth _ points) = Prelude.foldl (f''' params m tth w' d') x points
 
       f''' :: [Double] -> MyMatrix Double -> Angle Double -> Length Double -> Detector a -> Double -> NptPoint -> Double
+      {-# INLINE f''' #-}
       f''' params m tth w' detector x point = x + dtth * dtth
           where
             dtth = (tth /~ radian) - computeTth params m w' point detector
 
 computeTth :: [Double] -> MyMatrix Double -> Length Double -> NptPoint -> Detector a -> Double
-computeTth [rot1, rot2, rot3, d, poni1, poni2] m _w point detector = atan2 (sqrt (x*x + y*y)) z
+{-# INLINE computeTth #-}
+computeTth [rot1, rot2, rot3, d, poni1, poni2] m _w point detector = atan2 (sqrt (x*x + y*y)) (-z)
     where
       (MyMatrix _ m') = changeBase m PyFAIB
       rotations = Prelude.map (uncurry fromAxisAndAngle)
@@ -448,7 +454,7 @@ computeTth [rot1, rot2, rot3, d, poni1, poni2] m _w point detector = atan2 (sqrt
       xyz = coordinates detector point
 
       xyz' :: Vector Double
-      xyz' = xyz + fromList [-poni1, -poni2, d]
+      xyz' = xyz + fromList [-poni1, -poni2, -d]
 
       kf :: Vector Double
       kf = r #> xyz'

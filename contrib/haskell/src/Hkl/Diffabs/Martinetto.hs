@@ -244,12 +244,13 @@ main_calibration' = do
   p <- getPoniExtRef sampleRef
 
   -- flip the ref poni in order to fit the reality
+  -- let poniextref = p
   let poniextref = setPose p (MyMatrix HklB (ident 3))
   -- let poniextref = setPose (Hkl.PyFAI.PoniExt.flip p) (MyMatrix HklB (ident 3))
 
   -- full calibration
   poniextref' <- calibrate sampleCalibration poniextref Xpad32
-  print p
+  -- print p
   print poniextref
   print poniextref'
 
