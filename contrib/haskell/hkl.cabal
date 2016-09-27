@@ -15,6 +15,10 @@ copyright:           Synchrotron SOLEIL
 build-type:          Simple
 cabal-version:       >= 1.10
 
+Flag useHMatrixGsl
+  Description: Enable the HmatrixGSL package
+  Default:     False
+
 executable ghkl
   main-is:             src/ghkl.hs
   build-depends:       attoparsec
@@ -36,31 +40,7 @@ executable ghkl
   build-tools:         hsc2hs
   ghc-options:         -Wall -threaded -O2
   -- ghc-options:         -Wall -Werror
-
-executable ghkl-profiling
-  main-is:             src/ghkl.hs
-  build-depends:       attoparsec
-                     , base >= 4.6 && < 4.9
-                     , bindings-hdf5 >= 1.8.12
-                     , containers >= 0.5 && < 0.6
-                     , dimensional >= 0.10
-                     , filepath >= 1.3.0
-                     , Glob >= 0.7.5
-                     , hkl
-                     , hmatrix >= 0.15
-                     , monad-loops >= 0.4.2
-                     , pipes >= 4.1.2
-                     , text
-                     , transformers >= 0.3
-                     , vector >= 0.10.0.1
-  default-language:    Haskell2010
-  pkgconfig-depends:   hkl
-  build-tools:         hsc2hs
-  ghc-options:
-    -O2
-    -threaded
-    -fprof-auto
-    "-with-rtsopts=-N -p -s -h -i0.1"
+  ghc-prof-options:    -fprof-auto "-with-rtsopts=-N -p -s -h -i0.1"
 
 executable hkl3d
   main-is:             src/hkl3d.hs
@@ -80,25 +60,26 @@ executable hkl3d
   pkgconfig-depends:   hkl
   build-tools:         hsc2hs
   -- ghc-options:         -Wall -Werror
+  ghc-prof-options:    -fprof-auto "-with-rtsopts=-N -p -s -h -i0.1"
 
 library
-   exposed-modules:    Hkl
-                     , Hkl.C
-                     , Hkl.Calibration
-                     , Hkl.Detector
-                     , Hkl.Diffabs
-                     , Hkl.Diffabs.Martinetto
-                     , Hkl.Engine
-                     , Hkl.H5
-                     , Hkl.MyMatrix
-                     , Hkl.PyFAI
-                     , Hkl.PyFAI.Poni
-                     , Hkl.PyFAI.PoniExt
-                     , Hkl.PyFAI.Npt
-                     , Hkl.Sixs
-                     , Hkl.Types
-                     , Hkl.Types.Parameter
-                     , Hkl.XRD
+  exposed-modules:    Hkl
+                    , Hkl.C
+                    , Hkl.Calibration
+                    , Hkl.Detector
+                    , Hkl.Diffabs
+                    , Hkl.Diffabs.Martinetto
+                    , Hkl.Engine
+                    , Hkl.H5
+                    , Hkl.MyMatrix
+                    , Hkl.PyFAI
+                    , Hkl.PyFAI.Poni
+                    , Hkl.PyFAI.PoniExt
+                    , Hkl.PyFAI.Npt
+                    , Hkl.Sixs
+                    , Hkl.Types
+                    , Hkl.Types.Parameter
+                    , Hkl.XRD
   other-extensions:    CPP
                      , ForeignFunctionInterface
                      , EmptyDataDecls
@@ -118,7 +99,6 @@ library
                      , Glob >= 0.7.5
                      , hdf5
                      , hmatrix >= 0.15
-                     -- , hmatrix-gsl >= 0.16
                      , mmorph >= 1.0.3
                      , monad-loops >= 0.4.2
                      , pipes >= 4.1.2
@@ -127,9 +107,13 @@ library
                      , text
                      , transformers >= 0.3
                      , vector >= 0.10.0.1
+
+  if flag(useHMatrixGsl)
+    build-depends: hmatrix-gsl >= 0.16
+
   hs-source-dirs:      src
   build-tools:         hsc2hs
   default-language:    Haskell2010
   pkgconfig-depends:   hkl
   ghc-options:         -Wall -threaded -O2
-  GHC-Prof-Options:    -fprof-auto-top
+  ghc-prof-options:    -fprof-auto-top
