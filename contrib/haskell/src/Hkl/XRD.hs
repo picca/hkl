@@ -35,6 +35,7 @@ import Control.Monad.Trans.State.Strict
 import Data.Attoparsec.Text
 import Data.ByteString.Char8 (pack)
 import Data.Either
+import Data.List (foldl')
 import Data.Text (Text, unlines, pack, intercalate)
 import Data.Text.IO (readFile, writeFile)
 import Data.Vector.Storable (concat, head)
@@ -421,12 +422,12 @@ calibrate c (PoniExt p _) d =  do
 
       f :: [NptExt a] -> Vector Double -> Double
       {-# INLINE f #-}
-      f ns params = Prelude.foldl (f' params) 0 ns
+      f ns params = foldl' (f' params) 0 ns
 
       f' :: Vector Double -> Double -> NptExt a -> Double
       {-# INLINE f' #-}
       f' params x (NptExt n m d') =
-        Prelude.foldl (f'' translation r (nptWavelength n) d') x (nptEntries n)
+        foldl' (f'' translation r (nptWavelength n) d') x (nptEntries n)
           where
             rot1 = params `atIndex` 0
             rot2 = params `atIndex` 1
@@ -442,14 +443,14 @@ calibrate c (PoniExt p _) d =  do
                         , (fromList [1, 0, 0], rot1 *~ radian)]
             -- M1 . R0 = R1
             r :: Matrix Double
-            r = Prelude.foldl (<>) m' rotations -- pyFAIB
+            r = foldl' (<>) m' rotations -- pyFAIB
 
             translation :: Vector Double
             translation = fromList [-poni1, -poni2, -d'']
 
       f'' :: Vector Double -> Matrix Double -> Length Double -> Detector a -> Double -> NptEntry -> Double
       {-# INLINE f'' #-}
-      f'' translation m w' d' x (NptEntry _ tth _ points) = Prelude.foldl (f''' translation m tth w' d') x points
+      f'' translation m w' d' x (NptEntry _ tth _ points) = foldl' (f''' translation m tth w' d') x points
 
       f''' :: Vector Double -> Matrix Double -> Angle Double -> Length Double -> Detector a -> Double -> NptPoint -> Double
       {-# INLINE f''' #-}
