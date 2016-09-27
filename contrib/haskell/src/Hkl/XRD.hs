@@ -425,46 +425,50 @@ calibrate c (PoniExt p _) d =  do
 
       f' :: Vector Double -> Double -> NptExt a -> Double
       {-# INLINE f' #-}
-      f' params x (NptExt n m d') = Prelude.foldl (f'' params m (nptWavelength n) d') x (nptEntries n)
-
-      f'' :: Vector Double -> MyMatrix Double -> Length Double -> Detector a -> Double -> NptEntry -> Double
-      {-# INLINE f'' #-}
-      f'' params m w' d' x (NptEntry _ tth _ points) = Prelude.foldl (f''' params m tth w' d') x points
-
-      f''' :: Vector Double -> MyMatrix Double -> Angle Double -> Length Double -> Detector a -> Double -> NptPoint -> Double
-      {-# INLINE f''' #-}
-      f''' params m tth w' detector x point = x + dtth * dtth
+      f' params x (NptExt n m d') =
+        Prelude.foldl (f'' translation r (nptWavelength n) d') x (nptEntries n)
           where
-            dtth = (tth /~ radian) - computeTth params m w' point detector
+            rot1 = params `atIndex` 0
+            rot2 = params `atIndex` 1
+            rot3 = params `atIndex` 2
+            d'' = params `atIndex` 3
+            poni1 = params `atIndex` 4
+            poni2 = params `atIndex` 5
 
-computeTth :: Vector Double -> MyMatrix Double -> Length Double -> NptPoint -> Detector a -> Double
+            (MyMatrix _ m') = changeBase m PyFAIB
+            rotations = Prelude.map (uncurry fromAxisAndAngle)
+                        [ (fromList [0, 0, 1], rot3 *~ radian)
+                        , (fromList [0, 1, 0], rot2 *~ radian)
+                        , (fromList [1, 0, 0], rot1 *~ radian)]
+            -- M1 . R0 = R1
+            r :: Matrix Double
+            r = Prelude.foldl (<>) m' rotations -- pyFAIB
+
+            translation :: Vector Double
+            translation = fromList [-poni1, -poni2, -d'']
+
+      f'' :: Vector Double -> Matrix Double -> Length Double -> Detector a -> Double -> NptEntry -> Double
+      {-# INLINE f'' #-}
+      f'' translation m w' d' x (NptEntry _ tth _ points) = Prelude.foldl (f''' translation m tth w' d') x points
+
+      f''' :: Vector Double -> Matrix Double -> Angle Double -> Length Double -> Detector a -> Double -> NptPoint -> Double
+      {-# INLINE f''' #-}
+      f''' translation m tth w' detector x point = x + dtth * dtth
+          where
+            dtth = (tth /~ radian) - computeTth translation m w' point detector
+
+computeTth :: Vector Double -> Matrix Double -> Length Double -> NptPoint -> Detector a -> Double
 {-# INLINE computeTth #-}
-computeTth params m _w point detector = atan2 (sqrt (x*x + y*y)) (-z)
+computeTth translation m _w point detector = atan2 (sqrt (x*x + y*y)) (-z)
     where
-      rot1 = params `atIndex` 0
-      rot2 = params `atIndex` 1
-      rot3 = params `atIndex` 2
-      d = params `atIndex` 3
-      poni1 = params `atIndex` 4
-      poni2 = params `atIndex` 5
-
-      (MyMatrix _ m') = changeBase m PyFAIB
-      rotations = Prelude.map (uncurry fromAxisAndAngle)
-                  [ (fromList [0, 0, 1], rot3 *~ radian)
-                  , (fromList [0, 1, 0], rot2 *~ radian)
-                  , (fromList [1, 0, 0], rot1 *~ radian)]
-      -- M1 . R0 = R1
-      r :: Matrix Double
-      r = Prelude.foldl (<>) m' rotations -- pyFAIB
-
       xyz :: Vector Double
       xyz = coordinates detector point
 
       xyz' :: Vector Double
-      xyz' = xyz + fromList [-poni1, -poni2, -d]
+      xyz' = xyz + translation
 
       kf :: Vector Double
-      kf = r #> xyz'
+      kf = m #> xyz'
 
       x = kf `atIndex` 0
       y = kf `atIndex` 1
