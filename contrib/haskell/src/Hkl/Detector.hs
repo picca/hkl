@@ -30,7 +30,7 @@ coordinates ZeroD _ = error "No coordinates in a ZeroD detecteor"
 
 -- | Xpad32
 
-coordinates Xpad32 (NptPoint x y) = fromList [g (round y), f (round x), 0]
+coordinates Xpad32 (NptPoint x y) = fromList [d1, d2, d3]
   where
     chipw = 80
     chiph = 120
@@ -57,3 +57,18 @@ coordinates Xpad32 (NptPoint x y) = fromList [g (round y), f (round x), 0]
       where
         module' :: Int
         module' = div j chiph
+
+    interp :: (Int -> Double) -> Double -> Double
+    interp f' p
+      | p0 == p1  = f' p0
+      | otherwise = (p - fromIntegral p0) * (f' p1 - f' p0) + f' p0
+      where
+        p0 :: Int
+        p0 = floor p
+
+        p1 :: Int
+        p1 = ceiling p
+
+    d1 = interp g y
+    d2 = interp f x
+    d3 = 0
