@@ -255,5 +255,5 @@ main_calibration' = do
   print poniextref'
 
   -- integrate each step of the scan
-  -- _ <- mapConcurrently (integrate poniextref') samples
+  _ <- mapConcurrently (integrate poniextref') samples
   return ()
