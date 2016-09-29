@@ -78,7 +78,7 @@ poniToText :: Poni -> Text
 poniToText p = Data.Text.intercalate (Data.Text.pack "\n") (map poniEntryToText p)
 
 poniEntryFromList :: PoniEntry -> [Double] -> PoniEntry
-poniEntryFromList p [rot1, rot2, rot3, d, poni1, poni2] =
+poniEntryFromList p [rot1, rot2, rot3, poni1, poni2, d] =
   p { poniEntryDistance = d *~ meter
     , poniEntryPoni1 = poni1 *~ meter
     , poniEntryPoni2 = poni2 *~ meter
@@ -92,9 +92,9 @@ poniEntryToList :: PoniEntry -> [Double]
 poniEntryToList p = [ poniEntryRot1 p /~ radian
                     , poniEntryRot2 p /~ radian
                     , poniEntryRot3 p /~ radian
-                    , poniEntryDistance p /~ meter
                     , poniEntryPoni1 p /~ meter
                     , poniEntryPoni2 p /~ meter
+                    , poniEntryDistance p /~ meter
                     ]
 
 poniEntryToText :: PoniEntry -> Text

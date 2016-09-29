@@ -38,7 +38,7 @@ import Data.Either
 import Data.List (foldl')
 import Data.Text (Text, unlines, pack, intercalate)
 import Data.Text.IO (readFile, writeFile)
-import Data.Vector.Storable (concat, head)
+import Data.Vector.Storable (concat, head, slice)
 import Hkl.C (geometryDetectorRotationGet)
 import Hkl.Detector
 import Hkl.H5 ( Dataset
@@ -414,7 +414,7 @@ calibrate c (PoniExt p _) d =  do
   npts <- mapM (readXRDCalibrationEntry d) (xrdCalibrationEntries c)
   -- in order to improve computation speed, pre-compute the pixel coodinates.
 
-  let (solution, _p) = minimizeV NMSimplex2 1E-7 3000 box (f (preCalibrate npts)) guess
+  let (solution, _p) = minimizeV NMSimplex2 1E-16 3000 box (f (preCalibrate npts)) guess
   -- mplot $ drop 3 (toColumns p)
   print _p
   return $ PoniExt [poniEntryFromList entry (toList solution)] (MyMatrix HklB (ident 3))
@@ -442,9 +442,6 @@ calibrate c (PoniExt p _) d =  do
             rot1 = params `atIndex` 0
             rot2 = params `atIndex` 1
             rot3 = params `atIndex` 2
-            d'' = params `atIndex` 3
-            poni1 = params `atIndex` 4
-            poni2 = params `atIndex` 5
 
             rotations = Prelude.map (uncurry fromAxisAndAngle)
                         [ (fromList [0, 0, 1], rot3 *~ radian)
@@ -454,7 +451,7 @@ calibrate c (PoniExt p _) d =  do
             rotation = foldl' (<>) (ident 3) rotations
 
             translation :: Vector Double
-            translation = fromList [-poni1, -poni2, -d'']
+            translation = slice 3 3 params
 
       f' :: Matrix Double -> Vector Double -> Double -> ((Double, [(Double, [Vector Double])]), Matrix Double, Detector a)  -> Double
       f' rotation translation x ((_wavelength, entries), m, detector) =
@@ -471,7 +468,7 @@ calibrate c (PoniExt p _) d =  do
       {-# INLINE f''' #-}
       f''' translation r tth x pixel = x + dtth * dtth
           where
-            kf = r #> (pixel + translation)
+            kf = r #> (pixel - translation)
             x' = kf `atIndex` 0
             y' = kf `atIndex` 1
             z' = kf `atIndex` 2
