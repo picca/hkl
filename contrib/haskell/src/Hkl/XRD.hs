@@ -55,7 +55,7 @@ import Hkl.Types
 import Numeric.LinearAlgebra
 import Numeric.GSL.Minimization
 -- import Graphics.Plot
-import Numeric.Units.Dimensional.Prelude (Angle, Length, meter, radian, nano, (/~), (*~))
+import Numeric.Units.Dimensional.Prelude (meter, radian, nano, (/~), (*~))
 import System.Directory (createDirectoryIfMissing)
 import System.FilePath ((</>), dropExtension, takeFileName, takeDirectory)
 import Prelude hiding (concat, lookup, readFile, writeFile, unlines)
@@ -406,6 +406,12 @@ readXRDCalibrationEntry d e =
       idx = xrdCalibrationEntryIdx e
       (Nxs f _ p) = xrdCalibrationEntryNxs e
 
+-- synonyme types use in order to improve the calibration performaces
+
+type NptEntry' = (Double, [Vector Double])
+type Npt' = (Double, [NptEntry'])
+type NptExt' a = (Npt', Matrix Double, Detector a)
+
 calibrate :: XRDCalibration -> PoniExt -> Detector a -> IO PoniExt
 calibrate c (PoniExt p _) d =  do
   let entry = Prelude.last p
@@ -419,24 +425,24 @@ calibrate c (PoniExt p _) d =  do
   print _p
   return $ PoniExt [poniEntryFromList entry (toList solution)] (MyMatrix HklB (ident 3))
     where
-      preCalibrate''' :: Detector a -> NptEntry -> (Double, [Vector Double])
+      preCalibrate''' :: Detector a -> NptEntry -> NptEntry'
       preCalibrate''' detector (NptEntry _ tth _ points) = (tth /~ radian, map (coordinates detector) points)
 
-      preCalibrate'' :: Npt -> Detector a -> (Double, [(Double, [Vector Double])])
+      preCalibrate'' :: Npt -> Detector a -> Npt'
       preCalibrate'' n detector = (nptWavelength n /~ meter, map (preCalibrate''' detector) (nptEntries n))
 
-      preCalibrate' :: NptExt a -> ((Double, [(Double, [Vector Double])]), Matrix Double, Detector a)
+      preCalibrate' :: NptExt a -> NptExt' a
       preCalibrate' (NptExt n m detector) = (preCalibrate'' n detector, m', detector)
         where
           (MyMatrix _ m') = changeBase m PyFAIB
 
-      preCalibrate :: [NptExt a] -> [((Double, [(Double, [Vector Double])]), Matrix Double, Detector a)]
+      preCalibrate :: [NptExt a] -> [NptExt' a]
       preCalibrate ns = map preCalibrate' ns
 
       box :: Vector Double
       box = fromList [0.1, 0.1, 0.1, 0.01, 0.01, 0.01]
 
-      f ::[((Double, [(Double, [Vector Double])]), Matrix Double, Detector a)] -> Vector Double -> Double
+      f :: [NptExt' a] -> Vector Double -> Double
       f ns params = foldl' (f' rotation translation) 0 ns
         where
             rot1 = params `atIndex` 0
@@ -453,14 +459,14 @@ calibrate c (PoniExt p _) d =  do
             translation :: Vector Double
             translation = slice 3 3 params
 
-      f' :: Matrix Double -> Vector Double -> Double -> ((Double, [(Double, [Vector Double])]), Matrix Double, Detector a)  -> Double
+      f' :: Matrix Double -> Vector Double -> Double -> NptExt' a -> Double
       f' rotation translation x ((_wavelength, entries), m, detector) =
         foldl' (f'' translation r) x entries
           where
             r :: Matrix Double
             r = m <> rotation
 
-      f'' :: Vector Double -> Matrix Double -> Double -> (Double, [Vector Double]) -> Double
+      f'' :: Vector Double -> Matrix Double -> Double -> NptEntry'-> Double
       {-# INLINE f'' #-}
       f'' translation r x (tth, pixels) = foldl' (f''' translation r tth) x pixels
 
