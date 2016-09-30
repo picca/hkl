@@ -408,8 +408,8 @@ readXRDCalibrationEntry d e =
 
 -- synonyme types use in order to improve the calibration performaces
 
-type NptEntry' = (Double, [Vector Double])
-type Npt' = (Double, [NptEntry'])
+type NptEntry' = (Double, [Vector Double]) -- tth, detector pixels coordinates
+type Npt' = (Double, [NptEntry']) -- wavelength, [NptEntry']
 type NptExt' a = (Npt', Matrix Double, Detector a)
 
 calibrate :: XRDCalibration -> PoniExt -> Detector a -> IO PoniExt
