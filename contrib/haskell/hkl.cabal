@@ -80,6 +80,7 @@ library
                     , Hkl.Types
                     , Hkl.Types.Parameter
                     , Hkl.XRD
+                    , Hkl.XRD.Calibration
   other-extensions:    CPP
                      , ForeignFunctionInterface
                      , EmptyDataDecls

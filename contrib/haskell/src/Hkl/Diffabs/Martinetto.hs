@@ -18,6 +18,7 @@ import Hkl.MyMatrix
 import Hkl.PyFAI.PoniExt
 import Hkl.Types
 import Hkl.XRD
+import Hkl.XRD.Calibration
 import Hkl.Detector
 
 sampleCalibration :: XRDCalibration
@@ -255,5 +256,5 @@ main_calibration' = do
   print poniextref'
 
   -- integrate each step of the scan
-  _ <- mapConcurrently (integrate poniextref') samples
+  -- _ <- mapConcurrently (integrate poniextref') samples
   return ()

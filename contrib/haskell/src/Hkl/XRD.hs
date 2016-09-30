@@ -17,11 +17,6 @@ module Hkl.XRD
        , getPoniExtRef
          -- integration
        , integrate
-         -- calibration
-       , NptExt(..)
-       , XRDCalibrationEntry(..)
-       , XRDCalibration(..)
-       , calibrate
        ) where
 
 #if __GLASGOW_HASKELL__ < 710
@@ -35,10 +30,9 @@ import Control.Monad.Trans.State.Strict
 import Data.Attoparsec.Text
 import Data.ByteString.Char8 (pack)
 import Data.Either
-import Data.List (foldl')
 import Data.Text (Text, unlines, pack, intercalate)
 import Data.Text.IO (readFile, writeFile)
-import Data.Vector.Storable (concat, head, slice)
+import Data.Vector.Storable (concat, head)
 import Hkl.C (geometryDetectorRotationGet)
 import Hkl.Detector
 import Hkl.H5 ( Dataset
@@ -52,10 +46,7 @@ import Hkl.PyFAI
 import Hkl.MyMatrix
 import Hkl.PyFAI.PoniExt
 import Hkl.Types
-import Numeric.LinearAlgebra
-import Numeric.GSL.Minimization
--- import Graphics.Plot
-import Numeric.Units.Dimensional.Prelude (meter, radian, nano, (/~), (*~))
+import Numeric.Units.Dimensional.Prelude (meter, nano, (/~), (*~))
 import System.Directory (createDirectoryIfMissing)
 import System.FilePath ((</>), dropExtension, takeFileName, takeDirectory)
 import Prelude hiding (concat, lookup, readFile, writeFile, unlines)
@@ -67,11 +58,6 @@ import Pipes.Safe (MonadSafe(..), runSafeT, bracket)
 import System.Exit
 import System.Process
 import Text.Printf (printf)
-
-#if !MIN_VERSION_hmatrix(0, 17, 0)
-(#>) :: Matrix Double -> Vector Double -> Vector Double
-(#>) = (<>)
-#endif
 
 -- | Types
 
@@ -281,7 +267,9 @@ savePonies g = forever $ do
   lift $ createDirectoryIfMissing True (takeDirectory filename)
   lift $ writeFile filename (content (difTomoFramePoniExt f))
   lift $ Prelude.print $ "--> " ++ filename
-  yield $ DifTomoFrame' f filename
+  yield $ DifTomoFrame' { difTomoFrame'DifTomoFrame = f
+                        , difTomoFrame'PoniPath = filename
+                        }
     where
       content :: PoniExt -> Text
       content (PoniExt poni _) = poniToText poni
@@ -294,7 +282,7 @@ data DifTomoFrame'' = DifTomoFrame'' { difTomoFrame''DifTomoFrame' :: DifTomoFra
 
 savePy :: Bins -> Threshold -> Pipe DifTomoFrame' DifTomoFrame'' IO ()
 savePy b t = forever $ do
-  f@(DifTomoFrame' difTomoFrame poniPath) <- await
+  f@(DifTomoFrame' _difTomoFrame poniPath) <- await
   let directory = takeDirectory poniPath
   let scriptPath = dropExtension poniPath ++ ".py"
   let (script, dataPath) = createPy b t f
@@ -302,7 +290,11 @@ savePy b t = forever $ do
   lift $ writeFile scriptPath script
   lift $ Prelude.print $ "--> " ++ scriptPath
   ExitSuccess <- lift $ system (Prelude.unwords ["cd ", directory, "&&",  "python", scriptPath])
-  yield $ DifTomoFrame'' f script scriptPath dataPath
+  yield $ DifTomoFrame'' { difTomoFrame''DifTomoFrame' = f
+                         , difTomoFrame''PySCript = script
+                         , difTomoFrame''PySCriptPath = scriptPath
+                         , difTomoFrame''DataPath = dataPath
+                         }
 
 saveGnuplot' :: Consumer DifTomoFrame'' (StateT [FilePath] IO) r
 saveGnuplot' = forever $ do
@@ -347,136 +339,3 @@ frames' is = do
   forM_ is (\i' -> do
               f <- lift $ Hkl.XRD.row d i'
               yield f)
-
--- | Calibration
-
-data NptExt a = NptExt { nptExtNpt :: Npt
-                       , nptExtMyMatrix :: MyMatrix Double
-                       , nptExtDetector :: Detector a
-                       }
-              deriving (Show)
-
-data XRDCalibrationEntry = XRDCalibrationEntry { xrdCalibrationEntryNxs :: Nxs
-                                               , xrdCalibrationEntryIdx :: Int
-                                               , xrdCalibrationEntryNptPath :: FilePath
-                                               }
-                           deriving (Show)
-
-data XRDCalibration = XRDCalibration { xrdCalibrationName :: Text
-                                     , xrdCalibrationOutputDir :: FilePath
-                                     , xrdCalibrationEntries :: [XRDCalibrationEntry]
-                                     }
-                      deriving (Show)
-
-withDataItem :: MonadSafe m => File -> DataItem -> (Dataset -> m r) -> m r
-withDataItem hid (DataItem name _) = Pipes.Safe.bracket (liftIO acquire') (liftIO . release')
-    where
-      acquire' :: IO Dataset
-      acquire' = openDataset hid (Data.ByteString.Char8.pack name) Nothing
-
-      release' :: Dataset -> IO ()
-      release' = closeDataset
-
-getM :: File -> DataFrameH5Path -> Int -> IO (MyMatrix Double)
-getM f p i' = runSafeT $
-    withDataItem f (h5pGamma p) $ \g' ->
-    withDataItem f (h5pDelta p) $ \d' ->
-    withDataItem f (h5pWavelength p) $ \w' -> liftIO $ do
-      let mu = 0.0
-      let komega = 0.0
-      let kappa = 0.0
-      let kphi = 0.0
-      gamma <- get_position g' 0
-      delta <- get_position d' i'
-      wavelength <- get_position w' 0
-      let source = Source (Data.Vector.Storable.head wavelength *~ nano meter)
-      let positions = Data.Vector.Storable.concat [mu, komega, kappa, kphi, gamma, delta]
-      let geometry = Geometry K6c source positions Nothing
-      let detector = ZeroD
-      m <- geometryDetectorRotationGet geometry detector
-      return (MyMatrix HklB m)
-
-readXRDCalibrationEntry :: Detector a -> XRDCalibrationEntry -> IO (NptExt a)
-readXRDCalibrationEntry d e =
-    withH5File f $ \h5file -> do
-      m <- getM h5file p idx
-      npt <- nptFromFile (xrdCalibrationEntryNptPath e)
-      return (NptExt npt m d)
-    where
-      idx = xrdCalibrationEntryIdx e
-      (Nxs f _ p) = xrdCalibrationEntryNxs e
-
--- synonyme types use in order to improve the calibration performaces
-
-type NptEntry' = (Double, [Vector Double]) -- tth, detector pixels coordinates
-type Npt' = (Double, [NptEntry']) -- wavelength, [NptEntry']
-type NptExt' a = (Npt', Matrix Double, Detector a)
-
-calibrate :: XRDCalibration -> PoniExt -> Detector a -> IO PoniExt
-calibrate c (PoniExt p _) d =  do
-  let entry = Prelude.last p
-  let guess = fromList $ poniEntryToList entry
-  -- read all the NptExt
-  npts <- mapM (readXRDCalibrationEntry d) (xrdCalibrationEntries c)
-  -- in order to improve computation speed, pre-compute the pixel coodinates.
-
-  let (solution, _p) = minimizeV NMSimplex2 1E-16 3000 box (f (preCalibrate npts)) guess
-  -- mplot $ drop 3 (toColumns p)
-  print _p
-  return $ PoniExt [poniEntryFromList entry (toList solution)] (MyMatrix HklB (ident 3))
-    where
-      preCalibrate''' :: Detector a -> NptEntry -> NptEntry'
-      preCalibrate''' detector (NptEntry _ tth _ points) = (tth /~ radian, map (coordinates detector) points)
-
-      preCalibrate'' :: Npt -> Detector a -> Npt'
-      preCalibrate'' n detector = (nptWavelength n /~ meter, map (preCalibrate''' detector) (nptEntries n))
-
-      preCalibrate' :: NptExt a -> NptExt' a
-      preCalibrate' (NptExt n m detector) = (preCalibrate'' n detector, m', detector)
-        where
-          (MyMatrix _ m') = changeBase m PyFAIB
-
-      preCalibrate :: [NptExt a] -> [NptExt' a]
-      preCalibrate ns = map preCalibrate' ns
-
-      box :: Vector Double
-      box = fromList [0.1, 0.1, 0.1, 0.01, 0.01, 0.01]
-
-      f :: [NptExt' a] -> Vector Double -> Double
-      f ns params = foldl' (f' rotation translation) 0 ns
-        where
-            rot1 = params `atIndex` 0
-            rot2 = params `atIndex` 1
-            rot3 = params `atIndex` 2
-
-            rotations = Prelude.map (uncurry fromAxisAndAngle)
-                        [ (fromList [0, 0, 1], rot3 *~ radian)
-                        , (fromList [0, 1, 0], rot2 *~ radian)
-                        , (fromList [1, 0, 0], rot1 *~ radian)]
-
-            rotation = foldl' (<>) (ident 3) rotations
-
-            translation :: Vector Double
-            translation = slice 3 3 params
-
-      f' :: Matrix Double -> Vector Double -> Double -> NptExt' a -> Double
-      f' rotation translation x ((_wavelength, entries), m, detector) =
-        foldl' (f'' translation r) x entries
-          where
-            r :: Matrix Double
-            r = m <> rotation
-
-      f'' :: Vector Double -> Matrix Double -> Double -> NptEntry'-> Double
-      {-# INLINE f'' #-}
-      f'' translation r x (tth, pixels) = foldl' (f''' translation r tth) x pixels
-
-      f''' :: Vector Double -> Matrix Double -> Double -> Double -> Vector Double -> Double
-      {-# INLINE f''' #-}
-      f''' translation r tth x pixel = x + dtth * dtth
-          where
-            kf = r #> (pixel - translation)
-            x' = kf `atIndex` 0
-            y' = kf `atIndex` 1
-            z' = kf `atIndex` 2
-
-            dtth = tth - atan2 (sqrt (x'*x' + y'*y')) (-z')
