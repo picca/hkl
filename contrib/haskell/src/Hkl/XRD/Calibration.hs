@@ -1,4 +1,3 @@
-{-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE OverloadedStrings #-}
 
@@ -149,7 +148,7 @@ calibrate c (PoniExt p _) d =  do
           (MyMatrix _ m') = changeBase m PyFAIB
 
       preCalibrate :: [NptExt a] -> [NptExt' a]
-      preCalibrate ns = Prelude.map preCalibrate' ns
+      preCalibrate = Prelude.map preCalibrate'
 
       box :: Vector Double
       box = Data.Vector.Storable.fromList [0.1, 0.1, 0.1, 0.01, 0.01, 0.01]
