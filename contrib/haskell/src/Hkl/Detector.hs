@@ -1,6 +1,5 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE BangPatterns #-}
 
 module Hkl.Detector
        ( Detector(..)
@@ -10,65 +9,65 @@ module Hkl.Detector
 import Hkl.PyFAI.Npt
 import Numeric.LinearAlgebra
 
+data ImXpadS140
 data Xpad32
 data ZeroD
 
 data Detector a where
+  ImXpadS140 :: Detector ImXpadS140
   Xpad32 :: Detector Xpad32
   ZeroD :: Detector ZeroD
 
 instance Show (Detector a) where
+  show ImXpadS140 = "Detector ImXpadS140"
   show Xpad32 = "Detector Xpad32"
   show ZeroD = "Detector ZeroD"
 
+-- | Xpad Family
+
+type Gap = Double
+type PixelSize = Double
+type Width = Int
+type Index = Int
+
+xpadLine :: PixelSize -> Width -> Index -> Double
+xpadLine s _ 0 = s / 2
+xpadLine s _ 1 = s * 3 / 2
+xpadLine s w i'
+      | idx == 0       = s * (fromIntegral i' + 3 * fromIntegral c - 1 / 4)
+      | idx <= (w - 2) = s * (fromIntegral i' + 3 * fromIntegral c + 1 / 2)
+      | idx == (w - 1) = s * (fromIntegral i' + 3 * fromIntegral c + 5 / 4)
+      | otherwise = error $ "wront coordinates" ++ show i'
+      where
+        (c, idx) = divMod i' w
+
+xpadLineWithGap :: PixelSize -> Width -> Gap -> Index -> Double
+xpadLineWithGap s w g i' = s / 2 + (s * fromIntegral i') + g * fromIntegral (div i' w)
+
+interp :: (Int -> Double) -> Double -> Double
+interp f p
+  | p0 == p1  = f p0
+  | otherwise = (p - fromIntegral p0) * (f p1 - f p0) + f p0
+  where
+    p0 :: Int
+    p0 = floor p
+
+    p1 :: Int
+    p1 = ceiling p
+
+-- compute the coordinated at a given point
+
 coordinates :: Detector a -> NptPoint -> Vector Double
-
--- | ZeroD
-
 coordinates ZeroD (NptPoint 0 0) = fromList [0, 0, 0]
 coordinates ZeroD _ = error "No coordinates in a ZeroD detecteor"
 
--- | Xpad32
+coordinates ImXpadS140 (NptPoint x y) =
+  fromList [ interp (xpadLine 130e-6 120) y
+           , interp (xpadLine 130e-6  80) x
+           , 0
+           ]
 
-coordinates Xpad32 (NptPoint x y) = fromList [d1, d2, d3]
-  where
-    chipw = 80
-    chiph = 120
-    pixel = 130e-6
-    bigPixelwidthFactor = 2.5
-    bigPixelWidth = pixel * bigPixelwidthFactor
-    interModule = 3.57e-3
-
-    -- width
-    f :: Int -> Double
-    f 0 = pixel / 2
-    f 1 = pixel * 3 / 2
-    f i'
-      | idxInChip == 0  = pixel * (fromIntegral i' + 3 * fromIntegral chip - 1 / 4)
-      | idxInChip <= 78 = pixel * (fromIntegral i' + 3 * fromIntegral chip + 1 / 2)
-      | idxInChip == 79 = pixel * (fromIntegral i' + 3 * fromIntegral chip + 5 / 4)
-      | otherwise = error $ "wront coordinates" ++ show i'
-      where
-        (chip, idxInChip) = divMod i' chipw
-
-    -- height
-    g :: Int -> Double
-    g j = pixel / 2.0 + (pixel * fromIntegral j) + interModule * fromIntegral module'
-      where
-        module' :: Int
-        module' = div j chiph
-
-    interp :: (Int -> Double) -> Double -> Double
-    interp f' p
-      | p0 == p1  = f' p0
-      | otherwise = (p - fromIntegral p0) * (f' p1 - f' p0) + f' p0
-      where
-        p0 :: Int
-        p0 = floor p
-
-        p1 :: Int
-        p1 = ceiling p
-
-    d1 = interp g y
-    d2 = interp f x
-    d3 = 0
+coordinates Xpad32 (NptPoint x y) =
+  fromList [ interp (xpadLineWithGap 130e-6 120 3.57e-3) y
+           , interp (xpadLine        130e-6 80) x
+           , 0]

@@ -295,8 +295,8 @@ geometryDetectorRotationGet g d  = do
       f_q <- newForeignPtr c_hkl_quaternion_free =<< c_hkl_geometry_detector_rotation_get_binding geometry detector
       withForeignPtr f_q $ \quaternion -> do
         f_m <- newForeignPtr c_hkl_matrix_free =<< c_hkl_quaternion_to_matrix_binding quaternion
-        withForeignPtr f_m $ \matrix ->
-          buildMatrix' 3 3 (getV matrix)
+        withForeignPtr f_m $ \matrix' ->
+          buildMatrix' 3 3 (getV matrix')
           where
             getV :: Ptr HklMatrix -> (CInt, CInt) -> IO Double
             getV m (i', j') = do
@@ -361,8 +361,8 @@ withDetector d func = do
   withForeignPtr fptr func
 
 newDetector :: Detector a -> IO (ForeignPtr HklDetector)
-newDetector Xpad32 = error "Can not use 2D detector with the hkl library"
 newDetector ZeroD = c_hkl_detector_new 0 >>= newForeignPtr c_hkl_detector_free
+newDetector _ = error "Can not use 2D detector with the hkl library"
 
 foreign import ccall unsafe "hkl.h hkl_detector_new"
   c_hkl_detector_new:: CInt -> IO (Ptr HklDetector)
