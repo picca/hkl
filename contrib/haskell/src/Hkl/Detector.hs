@@ -29,6 +29,8 @@ type Gap = Double
 type Width = Int
 type Index = Int
 
+-- an xpad line is like this (pixel size, index)
+-- | s 0 | s 1 | s 2 | ... |   5/2 s (w - 1)  || 5/2 s w   | s (w + 1) | ...
 xpadLine :: Width -> Index -> Double
 xpadLine w i'
     | i' == 0        = s / 2
