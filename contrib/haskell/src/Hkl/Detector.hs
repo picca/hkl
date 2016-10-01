@@ -26,23 +26,25 @@ instance Show (Detector a) where
 -- | Xpad Family
 
 type Gap = Double
-type PixelSize = Double
 type Width = Int
 type Index = Int
 
-xpadLine :: PixelSize -> Width -> Index -> Double
-xpadLine s _ 0 = s / 2
-xpadLine s _ 1 = s * 3 / 2
-xpadLine s w i'
-      | idx == 0       = s * (fromIntegral i' + 3 * fromIntegral c - 1 / 4)
-      | idx <= (w - 2) = s * (fromIntegral i' + 3 * fromIntegral c + 1 / 2)
-      | idx == (w - 1) = s * (fromIntegral i' + 3 * fromIntegral c + 5 / 4)
-      | otherwise = error $ "wront coordinates" ++ show i'
-      where
-        (c, idx) = divMod i' w
+xpadLine :: Width -> Index -> Double
+xpadLine w i'
+    | i' == 0        = s / 2
+    | i' == 1        = s * 3 / 2
+    | idx == 0       = s * (fromIntegral i' + 3 * fromIntegral c - 1 / 4)
+    | idx <= (w - 2) = s * (fromIntegral i' + 3 * fromIntegral c + 1 / 2)
+    | idx == (w - 1) = s * (fromIntegral i' + 3 * fromIntegral c + 5 / 4)
+    | otherwise = error $ "wront coordinates" ++ show i'
+    where
+      s = 130e-6
+      (c, idx) = divMod i' w
 
-xpadLineWithGap :: PixelSize -> Width -> Gap -> Index -> Double
-xpadLineWithGap s w g i' = s / 2 + (s * fromIntegral i') + g * fromIntegral (div i' w)
+xpadLineWithGap :: Width -> Gap -> Index -> Double
+xpadLineWithGap w g i' = s / 2 + (s * fromIntegral i') + g * fromIntegral (div i' w)
+    where
+      s = 130e-6
 
 interp :: (Int -> Double) -> Double -> Double
 interp f p
@@ -62,12 +64,12 @@ coordinates ZeroD (NptPoint 0 0) = fromList [0, 0, 0]
 coordinates ZeroD _ = error "No coordinates in a ZeroD detecteor"
 
 coordinates ImXpadS140 (NptPoint x y) =
-  fromList [ interp (xpadLine 130e-6 120) y
-           , interp (xpadLine 130e-6  80) x
+  fromList [ interp (xpadLine 120) y
+           , interp (xpadLine  80) x
            , 0
            ]
 
 coordinates Xpad32 (NptPoint x y) =
-  fromList [ interp (xpadLineWithGap 130e-6 120 3.57e-3) y
-           , interp (xpadLine        130e-6 80) x
+  fromList [ interp (xpadLineWithGap 120 3.57e-3) y
+           , interp (xpadLine        80) x
            , 0]
