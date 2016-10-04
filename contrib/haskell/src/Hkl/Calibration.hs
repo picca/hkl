@@ -11,6 +11,7 @@ import Control.Applicative ((<$>), (<*>))
 
 import Control.Exception (bracket)
 import Control.Monad (forM_)
+import Data.ByteString.Char8 (pack)
 import Data.Vector.Storable (concat, head)
 import Numeric.Units.Dimensional.Prelude (meter, nano, (*~))
 import Pipes (Producer, lift, (>->), runEffect, yield)

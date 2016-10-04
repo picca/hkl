@@ -7,7 +7,6 @@ module Hkl.H5
     , get_ub
     , lenH5Dataspace
     , openDataset
-    , pack
     , withH5File
     )
     where

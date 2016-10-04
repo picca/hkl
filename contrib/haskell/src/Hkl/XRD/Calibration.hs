@@ -8,6 +8,7 @@ module Hkl.XRD.Calibration
        ) where
 
 import Control.Monad.IO.Class (liftIO)
+import Data.ByteString.Char8 (pack)
 import Data.List (foldl')
 import Data.Text (Text)
 import Data.Vector.Storable

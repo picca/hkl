@@ -9,6 +9,7 @@ import Prelude hiding (concat, head, print)
 import Control.Applicative ((<$>), (<*>))
 #endif
 
+import Data.ByteString.Char8 (pack)
 import Data.Vector.Storable (concat, head)
 import Control.Exception (bracket)
 import Control.Monad (forM_)

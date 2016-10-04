@@ -22,42 +22,52 @@ module Hkl.XRD
 #if __GLASGOW_HASKELL__ < 710
 import Control.Applicative ((<$>), (<*>))
 #endif
-import Control.Concurrent.Async
+import Control.Concurrent.Async (mapConcurrently)
 import Control.Monad (forM_, forever)
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Morph (hoist)
-import Control.Monad.Trans.State.Strict
-import Data.Attoparsec.Text
-import Data.ByteString.Char8 (pack)
-import Data.Either
-import Data.Text (Text, unlines, pack, intercalate)
+import Control.Monad.Trans.State.Strict (StateT, get, put)
+import Data.Attoparsec.Text (parseOnly)
+import qualified Data.ByteString.Char8 as Char8 (pack)
+import Data.Text (Text)
+import qualified Data.Text as Text (unlines, pack, intercalate)
 import Data.Text.IO (readFile, writeFile)
 import Data.Vector.Storable (concat, head)
-import Hkl.C (geometryDetectorRotationGet)
+import Numeric.Units.Dimensional.Prelude (meter, nano, (/~), (*~))
+import System.Directory (createDirectoryIfMissing)
+import System.Exit ( ExitCode( ExitSuccess ) )
+import System.FilePath ((</>), dropExtension, takeFileName, takeDirectory)
+import System.Process ( system )
+import Text.Printf ( printf )
+
+import Prelude hiding
+    ( concat
+    , head
+    , lookup
+    , readFile
+    , writeFile
+    , unlines
+    )
+import Pipes
+    ( Consumer
+    , Pipe
+    , lift
+    , (>->)
+    , runEffect
+    , await
+    , yield
+    )
+import Pipes.Lift
+import Pipes.Prelude (toListM)
+import Pipes.Safe ( MonadSafe(..), runSafeT, bracket )
+
+import Hkl.C
 import Hkl.Detector
-import Hkl.H5 ( Dataset
-              , File
-              , closeDataset
-              , get_position
-              , lenH5Dataspace
-              , openDataset
-              , withH5File )
+import Hkl.H5
 import Hkl.PyFAI
 import Hkl.MyMatrix
 import Hkl.PyFAI.PoniExt
 import Hkl.Types
-import Numeric.Units.Dimensional.Prelude (meter, nano, (/~), (*~))
-import System.Directory (createDirectoryIfMissing)
-import System.FilePath ((</>), dropExtension, takeFileName, takeDirectory)
-import Prelude hiding (concat, lookup, readFile, writeFile, unlines)
-
-import Pipes (Consumer, Pipe, lift, (>->), runEffect, await, yield)
-import Pipes.Lift
-import Pipes.Prelude (toListM)
-import Pipes.Safe (MonadSafe(..), runSafeT, bracket)
-import System.Exit
-import System.Process
-import Text.Printf (printf)
 
 -- | Types
 
@@ -118,8 +128,8 @@ instance Frame DataFrameH5 where
     gamma <- get_position (h5gamma d) 0
     delta <- get_position (h5delta d) idx
     wavelength <- get_position (h5wavelength d) 0
-    let source = Source (Data.Vector.Storable.head wavelength *~ nano meter)
-    let positions = Data.Vector.Storable.concat [mu, komega, kappa, kphi, gamma, delta]
+    let source = Source (head wavelength *~ nano meter)
+    let positions = concat [mu, komega, kappa, kphi, gamma, delta]
     let geometry =  Geometry K6c source positions Nothing
     let detector = ZeroD
     m <- geometryDetectorRotationGet geometry detector
@@ -177,7 +187,7 @@ integrate ref (XRDSample _ output nxss) = do
 
 integrate' :: PoniExt -> OutputBaseDir -> XrdNxs -> IO ()
 integrate' ref output (XrdNxs b t nxs'@(Nxs f _ _)) = do
-  Prelude.print f
+  print f
   withH5File f $ \h5file ->
       runSafeT $ runEffect $
         withDataFrameH5 h5file nxs' (gen ref) yield
@@ -197,34 +207,34 @@ integrate' ref output (XrdNxs b t nxs'@(Nxs f _ _)) = do
 createPy :: Bins -> Threshold -> DifTomoFrame' -> (Text, FilePath)
 createPy (Bins b) (Threshold t) (DifTomoFrame' f poniPath) = (script, output)
     where
-      script = unlines $
-               map Data.Text.pack ["#!/bin/env python"
-                                  , ""
-                                  , "import numpy"
-                                  , "from h5py import File"
-                                  , "from pyFAI import load"
-                                  , ""
-                                  , "PONIFILE = " ++ show p
-                                  , "NEXUSFILE = " ++ show nxs'
-                                  , "IMAGEPATH = " ++ show i'
-                                  , "IDX = " ++ show idx
-                                  , "N = " ++ show b
-                                  , "OUTPUT = " ++ show output
-                                  , "WAVELENGTH = " ++ show (w /~ meter)
-                                  , "THRESHOLD = " ++ show t
-                                  , ""
-                                  , "ai = load(PONIFILE)"
-                                  , "ai.wavelength = WAVELENGTH"
-                                  , "ai._empty = numpy.nan"
-                                  , "mask_det = ai.detector.mask"
-                                  , "#mask_module = numpy.zeros_like(mask_det)"
-                                  , "#mask_module[0:120, :] = True"
-                                  , "with File(NEXUSFILE) as f:"
-                                  , "    img = f[IMAGEPATH][IDX]"
-                                  , "    mask = numpy.where(img > THRESHOLD, True, False)"
-                                  , "    mask = numpy.logical_or(mask, mask_det)"
-                                  , "    #mask = numpy.logical_or(mask, mask_module)"
-                                  , "    ai.integrate1d(img, N, filename=OUTPUT, unit=\"2th_deg\", error_model=\"poisson\", correctSolidAngle=False, method=\"lut\", mask=mask)"
+      script = Text.unlines $
+               map Text.pack ["#!/bin/env python"
+                             , ""
+                             , "import numpy"
+                             , "from h5py import File"
+                             , "from pyFAI import load"
+                             , ""
+                             , "PONIFILE = " ++ show p
+                             , "NEXUSFILE = " ++ show nxs'
+                             , "IMAGEPATH = " ++ show i'
+                             , "IDX = " ++ show idx
+                             , "N = " ++ show b
+                             , "OUTPUT = " ++ show output
+                             , "WAVELENGTH = " ++ show (w /~ meter)
+                             , "THRESHOLD = " ++ show t
+                             , ""
+                             , "ai = load(PONIFILE)"
+                             , "ai.wavelength = WAVELENGTH"
+                             , "ai._empty = numpy.nan"
+                             , "mask_det = ai.detector.mask"
+                             , "#mask_module = numpy.zeros_like(mask_det)"
+                             , "#mask_module[0:120, :] = True"
+                             , "with File(NEXUSFILE) as f:"
+                             , "    img = f[IMAGEPATH][IDX]"
+                             , "    mask = numpy.where(img > THRESHOLD, True, False)"
+                             , "    mask = numpy.logical_or(mask, mask_det)"
+                             , "    #mask = numpy.logical_or(mask, mask_module)"
+                             , "    ai.integrate1d(img, N, filename=OUTPUT, unit=\"2th_deg\", error_model=\"poisson\", correctSolidAngle=False, method=\"lut\", mask=mask)"
                                   ]
       p = takeFileName poniPath
       (Nxs nxs' _ h5path') = difTomoFrameNxs f
@@ -236,7 +246,7 @@ createPy (Bins b) (Threshold t) (DifTomoFrame' f poniPath) = (script, output)
 -- | Pipes
 
 withDataFrameH5 :: (MonadSafe m) => File -> Nxs -> PoniGenerator -> (DataFrameH5 -> m r) -> m r
-withDataFrameH5 h nxs'@(Nxs _ _ d) gen = Pipes.Safe.bracket (liftIO before) (liftIO . after)
+withDataFrameH5 h nxs'@(Nxs _ _ d) gen = bracket (liftIO before) (liftIO . after)
   where
     -- before :: File -> DataFrameH5Path -> m DataFrameH5
     before :: IO DataFrameH5
@@ -254,7 +264,7 @@ withDataFrameH5 h nxs'@(Nxs _ _ d) gen = Pipes.Safe.bracket (liftIO before) (lif
       closeDataset (h5wavelength d')
 
     -- openDataset' :: File -> DataItem -> IO Dataset
-    openDataset' hid (DataItem name _) = openDataset hid (Data.ByteString.Char8.pack name) Nothing
+    openDataset' hid (DataItem name _) = openDataset hid (Char8.pack name) Nothing
 
 data DifTomoFrame' = DifTomoFrame' { difTomoFrame'DifTomoFrame :: DifTomoFrame
                                    , difTomoFrame'PoniPath :: FilePath
@@ -266,7 +276,7 @@ savePonies g = forever $ do
   let filename = g (difTomoFrameIdx f)
   lift $ createDirectoryIfMissing True (takeDirectory filename)
   lift $ writeFile filename (content (difTomoFramePoniExt f))
-  lift $ Prelude.print $ "--> " ++ filename
+  lift $ print $ "--> " ++ filename
   yield $ DifTomoFrame' { difTomoFrame'DifTomoFrame = f
                         , difTomoFrame'PoniPath = filename
                         }
@@ -288,8 +298,8 @@ savePy b t = forever $ do
   let (script, dataPath) = createPy b t f
   lift $ createDirectoryIfMissing True directory
   lift $ writeFile scriptPath script
-  lift $ Prelude.print $ "--> " ++ scriptPath
-  ExitSuccess <- lift $ system (Prelude.unwords ["cd ", directory, "&&",  "python", scriptPath])
+  lift $ print $ "--> " ++ scriptPath
+  ExitSuccess <- lift $ system (unwords ["cd ", directory, "&&",  "python", scriptPath])
   yield $ DifTomoFrame'' { difTomoFrame''DifTomoFrame' = f
                          , difTomoFrame''PySCript = script
                          , difTomoFrame''PySCriptPath = scriptPath
@@ -307,11 +317,11 @@ saveGnuplot' = forever $ do
   lift $ put $! (curves ++ [dataPath])
     where
       new_content :: [FilePath] -> Text
-      new_content cs = Data.Text.unlines (lines' cs)
+      new_content cs = Text.unlines (lines' cs)
 
       lines' :: [FilePath] -> [Text]
       lines' cs = ["plot"]
-                 ++ [intercalate "\\\n" [ Data.Text.pack (show (takeFileName c)) | c <- cs ]]
+                 ++ [Text.intercalate "\\\n" [ Text.pack (show (takeFileName c)) | c <- cs ]]
                  ++ ["pause -1"]
 
 saveGnuplot :: Consumer DifTomoFrame'' IO r
@@ -330,12 +340,12 @@ frames = do
   d <- await
   (Just n) <- lift $ len d
   forM_ [0..n-1] (\i' -> do
-                     f <- lift $ Hkl.XRD.row d i'
+                     f <- lift $ row d i'
                      yield f)
 
 frames' :: (Frame a) => [Int] -> Pipe a DifTomoFrame IO ()
 frames' is = do
   d <- await
   forM_ is (\i' -> do
-              f <- lift $ Hkl.XRD.row d i'
+              f <- lift $ row d i'
               yield f)
