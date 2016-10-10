@@ -309,9 +309,10 @@ savePy b t = forever $ do
 saveGnuplot' :: Consumer DifTomoFrame'' (StateT [FilePath] IO) r
 saveGnuplot' = forever $ do
   curves <- lift get
-  (DifTomoFrame'' _ _ _ dataPath) <- await
-  let directory = takeDirectory dataPath
+  (DifTomoFrame'' (DifTomoFrame' _ poniPath) _ _ dataPath) <- await
+  let directory = takeDirectory poniPath
   let filename = directory </> "plot.gnuplot"
+  lift . lift $ print $ "gnuplot --> " ++ filename
   lift . lift $ createDirectoryIfMissing True directory
   lift . lift $ writeFile filename (new_content curves)
   lift $ put $! (curves ++ [dataPath])
@@ -320,8 +321,8 @@ saveGnuplot' = forever $ do
       new_content cs = Text.unlines (lines' cs)
 
       lines' :: [FilePath] -> [Text]
-      lines' cs = ["plot"]
-                 ++ [Text.intercalate "\\\n" [ Text.pack (show (takeFileName c)) | c <- cs ]]
+      lines' cs = ["plot \\"]
+                 ++ [intercalate ",\\\n" [ Data.Text.pack (show (takeFileName c) ++ " u 1:2 w l") | c <- cs ]]
                  ++ ["pause -1"]
 
 saveGnuplot :: Consumer DifTomoFrame'' IO r
