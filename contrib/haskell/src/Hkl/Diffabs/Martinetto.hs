@@ -6,9 +6,9 @@ module Hkl.Diffabs.Martinetto
        , main_calibration'
        ) where
 
-import Control.Concurrent.Async
+import Control.Concurrent.Async (mapConcurrently)
 import Data.Char (toUpper)
-import Numeric.LinearAlgebra
+import Numeric.LinearAlgebra (ident)
 import System.FilePath ((</>))
 import Text.Printf (printf)
 

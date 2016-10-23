@@ -22,6 +22,7 @@ import Data.Vector.Storable
 import Numeric.LinearAlgebra
   ( Matrix
   , (<>)
+  , (#>)
   , atIndex
   , ident
   )
@@ -41,12 +42,6 @@ import Hkl.MyMatrix
 import Hkl.PyFAI.PoniExt
 import Hkl.Types
 import Hkl.XRD
-
-
-#if !MIN_VERSION_hmatrix(0, 17, 0)
-(#>) :: Matrix Double -> Vector Double -> Vector Double
-(#>) = (<>)
-#endif
 
 -- | Calibration
 

@@ -5,7 +5,7 @@ module Hkl.MyMatrix
        , toEulerians
        ) where
 
-import Numeric.LinearAlgebra
+import Numeric.LinearAlgebra (Matrix, atIndex, fromLists, inv, (<>))
 import Numeric.Units.Dimensional.Prelude (Angle, (*~), radian)
 
 data Basis = PyFAIB -- the pyFAI (1, 2, 3) detector coordinates
