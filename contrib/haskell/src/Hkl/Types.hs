@@ -50,14 +50,14 @@ data Factory = K6c | Uhv | MedH | MedV
 
 instance Show Factory where
   show K6c = "K6C"
-  show Uhv = "todo"
+  show Uhv = "ZAXIS"
   show MedH = "todo"
   show MedV = "todo"
 
 factoryFromString :: String -> Factory
 factoryFromString s
   | s == "K6C"  = K6c
-  | s == "todo" = Uhv
+  | s == "ZAXIS" = Uhv
   | s == "todo" = MedH
   | s == "todo" = MedV
   | otherwise   = error $ "unknown diffractometer type:" ++ s
