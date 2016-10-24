@@ -229,7 +229,7 @@ createPy (Bins b) (Threshold t) (DifTomoFrame' f poniPath) = (script, output)
                              , "mask_det = ai.detector.mask"
                              , "#mask_module = numpy.zeros_like(mask_det)"
                              , "#mask_module[0:120, :] = True"
-                             , "with File(NEXUSFILE) as f:"
+                             , "with File(NEXUSFILE, mode='r') as f:"
                              , "    img = f[IMAGEPATH][IDX]"
                              , "    mask = numpy.where(img > THRESHOLD, True, False)"
                              , "    mask = numpy.logical_or(mask, mask_det)"
