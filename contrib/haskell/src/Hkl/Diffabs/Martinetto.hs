@@ -21,38 +21,6 @@ import Hkl.XRD
 import Hkl.XRD.Calibration
 import Hkl.Detector
 
-sampleCalibration :: XRDCalibration
-sampleCalibration = XRDCalibration { xrdCalibrationName = "calibration"
-                                   , xrdCalibrationOutputDir = published </> "calibration"
-                                   , xrdCalibrationEntries = entries
-                                   }
-    where
-      beamline :: String
-      beamline = beamlineUpper Diffabs
-
-      image = "scan_data/data_53"
-      gamma = "d13-1-cx1__EX__DIF.1-GAMMA__#1/raw_value"
-      delta = "scan_data/actuator_1_1"
-      wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
-
-      idxs = [3 :: Int, 6, 9, 15, 18, 21, 24, 27, 30, 33, 36, 39, 43]
-
-      h5path' :: NxEntry -> DataFrameH5Path
-      h5path' nxentry =
-          DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
-                          , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
-                          , h5pDelta = DataItem (nxentry </> delta) ExtendDims
-                          , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
-                          }
-
-      entry idx = XRDCalibrationEntry
-                { xrdCalibrationEntryNxs = nxs (published </> "calibration" </> "XRD18keV_26.nxs") "scan_26" h5path'
-                , xrdCalibrationEntryIdx = idx
-                , xrdCalibrationEntryNptPath = published </> "calibration" </> printf "XRD18keV_26.nxs_%02d.npt" idx
-                }
-
-      entries = [ entry idx | idx <- idxs]
-
 -- | Samples
 
 -- project = "/home/experiences/instrumentation/picca/data/99160066"
@@ -69,28 +37,48 @@ beamlineUpper b = [Data.Char.toUpper x | x <- show b]
 nxs :: FilePath -> NxEntry -> (NxEntry -> DataFrameH5Path) -> Nxs
 nxs f e h = Nxs f e (h e)
 
+h5path' :: NxEntry -> DataFrameH5Path
+h5path' nxentry =
+    DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
+                    , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
+                    , h5pDelta = DataItem (nxentry </> delta) ExtendDims
+                    , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
+                    }
+        where
+          beamline :: String
+          beamline = beamlineUpper Diffabs
+
+          image = "scan_data/data_53"
+          gamma = "d13-1-cx1__EX__DIF.1-GAMMA__#1/raw_value"
+          delta = "scan_data/actuator_1_1"
+          wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
+
+sampleCalibration :: XRDCalibration
+sampleCalibration = XRDCalibration { xrdCalibrationName = "calibration"
+                                   , xrdCalibrationOutputDir = published </> "calibration"
+                                   , xrdCalibrationEntries = entries
+                                   }
+    where
+
+      idxs :: [Int]
+      idxs = [3, 6, 9, 15, 18, 21, 24, 27, 30, 33, 36, 39, 43]
+
+      entry :: Int -> XRDCalibrationEntry
+      entry idx = XRDCalibrationEntry
+                { xrdCalibrationEntryNxs = nxs (published </> "calibration" </> "XRD18keV_26.nxs") "scan_26" h5path'
+                , xrdCalibrationEntryIdx = idx
+                , xrdCalibrationEntryNptPath = published </> "calibration" </> printf "XRD18keV_26.nxs_%02d.npt" idx
+                }
+
+      entries :: [XRDCalibrationEntry]
+      entries = [ entry idx | idx <- idxs]
+
+
 sampleRef :: XRDRef
 sampleRef = XRDRef "reference"
             (published </> "calibration")
             (nxs (published </> "calibration" </> "XRD18keV_26.nxs") "scan_26" h5path')
             6 -- BEWARE only the 6th poni was generated with the right Xpad_flat geometry.
-  where
-    beamline :: String
-    beamline = beamlineUpper Diffabs
-
-    image = "scan_data/data_53"
-    gamma = "d13-1-cx1__EX__DIF.1-GAMMA__#1/raw_value"
-    delta = "scan_data/actuator_1_1"
-    wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
-
-    h5path' :: NxEntry -> DataFrameH5Path
-    h5path' nxentry =
-      DataFrameH5Path { h5pImage = DataItem (nxentry </> image) StrictDims
-                      , h5pGamma = DataItem (nxentry </> beamline </> gamma) ExtendDims
-                      , h5pDelta = DataItem (nxentry </> delta) ExtendDims
-                      , h5pWavelength = DataItem (nxentry </> beamline </> wavelength) StrictDims
-                      }
-
 
 h5path :: NxEntry -> DataFrameH5Path
 h5path nxentry =
@@ -113,6 +101,13 @@ bins = Bins 8000
 
 threshold :: Threshold
 threshold = Threshold 800
+
+ceo2 :: XRDSample
+ceo2 = XRDSample "CeO2"
+       (published </> "CeO2")
+       [ XrdNxs bins threshold n | n <-
+         [ nxs (published </> "calibration" </> "XRD18keV_26.nxs") "scan_26" h5path' ]
+       ]
 
 n27t2 :: XRDSample
 n27t2 = XRDSample "N27T2"
@@ -223,8 +218,8 @@ main_martinetto = do
   -- lire le ou les ponis de référence ainsi que leur géométrie
   -- associée.
 
-  let samples = [n27t2, r34n1, r23, r18, a2, a3, d2, d3, r11, d16, k9a2]
-  -- let samples = [n27t2]
+  -- let samples = [ceo2, n27t2, r34n1, r23, r18, a2, a3, d2, d3, r11, d16, k9a2]
+  let samples = [ceo2]
 
   p <- getPoniExtRef sampleRef
 
@@ -239,8 +234,8 @@ main_martinetto = do
 
 main_calibration' :: IO ()
 main_calibration' = do
-  -- let samples = [n27t2, r34n1, r23, r18, a2, a3, d2, d3, r11, d16, k9a2]
-  let samples = [n27t2]
+  -- let samples = [ceo2, n27t2, r34n1, r23, r18, a2, a3, d2, d3, r11, d16, k9a2]
+  let samples = [ceo2]
 
   p <- getPoniExtRef sampleRef
 
@@ -256,5 +251,5 @@ main_calibration' = do
   print poniextref'
 
   -- integrate each step of the scan
-  -- _ <- mapConcurrently (integrate poniextref') samples
+  _ <- mapConcurrently (integrate poniextref') samples
   return ()
