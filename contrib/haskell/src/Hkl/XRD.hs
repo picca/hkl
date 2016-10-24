@@ -322,7 +322,7 @@ saveGnuplot' = forever $ do
 
       lines' :: [FilePath] -> [Text]
       lines' cs = ["plot \\"]
-                 ++ [intercalate ",\\\n" [ Data.Text.pack (show (takeFileName c) ++ " u 1:2 w l") | c <- cs ]]
+                 ++ [Text.intercalate ",\\\n" [ Text.pack (show (takeFileName c) ++ " u 1:2 w l") | c <- cs ]]
                  ++ ["pause -1"]
 
 saveGnuplot :: Consumer DifTomoFrame'' IO r
