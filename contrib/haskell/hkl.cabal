@@ -42,8 +42,8 @@ executable ghkl
   -- ghc-options:         -Wall -Werror
   ghc-prof-options:    -fprof-auto "-with-rtsopts=-N -p -s -h -i0.1"
 
-executable xrf
-  main-is:             src/xrf.hs
+executable xrd
+  main-is:             src/xrd.hs
   build-depends:       attoparsec
                      , base >= 4.6 && < 4.9
                      , bindings-hdf5 >= 1.8.12
