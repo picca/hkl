@@ -118,15 +118,6 @@ n27t2 = XRDSample "N27T2"
           ]
         ]
 
-r34n1 :: XRDSample
-r34n1 = XRDSample "R34N1"
-        (published </> "R34N1")
-        [ XrdNxs bins threshold n | n <-
-          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R34N1_28.nxs") "scan_28" h5path
-          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R34N1_37.nxs") "scan_37" h5path
-          ]
-        ]
-
 r23 :: XRDSample
 r23 = XRDSample "R23"
         (published </> "R23")
@@ -164,6 +155,23 @@ a2 = XRDSample "A2"
          ]
         ]
 
+a26 :: XRDSample
+a26 = XRDSample "A26"
+      (published </> "A26")
+      [ XrdNxs bins threshold n | n <-
+        [ nxs (project </> "2016" </> "Run2" </> "2016-03-26" </> "A26_50.nxs") "scan_50" h5path
+        , nxs (project </> "2016" </> "Run2" </> "2016-03-26" </> "A26_51.nxs") "scan_51" h5path
+        , nxs (project </> "2016" </> "Run2" </> "2016-03-26" </> "A26_52.nxs") "scan_52" h5path
+        , nxs (project </> "2016" </> "Run2" </> "2016-03-26" </> "A26_53.nxs") "scan_53" h5path
+        , nxs (project </> "2016" </> "Run2" </> "2016-03-26" </> "A26_54.nxs") "scan_54" h5path
+        , nxs (project </> "2016" </> "Run2" </> "2016-03-26" </> "A26_55.nxs") "scan_55" h5path
+        , nxs (project </> "2016" </> "Run2" </> "2016-03-26" </> "A26_56.nxs") "scan_56" h5path
+        , nxs (project </> "2016" </> "Run2" </> "2016-03-26" </> "A26_57.nxs") "scan_57" h5path
+        , nxs (project </> "2016" </> "Run2" </> "2016-03-26" </> "A26_58.nxs") "scan_58" h5path
+        , nxs (project </> "2016" </> "Run2" </> "2016-03-26" </> "A26_59.nxs") "scan_59" h5path
+        ]
+      ]
+
 d2 :: XRDSample
 d2 = XRDSample "D2"
         (published </> "D2")
@@ -181,6 +189,16 @@ d3 = XRDSample "D3"
           , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "D3_15.nxs") "scan_15" h5path
           ]
         ]
+
+f30 :: XRDSample
+f30 = XRDSample "F30"
+      (published </> "F30")
+      [ XrdNxs bins threshold n | n <-
+        [ nxs (project </> "2016" </> "Run2" </> "2016-03-26" </> "F30_11.nxs") "scan_11" h5path
+        , nxs (project </> "2016" </> "Run2" </> "2016-03-26" </> "F30_12.nxs") "scan_12" h5path
+        , nxs (project </> "2016" </> "Run2" </> "2016-03-26" </> "F30_13.nxs") "scan_13" h5path
+        ]
+      ]
 
 r11 :: XRDSample
 r11 = XRDSample "R11"
@@ -211,6 +229,25 @@ k9a2 = XRDSample "K9A2"
           ]
         ]
 
+r34n1 :: XRDSample
+r34n1 = XRDSample "R34N1"
+        (published </> "R34N1")
+        [ XrdNxs bins threshold n | n <-
+          [ nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R34N1_28.nxs") "scan_28" h5path
+          , nxs (project </> "2016" </> "Run2" </> "2016-03-27" </> "R34N1_37.nxs") "scan_37" h5path
+          ]
+        ]
+
+r35n1 :: XRDSample
+r35n1 = XRDSample "R35N1"
+        (published </> "R35N1")
+        [ XrdNxs bins threshold n | n <-
+          [ nxs (project </> "2016" </> "Run2" </> "2016-03-26" </> "R35N1_25.nxs") "scan_19" h5path
+          , nxs (project </> "2016" </> "Run2" </> "2016-03-26" </> "R35N1_26.nxs") "scan_20" h5path
+          , nxs (project </> "2016" </> "Run2" </> "2016-03-26" </> "R35N1_27.nxs") "scan_21" h5path
+          ]
+        ]
+
 -- | Main
 
 main_martinetto :: IO ()
@@ -218,7 +255,7 @@ main_martinetto = do
   -- lire le ou les ponis de référence ainsi que leur géométrie
   -- associée.
 
-  -- let samples = [ceo2, n27t2, r34n1, r23, r18, a2, a3, d2, d3, r11, d16, k9a2]
+  -- let samples = [ceo2, a2, a3, a26, d2, d3, d16, f30, k9a2, n27t2, r11, r18, r23, r34n1, r35n1]
   let samples = [ceo2]
 
   p <- getPoniExtRef sampleRef
@@ -234,8 +271,10 @@ main_martinetto = do
 
 main_calibration' :: IO ()
 main_calibration' = do
-  -- let samples = [ceo2, n27t2, r34n1, r23, r18, a2, a3, d2, d3, r11, d16, k9a2]
-  let samples = [ceo2]
+  let samples = [ceo2, a2, a3, a26, d2, d3, d16, k9a2, n27t2, r11, r18, r23, r34n1, r35n1]
+  -- # need to run f30 by itself because of a segfault in the hkl library
+  -- let samples = [f30]
+  -- let samples = [ceo2]
 
   p <- getPoniExtRef sampleRef
 
