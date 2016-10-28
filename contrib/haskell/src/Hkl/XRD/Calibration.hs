@@ -46,8 +46,9 @@ import Hkl.XRD
 (#>) :: Matrix Double -> Vector Double -> Vector Double
 (#>) = (<>)
 #else
-import Numeric.LinearAlgebra (#>)
+import Numeric.LinearAlgebra ((#>))
 #endif
+
 -- | Calibration
 
 data NptExt a = NptExt { nptExtNpt :: Npt
