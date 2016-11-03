@@ -1,5 +1,6 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE StandaloneDeriving #-}
 
 module Hkl.Detector
        ( Detector(..)
@@ -18,10 +19,7 @@ data Detector a where
   Xpad32 :: Detector Xpad32
   ZeroD :: Detector ZeroD
 
-instance Show (Detector a) where
-  show ImXpadS140 = "Detector ImXpadS140"
-  show Xpad32 = "Detector Xpad32"
-  show ZeroD = "Detector ZeroD"
+deriving instance Show (Detector a)
 
 -- | Xpad Family
 
