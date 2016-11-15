@@ -92,6 +92,7 @@ library
                     , Hkl.Detector
                     , Hkl.Diffabs
                     , Hkl.Diffabs.Martinetto
+                    , Hkl.Diffabs.IRDRx
                     , Hkl.Engine
                     , Hkl.H5
                     , Hkl.MyMatrix

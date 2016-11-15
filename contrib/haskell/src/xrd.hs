@@ -6,4 +6,5 @@ import Hkl
 main :: IO ()
 -- main = replicateM_ 1 main'
 -- main = replicateM_ 1 main_martinetto
-main = replicateM_ 1 main_calibration'
+-- main = replicateM_ 1 main_calibration'
+main = replicateM_ 1 main_irdrx'
