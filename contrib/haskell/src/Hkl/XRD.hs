@@ -17,6 +17,7 @@ module Hkl.XRD
        , getPoniExtRef
          -- integration
        , integrate
+       , integrateMulti
        ) where
 
 #if __GLASGOW_HASKELL__ < 710
@@ -28,6 +29,7 @@ import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Morph (hoist)
 import Control.Monad.Trans.State.Strict (StateT, get, put)
 import Data.Attoparsec.Text (parseOnly)
+import qualified Data.List as List (intercalate)
 import qualified Data.ByteString.Char8 as Char8 (pack)
 import Data.Text (Text)
 import qualified Data.Text as Text (unlines, pack, intercalate)
@@ -86,13 +88,14 @@ data XRDRef = XRDRef SampleName OutputBaseDir Nxs Int
 
 data XRDSample = XRDSample SampleName OutputBaseDir [XrdNxs]-- ^ nxss
 
-data XrdNxs = XrdNxs Bins Threshold Nxs deriving (Show)
+data XrdNxs = XrdNxs Bins Bins Threshold Nxs deriving (Show)
 
 data Nxs = Nxs FilePath NxEntry DataFrameH5Path deriving (Show)
 
 data DifTomoFrame =
   DifTomoFrame { difTomoFrameNxs :: Nxs -- ^ nexus of the current frame
                , difTomoFrameIdx :: Int -- ^ index of the current frame
+               , difTomoFrameEOF :: Bool -- ^ is it the eof of the stream
                , difTomoFrameGeometry :: Geometry -- ^ diffractometer geometry
                , difTomoFramePoniExt :: PoniExt -- ^ the ref poniext
                } deriving (Show)
@@ -120,6 +123,8 @@ instance Frame DataFrameH5 where
   len d =  lenH5Dataspace (h5delta d)
 
   row d idx = do
+    (Just n) <- len d
+    let eof = n - 1 == idx
     let nxs' = h5nxs d
     let mu = 0.0
     let komega = 0.0
@@ -136,6 +141,7 @@ instance Frame DataFrameH5 where
     poniext <- ponigen d (MyMatrix HklB m) idx
     return DifTomoFrame { difTomoFrameNxs = nxs'
                         , difTomoFrameIdx = idx
+                        , difTomoFrameEOF = eof
                         , difTomoFrameGeometry = geometry
                         , difTomoFramePoniExt = poniext
                         }
@@ -186,7 +192,7 @@ integrate ref (XRDSample _ output nxss) = do
   return ()
 
 integrate' :: PoniExt -> OutputBaseDir -> XrdNxs -> IO ()
-integrate' ref output (XrdNxs b t nxs'@(Nxs f _ _)) = do
+integrate' ref output (XrdNxs b _ t nxs'@(Nxs f _ _)) = do
   print f
   withH5File f $ \h5file ->
       runSafeT $ runEffect $
@@ -195,6 +201,28 @@ integrate' ref output (XrdNxs b t nxs'@(Nxs f _ _)) = do
                         >-> savePonies (pgen output f)
                         >-> savePy b t
                         >-> saveGnuplot)
+  where
+    gen :: PoniExt -> Pose -> Int -> IO PoniExt
+    gen ref' m _idx = return $ setPose ref' m
+
+    pgen :: OutputBaseDir -> FilePath -> Int -> FilePath
+    pgen o nxs'' idx = o </> scandir </>  scandir ++ printf "_%02d.poni" idx
+      where
+        scandir = (dropExtension . takeFileName) nxs''
+
+integrateMulti :: PoniExt -> XRDSample -> IO ()
+integrateMulti ref (XRDSample _ output nxss) =
+  mapM_ (integrateMulti' ref output) nxss
+
+integrateMulti' :: PoniExt -> OutputBaseDir -> XrdNxs -> IO ()
+integrateMulti' ref output (XrdNxs _ mb t nxs'@(Nxs f _ _)) = do
+  print f
+  withH5File f $ \h5file ->
+      runSafeT $ runEffect $
+        withDataFrameH5 h5file nxs' (gen ref) yield
+        >-> hoist lift (frames
+                        >-> savePonies (pgen output f)
+                        >-> saveMultiGeometry mb t)
   where
     gen :: PoniExt -> Pose -> Int -> IO PoniExt
     gen ref' m _idx = return $ setPose ref' m
@@ -244,6 +272,48 @@ createPy (Bins b) (Threshold t) (DifTomoFrame' f poniPath) = (script, output)
       (DataItem i' _) = h5pImage h5path'
       idx = difTomoFrameIdx f
       output = (dropExtension . takeFileName) poniPath ++ ".dat"
+      (Geometry _ (Source w) _ _) = difTomoFrameGeometry f
+
+createMultiPy :: Bins -> Threshold -> DifTomoFrame' -> [FilePath] -> (Text, FilePath)
+createMultiPy (Bins b) (Threshold t) (DifTomoFrame' f _) ponies = (script, output)
+    where
+      script = Text.unlines $
+               map Text.pack ["#!/bin/env python"
+                             , ""
+                             , "import numpy"
+                             , "from h5py import File"
+                             , "from pyFAI.multi_geometry import MultiGeometry"
+                             , ""
+                             , "NEXUSFILE = " ++ show nxs'
+                             , "IMAGEPATH = " ++ show i'
+                             , "BINS = " ++ show b
+                             , "OUTPUT = " ++ show output
+                             , "WAVELENGTH = " ++ show (w /~ meter)
+                             , "THRESHOLD = " ++ show t
+                             , ""
+                             , "# Load all images"
+                             , "PONIES = [" ++ (List.intercalate ",\n" (map show ponies)) ++ "]"
+                             , ""
+                             , "# Read all the images"
+                             , "with File(NEXUSFILE, mode='r') as f:"
+                             , "    imgs = f[IMAGEPATH][:]"
+                             , ""
+                             , "# Compute the mask"
+                             , "mask = numpy.zeros_like(imgs[0], dtype=bool)"
+                             , "for img in imgs:"
+                             , "    mask_t = numpy.where(img > THRESHOLD, True, False)"
+                             , "    mask = numpy.logical_or(mask, mask_t)"
+                             , ""
+                             , "# Integration multi-geometry 1D"
+                             , "mg = MultiGeometry(PONIES, unit=\"2th_deg\", radial_range=(20,80))"
+                             , "p = mg.integrate1d(imgs, BINS, lst_mask=mask)"
+                             , ""
+                             , "# Save the datas"
+                             , "numpy.savetxt(OUTPUT, numpy.array(p).T)"
+                             ]
+      (Nxs nxs' _ h5path') = difTomoFrameNxs f
+      (DataItem i' _) = h5pImage h5path'
+      output = "multi.dat"
       (Geometry _ (Source w) _ _) = difTomoFrameGeometry f
 
 -- | Pipes
@@ -331,13 +401,29 @@ saveGnuplot' = forever $ do
 saveGnuplot :: Consumer DifTomoFrame'' IO r
 saveGnuplot = evalStateP [] saveGnuplot'
 
--- createGnuplot :: FilePath -> Text
--- createGnuplot f = Data.Text.unline $
---                   map Data.Text.pack ["plot for [i=0:" ++ n ++ "] sprintf(\"" ++ N27T2_14_ ++ "%02d.dat\", i) u 1:2 w l"
---                                      , "pause -1"
---                                      ]
---                       where
---                         n =
+-- PyFAI MultiGeometry
+
+saveMulti' :: Bins -> Threshold -> Consumer DifTomoFrame' (StateT [FilePath] IO) r
+saveMulti' b t = forever $ do
+  ponies <- lift get
+  f'@(DifTomoFrame' f poniPath) <- await
+  let directory = takeDirectory poniPath
+  let filename = directory </> "multi.py"
+  let (script, _) = createMultiPy b t f' ponies
+  lift . lift $ print $ "multi integrator --> " ++ filename
+  lift . lift $ createDirectoryIfMissing True directory
+  lift . lift $ writeFile filename script
+  lift . lift $ go directory filename (difTomoFrameEOF f)
+  lift $ put $! (ponies ++ [poniPath])
+      where
+        go :: FilePath -> FilePath -> Bool -> IO ()
+        go d s True = do
+          ExitSuccess <- system (unwords ["cd ", d, "&&",  "python", s])
+          return ()
+        go _ _ False = return ()
+
+saveMultiGeometry :: Bins -> Threshold -> Consumer DifTomoFrame' IO r
+saveMultiGeometry b t = evalStateP [] (saveMulti' b t)
 
 frames :: (Frame a) => Pipe a DifTomoFrame IO ()
 frames = do

@@ -4,7 +4,8 @@ import Control.Monad
 import Hkl
 
 main :: IO ()
--- main = replicateM_ 1 main'
--- main = replicateM_ 1 main_martinetto
--- main = replicateM_ 1 main_calibration'
-main = replicateM_ 1 main_irdrx'
+main = do
+  -- replicateM_ 1 main_irdrx'
+  -- main = replicateM_ 1 main'
+  replicateM_ 1 martinetto'
+  -- main = replicateM_ 1 main_calibration'
