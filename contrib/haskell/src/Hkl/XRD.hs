@@ -305,7 +305,7 @@ createMultiPy (Bins b) (Threshold t) (DifTomoFrame' f _) ponies = (script, outpu
                              , "    mask = numpy.logical_or(mask, mask_t)"
                              , ""
                              , "# Integration multi-geometry 1D"
-                             , "mg = MultiGeometry(PONIES, unit=\"2th_deg\", radial_range=(20,80))"
+                             , "mg = MultiGeometry(PONIES, unit=\"2th_deg\", radial_range=(0,80))"
                              , "p = mg.integrate1d(imgs, BINS, lst_mask=mask)"
                              , ""
                              , "# Save the datas"

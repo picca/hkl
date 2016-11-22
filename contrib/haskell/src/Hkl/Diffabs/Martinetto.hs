@@ -6,6 +6,7 @@ module Hkl.Diffabs.Martinetto
        , martinetto'
        ) where
 
+import Control.Concurrent (setNumCapabilities)
 import Control.Concurrent.Async (mapConcurrently)
 import Data.Char (toUpper)
 import Numeric.LinearAlgebra (ident)
@@ -293,5 +294,6 @@ martinetto' = do
   print poniextref'
 
   -- integrate each step of the scan
+  setNumCapabilities 2
   _ <- mapM_ (integrateMulti poniextref') samples
   return ()
