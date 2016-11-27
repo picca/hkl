@@ -192,8 +192,8 @@ HklGeometryList *hkl_engine_pseudo_axis_values_set(HklEngine *self,
 		fprintf(stream, " %f", values[i]);
 	fprintf(stream, "], n_values: %d unit_type: %d, error: %p)", n_values, unit_type, error);
 
-	hkl_geometry_fprintf(stream, self->geometry);
-	hkl_sample_fprintf(stream, self->sample);
+	hkl_geometry_fprintf(stream, self->engines->geometry);
+	hkl_sample_fprintf(stream, self->engines->sample);
 	hkl_engine_fprintf(stream, self);
 #endif
 	for(size_t i=0; i<n_values; ++i){
