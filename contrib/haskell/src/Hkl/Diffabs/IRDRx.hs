@@ -2,11 +2,10 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Hkl.Diffabs.IRDRx
-       ( main_irdrx
-       , main_irdrx'
-       ) where
+       ( mainIRDRx ) where
 
 import Control.Concurrent.Async (mapConcurrently)
+import Data.Array.Repa (DIM1, ix1)
 import Data.Char (toUpper)
 import Numeric.LinearAlgebra (ident)
 import System.FilePath ((</>))
@@ -79,8 +78,8 @@ sampleCalibration = XRDCalibration { xrdCalibrationName = "calibration"
       entries = [ entry idx | idx <- idxs]
 
 
-bins :: Bins
-bins = Bins 1000
+bins :: DIM1
+bins = ix1 1000
 
 multibins :: Bins
 multibins = Bins 10000
@@ -104,43 +103,16 @@ lab6 = XRDSample "LaB6"
 
 -- | Main
 
-main_irdrx :: IO ()
-main_irdrx = do
-  -- lire le ou les ponis de référence ainsi que leur géométrie
-  -- associée.
-
-  -- let samples = [ceo2, a2, a3, a26, d2, d3, d16, f30, k9a2, n27t2, r11, r18, r23, r34n1, r35n1]
+mainIRDRx :: IO ()
+mainIRDRx = do
   let samples = [lab6]
 
   p <- getPoniExtRef sampleRef
 
-  -- flip the ref poni in order to fit the reality
-  let poniextref = Hkl.PyFAI.PoniExt.flip p
-  -- let poniextref = p
-  -- integrate each step of the scan
-  _ <- mapConcurrently (integrate poniextref) samples
-
-  -- plot de la figure. (script python ou autre ?)
-  return ()
-
-main_irdrx' :: IO ()
-main_irdrx' = do
-  -- # need to run f30 by itself because of a segfault in the hkl library
-  -- let samples = [f30]
-  let samples = [lab6]
-
-  p <- getPoniExtRef sampleRef
-
-  -- flip the ref poni in order to fit the reality
-  -- let poniextref = p
-  -- let poniextref = setPose p (MyMatrix HklB (ident 3))
   let poniextref = setPose (Hkl.PyFAI.PoniExt.flip p) (MyMatrix HklB (ident 3))
 
   -- full calibration
   poniextref' <- calibrate sampleCalibration poniextref ImXpadS140
-  -- print p
-  print poniextref
-  print poniextref'
 
   -- integrate each step of the scan
   _ <- mapConcurrently (integrate poniextref') samples

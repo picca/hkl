@@ -8,6 +8,7 @@ module Hkl.Diffabs.Martinetto
 
 import Control.Concurrent (setNumCapabilities)
 import Control.Concurrent.Async (mapConcurrently)
+import Data.Array.Repa (DIM1, ix1)
 import Data.Char (toUpper)
 import Numeric.LinearAlgebra (ident)
 import System.FilePath ((</>))
@@ -97,8 +98,8 @@ h5path nxentry =
     delta = "scan_data/actuator_1_1"
     wavelength = "D13-1-C03__OP__MONO__#1/wavelength"
 
-bins :: Bins
-bins = Bins 8000
+bins :: DIM1
+bins = ix1 8000
 
 multibins :: Bins
 multibins = Bins 25000

@@ -5,7 +5,7 @@ import Hkl
 
 main :: IO ()
 main = do
-  -- replicateM_ 1 main_irdrx'
+  replicateM_ 1 mainIRDRx
   -- main = replicateM_ 1 main'
-  replicateM_ 1 martinetto'
+  -- replicateM_ 1 martinetto'
   -- main = replicateM_ 1 main_calibration'

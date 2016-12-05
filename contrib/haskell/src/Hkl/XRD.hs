@@ -28,7 +28,7 @@ import Control.Monad (forM_, forever)
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Morph (hoist)
 import Control.Monad.Trans.State.Strict (StateT, get, put)
-import Data.Array.Repa (Shape, DIM1)
+import Data.Array.Repa (Shape, DIM1, size)
 import Data.Attoparsec.Text (parseOnly)
 import qualified Data.List as List (intercalate)
 import qualified Data.ByteString.Char8 as Char8 (pack)
@@ -89,7 +89,7 @@ data XRDRef = XRDRef SampleName OutputBaseDir Nxs Int
 
 data XRDSample = XRDSample SampleName OutputBaseDir [XrdNxs] -- ^ nxss
 
-data XrdNxs = XrdNxs Bins Bins Threshold Nxs deriving (Show)
+data XrdNxs = XrdNxs DIM1 Bins Threshold Nxs deriving (Show)
 
 data Nxs = Nxs FilePath NxEntry DataFrameH5Path deriving (Show)
 
@@ -146,6 +146,21 @@ instance Frame DataFrameH5 where
                         , difTomoFrameGeometry = geometry
                         , difTomoFramePoniExt = poniext
                         }
+
+frames :: (Frame a) => Pipe a (DifTomoFrame DIM1) IO ()
+frames = do
+  d <- await
+  (Just n) <- lift $ len d
+  forM_ [0..n-1] (\i' -> do
+                     f <- lift $ row d i'
+                     yield f)
+
+frames' :: (Frame a) => [Int] -> Pipe a (DifTomoFrame DIM1) IO ()
+frames' is = do
+  d <- await
+  forM_ is (\i' -> do
+              f <- lift $ row d i'
+              yield f)
 
 -- {-# ANN module "HLint: ignore Use camelCase" #-}
 
@@ -233,8 +248,8 @@ integrateMulti' ref output (XrdNxs _ mb t nxs'@(Nxs f _ _)) = do
       where
         scandir = (dropExtension . takeFileName) nxs''
 
-createPy :: (Shape sh) => Bins -> Threshold -> (DifTomoFrame' sh) -> (Text, FilePath)
-createPy (Bins b) (Threshold t) (DifTomoFrame' f poniPath) = (script, output)
+createPy :: (Shape sh) => DIM1 -> Threshold -> (DifTomoFrame' sh) -> (Text, FilePath)
+createPy b (Threshold t) (DifTomoFrame' f poniPath) = (script, output)
     where
       script = Text.unlines $
                map Text.pack ["#!/bin/env python"
@@ -247,7 +262,7 @@ createPy (Bins b) (Threshold t) (DifTomoFrame' f poniPath) = (script, output)
                              , "NEXUSFILE = " ++ show nxs'
                              , "IMAGEPATH = " ++ show i'
                              , "IDX = " ++ show idx
-                             , "N = " ++ show b
+                             , "N = " ++ show (size b)
                              , "OUTPUT = " ++ show output
                              , "WAVELENGTH = " ++ show (w /~ meter)
                              , "THRESHOLD = " ++ show t
@@ -364,7 +379,7 @@ data DifTomoFrame'' sh = DifTomoFrame'' { difTomoFrame''DifTomoFrame' :: DifTomo
                                         , difTomoFrame''DataPath :: FilePath
                                         }
 
-savePy :: (Shape sh) => Bins -> Threshold -> Pipe (DifTomoFrame' sh) (DifTomoFrame'' sh) IO ()
+savePy :: (Shape sh) => DIM1 -> Threshold -> Pipe (DifTomoFrame' sh) (DifTomoFrame'' sh) IO ()
 savePy b t = forever $ do
   f@(DifTomoFrame' _difTomoFrame poniPath) <- await
   let directory = takeDirectory poniPath
@@ -425,18 +440,3 @@ saveMulti' b t = forever $ do
 
 saveMultiGeometry :: (Shape sh) => Bins -> Threshold -> Consumer (DifTomoFrame' sh) IO r
 saveMultiGeometry b t = evalStateP [] (saveMulti' b t)
-
-frames :: (Frame a) => Pipe a (DifTomoFrame DIM1) IO ()
-frames = do
-  d <- await
-  (Just n) <- lift $ len d
-  forM_ [0..n-1] (\i' -> do
-                     f <- lift $ row d i'
-                     yield f)
-
-frames' :: (Frame a) => [Int] -> Pipe a (DifTomoFrame DIM1) IO ()
-frames' is = do
-  d <- await
-  forM_ is (\i' -> do
-              f <- lift $ row d i'
-              yield f)
