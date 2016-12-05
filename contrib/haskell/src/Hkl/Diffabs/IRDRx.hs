@@ -81,8 +81,8 @@ sampleCalibration = XRDCalibration { xrdCalibrationName = "calibration"
 bins :: DIM1
 bins = ix1 1000
 
-multibins :: Bins
-multibins = Bins 10000
+multibins :: DIM1
+multibins = ix1 10000
 
 threshold :: Threshold
 threshold = Threshold 5000

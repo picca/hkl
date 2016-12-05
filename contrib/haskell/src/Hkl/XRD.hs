@@ -9,7 +9,6 @@ module Hkl.XRD
        , DataFrameH5Path(..)
        , NxEntry
        , Nxs(..)
-       , Bins(..)
        , Threshold(..)
        , XrdNxs(..)
        , PoniExt(..)
@@ -79,9 +78,6 @@ type OutputBaseDir = FilePath
 type PoniGenerator = Pose -> Int -> IO PoniExt
 type SampleName = String
 
-data Bins = Bins Int
-          deriving (Show)
-
 data Threshold = Threshold Int
                deriving (Show)
 
@@ -89,7 +85,7 @@ data XRDRef = XRDRef SampleName OutputBaseDir Nxs Int
 
 data XRDSample = XRDSample SampleName OutputBaseDir [XrdNxs] -- ^ nxss
 
-data XrdNxs = XrdNxs DIM1 Bins Threshold Nxs deriving (Show)
+data XrdNxs = XrdNxs DIM1 DIM1 Threshold Nxs deriving (Show)
 
 data Nxs = Nxs FilePath NxEntry DataFrameH5Path deriving (Show)
 
@@ -290,8 +286,8 @@ createPy b (Threshold t) (DifTomoFrame' f poniPath) = (script, output)
       output = (dropExtension . takeFileName) poniPath ++ ".dat"
       (Geometry _ (Source w) _ _) = difTomoFrameGeometry f
 
-createMultiPy :: (Shape sh) => Bins -> Threshold -> (DifTomoFrame' sh) -> [FilePath] -> (Text, FilePath)
-createMultiPy (Bins b) (Threshold t) (DifTomoFrame' f _) ponies = (script, output)
+createMultiPy :: (Shape sh) => DIM1 -> Threshold -> (DifTomoFrame' sh) -> [FilePath] -> (Text, FilePath)
+createMultiPy b (Threshold t) (DifTomoFrame' f _) ponies = (script, output)
     where
       script = Text.unlines $
                map Text.pack ["#!/bin/env python"
@@ -302,7 +298,7 @@ createMultiPy (Bins b) (Threshold t) (DifTomoFrame' f _) ponies = (script, outpu
                              , ""
                              , "NEXUSFILE = " ++ show nxs'
                              , "IMAGEPATH = " ++ show i'
-                             , "BINS = " ++ show b
+                             , "BINS = " ++ show (size b)
                              , "OUTPUT = " ++ show output
                              , "WAVELENGTH = " ++ show (w /~ meter)
                              , "THRESHOLD = " ++ show t
@@ -419,7 +415,7 @@ saveGnuplot = evalStateP [] saveGnuplot'
 
 -- PyFAI MultiGeometry
 
-saveMulti' :: (Shape sh) => Bins -> Threshold -> Consumer (DifTomoFrame' sh) (StateT [FilePath] IO) r
+saveMulti' :: (Shape sh) => DIM1 -> Threshold -> Consumer (DifTomoFrame' sh) (StateT [FilePath] IO) r
 saveMulti' b t = forever $ do
   ponies <- lift get
   f'@(DifTomoFrame' f poniPath) <- await
@@ -438,5 +434,5 @@ saveMulti' b t = forever $ do
           return ()
         go _ _ False = return ()
 
-saveMultiGeometry :: (Shape sh) => Bins -> Threshold -> Consumer (DifTomoFrame' sh) IO r
+saveMultiGeometry :: (Shape sh) => DIM1 -> Threshold -> Consumer (DifTomoFrame' sh) IO r
 saveMultiGeometry b t = evalStateP [] (saveMulti' b t)

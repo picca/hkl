@@ -101,8 +101,8 @@ h5path nxentry =
 bins :: DIM1
 bins = ix1 8000
 
-multibins :: Bins
-multibins = Bins 25000
+multibins :: DIM1
+multibins = ix1 25000
 
 threshold :: Threshold
 threshold = Threshold 800
