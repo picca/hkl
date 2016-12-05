@@ -28,6 +28,7 @@ import Control.Monad (forM_, forever)
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Morph (hoist)
 import Control.Monad.Trans.State.Strict (StateT, get, put)
+import Data.Array.Repa (Shape, DIM1)
 import Data.Attoparsec.Text (parseOnly)
 import qualified Data.List as List (intercalate)
 import qualified Data.ByteString.Char8 as Char8 (pack)
@@ -86,13 +87,13 @@ data Threshold = Threshold Int
 
 data XRDRef = XRDRef SampleName OutputBaseDir Nxs Int
 
-data XRDSample = XRDSample SampleName OutputBaseDir [XrdNxs]-- ^ nxss
+data XRDSample = XRDSample SampleName OutputBaseDir [XrdNxs] -- ^ nxss
 
 data XrdNxs = XrdNxs Bins Bins Threshold Nxs deriving (Show)
 
 data Nxs = Nxs FilePath NxEntry DataFrameH5Path deriving (Show)
 
-data DifTomoFrame =
+data DifTomoFrame sh =
   DifTomoFrame { difTomoFrameNxs :: Nxs -- ^ nexus of the current frame
                , difTomoFrameIdx :: Int -- ^ index of the current frame
                , difTomoFrameEOF :: Bool -- ^ is it the eof of the stream
@@ -102,7 +103,7 @@ data DifTomoFrame =
 
 class Frame t where
   len :: t -> IO (Maybe Int)
-  row :: t -> Int -> IO DifTomoFrame
+  row :: t -> Int -> IO (DifTomoFrame DIM1)
 
 data DataFrameH5Path =
   DataFrameH5Path { h5pImage :: DataItem
@@ -232,7 +233,7 @@ integrateMulti' ref output (XrdNxs _ mb t nxs'@(Nxs f _ _)) = do
       where
         scandir = (dropExtension . takeFileName) nxs''
 
-createPy :: Bins -> Threshold -> DifTomoFrame' -> (Text, FilePath)
+createPy :: (Shape sh) => Bins -> Threshold -> (DifTomoFrame' sh) -> (Text, FilePath)
 createPy (Bins b) (Threshold t) (DifTomoFrame' f poniPath) = (script, output)
     where
       script = Text.unlines $
@@ -274,7 +275,7 @@ createPy (Bins b) (Threshold t) (DifTomoFrame' f poniPath) = (script, output)
       output = (dropExtension . takeFileName) poniPath ++ ".dat"
       (Geometry _ (Source w) _ _) = difTomoFrameGeometry f
 
-createMultiPy :: Bins -> Threshold -> DifTomoFrame' -> [FilePath] -> (Text, FilePath)
+createMultiPy :: (Shape sh) => Bins -> Threshold -> (DifTomoFrame' sh) -> [FilePath] -> (Text, FilePath)
 createMultiPy (Bins b) (Threshold t) (DifTomoFrame' f _) ponies = (script, output)
     where
       script = Text.unlines $
@@ -339,11 +340,11 @@ withDataFrameH5 h nxs'@(Nxs _ _ d) gen = bracket (liftIO before) (liftIO . after
     -- openDataset' :: File -> DataItem -> IO Dataset
     openDataset' hid (DataItem name _) = openDataset hid (Char8.pack name) Nothing
 
-data DifTomoFrame' = DifTomoFrame' { difTomoFrame'DifTomoFrame :: DifTomoFrame
-                                   , difTomoFrame'PoniPath :: FilePath
-                                   }
+data DifTomoFrame' sh = DifTomoFrame' { difTomoFrame'DifTomoFrame :: DifTomoFrame sh
+                                      , difTomoFrame'PoniPath :: FilePath
+                                      }
 
-savePonies :: (Int -> FilePath) -> Pipe DifTomoFrame DifTomoFrame' IO ()
+savePonies :: (Shape sh) => (Int -> FilePath) -> Pipe (DifTomoFrame sh) (DifTomoFrame' sh) IO ()
 savePonies g = forever $ do
   f <- await
   let filename = g (difTomoFrameIdx f)
@@ -357,13 +358,13 @@ savePonies g = forever $ do
       content :: PoniExt -> Text
       content (PoniExt poni _) = poniToText poni
 
-data DifTomoFrame'' = DifTomoFrame'' { difTomoFrame''DifTomoFrame' :: DifTomoFrame'
-                                     , difTomoFrame''PySCript :: Text
-                                     , difTomoFrame''PySCriptPath :: FilePath
-                                     , difTomoFrame''DataPath :: FilePath
-                                     }
+data DifTomoFrame'' sh = DifTomoFrame'' { difTomoFrame''DifTomoFrame' :: DifTomoFrame' sh
+                                        , difTomoFrame''PySCript :: Text
+                                        , difTomoFrame''PySCriptPath :: FilePath
+                                        , difTomoFrame''DataPath :: FilePath
+                                        }
 
-savePy :: Bins -> Threshold -> Pipe DifTomoFrame' DifTomoFrame'' IO ()
+savePy :: (Shape sh) => Bins -> Threshold -> Pipe (DifTomoFrame' sh) (DifTomoFrame'' sh) IO ()
 savePy b t = forever $ do
   f@(DifTomoFrame' _difTomoFrame poniPath) <- await
   let directory = takeDirectory poniPath
@@ -379,7 +380,7 @@ savePy b t = forever $ do
                          , difTomoFrame''DataPath = dataPath
                          }
 
-saveGnuplot' :: Consumer DifTomoFrame'' (StateT [FilePath] IO) r
+saveGnuplot' :: (Shape sh) => Consumer (DifTomoFrame'' sh) (StateT [FilePath] IO) r
 saveGnuplot' = forever $ do
   curves <- lift get
   (DifTomoFrame'' (DifTomoFrame' _ poniPath) _ _ dataPath) <- await
@@ -398,12 +399,12 @@ saveGnuplot' = forever $ do
                  ++ [Text.intercalate ",\\\n" [ Text.pack (show (takeFileName c) ++ " u 1:2 w l") | c <- cs ]]
                  ++ ["pause -1"]
 
-saveGnuplot :: Consumer DifTomoFrame'' IO r
+saveGnuplot :: (Shape sh) => Consumer (DifTomoFrame'' sh) IO r
 saveGnuplot = evalStateP [] saveGnuplot'
 
 -- PyFAI MultiGeometry
 
-saveMulti' :: Bins -> Threshold -> Consumer DifTomoFrame' (StateT [FilePath] IO) r
+saveMulti' :: (Shape sh) => Bins -> Threshold -> Consumer (DifTomoFrame' sh) (StateT [FilePath] IO) r
 saveMulti' b t = forever $ do
   ponies <- lift get
   f'@(DifTomoFrame' f poniPath) <- await
@@ -422,10 +423,10 @@ saveMulti' b t = forever $ do
           return ()
         go _ _ False = return ()
 
-saveMultiGeometry :: Bins -> Threshold -> Consumer DifTomoFrame' IO r
+saveMultiGeometry :: (Shape sh) => Bins -> Threshold -> Consumer (DifTomoFrame' sh) IO r
 saveMultiGeometry b t = evalStateP [] (saveMulti' b t)
 
-frames :: (Frame a) => Pipe a DifTomoFrame IO ()
+frames :: (Frame a) => Pipe a (DifTomoFrame DIM1) IO ()
 frames = do
   d <- await
   (Just n) <- lift $ len d
@@ -433,7 +434,7 @@ frames = do
                      f <- lift $ row d i'
                      yield f)
 
-frames' :: (Frame a) => [Int] -> Pipe a DifTomoFrame IO ()
+frames' :: (Frame a) => [Int] -> Pipe a (DifTomoFrame DIM1) IO ()
 frames' is = do
   d <- await
   forM_ is (\i' -> do
