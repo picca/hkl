@@ -32,6 +32,14 @@ published = project </> "2016" </> "Run5B" </> "irdrx"
 beamlineUpper :: Beamline -> String
 beamlineUpper b = [Data.Char.toUpper x | x <- show b]
 
+
+-- meshSample :: String
+-- meshSample :: project </> "2016" </> Run5 </> "2016-11-fly" </> "scan5 </> "*"
+-- h5path nxentry = exptest_01368
+-- scan_data, sxpos szpos xpad_image 12x273 x 10 (fichiers)
+-- delta = -6.2
+-- gamma = 0.0
+
 nxs :: FilePath -> NxEntry -> (NxEntry -> DataFrameH5Path) -> Nxs
 nxs f e h = Nxs f e (h e)
 

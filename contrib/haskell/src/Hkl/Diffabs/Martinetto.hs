@@ -253,6 +253,10 @@ r35n1 = XRDSample "R35N1"
           ]
         ]
 
+-- meshSample :: String
+-- meshSample = project </> "2016" "Run2" "2016-03-28" "MELLE_29.nxs"
+-- scan_29 scan_data actuator_1_1 actuator_2_1 data_58 (images)
+
 -- | Main
 
 martinetto :: IO ()

@@ -92,8 +92,9 @@ library
                     , Hkl.Calibration
                     , Hkl.Detector
                     , Hkl.Diffabs
-                    , Hkl.Diffabs.Martinetto
                     , Hkl.Diffabs.IRDRx
+                    , Hkl.Diffabs.Martinetto
+                    , Hkl.Diffabs.Melle
                     , Hkl.Edf
                     , Hkl.Engine
                     , Hkl.H5
