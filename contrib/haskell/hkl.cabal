@@ -22,7 +22,7 @@ Flag useHMatrixGsl
 executable ghkl
   main-is:             src/ghkl.hs
   build-depends:       attoparsec
-                     , base >= 4.6 && < 4.9
+                     , base >= 4.6 && < 4.10
                      , bindings-hdf5 >= 1.8.12
                      , containers >= 0.5 && < 0.6
                      , dimensional >= 0.10
@@ -45,7 +45,7 @@ executable ghkl
 executable xrd
   main-is:             src/xrd.hs
   build-depends:       attoparsec
-                     , base >= 4.6 && < 4.9
+                     , base >= 4.6 && < 4.10
                      , bindings-hdf5 >= 1.8.12
                      , containers >= 0.5 && < 0.6
                      , dimensional >= 0.10
@@ -58,6 +58,7 @@ executable xrd
                      , text
                      , transformers >= 0.3
                      , vector >= 0.10.0.1
+
   default-language:    Haskell2010
   pkgconfig-depends:   hkl
   build-tools:         hsc2hs
@@ -67,7 +68,7 @@ executable xrd
 
 executable hkl3d
   main-is:             src/hkl3d.hs
-  build-depends:       base >= 4.6 && < 4.9
+  build-depends:       base >= 4.6 && < 4.10
                      , bindings-hdf5 >= 1.8.12
                      , containers >= 0.5 && < 0.6
                      , dimensional >= 0.10
@@ -93,6 +94,7 @@ library
                     , Hkl.Diffabs
                     , Hkl.Diffabs.Martinetto
                     , Hkl.Diffabs.IRDRx
+                    , Hkl.Edf
                     , Hkl.Engine
                     , Hkl.H5
                     , Hkl.MyMatrix
@@ -114,7 +116,7 @@ library
                      , RecordWildCards
   build-depends:       async
                      , attoparsec
-                     , base >= 4.6 && < 4.9
+                     , base >= 4.6 && < 4.10
                      , bindings-hdf5 >= 1.8.12
                      , bytestring >= 0.10.0.2
                      , containers >= 0.5 && < 0.6
