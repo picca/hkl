@@ -4,8 +4,8 @@
 module Hkl.D2AM.XRD
        ( d2am ) where
 
--- import Control.Concurrent.Async (mapConcurrently)
--- import Data.Array.Repa (DIM1, ix1)
+import Control.Concurrent.Async (mapConcurrently)
+import Data.Array.Repa (DIM1, ix1)
 -- import Data.Char (toUpper)
 import Numeric.LinearAlgebra (ident)
 import System.FilePath ((</>))
@@ -56,15 +56,34 @@ sampleCalibration = XRDCalibration { xrdCalibrationName = "calibration"
       entries :: [XRDCalibrationEntry]
       entries = [ entry idx | idx <- idxs]
 
-sample :: XRDSample
-sample = XRDSample
-         {
-         }
+bins :: DIM1
+bins = ix1 1000
+
+multibins :: DIM1
+multibins = ix1 10000
+
+threshold :: Threshold
+threshold = Threshold 5000
+
+lab6 :: XRDSample
+lab6 = XRDSample "test"
+       (published </> "test")
+       [XrdNxs bins multibins threshold entries]
+           where
+             idxs :: [Int]
+             idxs = [268, 271, 285, 295]
+
+             entry :: Int -> FilePath
+             entry idx = project </> printf "16Dec08D5_%04d-rsz.edf" idx
+
+             entries :: XrdSource
+             entries = XrdSourceEdf [entry idx | idx <- idxs]
+
 -- | Main
 
 d2am :: IO ()
 d2am = do
-  -- let samples = [lab6]
+  let samples = [lab6]
 
   p <- getPoniExtRef sampleRef
 
@@ -78,5 +97,5 @@ d2am = do
   print poniextref'
 
   -- integrate each step of the scan
-  -- _ <- mapConcurrently (integrate poniextref') samples
+  _ <- mapConcurrently (integrate poniextref') samples
   return ()
