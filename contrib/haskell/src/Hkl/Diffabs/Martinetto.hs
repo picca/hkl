@@ -66,10 +66,10 @@ sampleCalibration = XRDCalibration { xrdCalibrationName = "calibration"
       idxs = [3, 6, 9, 15, 18, 21, 24, 27, 30, 33, 36, 39, 43]
 
       entry :: Int -> XRDCalibrationEntry
-      entry idx = XRDCalibrationEntry
-                { xrdCalibrationEntryNxs = nxs (published </> "calibration" </> "XRD18keV_26.nxs") "scan_26" h5path'
-                , xrdCalibrationEntryIdx = idx
-                , xrdCalibrationEntryNptPath = published </> "calibration" </> printf "XRD18keV_26.nxs_%02d.npt" idx
+      entry idx = XRDCalibrationEntryNxs
+                { xrdCalibrationEntryNxs'Nxs = nxs (published </> "calibration" </> "XRD18keV_26.nxs") "scan_26" h5path'
+                , xrdCalibrationEntryNxs'Idx = idx
+                , xrdCalibrationEntryNxs'NptPath = published </> "calibration" </> printf "XRD18keV_26.nxs_%02d.npt" idx
                 }
 
       entries :: [XRDCalibrationEntry]

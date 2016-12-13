@@ -76,10 +76,10 @@ sampleCalibration = XRDCalibration { xrdCalibrationName = "calibration"
       idxs = [0, 1, 10, 30]
 
       entry :: Int -> XRDCalibrationEntry
-      entry idx = XRDCalibrationEntry
-                { xrdCalibrationEntryNxs = nxs (project </> "2016" </> "Run5" </> "2016-11-09" </> "scan_39.nxs") "scan_39" h5path'
-                , xrdCalibrationEntryIdx = idx
-                , xrdCalibrationEntryNptPath = published </> "calibration" </> printf "scan_39.nxs_%02d.npt" idx
+      entry idx = XRDCalibrationEntryNxs
+                { xrdCalibrationEntryNxs'Nxs = nxs (project </> "2016" </> "Run5" </> "2016-11-09" </> "scan_39.nxs") "scan_39" h5path'
+                , xrdCalibrationEntryNxs'Idx = idx
+                , xrdCalibrationEntryNxs'NptPath = published </> "calibration" </> printf "scan_39.nxs_%02d.npt" idx
                 }
 
       entries :: [XRDCalibrationEntry]

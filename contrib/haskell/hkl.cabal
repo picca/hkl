@@ -90,6 +90,8 @@ library
   exposed-modules:    Hkl
                     , Hkl.C
                     , Hkl.Calibration
+                    , Hkl.D2AM
+                    , Hkl.D2AM.XRD
                     , Hkl.Detector
                     , Hkl.Diffabs
                     , Hkl.Diffabs.IRDRx

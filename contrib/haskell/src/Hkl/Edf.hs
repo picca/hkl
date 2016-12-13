@@ -16,8 +16,7 @@ import Numeric.Units.Dimensional.Prelude (Length, (*~), nano, meter)
 import Prelude hiding (readFile, words)
 
 data Edf = Edf { edf'Lambda :: Length Double
-               , edf'MotorPos :: [Double]
-               , edf'MotorMne :: [Text]
+               , edf'Motors :: [(Text, Double)]
                }
          deriving (Show)
 
@@ -73,22 +72,18 @@ edf'LambdaP = do
   value <- double
   pure $ value *~ nano meter
 
-edf'MotorPosP :: Parser [Double]
-edf'MotorPosP = do
+edf'MotorsP :: Parser [(Text, Double)]
+edf'MotorsP = do
   _ <- manyTill anyChar (try $ string "motor_pos = ")
-  many1 (skipSpace *> double)
-
-edf'MotorMneP :: Parser [Text]
-edf'MotorMneP = do
+  vs <- many1 (skipSpace *> double)
   _ <- manyTill anyChar (try $ string "motor_mne = ")
-  vs <- takeTill (\c -> c == ';') 
-  return (words vs)
+  ns <- takeTill (\c -> c == ';')
+  return $ zip (words ns) vs
 
 edfP :: Parser Edf
 edfP = Edf
        <$> edf'LambdaP
-       <*> edf'MotorPosP
-       <*> edf'MotorMneP
+       <*> edf'MotorsP
          <?> "edfP"
 
 edfFromFile :: FilePath -> IO Edf
@@ -99,8 +94,8 @@ edfFromFile filename = do
     Left _     -> error $ "Can not parse the " ++ filename ++ " edf file"
     Right a -> a
 
-main :: IO ()
-main = do
-  edf <- edfFromFile "/home/picca/test.edf"
-  print edf
-  return ()
+-- main :: IO ()
+-- main = do
+--   edf <- edfFromFile "/home/picca/test.edf"
+--   print edf
+--   return ()

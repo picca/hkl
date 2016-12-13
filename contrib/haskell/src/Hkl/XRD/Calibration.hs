@@ -35,6 +35,7 @@ import Prelude hiding (head, concat, lookup, readFile, writeFile, unlines)
 
 import Hkl.C
 import Hkl.Detector
+import Hkl.Edf
 import Hkl.H5
 import Hkl.PyFAI
 import Hkl.MyMatrix
@@ -57,10 +58,13 @@ data NptExt a = NptExt { nptExtNpt :: Npt
                        }
               deriving (Show)
 
-data XRDCalibrationEntry = XRDCalibrationEntry { xrdCalibrationEntryNxs :: Nxs
-                                               , xrdCalibrationEntryIdx :: Int
-                                               , xrdCalibrationEntryNptPath :: FilePath
-                                               }
+data XRDCalibrationEntry = XRDCalibrationEntryNxs { xrdCalibrationEntryNxs'Nxs :: Nxs
+                                                  , xrdCalibrationEntryNxs'Idx :: Int
+                                                  , xrdCalibrationEntryNxs'NptPath :: FilePath
+                                                  }
+                         | XRDCalibrationEntryEdf { xrdCalibrationEntryEdf'Edf :: FilePath
+                                                  , xrdCalibrationEntryEdf'NptPath :: FilePath
+                                                  }
                            deriving (Show)
 
 data XRDCalibration = XRDCalibration { xrdCalibrationName :: Text
@@ -78,8 +82,8 @@ withDataItem hid (DataItem name _) = bracket (liftIO acquire') (liftIO . release
       release' :: Dataset -> IO ()
       release' = closeDataset
 
-getM :: File -> DataFrameH5Path -> Int -> IO (MyMatrix Double)
-getM f p i' = runSafeT $
+getMNxs :: File -> DataFrameH5Path -> Int -> IO (MyMatrix Double) -- TODO move to XRD
+getMNxs f p i' = runSafeT $
     withDataItem f (h5pGamma p) $ \g' ->
     withDataItem f (h5pDelta p) $ \d' ->
     withDataItem f (h5pWavelength p) $ \w' -> liftIO $ do
@@ -98,14 +102,18 @@ getM f p i' = runSafeT $
       return (MyMatrix HklB m)
 
 readXRDCalibrationEntry :: Detector a -> XRDCalibrationEntry -> IO (NptExt a)
-readXRDCalibrationEntry d e =
+readXRDCalibrationEntry d e@(XRDCalibrationEntryNxs _ _ _) =
     withH5File f $ \h5file -> do
-      m <- getM h5file p idx
-      npt <- nptFromFile (xrdCalibrationEntryNptPath e)
+      m <- getMNxs h5file p idx
+      npt <- nptFromFile (xrdCalibrationEntryNxs'NptPath e)
       return (NptExt npt m d)
     where
-      idx = xrdCalibrationEntryIdx e
-      (Nxs f _ p) = xrdCalibrationEntryNxs e
+      idx = xrdCalibrationEntryNxs'Idx e
+      (Nxs f _ p) = xrdCalibrationEntryNxs'Nxs e
+readXRDCalibrationEntry d e@(XRDCalibrationEntryEdf _ _) = do
+  m <- getMEdf (xrdCalibrationEntryEdf'Edf e)
+  npt <-  nptFromFile (xrdCalibrationEntryEdf'NptPath e)
+  return (NptExt npt m d)
 
 -- | Poni Calibration
 
