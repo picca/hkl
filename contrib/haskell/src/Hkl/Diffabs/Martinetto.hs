@@ -36,8 +36,11 @@ published = project </> "published-data"
 beamlineUpper :: Beamline -> String
 beamlineUpper b = [Data.Char.toUpper x | x <- show b]
 
-nxs :: FilePath -> NxEntry -> (NxEntry -> DataFrameH5Path) -> Nxs
-nxs f e h = Nxs f e (h e)
+nxs' :: FilePath -> NxEntry -> (NxEntry -> DataFrameH5Path) -> Nxs
+nxs' f e h = Nxs f e (h e)
+
+nxs :: FilePath -> NxEntry -> (NxEntry -> DataFrameH5Path) -> XrdSource
+nxs f e h = XrdSourceNxs (nxs' f e h)
 
 h5path' :: NxEntry -> DataFrameH5Path
 h5path' nxentry =
@@ -67,7 +70,7 @@ sampleCalibration = XRDCalibration { xrdCalibrationName = "calibration"
 
       entry :: Int -> XRDCalibrationEntry
       entry idx = XRDCalibrationEntryNxs
-                { xrdCalibrationEntryNxs'Nxs = nxs (published </> "calibration" </> "XRD18keV_26.nxs") "scan_26" h5path'
+                { xrdCalibrationEntryNxs'Nxs = nxs' (published </> "calibration" </> "XRD18keV_26.nxs") "scan_26" h5path'
                 , xrdCalibrationEntryNxs'Idx = idx
                 , xrdCalibrationEntryNxs'NptPath = published </> "calibration" </> printf "XRD18keV_26.nxs_%02d.npt" idx
                 }
@@ -79,8 +82,10 @@ sampleCalibration = XRDCalibration { xrdCalibrationName = "calibration"
 sampleRef :: XRDRef
 sampleRef = XRDRef "reference"
             (published </> "calibration")
-            (nxs (published </> "calibration" </> "XRD18keV_26.nxs") "scan_26" h5path')
-            6 -- BEWARE only the 6th poni was generated with the right Xpad_flat geometry.
+            (XrdRefNxs
+             (nxs' (published </> "calibration" </> "XRD18keV_26.nxs") "scan_26" h5path')
+             6 -- BEWARE only the 6th poni was generated with the right Xpad_flat geometry.
+            )
 
 h5path :: NxEntry -> DataFrameH5Path
 h5path nxentry =

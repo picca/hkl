@@ -30,10 +30,12 @@ published :: FilePath
 published = project </> "published-data"
 
 sampleRef :: XRDRef
-sampleRef =  XRDRefEdf "reference"
+sampleRef =  XRDRef "reference"
             (published </> "calibration")
-            (project </> "16Dec08D5_0268-rsz.edf")
-            (project </> "16Dec08D5_0268-rsz.poni")
+            (XrdRefEdf
+             (project </> "16Dec08D5_0268-rsz.edf")
+             (project </> "16Dec08D5_0268-rsz.poni")
+            )
 
 sampleCalibration :: XRDCalibration
 sampleCalibration = XRDCalibration { xrdCalibrationName = "calibration"
@@ -54,6 +56,10 @@ sampleCalibration = XRDCalibration { xrdCalibrationName = "calibration"
       entries :: [XRDCalibrationEntry]
       entries = [ entry idx | idx <- idxs]
 
+sample :: XRDSample
+sample = XRDSample
+         {
+         }
 -- | Main
 
 d2am :: IO ()

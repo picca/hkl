@@ -40,14 +40,19 @@ beamlineUpper b = [Data.Char.toUpper x | x <- show b]
 -- delta = -6.2
 -- gamma = 0.0
 
-nxs :: FilePath -> NxEntry -> (NxEntry -> DataFrameH5Path) -> Nxs
-nxs f e h = Nxs f e (h e)
+nxs' :: FilePath -> NxEntry -> (NxEntry -> DataFrameH5Path) -> Nxs
+nxs' f e h = Nxs f e (h e)
+
+nxs :: FilePath -> NxEntry -> (NxEntry -> DataFrameH5Path) -> XrdSource
+nxs f e h = XrdSourceNxs (nxs' f e h)
 
 sampleRef :: XRDRef
 sampleRef = XRDRef "reference"
             (published </> "calibration")
-            (nxs (project </> "2016" </> "Run5" </> "2016-11-09" </> "scan_39.nxs") "scan_39" h5path')
-            10
+            (XrdRefNxs
+             (nxs' (project </> "2016" </> "Run5" </> "2016-11-09" </> "scan_39.nxs") "scan_39" h5path')
+             10
+            )
 
 h5path' :: NxEntry -> DataFrameH5Path
 h5path' nxentry =
@@ -77,7 +82,7 @@ sampleCalibration = XRDCalibration { xrdCalibrationName = "calibration"
 
       entry :: Int -> XRDCalibrationEntry
       entry idx = XRDCalibrationEntryNxs
-                { xrdCalibrationEntryNxs'Nxs = nxs (project </> "2016" </> "Run5" </> "2016-11-09" </> "scan_39.nxs") "scan_39" h5path'
+                { xrdCalibrationEntryNxs'Nxs = nxs' (project </> "2016" </> "Run5" </> "2016-11-09" </> "scan_39.nxs") "scan_39" h5path'
                 , xrdCalibrationEntryNxs'Idx = idx
                 , xrdCalibrationEntryNxs'NptPath = published </> "calibration" </> printf "scan_39.nxs_%02d.npt" idx
                 }

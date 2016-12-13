@@ -4,6 +4,7 @@
 
 module Hkl.XRD
        ( XRDRef(..)
+       , XrdRefSource(..)
        , XRDSample(..)
        , DataFrameH5(..)
        , DataFrameH5Path(..)
@@ -11,6 +12,7 @@ module Hkl.XRD
        , Nxs(..)
        , Threshold(..)
        , XrdNxs(..)
+       , XrdSource(..)
        , PoniExt(..)
          -- reference
        , getMEdf
@@ -91,12 +93,21 @@ type SampleName = String
 data Threshold = Threshold Int
                deriving (Show)
 
-data XRDRef = XRDRef SampleName OutputBaseDir Nxs Int
-            | XRDRefEdf SampleName OutputBaseDir FilePath FilePath -- edf, poni
+data XrdRefSource = XrdRefNxs Nxs Int
+                  | XrdRefEdf FilePath FilePath
+                    deriving (Show)
+
+data XRDRef = XRDRef SampleName OutputBaseDir XrdRefSource
+            deriving (Show)
 
 data XRDSample = XRDSample SampleName OutputBaseDir [XrdNxs] -- ^ nxss
+               deriving (Show)
 
-data XrdNxs = XrdNxs DIM1 DIM1 Threshold Nxs deriving (Show)
+data XrdSource = XrdSourceNxs Nxs
+               | XrdSourceEdf [FilePath]
+                 deriving (Show)
+
+data XrdNxs = XrdNxs DIM1 DIM1 Threshold XrdSource deriving (Show)
 
 data Nxs = Nxs FilePath NxEntry DataFrameH5Path deriving (Show)
 
@@ -209,7 +220,7 @@ poniFromFile filename = do
     Right poni -> poni
 
 getPoniExtRef :: XRDRef -> IO PoniExt
-getPoniExtRef (XRDRef _ output nxs'@(Nxs f _ _) idx) = do
+getPoniExtRef (XRDRef _ output (XrdRefNxs nxs'@(Nxs f _ _) idx)) = do
   poniExtRefs <- withH5File f $ \h5file ->
     runSafeT $ toListM ( withDataFrameH5 h5file nxs' (gen output f) yield
                          >-> hoist lift (frames' [idx]))
@@ -221,7 +232,7 @@ getPoniExtRef (XRDRef _ output nxs'@(Nxs f _ _) idx) = do
       return $ PoniExt poni m
       where
         scandir = takeFileName nxs''
-getPoniExtRef (XRDRefEdf _ _ e p) = do
+getPoniExtRef (XRDRef _ _ (XrdRefEdf e p)) = do
   poni <- poniFromFile p
   m <- getMEdf e
   return $ PoniExt poni m
@@ -232,7 +243,7 @@ integrate ref (XRDSample _ output nxss) = do
   return ()
 
 integrate' :: PoniExt -> OutputBaseDir -> XrdNxs -> IO ()
-integrate' ref output (XrdNxs b _ t nxs'@(Nxs f _ _)) = do
+integrate' ref output (XrdNxs b _ t (XrdSourceNxs nxs'@(Nxs f _ _))) = do
   print f
   withH5File f $ \h5file ->
       runSafeT $ runEffect $
@@ -384,7 +395,7 @@ integrateMulti ref (XRDSample _ output nxss) =
   mapM_ (integrateMulti' ref output) nxss
 
 integrateMulti' :: PoniExt -> OutputBaseDir -> XrdNxs -> IO ()
-integrateMulti' ref output (XrdNxs _ mb t nxs'@(Nxs f _ _)) = do
+integrateMulti' ref output (XrdNxs _ mb t (XrdSourceNxs nxs'@(Nxs f _ _))) = do
   print f
   withH5File f $ \h5file ->
       runSafeT $ runEffect $

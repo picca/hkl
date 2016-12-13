@@ -35,7 +35,6 @@ import Prelude hiding (head, concat, lookup, readFile, writeFile, unlines)
 
 import Hkl.C
 import Hkl.Detector
-import Hkl.Edf
 import Hkl.H5
 import Hkl.PyFAI
 import Hkl.MyMatrix
