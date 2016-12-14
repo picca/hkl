@@ -97,5 +97,5 @@ d2am = do
   print poniextref'
 
   -- integrate each step of the scan
-  _ <- mapConcurrently (integrate poniextref') samples
+  _ <- mapConcurrently (integrateMulti poniextref') samples
   return ()

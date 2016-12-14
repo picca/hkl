@@ -108,6 +108,7 @@ library
                     , Hkl.Sixs
                     , Hkl.Types
                     , Hkl.Types.Parameter
+                    , Hkl.Utils
                     , Hkl.XRD
                     , Hkl.XRD.Calibration
   other-extensions:    CPP

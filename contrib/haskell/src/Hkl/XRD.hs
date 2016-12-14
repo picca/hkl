@@ -43,11 +43,10 @@ import qualified Data.List as List (intercalate, lookup)
 import Data.Maybe (fromMaybe)
 import Data.Text (Text)
 import qualified Data.Text as Text (unlines, pack, intercalate)
-import Data.Text.IO (readFile, writeFile)
+import Data.Text.IO (readFile)
 import Data.Vector.Storable (concat, head)
 import Numeric.LinearAlgebra (fromList)
 import Numeric.Units.Dimensional.Prelude (meter, nano, (/~), (*~))
-import System.Directory (createDirectoryIfMissing)
 import System.Exit ( ExitCode( ExitSuccess ) )
 import System.FilePath ((</>), dropExtension, takeFileName, takeDirectory)
 import System.Process ( system )
@@ -58,7 +57,6 @@ import Prelude hiding
     , head
     , lookup
     , readFile
-    , writeFile
     , unlines
     )
 import Pipes
@@ -82,6 +80,7 @@ import Hkl.PyFAI
 import Hkl.MyMatrix
 import Hkl.PyFAI.PoniExt
 import Hkl.Types
+import Hkl.Utils
 
 -- | Types
 
@@ -334,15 +333,11 @@ savePonies :: (Shape sh) => (Int -> FilePath) -> Pipe (DifTomoFrame sh) (DifTomo
 savePonies g = forever $ do
   f <- await
   let filename = g (difTomoFrameIdx f)
-  lift $ createDirectoryIfMissing True (takeDirectory filename)
-  lift $ writeFile filename (content (difTomoFramePoniExt f))
-  lift $ print $ "--> " ++ filename
+  let (PoniExt p _) = difTomoFramePoniExt f
+  lift $ saveScript (poniToText p) filename
   yield $ DifTomoFrame' { difTomoFrame'DifTomoFrame = f
                         , difTomoFrame'PoniPath = filename
                         }
-    where
-      content :: PoniExt -> Text
-      content (PoniExt poni _) = poniToText poni
 
 data DifTomoFrame'' sh = DifTomoFrame'' { difTomoFrame''DifTomoFrame' :: DifTomoFrame' sh
                                         , difTomoFrame''PySCript :: Text
@@ -356,9 +351,7 @@ savePy b t = forever $ do
   let directory = takeDirectory poniPath
   let scriptPath = dropExtension poniPath ++ ".py"
   let (script, dataPath) = createPy b t f
-  lift $ createDirectoryIfMissing True directory
-  lift $ writeFile scriptPath script
-  lift $ print $ "--> " ++ scriptPath
+  lift $ saveScript script scriptPath
   ExitSuccess <- lift $ system (unwords ["cd ", directory, "&&",  "python", scriptPath])
   yield $ DifTomoFrame'' { difTomoFrame''DifTomoFrame' = f
                          , difTomoFrame''PySCript = script
@@ -372,9 +365,7 @@ saveGnuplot' = forever $ do
   (DifTomoFrame'' (DifTomoFrame' _ poniPath) _ _ dataPath) <- await
   let directory = takeDirectory poniPath
   let filename = directory </> "plot.gnuplot"
-  lift . lift $ print $ "gnuplot --> " ++ filename
-  lift . lift $ createDirectoryIfMissing True directory
-  lift . lift $ writeFile filename (new_content curves)
+  lift . lift $ saveScript (new_content curves) filename
   lift $ put $! (curves ++ [dataPath])
     where
       new_content :: [FilePath] -> Text
@@ -411,6 +402,20 @@ integrateMulti' ref output (XrdNxs _ mb t (XrdSourceNxs nxs'@(Nxs f _ _))) = do
     pgen o nxs'' idx = o </> scandir </>  scandir ++ printf "_%02d.poni" idx
       where
         scandir = (dropExtension . takeFileName) nxs''
+integrateMulti' ref output (XrdNxs _b _ _t (XrdSourceEdf fs)) = do
+  -- generate all the ponies
+  mapM_ go fs
+
+  -- generate the python code
+
+  -- TODO
+    where
+        go :: FilePath -> IO ()
+        go f = do
+          m <- getMEdf f
+          let (PoniExt p _) = setPose ref m
+          let filename = output </> (dropExtension . takeFileName) f ++ ".poni"
+          saveScript (poniToText p) filename
 
 createMultiPy :: (Shape sh) => DIM1 -> Threshold -> (DifTomoFrame' sh) -> [FilePath] -> (Text, FilePath)
 createMultiPy b (Threshold t) (DifTomoFrame' f _) ponies = (script, output)
@@ -461,9 +466,7 @@ saveMulti' b t = forever $ do
   let directory = takeDirectory poniPath
   let filename = directory </> "multi.py"
   let (script, _) = createMultiPy b t f' ponies
-  lift . lift $ print $ "multi integrator --> " ++ filename
-  lift . lift $ createDirectoryIfMissing True directory
-  lift . lift $ writeFile filename script
+  lift . lift $ saveScript script filename
   lift . lift $ go directory filename (difTomoFrameEOF f)
   lift $ put $! (ponies ++ [poniPath])
       where
