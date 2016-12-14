@@ -32,7 +32,7 @@ module Hkl.XRD
 import Control.Applicative ((<$>), (<*>))
 #endif
 import Control.Concurrent.Async (mapConcurrently)
-import Control.Monad (forM_, forever)
+import Control.Monad (forM_, forever, zipWithM_)
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Morph (hoist)
 import Control.Monad.Trans.State.Strict (StateT, get, put)
@@ -402,20 +402,21 @@ integrateMulti' ref output (XrdNxs _ mb t (XrdSourceNxs nxs'@(Nxs f _ _))) = do
     pgen o nxs'' idx = o </> scandir </>  scandir ++ printf "_%02d.poni" idx
       where
         scandir = (dropExtension . takeFileName) nxs''
-integrateMulti' ref output (XrdNxs _b _ _t (XrdSourceEdf fs)) = do
+integrateMulti' ref output (XrdNxs b _ t (XrdSourceEdf fs)) = do
   -- generate all the ponies
-  mapM_ go fs
+  zipWithM_ go fs ponies
 
-  -- generate the python code
-
-  -- TODO
+  -- generate the multi.py python script
+  let script = createMultiPyEdf b t fs ponies (output </> "multi.dat")
+  saveScript script (output </> "multi.py")
     where
-        go :: FilePath -> IO ()
-        go f = do
-          m <- getMEdf f
-          let (PoniExt p _) = setPose ref m
-          let filename = output </> (dropExtension . takeFileName) f ++ ".poni"
-          saveScript (poniToText p) filename
+      ponies = [(output </> (dropExtension . takeFileName) f ++ ".poni") | f <- fs]
+
+      go :: FilePath -> FilePath -> IO ()
+      go f o = do
+        m <- getMEdf f
+        let (PoniExt p _) = setPose ref m
+        saveScript (poniToText p) o
 
 createMultiPy :: (Shape sh) => DIM1 -> Threshold -> (DifTomoFrame' sh) -> [FilePath] -> (Text, FilePath)
 createMultiPy b (Threshold t) (DifTomoFrame' f _) ponies = (script, output)
@@ -458,6 +459,39 @@ createMultiPy b (Threshold t) (DifTomoFrame' f _) ponies = (script, output)
       (DataItem i' _) = h5pImage h5path'
       output = "multi.dat"
       (Geometry _ (Source w) _ _) = difTomoFrameGeometry f
+
+createMultiPyEdf :: DIM1 -> Threshold -> [FilePath] -> [FilePath] -> FilePath -> Text
+createMultiPyEdf b (Threshold t) edfs ponies output = script
+    where
+      script = Text.unlines $
+               map Text.pack ["#!/bin/env python"
+                             , ""
+                             , "import numpy"
+                             , "from fabio import open"
+                             , "from pyFAI.multi_geometry import MultiGeometry"
+                             , ""
+                             , "EDFS = [" ++ (List.intercalate ",\n" (map show edfs)) ++ "]"
+                             , "PONIES = [" ++ (List.intercalate ",\n" (map show ponies)) ++ "]"
+                             , "BINS = " ++ show (size b)
+                             , "OUTPUT = " ++ show output
+                             , "THRESHOLD = " ++ show t
+                             , ""
+                             , "# Read all the images"
+                             , "imgs = [open(edf).data for edf in EDFS]"
+                             , ""
+                             , "# Compute the mask"
+                             , "mask = numpy.zeros_like(imgs[0], dtype=bool)"
+                             , "for img in imgs:"
+                             , "    mask_t = numpy.where(img > THRESHOLD, True, False)"
+                             , "    mask = numpy.logical_or(mask, mask_t)"
+                             , ""
+                             , "# Integration multi-geometry 1D"
+                             , "mg = MultiGeometry(PONIES, unit=\"2th_deg\", radial_range=(0,80))"
+                             , "p = mg.integrate1d(imgs, BINS, lst_mask=mask)"
+                             , ""
+                             , "# Save the datas"
+                             , "numpy.savetxt(OUTPUT, numpy.array(p).T)"
+                             ]
 
 saveMulti' :: (Shape sh) => DIM1 -> Threshold -> Consumer (DifTomoFrame' sh) (StateT [FilePath] IO) r
 saveMulti' b t = forever $ do
