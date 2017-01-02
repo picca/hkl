@@ -1,7 +1,7 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-
-    Copyright  : Copyright (C) 2014-2016 Synchrotron Soleil
+    Copyright  : Copyright (C) 2014-2017 Synchrotron Soleil
     License    : GPL3+
 
     Maintainer : picca@synchrotron-soleil.fr
